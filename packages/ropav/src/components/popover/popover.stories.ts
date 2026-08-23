@@ -2,6 +2,7 @@ import type {Meta, StoryObj} from "@storybook/vue3";
 
 import {shallowRef} from "vue";
 
+import {avatarSrc} from "../../utils/story-assets";
 import {AvatarFallback, AvatarImage, AvatarRoot} from "../avatar";
 import {ButtonRoot} from "../button";
 import {CardContent, CardDescription, CardHeader, CardRoot, CardTitle} from "../card";
@@ -75,7 +76,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-const AVATAR_SRC = "https://img.heroui.chat/image/avatar?w=400&h=400&u=5";
+const AVATAR_SRC = avatarSrc(5);
 
 export const Default: Story = {
   render: (args) => ({

@@ -3,6 +3,7 @@ import type {StoryObj} from "@storybook/vue3";
 
 import {computed, shallowRef} from "vue";
 
+import {qrCodeSrc} from "../../utils/story-assets";
 import {Button} from "../button";
 import {
   Disclosure,
@@ -64,8 +65,7 @@ const components = {
   Separator,
 };
 
-const QR_CODE_SRC =
-  "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/images/qr-code-native.png";
+const QR_CODE_SRC = qrCodeSrc("https://github.com/daopk/ropav");
 
 const NATIVE_ITEM_IDS = ["preview", "download"];
 

@@ -3,6 +3,7 @@ import type {StoryObj} from "@storybook/vue3";
 
 import {shallowRef} from "vue";
 
+import {avatarSrc, photoSrc} from "../../utils/story-assets";
 import {Avatar, AvatarFallback, AvatarImage} from "../avatar";
 import {Button} from "../button";
 import {CloseButton} from "../close-button";
@@ -42,8 +43,6 @@ const components = {
   LinkIcon,
   TextField,
 };
-
-const ASSETS = "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com";
 
 /** Reused by both blur overlays, which are identical apart from where they sit. */
 const blurMask = {
@@ -160,7 +159,7 @@ export const Variants: Story = {
 export const Horizontal: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args, src: ASSETS + "/components/card/porsche-911.png"}),
+    setup: () => ({args, src: photoSrc("porsche", 640, 360)}),
     template: `
       <Card class="w-full items-stretch md:flex-row" v-bind="args">
         <img
@@ -206,10 +205,10 @@ export const WithAvatar: Story = {
         {
           alt: "Indie Hackers community",
           author: "Martha",
-          avatar: ASSETS + "/avatars/red.jpg",
+          avatar: avatarSrc("red"),
           avatarAlt: "Martha's avatar",
           avatarLabel: "IH",
-          cover: ASSETS + "/docs/demo1.jpg",
+          cover: photoSrc("demo1", 640, 360),
           members: "148 members",
           name: "Indie Hackers",
           profileLabel: "Martha's profile picture",
@@ -217,10 +216,10 @@ export const WithAvatar: Story = {
         {
           alt: "AI Builders community",
           author: "John",
-          avatar: ASSETS + "/avatars/blue.jpg",
+          avatar: avatarSrc("blue"),
           avatarAlt: "John's avatar - blue themed",
           avatarLabel: "B",
-          cover: ASSETS + "/docs/demo2.jpg",
+          cover: photoSrc("demo2", 640, 360),
           members: "362 members",
           name: "AI Builders",
           profileLabel: "John's profile picture",
@@ -264,7 +263,7 @@ export const WithImages: Story = {
   },
   render: (args) => ({
     components,
-    setup: () => ({args, assets: ASSETS, blurMask}),
+    setup: () => ({args, avatarSrc, blurMask, photoSrc}),
     template: `
       <div class="flex w-full items-center justify-center">
         <div class="grid w-full max-w-2xl grid-cols-12 gap-4 p-4">
@@ -274,7 +273,7 @@ export const WithImages: Story = {
                 alt="Cherries"
                 class="pointer-events-none absolute inset-0 h-full w-full scale-125 object-cover select-none"
                 loading="lazy"
-                :src="assets + '/docs/cherries.jpeg'"
+                :src="photoSrc('cherries', 400, 400)"
               />
             </div>
             <div class="flex flex-1 flex-col gap-3">
@@ -330,7 +329,7 @@ export const WithImages: Story = {
                 <Card class="col-span-12 gap-2 sm:col-span-6">
                   <CardHeader>
                     <Avatar class="size-[56px] rounded-xl">
-                      <AvatarImage alt="Demo 1" :src="assets + '/docs/demo1.jpg'" />
+                      <AvatarImage alt="Demo 1" :src="photoSrc('demo1', 112, 112)" />
                       <AvatarFallback>JK</AvatarFallback>
                     </Avatar>
                   </CardHeader>
@@ -340,7 +339,7 @@ export const WithImages: Story = {
                   </CardContent>
                   <CardFooter class="flex items-center gap-2">
                     <Avatar class="size-4">
-                      <AvatarImage alt="John" :src="assets + '/avatars/red.jpg'" />
+                      <AvatarImage alt="John" :src="avatarSrc('red', 64)" />
                       <AvatarFallback>JK</AvatarFallback>
                     </Avatar>
                     <p class="text-xs text-muted">By John</p>
@@ -349,7 +348,7 @@ export const WithImages: Story = {
                 <Card class="col-span-12 gap-2 sm:col-span-6">
                   <CardHeader>
                     <Avatar class="size-[56px] rounded-xl">
-                      <AvatarImage alt="Demo 2" :src="assets + '/docs/demo2.jpg'" />
+                      <AvatarImage alt="Demo 2" :src="photoSrc('demo2', 112, 112)" />
                       <AvatarFallback>AB</AvatarFallback>
                     </Avatar>
                   </CardHeader>
@@ -359,7 +358,7 @@ export const WithImages: Story = {
                   </CardContent>
                   <CardFooter class="flex items-center gap-2">
                     <Avatar class="size-4">
-                      <AvatarImage alt="John" :src="assets + '/avatars/blue.jpg'" />
+                      <AvatarImage alt="John" :src="avatarSrc('blue', 64)" />
                       <AvatarFallback>M</AvatarFallback>
                     </Avatar>
                     <p class="text-xs text-muted">By Martha</p>
@@ -373,7 +372,7 @@ export const WithImages: Story = {
                 alt="NEO Home Robot"
                 aria-hidden="true"
                 class="absolute inset-0 h-full w-full object-cover"
-                :src="assets + '/docs/neo2.jpeg'"
+                :src="photoSrc('neo2', 800, 600)"
               />
 
               <CardHeader class="z-10 text-white">
@@ -415,7 +414,7 @@ export const WithImages: Story = {
                 alt="NEO Home Robot"
                 aria-hidden="true"
                 class="absolute inset-0 h-full w-full object-cover"
-                :src="assets + '/docs/neo1.jpeg'"
+                :src="photoSrc('neo1', 1000, 700)"
               />
 
               <div
@@ -442,7 +441,7 @@ export const WithImages: Story = {
                   alt="Futuristic Robot"
                   class="aspect-square h-16 w-16 shrink-0 rounded-xl object-cover select-none sm:h-20 sm:w-20"
                   loading="lazy"
-                  :src="assets + '/docs/robot1.jpeg'"
+                  :src="photoSrc('robot1', 200, 200)"
                 />
                 <div class="flex flex-1 flex-col justify-center gap-1">
                   <CardTitle class="text-sm">Bridging the Future</CardTitle>
@@ -454,7 +453,7 @@ export const WithImages: Story = {
                   alt="Avocado"
                   class="aspect-square h-16 w-16 shrink-0 rounded-xl object-cover select-none sm:h-20 sm:w-20"
                   loading="lazy"
-                  :src="assets + '/docs/avocado.jpeg'"
+                  :src="photoSrc('avocado', 200, 200)"
                 />
                 <div class="flex flex-1 flex-col justify-center gap-1">
                   <CardTitle class="text-sm">Avocado Hackathon</CardTitle>
@@ -466,7 +465,7 @@ export const WithImages: Story = {
                   alt="Sound Electro event"
                   class="aspect-square h-16 w-16 shrink-0 rounded-xl object-cover select-none sm:h-20 sm:w-20"
                   loading="lazy"
-                  :src="assets + '/docs/oranges.jpeg'"
+                  :src="photoSrc('oranges', 200, 200)"
                 />
                 <div class="flex flex-1 flex-col justify-center gap-1">
                   <CardTitle class="text-sm">Sound Electro | Beyond art</CardTitle>

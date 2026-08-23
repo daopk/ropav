@@ -1,6 +1,7 @@
 import type {StoryMeta} from "../../utils/story-meta";
 import type {StoryObj} from "@storybook/vue3";
 
+import {avatarSrc} from "../../utils/story-assets";
 import {Avatar, AvatarImage} from "../avatar";
 import {SeparatorRoot} from "../separator";
 
@@ -19,7 +20,7 @@ const components = {
   Separator: SeparatorRoot,
 };
 
-const AVATAR_URL = "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/green.jpg";
+const AVATAR_URL = avatarSrc("green");
 
 const meta: StoryMeta = {
   argTypes: {

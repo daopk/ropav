@@ -4,6 +4,7 @@ import type {StoryObj} from "@storybook/vue3";
 
 import {computed, shallowRef} from "vue";
 
+import {avatarSrc} from "../../utils/story-assets";
 import {AvatarFallback, AvatarImage, AvatarRoot} from "../avatar";
 import {ButtonRoot} from "../button";
 import {DescriptionRoot} from "../description";
@@ -873,7 +874,7 @@ export const CustomTrigger: Story = {
   render: () => ({
     components: {...components, IconArrowRightFromSquare, IconGear, IconPersons},
     setup: () => ({
-      avatarUrl: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/orange.jpg",
+      avatarUrl: avatarSrc("orange"),
     }),
     template: `
       <Dropdown>

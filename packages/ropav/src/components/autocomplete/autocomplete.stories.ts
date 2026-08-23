@@ -6,6 +6,7 @@ import type {StoryObj} from "@storybook/vue3";
 import {computed, shallowRef} from "vue";
 
 import {useFilter} from "../../composables/use-filter";
+import {avatarSrc} from "../../utils/story-assets";
 import {ListLayout} from "../../utils/virtualizer-list-layout";
 import {AvatarFallback, AvatarImage, AvatarRoot} from "../avatar";
 import {ButtonRoot} from "../button";
@@ -230,27 +231,25 @@ const CITIES = [
   {country: "Spain", id: "Madrid", name: "Madrid"},
 ];
 
-const AVATARS = "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars";
-
 const USERS = [
-  {avatarUrl: `${AVATARS}/blue.jpg`, email: "bob@ropav.com", fallback: "B", id: "1", name: "Bob"},
+  {avatarUrl: avatarSrc("blue"), email: "bob@ropav.com", fallback: "B", id: "1", name: "Bob"},
   {
-    avatarUrl: `${AVATARS}/green.jpg`,
+    avatarUrl: avatarSrc("green"),
     email: "fred@ropav.com",
     fallback: "F",
     id: "2",
     name: "Fred",
   },
   {
-    avatarUrl: `${AVATARS}/purple.jpg`,
+    avatarUrl: avatarSrc("purple"),
     email: "martha@ropav.com",
     fallback: "M",
     id: "3",
     name: "Martha",
   },
-  {avatarUrl: `${AVATARS}/red.jpg`, email: "john@ropav.com", fallback: "J", id: "4", name: "John"},
+  {avatarUrl: avatarSrc("red"), email: "john@ropav.com", fallback: "J", id: "4", name: "John"},
   {
-    avatarUrl: `${AVATARS}/orange.jpg`,
+    avatarUrl: avatarSrc("orange"),
     email: "jane@ropav.com",
     fallback: "J",
     id: "5",

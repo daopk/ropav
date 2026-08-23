@@ -1,6 +1,7 @@
 import type {StoryMeta} from "../../utils/story-meta";
 import type {StoryObj} from "@storybook/vue3";
 
+import {avatarSrc} from "../../utils/story-assets";
 import {SeparatorRoot} from "../separator";
 
 import {Avatar, AvatarFallback, AvatarImage} from "./index";
@@ -21,24 +22,20 @@ const components = {
   Separator: SeparatorRoot,
 };
 
-const AVATAR = (u: number) => `https://img.heroui.chat/image/avatar?w=400&h=400&u=${u}`;
-const CIRCLE = (name: string) =>
-  `https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/${name}.jpg`;
-
 const users = [
-  {id: 1, imageUrl: AVATAR(3), name: "John"},
-  {id: 2, imageUrl: AVATAR(5), name: "Kate"},
-  {id: 3, imageUrl: AVATAR(20), name: "Emily"},
-  {id: 4, imageUrl: AVATAR(23), name: "Michael"},
-  {id: 5, imageUrl: AVATAR(16), name: "Olivia"},
+  {id: 1, imageUrl: avatarSrc(3), name: "John"},
+  {id: 2, imageUrl: avatarSrc(5), name: "Kate"},
+  {id: 3, imageUrl: avatarSrc(20), name: "Emily"},
+  {id: 4, imageUrl: avatarSrc(23), name: "Michael"},
+  {id: 5, imageUrl: avatarSrc(16), name: "Olivia"},
 ];
 
 const circles = [
-  {id: 1, imageUrl: CIRCLE("red"), name: "R"},
-  {id: 2, imageUrl: CIRCLE("orange"), name: "O"},
-  {id: 3, imageUrl: CIRCLE("green"), name: "G"},
-  {id: 4, imageUrl: CIRCLE("white"), name: "W"},
-  {id: 5, imageUrl: CIRCLE("black"), name: "B"},
+  {id: 1, imageUrl: avatarSrc("red"), name: "R"},
+  {id: 2, imageUrl: avatarSrc("orange"), name: "O"},
+  {id: 3, imageUrl: avatarSrc("green"), name: "G"},
+  {id: 4, imageUrl: avatarSrc("white"), name: "W"},
+  {id: 5, imageUrl: avatarSrc("black"), name: "B"},
 ];
 
 const meta: StoryMeta = {
@@ -73,17 +70,17 @@ export const Default: Story = {
     setup: () => ({
       args,
       delayed: [
-        {alt: "John Doe", label: "JD", src: AVATAR(3)},
-        {alt: "Junior Garcia", label: "JG", src: AVATAR(4)},
-        {alt: "Junior Garcia", label: "JG", src: AVATAR(5)},
-        {alt: "Paul", label: "PG", src: AVATAR(8)},
+        {alt: "John Doe", label: "JD", src: avatarSrc(3)},
+        {alt: "Junior Garcia", label: "JG", src: avatarSrc(4)},
+        {alt: "Junior Garcia", label: "JG", src: avatarSrc(5)},
+        {alt: "Paul", label: "PG", src: avatarSrc(8)},
       ],
       solid: [
-        {alt: "Red", label: "R", src: CIRCLE("red")},
-        {alt: "Orange", label: "O", src: CIRCLE("orange")},
-        {alt: "Green", label: "G", src: CIRCLE("green")},
-        {alt: "White", label: "W", src: CIRCLE("white")},
-        {alt: "Black", label: "B", src: CIRCLE("black")},
+        {alt: "Red", label: "R", src: avatarSrc("red")},
+        {alt: "Orange", label: "O", src: avatarSrc("orange")},
+        {alt: "Green", label: "G", src: avatarSrc("green")},
+        {alt: "White", label: "W", src: avatarSrc("white")},
+        {alt: "Black", label: "B", src: avatarSrc("black")},
       ],
     }),
     template: `
@@ -125,7 +122,7 @@ export const Default: Story = {
 export const WithDelay: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args, src: `https://app.requestly.io/delay/300/${AVATAR(3)}`}),
+    setup: () => ({args, src: `https://app.requestly.io/delay/300/${avatarSrc(3)}`}),
     template: `
       <div class="flex flex-col gap-4">
         <Avatar v-bind="args">
@@ -221,9 +218,9 @@ export const Sizes: Story = {
     components,
     setup: () => ({
       sizes: [
-        {alt: "Small", label: "SM", size: "sm", src: AVATAR(3)},
-        {alt: "Medium", label: "MD", size: "md", src: AVATAR(4)},
-        {alt: "Large", label: "LG", size: "lg", src: AVATAR(5)},
+        {alt: "Small", label: "SM", size: "sm", src: avatarSrc(3)},
+        {alt: "Medium", label: "MD", size: "md", src: avatarSrc(4)},
+        {alt: "Large", label: "LG", size: "lg", src: avatarSrc(5)},
       ],
     }),
     template: `
@@ -244,7 +241,13 @@ export const Variants: Story = {
     setup: () => ({
       args,
       colors: ["accent", "default", "success", "warning", "danger"],
-      images: [CIRCLE("blue"), CIRCLE("black"), CIRCLE("green"), CIRCLE("orange"), CIRCLE("red")],
+      images: [
+        avatarSrc("blue"),
+        avatarSrc("black"),
+        avatarSrc("green"),
+        avatarSrc("orange"),
+        avatarSrc("red"),
+      ],
       rows: [
         {label: "letter", type: "letter"},
         {label: "letter soft", type: "letter-soft"},

@@ -6,6 +6,7 @@ import type {StoryObj} from "@storybook/vue3";
 import {computed, ref} from "vue";
 
 import {useListData} from "../../composables/use-list-data";
+import {avatarSrc} from "../../utils/story-assets";
 import {AvatarFallback, AvatarImage, AvatarRoot} from "../avatar";
 import {DescriptionRoot} from "../description";
 import {EmptyStateRoot} from "../empty-state";
@@ -222,37 +223,37 @@ interface TeamMember {
 
 const TEAM_MEMBERS: TeamMember[] = [
   {
-    avatarUrl: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/blue.jpg",
+    avatarUrl: avatarSrc("blue"),
     fallback: "F",
     id: "fred",
     name: "Fred",
   },
   {
-    avatarUrl: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/green.jpg",
+    avatarUrl: avatarSrc("green"),
     fallback: "M",
     id: "michael",
     name: "Michael",
   },
   {
-    avatarUrl: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/purple.jpg",
+    avatarUrl: avatarSrc("purple"),
     fallback: "J",
     id: "jane",
     name: "Jane",
   },
   {
-    avatarUrl: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/red.jpg",
+    avatarUrl: avatarSrc("red"),
     fallback: "A",
     id: "alice",
     name: "Alice",
   },
   {
-    avatarUrl: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/orange.jpg",
+    avatarUrl: avatarSrc("orange"),
     fallback: "B",
     id: "bob",
     name: "Bob",
   },
   {
-    avatarUrl: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/black.jpg",
+    avatarUrl: avatarSrc("black"),
     fallback: "C",
     id: "charlie",
     name: "Charlie",

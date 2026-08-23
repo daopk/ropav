@@ -13,6 +13,7 @@ import {
 import {computed, shallowRef} from "vue";
 
 import {useDragAndDrop} from "../../composables/use-drag-and-drop";
+import {avatarSrc} from "../../utils/story-assets";
 import {TableLayout} from "../../utils/virtualizer-table-layout";
 import {AvatarFallback, AvatarImage, AvatarRoot} from "../avatar";
 import {Button} from "../button";
@@ -141,13 +142,11 @@ interface User {
   email: string;
 }
 
-const AVATARS = "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars";
-
 const users: User[] = [
   {
     email: "kate@acme.com",
     id: 4586932,
-    image_url: `${AVATARS}/red.jpg`,
+    image_url: avatarSrc("red"),
     name: "Kate Moore",
     role: "Chief Executive Officer",
     status: "Active",
@@ -155,7 +154,7 @@ const users: User[] = [
   {
     email: "john@acme.com",
     id: 5273849,
-    image_url: `${AVATARS}/green.jpg`,
+    image_url: avatarSrc("green"),
     name: "John Smith",
     role: "Chief Technology Officer",
     status: "Active",
@@ -163,7 +162,7 @@ const users: User[] = [
   {
     email: "sara@acme.com",
     id: 7492836,
-    image_url: `${AVATARS}/blue.jpg`,
+    image_url: avatarSrc("blue"),
     name: "Sara Johnson",
     role: "Chief Marketing Officer",
     status: "On Leave",
@@ -171,7 +170,7 @@ const users: User[] = [
   {
     email: "michael@acme.com",
     id: 8293746,
-    image_url: `${AVATARS}/purple.jpg`,
+    image_url: avatarSrc("purple"),
     name: "Michael Brown",
     role: "Chief Financial Officer",
     status: "Active",
@@ -179,7 +178,7 @@ const users: User[] = [
   {
     email: "emily@acme.com",
     id: 1234567,
-    image_url: `${AVATARS}/orange.jpg`,
+    image_url: avatarSrc("orange"),
     name: "Emily Davis",
     role: "Product Manager",
     status: "Inactive",
@@ -187,7 +186,7 @@ const users: User[] = [
   {
     email: "davis@acme.com",
     id: 9876543,
-    image_url: `${AVATARS}/black.jpg`,
+    image_url: avatarSrc("black"),
     name: "Davis Wilson",
     role: "Lead Designer",
     status: "Active",
@@ -195,7 +194,7 @@ const users: User[] = [
   {
     email: "olivia@acme.com",
     id: 3456789,
-    image_url: `${AVATARS}/red.jpg`,
+    image_url: avatarSrc("red"),
     name: "Olivia Martinez",
     role: "Frontend Engineer",
     status: "Active",
@@ -203,7 +202,7 @@ const users: User[] = [
   {
     email: "james@acme.com",
     id: 4567890,
-    image_url: `${AVATARS}/green.jpg`,
+    image_url: avatarSrc("green"),
     name: "James Taylor",
     role: "Backend Engineer",
     status: "Active",
@@ -211,7 +210,7 @@ const users: User[] = [
   {
     email: "sophia@acme.com",
     id: 5678901,
-    image_url: `${AVATARS}/blue.jpg`,
+    image_url: avatarSrc("blue"),
     name: "Sophia Anderson",
     role: "QA Engineer",
     status: "On Leave",
@@ -219,7 +218,7 @@ const users: User[] = [
   {
     email: "liam@acme.com",
     id: 6789012,
-    image_url: `${AVATARS}/purple.jpg`,
+    image_url: avatarSrc("purple"),
     name: "Liam Thomas",
     role: "DevOps Engineer",
     status: "Active",
@@ -227,7 +226,7 @@ const users: User[] = [
   {
     email: "ava@acme.com",
     id: 7890123,
-    image_url: `${AVATARS}/orange.jpg`,
+    image_url: avatarSrc("orange"),
     name: "Ava Jackson",
     role: "Data Analyst",
     status: "Inactive",
@@ -235,7 +234,7 @@ const users: User[] = [
   {
     email: "noah@acme.com",
     id: 8901234,
-    image_url: `${AVATARS}/black.jpg`,
+    image_url: avatarSrc("black"),
     name: "Noah White",
     role: "Security Engineer",
     status: "Active",
@@ -1057,7 +1056,7 @@ const generateUsers = (count: number): User[] =>
     return {
       email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}@acme.com`,
       id: index + 1,
-      image_url: `${AVATARS}/red.jpg`,
+      image_url: avatarSrc("red"),
       name: `${firstName} ${lastName}`,
       role: ROLES[index % ROLES.length]!,
       status: STATUSES[index % STATUSES.length]!,

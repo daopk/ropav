@@ -1,6 +1,8 @@
 import type {StoryMeta} from "../../utils/story-meta";
 import type {StoryObj} from "@storybook/vue3";
 
+import {iconSrc} from "../../utils/story-assets";
+
 import {SeparatorRoot} from "./index";
 
 // Registered under a flat name: a story template is compiled at runtime with no binding
@@ -64,18 +66,17 @@ export const Vertical: Story = {
 
 const items = [
   {
-    iconUrl: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/docs/3dicons/bell-small.png",
+    iconUrl: iconSrc("tabler:bell"),
     subtitle: "Receive account activity updates",
     title: "Set Up Notifications",
   },
   {
-    iconUrl: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/docs/3dicons/compass-small.png",
+    iconUrl: iconSrc("tabler:compass"),
     subtitle: "Connect your browser to your account",
     title: "Set up Browser Extension",
   },
   {
-    iconUrl:
-      "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/docs/3dicons/mint-collective-small.png",
+    iconUrl: iconSrc("tabler:diamond"),
     subtitle: "Create your first collectible",
     title: "Mint Collectible",
   },

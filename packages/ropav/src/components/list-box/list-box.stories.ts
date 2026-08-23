@@ -4,6 +4,7 @@ import type {StoryObj} from "@storybook/vue3";
 import {computed, ref} from "vue";
 
 import {useDragAndDrop} from "../../composables/use-drag-and-drop";
+import {avatarSrc} from "../../utils/story-assets";
 import {ListLayout} from "../../utils/virtualizer-list-layout";
 import {AvatarFallback, AvatarImage, AvatarRoot} from "../avatar";
 import {DescriptionRoot} from "../description";
@@ -76,8 +77,7 @@ const USERS = [
   },
 ];
 
-const avatarUrl = (color: string) =>
-  `https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/${color}.jpg`;
+const avatarUrl = avatarSrc;
 
 const userItems = (withIndicator: boolean) => `
   <ListBoxItem v-for="user in users" :key="user.id" :id="user.id" :text-value="user.name">
