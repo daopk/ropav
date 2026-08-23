@@ -6,6 +6,8 @@ import { nextTick } from "vue";
 
 import { resetTooltipWarmup } from "@/composables/use-tooltip-trigger-state";
 
+import { finishAnimations, startSlowMotion, stopSlowMotion } from "../../harness/slow-motion";
+
 import TooltipFixture from "./fixtures.vue";
 
 /** Opens and closes at once, so a case can assert what happened rather than wait for it. */
@@ -77,6 +79,8 @@ const open = async (result: RenderResult, name?: string) => {
 const rect = (element: Element) => element.getBoundingClientRect();
 
 afterEach(async () => {
+  stopSlowMotion();
+
   while (mounted.length > 0) {
     try {
       mounted.pop()!.unmount();
@@ -368,6 +372,11 @@ describe("Tooltip (browser)", () => {
 
       place(result);
 
+      // Before the hover, because the entry animation starts with it: everything below has to be
+      // read while that animation is still running, and at the stylesheet's own duration that is a
+      // couple of hundred milliseconds shared with two `userEvent` round trips.
+      startSlowMotion();
+
       await arriveWithPointer(result);
       await userEvent.hover(triggerOf(result));
       await nextTick();
@@ -381,6 +390,9 @@ describe("Tooltip (browser)", () => {
       expect(tooltip.getAttribute("data-entering")).toBe("true");
       expect(tooltip.getAnimations().length).toBeGreaterThan(0);
 
+      // Driven to the end rather than waited out — the claim is that the phase clears when the
+      // animation finishes, not that it lasts as long as the stylesheet says.
+      finishAnimations(tooltip);
       await settled(tooltip);
 
       expect(tooltip.getAttribute("data-entering")).toBeNull();
