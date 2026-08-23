@@ -1,4 +1,4 @@
-import type { Plugin, Rollup } from "vite";
+import type { Plugin } from "vite";
 
 import fs from "node:fs";
 import path from "node:path";
@@ -28,42 +28,52 @@ const replaceVersion = (): Plugin => ({
 });
 
 /**
- * `preserveModules` emits every module in the graph, including the virtual
- * sub-modules `@vitejs/plugin-vue` creates per SFC block. Those land as dead
- * `*.vue2.js` files that nothing imports. Drop whatever no entry can reach.
+ * Fold each SFC's script block back into the file named after the component.
+ *
+ * `@vitejs/plugin-vue` compiles `<script setup>` into a separate module, addressed by a query on
+ * the SFC's own id. Rollup used to inline that module; rolldown keeps it, so `preserveModules`
+ * emits two files per SFC — `card-root.js`, holding nothing but a default re-export, and
+ * `card-root.vue_vue_type_script_setup_true_vapor_true_lang.js`, holding the component. That is
+ * 342 extra files and a fifth more weight on a package whose whole point is to be imported a
+ * piece at a time.
+ *
+ * Folding is only safe because the wrapper does exactly one thing. Each is checked before it is
+ * touched: it must import the script module and nothing else, and the script module must have no
+ * other importer. Both sit in the same directory, so the relative specifiers inside the script
+ * block still resolve once it moves up.
  */
-const pruneOrphanChunks = (): Plugin => ({
+const inlineSfcScriptChunks = (): Plugin => ({
   generateBundle(_options, bundle) {
-    const reachable = new Set<string>();
-    const queue: string[] = [];
+    const SCRIPT_BLOCK = /^(.*)\.vue_vue_type_script_[^/]*\.js$/;
 
-    const isChunk = (value: Rollup.OutputAsset | Rollup.OutputChunk): value is Rollup.OutputChunk =>
-      value.type === "chunk";
+    const importerCounts = new Map<string, number>();
 
-    for (const [fileName, output] of Object.entries(bundle)) {
-      if (isChunk(output) && output.isEntry) queue.push(fileName);
-    }
-
-    while (queue.length > 0) {
-      const fileName = queue.pop();
-
-      if (fileName === undefined || reachable.has(fileName)) continue;
-      reachable.add(fileName);
-
-      const output = bundle[fileName];
-
-      if (!output || !isChunk(output)) continue;
-
-      for (const next of [...output.imports, ...output.dynamicImports]) {
-        if (!reachable.has(next)) queue.push(next);
+    for (const output of Object.values(bundle)) {
+      if (output.type !== "chunk") continue;
+      for (const imported of output.imports) {
+        importerCounts.set(imported, (importerCounts.get(imported) ?? 0) + 1);
       }
     }
 
     for (const [fileName, output] of Object.entries(bundle)) {
-      if (isChunk(output) && !reachable.has(fileName)) delete bundle[fileName];
+      const match = SCRIPT_BLOCK.exec(fileName);
+
+      if (!match || output.type !== "chunk") continue;
+      if (importerCounts.get(fileName) !== 1) continue;
+
+      const wrapperName = `${match[1]}.js`;
+      const wrapper = bundle[wrapperName];
+
+      if (!wrapper || wrapper.type !== "chunk") continue;
+      if (wrapper.imports.length !== 1 || wrapper.imports[0] !== fileName) continue;
+
+      wrapper.code = output.code;
+      wrapper.imports = output.imports;
+      wrapper.dynamicImports = output.dynamicImports;
+      delete bundle[fileName];
     }
   },
-  name: "ropav-prune-orphan-chunks",
+  name: "ropav-inline-sfc-script-chunks",
 });
 
 /**
@@ -107,7 +117,7 @@ export default defineConfig({
     },
     minify: false,
     outDir: "dist",
-    rollupOptions: {
+    rolldownOptions: {
       external,
       output: {
         entryFileNames: "[name].js",
@@ -127,7 +137,7 @@ export default defineConfig({
   },
   plugins: [
     replaceVersion(),
-    pruneOrphanChunks(),
+    inlineSfcScriptChunks(),
     // Safety net only — every SFC opts in explicitly via `<script setup lang="ts" vapor>`
     vue({ features: { vapor: true } }),
   ],

@@ -16,6 +16,7 @@ catalog:
   "@vitejs/plugin-vue": 6.0.8
   "@vue/compiler-vapor": 3.6.0-rc.5
   typescript: npm:typescript-native-bridge@6.0.3-bridge.15.tsgo.7.0.2
+  vite: 8.2.2
   vue: 3.6.0-rc.5
   vue-tsc: 3.3.10
 

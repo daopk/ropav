@@ -3,7 +3,7 @@ import { default as vue } from "@vitejs/plugin-vue";
 import { default as Icons } from "unplugin-icons/vite";
 import { defineConfig } from "vite";
 
-import { vaporIconCompiler } from "./.storybook/vapor-icon-compiler";
+import { vaporIconCompiler } from "./.storybook/vapor-icon-compiler.ts";
 
 export default defineConfig({
   optimizeDeps: {
