@@ -1,5 +1,4 @@
 packages:
-  - "apps/**/**"
   - "packages/**/**"
 
 # The vue toolchain moves in lockstep: `@vue/compiler-vapor` must match `vue` exactly, and
