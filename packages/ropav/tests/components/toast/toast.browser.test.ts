@@ -274,22 +274,24 @@ describe("Toast (browser)", () => {
         vi.advanceTimersByTime(TOAST_CLOCK);
         await waitForNoRegion();
       });
-    });
 
-    it("holds the clock while focus is inside the stack", async () => {
-      const queue = new ToastQueue();
+      it("holds the clock while focus is inside the stack", async () => {
+        const queue = new ToastQueue();
 
-      render({ queue });
-      queue.add({ title: "Saved" }, { timeout: 400 });
-      await waitForToasts(1);
+        render({ queue });
+        queue.add({ title: "Saved" }, { timeout: TOAST_CLOCK });
+        await waitForToasts(1);
 
-      toasts()[0]!.focus();
+        toasts()[0]!.focus();
 
-      await new Promise((resolve) => setTimeout(resolve, 900));
-      await settle();
+        vi.advanceTimersByTime(TOAST_CLOCK * 5);
 
-      // Reading a toast with the keyboard must not be a race against its own timeout.
-      expect(region()).not.toBeNull();
+        // Reading a toast with the keyboard must not be a race against its own timeout.
+        expect(queue.visibleToasts).toHaveLength(1);
+
+        await settle();
+        expect(region()).not.toBeNull();
+      });
     });
   });
 
