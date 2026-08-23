@@ -1,6 +1,6 @@
 import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
 import { renderVapor } from "@ropav/testing/helpers/vue";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
@@ -59,6 +59,9 @@ const waitForToasts = (count: number, budget = 2000) =>
 
 const waitForNoRegion = (budget = 2000) =>
   waitUntil("the region to go away", () => region() === null, budget);
+
+/** The timeout the pausing tests give a toast, and the unit they advance the fake clock in. */
+const TOAST_CLOCK = 400;
 
 describe("Toast (browser)", () => {
   afterEach(() => {
@@ -210,23 +213,67 @@ describe("Toast (browser)", () => {
       await waitForNoRegion();
     });
 
-    it("holds the clock while the pointer is over the stack and releases it after", async () => {
-      const queue = new ToastQueue();
+    describe("pausing", () => {
+      /**
+       * The toast's own clock, and nothing else.
+       *
+       * Waiting the timeout out on the real clock is what made the pointer half of this flaky. A
+       * toast can only be shown to outlive its timeout if the timeout is shorter than the wait —
+       * and the same timeout also has to survive the `userEvent` round trip and the frame polling
+       * that come first, which a full-suite run stretches by whole seconds. Both halves are bets
+       * on scheduling, and the first one to lose takes the clock out from under a pointer that has
+       * not arrived yet: `hover` then retries against a toast mid-unmount until Playwright's own
+       * action timeout, which is the ~15s failure this replaces. Advancing the clock by hand makes
+       * the same statement without either bet.
+       *
+       * `Date` is faked *with* the timers rather than instead of them: `Timer` sets the timeout
+       * with `setTimeout` but works out what a paused clock has left from `Date.now()`, so leaving
+       * one of the two real would have it subtracting a real round trip from a fake delay and
+       * arriving at a clock with nothing left to resume.
+       *
+       * What stays real is what makes this a browser test rather than a slower `jsdom` one:
+       * `performance` and `requestAnimationFrame`, which the frame polling above and the view
+       * transition run on, and the pointer itself.
+       */
+      beforeEach(() => {
+        vi.useFakeTimers({ toFake: ["Date", "clearTimeout", "setTimeout"] });
+      });
 
-      render({ queue });
-      queue.add({ title: "Saved" }, { timeout: 400 });
-      await waitForToasts(1);
+      afterEach(() => {
+        vi.clearAllTimers();
+        vi.useRealTimers();
+      });
 
-      await userEvent.hover(toasts()[0]!);
+      it("holds the clock while the pointer is over the stack and releases it after", async () => {
+        const queue = new ToastQueue();
 
-      // A real clock: the point is that the toast outlives its own timeout while hovered.
-      await new Promise((resolve) => setTimeout(resolve, 900));
-      await settle();
-      expect(region()).not.toBeNull();
+        render({ queue });
+        queue.add({ title: "Saved" }, { timeout: TOAST_CLOCK });
+        await waitForToasts(1);
 
-      await userEvent.unhover(toasts()[0]!);
+        await userEvent.hover(toasts()[0]!);
 
-      await waitForNoRegion();
+        // Well past the timeout: a clock the pointer failed to reach would have fired long before
+        // here, so this is the same claim the real-clock version made — the toast outlives its own
+        // timeout while hovered — with the scheduler taken out of it.
+        vi.advanceTimersByTime(TOAST_CLOCK * 5);
+
+        // The queue, not the document, is what a fired clock shows up in *now*: `close` splices
+        // synchronously, while the view transition keeps the toast on screen for several frames
+        // afterwards — long enough that a region read on the next tick would still find one.
+        expect(queue.visibleToasts).toHaveLength(1);
+
+        await settle();
+        expect(region()).not.toBeNull();
+
+        await userEvent.unhover(toasts()[0]!);
+
+        // Released rather than restarted: the clock picks up with what it had left, which is all
+        // of it here because the only time that passed was time it spent held. So one timeout's
+        // worth is exactly what it takes — and the toast really goes, through a real transition.
+        vi.advanceTimersByTime(TOAST_CLOCK);
+        await waitForNoRegion();
+      });
     });
 
     it("holds the clock while focus is inside the stack", async () => {
