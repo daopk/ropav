@@ -84,6 +84,9 @@ describe("Modal (browser)", () => {
     it("animates both elements in", async () => {
       const result = render();
 
+      // Before the click, because both entry animations start with it.
+      startSlowMotion();
+
       await userEvent.click(triggerOf(result));
       await nextTick();
       await nextTick();
@@ -98,6 +101,10 @@ describe("Modal (browser)", () => {
       expect(container.getAttribute("data-entering")).toBe("true");
       expect(backdrop.getAnimations().length).toBeGreaterThan(0);
       expect(container.getAnimations().length).toBeGreaterThan(0);
+
+      // Each waits for its own entry animation, so each has to be sent to its end.
+      finishAnimations(backdrop);
+      finishAnimations(container);
 
       await expect.poll(() => backdrop.getAttribute("data-entering")).toBeNull();
       await expect.poll(() => container.getAttribute("data-entering")).toBeNull();

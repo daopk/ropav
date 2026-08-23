@@ -4,6 +4,8 @@ import { afterEach, describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
+import { finishAnimations, startSlowMotion, stopSlowMotion } from "../../harness/slow-motion";
+
 import DrawerFixture from "./fixtures.vue";
 
 const mounted: { unmount: () => void }[] = [];
@@ -58,6 +60,8 @@ const close = async (backdrop: HTMLElement) => {
 };
 
 afterEach(() => {
+  stopSlowMotion();
+
   while (mounted.length > 0) {
     try {
       mounted.pop()!.unmount();
@@ -122,6 +126,10 @@ describe("Drawer (browser)", () => {
       const content = slot("drawer-content")!;
       const dialog = slot("drawer-dialog")!;
 
+      // After the entry has settled, so only the exit is stretched: every assertion below reads a
+      // state that exists solely while the slide is running.
+      startSlowMotion();
+
       await userEvent.keyboard("{Escape}");
       await nextTick();
       await nextTick();
@@ -138,6 +146,10 @@ describe("Drawer (browser)", () => {
       expect(content.isConnected).toBe(true);
       expect(dialog.isConnected).toBe(true);
       expect(getComputedStyle(dialog).translate).not.toBe("none");
+
+      // The backdrop's own transition is what holds the union open, so it is the one to finish.
+      finishAnimations(backdrop);
+      finishAnimations(content);
 
       await settled(backdrop);
       await nextTick();

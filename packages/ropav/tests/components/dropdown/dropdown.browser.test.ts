@@ -4,6 +4,8 @@ import { afterEach, describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
+import { finishAnimations, startSlowMotion, stopSlowMotion } from "../../harness/slow-motion";
+
 import DropdownFixture from "./fixtures.vue";
 
 const render = (props: Record<string, unknown> = {}) => renderVapor(DropdownFixture, { props });
@@ -81,6 +83,8 @@ const open = async (result: RenderResult) => {
 };
 
 afterEach(() => {
+  stopSlowMotion();
+
   // The page-wide scroll lock and the `inert` marking both live outside the container, so a leaked
   // one would show up as an unrelated failure in the next suite.
   document.documentElement.style.overflow = "";
@@ -199,6 +203,9 @@ describe("Dropdown (browser)", () => {
     it("animates in from its anchor point and then stops reporting entry", async () => {
       const result = render();
 
+      // Before the press, because the entry animation starts with it.
+      startSlowMotion();
+
       press(result.getByRole("button", { name: "Menu" }));
       await nextTick();
       await nextTick();
@@ -209,6 +216,7 @@ describe("Dropdown (browser)", () => {
       expect(popover).toHaveAttribute("data-entering", "true");
       expect(popover.getAnimations().length).toBeGreaterThan(0);
 
+      finishAnimations(popover);
       await settled(popover);
 
       // Left in place, the entry styles would hold the popover at its start frame for good.
@@ -224,6 +232,10 @@ describe("Dropdown (browser)", () => {
 
       const popover = await open(result);
       const before = popover.getBoundingClientRect();
+
+      // After the entry has settled, so only the exit is stretched: the position below is read
+      // while the popover is still on screen leaving.
+      startSlowMotion();
 
       press(document.body);
       await nextTick();
@@ -246,6 +258,9 @@ describe("Dropdown (browser)", () => {
       const result = render();
       const popover = await open(result);
 
+      // After the entry has settled, so only the exit is stretched.
+      startSlowMotion();
+
       press(document.body);
       await nextTick();
 
@@ -254,6 +269,7 @@ describe("Dropdown (browser)", () => {
       expect(popover).toHaveAttribute("data-exiting", "true");
       expect(popover.isConnected).toBe(true);
 
+      finishAnimations(popover);
       await Promise.allSettled(popover.getAnimations().map((animation) => animation.finished));
       // Two ticks: the exit is reported as finished one tick after the animation settles, and the
       // element leaves the DOM on the render that follows.

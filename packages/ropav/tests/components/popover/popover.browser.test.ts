@@ -447,6 +447,10 @@ describe("Popover (browser)", () => {
       const result = render();
 
       place(result);
+
+      // Before the click, because the entry animation starts with it.
+      startSlowMotion();
+
       await userEvent.click(triggerOf(result));
       await nextTick();
       await nextTick();
@@ -459,6 +463,7 @@ describe("Popover (browser)", () => {
       expect(popover).toHaveAttribute("data-entering", "true");
       expect(popover.getAnimations().length).toBeGreaterThan(0);
 
+      finishAnimations(popover);
       await settled(popover);
 
       expect(popover.hasAttribute("data-entering")).toBe(false);

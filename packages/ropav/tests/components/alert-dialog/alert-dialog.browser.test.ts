@@ -4,6 +4,8 @@ import { afterEach, describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
+import { finishAnimations, startSlowMotion, stopSlowMotion } from "../../harness/slow-motion";
+
 import AlertDialogFixture from "./fixtures.vue";
 
 const mounted: { unmount: () => void }[] = [];
@@ -59,6 +61,8 @@ const close = async (result: RenderResult, backdrop: HTMLElement) => {
 };
 
 afterEach(() => {
+  stopSlowMotion();
+
   while (mounted.length > 0) {
     try {
       mounted.pop()!.unmount();
@@ -83,6 +87,9 @@ describe("AlertDialog (browser)", () => {
     it("animates both elements in", async () => {
       const result = render();
 
+      // Before the click, because both entry animations start with it.
+      startSlowMotion();
+
       await userEvent.click(triggerOf(result));
       await nextTick();
       await nextTick();
@@ -98,6 +105,10 @@ describe("AlertDialog (browser)", () => {
       expect(backdrop.getAnimations().length).toBeGreaterThan(0);
       expect(container.getAnimations().length).toBeGreaterThan(0);
 
+      // Each waits for its own entry animation, so each has to be sent to its end.
+      finishAnimations(backdrop);
+      finishAnimations(container);
+
       await expect.poll(() => backdrop.getAttribute("data-entering")).toBeNull();
       await expect.poll(() => container.getAttribute("data-entering")).toBeNull();
 
@@ -110,6 +121,9 @@ describe("AlertDialog (browser)", () => {
       const backdrop = await open(result);
       const container = slot("alert-dialog-container")!;
 
+      // After the entry has settled, so only the exit is stretched.
+      startSlowMotion();
+
       await userEvent.click(result.screen.getByTestId("close-from-slot") as unknown as HTMLElement);
       await nextTick();
       await nextTick();
@@ -119,6 +133,10 @@ describe("AlertDialog (browser)", () => {
       expect(container.getAttribute("data-exiting")).toBe("true");
       expect(backdrop.isConnected).toBe(true);
       expect(container.isConnected).toBe(true);
+
+      // Both, because the exit state is the union of the two.
+      finishAnimations(backdrop);
+      finishAnimations(container);
 
       await settled(backdrop);
       await nextTick();

@@ -3,6 +3,8 @@ import { afterEach, describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
+import { startSlowMotion, stopSlowMotion } from "../../harness/slow-motion";
+
 import DrawerFixture from "./fixtures.vue";
 
 const mounted: { unmount: () => void }[] = [];
@@ -95,6 +97,8 @@ const watchCapture = (panel: HTMLElement) => {
 };
 
 afterEach(() => {
+  stopSlowMotion();
+
   while (mounted.length > 0) {
     try {
       mounted.pop()!.unmount();
@@ -140,6 +144,10 @@ describe("Drawer drag (browser)", () => {
     const height = panel.offsetHeight;
     const box = panel.getBoundingClientRect();
     const start = 8;
+
+    // The two assertions below read the panel mid-exit — the offset the finger left behind is only
+    // on it while the slide is still running, so the slide is stretched rather than raced.
+    startSlowMotion();
 
     await dragPanel(
       { x: Math.round(box.width / 2), y: start },

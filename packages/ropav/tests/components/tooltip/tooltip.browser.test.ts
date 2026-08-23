@@ -407,6 +407,9 @@ describe("Tooltip (browser)", () => {
 
       const tooltip = await open(result);
 
+      // After the entry has settled, so only the exit is stretched.
+      startSlowMotion();
+
       await userEvent.hover(result.getByRole("button", { name: "Outside" }) as HTMLElement);
       await nextTick();
       await nextTick();
@@ -416,6 +419,7 @@ describe("Tooltip (browser)", () => {
       expect(tooltip.getAttribute("data-exiting")).toBe("true");
       expect(tooltip.isConnected).toBe(true);
 
+      finishAnimations(tooltip);
       await settled(tooltip);
       await nextTick();
       await nextTick();
