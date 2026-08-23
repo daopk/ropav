@@ -12,6 +12,8 @@ const render = (props: Record<string, unknown> = {}) => renderVapor(PopoverFixtu
 
 type RenderResult = ReturnType<typeof render>;
 
+const nextFrame = () => new Promise((resolve) => requestAnimationFrame(resolve));
+
 /** Wait for the entry or exit animation to finish, so the popover is measured at its final size. */
 const settled = async (element: HTMLElement) => {
   await Promise.allSettled(element.getAnimations().map((animation) => animation.finished));
@@ -159,6 +161,20 @@ describe("Popover (browser)", () => {
       result.unmount();
     });
 
+    /**
+     * The page itself, and deliberately not the `#outside` button.
+     *
+     * Two separate ways out of an overlay, and only one of them is being denied here.
+     * `isDismissable` is false while the page stays live, so the press-outside path does not
+     * dismiss — the press was meant for whatever it landed on. `shouldCloseOnBlur` is true
+     * regardless, so focus leaving still closes it, which is the `focus leaving` group below.
+     *
+     * Pressing a focusable element is both at once: the press is ignored and the focus it moves
+     * closes the popover anyway. This case used to press the button and assert the popover was
+     * still there, which passed only because a closing popover stays in the document for the
+     * length of its exit animation — so it was reading an animation, not a decision, and it
+     * failed whenever the animation finished first.
+     */
     it("stays open on a press outside a popover that leaves the page live", async () => {
       const result = render({ isNonModal: true });
 
@@ -166,13 +182,17 @@ describe("Popover (browser)", () => {
 
       const popover = await open(result);
 
-      await userEvent.click(result.container.querySelector<HTMLElement>("#outside")!);
-      await nextTick();
-      await nextTick();
-      await nextTick();
+      await userEvent.click(document.documentElement);
 
-      // A popover that leaves the page live is not dismissed by pressing the page: the press was
-      // meant for whatever it landed on. Escape is the way out.
+      // The trigger's own state, which flips on the decision rather than on the animation that
+      // follows it, and read across several frames so a late close cannot pass as no close.
+      for (let frame = 0; frame < 4; frame += 1) {
+        await nextFrame();
+        await nextTick();
+
+        expect(triggerOf(result)).toHaveAttribute("aria-expanded", "true");
+      }
+
       expect(result.screen.getByRole("dialog")).toBeTruthy();
 
       await close(popover);
