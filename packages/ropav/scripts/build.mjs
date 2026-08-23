@@ -43,7 +43,6 @@ async function generateTypes() {
     {
       compilerOptions: {
         allowSyntheticDefaultImports: true,
-        baseUrl: ".",
         declaration: true,
         declarationMap: false,
         emitDeclarationOnly: true,
