@@ -20,7 +20,27 @@ const renderInputOTP = (props: Record<string, unknown> = {}) => {
   };
 };
 
-const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+/**
+ * Poll rather than sleep.
+ *
+ * Everything the boxes are drawn from reaches the engine through the document's `selectionchange`,
+ * which the browser queues as a task rather than firing inline — so the mirror lands some time
+ * after the call that moved the caret, and the render lands after that. A fixed sleep is a guess at
+ * how long the pair takes, and the guess is what a loaded machine invalidates. This waits for the
+ * answer instead, and says what it was waiting for when it never comes.
+ */
+const waitUntil = async (what: string, predicate: () => boolean, budget = 2000): Promise<void> => {
+  const started = performance.now();
+
+  while (performance.now() - started < budget) {
+    if (predicate()) return;
+
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    await nextTick();
+  }
+
+  throw new Error(`timed out after ${budget}ms waiting for ${what}`);
+};
 
 /**
  * A paste carrying text, delivered to the control.
@@ -125,8 +145,7 @@ describe("InputOTP (browser)", () => {
 
     await userEvent.click(control);
     await userEvent.keyboard("{Backspace}");
-    await nextTick();
-    await wait(60);
+    await waitUntil("the caret to walk back a box", () => activeIndex(container) === 2);
 
     expect(slotAt(2)).toHaveTextContent("");
     expect(activeIndex(container)).toBe(2);
@@ -144,8 +163,7 @@ describe("InputOTP (browser)", () => {
 
     await userEvent.click(control);
     control.setSelectionRange(2, 2);
-    await wait(60);
-    await nextTick();
+    await waitUntil("the caret to snap onto a single box", () => activeIndex(container) === 1);
 
     expect(activeIndex(container)).toBe(1);
     expect(control.selectionStart).toBe(1);
@@ -159,8 +177,10 @@ describe("InputOTP (browser)", () => {
 
     await userEvent.click(control);
     control.setSelectionRange(0, 6);
-    await wait(60);
-    await nextTick();
+    await waitUntil(
+      "the whole code to be mirrored as selected",
+      () => activeIndex(container) === 0,
+    );
 
     const active = [...container.querySelectorAll('[data-slot="input-otp-slot"]')].map(
       (element) => element.getAttribute("data-active") === "true",
@@ -172,11 +192,16 @@ describe("InputOTP (browser)", () => {
   });
 
   it("replaces the whole code when a full selection is typed over", async () => {
-    const { control, slotAt, unmount } = renderInputOTP({ defaultValue: "123456" });
+    const { container, control, slotAt, unmount } = renderInputOTP({ defaultValue: "123456" });
 
     await userEvent.click(control);
     control.setSelectionRange(0, 6);
-    await wait(60);
+    // The keystroke has to land on a selection the engine has already taken in, or it replaces a
+    // caret rather than the whole code — which is the thing under test.
+    await waitUntil(
+      "the whole code to be mirrored as selected",
+      () => activeIndex(container) === 0,
+    );
     await userEvent.keyboard("9");
     await nextTick();
 
