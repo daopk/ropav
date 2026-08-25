@@ -71,10 +71,118 @@ async function generateTypes() {
 
   try {
     execSync("vue-tsc --project tsconfig.build.json", { cwd: rootDir, stdio: "inherit" });
+    await renameSfcDeclarations();
+    await rewriteDeclarationSpecifiers();
     console.log("✅ TypeScript declarations generated successfully");
   } finally {
     await fs.remove(tsconfigPath);
   }
+}
+
+/** Walk `dist` and hand every file to `visit`. */
+async function walkDist(visit) {
+  async function walk(dir) {
+    for (const entry of await fs.readdir(dir, { withFileTypes: true })) {
+      const entryPath = path.join(dir, entry.name);
+
+      if (entry.isDirectory()) await walk(entryPath);
+      else await visit(entryPath);
+    }
+  }
+
+  await walk(distDir);
+}
+
+/**
+ * Name each SFC declaration after the JS file Vite emits for it.
+ *
+ * Two things are off otherwise. The tsgo bridge names a declaration by splitting
+ * the source name at its *first* dot, so Volar's virtual `button.vue.ts` lands as
+ * `button.vue.d.vue.ts` rather than `button.vue.d.ts`. And even spelled right,
+ * `button.vue.d.ts` pairs with a `button.vue.js` that Vite never emits — the
+ * bundle calls it `button.js`. Dropping the `.vue` infix settles both, and lets
+ * `rewriteDeclarationSpecifiers` point `./button.vue` at `./button.js`.
+ */
+async function renameSfcDeclarations() {
+  let renamed = 0;
+
+  await walkDist(async (filePath) => {
+    const suffix = [".vue.d.vue.ts", ".vue.d.ts"].find((candidate) => filePath.endsWith(candidate));
+
+    if (!suffix) return;
+
+    const target = `${filePath.slice(0, -suffix.length)}.d.ts`;
+
+    // A `button.ts` sitting beside `button.vue` would have claimed this name already.
+    if (fs.existsSync(target)) {
+      throw new Error(
+        `Cannot rename ${path.relative(distDir, filePath)}: ${path.basename(target)} exists`,
+      );
+    }
+
+    await fs.rename(filePath, target);
+    renamed++;
+  });
+
+  if (renamed > 0) console.log(`   ↳ renamed ${renamed} SFC declarations to match their JS output`);
+}
+
+/** `from "…"` and `import("…")`, capturing the specifier. */
+const RELATIVE_SPECIFIER = /(\bfrom\s*|\bimport\s*\(\s*)(["'])(\.[^"']*)\2/g;
+
+/**
+ * Give every relative specifier in the emitted `.d.ts` files an explicit `.js`
+ * extension.
+ *
+ * `moduleResolution: "bundler"` lets `vue-tsc` emit `./modal.types` and `../..`
+ * verbatim. Bundlers cope; a consumer on `node16`/`nodenext` does not, because
+ * ESM resolution there has no extension search and no directory index. Rewriting
+ * to `./modal.types.js` and `../../index.js` keeps both happy — TypeScript maps
+ * the `.js` back onto the neighbouring `.d.ts` under every resolution mode.
+ */
+async function rewriteDeclarationSpecifiers() {
+  const unresolved = [];
+  let rewritten = 0;
+
+  /** Resolve `specifier` against `dist` and return it with an explicit extension. */
+  function withExtension(specifier, fromFile) {
+    if (/\.(?:js|json|css)$/.test(specifier)) return specifier;
+
+    // `./button.vue` now has its declaration at `button.d.ts`, next to `button.js`.
+    const target = specifier.endsWith(".vue") ? specifier.slice(0, -".vue".length) : specifier;
+    const resolved = path.resolve(path.dirname(fromFile), target);
+
+    if (fs.existsSync(path.join(resolved, "index.d.ts"))) return `${target}/index.js`;
+    if (fs.existsSync(`${resolved}.d.ts`)) return `${target}.js`;
+
+    unresolved.push(`${path.relative(distDir, fromFile)} → ${specifier}`);
+
+    return specifier;
+  }
+
+  await walkDist(async (filePath) => {
+    if (!filePath.endsWith(".d.ts")) return;
+
+    const source = await fs.readFile(filePath, "utf8");
+    const output = source.replace(RELATIVE_SPECIFIER, (match, lead, quote, specifier) => {
+      const next = withExtension(specifier, filePath);
+
+      if (next === specifier) return match;
+      rewritten++;
+
+      return `${lead}${quote}${next}${quote}`;
+    });
+
+    if (output !== source) await fs.writeFile(filePath, output);
+  });
+
+  if (unresolved.length > 0) {
+    throw new Error(
+      `Declaration specifiers that resolve to nothing:\n  ${unresolved.join("\n  ")}`,
+    );
+  }
+
+  console.log(`   ↳ pinned ${rewritten} relative specifiers to explicit .js paths`);
 }
 
 async function logComponentCount() {
