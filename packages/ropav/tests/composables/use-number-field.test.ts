@@ -593,8 +593,8 @@ describe("useNumberField", () => {
       // A real reset, not a synthetic `reset` event. The browser restores a control from its
       // `value` *attribute*, which a Vapor binding never writes, so the element is blanked — and
       // with the state already holding the default, nothing changes and no binding write follows,
-      // so the field would be left empty. The write also has to be a tick out: the `reset` event
-      // is dispatched before the browser puts the controls back.
+      // so the field would be left empty. What saves it is the attribute being kept in step
+      // continuously, so the restore has the right value to land on.
       const { input, unmount } = mount({ defaultValue: 5, step: 1, withForm: true });
 
       await nextTick();

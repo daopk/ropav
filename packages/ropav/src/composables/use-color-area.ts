@@ -3,7 +3,7 @@ import type { ColorAreaState } from "./use-color-area-state";
 import type { MoveMoveEvent } from "./use-move";
 import type { CSSProperties, ComputedRef, MaybeRefOrGetter, Ref } from "vue";
 
-import { computed, nextTick, onScopeDispose, shallowRef, toValue, watch } from "vue";
+import { computed, onScopeDispose, shallowRef, toValue, watch } from "vue";
 
 import { colorStrings } from "../i18n/color";
 import { setFormValue } from "../utils/form-value";
@@ -155,16 +155,7 @@ export const useColorArea = (options: UseColorAreaOptions): UseColorAreaReturn =
     immediate: true,
   });
 
-  useFormReset(
-    inputXEl,
-    () => state.defaultValue.value,
-    (value) => {
-      state.setValue(value);
-      // Belt and braces alongside the attribute the watcher above keeps in step: this covers a
-      // reset called from script, where the restore happens before that watcher has run.
-      void nextTick(reassert);
-    },
-  );
+  useFormReset(inputXEl, () => state.defaultValue.value, state.setValue);
 
   /** Where the thumb is during a drag, in fractions of the area — not in pixels. */
   let currentPosition: { x: number; y: number } | null = null;

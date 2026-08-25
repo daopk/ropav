@@ -340,8 +340,8 @@ describe("useColorField", () => {
       // reset blanks the element, because the browser restores a control from its `value`
       // *attribute* and a Vapor binding only ever writes the property. With the state already
       // holding the default, nothing changes and no binding write follows — so the field would
-      // sit there empty. And the write has to be a tick out: the `reset` event is dispatched
-      // before the browser puts the controls back, so a write from inside the listener is lost.
+      // sit there empty. What saves it is the attribute being kept in step continuously, which
+      // means the restore has the right value to land on before the event is ever dispatched.
       const { input, unmount } = mount({ defaultValue: "#0485F7", withForm: true });
 
       await nextTick();
@@ -360,8 +360,8 @@ describe("useColorField", () => {
     it("puts the colour back after the field was edited", async () => {
       // A real reset, not a synthetic `reset` event: the browser restores a control from its
       // `value` *attribute*, which a Vapor binding never writes, so an input with no attribute
-      // comes back empty. The write has to happen a tick after the event, because the event is
-      // dispatched before the browser puts the controls back.
+      // comes back empty. The attribute is kept in step as the value changes, so the restore
+      // reads the default rather than nothing.
       const { field, form, input, unmount } = mount({ defaultValue: "#0485F7", withForm: true });
 
       await nextTick();

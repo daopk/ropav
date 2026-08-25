@@ -8,7 +8,7 @@ import type { SpinStepperHandlers } from "./use-spin-button";
 import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
 import { NumberFormatter } from "@internationalized/number";
-import { computed, nextTick, shallowRef, toValue, watch } from "vue";
+import { computed, shallowRef, toValue, watch } from "vue";
 
 import { setFormValue } from "../utils/form-value";
 import { announce } from "../utils/live-announcer";
@@ -246,17 +246,7 @@ export const useNumberField = (options: UseNumberFieldOptions = {}): UseNumberFi
     validate: state.validate,
   });
 
-  useFormReset(
-    element,
-    () => state.defaultNumberValue.value,
-    (value) => {
-      state.setNumberValue(value);
-      // Belt and braces. The attribute the field keeps in step covers a reset the browser starts;
-      // this covers one called from script, where the restore happens before the watcher that
-      // mirrors the attribute has run.
-      void nextTick(reassert);
-    },
-  );
+  useFormReset(element, () => state.defaultNumberValue.value, state.setNumberValue);
 
   /**
    * Range validation borrowed from a real number input.

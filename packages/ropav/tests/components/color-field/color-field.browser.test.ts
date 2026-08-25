@@ -207,7 +207,7 @@ describe("ColorField (browser)", () => {
   describe("a form", () => {
     it("puts the field back to its default on a real reset", async () => {
       // The browser restores a control from its `value` *attribute*, which a Vapor binding never
-      // writes — so the field has to put its own text back, a tick after the event.
+      // writes — so the field has to keep that attribute in step for the restore to land on.
       const { container, unmount } = renderField({
         defaultValue: "#0485F7",
         name: "color",

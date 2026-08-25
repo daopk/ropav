@@ -3,7 +3,7 @@ import type { FieldIdsContext } from "./use-field-ids";
 import type { TextFieldHandlers } from "./use-text-field";
 import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import { computed, nextTick, shallowRef, toValue, watch } from "vue";
+import { computed, shallowRef, toValue, watch } from "vue";
 
 import { setFormValue } from "../utils/form-value";
 
@@ -143,16 +143,7 @@ export const useColorField = (options: UseColorFieldOptions = {}): UseColorField
     validate: state.validate,
   });
 
-  useFormReset(
-    field.element,
-    () => state.defaultColorValue.value,
-    (value) => {
-      state.setColorValue(value);
-      // Belt and braces alongside the attribute the watcher above keeps in step: this covers a
-      // reset called from script, where the restore happens before that watcher has run.
-      void nextTick(reassert);
-    },
-  );
+  useFormReset(field.element, () => state.defaultColorValue.value, state.setColorValue);
 
   /**
    * Whether the input has focus, which gates the wheel.
