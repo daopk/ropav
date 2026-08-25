@@ -2,6 +2,7 @@ import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
 import { computed, nextTick, onScopeDispose, shallowRef, toValue, watch } from "vue";
 
+import { createAnimationSettleWaiter } from "../utils/animation-settled";
 import { createContext } from "../utils/create-context";
 
 /** What an element leaves behind for whichever element claims its name next. */
@@ -101,7 +102,6 @@ export const useSharedElement = (options: UseSharedElementOptions): UseSharedEle
   let frame: number | null = null;
   /** The snapshot this element stored, so a newer one is never mistaken for it. */
   let stored: SharedElementSnapshot | null = null;
-  let generation = 0;
 
   const cancelFrame = () => {
     if (frame != null && typeof cancelAnimationFrame === "function") cancelAnimationFrame(frame);
@@ -122,41 +122,7 @@ export const useSharedElement = (options: UseSharedElementOptions): UseSharedEle
     });
   };
 
-  /**
-   * Resolve once every animation running on the element has settled.
-   *
-   * Read a tick after being asked for, because the state that triggers the animations is rendered
-   * as an attribute and reading before that attribute is in the DOM finds no animations at all.
-   */
-  const whenSettled = (onEnd: () => void) => {
-    const current = ++generation;
-
-    void nextTick(() => {
-      if (cancelled || current !== generation) return;
-
-      const element = getElement();
-
-      if (!element || typeof element.getAnimations !== "function") {
-        onEnd();
-
-        return;
-      }
-
-      const animations = element.getAnimations();
-
-      if (animations.length === 0) {
-        onEnd();
-
-        return;
-      }
-
-      // `allSettled`, not `all`: an interrupted animation rejects, and an interruption still has
-      // to clear the state or the element would stay at its first frame for good.
-      void Promise.allSettled(animations.map((animation) => animation.finished)).then(() => {
-        if (!cancelled && current === generation) onEnd();
-      });
-    });
-  };
+  const settle = createAnimationSettleWaiter(getElement);
 
   const takeSnapshot = () => {
     const element = getElement();
@@ -271,7 +237,7 @@ export const useSharedElement = (options: UseSharedElementOptions): UseSharedEle
       scope.snapshots.delete(name.value);
       state.value = "exiting";
 
-      whenSettled(() => {
+      settle.whenSettled(() => {
         if (state.value === "exiting") state.value = "hidden";
       });
     });
@@ -323,6 +289,7 @@ export const useSharedElement = (options: UseSharedElementOptions): UseSharedEle
 
   onScopeDispose(() => {
     cancelled = true;
+    settle.cancel();
     cancelFrame();
     /*
      * Teardown, which the edge above cannot see: an element removed along with whatever held it

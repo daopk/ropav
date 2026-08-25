@@ -1,6 +1,8 @@
 import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import { computed, nextTick, onScopeDispose, shallowRef, toValue, watch } from "vue";
+import { computed, onScopeDispose, shallowRef, toValue, watch } from "vue";
+
+import { createAnimationSettleWaiter } from "../utils/animation-settled";
 
 export interface UseEnterExitOptions {
   /** The animated element. */
@@ -60,56 +62,16 @@ export const useEnterExit = (options: UseEnterExitOptions): UseEnterExitReturn =
   const isEntering = computed(() => entering.value && isReady.value);
   const isExiting = computed(() => exitState.value === "exiting");
 
-  let cancelled = false;
-
   /**
-   * The latest wait of each phase, so a superseded one cannot resolve over the top of it.
-   *
-   * One counter per phase rather than one shared: entry and exit are waited for independently, and
-   * a single counter meant an exit beginning while the entry was still animating invalidated that
-   * entry's wait for good. Nothing ever cleared the entry state after that, and the element stayed
-   * at the first frame of its entry animation — scaled down and fully transparent, so an overlay
-   * closed and reopened quickly became invisible until it was destroyed.
+   * A waiter per phase rather than one shared, because entry and exit are waited for
+   * independently. Sharing one meant an exit beginning while the entry was still animating
+   * superseded that entry's wait for good. Nothing ever cleared the entry state after that, and
+   * the element stayed at the first frame of its entry animation — scaled down and fully
+   * transparent, so an overlay closed and reopened quickly became invisible until it was
+   * destroyed.
    */
-  const generations = { entering: 0, exiting: 0 };
-
-  /**
-   * Resolve once every animation running on the element has settled.
-   *
-   * The animations are read a tick after being asked for, not straight away: the state that
-   * triggers them is rendered as an attribute, and reading before that attribute is in the DOM
-   * finds no animations at all — which would clear the state again and leave the animation never
-   * playing.
-   */
-  const whenSettled = (phase: "entering" | "exiting", onEnd: () => void) => {
-    const current = ++generations[phase];
-
-    void nextTick(() => {
-      if (cancelled || current !== generations[phase]) return;
-
-      const element = getElement();
-
-      if (!element || typeof element.getAnimations !== "function") {
-        onEnd();
-
-        return;
-      }
-
-      const animations = element.getAnimations();
-
-      if (animations.length === 0) {
-        onEnd();
-
-        return;
-      }
-
-      // `allSettled`, not `all`: an interrupted animation rejects, and an interrupted entry still
-      // has to clear the entering state or the element would stay stuck at its start frame.
-      void Promise.allSettled(animations.map((animation) => animation.finished)).then(() => {
-        if (!cancelled && current === generations[phase]) onEnd();
-      });
-    });
-  };
+  const entry = createAnimationSettleWaiter(getElement);
+  const exit = createAnimationSettleWaiter(getElement);
 
   watch(
     [isEntering, () => getElement()],
@@ -128,7 +90,7 @@ export const useEnterExit = (options: UseEnterExitOptions): UseEnterExitReturn =
         }
       }
 
-      whenSettled("entering", () => {
+      entry.whenSettled(() => {
         entering.value = false;
       });
     },
@@ -159,7 +121,7 @@ export const useEnterExit = (options: UseEnterExitOptions): UseEnterExitReturn =
     ([active]) => {
       if (!active) return;
 
-      whenSettled("exiting", () => {
+      exit.whenSettled(() => {
         if (exitState.value === "exiting") exitState.value = "closed";
       });
     },
@@ -167,7 +129,8 @@ export const useEnterExit = (options: UseEnterExitOptions): UseEnterExitReturn =
   );
 
   onScopeDispose(() => {
-    cancelled = true;
+    entry.cancel();
+    exit.cancel();
   }, true);
 
   return {
