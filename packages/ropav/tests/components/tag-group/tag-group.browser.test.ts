@@ -1,7 +1,10 @@
 import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it, vi } from "vitest";
+import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
+
+import { parkPointer } from "../../harness/park-pointer";
 
 import Fixture from "./fixtures.vue";
 
@@ -71,6 +74,47 @@ describe("TagGroup (browser)", () => {
     tag.setAttribute("data-focus-visible", "true");
 
     expect(getComputedStyle(tag).boxShadow).not.toBe("none");
+
+    unmount();
+  });
+
+  /**
+   * Two pressables share a tag — the tag itself, which selects, and the remove button nested
+   * inside it — and the jsdom suite reaches both by dispatching a click. That cannot see the
+   * shape a real press has: the pointer moves onto the tag first, and the hover it reports
+   * re-renders it; in vapor a re-render re-attaches every listener that arrived through `v-bind`,
+   * which reorders them and can drop one mid-dispatch. A press on the remove button crosses the
+   * tag on the way in, so it re-renders the very element whose listener has to stay ahead.
+   *
+   * The pointer is parked first: a tag left under it by an earlier test would never see the
+   * pointer arrive, and the press would skip the re-render this is here to survive.
+   */
+  it("selects a tag on a press from the pointer itself", async () => {
+    await parkPointer();
+
+    const onSelectionChange = vi.fn();
+    const { tags, unmount } = await render({ onSelectionChange, selectionMode: "single" });
+
+    await userEvent.click(tags()[1]!);
+    await nextTick();
+
+    expect(onSelectionChange).toHaveBeenCalledOnce();
+    expect(tags()[1]).toHaveAttribute("data-selected", "true");
+
+    unmount();
+  });
+
+  it("removes a tag on a press from the pointer itself", async () => {
+    await parkPointer();
+
+    const onRemove = vi.fn();
+    const { tags, unmount } = await render({ onRemove });
+    const remove = tags()[1]!.querySelector<HTMLElement>('[data-slot="tag-remove-button"]')!;
+
+    await userEvent.click(remove);
+    await nextTick();
+
+    expect(onRemove).toHaveBeenCalledOnce();
 
     unmount();
   });

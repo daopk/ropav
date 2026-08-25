@@ -6,6 +6,7 @@ import { nextTick } from "vue";
 
 import { Button } from "@/components/button";
 
+import { parkPointer } from "../../harness/park-pointer";
 import { settled } from "../../harness/settle";
 
 const renderButton = (props: Record<string, unknown> = {}) =>
@@ -111,6 +112,34 @@ describe("Button (browser)", () => {
     await userEvent.keyboard(" ");
 
     expect(clicks).toHaveLength(2);
+
+    unmount();
+  });
+
+  /**
+   * The synthetic press the jsdom suite uses cannot see this. A real press moves the pointer onto
+   * the button first, and hovering re-renders it; in vapor a re-render re-attaches every listener
+   * that arrived through `v-bind`, which reorders them and can drop one mid-dispatch. So a button
+   * whose activation is green under a dispatched event can still be dead under a finger.
+   *
+   * The pointer is parked first because it belongs to the page rather than to this test: left on
+   * the button by an earlier test, a click would never cross the boundary that triggers the
+   * re-render, and the case would pass without exercising anything.
+   */
+  it("activates on a press from the pointer itself", async () => {
+    await parkPointer();
+
+    const clicks: MouseEvent[] = [];
+    const { container, unmount } = renderVapor(Button, {
+      props: { onClick: (event: MouseEvent) => clicks.push(event) },
+      slots: { default: () => document.createTextNode("Press me") },
+    });
+    const button = buttonIn(container);
+
+    await userEvent.click(button);
+    await nextTick();
+
+    expect(clicks).toHaveLength(1);
 
     unmount();
   });

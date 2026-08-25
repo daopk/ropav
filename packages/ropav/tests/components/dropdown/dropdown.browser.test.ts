@@ -316,6 +316,30 @@ describe("Dropdown (browser)", () => {
       await dismiss(result);
       result.unmount();
     });
+
+    it("fires an item's action from the pointer itself", async () => {
+      // The trigger is not the only pressable here. An item is hovered on the way to being
+      // pressed, and the menu follows the pointer with its focus, so the item re-renders before
+      // the press lands on it and again while the press is still dispatching.
+      const actions: (string | number)[] = [];
+      const result = render({ onAction: (key: string | number) => actions.push(key) });
+
+      await userEvent.click(result.getByRole("button", { name: "Menu" }));
+      await nextTick();
+
+      const popover = result.screen.getByRole("dialog") as HTMLElement;
+
+      await settled(popover);
+
+      const items = result.screen.getAllByRole("menuitem");
+
+      await userEvent.click(items[1]!);
+      await nextTick();
+
+      expect(actions).toHaveLength(1);
+
+      result.unmount();
+    });
   });
 
   describe("focus", () => {

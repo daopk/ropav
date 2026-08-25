@@ -1,7 +1,10 @@
 import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
 import { renderVapor } from "@ropav/testing/helpers/vue";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
+
+import { parkPointer } from "../../harness/park-pointer";
 
 import Fixture from "./fixtures.vue";
 
@@ -83,6 +86,49 @@ describe("ListBox (browser)", () => {
     // build as much as this one, so that is what is pinned here.
     expect(styles.transitionProperty).toBe("all");
     expect(styles.transitionDuration).toBe("0.3s");
+
+    unmount();
+  });
+
+  /**
+   * The jsdom suite selects by dispatching a click on the option, which proves the handler runs
+   * but not that a pointer can reach it. A real press moves the pointer onto the option first, and
+   * the hover that follows re-renders it; in vapor a re-render re-attaches every listener that
+   * arrived through `v-bind`, which reorders them and can drop one while the event is still in
+   * flight. Selection re-renders the option again, mid-dispatch, for the same reason.
+   *
+   * The pointer is parked first because it belongs to the page: an option left under it by an
+   * earlier test would never see the pointer arrive, and the press would skip both re-renders.
+   */
+  it("selects an item on a press from the pointer itself", async () => {
+    await parkPointer();
+
+    const onSelectionChange = vi.fn();
+    const { items, unmount } = await render({ onSelectionChange, selectionMode: "single" });
+
+    await userEvent.click(items()[1]!);
+    await nextTick();
+
+    expect(onSelectionChange).toHaveBeenCalledOnce();
+    expect(items()[1]).toHaveAttribute("data-selected", "true");
+
+    unmount();
+  });
+
+  it("moves the selection with the pointer across two presses", async () => {
+    // The second press starts from the first option rather than from nowhere, so the pointer
+    // crosses out of one option and into another while both are re-rendering.
+    await parkPointer();
+
+    const { items, unmount } = await render({ selectionMode: "single" });
+
+    await userEvent.click(items()[0]!);
+    await nextTick();
+    await userEvent.click(items()[2]!);
+    await nextTick();
+
+    expect(items()[0]).not.toHaveAttribute("data-selected");
+    expect(items()[2]).toHaveAttribute("data-selected", "true");
 
     unmount();
   });
