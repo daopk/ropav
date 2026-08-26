@@ -26,3 +26,19 @@
 body {
   background-color: var(--background);
 }
+
+/*
+ * The docs blocks hold space around a story with `border: 8px solid transparent !important`, and
+ * Forced Colors Mode is one of the few things that turns a transparent border-color *opaque* - so
+ * every component in the docs view picks up a thick `CanvasText` frame.
+ *
+ * Only the colour is neutralised. Removing the border instead takes the spacing with it, and that
+ * spacing is what keeps focus rings and outlines from being clipped by the preview. Matches
+ * Storybook's own `> *` rather than `> div`, since a story root is not always a div; the `#id`
+ * outranks the class selector the rule arrives with.
+ */
+@media (forced-colors: active) {
+  #storybook-docs .innerZoomElementWrapper > * {
+    border-color: Canvas !important;
+  }
+}
