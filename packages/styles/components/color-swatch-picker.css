@@ -14,6 +14,13 @@
 .color-swatch-picker__item {
   @apply relative flex size-8 items-center justify-center rounded-2xl border-2 border-transparent outline-none no-highlight;
 
+  /* The unselected border is transparent purely to hold the ring's width, and forced colors turns
+   * a transparent border-color opaque - so every swatch drew the same border and the selected one
+   * stopped being the selected one. */
+  @media (forced-colors: active) {
+    border-color: Canvas;
+  }
+
   /* Cursor */
   cursor: var(--cursor-interactive);
 
@@ -41,6 +48,10 @@
   &[data-selected="true"] {
     border-color: var(--color-swatch-current);
     box-shadow: var(--field-shadow);
+
+    @media (forced-colors: active) {
+      border-color: Highlight;
+    }
     /* Shrink the swatch to reveal the white gap */
     .color-swatch-picker__swatch {
       transform: scale(0.77);
