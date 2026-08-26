@@ -17,6 +17,13 @@ export interface SeparatorContext {
    * this better than the caller does: a rule inside a horizontal toolbar runs vertically.
    */
   orientation?: ComputedRef<SeparatorVariants["orientation"]>;
+  /**
+   * Role a Separator takes inside this container. `listbox` accepts only `option` and
+   * `group` children, so a rule between its sections has to step out of the ARIA tree
+   * rather than announce itself as a separator that does not belong there.
+   * @default "separator"
+   */
+  role?: "presentation" | "separator";
 }
 
 /**

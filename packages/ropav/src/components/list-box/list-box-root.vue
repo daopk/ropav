@@ -304,7 +304,7 @@ const lastItemKey = computed(() => collection.getLastKey());
 
 // A listbox lays its own options out, so a rule between two of them has to take part in that
 // layout rather than being the block-level `hr` it would be on its own.
-provideSeparatorContext({ elementType: "div" });
+provideSeparatorContext({ elementType: "div", role: "presentation" });
 
 const typeahead = useTypeahead({
   focusedKey: () => selection.focusedKey.value,

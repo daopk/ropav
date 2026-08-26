@@ -30,6 +30,8 @@ const isVertical = computed(() => resolvedOrientation.value === "vertical");
 // A vertical rule can never be an `hr`, and a horizontal one stops being one whenever the
 // container lays its own children out — see `elementType` on the context.
 const isDiv = computed(() => isVertical.value || context?.elementType === "div");
+
+const role = computed(() => context?.role ?? "separator");
 </script>
 
 <template>
@@ -41,11 +43,11 @@ const isDiv = computed(() => isVertical.value || context?.elementType === "div")
   -->
   <div
     v-if="isDiv"
-    :aria-orientation="isVertical ? 'vertical' : undefined"
+    :aria-orientation="isVertical && role === 'separator' ? 'vertical' : undefined"
     :class="styles"
     :data-orientation="resolvedOrientation"
     data-slot="separator"
-    role="separator"
+    :role="role"
   />
-  <hr v-else :class="styles" data-orientation="horizontal" data-slot="separator" role="separator" />
+  <hr v-else :class="styles" data-orientation="horizontal" data-slot="separator" :role="role" />
 </template>
