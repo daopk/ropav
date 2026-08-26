@@ -6,10 +6,12 @@
     "Segoe UI Symbol", "Noto Color Emoji";
 }
 
-:root,
-.light,
-.default,
-[data-theme="light"],
+/* Storybook's own slightly-warmer grey, for the default theme only.
+ *
+ * Scoped on purpose: this is unlayered author CSS, so it outranks every cascade layer. Left
+ * on a bare `:root` it would repaint all eleven themes the same colour and the toolbar would
+ * look broken. */
+:root:not([data-theme]),
 [data-theme="default"] {
   --background: lab(96.5432% -0.0000596046 0);
   --foreground: lab(8.34178% 0.607349 -2.12998);
@@ -20,8 +22,8 @@ body {
   font-family: var(--font-sans);
 }
 
-.dark,
-[data-theme="dark"] {
+:root:not([data-theme]).dark,
+[data-theme="default"].dark {
   --background: lab(1.54547% 0.178337 -0.64671);
   --foreground: lab(98.9676% -0.0000298023 -0.0000119209);
 }

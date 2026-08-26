@@ -1,17 +1,25 @@
 import type { Decorator } from "@storybook/vue3-vite";
 
-import { THEME_GLOBAL_TYPE_ID, ensureThemeKey } from "./constants";
+import {
+  SCHEME_GLOBAL_TYPE_ID,
+  THEME_GLOBAL_TYPE_ID,
+  ensureSchemeKey,
+  ensureThemeKey,
+} from "./constants";
 
 /**
- * The theme is selected by CSS, so all this has to do is put the selector on the root
+ * The theme is selected by CSS, so all this has to do is put the selectors on the root
  * element of the preview iframe.
+ *
+ * Two independent selectors: `data-theme` carries the palette, the class carries the
+ * appearance. The stylesheet reads them as `[data-theme="netflix"].dark`.
  */
-const applyPreviewTheme = (theme: string) => {
+const applyPreviewTheme = (theme: string, scheme: string) => {
   const root = document.documentElement;
 
   root.setAttribute("data-theme", theme);
   root.classList.remove("light", "dark");
-  root.classList.add(theme);
+  root.classList.add(scheme);
 };
 
 /**
@@ -20,7 +28,10 @@ const applyPreviewTheme = (theme: string) => {
  * lands before the story renders.
  */
 export const withTheme: Decorator = (story, context) => {
-  applyPreviewTheme(ensureThemeKey(context.globals[THEME_GLOBAL_TYPE_ID] as string | undefined));
+  applyPreviewTheme(
+    ensureThemeKey(context.globals[THEME_GLOBAL_TYPE_ID] as string | undefined),
+    ensureSchemeKey(context.globals[SCHEME_GLOBAL_TYPE_ID] as string | undefined),
+  );
 
   return story();
 };

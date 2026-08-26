@@ -1,6 +1,10 @@
 /* The stylesheet the library ships, not `@ropav/styles` directly - it carries rules on top. */
 @import "ropav/styles";
 
+/* Every bundled theme, so the toolbar can switch between them. An app imports only the ones
+ * it offers. Relative because the granular subpaths only exist in the published tarball. */
+@import "../../styles/themes/all.css";
+
 /* Tailwind has to scan the Vue sources, or the classes the SFCs name never get emitted. */
 @source "../../ropav/src/**/*.{vue,ts}";
 

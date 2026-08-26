@@ -8,11 +8,14 @@ import { addons } from "storybook/manager-api";
 
 import { themes } from "../../styles/theme";
 
-import { DEFAULT_THEME, THEME_GLOBAL_TYPE_ID, ensureThemeKey } from "./constants";
+import { DEFAULT_SCHEME, SCHEME_GLOBAL_TYPE_ID, ensureSchemeKey } from "./constants";
 
 /**
  * Theme the Storybook UI along with the preview: the decorator only reaches inside the
  * preview iframe, so without this the chrome around a dark story stays light.
+ *
+ * Follows the appearance axis only. The colour themes are the library's, not the manager's -
+ * there is no Storybook chrome in Netflix red.
  *
  * The event names have to come from `core-events` — their values are camelCase, so
  * listening for the constant *names* subscribes to events that are never emitted.
@@ -20,8 +23,8 @@ import { DEFAULT_THEME, THEME_GLOBAL_TYPE_ID, ensureThemeKey } from "./constants
 addons.register("ropav-theme-manager", (api) => {
   let applied: string | undefined;
 
-  const applyTheme = (theme: string | undefined) => {
-    const next = ensureThemeKey(theme);
+  const applyTheme = (scheme: string | undefined) => {
+    const next = ensureSchemeKey(scheme);
 
     // `setConfig` re-renders the whole manager, so only push real changes.
     if (next === applied) return;
@@ -31,7 +34,7 @@ addons.register("ropav-theme-manager", (api) => {
   };
 
   const applyGlobals = (globals: Record<string, unknown> | undefined) =>
-    applyTheme(globals?.[THEME_GLOBAL_TYPE_ID] as string | undefined);
+    applyTheme(globals?.[SCHEME_GLOBAL_TYPE_ID] as string | undefined);
 
   // `api.getChannel()` is optional; the store's is not.
   const channel = api.getChannel() ?? addons.getChannel();
@@ -50,5 +53,5 @@ addons.register("ropav-theme-manager", (api) => {
   channel.on(STORY_RENDERED, syncFromApi);
   channel.on(DOCS_RENDERED, syncFromApi);
 
-  applyTheme(DEFAULT_THEME);
+  applyTheme(DEFAULT_SCHEME);
 });
