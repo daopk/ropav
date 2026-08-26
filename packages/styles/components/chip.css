@@ -8,6 +8,19 @@
 
   background-color: var(--chip-bg);
   color: var(--chip-fg);
+
+  /* A chip is nothing but its colour, so Forced Colors Mode leaves it as bare label text -
+   * not a weaker chip, no chip at all, indistinguishable from the copy around it. The edge
+   * brings the shape back.
+   *
+   * What cannot come back is the status. The mode has no keyword for success or warning, so
+   * every colour collapses onto one appearance and the label is what has to carry the
+   * meaning - which is the same reason a chip should not lean on colour alone in the first
+   * place. Only the emphasis split survives, on `.chip--primary` below. */
+  @media (forced-colors: active) {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
 }
 
 .chip__label {
@@ -37,6 +50,14 @@
 
 /* Variant styles */
 .chip--primary {
+  /* The one distinction worth keeping: solid against outlined. `forced-color-adjust` is what
+   * makes it readable - without it Chromium paints a `Canvas` backplate over this fill and the
+   * label goes with it. */
+  @media (forced-colors: active) {
+    forced-color-adjust: none;
+    background-color: CanvasText;
+    color: Canvas;
+  }
 }
 
 .chip--secondary {
