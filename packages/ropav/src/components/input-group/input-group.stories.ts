@@ -331,7 +331,7 @@ export const WithLoadingSuffix: Story = {
   render: () => ({
     components,
     template: `
-      <TextField class="w-[280px]" default-value="Sending..." name="status">
+      <TextField aria-label="Status" class="w-[280px]" default-value="Sending..." name="status">
         <InputGroupRoot>
           <InputGroupInput class="w-[280px]" />
           <InputGroupSuffix>

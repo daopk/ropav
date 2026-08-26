@@ -60,7 +60,7 @@ export const Default: Story = {
           <Label>Verify account</Label>
           <p class="text-sm text-muted">We&apos;ve sent a code to a****@gmail.com</p>
         </div>
-        <InputOTPRoot :max-length="6">
+        <InputOTPRoot aria-label="Verification code" :max-length="6">
           <InputOTPGroup>
             <InputOTPSlot :index="0" />
             <InputOTPSlot :index="1" />
@@ -89,7 +89,7 @@ export const Variants: Story = {
       <div class="flex flex-col gap-6">
         <div class="flex flex-col gap-2">
           <Label>Primary variant</Label>
-          <InputOTPRoot :max-length="6" variant="primary">
+          <InputOTPRoot aria-label="Verification code" :max-length="6" variant="primary">
             <InputOTPGroup>
               <InputOTPSlot :index="0" />
               <InputOTPSlot :index="1" />
@@ -105,7 +105,7 @@ export const Variants: Story = {
         </div>
         <div class="flex flex-col gap-2">
           <Label>Secondary variant</Label>
-          <InputOTPRoot :max-length="6" variant="secondary">
+          <InputOTPRoot aria-label="Verification code" :max-length="6" variant="secondary">
             <InputOTPGroup>
               <InputOTPSlot :index="0" />
               <InputOTPSlot :index="1" />
@@ -130,7 +130,7 @@ export const FourDigits: Story = {
     template: `
       <div class="flex w-[280px] flex-col gap-2">
         <Label>Enter PIN</Label>
-        <InputOTPRoot :max-length="4">
+        <InputOTPRoot aria-label="Verification code" :max-length="4">
           <InputOTPGroup>
             <InputOTPSlot :index="0" />
             <InputOTPSlot :index="1" />
@@ -150,7 +150,7 @@ export const Disabled: Story = {
       <div class="flex w-[280px] flex-col gap-2">
         <Label is-disabled>Verify account</Label>
         <Description>Code verification is currently disabled</Description>
-        <InputOTPRoot is-disabled :max-length="6">
+        <InputOTPRoot aria-label="Verification code" is-disabled :max-length="6">
           <InputOTPGroup>
             <InputOTPSlot :index="0" />
             <InputOTPSlot :index="1" />
@@ -176,7 +176,7 @@ export const WithPattern: Story = {
       <div class="flex w-[280px] flex-col gap-2">
         <Label>Enter code (letters only)</Label>
         <Description>Only alphabetic characters are allowed</Description>
-        <InputOTPRoot :max-length="6" :pattern="pattern">
+        <InputOTPRoot aria-label="Verification code" :max-length="6" :pattern="pattern">
           <InputOTPGroup>
             <InputOTPSlot :index="0" />
             <InputOTPSlot :index="1" />
@@ -205,7 +205,7 @@ export const Controlled: Story = {
     template: `
       <div class="flex w-[280px] flex-col gap-2">
         <Label>Verify account</Label>
-        <InputOTPRoot v-model:value="value" :max-length="6">
+        <InputOTPRoot aria-label="Verification code" v-model:value="value" :max-length="6">
           <InputOTPGroup>
             <InputOTPSlot :index="0" />
             <InputOTPSlot :index="1" />
@@ -266,7 +266,7 @@ export const WithValidation: Story = {
         <Form class="flex flex-col gap-2" @submit="onSubmit">
           <Label>Verify account</Label>
           <Description>Hint: The code is 123456</Description>
-          <InputOTPRoot
+          <InputOTPRoot aria-label="Verification code"
             :aria-describedby="isInvalid ? 'code-error' : undefined"
             :is-invalid="isInvalid"
             :max-length="6"
@@ -332,7 +332,7 @@ export const OnComplete: Story = {
     template: `
       <Form class="flex w-[280px] flex-col gap-2" @submit="onSubmit">
         <Label>Verify account</Label>
-        <InputOTPRoot
+        <InputOTPRoot aria-label="Verification code"
           :max-length="6"
           :value="value"
           @change="onChange"
@@ -414,7 +414,7 @@ export const FormExample: Story = {
         <div class="flex flex-col gap-2">
           <Label>Two-factor authentication</Label>
           <Description>Enter the 6-digit code from your authenticator app</Description>
-          <InputOTPRoot
+          <InputOTPRoot aria-label="Verification code"
             :is-invalid="isInvalid"
             :max-length="6"
             :value="value"

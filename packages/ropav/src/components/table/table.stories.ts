@@ -359,7 +359,7 @@ const DEFAULT_TEMPLATE = `
               </TableCell>
               <TableCell class="font-medium">
                 <div class="flex items-center gap-2">#{{ user.id }}
-                  <Button is-icon-only size="sm" variant="ghost">
+                  <Button aria-label="Copy" is-icon-only size="sm" variant="ghost">
                     <IconCopy class="size-4 text-muted" />
                   </Button>
                 </div>
@@ -384,13 +384,13 @@ const DEFAULT_TEMPLATE = `
               </TableCell>
               <TableCell>
                 <div class="flex items-center gap-1">
-                  <Button is-icon-only size="sm" variant="tertiary">
+                  <Button aria-label="View" is-icon-only size="sm" variant="tertiary">
                     <IconEye class="size-4" />
                   </Button>
-                  <Button is-icon-only size="sm" variant="tertiary">
+                  <Button aria-label="Edit" is-icon-only size="sm" variant="tertiary">
                     <IconPencil class="size-4" />
                   </Button>
-                  <Button is-icon-only size="sm" variant="danger-soft">
+                  <Button aria-label="Delete" is-icon-only size="sm" variant="danger-soft">
                     <IconTrashBin class="size-4" />
                   </Button>
                 </div>
@@ -768,7 +768,7 @@ export const ExpandableRows: Story = {
                   >
                     <span class="flex items-center gap-1">
                       <TableExpandTrigger v-if="hasChildRows && isTreeColumn">
-                        <Button is-icon-only size="sm" variant="ghost">
+                        <Button aria-label="Expand row" is-icon-only size="sm" variant="ghost">
                           <IconChevronRight
                             class="size-4 text-muted transition-transform duration-150"
                             :class="isExpanded ? 'rotate-90' : 'rtl:rotate-180'"
@@ -1177,7 +1177,7 @@ export const DragAndDrop: Story = {
                   <TableRow :id="String(user.id)" :text-value="user.name">
                     <TableCell>
                       <TableDragHandle>
-                        <Button is-icon-only size="sm" variant="ghost">
+                        <Button aria-label="Reorder row" is-icon-only size="sm" variant="ghost">
                           <IconGrip />
                         </Button>
                       </TableDragHandle>
@@ -1260,7 +1260,7 @@ export const VirtualizedDragAndDrop: Story = {
                   <TableRow :id="item.id" :text-value="item.name">
                     <TableCell>
                       <TableDragHandle>
-                        <Button is-icon-only size="sm" variant="ghost">
+                        <Button aria-label="Reorder row" is-icon-only size="sm" variant="ghost">
                           <IconGrip />
                         </Button>
                       </TableDragHandle>

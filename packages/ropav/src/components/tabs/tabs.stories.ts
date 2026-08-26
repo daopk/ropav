@@ -336,6 +336,9 @@ export const WithCustomStyle: Story = {
               </TabsTab>
             </TabsList>
           </TabsListContainer>
+          <TabsPanel v-for="item in items" :id="item.id" :key="item.id" class="pt-4">
+            <p>{{ item.label }} report</p>
+          </TabsPanel>
         </Tabs>
       </div>
     `,
@@ -469,6 +472,7 @@ export const Showcase1: Story = {
             <img
               v-for="level in levels"
               :key="level.id"
+              :alt="'Sample photo at ' + level.label + ', ' + level.factor + ' zoom'"
               :aria-hidden="selectedZoom !== level.id"
               class="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity delay-200 duration-[800ms] ease-in-out data-[selected=true]:opacity-100 data-[selected=true]:delay-0"
               :data-selected="selectedZoom === level.id"

@@ -94,7 +94,14 @@ export const Sizes: Story = {
           </Button>
         </div>
         <div class="flex items-center gap-3">
-          <Button v-for="size in sizes" :key="size" is-icon-only :size="size" variant="tertiary">
+          <Button
+            v-for="size in sizes"
+            :key="size"
+            aria-label="More options"
+            is-icon-only
+            :size="size"
+            variant="tertiary"
+          >
             <IconEllipsis />
           </Button>
         </div>
@@ -175,6 +182,7 @@ export const WithIconOnly: Story = {
     template: `
       <div class="flex gap-3">
         <Button
+          aria-label="More options"
           is-icon-only
           :is-disabled="args.isDisabled"
           :size="args.size"
