@@ -291,7 +291,7 @@ export const CompoundPrimitives: Story = {
           <Code>Typography.Heading</Code>, <Code>Typography.Paragraph</Code>, and
           <Code>Typography.Code</Code> when you want the semantic element chosen automatically.
         </Paragraph>
-        <Heading :level="4">Recent Activity</Heading>
+        <Heading :level="2">Recent Activity</Heading>
         <Paragraph color="muted" size="sm">
           No new notifications. Check back later for updates on your projects and team activity.
         </Paragraph>

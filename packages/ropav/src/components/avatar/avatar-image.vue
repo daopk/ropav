@@ -50,7 +50,7 @@ watch(
 <template>
   <img
     v-if="status === 'loaded'"
-    :alt="props.alt"
+    :alt="props.alt ?? ''"
     :class="composeSlotClassName(slots.image, props.class)"
     :crossorigin="props.crossOrigin"
     :loading="props.loading"

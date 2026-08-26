@@ -14,7 +14,17 @@ const meta: StoryMeta = {
   },
   component: Meter,
   decorators: [() => ({ template: '<div class="w-96 p-8"><story /></div>' })],
-  parameters: { layout: "centered" },
+  parameters: {
+    /**
+     * `role="meter progressbar"` is an ARIA fallback role list, and axe does not implement them:
+     * measured, `role="meter"` and `role="progressbar"` each pass on their own, while any two-token
+     * list is rejected - including `"progressbar meter"`, whose first token axe accepts alone. The
+     * markup is right and the tool is short, so the rule is scoped off here rather than the
+     * fallback being dropped for assistive technology that predates `meter`.
+     */
+    a11y: { options: { rules: { "aria-allowed-attr": { enabled: false } } } },
+    layout: "centered",
+  },
   title: "Components/Feedback/Meter",
 };
 

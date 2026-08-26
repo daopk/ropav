@@ -12,7 +12,13 @@ export interface AvatarRootProps {
 
 export interface AvatarImageProps {
   class?: string;
-  /** Alternative text, forwarded to the rendered `img`. */
+  /**
+   * Alternative text, forwarded to the rendered `img`.
+   *
+   * Defaults to empty, which marks the image decorative: an avatar sits beside the name it
+   * belongs to, and the fallback carries the initials, so a description here usually repeats
+   * what is already on the page. Omitting the attribute altogether is never right.
+   */
   alt?: string;
   /** Forwarded to the probe image so the request matches the rendered one. */
   crossOrigin?: "" | "anonymous" | "use-credentials";
