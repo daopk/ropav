@@ -237,6 +237,16 @@ Use the system colour keywords, not tokens: `Highlight` / `HighlightText` for a 
 `CanvasText` on `Canvas` for ordinary content, `ButtonBorder` for a control's edge, `GrayText` for
 disabled. They are the only colours exempt from the override.
 
+One trap, and `getComputedStyle` cannot see it. Chromium paints a `Canvas`-coloured **backplate**
+behind the text of any element that has text, so that text over an image stays legible. It lands on
+top of that element's own background, so a `Highlight` fill carrying `HighlightText` renders as a
+solid plate with the label invisible inside it - the colours are all correct and the component is
+unreadable. `forced-color-adjust: none` is what suppresses the backplate. `forced-selected` already
+carries it; anything hand-rolling the same pairing needs it too, including the case where the fill
+sits on a different element than the text (`tabs.css`, `range-calendar.css`). Reach for it only
+alongside explicit system colours - on its own it just hands the author's palette back, which is the
+opposite of the point.
+
 To look at it, use Chromium's rendering panel - DevTools, `Cmd+Shift+P`, "Show Rendering", then
 *Emulate CSS media feature forced-colors* - and note that **macOS has no Forced Colors Mode at all**:
 "Increase contrast" maps to `prefers-contrast: more`, so switching it on tests nothing. There is
