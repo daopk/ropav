@@ -318,6 +318,40 @@ describe("forced colors mode (browser)", () => {
     expect(styleOf(plain).backgroundColor).not.toBe(styleOf(solid).backgroundColor);
   });
 
+  it.each([
+    ["card", `<div class="card card--default">x</div>`],
+    ["surface", `<div class="surface surface--default">x</div>`],
+    ["alert", `<div class="alert alert--accent">x</div>`],
+    ["avatar", `<span class="avatar avatar--md"><span class="avatar__fallback">AB</span></span>`],
+    ["inline code", `<code class="typography--code">x</code>`],
+  ])("keeps the %s visible as a container", (_name, markup) => {
+    // Each of these is a tinted fill plus a shadow, and the mode takes both - the contents end up
+    // sitting loose on the page with nothing around them.
+    const container = mount(markup);
+
+    expect(styleOf(container).outlineStyle).not.toBe("none");
+    expect(styleOf(container).outlineColor).toBe(systemColor("CanvasText"));
+  });
+
+  it("leaves a transparent surface transparent", () => {
+    // The edge goes on the variants that actually paint. A transparent surface shows whatever is
+    // behind it, so framing it would invent a box that was never there.
+    const transparent = mount(`<div class="surface surface--transparent">x</div>`);
+
+    expect(styleOf(transparent).outlineStyle).toBe("none");
+  });
+
+  it("keeps a separator drawing a line", () => {
+    // A separator *is* its background, so flattening it removes the rule outright rather than
+    // weakening it. Each colour variant restates the fallback, since each sets `background-color`
+    // after the base rule and would otherwise win.
+    for (const variant of ["default", "secondary", "tertiary"]) {
+      const rule = mount(`<hr class="separator separator--${variant}" />`);
+
+      expect(styleOf(rule).backgroundColor).toBe(systemColor("CanvasText"));
+    }
+  });
+
   it("keeps a chip looking like a chip", () => {
     // A chip is nothing but its colour, so the mode leaves it as bare label text - not a weaker
     // chip, no chip at all. The status cannot survive (there is no keyword for success or
