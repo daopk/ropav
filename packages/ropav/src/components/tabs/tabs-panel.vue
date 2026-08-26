@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type { TabsPanelProps, TabsPanelSlotProps } from "./tabs.types";
 
-import { computed, shallowRef } from "vue";
+import { computed, shallowRef, watch } from "vue";
 
 import { useEnterExit } from "../../composables/use-enter-exit";
 import { useInteractionStates } from "../../composables/use-interaction-states";
@@ -18,6 +18,16 @@ const { slots, state } = useTabsContext();
 const panelKey = computed(() => props.id);
 
 const isSelected = computed(() => state.selectedKey.value === panelKey.value);
+
+// Registered while mounted so a tab knows whether its `aria-controls` has anything to point at.
+watch(
+  panelKey,
+  (key, _previous, onCleanup) => {
+    if (key == null) return;
+    onCleanup(state.registerPanel(key));
+  },
+  { immediate: true },
+);
 
 const element = shallowRef<HTMLElement | null>(null);
 

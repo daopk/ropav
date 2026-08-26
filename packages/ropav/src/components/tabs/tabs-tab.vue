@@ -89,7 +89,7 @@ const onKeydown = (event: KeyboardEvent) => {
   <div
     :id="state.tabId(tabKey)"
     ref="element"
-    :aria-controls="isSelected ? state.tabPanelId(tabKey) : undefined"
+    :aria-controls="isSelected && state.hasPanel(tabKey) ? state.tabPanelId(tabKey) : undefined"
     :aria-disabled="isDisabled || undefined"
     :aria-selected="isSelected"
     :class="slots.tab({ class: props.class })"

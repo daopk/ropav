@@ -2,7 +2,7 @@ import type { CollectionKey, UseCollectionReturn } from "./use-collection";
 import type { UseSelectionManagerReturn } from "./use-selection-manager";
 import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import { computed, toValue, watch } from "vue";
+import { computed, shallowRef, toValue, watch } from "vue";
 
 import { useCollection } from "./use-collection";
 import { useControllableState } from "./use-controllable-state";
@@ -34,6 +34,16 @@ export interface UseTabListStateReturn {
   /** `undefined` for a key that does not exist, so no attribute points at nothing. */
   tabId: (key: CollectionKey | null | undefined) => string | undefined;
   tabPanelId: (key: CollectionKey | null | undefined) => string | undefined;
+  /**
+   * Whether a panel for this key is in the document.
+   *
+   * Tabs are usable without panels - driving something rendered elsewhere on the page is a normal
+   * arrangement - and a tab that points `aria-controls` at an element that was never rendered is
+   * worse than one that points nowhere.
+   */
+  hasPanel: (key: CollectionKey | null | undefined) => boolean;
+  /** Called by a panel while it is mounted. Returns the matching unregister. */
+  registerPanel: (key: CollectionKey) => () => void;
 }
 
 /**
@@ -170,9 +180,22 @@ export const useTabListState = (options: UseTabListStateOptions = {}): UseTabLis
   const idFor = (key: CollectionKey | null | undefined, role: "tab" | "tabpanel") =>
     key == null ? undefined : `${tabsId.value}-${role}-${String(key).replace(/\s+/g, "")}`;
 
+  const panelKeys = shallowRef<ReadonlySet<CollectionKey>>(new Set());
+
   return {
     collection,
+    hasPanel: (key) => key != null && panelKeys.value.has(key),
     isDisabled: computed(() => Boolean(toValue(options.isDisabled))),
+    registerPanel: (key) => {
+      panelKeys.value = new Set(panelKeys.value).add(key);
+
+      return () => {
+        const next = new Set(panelKeys.value);
+
+        next.delete(key);
+        panelKeys.value = next;
+      };
+    },
     selectedKey,
     selection,
     setSelectedKey: (key) => stored.setState(key),
