@@ -241,6 +241,9 @@
       background-color: Highlight;
 
       .range-calendar__cell-button {
+        /* Suppresses the `Canvas` backplate behind the day number, which would otherwise cover
+         * the track and leave the digits invisible against it. */
+        forced-color-adjust: none;
         color: HighlightText;
       }
     }
@@ -272,6 +275,7 @@
       /* Caps read the same as the track here. Forced colors offers one selection colour, and
        * spending it on the shape that matters - the range - beats splitting it. */
       @media (forced-colors: active) {
+        forced-color-adjust: none;
         background-color: Highlight;
         color: HighlightText;
       }

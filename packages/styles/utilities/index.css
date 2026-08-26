@@ -112,6 +112,13 @@
  */
 @utility forced-selected {
   @media (forced-colors: active) {
+    /* Chromium paints a `Canvas`-coloured backplate behind the text of any element that has
+     * one, so that text over an image stays legible. It goes on top of the element's own
+     * background, which means a `Highlight` fill with `HighlightText` on it renders as a
+     * solid plate with invisible text - the label disappears completely. Opting the element
+     * out of adjustment is what suppresses the backplate; the colours below are system
+     * colours either way, so the user's palette is still what gets used. */
+    forced-color-adjust: none;
     background-color: Highlight;
     border-color: Highlight;
     color: HighlightText;

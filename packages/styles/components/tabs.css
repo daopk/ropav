@@ -141,8 +141,11 @@
   &[data-selected="true"] {
     @apply text-segment-foreground;
 
-    /* Sits on top of the indicator, which forced colors paints `Highlight` */
+    /* Sits on top of the indicator, which forced colors paints `Highlight`. `forced-color-adjust`
+     * suppresses the `Canvas` backplate Chromium would otherwise paint behind this label - it
+     * covers the indicator, and black-on-black is exactly what it would leave. */
     @media (forced-colors: active) {
+      forced-color-adjust: none;
       color: HighlightText;
     }
 
