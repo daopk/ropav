@@ -4,6 +4,15 @@
   border-width: var(--border-width-field);
   border-color: var(--field-border);
 
+  /* Forced Colors Mode flattens the fill onto the page and strips the shadow, leaving a field that
+   * reads as bare text - `--border-width-field` is 0, so the declared border brings nothing back on
+   * its own. An outline rather than a width so nothing shifts, and the focus ring replaces it while
+   * focused, which is the right order of importance. */
+  @media (forced-colors: active) {
+    outline: 1px solid ButtonBorder;
+    outline-offset: -1px;
+  }
+
   /* When textarea is present, align items to start and allow height to grow */
   &:has([data-slot="input-group-textarea"]) {
     @apply items-start;

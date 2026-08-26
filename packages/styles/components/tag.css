@@ -19,6 +19,15 @@
   /* Cursor */
   cursor: var(--cursor-interactive);
 
+  /* Forced Colors Mode flattens the fill onto the page and strips the shadow, leaving a control
+   * that reads as bare text. `ButtonBorder` is the keyword the platform uses for a control's
+   * edge; an outline rather than a border so nothing shifts, and the focus ring replaces it
+   * while focused, which is the right order of importance. */
+  @media (forced-colors: active) {
+    outline: 1px solid ButtonBorder;
+    outline-offset: -1px;
+  }
+
   /* SVG icon styling */
   & svg {
     @apply pointer-events-none size-3 shrink-0 self-center text-current;

@@ -26,6 +26,15 @@
   background-color: var(--button-bg);
   color: var(--button-fg);
 
+  /* Forced Colors Mode flattens the fill onto the page and strips the shadow, leaving a control
+   * that reads as bare text. `ButtonBorder` is the keyword the platform uses for a control's
+   * edge; an outline rather than a border so nothing shifts, and the focus ring replaces it
+   * while focused, which is the right order of importance. */
+  @media (forced-colors: active) {
+    outline: 1px solid ButtonBorder;
+    outline-offset: -1px;
+  }
+
   /* Focus state */
   &:focus-visible:not(:focus),
   &[data-focus-visible="true"] {
@@ -97,6 +106,16 @@
   --button-bg-hover: var(--accent-hover);
   --button-bg-pressed: var(--accent-hover);
   --button-fg: var(--accent-foreground);
+
+  /* Solid against outlined is the one distinction that survives - forced colors has no keyword
+   * for "this is the important one", so the emphasis has to come from the fill. `Highlight` is
+   * spoken for by selection, which a button is not in. `forced-color-adjust` keeps the backplate
+   * off the label. */
+  @media (forced-colors: active) {
+    forced-color-adjust: none;
+    background-color: CanvasText;
+    color: Canvas;
+  }
 }
 
 .button--secondary {
@@ -130,6 +149,14 @@
   --button-bg-hover: var(--danger-hover);
   --button-bg-pressed: var(--danger-hover);
   --button-fg: var(--danger-foreground);
+
+  /* Solid like the primary one. The danger colour itself cannot survive - there is no keyword
+   * for it - so the label is what says this is the destructive action. */
+  @media (forced-colors: active) {
+    forced-color-adjust: none;
+    background-color: CanvasText;
+    color: Canvas;
+  }
 }
 
 .button--danger-soft {

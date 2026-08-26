@@ -7,6 +7,16 @@
   border-width: var(--border-width-field);
   border-color: var(--field-border);
 
+  /* Forced Colors Mode flattens the fill onto the page and strips the shadow, leaving a field that
+   * reads as bare text - `--border-width-field` is 0, so the declared border brings nothing
+   * back on its own. `ButtonBorder` is the keyword the platform uses for a control's
+   * edge; an outline rather than a border so nothing shifts, and the focus ring replaces it
+   * while focused, which is the right order of importance. */
+  @media (forced-colors: active) {
+    outline: 1px solid ButtonBorder;
+    outline-offset: -1px;
+  }
+
   /**
    * Transitions
    * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
