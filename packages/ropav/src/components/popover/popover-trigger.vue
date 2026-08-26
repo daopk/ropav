@@ -1,11 +1,12 @@
 <script setup lang="ts" vapor>
 import type { PopoverTriggerProps } from "./popover.types";
 
-import { computed } from "vue";
+import { computed, shallowRef, watch } from "vue";
 
 import { composePressResponder, usePressResponder } from "../../composables/press-responder";
 import { useInteractionStates } from "../../composables/use-interaction-states";
 import { dataAttr } from "../../utils/assertion";
+import { FOCUSABLE_SELECTOR } from "../../utils/focus";
 
 import { usePopoverContext } from "./popover.context";
 
@@ -20,9 +21,26 @@ const responder = usePressResponder();
 
 const styles = computed(() => slots.value.trigger({ class: props.class }));
 
+// Yielded whenever the slot already brought something focusable: wrapping a real control in
+// `role="button"` nests one interactive element inside another.
+//
+// Read after the flush rather than in the ref callback, which vapor runs before the slot's own
+// content has been inserted - there the answer is always "nothing focusable".
+const host = shallowRef<HTMLElement | null>(null);
+const hasFocusableContent = shallowRef(false);
+
 const setElement = (element: unknown) => {
-  responder?.registerElement((element as HTMLElement | null) ?? null);
+  host.value = (element as HTMLElement | null) ?? null;
+  responder?.registerElement(host.value);
 };
+
+watch(
+  host,
+  (element) => {
+    hasFocusableContent.value = Boolean(element?.querySelector(FOCUSABLE_SELECTOR));
+  },
+  { flush: "post" },
+);
 
 // The stylesheet keys the focus ring on the attribute, and a `div` has no pseudo-class branch it
 // could fall back to.
@@ -43,8 +61,8 @@ const press = composePressResponder(responder);
     :data-focus-visible="dataAttr(isFocusVisible)"
     :data-pressed="dataAttr(responder?.isPressed.value)"
     data-slot="popover-trigger"
-    role="button"
-    tabindex="0"
+    :role="hasFocusableContent ? undefined : 'button'"
+    :tabindex="hasFocusableContent ? undefined : 0"
     v-bind="responder?.attrs.value"
     @blur="onBlur"
     @click="press.onClick"
