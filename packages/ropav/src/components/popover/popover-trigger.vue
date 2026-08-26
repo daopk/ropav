@@ -22,7 +22,9 @@ const responder = usePressResponder();
 const styles = computed(() => slots.value.trigger({ class: props.class }));
 
 // Yielded whenever the slot already brought something focusable: wrapping a real control in
-// `role="button"` nests one interactive element inside another.
+// `role="button"` nests one interactive element inside another. The responder's attributes go with
+// the role - a pressable inside consumes the same responder and already carries them, so the copy
+// here was a second `aria-expanded` and a duplicate `id` on the same page.
 //
 // Read after the flush rather than in the ref callback, which vapor runs before the slot's own
 // content has been inserted - there the answer is always "nothing focusable".
@@ -52,6 +54,9 @@ const { isFocusVisible, onBlur, onFocus } = useInteractionStates();
 // Listeners are attached here rather than spread with `v-bind`, which in vapor re-attaches them
 // on every render — see `composePressResponder`.
 const press = composePressResponder(responder);
+const wrapperAttrs = computed(() =>
+  hasFocusableContent.value ? undefined : responder?.attrs.value,
+);
 </script>
 
 <template>
@@ -63,7 +68,7 @@ const press = composePressResponder(responder);
     data-slot="popover-trigger"
     :role="hasFocusableContent ? undefined : 'button'"
     :tabindex="hasFocusableContent ? undefined : 0"
-    v-bind="responder?.attrs.value"
+    v-bind="wrapperAttrs"
     @blur="onBlur"
     @click="press.onClick"
     @dragstart="press.onDragstart"

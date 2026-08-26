@@ -247,7 +247,7 @@ export const CardWithHelptext: Story = {
           <div class="flex items-center gap-2">
             <CardTitle>Card Title</CardTitle>
             <Popover>
-              <PopoverTrigger aria-label="Help information">
+              <PopoverTrigger>
                 <Button aria-label="Help" is-icon-only size="sm" variant="ghost">
                   <IconCircleInfo class="text-muted" />
                 </Button>

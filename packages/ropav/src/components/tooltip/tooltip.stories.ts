@@ -123,7 +123,7 @@ export const CardWithTooltip: Story = {
       <Card class="w-[200px]">
         <CardContent class="flex items-center justify-center p-6">
           <Tooltip :delay="0">
-            <TooltipTrigger aria-label="Attach a file">
+            <TooltipTrigger>
               <Button
                 aria-label="Attach file"
                 class="rounded-full"
