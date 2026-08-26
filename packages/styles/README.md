@@ -230,12 +230,17 @@ surroundings. Where selection is *just* a background - a tag, a calendar day, a 
 Folded into the line above it, Tailwind sorts the list and hoists the nested media query over the
 plain declarations, and the `background-color` it exists to override wins instead. Where selection
 also moves a thumb or shows a glyph, the component writes its own `forced-colors` block, because
-those parts need colours of their own - see `switch.css`, `radio.css`, `tabs.css`, `range-calendar.css`
-and `skeleton.css`.
+those parts need colours of their own - see `switch.css`, `radio.css`, `tabs.css`, `range-calendar.css`,
+`slider.css` and `skeleton.css`.
 
 Use the system colour keywords, not tokens: `Highlight` / `HighlightText` for a selected control,
 `CanvasText` on `Canvas` for ordinary content, `ButtonBorder` for a control's edge, `GrayText` for
 disabled. They are the only colours exempt from the override.
+
+Watch for `transparent` used as a spacer. Forced colors preserves a transparent *background*, but a
+transparent `border-color` is turned **opaque** - so a border held open purely to reserve layout space
+(`slider.css` does this at both ends of the track) stops being invisible and renders as a solid block.
+Restate those as `Canvas` inside the media query.
 
 One trap, and `getComputedStyle` cannot see it. Chromium paints a `Canvas`-coloured **backplate**
 behind the text of any element that has text, so that text over an image stays legible. It lands on
