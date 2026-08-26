@@ -18,6 +18,13 @@
   color: var(--badge-fg);
   border: 1px solid var(--badge-border);
   background-clip: padding-box;
+
+  /* That border is the page colour, there to cut the badge out of whatever it overlaps, and
+   * forced colors turns it into a visible ring - which is the only reason a badge still reads
+   * as one. Stated here so it stays true if `--badge-border` is ever repointed. */
+  @media (forced-colors: active) {
+    border-color: CanvasText;
+  }
 }
 
 .badge__label {

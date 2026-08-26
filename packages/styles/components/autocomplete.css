@@ -6,6 +6,14 @@
 .autocomplete__trigger {
   @apply relative isolate inline-flex min-h-9 rounded-field border bg-field px-3 py-2 text-sm text-field-foreground shadow-field outline-none select-none no-highlight;
 
+  /* Forced Colors Mode flattens the fill onto the page and strips the shadow, leaving a control
+   * with nothing to say it is one. `ButtonBorder` is the keyword the platform uses for a
+   * control's edge. */
+  @media (forced-colors: active) {
+    outline: 1px solid ButtonBorder;
+    outline-offset: -1px;
+  }
+
   /**
    * Transitions
    * CRITICAL: motion-reduce must be AFTER transition for correct override specificity

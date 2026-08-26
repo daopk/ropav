@@ -1,6 +1,15 @@
 /* Base avatar styles */
 .avatar {
   @apply relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-3xl bg-default;
+
+  /* Forced Colors Mode flattens the fill onto the page, so a fallback avatar is initials sitting
+   * loose on the page with no shape around them. The edge goes here rather than on the fallback:
+   * this is the element carrying the radius, and the `overflow-hidden` above would clip a
+   * square outline drawn inside it down to four arcs. */
+  @media (forced-colors: active) {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
 }
 
 /* Avatar fallback element */

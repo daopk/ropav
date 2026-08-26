@@ -3,6 +3,14 @@
 /* Base alert styles */
 .alert {
   @apply flex w-full flex-row items-start justify-start gap-4 bg-surface px-4 py-3 shadow-surface;
+
+  /* Forced Colors Mode flattens the fill onto the page and strips the shadow, so the container
+   * stops having any shape - its contents just sit loose on the page. An outline rather than a
+   * border so nothing shifts, and it follows the radius the component sets. */
+  @media (forced-colors: active) {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
   border-radius: min(32px, var(--radius-3xl));
 }
 

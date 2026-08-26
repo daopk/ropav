@@ -40,12 +40,33 @@
 
 .card--default {
   @apply bg-surface;
+
+  /* Forced Colors Mode flattens the fill onto the page and strips the shadow, so the container
+   * stops having any shape and its contents sit loose on the page. */
+  @media (forced-colors: active) {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
 }
 
 .card--secondary {
   @apply bg-surface-secondary;
+
+  /* Forced Colors Mode flattens the fill onto the page and strips the shadow, so the container
+   * stops having any shape and its contents sit loose on the page. */
+  @media (forced-colors: active) {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
 }
 
 .card--tertiary {
   @apply bg-surface-tertiary;
+
+  /* Forced Colors Mode flattens the fill onto the page and strips the shadow, so the container
+   * stops having any shape and its contents sit loose on the page. */
+  @media (forced-colors: active) {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
 }

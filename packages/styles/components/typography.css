@@ -36,6 +36,13 @@
 
 .typography-prose code {
   @apply rounded-md bg-default px-1.5 py-0.5 font-mono text-sm text-foreground;
+
+  /* Code is marked out by a tinted background and nothing else, so forced colors leaves it
+   * indistinguishable from the prose around it - the monospace face is all that is left. */
+  @media (forced-colors: active) {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
 }
 
 .typography-prose a {
@@ -64,6 +71,13 @@
 
 .typography-prose pre {
   @apply my-4 overflow-x-auto rounded-xl bg-default p-4 font-mono text-sm leading-relaxed;
+
+  /* Code is marked out by a tinted background and nothing else, so forced colors leaves it
+   * indistinguishable from the prose around it - the monospace face is all that is left. */
+  @media (forced-colors: active) {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
 }
 
 .typography-prose strong {
@@ -116,6 +130,13 @@
 
 .typography--code {
   @apply rounded-md bg-default px-1.5 py-0.5 font-mono text-sm text-foreground;
+
+  /* Code is marked out by a tinted background and nothing else, so forced colors leaves it
+   * indistinguishable from the prose around it - the monospace face is all that is left. */
+  @media (forced-colors: active) {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
 }
 
 .typography--align-start {

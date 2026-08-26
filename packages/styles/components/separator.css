@@ -17,17 +17,34 @@
   @apply h-auto min-h-2 w-px self-stretch;
 }
 
-/* Color variants */
+/* Color variants
+ *
+ * The whole separator *is* its background, so Forced Colors Mode flattening it onto the page
+ * removes the rule entirely rather than weakening it. Each variant restates the fallback because
+ * each one sets `background-color` after the base rule and would otherwise win. All three land on
+ * the same ink - the mode has no second tier to give them. */
 .separator--default {
   @apply bg-separator;
+
+  @media (forced-colors: active) {
+    background-color: CanvasText;
+  }
 }
 
 .separator--secondary {
   @apply bg-separator-secondary;
+
+  @media (forced-colors: active) {
+    background-color: CanvasText;
+  }
 }
 
 .separator--tertiary {
   @apply bg-separator-tertiary;
+
+  @media (forced-colors: active) {
+    background-color: CanvasText;
+  }
 }
 
 .separator__container {
