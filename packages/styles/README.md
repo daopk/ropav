@@ -252,9 +252,17 @@ sits on a different element than the text (`tabs.css`, `range-calendar.css`). Re
 alongside explicit system colours - on its own it just hands the author's palette back, which is the
 opposite of the point.
 
+Structure has to survive the mode as well as state. A component that is only a tinted fill and a
+shadow - a card, an alert, a text field, a chip - renders as loose text once both are taken, which
+reads as no component at all. So every container carries an inset `CanvasText` outline under the
+mode and every control a `ButtonBorder` one, on the variants that actually paint; a transparent
+surface is left alone, since framing it would invent a box that was never there. A separator is the
+exception that proves it: the whole thing *is* its background, so it takes a colour rather than an
+edge.
+
 Two things guard it. `forced-colors.browser.test.ts` in the `ropav` package asserts the stylesheet
 directly, and the Storybook package runs **every story** through an audit that renders it twice - the
-mode off, then on over CDP - and fails on anything that carried a state and stops carrying it. The
+mode off, then on over CDP - and fails on anything that painted something and stops painting it. The
 second one exists because the first cannot see this class of bug on its own: the colour override runs
 after the cascade and the backplate is painted later still, so a component reports every declared
 colour correctly while rendering as a blank block. Three bugs shipped that way before the audit
