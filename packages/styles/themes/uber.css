@@ -1,0 +1,226 @@
+/**
+ * Uber theme — GENERATED, do not edit by hand.
+ *
+ * Run `pnpm generate:themes` after changing `scripts/themes/presets.ts`.
+ * Seed values: lightness 0, chroma 0, hue 0, base 0.
+ *
+ * The `theme` layer is declared inside this file, so it can be imported with or without a
+ * `layer()` wrapper:
+ *
+ *   @import "@ropav/styles";
+ *   @import "@ropav/styles/themes/uber.css";
+ *
+ * Light is the default; dark needs the `dark` class alongside the attribute:
+ *   <html data-theme="uber">               light
+ *   <html data-theme="uber" class="dark">  dark
+ */
+
+@layer theme {
+  [data-theme="uber"] {
+    color-scheme: light;
+
+    --field-radius: 0.25rem;
+    --radius: 0.25rem;
+
+    /* Base Colors */
+    --background: oklch(97.02% 0 0);
+    --foreground: oklch(21.03% 0 0);
+
+    /* Surfaces */
+    --overlay: oklch(100% 0 0);
+    --overlay-foreground: oklch(21.03% 0 0);
+    --surface: oklch(100% 0 0);
+    --surface-foreground: oklch(21.03% 0 0);
+    --surface-hover: color-mix(in oklab, var(--surface) 92%, var(--surface-foreground) 8%);
+    --surface-secondary: oklch(95.24% 0 0);
+    --surface-secondary-foreground: oklch(21.03% 0 0);
+    --surface-tertiary: oklch(93.73% 0 0);
+    --surface-tertiary-foreground: oklch(21.03% 0 0);
+
+    /* Muted and scrollbar */
+    --muted: oklch(55.17% 0 0);
+    --scrollbar: var(--scrollbar-thumb);
+    --scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    --scrollbar-thumb: color-mix(in oklch, var(--foreground) 15%, transparent);
+
+    /* Default */
+    --default: oklch(94% 0 0);
+    --default-foreground: oklch(21.03% 0.0059 0);
+    --default-hover: color-mix(in oklab, var(--default) 96%, var(--default-foreground) 4%);
+    --default-soft: color-mix(in oklab, var(--default) 50%, transparent);
+    --default-soft-foreground: var(--default-foreground);
+    --default-soft-hover: color-mix(in oklab, var(--default) 60%, transparent);
+
+    /* Accent */
+    --accent: oklch(0 0 0);
+    --accent-foreground: oklch(99.11% 0 0);
+    --accent-hover: color-mix(in oklab, var(--accent) 90%, var(--accent-foreground) 10%);
+    --accent-soft: color-mix(in oklab, var(--accent) 15%, transparent);
+    --accent-soft-foreground: oklch(0 0 0);
+    --accent-soft-hover: color-mix(in oklab, var(--accent) 20%, transparent);
+    --focus: oklch(0 0 0);
+
+    /* Form Fields */
+    --field-background: oklch(100% 0 0);
+    --field-border: transparent;
+    --field-border-focus: color-mix(
+      in oklab,
+      var(--field-border, var(--border)) 74%,
+      var(--field-foreground, var(--foreground)) 22%
+    );
+    --field-border-hover: color-mix(
+      in oklab,
+      var(--field-border, var(--border)) 88%,
+      var(--field-foreground, var(--foreground)) 10%
+    );
+    --field-focus: var(--field-background, var(--default));
+    --field-foreground: oklch(21.03% 0 0);
+    --field-hover: color-mix(
+      in oklab,
+      var(--field-background, var(--default)) 90%,
+      var(--field-foreground, var(--foreground)) 2%
+    );
+    --field-placeholder: oklch(55.17% 0 0);
+
+    /* Status Colors */
+    --danger: oklch(0.573 0.2249 21.97);
+    --danger-foreground: oklch(98% 0.02 21.97);
+    --danger-hover: color-mix(in oklab, var(--danger) 90%, var(--danger-foreground) 10%);
+    --danger-soft: color-mix(in oklab, var(--danger) 15%, transparent);
+    --danger-soft-foreground: color-mix(in oklab, var(--danger) 70%, var(--foreground) 40%);
+    --danger-soft-hover: color-mix(in oklab, var(--danger) 20%, transparent);
+    --success: oklch(0.6277 0.1604 153.06);
+    --success-foreground: oklch(98% 0.016 153.06);
+    --success-hover: color-mix(in oklab, var(--success) 90%, var(--success-foreground) 10%);
+    --success-soft: color-mix(in oklab, var(--success) 15%, transparent);
+    --success-soft-foreground: color-mix(in oklab, var(--success) 80%, var(--foreground) 60%);
+    --success-soft-hover: color-mix(in oklab, var(--success) 20%, transparent);
+    --warning: oklch(0.8446 0.1525 80.6);
+    --warning-foreground: oklch(15% 0.0457 80.6);
+    --warning-hover: color-mix(in oklab, var(--warning) 90%, var(--warning-foreground) 10%);
+    --warning-soft: color-mix(in oklab, var(--warning) 15%, transparent);
+    --warning-soft-foreground: color-mix(in oklab, var(--warning) 80%, var(--foreground) 70%);
+    --warning-soft-hover: color-mix(in oklab, var(--warning) 20%, transparent);
+
+    /* Component Colors */
+    --link: var(--foreground);
+    --segment: oklch(100% 0 0);
+    --segment-foreground: oklch(21.03% 0 0);
+
+    /* Borders and separators */
+    --border: oklch(90% 0 0);
+    --border-secondary: color-mix(in oklab, var(--surface) 78%, var(--surface-foreground) 22%);
+    --border-tertiary: color-mix(in oklab, var(--surface) 66%, var(--surface-foreground) 34%);
+    --separator: oklch(92% 0 0);
+    --separator-secondary: color-mix(in oklab, var(--surface) 85%, var(--surface-foreground) 15%);
+    --separator-tertiary: color-mix(in oklab, var(--surface) 81%, var(--surface-foreground) 19%);
+
+    /* Other */
+    --background-inverse: var(--foreground);
+    --background-secondary: color-mix(in oklab, var(--background) 96%, var(--foreground) 4%);
+    --background-tertiary: color-mix(in oklab, var(--background) 92%, var(--foreground) 8%);
+  }
+
+  [data-theme="uber"].dark,
+  .dark [data-theme="uber"] {
+    color-scheme: dark;
+
+    /* Base Colors */
+    --background: oklch(12% 0 0);
+    --foreground: oklch(99.11% 0 0);
+
+    /* Surfaces */
+    --overlay: oklch(21.03% 0 0);
+    --overlay-foreground: oklch(99.11% 0 0);
+    --surface: oklch(21.03% 0 0);
+    --surface-foreground: oklch(99.11% 0 0);
+    --surface-hover: color-mix(in oklab, var(--surface) 92%, var(--surface-foreground) 8%);
+    --surface-secondary: oklch(25.7% 0 0);
+    --surface-secondary-foreground: oklch(99.11% 0 0);
+    --surface-tertiary: oklch(27.21% 0 0);
+    --surface-tertiary-foreground: oklch(99.11% 0 0);
+
+    /* Muted and scrollbar */
+    --muted: oklch(70.5% 0 0);
+    --scrollbar: var(--scrollbar-thumb);
+    --scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    --scrollbar-thumb: color-mix(in oklch, var(--foreground) 15%, transparent);
+
+    /* Default */
+    --default: oklch(27.4% 0 0);
+    --default-foreground: oklch(99.11% 0 0);
+    --default-hover: color-mix(in oklab, var(--default) 96%, var(--default-foreground) 4%);
+    --default-soft: color-mix(in oklab, var(--default) 50%, transparent);
+    --default-soft-foreground: var(--default-foreground);
+    --default-soft-hover: color-mix(in oklab, var(--default) 60%, transparent);
+
+    /* Accent */
+    --accent: oklch(0.9848 0 0);
+    --accent-foreground: oklch(15% 0 0);
+    --accent-hover: color-mix(in oklab, var(--accent) 90%, var(--accent-foreground) 10%);
+    --accent-soft: color-mix(in oklab, var(--accent) 12%, transparent);
+    --accent-soft-foreground: oklch(0.9848 0 0);
+    --accent-soft-hover: color-mix(in oklab, var(--accent) 16%, transparent);
+    --focus: oklch(0.9848 0 0);
+
+    /* Form Fields */
+    --field-background: oklch(21.03% 0 0);
+    --field-border: transparent;
+    --field-border-focus: color-mix(
+      in oklab,
+      var(--field-border, var(--border)) 74%,
+      var(--field-foreground, var(--foreground)) 22%
+    );
+    --field-border-hover: color-mix(
+      in oklab,
+      var(--field-border, var(--border)) 88%,
+      var(--field-foreground, var(--foreground)) 10%
+    );
+    --field-focus: var(--field-background, var(--default));
+    --field-foreground: oklch(99.11% 0 0);
+    --field-hover: color-mix(
+      in oklab,
+      var(--field-background, var(--default)) 90%,
+      var(--field-foreground, var(--foreground)) 2%
+    );
+    --field-placeholder: oklch(70.5% 0 0);
+
+    /* Status Colors */
+    --danger: oklch(0.7044 0.1872 23.19);
+    --danger-foreground: oklch(15% 0.05 23.19);
+    --danger-hover: color-mix(in oklab, var(--danger) 90%, var(--danger-foreground) 10%);
+    --danger-soft: color-mix(in oklab, var(--danger) 15%, transparent);
+    --danger-soft-foreground: color-mix(in oklab, var(--danger) 80%, var(--foreground) 30%);
+    --danger-soft-hover: color-mix(in oklab, var(--danger) 20%, transparent);
+    --success: oklch(0.6514 0.1321 156.22);
+    --success-foreground: oklch(15% 0.0396 156.22);
+    --success-hover: color-mix(in oklab, var(--success) 90%, var(--success-foreground) 10%);
+    --success-soft: color-mix(in oklab, var(--success) 12%, transparent);
+    --success-soft-foreground: color-mix(in oklab, var(--success) 80%, var(--foreground) 30%);
+    --success-soft-hover: color-mix(in oklab, var(--success) 16%, transparent);
+    --warning: oklch(0.8803 0.1348 86.06);
+    --warning-foreground: oklch(15% 0.0404 86.06);
+    --warning-hover: color-mix(in oklab, var(--warning) 90%, var(--warning-foreground) 10%);
+    --warning-soft: color-mix(in oklab, var(--warning) 12%, transparent);
+    --warning-soft-foreground: color-mix(in oklab, var(--warning) 80%, var(--foreground) 30%);
+    --warning-soft-hover: color-mix(in oklab, var(--warning) 16%, transparent);
+
+    /* Component Colors */
+    --link: var(--foreground);
+    --segment: oklch(39.64% 0 0);
+    --segment-foreground: oklch(99.11% 0 0);
+
+    /* Borders and separators */
+    --border: oklch(28% 0 0);
+    --border-secondary: color-mix(in oklab, var(--surface) 78%, var(--surface-foreground) 22%);
+    --border-tertiary: color-mix(in oklab, var(--surface) 66%, var(--surface-foreground) 34%);
+    --separator: oklch(25% 0 0);
+    --separator-secondary: color-mix(in oklab, var(--surface) 85%, var(--surface-foreground) 15%);
+    --separator-tertiary: color-mix(in oklab, var(--surface) 81%, var(--surface-foreground) 19%);
+
+    /* Other */
+    --background-inverse: var(--foreground);
+    --background-secondary: color-mix(in oklab, var(--background) 96%, var(--foreground) 4%);
+    --background-tertiary: color-mix(in oklab, var(--background) 92%, var(--foreground) 8%);
+  }
+}

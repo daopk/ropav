@@ -1,0 +1,16 @@
+/**
+ * Every bundled theme — GENERATED, do not edit by hand.
+ *
+ * Convenience for docs and playgrounds. Apps should import only the themes they offer.
+ * Import without a `layer()` wrapper.
+ */
+@import "./sky.css";
+@import "./lavender.css";
+@import "./mint.css";
+@import "./netflix.css";
+@import "./uber.css";
+@import "./spotify.css";
+@import "./coinbase.css";
+@import "./airbnb.css";
+@import "./discord.css";
+@import "./rabbit.css";
