@@ -1,4 +1,4 @@
-import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { PALETTE_CONTRAST_DEBT, expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
@@ -54,12 +54,8 @@ const scrollerIn = (container: HTMLElement) =>
 const chevronIn = (container: HTMLElement, edge: "prev" | "next") =>
   container.querySelector<HTMLButtonElement>(`.tabs__list-container__scroll-${edge}`)!;
 
-/**
- * The muted label on an unselected tab falls below 4.5:1 against the strip it sits on. It comes
- * from the shared stylesheet, so the React build reports the same thing — scoped off here rather
- * than papered over.
- */
-const SHARED_WITH_REACT = { rules: { "color-contrast": { enabled: false } } };
+/** The contrast exclusion is the palette's, not this component's. */
+const SHARED_WITH_REACT = PALETTE_CONTRAST_DEBT;
 
 describe("Tabs (browser)", () => {
   describe("the indicator", () => {

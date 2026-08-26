@@ -1,5 +1,5 @@
 import { CalendarDate } from "@internationalized/date";
-import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { PALETTE_CONTRAST_DEBT, expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { afterEach, describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
@@ -12,14 +12,8 @@ import Fixture from "./fixtures.vue";
 
 const jun = (day: number) => new CalendarDate(2026, 6, day);
 
-/**
- * One rule react-aria's own build fails in exactly the same places, measured on both sides with axe
- * against the same markup: a label, and an invalid segment, sit below 4.5:1 against the field.
- *
- * It lives in `@ropav/styles` rather than in this port, so it is excluded here and recorded as debt
- * instead of being absorbed into a green gate.
- */
-const SHARED_WITH_REACT = { rules: { "color-contrast": { enabled: false } } };
+/** The contrast exclusion is the palette's, not this component's. */
+const SHARED_WITH_REACT = PALETTE_CONTRAST_DEBT;
 
 const render = (props: Record<string, unknown> = {}) =>
   renderVapor(Fixture, { props: { locale: "en-US", withLabel: true, ...props } });

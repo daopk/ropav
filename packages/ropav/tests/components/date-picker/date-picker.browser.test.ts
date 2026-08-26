@@ -1,5 +1,5 @@
 import { CalendarDate } from "@internationalized/date";
-import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { PALETTE_CONTRAST_DEBT, expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { afterEach, describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
@@ -11,12 +11,7 @@ import Fixture from "./fixtures.vue";
 
 const jun = (day: number) => new CalendarDate(2026, 6, day);
 
-const SHARED_WITH_REACT = {
-  rules: {
-    "color-contrast": { enabled: false },
-    "landmark-banner-is-top-level": { enabled: false },
-  },
-};
+const SHARED_WITH_REACT = PALETTE_CONTRAST_DEBT;
 
 const render = (props: Record<string, unknown> = {}) =>
   renderVapor(Fixture, { props: { label: "Appointment", locale: "en-US", ...props } });

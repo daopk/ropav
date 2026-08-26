@@ -1,4 +1,4 @@
-import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { PALETTE_CONTRAST_DEBT, expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
@@ -354,7 +354,7 @@ describe("InputOTP (browser)", () => {
 
     // `color-contrast` is scoped off: the disabled field is deliberately faded, which is what the
     // rule reports, and the same exemption is already taken for the other disabled fields.
-    await expectNoA11yViolations(container, { rules: { "color-contrast": { enabled: false } } });
+    await expectNoA11yViolations(container, PALETTE_CONTRAST_DEBT);
 
     unmount();
   });

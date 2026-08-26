@@ -1,4 +1,4 @@
-import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { PALETTE_CONTRAST_DEBT, expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it, vi } from "vitest";
 import { userEvent } from "vitest/browser";
@@ -221,7 +221,7 @@ describe("Table (browser)", () => {
       // `--muted` (#71717a) on `--surface-secondary` (#efeff0) at 12px for 4.2:1, under the
       // 4.5:1 WCAG AA floor. Both colours come out of `@ropav/styles` and measure identical on
       // React at 6006, so the shortfall belongs to the palette rather than to this port.
-      await expectNoA11yViolations(container, { rules: { "color-contrast": { enabled: false } } });
+      await expectNoA11yViolations(container, PALETTE_CONTRAST_DEBT);
 
       unmount();
     });
@@ -234,7 +234,7 @@ describe("Table (browser)", () => {
       });
 
       // Same palette shortfall as above; every other rule still runs.
-      await expectNoA11yViolations(container, { rules: { "color-contrast": { enabled: false } } });
+      await expectNoA11yViolations(container, PALETTE_CONTRAST_DEBT);
 
       unmount();
     });
@@ -243,7 +243,7 @@ describe("Table (browser)", () => {
       const { container, unmount } = await render({ users: [] });
 
       // Same palette shortfall as above; every other rule still runs.
-      await expectNoA11yViolations(container, { rules: { "color-contrast": { enabled: false } } });
+      await expectNoA11yViolations(container, PALETTE_CONTRAST_DEBT);
 
       unmount();
     });
@@ -362,7 +362,7 @@ describe("Table column resizing (browser)", () => {
     const { container, unmount } = await renderResizable();
 
     // Same palette shortfall as the other grids; every other rule still runs.
-    await expectNoA11yViolations(container, { rules: { "color-contrast": { enabled: false } } });
+    await expectNoA11yViolations(container, PALETTE_CONTRAST_DEBT);
 
     unmount();
   });

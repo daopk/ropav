@@ -1,4 +1,4 @@
-import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { PALETTE_CONTRAST_DEBT, expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
@@ -385,7 +385,7 @@ describe("NumberField (browser)", () => {
     // `color-contrast` is scoped out for this one case, not silenced: a disabled field dims its
     // label through opacity, which drops it below the threshold. The same colour comes out of
     // React, so this is a gap in the shared stylesheet rather than anything about this port.
-    await expectNoA11yViolations(container, { rules: { "color-contrast": { enabled: false } } });
+    await expectNoA11yViolations(container, PALETTE_CONTRAST_DEBT);
 
     unmount();
   });

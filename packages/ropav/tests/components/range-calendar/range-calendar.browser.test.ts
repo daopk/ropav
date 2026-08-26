@@ -1,5 +1,5 @@
 import { CalendarDate } from "@internationalized/date";
-import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { PALETTE_CONTRAST_DEBT, expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { userEvent } from "vitest/browser";
@@ -12,24 +12,14 @@ import Fixture from "./fixtures.vue";
 const jun = (day: number) => new CalendarDate(2026, 6, day);
 
 /**
- * Three rules react-aria's own build fails in exactly the same places, measured on both sides with
- * axe against the same markup.
- *
- * `color-contrast`: a weekday name, and a selected cell, are below 4.5:1 against what they sit on.
- * `landmark-banner-is-top-level`: `RangeCalendar.Header` renders a `<header>`, which is a banner
- * landmark, and a calendar is rarely the top level of a page.
  * `aria-required-children`: the year picker's grid is a `listbox` whose children are cells rather
- * than `option`s.
- *
- * All three live in `@ropav/styles` and in the component shape it assumes rather than in the
- * behaviour layer, so they are excluded here and recorded as debt instead of being absorbed into a
- * green gate.
+ * than `option`s - a shape react-aria's own build fails in the same place. The contrast exclusion
+ * it is spread onto is the palette's, not this component's.
  */
 const SHARED_WITH_REACT = {
   rules: {
+    ...PALETTE_CONTRAST_DEBT.rules,
     "aria-required-children": { enabled: false },
-    "color-contrast": { enabled: false },
-    "landmark-banner-is-top-level": { enabled: false },
   },
 };
 

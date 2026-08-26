@@ -1,4 +1,4 @@
-import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { PALETTE_CONTRAST_DEBT, expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { beforeEach, describe, expect, it } from "vitest";
 import { nextTick } from "vue";
@@ -174,7 +174,7 @@ describe("Table virtualization (browser)", () => {
     // label in `--muted` (#71717a) on `--surface-secondary` (#efeff0) at 12px for 4.2:1, under the
     // 4.5:1 WCAG AA floor. Every other rule still runs, which is where the risk of virtualizing
     // actually is: the roles, the counts and the `aria-rowindex`/`aria-colindex` pairs.
-    await expectNoA11yViolations(container, { rules: { "color-contrast": { enabled: false } } });
+    await expectNoA11yViolations(container, PALETTE_CONTRAST_DEBT);
 
     unmount();
   });

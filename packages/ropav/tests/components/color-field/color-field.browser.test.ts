@@ -1,4 +1,4 @@
-import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { PALETTE_CONTRAST_DEBT, expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it, vi } from "vitest";
 import { userEvent } from "vitest/browser";
@@ -347,7 +347,7 @@ describe("ColorField (browser)", () => {
        * it is recorded as debt against `@ropav/styles` rather than papered over here. Every other
        * axe rule stays on, and the two configurations above check contrast with the rule enabled.
        */
-      await expectNoA11yViolations(container, { rules: { "color-contrast": { enabled: false } } });
+      await expectNoA11yViolations(container, PALETTE_CONTRAST_DEBT);
 
       unmount();
     });

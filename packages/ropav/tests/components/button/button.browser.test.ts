@@ -1,4 +1,4 @@
-import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { PALETTE_CONTRAST_DEBT, expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it, vi } from "vitest";
 import { userEvent } from "vitest/browser";
@@ -226,7 +226,7 @@ describe("Button (browser)", () => {
     // `--accent` (#0485F7) with `--accent-foreground` (#FCFCFC) for 3.59:1, under the
     // 4.5:1 WCAG AA floor for normal text. Both come from `@ropav/styles`, so the
     // finding belongs to the palette, not to this component.
-    await expectNoA11yViolations(container, { rules: { "color-contrast": { enabled: false } } });
+    await expectNoA11yViolations(container, PALETTE_CONTRAST_DEBT);
 
     unmount();
   });

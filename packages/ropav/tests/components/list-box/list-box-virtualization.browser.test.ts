@@ -1,4 +1,4 @@
-import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { PALETTE_CONTRAST_DEBT, expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { beforeEach, describe, expect, it } from "vitest";
 import { nextTick } from "vue";
@@ -142,7 +142,7 @@ describe("ListBox virtualization (browser)", () => {
      * passes with contrast on. Everything else axe checks stays on, which is where the risk of
      * this feature actually is: the roles and the `aria-posinset`/`aria-setsize` pair.
      */
-    await expectNoA11yViolations(container, { rules: { "color-contrast": { enabled: false } } });
+    await expectNoA11yViolations(container, PALETTE_CONTRAST_DEBT);
 
     unmount();
   });

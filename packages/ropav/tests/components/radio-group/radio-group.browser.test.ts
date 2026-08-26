@@ -1,4 +1,4 @@
-import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { PALETTE_CONTRAST_DEBT, expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
@@ -177,7 +177,7 @@ describe("RadioGroup (browser)", () => {
       // label in `--danger`, which falls short of 4.5:1. Verified byte-identical on React at
       // 6006 (`oklch(0.6532 0.2328 25.74)`), so it is a `@ropav/styles` shortfall both
       // frameworks share rather than anything this port introduced.
-      await expectNoA11yViolations(container, { rules: { "color-contrast": { enabled: false } } });
+      await expectNoA11yViolations(container, PALETTE_CONTRAST_DEBT);
 
       unmount();
     });

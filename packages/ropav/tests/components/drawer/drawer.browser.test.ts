@@ -1,4 +1,4 @@
-import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { PALETTE_CONTRAST_DEBT, expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { afterEach, describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
@@ -341,9 +341,7 @@ describe("Drawer (browser)", () => {
       const result = render({ withCloseTrigger: true, withHandle: true });
       const backdrop = await open(result);
 
-      await expectNoA11yViolations(slot("drawer-dialog")!, {
-        rules: { "color-contrast": { enabled: false } },
-      });
+      await expectNoA11yViolations(slot("drawer-dialog")!, PALETTE_CONTRAST_DEBT);
 
       await close(backdrop);
       result.unmount();
