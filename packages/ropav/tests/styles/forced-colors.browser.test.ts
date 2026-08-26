@@ -181,6 +181,67 @@ describe("forced colors mode (browser)", () => {
     expect(styleOf(indicator, "::before").backgroundColor).toBe(systemColor("CanvasText"));
   });
 
+  it("marks the active page", () => {
+    // An inactive link is transparent and the active one is a plain background, so forced
+    // colors flattens the second onto the page and leaves the pair identical.
+    const active = mount(`<a class="pagination__link" href="#" data-active="true">2</a>`);
+    const plain = mount(`<a class="pagination__link" href="#">3</a>`);
+
+    expect(styleOf(active).backgroundColor).toBe(systemColor("Highlight"));
+    expect(styleOf(active).backgroundColor).not.toBe(styleOf(plain).backgroundColor);
+    expect(styleOf(active).forcedColorAdjust).toBe("none");
+  });
+
+  it.each([
+    ["meter", "meter"],
+    ["progress-bar", "progress-bar"],
+  ])("keeps the %s readable as a proportion", (_name, block) => {
+    // Track and fill are both plain backgrounds. Flattened, the whole bar stops rendering -
+    // not a weaker indicator, nothing at all.
+    const host = mount(`
+      <div class="${block}">
+        <div class="${block}__track"><div class="${block}__fill"></div></div>
+      </div>
+    `);
+    const track = host.querySelector<HTMLElement>(`.${block}__track`)!;
+    const fill = host.querySelector<HTMLElement>(`.${block}__fill`)!;
+
+    expect(styleOf(track).outlineStyle).not.toBe("none");
+    expect(styleOf(fill).backgroundColor).toBe(systemColor("Highlight"));
+  });
+
+  it("keeps the progress ring's arc apart from its track", () => {
+    // Forced colors leaves SVG strokes alone, so this one renders in the library's own palette
+    // unless it is mapped over. The track steps aside rather than taking a keyword: every one
+    // dark enough to read against `Canvas` is close enough to `Highlight` to swallow the arc in
+    // one palette or the other.
+    const ring = mount(`
+      <div class="progress-circle" aria-valuenow="60">
+        <svg class="progress-circle__track" viewBox="0 0 32 32">
+          <circle class="progress-circle__track-circle" cx="16" cy="16" r="13"></circle>
+          <circle class="progress-circle__fill-circle" cx="16" cy="16" r="13"></circle>
+        </svg>
+      </div>
+    `);
+
+    expect(styleOf(ring.querySelector(".progress-circle__fill-circle")!).stroke).toBe(
+      systemColor("Highlight"),
+    );
+    expect(styleOf(ring.querySelector(".progress-circle__track-circle")!).stroke).toBe(
+      systemColor("Canvas"),
+    );
+  });
+
+  it("keeps today apart from a plain day and from the selected one", () => {
+    // Today is a tint and nothing else. An edge rather than a fill, so it survives the day also
+    // being selected, which paints the whole cell `Highlight`.
+    const today = mount(`<div class="calendar__cell" data-today="true">1</div>`);
+    const plain = mount(`<div class="calendar__cell">3</div>`);
+
+    expect(styleOf(today).outlineStyle).not.toBe("none");
+    expect(styleOf(plain).outlineStyle).toBe("none");
+  });
+
   it("keeps the slider's track, fill and thumb on screen", () => {
     // Every part of a slider is a background: the bar, the filled portion, the knob. Flattened
     // to `Canvas` the control disappears whole - no track, no value, nothing to grab.
