@@ -5,45 +5,28 @@ import { fileURLToPath } from "node:url";
 
 import fs from "fs-extra";
 
+import { readComponentDirs } from "./component-dirs.mjs";
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
 
 const PACKAGE_JSON_PATH = path.join(rootDir, "package.json");
 const COMPONENTS_DIR = path.join(rootDir, "src/components");
 
-/** Directories to skip when scanning components */
-// `overlay` is the shared layer positioned overlays are built on, not a component of its own,
-// so it gets no subpath and no entry.
-const SKIP_DIRS = new Set(["icons", "utils", "composables", "overlay", "dnd", "date-input-group"]);
-
 /**
  * Scan the components directory and return sorted component names
  * that have an index.ts file.
  */
-async function scanComponents() {
-  if (!(await fs.pathExists(COMPONENTS_DIR))) {
-    console.warn("⚠️  Components directory not found:", COMPONENTS_DIR);
+function scanComponents() {
+  const { components, missingIndex } = readComponentDirs(COMPONENTS_DIR);
 
-    return [];
-  }
+  for (const name of missingIndex) console.warn(`⚠️  Skipping ${name}: index.ts not found`);
 
-  const items = await fs.readdir(COMPONENTS_DIR);
-  const components = [];
+  // Publishing a package.json with no subpaths is worse than not publishing: every
+  // `ropav/<name>` import in the wild stops resolving, and nothing here would have said so.
+  if (components.length === 0) throw new Error(`No components found in ${COMPONENTS_DIR}`);
 
-  for (const item of items) {
-    if (SKIP_DIRS.has(item)) continue;
-
-    const itemPath = path.join(COMPONENTS_DIR, item);
-    const stat = await fs.stat(itemPath);
-
-    if (stat.isDirectory() && (await fs.pathExists(path.join(itemPath, "index.ts")))) {
-      components.push(item);
-    } else if (stat.isDirectory()) {
-      console.warn(`⚠️  Skipping ${item}: index.ts not found`);
-    }
-  }
-
-  return components.sort();
+  return components;
 }
 
 /**
@@ -52,7 +35,7 @@ async function scanComponents() {
  */
 async function generateExports() {
   const packageJson = await fs.readJson(PACKAGE_JSON_PATH);
-  const components = await scanComponents();
+  const components = scanComponents();
 
   console.log(`📦 Found ${components.length} components`);
 

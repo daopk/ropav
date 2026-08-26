@@ -59,6 +59,17 @@ export type {
   DateRangePickerTriggerProps,
 } from "./date-range-picker.types";
 
+export type {
+  DateInputGroupInputContainerProps as DateRangePickerInputContainerProps,
+  DateInputGroupInputProps as DateRangePickerInputProps,
+  DateInputGroupInputSlotProps as DateRangePickerInputSlotProps,
+  DateInputGroupPrefixProps as DateRangePickerPrefixProps,
+  DateInputGroupRootProps as DateRangePickerGroupProps,
+  DateInputGroupRootSlotProps as DateRangePickerGroupSlotProps,
+  DateInputGroupSegmentProps as DateRangePickerSegmentProps,
+  DateInputGroupSuffixProps as DateRangePickerSuffixProps,
+} from "../date-input-group";
+
 /* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
@@ -72,6 +83,6 @@ export type { DateRangePickerContext } from "./date-range-picker.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export { dateRangePickerVariants } from "@ropav/styles";
+export { dateInputGroupVariants, dateRangePickerVariants } from "@ropav/styles";
 
-export type { DateRangePickerVariants } from "@ropav/styles";
+export type { DateInputGroupVariants, DateRangePickerVariants } from "@ropav/styles";

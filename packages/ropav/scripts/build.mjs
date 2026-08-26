@@ -6,12 +6,11 @@ import zlib from "node:zlib";
 
 import fs from "fs-extra";
 
+import { readComponentDirs } from "./component-dirs.mjs";
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
 const distDir = path.join(rootDir, "dist");
-
-/** Directories under `src/components` that are not components */
-const SKIP_DIRS = new Set(["icons", "utils", "composables", "overlay"]);
 
 async function clean() {
   console.log("🧹 Cleaning dist directory...");
@@ -185,22 +184,10 @@ async function rewriteDeclarationSpecifiers() {
   console.log(`   ↳ pinned ${rewritten} relative specifiers to explicit .js paths`);
 }
 
-async function logComponentCount() {
-  const componentsDir = path.join(rootDir, "src/components");
-  let count = 0;
+function logComponentCount() {
+  const { components } = readComponentDirs(path.join(rootDir, "src/components"));
 
-  if (await fs.pathExists(componentsDir)) {
-    for (const item of await fs.readdir(componentsDir)) {
-      if (SKIP_DIRS.has(item)) continue;
-
-      const itemPath = path.join(componentsDir, item);
-
-      if (!(await fs.stat(itemPath)).isDirectory()) continue;
-      if (await fs.pathExists(path.join(itemPath, "index.ts"))) count++;
-    }
-  }
-
-  console.log(`✅ Found ${count} components`);
+  console.log(`✅ Found ${components.length} components`);
   console.log("   Note: Component exports are generated during 'pnpm pack' via clean-package");
 }
 
@@ -299,7 +286,7 @@ async function main() {
       console.log("⚡ Skipping TypeScript generation (use --tsc to include)");
     }
 
-    await logComponentCount();
+    logComponentCount();
     await measureBundleSizes();
 
     console.log("✨ Build completed successfully!");

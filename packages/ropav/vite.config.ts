@@ -6,14 +6,11 @@ import path from "node:path";
 import vue from "@vitejs/plugin-vue";
 import { defineConfig } from "vite";
 
+import { readComponentDirs } from "./scripts/component-dirs.mjs";
+
 const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
 
 const COMPONENTS_DIR = "src/components";
-
-/** Directories under `src/components` that are not components. Kept in step with `scripts/`. */
-// `overlay` is the shared layer positioned overlays are built on, not a component of its own,
-// so it gets no subpath and no entry.
-const SKIP_DIRS = new Set(["icons", "utils", "composables", "overlay", "dnd", "date-input-group"]);
 
 /**
  * Replace the version placeholder in `src/version.ts` with the real version.
@@ -83,17 +80,8 @@ const inlineSfcScriptChunks = (): Plugin => ({
 const resolveEntries = () => {
   const entries: Record<string, string> = { index: "src/index.ts" };
 
-  if (!fs.existsSync(COMPONENTS_DIR)) return entries;
-
-  for (const name of fs.readdirSync(COMPONENTS_DIR)) {
-    if (SKIP_DIRS.has(name)) continue;
-
-    const dir = path.join(COMPONENTS_DIR, name);
-
-    if (!fs.statSync(dir).isDirectory()) continue;
-    if (!fs.existsSync(path.join(dir, "index.ts"))) continue;
-
-    entries[`components/${name}/index`] = path.join(dir, "index.ts");
+  for (const name of readComponentDirs(COMPONENTS_DIR).components) {
+    entries[`components/${name}/index`] = path.join(COMPONENTS_DIR, name, "index.ts");
   }
 
   return entries;
