@@ -38,7 +38,7 @@
     --surface-tertiary-foreground: oklch(21.03% 0 27.99);
 
     /* Muted and scrollbar */
-    --muted: oklch(55.17% 0 27.99);
+    --muted: oklch(51.6% 0 27.99);
     --scrollbar: var(--scrollbar-thumb);
     --scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
     --scrollbar-thumb: color-mix(in oklch, var(--foreground) 15%, transparent);
@@ -80,7 +80,7 @@
       var(--field-background, var(--default)) 90%,
       var(--field-foreground, var(--foreground)) 2%
     );
-    --field-placeholder: oklch(55.17% 0 27.99);
+    --field-placeholder: oklch(51.6% 0 27.99);
 
     /* Status Colors */
     --danger: oklch(0.4823 0.1938 27.64);

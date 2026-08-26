@@ -61,7 +61,7 @@
     --overlay: var(--white);
     --overlay-foreground: var(--foreground);
 
-    --muted: oklch(0.5517 0.0138 285.94);
+    --muted: oklch(0.516 0.0138 285.94);
 
     --scrollbar: var(--scrollbar-thumb);
     --scrollbar-thumb: color-mix(in oklch, var(--foreground) 15%, transparent);

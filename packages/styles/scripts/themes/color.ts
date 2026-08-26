@@ -54,7 +54,7 @@ const DEFAULT_THEME_VALUES = {
     foreground: { c: 0.0059, h: 285.89, l: 0.2103 },
 
     // Pure white
-    muted: { c: 0.0138, h: 285.94, l: 0.5517 },
+    muted: { c: 0.0138, h: 285.94, l: 0.516 },
     // Pure white
     overlay: { c: 0, h: 0, l: 1 },
     scrollbar: { c: 0.006, h: 286.286, l: 0.871 },
