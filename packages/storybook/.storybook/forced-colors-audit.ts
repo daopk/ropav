@@ -9,9 +9,20 @@ import { cdp } from "vitest/browser";
  * block. Three separate bugs shipped that way before this existed.
  *
  * So the audit compares the story against itself: what it resolves to with the mode off, and
- * what it resolves to with the mode on. Anything that carried a state and stops carrying it is
+ * what it resolves to with the mode on. Anything that painted something and stops painting it is
  * the failure. No baseline files and no pixels - the comparison is within a single run, which
  * also means it cannot drift with the platform's fonts.
+ *
+ * Two populations, held to different standards on purpose:
+ *
+ * - Anything wearing a modifier class has to still paint *something* - a component that goes from
+ *   a filled box to loose text has disappeared, not degraded.
+ * - State carriers are held to that and to one more thing: a label sitting on a system-colour
+ *   fill has to opt out of adjustment, or Chromium's backplate covers it.
+ *
+ * What is deliberately *not* checked is whether variants stay apart from each other. They cannot:
+ * the mode has no keyword for success or danger, so status colours collapse onto one appearance
+ * by design and the label is what has to carry the meaning.
  */
 
 /** Attributes that make an element a state indicator rather than decoration. */
@@ -35,7 +46,20 @@ type Signature = {
   readonly hasText: boolean;
 };
 
-const isTransparent = (color: string) => /,\s*0\)$/.test(color) || color === "transparent";
+/**
+ * Alpha zero, and nothing else.
+ *
+ * Testing the string for a trailing `, 0)` looks equivalent and is not: `rgb(0, 0, 0)` ends that
+ * way too, so plain black - which is `CanvasText` in half the palettes this runs against - would
+ * count as invisible and every black edge would read as no edge at all.
+ */
+const isTransparent = (color: string) => {
+  if (color === "transparent") return true;
+
+  const parts = color.match(/[\d.]+/g);
+
+  return parts?.length === 4 && Number.parseFloat(parts[3]!) === 0;
+};
 
 const channels = (color: string) =>
   color
@@ -149,10 +173,13 @@ const settle = () =>
   new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
 export const forcedColorsAudit = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-  const targets = [...canvasElement.querySelectorAll(STATE_SELECTOR)];
+  const stateful = [...canvasElement.querySelectorAll(STATE_SELECTOR)];
+  const varied = [...canvasElement.querySelectorAll("[class*='--']")];
+  const targets = [...new Set([...stateful, ...varied])];
 
-  // Nothing in this story carries a state, so there is nothing that can lose one.
   if (targets.length === 0) return;
+
+  const stateCarriers = new Set(stateful);
 
   const resumeMotion = stopMotion();
 
@@ -191,7 +218,12 @@ export const forcedColorsAudit = async ({ canvasElement }: { canvasElement: HTML
       // Chromium paints a `Canvas` backplate behind the text of any element that has text, on top
       // of that element's own background. A fill carrying a label therefore has to opt out, or the
       // label is covered by a solid plate.
-      if (now.hasText && now.fca === "auto" && isDeliberateFill(now.bg, canvas)) {
+      if (
+        stateCarriers.has(element) &&
+        now.hasText &&
+        now.fca === "auto" &&
+        isDeliberateFill(now.bg, canvas)
+      ) {
         findings.push(
           `${describe(element)} puts a label on a ${now.bg} fill without ` +
             `\`forced-color-adjust: none\` - the backplate will cover it.`,
