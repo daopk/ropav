@@ -144,6 +144,7 @@
   &[data-selected="true"],
   &[aria-selected="true"] {
     @apply bg-accent text-accent-foreground;
+    @apply forced-selected;
 
     @media (hover: hover) and (pointer: fine) {
       &:is(:hover, [data-hovered="true"]) {

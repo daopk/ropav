@@ -232,6 +232,7 @@
   /* Selected state */
   &[data-selected="true"] .table__cell {
     @apply bg-surface/10;
+    @apply forced-selected;
   }
 
   /* Disabled state */

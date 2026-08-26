@@ -233,6 +233,17 @@
   /* Range selected track (middle segment) */
   &[data-selected="true"]:not([data-outside-month="true"]) {
     @apply rounded-none bg-accent-soft;
+
+    /* The track is a background and nothing else, so Forced Colors Mode flattens it into the
+     * page and the range stops being visible. The day button declares its own `color`, so
+     * `HighlightText` has to be restated there rather than left to inherit. */
+    @media (forced-colors: active) {
+      background-color: Highlight;
+
+      .range-calendar__cell-button {
+        color: HighlightText;
+      }
+    }
   }
 
   /* Round row boundaries so the range track looks continuous across weeks */
@@ -257,6 +268,13 @@
 
     .range-calendar__cell-button {
       @apply bg-accent text-accent-foreground;
+
+      /* Caps read the same as the track here. Forced colors offers one selection colour, and
+       * spending it on the shape that matters - the range - beats splitting it. */
+      @media (forced-colors: active) {
+        background-color: Highlight;
+        color: HighlightText;
+      }
     }
   }
 

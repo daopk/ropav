@@ -65,6 +65,7 @@
   &[data-selected="true"] {
     background-color: var(--toggle-button-bg-selected);
     color: var(--toggle-button-fg-selected);
+    @apply forced-selected;
 
     @media (hover: hover) {
       &:hover,

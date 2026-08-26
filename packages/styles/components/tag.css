@@ -42,6 +42,7 @@
 /* Selected state */
 .tag:is([data-selected="true"], [aria-selected="true"]) {
   @apply bg-accent-soft text-accent-soft-foreground;
+  @apply forced-selected;
 
   /* Selected + Hover state */
   @media (hover: hover) {

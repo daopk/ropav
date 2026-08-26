@@ -218,6 +218,7 @@
   /* Selected state */
   &[data-selected="true"] {
     @apply bg-accent text-accent-foreground;
+    @apply forced-selected;
   }
 
   /* Pressed state */

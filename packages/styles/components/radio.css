@@ -162,6 +162,13 @@
 .radio:has(input:checked) .radio__indicator:empty::before {
   @apply bg-accent-foreground;
   scale: 0.4286; /* 6px */
+
+  /* Forced Colors Mode paints the control and this dot the same `Canvas`, which leaves a
+   * checked radio looking exactly like an unchecked one - the scale change shows nothing on
+   * its own. */
+  @media (forced-colors: active) {
+    background-color: CanvasText;
+  }
 }
 
 /* Selected + Pressed state */

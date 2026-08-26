@@ -1,14 +1,33 @@
 /* === Focus Ring === */
+/*
+ * Every ring here is a `box-shadow` - that is what `ring-*` compiles to - and Forced Colors
+ * Mode strips `box-shadow` outright. Since `outline-none` has already given up the native
+ * outline, the two together leave no focus indicator at all, which is WCAG 2.4.7 across every
+ * component that focuses. Each utility therefore draws an outline back under
+ * `forced-colors: active`, in `Highlight`: system colours are exempt from the override, and
+ * `Highlight` is the one the platform reserves for the focused control.
+ */
 @utility focus-ring {
   @apply ring-2 ring-focus ring-offset-0 ring-offset-background outline-none;
   /* Overrides the ring offset from the theme variables */
   --tw-ring-offset-width: var(--ring-offset-width);
+
+  @media (forced-colors: active) {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
 }
 
 @utility focus-field-ring {
   @apply ring-2 ring-focus ring-offset-0 outline-none;
   /* No separation - ring sits directly against the element */
   --tw-ring-offset-width: 0px;
+
+  /* Offset stays at 0, matching the ring this stands in for */
+  @media (forced-colors: active) {
+    outline: 2px solid Highlight;
+    outline-offset: 0;
+  }
 }
 
 @utility invalid-field-ring {
@@ -25,6 +44,15 @@
   &[data-focus-within="true"] {
     @apply ring-2 ring-danger ring-offset-0;
     --tw-ring-offset-width: 0px;
+
+    /* The unfocused outline above survives forced colors, but the ring marking focus does
+     * not - widen and recolour the outline instead, or a focused invalid field is
+     * indistinguishable from an unfocused one. The danger colour is not the loss it looks
+     * like: forced colors overrides it either way, and the error message carries it. */
+    @media (forced-colors: active) {
+      outline-width: 2px;
+      outline-color: Highlight;
+    }
   }
 }
 
@@ -49,10 +77,45 @@
   opacity: var(--disabled-opacity);
   cursor: var(--cursor-disabled);
   pointer-events: none;
+
+  /* Forced colors leaves `opacity` alone, so the element still reads as dimmed without this.
+   * `GrayText` is the signal the platform actually uses for a disabled control, and it
+   * inherits, which is what carries it to the label and description inside. */
+  @media (forced-colors: active) {
+    color: GrayText;
+    border-color: GrayText;
+  }
 }
 
 @utility status-pending {
   @apply pointer-events-none;
+}
+
+/* === Forced Colors (Windows High Contrast Mode) === */
+
+/*
+ * Restates "selected" for Forced Colors Mode.
+ *
+ * The mode replaces every author colour with the user's palette, so a state carried only by
+ * `background-color` - a selected tag, calendar day, table row - collapses into its neighbours
+ * and the selection becomes invisible. `Highlight` / `HighlightText` is the pair the platform
+ * reserves for a selected control and is exempt from the override, so restating the state
+ * with it survives.
+ *
+ * Only for elements whose selected state is a background and nothing else. Where selection
+ * also shows as a glyph or a moved thumb, the component's own `forced-colors` block handles
+ * it, because those parts need colours of their own.
+ *
+ * Apply it as a statement of its own, never folded into another `@apply` list: Tailwind sorts
+ * the utilities in one list and hoists the nested at-rule above the plain declarations, where
+ * the very `background-color` this is meant to override then wins.
+ */
+@utility forced-selected {
+  @media (forced-colors: active) {
+    background-color: Highlight;
+    border-color: Highlight;
+    color: HighlightText;
+  }
 }
 
 /* === Scrollbars (standards-only; apply per scroll slot in component CSS) === */

@@ -141,6 +141,11 @@
   &[data-selected="true"] {
     @apply text-segment-foreground;
 
+    /* Sits on top of the indicator, which forced colors paints `Highlight` */
+    @media (forced-colors: active) {
+      color: HighlightText;
+    }
+
     /* Hide separator on the selected tab and the one following it */
     .tabs__separator,
     & + .tabs__tab .tabs__separator {
@@ -217,6 +222,13 @@
 
   z-index: -1;
 
+  /* The indicator is a background and nothing else, so Forced Colors Mode flattens it away
+   * and nothing marks the selected tab. `Highlight` behind `HighlightText` is the platform's
+   * own pairing for a selected segment. */
+  @media (forced-colors: active) {
+    background-color: Highlight;
+  }
+
   /**
    * Transitions
    * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
@@ -254,12 +266,25 @@
       /* Selected state - use text-foreground */
       &[data-selected="true"] {
         @apply text-foreground;
+
+        /* Here the indicator is a line under the tab rather than a pill behind it, so the
+         * label keeps the ordinary text colour instead of the base variant's
+         * `HighlightText`, which would be invisible against the page. */
+        @media (forced-colors: active) {
+          color: CanvasText;
+        }
       }
     }
 
     /* Tab indicator - line style */
     .tabs__indicator {
       @apply rounded-none bg-accent shadow-none;
+
+      /* `bg-accent` outranks the base rule's forced-colors fallback and is itself flattened
+       * to `Canvas`, so the underline has to be restated here or it disappears. */
+      @media (forced-colors: active) {
+        background-color: Highlight;
+      }
     }
   }
 

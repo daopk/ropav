@@ -1,5 +1,14 @@
 .skeleton {
   @apply pointer-events-none relative overflow-hidden rounded-sm bg-surface-tertiary/70;
+
+  /* Forced Colors Mode flattens the fill to `Canvas` - the same colour as the page behind it -
+   * and drops the shimmer gradient outright, so the placeholder disappears entirely. An inset
+   * outline is what is left to say something is loading here, and unlike a border it costs no
+   * layout. */
+  @media (forced-colors: active) {
+    outline: 1px solid GrayText;
+    outline-offset: -1px;
+  }
 }
 
 /* TODO: Skeleton with parent are not visible */
