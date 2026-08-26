@@ -24,15 +24,36 @@
     @apply relative rounded-xl bg-default;
 
     grid-area: track;
+
+    /* Forced Colors Mode flattens the bar to `Canvas`, the colour of the page behind it, so
+     * the track stops existing - hence the edge. The spacer borders are dealt with per
+     * orientation below, which is where they are set. */
+    @media (forced-colors: active) {
+      background-color: Canvas;
+      outline: 1px solid CanvasText;
+      outline-offset: -1px;
+    }
   }
 
   .slider__fill {
     @apply pointer-events-none absolute bg-accent;
+
+    /* The only thing showing how far along the value is */
+    @media (forced-colors: active) {
+      background-color: Highlight;
+    }
   }
 
   .slider__thumb {
     /* Flex container for centering pseudo-elements */
     @apply absolute flex cursor-grab items-center justify-center rounded-xl bg-accent no-highlight;
+
+    /* The wrapper is the fill colour in ordinary use, which hides it against the fill. Flattened
+     * to `Canvas` it would punch a hole through the fill instead, so it steps back and lets
+     * `::after` - the knob you actually see - carry the control. */
+    @media (forced-colors: active) {
+      background-color: transparent;
+    }
 
     /**
    * Transitions
@@ -48,6 +69,15 @@
     &::after {
       @apply relative z-10 rounded-lg bg-accent-foreground text-black shadow-field;
       content: "";
+
+      /* Both the knob's fill and the shadow that separates it from the track are gone under
+       * forced colors. `Canvas` inside a `CanvasText` ring reads against the bare track on one
+       * side and the `Highlight` fill on the other, which no single flat colour manages. */
+      @media (forced-colors: active) {
+        background-color: Canvas;
+        outline: 2px solid CanvasText;
+        outline-offset: -2px;
+      }
 
       /**
        * Transitions
@@ -96,12 +126,29 @@
       /* Thumb width is 1.5rem (24px), so half is 0.75rem (12px) */
       @apply border-x-[0.75rem] border-x-transparent;
 
+      /* A transparent border-color is one of the few things forced colors turns *opaque*, so
+       * without this the two spacers render as solid blocks at either end of the track. */
+      @media (forced-colors: active) {
+        border-inline-start-color: Canvas;
+        border-inline-end-color: Canvas;
+      }
+
       &[data-fill-start="true"] {
         @apply border-s-accent;
+
+        /* Carries the fill past the spacer to the end of the bar, so it has to be the fill
+         * colour rather than the `Canvas` the base rule neutralises the spacers with. */
+        @media (forced-colors: active) {
+          border-inline-start-color: Highlight;
+        }
       }
 
       &[data-fill-end="true"] {
         @apply border-e-accent;
+
+        @media (forced-colors: active) {
+          border-inline-end-color: Highlight;
+        }
       }
     }
 
@@ -150,12 +197,26 @@
       @apply border-y-[0.75rem] border-y-transparent;
       justify-self: center;
 
+      /* Same as the horizontal spacers - opaque without this */
+      @media (forced-colors: active) {
+        border-top-color: Canvas;
+        border-bottom-color: Canvas;
+      }
+
       &[data-fill-start="true"] {
         @apply border-b-accent;
+
+        @media (forced-colors: active) {
+          border-bottom-color: Highlight;
+        }
       }
 
       &[data-fill-end="true"] {
         @apply border-t-accent;
+
+        @media (forced-colors: active) {
+          border-top-color: Highlight;
+        }
       }
     }
 
