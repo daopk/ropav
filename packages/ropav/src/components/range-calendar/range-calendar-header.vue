@@ -15,7 +15,7 @@ const styles = computed(() => slots.value.header({ class: props.class }));
 </script>
 
 <template>
-  <header :class="styles" data-slot="range-calendar-header">
+  <div :class="styles" data-slot="range-calendar-header">
     <slot />
-  </header>
+  </div>
 </template>
