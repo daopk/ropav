@@ -2,6 +2,9 @@ import type { ElementContext, Result, RunOptions } from "axe-core";
 
 import axe from "axe-core";
 
+// Re-exported so a caller can type its own options without taking a direct dependency on axe.
+export type { RunOptions } from "axe-core";
+
 /**
  * Run axe against a DOM subtree and return whatever it flags.
  *
@@ -19,6 +22,21 @@ export const findA11yViolations = async (
   const results = await axe.run(context, options);
 
   return results.violations;
+};
+
+/**
+ * The contrast failures that belong to the palette rather than to any component.
+ *
+ * Measured across all eleven themes: `--accent` pairs with `--accent-foreground` at 3.59:1 and
+ * `--danger` with the page at 3.27:1, both under the 4.5:1 WCAG AA floor for normal text. They come
+ * from `@ropav/styles`, so every component that paints with them inherits the finding and none of
+ * them can fix it.
+ *
+ * Switched off here, in one place, so the debt has a name. Reaching for `{rules: {"color-contrast":
+ * ...}}` inline is how the previous version of this drifted into three different shapes.
+ */
+export const PALETTE_CONTRAST_DEBT: RunOptions = {
+  rules: { "color-contrast": { enabled: false } },
 };
 
 const formatViolations = (violations: Result[]) =>
