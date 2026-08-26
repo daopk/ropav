@@ -1,6 +1,14 @@
 import type { PaginationVariants } from "@ropav/styles";
 
 export interface PaginationRootProps {
+  /**
+   * Name for the navigation landmark.
+   *
+   * Overridable because the name is what tells two paginations apart: a list with one set of
+   * controls above it and another below reports the same landmark twice otherwise.
+   * @default "pagination"
+   */
+  ariaLabel?: string;
   class?: string;
   /** Pagination size. @default "md" */
   size?: PaginationVariants["size"];

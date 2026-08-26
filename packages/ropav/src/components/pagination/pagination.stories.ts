@@ -99,7 +99,7 @@ export const Sizes: Story = {
         <template v-for="(size, index) of sizes" :key="size">
           <div class="flex flex-col gap-2">
             <span class="text-sm font-semibold text-muted capitalize">{{ size }}</span>
-            <Pagination :size="size">
+            <Pagination :aria-label="size + ' pagination'" :size="size">
               <PaginationContent>
                 <PaginationItem>
                   <PaginationPrevious>

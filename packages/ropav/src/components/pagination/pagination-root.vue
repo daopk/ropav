@@ -17,7 +17,7 @@ providePaginationContext({ slots });
 
 <template>
   <nav
-    aria-label="pagination"
+    :aria-label="props.ariaLabel ?? 'pagination'"
     :class="slots.base({ class: props.class })"
     data-slot="pagination"
     role="navigation"
