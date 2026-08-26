@@ -252,14 +252,20 @@ sits on a different element than the text (`tabs.css`, `range-calendar.css`). Re
 alongside explicit system colours - on its own it just hands the author's palette back, which is the
 opposite of the point.
 
-To look at it, use Chromium's rendering panel - DevTools, `Cmd+Shift+P`, "Show Rendering", then
-*Emulate CSS media feature forced-colors* - and note that **macOS has no Forced Colors Mode at all**:
-"Increase contrast" maps to `prefers-contrast: more`, so switching it on tests nothing. There is
-deliberately no toolbar control in Storybook either. `data-reduce-motion` is an attribute a decorator
-can set, but this is a browser-level media feature that an iframe cannot turn on for itself; faking it
-with a stylesheet of system colours would miss the `box-shadow` removal, which is the part that
-actually breaks. `forced-colors.browser.test.ts` in the `ropav` package covers it instead, by
-emulating the mode over CDP.
+Two things guard it. `forced-colors.browser.test.ts` in the `ropav` package asserts the stylesheet
+directly, and the Storybook package runs **every story** through an audit that renders it twice - the
+mode off, then on over CDP - and fails on anything that carried a state and stops carrying it. The
+second one exists because the first cannot see this class of bug on its own: the colour override runs
+after the cascade and the backplate is painted later still, so a component reports every declared
+colour correctly while rendering as a blank block. Three bugs shipped that way before the audit
+existed.
+
+To look at it by hand, use Chromium's rendering panel - DevTools, `Cmd+Shift+P`, "Show Rendering",
+then *Emulate CSS media feature forced-colors* - and note that **macOS has no Forced Colors Mode at
+all**: "Increase contrast" maps to `prefers-contrast: more`, so switching it on tests nothing. There
+is deliberately no toolbar control in Storybook. `data-reduce-motion` is an attribute a decorator can
+set, but this is a browser-level media feature an iframe cannot turn on for itself, and faking it with
+a stylesheet of system colours would miss the `box-shadow` removal - the part that actually breaks.
 
 ## Build
 
