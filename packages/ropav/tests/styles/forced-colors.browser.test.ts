@@ -124,7 +124,32 @@ describe("forced colors mode (browser)", () => {
 
     expect(styleOf(selected).backgroundColor).toBe(systemColor("Highlight"));
     expect(styleOf(selected).color).toBe(systemColor("HighlightText"));
+    // The pairing only reads on screen because the backplate is suppressed - see below.
+    expect(styleOf(selected).forcedColorAdjust).toBe("none");
     expect(styleOf(selected).backgroundColor).not.toBe(styleOf(resting).backgroundColor);
+  });
+
+  it("opts label-bearing selected surfaces out of colour adjustment", () => {
+    // Chromium paints a `Canvas`-coloured backplate behind the text of any element that has
+    // text, so that text over an image stays readable. It lands on top of the element's own
+    // background, so a `Highlight` fill carrying `HighlightText` renders as a solid plate with
+    // an invisible label. `forced-color-adjust: none` is what suppresses it.
+    //
+    // Nothing about this is visible to `getComputedStyle` - the backplate is a paint-time
+    // artefact - so the opt-out itself is what gets asserted. Drop it from any of these and the
+    // component still reports the right colours while showing a blank block on screen.
+    const cases = [
+      mount(`<div class="tag" data-selected="true">t</div>`),
+      mount(`<div class="toggle-button" data-selected="true">t</div>`),
+      mount(`<div class="calendar__cell" data-selected="true">15</div>`),
+      mount(`<table><tbody><tr class="table__row" data-selected="true">
+        <td class="table__cell">c</td></tr></tbody></table>`).querySelector(".table__cell")!,
+      mount(`<div class="tabs__tab" data-selected="true">Overview</div>`),
+    ];
+
+    for (const element of cases) {
+      expect(styleOf(element).forcedColorAdjust).toBe("none");
+    }
   });
 
   it("keeps the switch thumb visible against its track at both ends", () => {
