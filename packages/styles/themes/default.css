@@ -1,5 +1,12 @@
-@layer base {
-  /* Ropav Default Theme */
+/**
+ * Ropav default theme — hand-written.
+ *
+ * Also the base layer every other theme sits on: the structural tokens declared here
+ * (`--spacing`, `--radius`, `--cursor-*`, the primitives, the shadows, `--backdrop`) are
+ * not repeated by the generated themes, which only swap colours. `:root` and `.dark` keep
+ * matching an element that carries a `data-theme`, so those tokens still come through.
+ */
+@layer theme {
   :root,
   .light,
   .default,

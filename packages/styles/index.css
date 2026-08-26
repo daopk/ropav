@@ -13,8 +13,13 @@
 /* Base component structures (unstyled) */
 @import "./components/index.css" layer(components);
 
-/* Default theme (variables + component customizations) */
-@import "./themes/default/index.css" layer(theme);
+/* Maps the theme tokens onto Tailwind's namespaces - @see https://tailwindcss.com/docs/theme.
+ * Must stay unlayered: Tailwind only picks up `@theme` outside a cascade layer. */
+@import "./themes/shared/theme.css";
+
+/* Default theme. Declares its own `@layer theme`; the bundled alternatives in
+ * `themes/*.css` are opt-in and layer themselves the same way. */
+@import "./themes/default.css";
 
 /* Utilities */
 @import "./utilities/index.css";
