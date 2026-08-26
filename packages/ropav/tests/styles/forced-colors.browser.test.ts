@@ -287,6 +287,22 @@ describe("forced colors mode (browser)", () => {
     expect(styleOf(track).borderInlineStartColor).toBe(systemColor("Highlight"));
   });
 
+  it("keeps a chip looking like a chip", () => {
+    // A chip is nothing but its colour, so the mode leaves it as bare label text - not a weaker
+    // chip, no chip at all. The status cannot survive (there is no keyword for success or
+    // warning), but the shape and the solid/outlined split can.
+    const solid = mount(`<span class="chip chip--primary chip--success">Completed</span>`);
+    const outlined = mount(`<span class="chip chip--soft chip--success">Completed</span>`);
+
+    expect(styleOf(solid).outlineStyle).not.toBe("none");
+    expect(styleOf(outlined).outlineStyle).not.toBe("none");
+
+    // Solid stays solid, and opts out so the backplate does not cover its label.
+    expect(styleOf(solid).backgroundColor).toBe(systemColor("CanvasText"));
+    expect(styleOf(solid).forcedColorAdjust).toBe("none");
+    expect(styleOf(outlined).backgroundColor).not.toBe(styleOf(solid).backgroundColor);
+  });
+
   it("keeps a skeleton visible against the page", () => {
     // Its fill flattens to Canvas - the colour of the page behind it - and the shimmer is a
     // gradient, which forced colors removes entirely. Without an outline there is nothing left.
