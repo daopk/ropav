@@ -287,6 +287,37 @@ describe("forced colors mode (browser)", () => {
     expect(styleOf(track).borderInlineStartColor).toBe(systemColor("Highlight"));
   });
 
+  it.each([
+    ["button", `<button class="button button--secondary">x</button>`],
+    ["toggle-button", `<button class="toggle-button">x</button>`],
+    ["tag", `<div class="tag tag--md">x</div>`],
+    ["input", `<input class="input" value="x" />`],
+    ["textarea", `<textarea class="textarea">x</textarea>`],
+    ["input-group", `<div class="input-group"></div>`],
+    ["select trigger", `<button class="select__trigger">x</button>`],
+  ])("keeps the %s identifiable as a control", (_name, markup) => {
+    // Every one of these is a fill and a shadow and nothing else - flattened, they read as bare
+    // text with no sign they can be clicked or typed into. The fields make it worse:
+    // `--border-width-field` is 0, so their declared border brings nothing back on its own.
+    const control = mount(markup);
+    const style = styleOf(control);
+
+    expect(style.outlineStyle).not.toBe("none");
+    expect(Number.parseFloat(style.outlineWidth)).toBeGreaterThan(0);
+    expect(style.outlineColor).toBe(systemColor("ButtonBorder"));
+  });
+
+  it("keeps the emphasised buttons apart from the rest", () => {
+    // Forced colors has no keyword for "this is the important one", so the emphasis has to come
+    // from solid against outlined - the same split the chip keeps.
+    const solid = mount(`<button class="button button--primary">x</button>`);
+    const plain = mount(`<button class="button button--secondary">x</button>`);
+
+    expect(styleOf(solid).backgroundColor).toBe(systemColor("CanvasText"));
+    expect(styleOf(solid).forcedColorAdjust).toBe("none");
+    expect(styleOf(plain).backgroundColor).not.toBe(styleOf(solid).backgroundColor);
+  });
+
   it("keeps a chip looking like a chip", () => {
     // A chip is nothing but its colour, so the mode leaves it as bare label text - not a weaker
     // chip, no chip at all. The status cannot survive (there is no keyword for success or
