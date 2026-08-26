@@ -204,6 +204,48 @@ stale the moment a token moves. `themes/shared/theme.css` holds what is derived 
 of the OS setting, and with neither the `prefers-reduced-motion` media query decides. Defined as the
 `motion-reduce` / `motion-safe` variants in `variants/index.css`.
 
+### Forced colors
+
+Forced Colors Mode - Windows High Contrast - replaces author colours with the user's own palette and
+strips `box-shadow` outright. That second part is what makes it more than a colour question here:
+every ring in this library *is* a `box-shadow`, because that is what `ring-*` compiles to, and it sits
+on top of `outline-none`. Left alone, a focused control would have no indicator at all.
+
+Nothing to opt into. The three focus utilities - `focus-ring`, `focus-field-ring`,
+`invalid-field-ring` - draw an outline back in `Highlight` under `forced-colors: active`, so any
+component that goes through `status-focused`, `status-focused-field` or `status-invalid-field` is
+covered without a line of its own. `status-disabled` picks up `GrayText` the same way.
+
+The other half is state carried only by `background-color`, which the override flattens into its
+surroundings. Where selection is *just* a background - a tag, a calendar day, a table row - apply
+`forced-selected`, **as an `@apply` statement of its own**:
+
+```css
+.thing[data-selected="true"] {
+  @apply bg-accent text-accent-foreground;
+  @apply forced-selected;
+}
+```
+
+Folded into the line above it, Tailwind sorts the list and hoists the nested media query over the
+plain declarations, and the `background-color` it exists to override wins instead. Where selection
+also moves a thumb or shows a glyph, the component writes its own `forced-colors` block, because
+those parts need colours of their own - see `switch.css`, `radio.css`, `tabs.css`, `range-calendar.css`
+and `skeleton.css`.
+
+Use the system colour keywords, not tokens: `Highlight` / `HighlightText` for a selected control,
+`CanvasText` on `Canvas` for ordinary content, `ButtonBorder` for a control's edge, `GrayText` for
+disabled. They are the only colours exempt from the override.
+
+To look at it, use Chromium's rendering panel - DevTools, `Cmd+Shift+P`, "Show Rendering", then
+*Emulate CSS media feature forced-colors* - and note that **macOS has no Forced Colors Mode at all**:
+"Increase contrast" maps to `prefers-contrast: more`, so switching it on tests nothing. There is
+deliberately no toolbar control in Storybook either. `data-reduce-motion` is an attribute a decorator
+can set, but this is a browser-level media feature that an iframe cannot turn on for itself; faking it
+with a stylesheet of system colours would miss the `box-shadow` removal, which is the part that
+actually breaks. `forced-colors.browser.test.ts` in the `ropav` package covers it instead, by
+emulating the mode over CDP.
+
 ## Build
 
 ```bash
