@@ -181,6 +181,51 @@ describe("forced colors mode (browser)", () => {
     expect(styleOf(indicator, "::before").backgroundColor).toBe(systemColor("CanvasText"));
   });
 
+  it("keeps the slider's track, fill and thumb on screen", () => {
+    // Every part of a slider is a background: the bar, the filled portion, the knob. Flattened
+    // to `Canvas` the control disappears whole - no track, no value, nothing to grab.
+    const slider = mount(`
+      <div class="slider" data-orientation="horizontal">
+        <div class="slider__track" data-fill-start="true">
+          <div class="slider__fill"></div>
+          <div class="slider__thumb"></div>
+        </div>
+      </div>
+    `);
+    const track = slider.querySelector<HTMLElement>(".slider__track")!;
+    const thumb = slider.querySelector<HTMLElement>(".slider__thumb")!;
+    const knob = styleOf(thumb, "::after");
+
+    expect(styleOf(track).outlineStyle).not.toBe("none");
+    expect(styleOf(slider.querySelector(".slider__fill")!).backgroundColor).toBe(
+      systemColor("Highlight"),
+    );
+
+    // The knob reads against the bare track on one side and the fill on the other, so it is
+    // the ring that has to survive - `shadow-field` is a box-shadow and does not.
+    expect(knob.outlineStyle).not.toBe("none");
+    expect(knob.backgroundColor).toBe(systemColor("Canvas"));
+    // The wrapper matches the fill normally; opaque here it would punch a hole through it.
+    // Matched on the alpha rather than the whole colour: forced colors keeps `transparent`
+    // transparent but restates it in the palette's own channels.
+    expect(styleOf(thumb).backgroundColor).toMatch(/,\s*0\)$/);
+  });
+
+  it("keeps the slider's transparent spacer borders from going opaque", () => {
+    // The track holds room for the thumb at either end with 0.75rem transparent borders, and a
+    // transparent border-color is one of the few things forced colors turns *opaque* - so
+    // without help they render as solid blocks at both ends of the bar. The filled end is the
+    // exception: there the border carries the fill past the spacer.
+    const track = mount(`
+      <div class="slider" data-orientation="horizontal">
+        <div class="slider__track" data-fill-start="true"></div>
+      </div>
+    `).querySelector<HTMLElement>(".slider__track")!;
+
+    expect(styleOf(track).borderInlineEndColor).toBe(systemColor("Canvas"));
+    expect(styleOf(track).borderInlineStartColor).toBe(systemColor("Highlight"));
+  });
+
   it("keeps a skeleton visible against the page", () => {
     // Its fill flattens to Canvas - the colour of the page behind it - and the shimmer is a
     // gradient, which forced colors removes entirely. Without an outline there is nothing left.
