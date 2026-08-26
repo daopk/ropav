@@ -4,6 +4,8 @@ import type { ScrollShadowRootProps } from "./scroll-shadow.types";
 import { scrollShadowVariants } from "@ropav/styles";
 import { computed, shallowRef, watch } from "vue";
 
+import { focusableIn } from "../../utils/focus";
+
 import { useScrollShadow } from "./use-scroll-shadow";
 
 const props = withDefaults(defineProps<ScrollShadowRootProps>(), {
@@ -19,6 +21,18 @@ const props = withDefaults(defineProps<ScrollShadowRootProps>(), {
 defineSlots<{ default?: () => unknown }>();
 
 const element = shallowRef<HTMLElement | null>(null);
+
+// A region that scrolls has to be reachable by keyboard. When nothing inside can take focus, the
+// container itself is the only place that tab stop can go.
+const needsTabStop = shallowRef(false);
+
+watch(
+  element,
+  (host) => {
+    needsTabStop.value = Boolean(host) && focusableIn(host as HTMLElement).length === 0;
+  },
+  { flush: "post" },
+);
 
 const styles = computed(() =>
   scrollShadowVariants({
@@ -75,6 +89,7 @@ defineExpose({ checkOverflow, element });
     :data-scroll-shadow-size="props.size"
     data-slot="scroll-shadow"
     :style="style"
+    :tabindex="needsTabStop ? 0 : undefined"
   >
     <slot />
   </div>
