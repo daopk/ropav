@@ -67,6 +67,12 @@ const role = computed(() =>
   state.selectionMode.value === "single" ? "radiogroup" : toolbar.role.value,
 );
 
+// A nested group reports `role="group"`, which has no orientation to report - the attribute is
+// invalid there even though the layout still has a direction.
+const ariaOrientation = computed(() =>
+  role.value === "group" ? undefined : resolvedOrientation.value,
+);
+
 provideToggleButtonGroupContext({
   size: computed(() => props.size),
   slots,
@@ -78,7 +84,7 @@ provideToggleButtonGroupContext({
   <div
     ref="element"
     :aria-disabled="resolvedIsDisabled || undefined"
-    :aria-orientation="resolvedOrientation"
+    :aria-orientation="ariaOrientation"
     :class="slots.base({ class: props.class })"
     :data-disabled="dataAttr(resolvedIsDisabled)"
     :data-orientation="resolvedOrientation"

@@ -410,7 +410,7 @@ describe("Select", () => {
       const { root, trigger } = await render({ isRequired: true });
 
       expect(root).toHaveAttribute("data-required", "true");
-      expect(trigger).toHaveAttribute("aria-required", "true");
+      expect(trigger).not.toHaveAttribute("aria-required");
     });
   });
 

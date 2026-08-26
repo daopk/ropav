@@ -211,7 +211,6 @@ export const useSelect = <T>(
       "aria-labelledby": [valueId.value, toValue(options.ariaLabelledby) ?? fieldIds.labelId.value]
         .filter(Boolean)
         .join(" "),
-      "aria-required": toValue(options.isRequired) || undefined,
       disabled: toValue(options.isDisabled) || undefined,
       id: trigger.triggerId.value,
       type: "button" as const,

@@ -34,12 +34,17 @@ provideToolbarContext({ orientation });
 provideSeparatorContext({
   orientation: computed(() => (props.orientation === "horizontal" ? "vertical" : "horizontal")),
 });
+// A nested toolbar reports `role="group"`, which has no orientation to report - the attribute is
+// invalid there even though the layout still has a direction.
+const ariaOrientation = computed(() =>
+  toolbar.role.value === "group" ? undefined : props.orientation,
+);
 </script>
 
 <template>
   <div
     ref="element"
-    :aria-orientation="props.orientation"
+    :aria-orientation="ariaOrientation"
     :class="styles"
     :data-orientation="props.orientation"
     data-slot="toolbar"

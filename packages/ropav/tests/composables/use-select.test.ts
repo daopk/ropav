@@ -73,11 +73,13 @@ describe("useSelect", () => {
       expect(select.labelledBy.value).toBe(select.triggerId.value);
     });
 
-    it("carries the required and invalid states", () => {
+    it("carries the invalid state, and leaves required off a role that cannot take it", () => {
       const { trigger } = mount({ isInvalid: true, isRequired: true });
 
-      expect(trigger).toHaveAttribute("aria-required", "true");
       expect(trigger).toHaveAttribute("aria-invalid", "true");
+      // `aria-required` is not supported on `role="button"`, so assistive technology drops it -
+      // rendering it only made the gap look covered. The hidden native select carries `required`.
+      expect(trigger).not.toHaveAttribute("aria-required");
     });
 
     it("omits the state attributes it is not in", () => {
