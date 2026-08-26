@@ -207,6 +207,13 @@
   &[data-today="true"] {
     @apply bg-accent-soft text-accent-soft-foreground;
 
+    /* A tinted background is all that marks today, and forced colors flattens it onto the page.
+     * An edge rather than a fill, so today still reads as itself once it is also selected. */
+    @media (forced-colors: active) {
+      outline: 1px solid CanvasText;
+      outline-offset: -1px;
+    }
+
     @media (hover: hover) {
       &:hover:not([data-selected="true"]),
       &[data-hovered="true"]:not([data-selected="true"]) {

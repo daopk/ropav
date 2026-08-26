@@ -32,12 +32,24 @@
 
     /* Default height (matches --md) */
     @apply h-2;
+
+    /* Track and fill are both plain backgrounds, so forced colors flattens the pair onto the
+     * page and the whole bar stops rendering. */
+    @media (forced-colors: active) {
+      background-color: Canvas;
+      outline: 1px solid CanvasText;
+      outline-offset: -1px;
+    }
   }
 
   .progress-bar__fill {
     @apply absolute start-0 top-0 h-full rounded-sm;
 
     background-color: var(--progress-bar-fill);
+
+    @media (forced-colors: active) {
+      background-color: Highlight;
+    }
 
     /**
      * Transitions

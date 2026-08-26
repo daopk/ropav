@@ -218,6 +218,12 @@
   &[data-today="true"] {
     .range-calendar__cell-button {
       @apply bg-accent-soft text-accent-soft-foreground;
+
+      /* An edge rather than a fill, so today still reads as itself once it is also in range */
+      @media (forced-colors: active) {
+        outline: 1px solid CanvasText;
+        outline-offset: -1px;
+      }
     }
 
     @media (hover: hover) {

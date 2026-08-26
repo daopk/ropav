@@ -17,10 +17,22 @@
 
   .progress-circle__track-circle {
     stroke: var(--progress-circle-track-stroke);
+
+    /* Forced colors leaves SVG strokes alone, so the ring renders but in the library's own
+     * palette rather than the user's. The track steps out of the way entirely: every keyword
+     * dark enough to read against `Canvas` is also close enough to `Highlight` to swallow the
+     * arc in one palette or the other, and the arc is the part carrying the value. */
+    @media (forced-colors: active) {
+      stroke: Canvas;
+    }
   }
 
   .progress-circle__fill-circle {
     stroke: var(--progress-circle-stroke);
+
+    @media (forced-colors: active) {
+      stroke: Highlight;
+    }
 
     /**
      * Transitions

@@ -79,6 +79,10 @@
     --pagination-link-bg: var(--default);
     --pagination-link-bg-hover: var(--default-hover);
     --pagination-link-bg-pressed: var(--default-hover);
+
+    /* The active page is a background and nothing else, and an inactive link is transparent -
+     * forced colors flattens the first onto the page and leaves the pair identical. */
+    @apply forced-selected;
   }
 }
 
