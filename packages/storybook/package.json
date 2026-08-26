@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "storybook dev --host 127.0.0.1 --port 6006 --no-open",
+    "test": "vitest run",
     "build": "storybook build",
     "start": "storybook start",
     "typecheck": "vue-tsc --noEmit"
@@ -24,19 +25,24 @@
     "@iconify-json/uim": "1.2.3",
     "@storybook/addon-a11y": "10.5.10",
     "@storybook/addon-docs": "10.5.10",
+    "@storybook/addon-vitest": "10.5.10",
     "@storybook/vue3": "10.5.10",
     "@storybook/vue3-vite": "10.5.10",
     "@tailwindcss/postcss": "4.3.0",
     "@tailwindcss/vite": "4.3.0",
     "@vitejs/plugin-vue": "catalog:",
+    "@vitest/browser": "4.1.10",
+    "@vitest/browser-playwright": "4.1.10",
     "@vue/compiler-vapor": "catalog:",
     "glob": "13.0.0",
+    "playwright": "1.62.1",
     "postcss": "8.5.23",
     "storybook": "10.5.10",
     "tailwindcss": "4.3.0",
     "typescript": "catalog:",
     "unplugin-icons": "23.0.1",
     "vite": "catalog:",
+    "vitest": "4.1.10",
     "vue-tsc": "catalog:"
   }
 }

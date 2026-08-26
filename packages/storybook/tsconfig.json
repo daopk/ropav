@@ -7,6 +7,6 @@
     // package only ever typechecks, so nothing is emitted that could carry the extension through.
     "allowImportingTsExtensions": true
   },
-  "include": [".storybook/**/*", "vite.config.ts"],
+  "include": [".storybook/**/*", "vitest.config.ts", "vite.config.ts"],
   "exclude": ["node_modules", "storybook-static"]
 }

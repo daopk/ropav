@@ -1,14 +1,20 @@
 import type { StorybookConfig } from "@storybook/vue3-vite";
 
 import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { sync as globSync } from "glob";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const STORIES_GLOB = join(__dirname, "../../ropav/src/**/*.stories.ts");
+/**
+ * Specifiers stay relative to this directory, which is what Storybook resolves them against.
+ * `@storybook/addon-vitest` reads the same field to decide which files to turn into tests, and
+ * it resolves them the same way - an absolute path arrives there already joined to the config
+ * dir, and matches nothing.
+ */
+const STORIES_GLOB = "../../ropav/src/**/*.stories.ts";
 
 /**
  * All stories, or only the ones marked ready. A story counts as ready when its title
@@ -19,13 +25,13 @@ export const getStories = () => {
 
   if (!readyOnly) return [STORIES_GLOB];
 
-  return globSync(STORIES_GLOB).filter((file: string) =>
-    /title:\s*["']Components/.test(readFileSync(file, "utf-8")),
-  );
+  return globSync(join(__dirname, STORIES_GLOB))
+    .filter((file: string) => /title:\s*["']Components/.test(readFileSync(file, "utf-8")))
+    .map((file: string) => relative(__dirname, file));
 };
 
 const config: StorybookConfig = {
-  addons: ["@storybook/addon-a11y", "@storybook/addon-docs"],
+  addons: ["@storybook/addon-a11y", "@storybook/addon-docs", "@storybook/addon-vitest"],
   core: {
     disableTelemetry: true,
     disableWhatsNewNotifications: true,
