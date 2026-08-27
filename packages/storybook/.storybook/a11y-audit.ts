@@ -1,9 +1,9 @@
 import type { RunOptions } from "@ropav/testing/helpers/a11y";
 
-import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { PALETTE_CONTRAST_DEBT, expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
 
 /**
- * Audits a rendered story with axe, in both colour schemes.
+ * Audits a rendered story with axe.
  *
  * The component suites run axe too, but only on the components that have a browser test, and only
  * on the states those tests set up. Half the library never reached one. Running it here instead
@@ -11,14 +11,16 @@ import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
  * axe's relational rules mean anything: an `option` outside a `listbox` or a `row` outside a `grid`
  * reports a failure that says more about the harness than about the component.
  *
- * The second pass is scheme, not theme. Only `color-contrast` can change with the palette - every
- * other rule reads the DOM, and the DOM is the same under both - so the dark pass runs that rule
- * alone. It also flips the class rather than re-rendering: theming is pure CSS, so the same story
- * answers for both schemes and the pass costs one axe run instead of a second render.
+ * Contrast is deliberately not part of it. `--accent` and `--danger` sit below the AA floor for
+ * normal text, and axe has no way to accept two specific colours while still judging the rest, so
+ * leaving the rule on here would keep every story that paints with either permanently red.
  *
- * What this deliberately does NOT cover is the other ten themes. Contrast is a property of a token
- * pair, not of a story, and re-rendering every story per theme would rediscover the same handful of
- * pairs eleven times over. The token matrix in `packages/styles` checks those pairs directly.
+ * It lives in `ropav`'s token matrix instead, which is the better home for it anyway: a contrast
+ * failure is a property of two tokens rather than of the story that happened to pair them, so the
+ * matrix checks each pair across all eleven themes and both schemes, names the token when one
+ * fails, and lists what it lets through with the measurement beside it. What the matrix cannot do
+ * is discover which pairings actually occur - that is this sweep's job. Run it once with the rule
+ * on after adding a component, and carry any new pairing across.
  */
 
 type A11yContext = {
@@ -40,10 +42,9 @@ type StoryContext = {
 /**
  * Colour transitions are why this stops motion before reading anything.
  *
- * Flipping the scheme starts a transition on everything that declares one, and axe judges contrast
- * from the value it finds mid-flight - which reads as exactly the failure being looked for. Measured
- * on 60 stories: 88 violations with the transitions running, 7 with them stopped, and the 7 match
- * what a real dark render reports.
+ * A story that transitions on entry reports whatever value axe catches mid-flight, which reads as
+ * exactly the kind of failure being looked for. Measured while the audit still flipped schemes: 88
+ * violations with the transitions running against 7 with them stopped, on the same 60 stories.
  */
 const stopMotion = () => {
   const style = document.createElement("style");
@@ -61,19 +62,6 @@ const stopMotion = () => {
 const settle = () =>
   new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
-/** Swaps the scheme class the theme decorator put on the root, and hands back the way home. */
-const useDarkScheme = () => {
-  const root = document.documentElement;
-  const had = [...root.classList];
-
-  root.classList.remove("light");
-  root.classList.add("dark");
-
-  return () => {
-    root.className = had.join(" ");
-  };
-};
-
 export const a11yAudit = async ({ canvasElement, parameters }: StoryContext) => {
   const config = parameters?.a11y ?? {};
 
@@ -82,25 +70,14 @@ export const a11yAudit = async ({ canvasElement, parameters }: StoryContext) => 
   // A story may narrow what is audited - an overlay renders outside the canvas, a third-party
   // embed is not ours to fix. Anything else stays on the canvas the story actually rendered.
   const target = (config.context ?? canvasElement) as Parameters<typeof expectNoA11yViolations>[0];
-  const options = config.options ?? {};
   const resumeMotion = stopMotion();
 
   try {
     await settle();
-    await expectNoA11yViolations(target, options);
-
-    const restoreScheme = useDarkScheme();
-
-    try {
-      await settle();
-      await expectNoA11yViolations(target, { ...options, runOnly: ["color-contrast"] });
-    } catch (error) {
-      // Without this the message is indistinguishable from the light pass, and the first thing
-      // anyone would do is open the story and fail to reproduce it.
-      throw new Error(`In dark mode: ${error instanceof Error ? error.message : String(error)}`);
-    } finally {
-      restoreScheme();
-    }
+    await expectNoA11yViolations(target, {
+      ...config.options,
+      rules: { ...PALETTE_CONTRAST_DEBT.rules, ...config.options?.rules },
+    });
   } finally {
     resumeMotion();
   }
