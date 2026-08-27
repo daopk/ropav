@@ -93,7 +93,7 @@
     --success-foreground: oklch(98% 0.016 153.06);
     --success-hover: color-mix(in oklab, var(--success) 90%, var(--success-foreground) 10%);
     --success-soft: color-mix(in oklab, var(--success) 15%, transparent);
-    --success-soft-foreground: color-mix(in oklab, var(--success) 80%, var(--foreground) 60%);
+    --success-soft-foreground: color-mix(in oklab, var(--success) 80%, var(--foreground) 75%);
     --success-soft-hover: color-mix(in oklab, var(--success) 20%, transparent);
     --warning: oklch(0.8446 0.1525 80.6);
     --warning-foreground: oklch(15% 0.0457 80.6);

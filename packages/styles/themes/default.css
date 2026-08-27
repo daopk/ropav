@@ -140,7 +140,7 @@
     --default-soft-hover: color-mix(in oklab, var(--default) 60%, transparent);
 
     --accent-soft: color-mix(in oklab, var(--accent) 15%, transparent);
-    --accent-soft-foreground: color-mix(in oklab, var(--accent) 70%, var(--foreground) 30%);
+    --accent-soft-foreground: color-mix(in oklab, var(--accent) 70%, var(--foreground) 45%);
     --accent-soft-hover: color-mix(in oklab, var(--accent) 20%, transparent);
 
     --danger-soft: color-mix(in oklab, var(--danger) 15%, transparent);
@@ -152,7 +152,7 @@
     --warning-soft-hover: color-mix(in oklab, var(--warning) 20%, transparent);
 
     --success-soft: color-mix(in oklab, var(--success) 15%, transparent);
-    --success-soft-foreground: color-mix(in oklab, var(--success) 80%, var(--foreground) 60%);
+    --success-soft-foreground: color-mix(in oklab, var(--success) 80%, var(--foreground) 75%);
     --success-soft-hover: color-mix(in oklab, var(--success) 20%, transparent);
 
     --separator-secondary: color-mix(in oklab, var(--surface) 85%, var(--surface-foreground) 15%);

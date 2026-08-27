@@ -736,7 +736,7 @@ export function getDerivedColorFormulas(
     "--accent-soft-foreground": sfFg(
       "accent",
       isLight
-        ? "color-mix(in oklab, var(--accent) 70%, var(--foreground) 30%)"
+        ? "color-mix(in oklab, var(--accent) 70%, var(--foreground) 45%)"
         : "color-mix(in oklab, var(--accent) 80%, var(--foreground) 30%)",
     ),
     "--accent-soft-hover": `color-mix(in oklab, var(--accent) ${softHoverPct}, transparent)`,
@@ -774,7 +774,7 @@ export function getDerivedColorFormulas(
     "--success-soft-foreground": sfFg(
       "success",
       isLight
-        ? "color-mix(in oklab, var(--success) 80%, var(--foreground) 60%)"
+        ? "color-mix(in oklab, var(--success) 80%, var(--foreground) 75%)"
         : "color-mix(in oklab, var(--success) 80%, var(--foreground) 30%)",
     ),
     "--success-soft-hover": `color-mix(in oklab, var(--success) ${softHoverPct}, transparent)`,

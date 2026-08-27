@@ -56,7 +56,7 @@
     --accent-foreground: oklch(99.11% 0 0);
     --accent-hover: color-mix(in oklab, var(--accent) 90%, var(--accent-foreground) 10%);
     --accent-soft: color-mix(in oklab, var(--accent) 15%, transparent);
-    --accent-soft-foreground: color-mix(in oklab, var(--accent) 70%, var(--foreground) 30%);
+    --accent-soft-foreground: color-mix(in oklab, var(--accent) 70%, var(--foreground) 45%);
     --accent-soft-hover: color-mix(in oklab, var(--accent) 20%, transparent);
     --focus: oklch(52.82% 0.2628 262.87);
 
@@ -93,7 +93,7 @@
     --success-foreground: oklch(98% 0.0127 157.17);
     --success-hover: color-mix(in oklab, var(--success) 90%, var(--success-foreground) 10%);
     --success-soft: color-mix(in oklab, var(--success) 15%, transparent);
-    --success-soft-foreground: color-mix(in oklab, var(--success) 80%, var(--foreground) 60%);
+    --success-soft-foreground: color-mix(in oklab, var(--success) 80%, var(--foreground) 75%);
     --success-soft-hover: color-mix(in oklab, var(--success) 20%, transparent);
     --warning: oklch(0.8095 0.1119 61.69);
     --warning-foreground: oklch(15% 0.0336 61.69);
