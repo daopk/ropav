@@ -7,8 +7,13 @@ import Fixture from "./fixtures.vue";
 const render = (props: Record<string, unknown> = {}) => renderVapor(Fixture, { props });
 
 const menuIn = (container: HTMLElement) => container.querySelector<HTMLElement>('[role="menu"]')!;
+/**
+ * Selected by `data-slot` rather than by role, and both halves of that matter: the role changes with
+ * the selection mode, and the empty state is itself a disabled `menuitem` — so a role query would
+ * count a menu that has nothing in it as having one item.
+ */
 const itemsIn = (container: HTMLElement) => [
-  ...container.querySelectorAll<HTMLElement>('[role^="menuitem"]'),
+  ...container.querySelectorAll<HTMLElement>('[data-slot="menu-item"]'),
 ];
 
 const keydown = (element: Element, key: string) => {
@@ -225,6 +230,25 @@ describe("Menu", () => {
 
       expect(container.textContent).toContain("Nothing here");
       expect(itemsIn(container)).toHaveLength(0);
+
+      unmount();
+    });
+
+    it("carries the empty state as a disabled item", async () => {
+      const { container, unmount } = render({ items: [], withEmptyState: true });
+
+      await settle();
+
+      const wrapper = menuIn(container).querySelector('[role="menuitem"]')!;
+
+      expect(wrapper).not.toBeNull();
+      expect(wrapper).toHaveAttribute("aria-disabled", "true");
+      // A `presentation` wrapper flattens out of the tree, leaving the menu owning the caller's
+      // prose, which is not an item — so the wrapper has to be the item itself.
+      expect(menuIn(container).querySelector('[role="presentation"]')).toBeNull();
+      // And it is not part of the collection, so nothing selects it and no arrow key reaches it.
+      expect(wrapper).not.toHaveAttribute("data-key");
+      expect(wrapper).not.toHaveAttribute("tabindex");
 
       unmount();
     });

@@ -81,7 +81,7 @@ const hasEmptySlot = computed(() => Boolean(callerSlots["empty"]));
     @keydown="menu.onKeydown"
     @keydown.capture="menu.onKeydownCapture"
   >
-    <div v-if="hasEmptySlot && menu.isEmpty.value" role="presentation">
+    <div v-if="hasEmptySlot && menu.isEmpty.value" v-bind="menu.emptyAttributes.value">
       <slot name="empty" />
     </div>
     <slot />

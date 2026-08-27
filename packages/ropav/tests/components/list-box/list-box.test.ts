@@ -308,13 +308,24 @@ describe("ListBox", () => {
       expect(listbox.querySelector('[data-slot="empty-state"]')).toBeNull();
     });
 
-    it("wraps the empty state so it is not read as an option", async () => {
+    it("carries the empty state as a disabled option", async () => {
       const { listbox } = await render({ items: [], withEmptyState: true });
-      const wrapper = listbox.querySelector('[role="presentation"]')!;
+      const wrapper = listbox.querySelector('[role="option"]')!;
 
       expect(wrapper).not.toBeNull();
+      expect(wrapper).toHaveAttribute("aria-disabled", "true");
       expect(wrapper.querySelector('[data-slot="empty-state"]')).not.toBeNull();
-      expect(listbox.querySelectorAll('[role="option"]')).toHaveLength(0);
+      // A `presentation` wrapper flattens out of the tree, leaving the listbox owning the caller's
+      // prose, which is not an option — so the wrapper has to be the option itself.
+      expect(listbox.querySelector('[role="presentation"]')).toBeNull();
+    });
+
+    it("keeps the empty option out of the collection", async () => {
+      const { listbox } = await render({ items: [], withEmptyState: true });
+
+      // Not registered, so nothing selects it and no arrow key reaches it.
+      expect(listbox.querySelector('[role="option"]')).not.toHaveAttribute("data-key");
+      expect(listbox.querySelector('[role="option"]')).not.toHaveAttribute("tabindex");
     });
 
     it("renders nothing extra when no empty slot was handed over", async () => {

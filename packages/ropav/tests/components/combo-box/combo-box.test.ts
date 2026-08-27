@@ -73,8 +73,12 @@ const inputOf = (result: RenderResult) =>
 const triggerOf = (result: RenderResult) =>
   result.container.querySelector<HTMLButtonElement>('[data-slot="combo-box-trigger"]')!;
 
+/**
+ * Selected by `data-slot` rather than by role: the empty state is itself a disabled `option`, so a
+ * role query would count a listbox that matched nothing as offering one choice.
+ */
 const optionsOf = (result: RenderResult) => [
-  ...result.baseElement.querySelectorAll<HTMLElement>('[role="option"]'),
+  ...result.baseElement.querySelectorAll<HTMLElement>('[data-slot="list-box-item"]'),
 ];
 
 const popoverOf = (result: RenderResult) =>

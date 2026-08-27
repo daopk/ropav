@@ -8,6 +8,7 @@ import { avatarSrc } from "../../utils/story-assets";
 import { ListLayout } from "../../utils/virtualizer-list-layout";
 import { AvatarFallback, AvatarImage, AvatarRoot } from "../avatar";
 import { DescriptionRoot } from "../description";
+import { EmptyStateRoot } from "../empty-state";
 import { HeaderRoot } from "../header";
 import { KbdAbbr, KbdContent, KbdRoot } from "../kbd";
 import { LabelRoot } from "../label";
@@ -26,6 +27,7 @@ const components = {
   AvatarFallback,
   AvatarImage,
   Description: DescriptionRoot,
+  EmptyState: EmptyStateRoot,
   Header: HeaderRoot,
   Kbd: KbdRoot,
   KbdAbbr,
@@ -429,6 +431,26 @@ export const DragAndDrop: Story = {
           :target="{type: 'item', key: items[items.length - 1].id, dropPosition: 'after'}"
         />
       </ListBox>
+    `,
+  }),
+};
+
+/**
+ * Nothing to show, which no story used to render — so the shape of the empty state had never been
+ * audited. It is a disabled `option` rather than a `presentation` wrapper: `presentation` flattens
+ * out of the tree, leaving the listbox owning prose where an option belongs.
+ */
+export const Empty: Story = {
+  render: () => ({
+    components,
+    template: `
+      <Surface class="w-64 p-0">
+        <ListBox aria-label="Search results">
+          <template #empty>
+            <EmptyState>No results found</EmptyState>
+          </template>
+        </ListBox>
+      </Surface>
     `,
   }),
 };

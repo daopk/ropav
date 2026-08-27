@@ -371,13 +371,17 @@ describe("Dropdown", () => {
       result.unmount();
     });
 
-    it("wraps the empty state so it is not read as an item", async () => {
+    it("carries the empty state as a disabled item", async () => {
       const result = render({ items: [], withEmptyState: true });
       const menu = await open(result);
-      const wrapper = menu.querySelector('[role="presentation"]')!;
+      const wrapper = menu.querySelector('[role="menuitem"]')!;
 
+      expect(wrapper).not.toBeNull();
+      expect(wrapper).toHaveAttribute("aria-disabled", "true");
       expect(wrapper.querySelector('[data-slot="empty-state"]')).not.toBeNull();
-      expect(menu.querySelectorAll('[role="menuitem"]')).toHaveLength(0);
+      // A `presentation` wrapper flattens out of the tree, leaving the menu owning the caller's
+      // prose, which is not an item — so the wrapper has to be the item itself.
+      expect(menu.querySelector('[role="presentation"]')).toBeNull();
 
       result.unmount();
     });

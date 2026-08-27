@@ -60,6 +60,8 @@ export interface UseMenuReturn {
   collectionId: ComputedRef<string>;
   /** Attributes the menu element renders, beside its own class and `data-slot`. */
   menuAttributes: ComputedRef<Record<string, string | number | boolean | undefined>>;
+  /** Attributes the wrapper around the empty slot renders. */
+  emptyAttributes: ComputedRef<Record<string, string | number | boolean | undefined>>;
   onKeydown: (event: KeyboardEvent) => void;
   onKeydownCapture: (event: KeyboardEvent) => void;
   onFocusin: (event: FocusEvent) => void;
@@ -150,6 +152,24 @@ export const useMenu = (options: UseMenuOptions = {}): UseMenuReturn => {
   return {
     collectionId,
     element,
+    /**
+     * The empty slot is a disabled item of the menu, not a bare wrapper inside it.
+     *
+     * `role="menu"` may only own `menuitem`, `menuitemradio`, `menuitemcheckbox` or `group`, and
+     * the empty state's content is the caller's, carrying no role at all. A `presentation` wrapper
+     * does not help: it flattens out of the tree, so what the menu ends up owning is that content
+     * — which is why the virtualizer's `presentation` wrapper is fine and this one was not. It
+     * holds real items; this holds prose.
+     *
+     * Measured against axe: `presentation`, `none`, `status`, `group` alone and a bare `div` all
+     * fail, while a disabled `menuitem` passes — and so does a menu with no children whatsoever. It
+     * is the unallowed child that breaks it rather than the missing item.
+     *
+     * A disabled item is also the truer reading. The menu still is a menu, it has one thing in it,
+     * and that thing says there is nothing to choose and cannot be chosen. It never registers with
+     * the collection, so the keyboard never reaches it either.
+     */
+    emptyAttributes: computed(() => ({ "aria-disabled": true, role: "menuitem" })),
     isEmpty: computed(() => collection.size.value === 0),
     menuAttributes: computed(() => ({
       "aria-label": toValue(options.label),

@@ -214,19 +214,11 @@ export const WithDisabledItems: Story = {
 /**
  * Rendered beside the items rather than instead of them, so the collection is never emptied.
  *
- * The scoped-off rule here is **not** a case of axe being short, the way `meter`'s fallback-role
- * exception is: `role="menu"` must own a `menuitem`, `menuitemradio`, `menuitemcheckbox` or `group`,
- * and a menu showing only an empty state owns none of them. The markup is genuinely invalid, and the
- * fix belongs in `useMenu`, which decides the role for the standalone menu and the dropdown one
- * alike. Scoped off to keep the story — which is what found this — not to call the finding wrong.
- *
- * `list-box` has the same shape and does not report it: axe only reviews an empty `listbox`, while
- * an empty `menu` it fails outright.
+ * This story is why the empty slot is a disabled `menuitem` rather than a `presentation` wrapper:
+ * a menu owning anything else is not a valid menu, and no story had ever rendered an empty
+ * collection before, so nothing had said so.
  */
 export const Empty: Story = {
-  parameters: {
-    a11y: { options: { rules: { "aria-required-children": { enabled: false } } } },
-  },
   render: () => ({
     components,
     template: `
