@@ -1,6 +1,6 @@
 {
   "name": "@ropav/styles",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Ropav core styles - framework-agnostic CSS and Tailwind variants",
   "keywords": [
     "css",
