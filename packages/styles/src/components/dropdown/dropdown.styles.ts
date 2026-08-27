@@ -4,7 +4,9 @@ import { tv } from "tailwind-variants";
 
 export const dropdownVariants = tv({
   slots: {
-    menu: "dropdown__menu",
+    // The block is shared with the standalone menu; `dropdown__menu` is only the hook that
+    // `dropdown.css` and callers target.
+    menu: "menu dropdown__menu",
     popover: "dropdown__popover",
     root: "dropdown",
     trigger: "dropdown__trigger",

@@ -2,6 +2,12 @@
    Base menu styles
    ========================================================================== */
 
+/**
+ * Worn by both menus — the standalone one and the one inside a dropdown, which carries
+ * `dropdown__menu` alongside it. The two used to define the same rules twice, differing only in
+ * `gap`; that difference now lives with the dropdown's other overrides in `dropdown.css`, nested
+ * where it has the specificity to win, since this file is imported after that one.
+ */
 .menu {
   @apply relative flex w-full flex-col gap-1 overflow-clip p-1;
 

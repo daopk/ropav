@@ -121,21 +121,14 @@
     rotate: 90deg;
   }
 
-  /* Menu styles */
+  /* Menu styles. The block itself is `.menu`; these are the dropdown's departures from it, and
+   * they sit here rather than on `.dropdown__menu` because `menu.css` is imported after this file
+   * and would otherwise win at equal specificity. */
   [data-slot="dropdown-menu"] {
-    @apply p-1.5 outline-none;
+    @apply gap-0.5 p-1.5 outline-none;
   }
 
   [data-slot="menu-item"] {
     @apply px-2.5;
-  }
-}
-
-.dropdown__menu {
-  @apply relative flex w-full flex-col gap-0.5 overflow-clip p-1;
-
-  /* This makes the separator take up 94% of the width and be centered */
-  [data-slot="separator"] {
-    @apply ms-[3%] w-[94%];
   }
 }
