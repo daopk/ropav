@@ -10,7 +10,7 @@
  *   motion-safe:animate-spin     - Full motion effects
  *   dark:bg-gray-900             - Dark mode styles
  *
- * Priority: Explicit data attributes/classes → System preferences (fallback)
+ * Priority: Explicit data attributes → System preferences (fallback); `dark` is explicit-only
  * ================================================================================================
  */
 
@@ -79,28 +79,18 @@
 
 /* -------------------------------------------------------------------------------------------------
  * dark — Dark mode styles
- * Priority: .dark class / data-theme="dark" → prefers-color-scheme: dark
+ * Explicit only: .dark class / data-theme="dark". No `prefers-color-scheme` fallback here — the
+ * token layer in `themes/` keys off these same selectors and has no media query of its own, so a
+ * fallback would flip the utilities while the colours stayed light. Apps read `matchMedia` and set
+ * the class themselves, which is also what a light/dark/system toggle needs.
  * ------------------------------------------------------------------------------------------------- */
 @custom-variant dark {
-  /* Explicit: .dark class or data-theme="dark" on element or ancestor */
   &:is(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
     @slot;
 
     &::before,
     &::after {
       @slot;
-    }
-  }
-
-  /* Fallback: system prefers dark color scheme */
-  @media (prefers-color-scheme: dark) {
-    &:not(:is(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *)) & {
-      @slot;
-
-      &::before,
-      &::after {
-        @slot;
-      }
     }
   }
 }
