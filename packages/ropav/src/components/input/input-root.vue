@@ -2,11 +2,12 @@
 import type { InputRootProps } from "./input.types";
 
 import { inputVariants } from "@ropav/styles";
-import { computed } from "vue";
+import { computed, shallowRef, watch } from "vue";
 
 import { useInteractionStates } from "../../composables/use-interaction-states";
 import { useTextFieldControlContext } from "../../composables/use-text-field";
 import { dataAttr } from "../../utils/assertion";
+import { setFormValue } from "../../utils/form-value";
 import { useTextFieldContext } from "../textfield/textfield.context";
 
 const props = withDefaults(defineProps<InputRootProps>(), {
@@ -14,12 +15,20 @@ const props = withDefaults(defineProps<InputRootProps>(), {
   variant: undefined,
 });
 
+const emit = defineEmits<{
+  change: [value: string];
+  "update:value": [value: string];
+}>();
+
 // Both are optional: a bare `<Input>` outside any field is legal, exactly as it is in React.
 const control = useTextFieldControlContext();
 const textField = useTextFieldContext();
 
-const setElement = (element: unknown) => {
-  control?.registerElement(element instanceof HTMLInputElement ? element : null);
+const element = shallowRef<HTMLInputElement | null>(null);
+
+const setElement = (next: unknown) => {
+  element.value = next instanceof HTMLInputElement ? next : null;
+  control?.registerElement(element.value);
 };
 
 // Named apart from the prop it resolves: an identifier matching a prop name resolves to the
@@ -42,6 +51,7 @@ const attrs = computed(() => {
   const merged: Record<string, unknown> = { ...control?.attrs.value };
 
   if (props.placeholder !== undefined) merged["placeholder"] = props.placeholder;
+  if (props.value !== undefined) merged["value"] = props.value;
 
   return merged;
 });
@@ -49,6 +59,56 @@ const attrs = computed(() => {
 // The stylesheet keys hover and focus on these attributes as well as on the native
 // pseudo-classes, so they are rendered here to match what React puts in the DOM.
 const interaction = useInteractionStates({ isDisabled: () => control?.isDisabled.value });
+
+// Bumped on every input so the re-assert below runs even when the value the caller holds has
+// not moved — which is the whole case worth handling.
+const inputCount = shallowRef(0);
+
+// Chained by hand rather than spread: a listener reaching a vapor element through `v-bind` is
+// re-attached on every render and can be dropped mid-dispatch.
+const onInput = (event: Event) => {
+  control?.handlers.onInput(event);
+
+  const next = (event.currentTarget as HTMLInputElement).value;
+
+  emit("change", next);
+  emit("update:value", next);
+
+  if (props.value !== undefined) inputCount.value++;
+};
+
+/**
+ * Put the text back to what the caller holds, reset source included. A `value` set on the control
+ * makes the caller the owner of it, and a caller that keeps it unchanged means the typing is
+ * rejected — but the browser has already moved the text, and Vapor skips writing `value` when the
+ * bound value has not changed, so nothing would put it back.
+ *
+ * Post-flush, because the value only settles once the listener that heard the change has updated
+ * whatever holds it. `immediate`, and with the element in the dependencies, because the reset
+ * source has to be there before a reset rather than after the first keystroke — `inputCount` alone
+ * never fires on a control nobody has typed into. See {@link setFormValue}.
+ */
+watch(
+  [element, () => props.value, inputCount],
+  ([el, pinned]) => {
+    if (pinned === undefined) return;
+
+    setFormValue(el, pinned);
+  },
+  { flush: "post", immediate: true },
+);
+
+/*
+ * Told to the field synchronously, before any post-flush write can happen: the field keeps the
+ * element in step with its own state, and the two would otherwise fight over one value on the
+ * flush that mounts the control. `setFormValue` above is then the only thing writing this element,
+ * reset source included.
+ */
+watch(
+  () => props.value !== undefined,
+  (owned) => control?.setValueOwned(owned),
+  { immediate: true },
+);
 
 const onFocus = (event: FocusEvent) => {
   interaction.onFocus();
@@ -74,7 +134,7 @@ const onBlur = (event: FocusEvent) => {
     v-bind="attrs"
     @blur="onBlur"
     @focus="onFocus"
-    @input="control?.handlers.onInput"
+    @input="onInput"
     @keydown="control?.handlers.onKeydown"
     @keyup="control?.handlers.onKeyup"
     @pointerdown="interaction.onPointerdown"

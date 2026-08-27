@@ -6,6 +6,12 @@ import type { InputVariants } from "@ropav/styles";
 // arrive as `""` and read as falsy, so the modifier silently never applies.
 export interface InputRootProps {
   class?: string;
+  /**
+   * Text in the control. Set here it takes the control over from the surrounding field, so the
+   * caller owns the value even inside a `TextField` — exactly as a `value` prop does in React.
+   * Without a listener to go with it the text is pinned.
+   */
+  value?: string;
   /** Visual variant. Taken from the surrounding field when unset. @default "primary" */
   variant?: InputVariants["variant"];
   /** Whether the control stretches to fill its container. */
