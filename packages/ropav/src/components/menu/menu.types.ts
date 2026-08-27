@@ -13,6 +13,8 @@ export interface MenuRootProps {
   id?: string;
   /** The id of the element naming the menu, normally its trigger. */
   ariaLabelledby?: string;
+  /** Names the menu when it has no trigger to point `ariaLabelledby` at. */
+  ariaLabel?: string;
   /** @default "none" */
   selectionMode?: SelectionMode;
   /** @default "toggle" */

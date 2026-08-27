@@ -41,7 +41,10 @@ export interface DropdownPopoverProps {
 }
 
 /**
- * The menu inside a dropdown. Everything a standalone menu takes, minus the ids and the focus
- * strategy, which the trigger decides.
+ * The menu inside a dropdown. Everything a standalone menu takes, minus the naming, the ids and the
+ * focus strategy, all of which the trigger decides.
  */
-export type DropdownMenuProps = Omit<MenuRootProps, "ariaLabelledby" | "autoFocus" | "id">;
+export type DropdownMenuProps = Omit<
+  MenuRootProps,
+  "ariaLabel" | "ariaLabelledby" | "autoFocus" | "id"
+>;

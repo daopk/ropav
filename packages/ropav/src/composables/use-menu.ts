@@ -25,6 +25,14 @@ export interface UseMenuOptions {
   id?: MaybeRefOrGetter<string | undefined>;
   /** The id of the element naming the menu, normally the trigger. */
   labelledBy?: MaybeRefOrGetter<string | undefined>;
+  /**
+   * Names the menu when there is no element to point `labelledBy` at.
+   *
+   * A menu inside a trigger is named by it and never needs this; a menu standing on its own has
+   * nothing to borrow a name from, and a name is not something axe checks for `role="menu"` — so
+   * without a string to pass, a standalone menu ships unnamed and nothing says so.
+   */
+  label?: MaybeRefOrGetter<string | undefined>;
   selectionMode?: MaybeRefOrGetter<SelectionMode | undefined>;
   selectionBehavior?: MaybeRefOrGetter<SelectionBehavior | undefined>;
   selectedKeys?: MaybeRefOrGetter<"all" | Iterable<CollectionKey> | undefined>;
@@ -144,6 +152,7 @@ export const useMenu = (options: UseMenuOptions = {}): UseMenuReturn => {
     element,
     isEmpty: computed(() => collection.size.value === 0),
     menuAttributes: computed(() => ({
+      "aria-label": toValue(options.label),
       "aria-labelledby": toValue(options.labelledBy),
       "data-collection": collectionId.value,
       "data-empty": collection.size.value === 0 ? "true" : undefined,

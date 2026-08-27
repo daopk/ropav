@@ -42,6 +42,7 @@ const menu = useMenu({
   disabledKeys: () => props.disabledKeys,
   disallowEmptySelection: () => props.disallowEmptySelection,
   id: () => props.id,
+  label: () => props.ariaLabel,
   labelledBy: () => props.ariaLabelledby,
   onAction: (key) => emit("action", key),
   onClose: () => emit("close"),
