@@ -2,7 +2,7 @@
 import type { ImageLoadingStatus } from "../../composables/use-image-loading-status";
 import type { AvatarImageProps } from "./avatar.types";
 
-import { watch } from "vue";
+import { shallowRef, watch } from "vue";
 
 import { useImageLoadingStatus } from "../../composables/use-image-loading-status";
 import { composeSlotClassName } from "../../utils/compose";
@@ -45,12 +45,25 @@ watch(
   // would be the one nobody is told about.
   { immediate: true },
 );
+/**
+ * `alt` is set by hand because an empty one cannot be bound.
+ *
+ * Vapor routes it through `setDOMProp`, which returns early when the new value equals what the
+ * element already reports - and an `img` carrying no `alt` attribute already reports `""`. So the
+ * empty default never reaches the DOM, and the attribute stays missing altogether, which is the
+ * one state that is always wrong.
+ */
+const image = shallowRef<HTMLImageElement | null>(null);
+
+watch([image, () => props.alt], ([element, alt]) => element?.setAttribute("alt", alt ?? ""), {
+  flush: "post",
+});
 </script>
 
 <template>
   <img
     v-if="status === 'loaded'"
-    :alt="props.alt ?? ''"
+    :ref="(element) => (image = element as HTMLImageElement | null)"
     :class="composeSlotClassName(slots.image, props.class)"
     :crossorigin="props.crossOrigin"
     :loading="props.loading"

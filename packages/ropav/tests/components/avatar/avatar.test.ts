@@ -101,7 +101,9 @@ describe("Avatar", () => {
 
   describe("image", () => {
     it("renders src and alt on the loaded image", async () => {
-      const { container, unmount } = renderVapor(AvatarFixture, { props: { src: "/jane.png" } });
+      const { container, unmount } = renderVapor(AvatarFixture, {
+        props: { alt: "Jane Doe", src: "/jane.png" },
+      });
 
       FakeImage.last?.onload?.();
       await nextTick();
@@ -110,6 +112,29 @@ describe("Avatar", () => {
 
       expect(image?.getAttribute("src")).toBe("/jane.png");
       expect(image?.getAttribute("alt")).toBe("Jane Doe");
+
+      unmount();
+    });
+
+    /**
+     * An `img` with no `alt` attribute at all is a defect in every case; empty is what marks it
+     * decorative, which is what an avatar beside a name is.
+     *
+     * Asserted on `hasAttribute` rather than the value, because the two are not the same here:
+     * vapor sets `alt` through `setDOMProp`, which returns early when the value matches what the
+     * element already reports - and an `img` without the attribute already reports `""`. Bound
+     * dynamically, the empty default never reaches the DOM at all.
+     */
+    it("renders an empty alt when none is given", async () => {
+      const { container, unmount } = renderVapor(AvatarFixture, { props: { src: "/jane.png" } });
+
+      FakeImage.last?.onload?.();
+      await nextTick();
+
+      const image = imageIn(container);
+
+      expect(image?.hasAttribute("alt")).toBe(true);
+      expect(image?.getAttribute("alt")).toBe("");
 
       unmount();
     });

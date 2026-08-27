@@ -5,6 +5,7 @@ import { Avatar } from "@/components/avatar";
 
 defineProps<
   AvatarRootProps & {
+    alt?: string;
     delayMs?: number;
     fallbackColor?: AvatarRootProps["color"];
     sizes?: string;
@@ -23,7 +24,7 @@ defineEmits<{
 <template>
   <Avatar :class="$props.class" :color="$props.color" :size="$props.size" :variant="$props.variant">
     <Avatar.Image
-      alt="Jane Doe"
+      :alt="$props.alt"
       :sizes="$props.sizes"
       :src="$props.src"
       :src-set="$props.srcSet"
