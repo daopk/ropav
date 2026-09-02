@@ -15,6 +15,7 @@ export * from "./use-css-variable";
 export * from "./use-date-field-state";
 export * from "./use-date-formatter";
 export * from "./use-date-picker-state";
+export * from "./use-date-range-picker-state";
 export * from "./use-description";
 export * from "./use-disclosure-group";
 export * from "./use-dismissable";

@@ -40,6 +40,7 @@ export const PUBLIC_MODULES = [
   "use-date-field-state",
   "use-date-formatter",
   "use-date-picker-state",
+  "use-date-range-picker-state",
   "use-description",
   "use-disclosure-group",
   "use-dismissable",
