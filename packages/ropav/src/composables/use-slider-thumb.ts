@@ -229,6 +229,7 @@ export const useSliderThumb = (options: UseSliderThumbOptions): UseSliderThumbRe
         setFormValue(inputEl.value, String(state.getThumbValue(index.value)));
       });
     },
+    options.form,
   );
 
   /*

@@ -155,7 +155,7 @@ export const useColorArea = (options: UseColorAreaOptions): UseColorAreaReturn =
     immediate: true,
   });
 
-  useFormReset(inputXEl, () => state.defaultValue.value, state.setValue);
+  useFormReset(inputXEl, () => state.defaultValue.value, state.setValue, options.form);
 
   /** Where the thumb is during a drag, in fractions of the area — not in pixels. */
   let currentPosition: { x: number; y: number } | null = null;

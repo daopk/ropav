@@ -44,7 +44,7 @@ const setInputEl = (element: unknown) => {
   inputEl.value = element instanceof HTMLInputElement ? element : null;
 };
 
-useFormReset(inputEl, defaultSelected, setSelected);
+useFormReset(inputEl, defaultSelected, setSelected, form);
 
 /*
  * `checked` is a property with nothing behind it — the same situation as `indeterminate` below,

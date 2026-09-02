@@ -47,7 +47,7 @@ const setInputEl = (element: unknown) => {
 
 // The whole group goes back to its starting selection, so every radio resets to the group's
 // default rather than to a value of its own.
-useFormReset(inputEl, state.defaultSelectedValue, state.setSelectedValue);
+useFormReset(inputEl, state.defaultSelectedValue, state.setSelectedValue, form);
 
 /*
  * Every radio keeps its own reset source, and the group falls out of that: they all mirror the same

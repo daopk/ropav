@@ -295,6 +295,7 @@ export const useComboBox = <T>(
     computed(() => inputElement.value),
     () => state.defaultValue.value,
     state.setValue,
+    options.form,
   );
 
   /**

@@ -216,7 +216,7 @@ export const useDateField = (options: UseDateFieldOptions): UseDateFieldReturn =
     () => toValue(options.inputValue) ?? state.value.value?.toString() ?? "",
   );
 
-  useFormReset(options.inputElement, state.defaultValue, state.setValue);
+  useFormReset(options.inputElement, state.defaultValue, state.setValue, options.form);
 
   /*
    * Keep the input's reset source in step. Under native behaviour this is a real control —

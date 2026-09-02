@@ -262,7 +262,12 @@ export const useTextField = (options: UseTextFieldOptions = {}): UseTextFieldRet
     // State only: moving it is what makes the watcher above write both halves, and that write is
     // the one that survives whichever order the browser chooses. Writing the element from in here
     // is the thing that looked right and did not work.
-    useFormReset(element, () => toValue(options.defaultValue) ?? initialValue, setState);
+    useFormReset(
+      element,
+      () => toValue(options.defaultValue) ?? initialValue,
+      setState,
+      options.form,
+    );
   }
 
   useFormValidation(element, validation, { commitOnBlur: () => toValue(options.commitOnBlur) });

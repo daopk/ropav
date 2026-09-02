@@ -246,7 +246,7 @@ export const useNumberField = (options: UseNumberFieldOptions = {}): UseNumberFi
     validate: state.validate,
   });
 
-  useFormReset(element, () => state.defaultNumberValue.value, state.setNumberValue);
+  useFormReset(element, () => state.defaultNumberValue.value, state.setNumberValue, options.form);
 
   /**
    * Range validation borrowed from a real number input.

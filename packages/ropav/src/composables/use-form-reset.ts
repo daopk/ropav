@@ -17,16 +17,21 @@ type ResettableElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElem
  * `initialValue` is read when the reset happens rather than when the listener is attached,
  * so a default that changes over the component's life still resets to the current one.
  *
+ * `form` is the `id` the caller renders as the control's `form` attribute, for a control that
+ * submits to a form it does not sit inside. Pass it wherever that attribute is rendered: it is
+ * what moves the listener when a mounted control is repointed.
+ *
  * @example
  * ```ts
  * const input = useTemplateRef<HTMLInputElement>("input");
- * useFormReset(input, () => props.defaultSelected ?? false, setSelected);
+ * useFormReset(input, () => props.defaultSelected ?? false, setSelected, () => props.form);
  * ```
  */
 export const useFormReset = <T>(
   element: Ref<ResettableElement | null | undefined>,
   initialValue: MaybeRefOrGetter<T>,
   onReset: (value: T) => void,
+  form?: MaybeRefOrGetter<string | undefined>,
 ): void => {
   let attachedForm: HTMLFormElement | null = null;
 
@@ -42,15 +47,20 @@ export const useFormReset = <T>(
     attachedForm = null;
   };
 
-  // Watching the element rather than attaching once after mount: the control may be rendered
-  // conditionally, and `form` can be repointed at any time through the attribute of the same
-  // name.
+  /*
+   * Watched rather than attached once after mount: the control may be rendered conditionally, and
+   * a `form` attribute can repoint a mounted one at another form.
+   *
+   * `element.form` answers which form owns the control either way, but it is a plain DOM property
+   * that tracks nothing, so the caller's `form` id is the dependency that catches a repoint. A
+   * control that simply sits inside its form needs no id.
+   */
   watch(
-    () => element.value?.form ?? null,
-    (form) => {
+    [() => element.value?.form ?? null, () => toValue(form)],
+    ([owner]) => {
       detach();
-      form?.addEventListener("reset", onFormReset);
-      attachedForm = form;
+      owner?.addEventListener("reset", onFormReset);
+      attachedForm = owner;
     },
     { flush: "post", immediate: true },
   );

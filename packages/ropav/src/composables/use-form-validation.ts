@@ -153,8 +153,9 @@ export const useFormValidation = (
 
   // Keyed on the element, so a field rendered conditionally re-attaches when it comes back.
   // Reading `.form` is a plain DOM property read and tracks nothing, so repointing the
-  // attribute after mount does not move the listeners on its own — the element has to be
-  // re-created. `useFormReset` resolves the owning form the same way.
+  // attribute after mount does not move these listeners on its own — the element has to be
+  // re-created. `useFormReset` takes the caller's `form` id to close that gap; this has no such
+  // argument yet.
   watch(
     [() => element.value, () => element.value?.form ?? null],
     ([input, form]) => {

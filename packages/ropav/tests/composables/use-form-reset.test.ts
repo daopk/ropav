@@ -119,11 +119,7 @@ describe("useFormReset", () => {
       dispose();
     });
 
-    /*
-     * Re-attaches when the *ref* moves to a control in another form. Note the limit this pins:
-     * the watcher's dependency is the ref, and `element.form` is a plain DOM property, so
-     * repointing a mounted control through its `form` attribute alone does not re-attach.
-     */
+    // Re-attaches when the *ref* moves to a control in another form.
     it("moves to the other form when the ref moves", async () => {
       const { form, input, other } = mount();
       const second = document.createElement("input");
@@ -136,6 +132,36 @@ describe("useFormReset", () => {
 
       await nextTick();
       element.value = second;
+      await nextTick();
+
+      form.reset();
+
+      expect(onReset).not.toHaveBeenCalled();
+
+      other.reset();
+
+      expect(onReset).toHaveBeenCalledWith("default");
+
+      dispose();
+    });
+
+    /*
+     * `element.form` is a plain DOM property and tracks nothing, so the `form` id the caller
+     * renders is what the watcher depends on. The attribute is written by hand here, standing in
+     * for the render that writes it alongside the id in a real component.
+     */
+    it("moves to the other form when the rendered form id changes", async () => {
+      const { form, input, other } = mount();
+      const formId = shallowRef<string | undefined>(undefined);
+      const onReset = vi.fn();
+      const [, dispose] = withScope(() =>
+        useFormReset(shallowRef(input), "default", onReset, formId),
+      );
+
+      await nextTick();
+
+      input.setAttribute("form", "other-form");
+      formId.value = "other-form";
       await nextTick();
 
       form.reset();

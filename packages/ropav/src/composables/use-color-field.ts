@@ -143,7 +143,12 @@ export const useColorField = (options: UseColorFieldOptions = {}): UseColorField
     validate: state.validate,
   });
 
-  useFormReset(field.element, () => state.defaultColorValue.value, state.setColorValue);
+  useFormReset(
+    field.element,
+    () => state.defaultColorValue.value,
+    state.setColorValue,
+    options.form,
+  );
 
   /**
    * Whether the input has focus, which gates the wheel.

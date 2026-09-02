@@ -57,7 +57,7 @@ const values = computed(() => {
 
 const value = computed(() => (isMultiple.value ? values.value : (values.value[0] ?? "")));
 
-useFormReset(element, state.defaultValue, state.setValue);
+useFormReset(element, state.defaultValue, state.setValue, () => props.form);
 
 useFormValidation(element, state, {
   // A failed submit lands on the trigger, which is the control a user can actually see.
