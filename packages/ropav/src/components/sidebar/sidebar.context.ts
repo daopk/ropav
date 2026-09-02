@@ -12,6 +12,15 @@ export interface SidebarContext {
   side: ComputedRef<SidebarSide>;
   /** The panel's id, which the trigger's `aria-controls` and the rail both point at. */
   panelId: ComputedRef<string>;
+  /**
+   * The panel element, reported upward rather than reached for.
+   *
+   * The rail resizes by measuring what the panel is now and adding the drag to it, and it cannot
+   * find that element from where it sits: the two are siblings, and a caller is free to put
+   * anything between them.
+   */
+  panelEl: ComputedRef<HTMLElement | null>;
+  setPanelEl: (element: HTMLElement | null) => void;
 }
 
 /**

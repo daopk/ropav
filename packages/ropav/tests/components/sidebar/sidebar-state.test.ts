@@ -47,6 +47,15 @@ describe("defaults", () => {
 
     expect(state.width.value).toBe("20rem");
   });
+
+  it("puts the width back where the author left it", () => {
+    const state = setUp({ defaultWidth: "16rem" });
+
+    state.setWidth("20rem");
+    state.resetWidth();
+
+    expect(state.width.value).toBe("16rem");
+  });
 });
 
 describe("collapsing", () => {

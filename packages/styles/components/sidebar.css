@@ -86,6 +86,16 @@
 .sidebar__panel--none {
 }
 
+/* Inside a drawer the panel is no longer the surface — the dialog is, and it paints, sizes and
+ * slides itself. The panel gives all three up and becomes the column that fills what it was handed.
+ * Last of the panel's modifiers, so it beats the widths above at equal specificity. */
+.sidebar__panel--drawer {
+  @apply size-full border-0 bg-transparent;
+
+  inline-size: auto;
+  transition: none;
+}
+
 /* ==========================================================================
    Header, content, footer
    ========================================================================== */

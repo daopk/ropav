@@ -47,6 +47,13 @@ export const sidebarVariants = tv({
         panel: "sidebar__panel--offcanvas",
       },
     },
+    // Whether the panel is rendering inside a drawer. Resolved by the panel at call time rather
+    // than by the root, because it is the one part that changes shape when the viewport narrows.
+    inDrawer: {
+      true: {
+        panel: "sidebar__panel--drawer",
+      },
+    },
     // Whether the rail resizes rather than only toggling. Not folded into `collapsible`, because
     // the two are independent: a sidebar that cannot collapse at all can still be dragged wider.
     isResizable: {

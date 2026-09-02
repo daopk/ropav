@@ -9,6 +9,7 @@ import SidebarItemLabel from "./sidebar-item-label.vue";
 import SidebarItemTrailing from "./sidebar-item-trailing.vue";
 import SidebarItem from "./sidebar-item.vue";
 import SidebarPanel from "./sidebar-panel.vue";
+import SidebarRail from "./sidebar-rail.vue";
 import SidebarRoot from "./sidebar-root.vue";
 import SidebarSeparator from "./sidebar-separator.vue";
 import SidebarTrigger from "./sidebar-trigger.vue";
@@ -28,6 +29,7 @@ export const Sidebar = Object.assign(SidebarRoot, {
   ItemLabel: SidebarItemLabel,
   ItemTrailing: SidebarItemTrailing,
   Panel: SidebarPanel,
+  Rail: SidebarRail,
   Root: SidebarRoot,
   Separator: SidebarSeparator,
   Trigger: SidebarTrigger,
@@ -51,6 +53,7 @@ export {
   SidebarItemIcon,
   SidebarItemLabel,
   SidebarItemTrailing,
+  SidebarRail,
 };
 
 export type {
@@ -72,6 +75,8 @@ export type {
   SidebarItemLabelProps,
   SidebarItemTrailingProps,
   SidebarItemSlotProps,
+  SidebarRailProps,
+  SidebarRailSlotProps,
   SidebarSide,
   SidebarSlotProps,
   SidebarPartSlotProps,

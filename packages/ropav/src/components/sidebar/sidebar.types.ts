@@ -29,6 +29,20 @@ export interface SidebarRootProps {
   width?: string;
   /** The width it starts at. Unset, the stylesheet decides and nothing is written inline. */
   defaultWidth?: string;
+  /**
+   * Where the sidebar is remembered between visits, under `ropav:sidebar:<id>` in `localStorage`.
+   *
+   * The wide-viewport state only: whether the panel was left expanded and how wide it was. What
+   * the drawer was doing is not worth restoring — it is opened to be used and closed when it is.
+   */
+  autoSaveId?: string;
+  /**
+   * The viewport at or below which the panel becomes a drawer, as a media query.
+   *
+   * Written as a query rather than a number so a caller can key it to whatever their layout
+   * actually needs — a container, an orientation, a coarse pointer. @default "(max-width: 47.99rem)"
+   */
+  breakpoint?: string;
 }
 
 export interface SidebarRootEmits {
@@ -78,6 +92,39 @@ export interface SidebarGroupLabelProps {
 
 export interface SidebarSeparatorProps {
   class?: string;
+}
+
+export interface SidebarRailProps {
+  class?: string;
+  /**
+   * Whether dragging the rail resizes the panel. Off, it is a toggle strip and nothing else.
+   * @default false
+   */
+  isResizable?: boolean;
+  /** Suppresses both gestures. */
+  isDisabled?: boolean;
+  /** Narrowest width a drag may reach, in pixels. @default 180 */
+  minWidth?: number;
+  /** Widest width a drag may reach, in pixels. @default 480 */
+  maxWidth?: number;
+  /** How far one arrow press moves the edge, in pixels. @default 10 */
+  keyboardStep?: number;
+  /** How far a shift-arrow press moves it, in pixels. @default 50 */
+  keyboardLargeStep?: number;
+  /** @default "Resize sidebar" when it resizes, "Toggle sidebar" when it only toggles */
+  ariaLabel?: string;
+  ariaLabelledby?: string;
+}
+
+/** State the rail hands to its slot. */
+export interface SidebarRailSlotProps {
+  isDragging: boolean;
+  isHovered: boolean;
+  isFocused: boolean;
+  isFocusVisible: boolean;
+  isDisabled: boolean;
+  isResizable: boolean;
+  isCollapsed: boolean;
 }
 
 export interface SidebarItemProps {

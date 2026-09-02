@@ -47,6 +47,8 @@ export interface SidebarState {
   /** Undefined until someone sets one, so an untouched sidebar is sized by the stylesheet. */
   width: ComputedRef<string | undefined>;
   setWidth: (width: string) => void;
+  /** Put the width back to the declared default, which is what a double-click on the rail does. */
+  resetWidth: () => void;
 }
 
 /**
@@ -123,6 +125,7 @@ export const useSidebarState = (options: UseSidebarStateOptions): SidebarState =
     isMobileOpen: computed(() => mobileOpen.state.value),
     isOpen,
     open: () => setOpen(true),
+    resetWidth: () => width.setState(options.defaultWidth),
     setOpen,
     setWidth: (next) => width.setState(next),
     toggle: () => setOpen(!isOpen.value),
