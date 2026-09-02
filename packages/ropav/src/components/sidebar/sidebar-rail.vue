@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type { SidebarRailProps, SidebarRailSlotProps } from "./sidebar.types";
 
-import { computed, shallowRef } from "vue";
+import { computed, shallowRef, watch } from "vue";
 
 import { useInteractionStates } from "../../composables/use-interaction-states";
 import { useMove } from "../../composables/use-move";
@@ -28,7 +28,45 @@ const maxWidth = computed(() => props.maxWidth ?? 480);
 const states = useInteractionStates({ isDisabled });
 const isDragging = shallowRef(false);
 
-/** The panel's width when the gesture opened; every delta is measured against it. */
+/*
+ * Two controls in one strip, and the role says which. Dragging makes it a window splitter, so it
+ * reports where the edge sits and how far it can travel. Toggling alone makes it a button, and a
+ * `separator` with no value to report would be one that says nothing about itself.
+ */
+
+/**
+ * The declared width, when it is the plain pixel length the rail itself writes.
+ *
+ * Preferred over measuring, and not as an optimisation: the panel eases towards a new width, so
+ * `offsetWidth` read any time after a change reports a frame of the animation rather than the
+ * width that was asked for. This is the number the user moved the edge to.
+ */
+const declaredWidth = computed(() => {
+  const value = state.width.value;
+  const pixels = value?.endsWith("px") ? Number.parseFloat(value) : Number.NaN;
+
+  return Number.isFinite(pixels) ? Math.round(pixels) : null;
+});
+
+/**
+ * The starting point, for a sidebar sized by the stylesheet with no declared width to read.
+ *
+ * Taken once, when the panel appears: nothing is in flight then, so this is the one moment a
+ * measurement is the truth. Every later change goes through `declaredWidth`.
+ */
+const measuredWidth = shallowRef(0);
+
+watch(
+  panelEl,
+  () => {
+    measuredWidth.value = panelEl.value?.offsetWidth ?? 0;
+  },
+  { flush: "post", immediate: true },
+);
+
+const width = computed(() => declaredWidth.value ?? measuredWidth.value);
+
+/** The width the gesture opened at; every delta is measured against it. */
 let startWidth = 0;
 /** The width to go back to if the gesture is abandoned. */
 let startDeclared: string | undefined;
@@ -56,11 +94,15 @@ const apply = (width: number) => {
 };
 
 const openGesture = () => {
-  startWidth = panelEl.value?.offsetWidth ?? 0;
+  // The reported width, not a fresh measurement. A second arrow press arrives while the panel is
+  // still easing towards the first one's result, and measuring there would restart the whole
+  // gesture from a frame of the animation — every press after the first would land on the same
+  // width and the edge would stop moving.
+  startWidth = width.value;
   startDeclared = state.width.value;
   total = 0;
-  hasMoved = false;
   isDragging.value = true;
+  state.setResizing(true);
   readDirection();
 };
 
@@ -82,6 +124,7 @@ const { handlers: moveHandlers } = useMove({
   },
   onMoveEnd: () => {
     isDragging.value = false;
+    state.setResizing(false);
     total = 0;
   },
   onMoveStart: () => {
@@ -91,9 +134,9 @@ const { handlers: moveHandlers } = useMove({
   },
 });
 
-const jump = (width: number) => {
-  startWidth = panelEl.value?.offsetWidth ?? 0;
-  apply(width);
+const jump = (target: number) => {
+  startWidth = width.value;
+  apply(target);
 };
 
 const onKeydown = (event: KeyboardEvent) => {
@@ -118,6 +161,7 @@ const onKeydown = (event: KeyboardEvent) => {
   if (event.key === "Escape" && isDragging.value) {
     event.preventDefault();
     isDragging.value = false;
+    state.setResizing(false);
     if (startDeclared === undefined) state.resetWidth();
     else state.setWidth(startDeclared);
 
@@ -132,6 +176,11 @@ const onKeydown = (event: KeyboardEvent) => {
 
 const onPointerdown = (event: PointerEvent) => {
   if (isDisabled.value) return;
+
+  // Cleared here rather than when a move opens, because a press that never travels opens no move
+  // at all — left to `onMoveStart` the flag would still be carrying the last drag's answer, and
+  // the click that press produces would be thrown away as the tail of a gesture long finished.
+  hasMoved = false;
 
   states.onPointerdown(event);
   if (isResizable.value) moveHandlers.onPointerdown(event);
@@ -154,13 +203,6 @@ const onDblclick = () => {
 const railClass = computed(() =>
   composeSlotClassName(slots.value.rail, props.class, { isResizable: isResizable.value }),
 );
-
-/*
- * Two controls in one strip, and the role says which. Dragging makes it a window splitter, so it
- * reports where the edge sits and how far it can travel. Toggling alone makes it a button, and a
- * `separator` with no value to report would be one that says nothing about itself.
- */
-const width = computed(() => panelEl.value?.offsetWidth ?? 0);
 </script>
 
 <template>

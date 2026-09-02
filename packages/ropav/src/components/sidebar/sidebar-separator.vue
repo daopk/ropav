@@ -12,7 +12,8 @@ const { slots } = useSidebarContext();
 </script>
 
 <template>
-  <!-- The library's own rule, inset to the nav's gutter. `w-auto` beats the `w-full` the separator
-    carries because the class goes through `tv()`, where tailwind-merge lets a caller override. -->
+  <!-- The library's own rule, spaced for the nav. It keeps the separator's own full width, which
+    is the box every item beside it already fills; `sidebar-content.vue` hands down the `div`
+    element type so it takes part in the column rather than breaking out of it. -->
   <SeparatorRoot :class="composeSlotClassName(slots.separator, props.class)" />
 </template>

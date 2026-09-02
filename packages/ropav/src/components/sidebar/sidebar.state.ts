@@ -1,6 +1,6 @@
 import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import { computed, toValue } from "vue";
+import { computed, shallowRef, toValue } from "vue";
 
 import { useControllableState } from "../../composables/use-controllable-state";
 
@@ -49,6 +49,9 @@ export interface SidebarState {
   setWidth: (width: string) => void;
   /** Put the width back to the declared default, which is what a double-click on the rail does. */
   resetWidth: () => void;
+  /** Whether a drag on the rail is in flight, which is what suppresses the width transition. */
+  isResizing: ComputedRef<boolean>;
+  setResizing: (isResizing: boolean) => void;
 }
 
 /**
@@ -73,6 +76,7 @@ export interface SidebarState {
 export const useSidebarState = (options: UseSidebarStateOptions): SidebarState => {
   const collapsible = computed(() => toValue(options.collapsible) ?? "icon");
   const isMobile = computed(() => Boolean(toValue(options.isMobile)));
+  const isResizing = shallowRef(false);
 
   const expanded = useControllableState<boolean>({
     defaultValue: options.defaultExpanded ?? true,
@@ -124,9 +128,13 @@ export const useSidebarState = (options: UseSidebarStateOptions): SidebarState =
     isMobile,
     isMobileOpen: computed(() => mobileOpen.state.value),
     isOpen,
+    isResizing: computed(() => isResizing.value),
     open: () => setOpen(true),
     resetWidth: () => width.setState(options.defaultWidth),
     setOpen,
+    setResizing: (next) => {
+      isResizing.value = next;
+    },
     setWidth: (next) => width.setState(next),
     toggle: () => setOpen(!isOpen.value),
     width: computed(() => width.state.value),

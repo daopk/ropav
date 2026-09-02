@@ -59,6 +59,13 @@
   @apply motion-reduce:transition-none;
 }
 
+/* Under the pointer the panel follows it exactly. Easing towards each frame's width instead makes
+ * the edge lag the cursor by the whole duration, which reads as the panel chasing the drag rather
+ * than being dragged. */
+.sidebar__panel[data-resizing="true"] {
+  transition: none;
+}
+
 /* The separating line is a border rather than a background, so it is one of the few things Forced
  * Colors Mode recolours instead of flattening — no restatement needed here. */
 .sidebar__panel--left {
@@ -76,9 +83,14 @@
 }
 
 /* Nothing left to divide once the panel is gone, and a hairline standing alone at the edge of the
- * page reads as a rendering fault. */
+ * page reads as a rendering fault.
+ *
+ * The fill goes with it, and that is a declaration rather than a change: a box zero wide with no
+ * border paints no background either way. Saying so is what keeps the Storybook forced-colors
+ * sweep honest — it reads this panel as one that painted a surface and then lost it to the mode,
+ * where in truth there was never anything on screen to lose. */
 .sidebar__panel--offcanvas[data-collapsed="true"] {
-  @apply border-0;
+  @apply border-0 bg-transparent;
 
   inline-size: 0;
 }
@@ -134,8 +146,13 @@
   @apply sr-only;
 }
 
+/* Spacing only, and no width of its own. `separator.css` is imported under Layout, after this file
+ * under Navigation, so its `w-full` wins at equal specificity and nothing here can take it back —
+ * tailwind-merge cannot help either, because the width lives inside a BEM rule rather than in the
+ * class string. It needs no taking back: the rule runs the width of the content's padding box,
+ * which is exactly the box every item beside it already fills. */
 .sidebar__separator {
-  @apply mx-2 my-1 w-auto;
+  @apply my-1;
 }
 
 /* ==========================================================================
