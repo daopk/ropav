@@ -1,7 +1,7 @@
 import type { Size } from "../utils/virtualizer-geometry";
 import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import { computed, onScopeDispose, toValue, watch } from "vue";
+import { computed, onScopeDispose, shallowRef, toValue, watch } from "vue";
 
 import { Point, Rect, Size as SizeClass } from "../utils/virtualizer-geometry";
 
@@ -46,11 +46,37 @@ export interface UseVirtualizerScrollOptions {
   onScrollEnd?: () => void;
 }
 
+/** Where to scroll the container to. An axis left out stays where it is. */
+export interface ScrollToOffset {
+  left?: number;
+  top?: number;
+}
+
 export interface UseVirtualizerScrollReturn {
   /** The style for the wrapper that gives the container something to scroll. */
   contentStyle: ComputedRef<Record<string, string | undefined>>;
   /** Re-measures the container. Called on mount, on resize, and by tests. */
   measure: () => void;
+  /**
+   * How far the container is scrolled, as the element reports it.
+   *
+   * Along the block axis the offset is clamped into the content, as the visible rectangle is.
+   * Along the inline axis it keeps its sign: a right-to-left box scrolls into negative offsets,
+   * and a scrollbar drawn for it has to know which way the content ran.
+   */
+  scrollOffset: ComputedRef<Point>;
+  /** The container's scrollable overflow, per axis — what the offset runs up to, less the box. */
+  scrollSize: ComputedRef<Size>;
+  /**
+   * Scrolls the container from here, and moves the window in the same task.
+   *
+   * A scroll the browser makes on its own reaches this composable a frame after the offset moved,
+   * and the compositor has already drawn that frame with the rows built for the old offset. A
+   * scroll made here is read back at once, so the offset and the rows it calls for are committed
+   * by the same frame — which is what lets a scrollbar the collection draws itself never show an
+   * empty window.
+   */
+  scrollTo: (offset: ScrollToOffset) => void;
 }
 
 const px = (value: number): string | undefined =>
@@ -71,9 +97,42 @@ export const useVirtualizerScroll = (
     viewportSize: new SizeClass(),
   };
 
+  const scrollOffset = shallowRef(new Point());
+  const scrollSize = shallowRef(new SizeClass());
+
   let isMeasuring = false;
 
   const getElement = () => toValue(options.element) ?? null;
+
+  /** Reads where the element is scrolled to, and how far it could go. */
+  const readScroll = (element: HTMLElement) => {
+    const scrollWidth = element.scrollWidth;
+    const scrollHeight = element.scrollHeight;
+    const left = element.scrollLeft;
+    const top = element.scrollTop;
+
+    // Clamped so an elastic over-scroll past either end does not shake the window, and clamped
+    // against the element rather than against the layout: the browser is the one that knows how
+    // tall the thing it is scrolling is *as rendered*, and asking the layout pulls a whole pass
+    // forward for the offset this handler is about to replace.
+    state.scrollPosition = new Point(
+      Math.max(0, Math.min(left, scrollWidth - state.size.width)),
+      Math.max(0, Math.min(top, scrollHeight - state.size.height)),
+    );
+
+    if (scrollSize.value.width !== scrollWidth || scrollSize.value.height !== scrollHeight) {
+      scrollSize.value = new SizeClass(scrollWidth, scrollHeight);
+    }
+
+    // The inline offset keeps its sign but not an over-scroll's excess, for the same reason.
+    const inlineRange = Math.max(0, scrollWidth - state.size.width);
+    const offset = new Point(
+      Math.sign(left) * Math.min(Math.abs(left), inlineRange),
+      state.scrollPosition.y,
+    );
+
+    if (!scrollOffset.value.equals(offset)) scrollOffset.value = offset;
+  };
 
   const updateVisibleRect = () => {
     // The container intersected with the window viewport. A collection with no bound of its own
@@ -112,6 +171,15 @@ export const useVirtualizerScroll = (
     state.scrollTimeout = setTimeout(endScrolling, SCROLL_END_DELAY);
   };
 
+  const markScrolling = () => {
+    if (!state.isScrolling) {
+      state.isScrolling = true;
+      options.onScrollStart?.();
+    }
+
+    scheduleScrollEnd();
+  };
+
   const onScroll = (event: Event) => {
     const element = getElement();
     const target = event.target;
@@ -119,14 +187,7 @@ export const useVirtualizerScroll = (
     if (!element || !(target instanceof Node) || !target.contains(element)) return;
 
     if (target === element) {
-      // Clamped so an elastic over-scroll past either end does not shake the window, and clamped
-      // against the element rather than against the layout: the browser is the one that knows how
-      // tall the thing it is scrolling is *as rendered*, and asking the layout pulls a whole pass
-      // forward for the offset this handler is about to replace.
-      state.scrollPosition = new Point(
-        Math.max(0, Math.min(element.scrollLeft, element.scrollWidth - state.size.width)),
-        Math.max(0, Math.min(element.scrollTop, element.scrollHeight - state.size.height)),
-      );
+      readScroll(element);
     } else {
       // An ancestor or the page scrolled: the container did not move inside itself, it moved
       // relative to the viewport.
@@ -140,13 +201,23 @@ export const useVirtualizerScroll = (
     }
 
     updateVisibleRect();
+    markScrolling();
+  };
 
-    if (!state.isScrolling) {
-      state.isScrolling = true;
-      options.onScrollStart?.();
-    }
+  const scrollTo = (offset: ScrollToOffset) => {
+    const element = getElement();
 
-    scheduleScrollEnd();
+    if (!element) return;
+
+    if (offset.left != null) element.scrollLeft = offset.left;
+    if (offset.top != null) element.scrollTop = offset.top;
+
+    // Read back rather than trusted: the browser clamps what it was given, and the window has to
+    // be built for the offset it settled on. The scroll event this raises arrives later in the
+    // frame and finds nothing left to move.
+    readScroll(element);
+    updateVisibleRect();
+    markScrolling();
   };
 
   /**
@@ -175,11 +246,13 @@ export const useVirtualizerScroll = (
 
     if (state.size.width !== clientWidth || state.size.height !== clientHeight || viewportChanged) {
       state.size = new SizeClass(clientWidth, clientHeight);
+      readScroll(element);
       updateVisibleRect();
       options.onSizeChange(state.size);
 
       if (element.clientWidth !== clientWidth || element.clientHeight !== clientHeight) {
         state.size = new SizeClass(element.clientWidth, element.clientHeight);
+        readScroll(element);
         updateVisibleRect();
         options.onSizeChange(state.size);
       }
@@ -220,6 +293,19 @@ export const useVirtualizerScroll = (
     { flush: "post", immediate: true },
   );
 
+  // The wrapper's height is what the container's overflow comes to, so once a new one has been
+  // written to the DOM the overflow is read again — a scrollbar drawn from the old one would
+  // describe content that is no longer there.
+  watch(
+    () => options.contentSize(),
+    () => {
+      const element = getElement();
+
+      if (element) readScroll(element);
+    },
+    { flush: "post" },
+  );
+
   // After the layout has run, not during it: the shift is worked out from where the rows were,
   // and the element has to be showing where they are now before the offset is moved to match.
   watch(
@@ -252,5 +338,8 @@ export const useVirtualizerScroll = (
       };
     }),
     measure,
+    scrollOffset: computed(() => scrollOffset.value),
+    scrollSize: computed(() => scrollSize.value),
+    scrollTo,
   };
 };

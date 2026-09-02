@@ -116,6 +116,58 @@
 }
 
 /* --------------------------------------------------------------------------
+   Scrollbar — drawn by a windowed table in place of the native one it hides,
+   so a dragged thumb moves the rows and the scroll offset together. The
+   component sizes and places each bar; this only paints it.
+   -------------------------------------------------------------------------- */
+.table__scrollbar {
+  @apply absolute touch-none select-none;
+  background-color: var(--scrollbar-track);
+
+  /* The content wrapper drops pointers mid-scroll so a fast scroll does not hover every row it
+   * passes. The bar is what is being dragged, so it keeps taking them. */
+  pointer-events: auto;
+
+  &[data-orientation="vertical"] {
+    @apply end-0 top-0;
+  }
+
+  &[data-orientation="horizontal"] {
+    @apply start-0;
+  }
+}
+
+.table__scrollbar-thumb {
+  @apply absolute rounded-full;
+  background-color: var(--scrollbar-thumb);
+
+  &[data-orientation="vertical"] {
+    inset-inline: 2px;
+  }
+
+  &[data-orientation="horizontal"] {
+    inset-block: 2px;
+  }
+
+  @media (hover: hover) {
+    &:hover,
+    &[data-hovered="true"] {
+      background-color: color-mix(in oklch, var(--foreground) 25%, transparent);
+    }
+  }
+
+  &[data-pressed="true"] {
+    background-color: color-mix(in oklch, var(--foreground) 35%, transparent);
+  }
+
+  /* Forced Colors Mode replaces the translucent fill with the canvas, and the thumb vanishes. */
+  @media (forced-colors: active) {
+    forced-color-adjust: none;
+    background-color: ButtonText;
+  }
+}
+
+/* --------------------------------------------------------------------------
    Table Header (<thead>)
    -------------------------------------------------------------------------- */
 .table__header {

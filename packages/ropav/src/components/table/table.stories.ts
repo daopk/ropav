@@ -1034,8 +1034,11 @@ export const Virtualization: Story = {
 /**
  * A hundred thousand rows, for dragging the scrollbar across.
  *
- * Every frame of a drag lands the window somewhere it has never been, so every frame mounts a
- * whole screenful of rows. This is where that cost is felt, and where it has to fit in a frame.
+ * The scrollbar is the table's own. A native thumb is moved by the compositor, which draws each
+ * frame at the new offset with whatever rows were last committed — and here those are always
+ * somewhere else, so a native drag shows an empty body for as long as the main thread takes to
+ * catch up. This thumb moves the offset and the rows in one task, so every frame of the drag
+ * shows real rows; what has to fit in a frame is a screenful of rows changing what they show.
  */
 export const VirtualizationHundredThousandRows: Story = {
   render: () => ({

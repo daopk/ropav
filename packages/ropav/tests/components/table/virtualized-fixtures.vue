@@ -25,6 +25,8 @@ export interface VirtualizedUser {
 const props = withDefaults(
   defineProps<{
     isLoading?: boolean;
+    /** Columns that together outgrow the box, so it scrolls sideways as well as down. */
+    isWide?: boolean;
     items?: VirtualizedUser[];
     rowSize?: number;
     selectionMode?: "multiple" | "none" | "single";
@@ -33,6 +35,7 @@ const props = withDefaults(
   }>(),
   {
     isLoading: undefined,
+    isWide: undefined,
     items: (): VirtualizedUser[] => [],
     rowSize: 42,
     selectionMode: "none",
@@ -58,9 +61,11 @@ const emit = defineEmits<{ loadMore: [] }>();
           :selection-mode="props.selectionMode"
         >
           <TableHeader>
-            <TableColumn id="name" is-row-header :min-width="160">Name</TableColumn>
-            <TableColumn id="role" :min-width="220">Role</TableColumn>
-            <TableColumn id="email" :min-width="240">Email</TableColumn>
+            <TableColumn id="name" is-row-header :min-width="props.isWide ? 400 : 160">
+              Name
+            </TableColumn>
+            <TableColumn id="role" :min-width="props.isWide ? 400 : 220">Role</TableColumn>
+            <TableColumn id="email" :min-width="props.isWide ? 400 : 240">Email</TableColumn>
           </TableHeader>
           <TableBody :item-text-value="(item) => item.name" :items="props.items">
             <template #default="{ item }">

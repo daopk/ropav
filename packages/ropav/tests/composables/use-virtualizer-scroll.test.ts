@@ -1,10 +1,10 @@
 import type { UseVirtualizerScrollReturn } from "@/composables/use-virtualizer-scroll";
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { effectScope, shallowRef } from "vue";
+import { effectScope, nextTick, shallowRef } from "vue";
 
 import { useVirtualizerScroll } from "@/composables/use-virtualizer-scroll";
-import { Rect, Size } from "@/utils/virtualizer-geometry";
+import { Point, Rect, Size } from "@/utils/virtualizer-geometry";
 
 /**
  * jsdom lays nothing out, so the container's measurements are defined on the element itself
@@ -123,6 +123,46 @@ describe("useVirtualizerScroll", () => {
     // 1000 of content less the 400 on screen: an elastic bounce past the end must not shake
     // the window back and forth.
     expect(rects.at(-1)).toEqual(new Rect(0, 600, 300, 400));
+  });
+
+  it("scrolls the container itself and moves the window before any scroll event", () => {
+    const { element, rects, scroll } = setup();
+
+    scroll.scrollTo({ top: 1_000 });
+
+    // Read back at once, with no event dispatched: the rows for the new offset go into the same
+    // flush as the offset, which is what keeps a frame from being drawn without them.
+    expect(element.scrollTop).toBe(1_000);
+    expect(rects.at(-1)).toEqual(new Rect(0, 1_000, 300, 400));
+    expect(scroll.scrollOffset.value).toEqual(new Point(0, 1_000));
+  });
+
+  it("reports how far the container is scrolled and how far it can go", () => {
+    const { element, rects, scroll, scrollTo } = setup({ contentSize: new Size(600, 50_000) });
+
+    expect(scroll.scrollSize.value).toEqual(new Size(600, 50_000));
+
+    scrollTo(500);
+
+    expect(scroll.scrollOffset.value).toEqual(new Point(0, 500));
+
+    // A right-to-left box scrolls into negative inline offsets, and the offset keeps the sign —
+    // while the window itself stays clamped into the content, as it always was.
+    element.scrollLeft = -20;
+    element.dispatchEvent(new Event("scroll", { bubbles: false }));
+
+    expect(scroll.scrollOffset.value).toEqual(new Point(-20, 500));
+    expect(rects.at(-1)!.x).toBe(0);
+  });
+
+  it("re-reads how far the container can go once new content has been laid out", async () => {
+    const { contentSize, element, scroll } = setup();
+
+    mockScrollExtent(element, { height: 80_000, width: 300 });
+    contentSize.value = new Size(300, 80_000);
+    await nextTick();
+
+    expect(scroll.scrollSize.value).toEqual(new Size(300, 80_000));
   });
 
   it("follows the page scrolling the container out of the viewport", () => {
