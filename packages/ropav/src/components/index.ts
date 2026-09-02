@@ -70,6 +70,7 @@ export * from "./search-field";
 export * from "./segmented-control";
 export * from "./select";
 export * from "./separator";
+export * from "./sidebar";
 export * from "./skeleton";
 export * from "./slider";
 export * from "./spinner";

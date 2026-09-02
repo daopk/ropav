@@ -9,6 +9,8 @@ import type {
   NumberFieldStepper,
   PushPasswordManagerStrategy,
   RangeCalendarCommitBehavior,
+  SidebarCollapsible,
+  SidebarState,
   SplitterState,
   TableColumnSize,
   Timer,
@@ -55,6 +57,8 @@ export interface HostExportedTypes {
   "number-field: NumberFieldStepper": NumberFieldStepper;
   "number-field: UseNumberFieldReturn": UseNumberFieldReturn;
   "range-calendar: RangeCalendarCommitBehavior": RangeCalendarCommitBehavior;
+  "sidebar: SidebarCollapsible": SidebarCollapsible;
+  "sidebar: SidebarState": SidebarState;
   "splitter: SplitterState": SplitterState;
   "table: TableColumnSize": TableColumnSize;
   "toast: Timer": Timer;
