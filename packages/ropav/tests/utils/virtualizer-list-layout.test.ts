@@ -137,18 +137,22 @@ describe("ListLayout", () => {
 
       // Anywhere inside row 2 the rectangle snaps to the same 100..550: y floors to 100 and the
       // height grows to cover what the floor gave away. Every offset in that row renders the
-      // same eleven rows, so scrolling a pixel at a time mounts nothing and unmounts nothing.
-      const insideRowTwo = Array.from({ length: 11 }, (_, index) => `item-${index + 1}`);
+      // same ten rows, so scrolling a pixel at a time mounts nothing and unmounts nothing.
+      //
+      // Row 2 rather than row 1 is where the set starts: a row ending exactly on the top edge is
+      // above the window. It shows no pixels, and it is the one edge rule the whole library now
+      // shares — upstream's list counts that shared edge as an overlap while its table does not.
+      const insideRowTwo = Array.from({ length: 10 }, (_, index) => `item-${index + 2}`);
 
       expect(keysIn(layout, new Rect(0, 101, 300, 400))).toEqual(insideRowTwo);
       expect(keysIn(layout, new Rect(0, 137, 300, 400))).toEqual(insideRowTwo);
       expect(keysIn(layout, new Rect(0, 149, 300, 400))).toEqual(insideRowTwo);
 
       // Landing exactly on a row boundary needs one row fewer, since nothing was given away.
-      expect(keysIn(layout, new Rect(0, 100, 300, 400))).toEqual(insideRowTwo.slice(0, 10));
+      expect(keysIn(layout, new Rect(0, 100, 300, 400))).toEqual(insideRowTwo.slice(0, 9));
       // The set only ever slides by whole rows: the next row down starts one key later.
       expect(keysIn(layout, new Rect(0, 151, 300, 400))).toEqual(
-        Array.from({ length: 11 }, (_, index) => `item-${index + 2}`),
+        Array.from({ length: 10 }, (_, index) => `item-${index + 3}`),
       );
     });
 
@@ -220,17 +224,18 @@ describe("ListLayout laziness", () => {
   it("places a screenful rather than the whole collection", () => {
     const layout = attach(new CountingListLayout({ rowSize: 50 }), createHost({ itemCount: 1000 }));
 
-    // One row is placed to learn the stride; the other 999 are accounted for arithmetically,
-    // which is why the scrollbar is right without a thousand rects existing.
-    expect(new Set(layout.built)).toEqual(new Set(["item-0"]));
-    expect(layout.getContentSize()).toEqual(new Size(300, 50_000));
-
-    layout.getVisibleLayoutInfos(new Rect(0, 0, 300, 400));
-
-    // The window asked about, and nothing below it.
+    // The container's own rectangle is the window until something asks for another, so a
+    // screenful is placed — and the other 991 are not, though the scrollbar describes them all.
     expect(new Set(layout.built)).toEqual(
       new Set(Array.from({ length: 9 }, (_, index) => `item-${index}`)),
     );
+    expect(layout.getContentSize()).toEqual(new Size(300, 50_000));
+
+    layout.built.length = 0;
+    layout.getVisibleLayoutInfos(new Rect(0, 0, 300, 400));
+
+    // The same window, so there is nothing left to place.
+    expect(layout.built).toEqual([]);
   });
 
   it("moves the placed region with the window rather than growing to cover both", () => {
@@ -240,10 +245,10 @@ describe("ListLayout laziness", () => {
     layout.built.length = 0;
     layout.getVisibleLayoutInfos(new Rect(0, 500, 300, 400));
 
-    // A fixed stride puts every row at a known offset, so the rows above the window are not
-    // needed to know where the ones inside it sit. Only the new window is placed.
+    // Every row sits at an offset the index knows, so the rows above the window are not needed to
+    // know where the ones inside it sit. Only the new window is placed.
     expect(new Set(layout.built)).toEqual(
-      new Set(Array.from({ length: 10 }, (_, index) => `item-${index + 9}`)),
+      new Set(Array.from({ length: 9 }, (_, index) => `item-${index + 10}`)),
     );
   });
 
@@ -281,20 +286,6 @@ describe("ListLayout laziness", () => {
     // placed on its own rather than by laying out everything above it.
     expect(layout.getLayoutInfo("item-999")?.rect).toEqual(new Rect(0, 49_950, 300, 50));
     expect(layout.built).toEqual(["item-999"]);
-  });
-
-  it("lays out everything above a key it never reached when rows vary in height", () => {
-    const layout = attach(
-      new CountingListLayout({ estimatedRowSize: 50 }),
-      createHost({ itemCount: 1000 }),
-    );
-
-    layout.built.length = 0;
-
-    // A measured row can be any height, so there is no way to know where this one sits without
-    // adding up the rows above it.
-    expect(layout.getLayoutInfo("item-999")?.rect).toEqual(new Rect(0, 49_950, 300, 50));
-    expect(new Set(layout.built).size).toBe(1000);
   });
 });
 
@@ -488,6 +479,77 @@ describe("ListLayout measured rows", () => {
           .rect,
       ).toEqual(new Rect(0, 196, 300, 8));
     });
+  });
+});
+
+/**
+ * A window is a window whatever the rows are.
+ *
+ * Every case here holds for a fixed stride already; what they pin is that a row whose height
+ * nobody declared costs the same. Where a row sits is the total of the rows above it, and adding
+ * that total up row by row on every pass is what makes a fast scroll cost more the further down
+ * it lands.
+ */
+describe("ListLayout laziness with rows of a height nobody declared", () => {
+  const variableLayout = (itemCount = 1000) =>
+    attach(new CountingListLayout({ estimatedRowSize: 50 }), createHost({ itemCount }));
+
+  it("places a screenful wherever the window is, not everything above it", () => {
+    const layout = variableLayout();
+
+    layout.getVisibleLayoutInfos(new Rect(0, 0, 300, 400));
+    layout.built.length = 0;
+    layout.getVisibleLayoutInfos(new Rect(0, 20_000, 300, 400));
+
+    expect(layout.built.length).toBeLessThan(20);
+  });
+
+  it("costs the same at the end of the collection as at the start", () => {
+    const near = variableLayout();
+
+    near.getVisibleLayoutInfos(new Rect(0, 0, 300, 400));
+    near.built.length = 0;
+    near.getVisibleLayoutInfos(new Rect(0, 500, 300, 400));
+
+    const far = variableLayout();
+
+    far.getVisibleLayoutInfos(new Rect(0, 0, 300, 400));
+    far.built.length = 0;
+    far.getVisibleLayoutInfos(new Rect(0, 40_000, 300, 400));
+
+    // The one number that matters for a scrollbar drag: what a pass costs must not be a function
+    // of how far down it landed.
+    expect(far.built.length).toBeLessThanOrEqual(near.built.length * 2);
+  });
+
+  it("drops the rows the window has left behind", () => {
+    const layout = variableLayout();
+
+    layout.getVisibleLayoutInfos(new Rect(0, 0, 300, 400));
+    layout.getVisibleLayoutInfos(new Rect(0, 20_000, 300, 400));
+
+    expect(layout.cachedKeys.length).toBeLessThan(20);
+  });
+
+  it("places one row rather than the whole collection when asked about a key by index", () => {
+    const layout = variableLayout();
+
+    layout.built.length = 0;
+
+    expect(layout.getLayoutInfo("item-999")?.rect).toEqual(new Rect(0, 49_950, 300, 50));
+    expect(layout.built.length).toBeLessThan(20);
+  });
+
+  it("keeps windowing after a key outside the window has been asked about", () => {
+    const layout = variableLayout();
+
+    layout.getLayoutInfo("item-999");
+
+    // Laying out everything to answer one question used to leave the region covering the whole
+    // collection, after which no later window could ever shrink it again — so the rendered set
+    // is what this asks about, not what the pass had to build to get there.
+    expect(layout.getVisibleLayoutInfos(new Rect(0, 0, 300, 400)).length).toBeLessThan(20);
+    expect(layout.cachedKeys.length).toBeLessThan(20);
   });
 });
 

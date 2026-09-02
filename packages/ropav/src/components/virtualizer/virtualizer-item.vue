@@ -23,24 +23,21 @@ const style = computed(() =>
 /**
  * Measure what the layout could only estimate.
  *
- * The inline height is cleared first: it is the estimate, and measuring through it would just
- * read the guess back. `scrollHeight` rather than `getBoundingClientRect` because that is what
- * React Aria reads, and a row whose content overflows should report the content.
+ * A wrapper still carrying an estimate has no height of its own, so what it reports is what its
+ * content came to. React Aria writes the estimate on, clears it to read `scrollHeight`, and writes
+ * it back — a forced reflow per element, and one that fights the size containment the wrapper
+ * also carries.
  */
 const measure = () => {
   const current = element.value;
 
   if (!current) return;
 
-  const height = current.style.height;
+  const bounds = current.getBoundingClientRect();
 
-  current.style.height = "";
-
-  const measured = new Size(current.scrollWidth, current.scrollHeight);
-
-  current.style.height = height;
-
-  if (props.layoutInfo) virtualizer?.updateItemSize(props.layoutInfo.key, measured);
+  if (props.layoutInfo) {
+    virtualizer?.updateItemSize(props.layoutInfo.key, new Size(bounds.width, bounds.height));
+  }
 };
 
 // A row placed at an estimate is measured as soon as it is in the DOM, every time it is placed

@@ -116,14 +116,15 @@ describe("ListBox virtualization", () => {
 
     const keys = renderedKeys(listbox);
 
-    // The window is 1000 to 1550: row 19 ends on the top edge, row 31 starts on the bottom one.
-    expect(keys[0]).toBe("user-19");
+    // The window is 1000 to 1550: row 19 ends exactly on the top edge, which counts as above it,
+    // and row 31 starts on the bottom one, which counts as in it.
+    expect(keys[0]).toBe("user-20");
     expect(keys.at(-1)).toBe("user-31");
     expect(keys).not.toContain("user-0");
     // Position comes from the layout, so a row far down the collection is still absolute.
     const [first] = wrappersOf(listbox) as HTMLElement[];
 
-    expect(first!.style.top).toBe("950px");
+    expect(first!.style.top).toBe("1000px");
 
     unmount();
   });

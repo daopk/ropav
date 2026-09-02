@@ -256,6 +256,8 @@ const scroll =
       virtualizer.setSize(size);
     },
     onVisibleRectChange: virtualizer.setVisibleRect,
+    scrollAdjustment: () => virtualizer.scrollAdjustment.value,
+    takeScrollAdjustment: virtualizer.takeScrollAdjustment,
   });
 
 /**

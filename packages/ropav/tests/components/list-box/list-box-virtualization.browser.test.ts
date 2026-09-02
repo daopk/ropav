@@ -79,7 +79,8 @@ describe("ListBox virtualization (browser)", () => {
     await scrollTo(1_000);
 
     expect(keys()).not.toContain("user-0");
-    expect(keys()[0]).toBe("user-19");
+    // Row 19 ends exactly on the top edge, which counts as above the window.
+    expect(keys()[0]).toBe("user-20");
 
     unmount();
   });
@@ -143,6 +144,111 @@ describe("ListBox virtualization (browser)", () => {
      * this feature actually is: the roles and the `aria-posinset`/`aria-setsize` pair.
      */
     await expectNoA11yViolations(container, PALETTE_CONTRAST_DEBT);
+
+    unmount();
+  });
+});
+
+/**
+ * Rows of a height nobody declared, in a browser that actually lays them out.
+ *
+ * jsdom computes nothing, so a measurement there is whatever the test mocked — these are the only
+ * assertions that can say a measured row is really the height of its own content, and that the
+ * rows under it really moved to make room.
+ */
+describe("ListBox virtualization with rows of no declared height (browser)", () => {
+  const varied = Array.from({ length: 500 }, (_, index) => ({
+    email: `user${index}@ropav.com`,
+    id: `user-${index}`,
+    // Every third row carries three extra lines, so no stride describes the collection.
+    lines: index % 3 === 0 ? 3 : 0,
+    name: `User ${index}`,
+  }));
+
+  // The estimate sits below every real height on purpose. One between them cancels out over a
+  // run of rows, which would let a broken adjustment look like a working one.
+  const renderVaried = () => render({ estimatedRowSize: 40, items: varied });
+
+  /** Every rendered wrapper, in the order the collection holds them. */
+  const wrappers = (listbox: HTMLElement) => [
+    ...listbox.querySelectorAll<HTMLElement>(
+      ':scope > [role="presentation"] > [role="presentation"]',
+    ),
+  ];
+
+  it("gives a row the height its own content came to", async () => {
+    const { listbox, unmount } = await renderVaried();
+    const [tall, short] = wrappers(listbox);
+
+    // Row 0 carries the extra lines and row 1 does not, so nothing but a real measurement can
+    // tell them apart — both were placed at the same 40px estimate.
+    expect(tall!.getBoundingClientRect().height).toBeGreaterThan(
+      short!.getBoundingClientRect().height,
+    );
+
+    unmount();
+  });
+
+  it("stacks the rows with no overlap and no gap", async () => {
+    const { listbox, unmount } = await renderVaried();
+    const rects = wrappers(listbox).map((wrapper) => wrapper.getBoundingClientRect());
+
+    for (const [index, rect] of rects.slice(1).entries()) {
+      // Each row starts where the one above it ended. A row measured but not accounted for would
+      // leave a hole here, or sit on top of its neighbour.
+      expect(rect.top).toBeCloseTo(rects[index]!.bottom, 0);
+    }
+
+    unmount();
+  });
+
+  it("holds the window to a screenful however far it is scrolled", async () => {
+    const { keys, listbox, scrollTo, unmount } = await renderVaried();
+
+    await scrollTo(10_000);
+
+    const scrolled = keys().length;
+
+    await scrollTo(0);
+
+    // The cost of a pass is the window, not the offset it landed on — which is the whole reason a
+    // scrollbar drag can keep up.
+    expect(scrolled).toBeLessThan(30);
+    expect(keys().length).toBeLessThan(30);
+    expect(listbox.scrollHeight).toBeGreaterThan(15_000);
+
+    unmount();
+  });
+
+  it("puts the shift back into the scroll offset when rows above it are measured", async () => {
+    const { listbox, scrollTo, unmount } = await renderVaried();
+
+    await scrollTo(9_000);
+    // Scrolling *up* is what renders rows above the viewport, and measuring those is what pushes
+    // everything below them down. Without the shift going back into the offset, the collection
+    // slides under the pointer exactly here.
+    await scrollTo(8_000);
+
+    expect(listbox.scrollTop).not.toBe(8_000);
+    const rects = wrappers(listbox).map((wrapper) => wrapper.getBoundingClientRect());
+
+    for (const [index, rect] of rects.slice(1).entries()) {
+      expect(rect.top).toBeCloseTo(rects[index]!.bottom, 0);
+    }
+
+    unmount();
+  });
+
+  it("keeps a measured row measured when the window leaves it and comes back", async () => {
+    const { listbox, scrollTo, unmount } = await renderVaried();
+    const before = wrappers(listbox)[0]!.getBoundingClientRect().height;
+
+    await scrollTo(10_000);
+    await scrollTo(0);
+
+    // The measurement is held by key in the index, not on the rendered node, so a row that
+    // scrolled away and back is not placed at an estimate for a frame first.
+    expect(wrappers(listbox)[0]!.getBoundingClientRect().height).toBeCloseTo(before, 0);
 
     unmount();
   });

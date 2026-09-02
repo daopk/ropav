@@ -90,82 +90,28 @@ export class TableLayout<
   /**
    * Every layout info to render, parents before children.
    *
-   * The rows are found by a binary search rather than by testing each one against the rectangle,
-   * and the two do not agree at the edges: the search treats a row whose bottom edge is exactly the
-   * rectangle's top edge as **above** the window, while an intersection test counts a shared edge
-   * as an overlap. Since the rectangle is snapped to whole rows, its top edge lands on a row
-   * boundary nearly always — so the difference is a whole extra row, every time. That is what makes
-   * this a port and not a simplification.
+   * Everything a pass built is reported. The body's children *are* the window — the index decided
+   * which rows those were before any of them was placed — so there is nothing left to search over
+   * and nothing to clamp against.
    */
   override getVisibleLayoutInfos(rect: Rect): LayoutInfo[] {
-    const searchRect = this.snapVisibleRect(rect);
-
-    this.layoutIfNeeded(searchRect);
+    this.layoutFor(this.snapVisibleRect(rect));
 
     const result: LayoutInfo[] = [];
 
     for (const node of this.rootNodes) {
       result.push(node.layoutInfo);
-      this.addVisibleLayoutInfos(result, node, searchRect);
+      this.addVisibleLayoutInfos(result, node);
     }
 
     return result;
   }
 
-  private addVisibleLayoutInfos(result: LayoutInfo[], node: LayoutNode, rect: Rect): void {
-    // A row group that built nothing is a table with nothing on screen; the search below would
-    // clamp its way to a row that is not there.
-    if (node.children.length === 0) return;
-
-    if (node.layoutInfo.type === "rowgroup") {
-      const first = this.binarySearch(node.children, rect.y);
-      const last = this.binarySearch(node.children, rect.maxY);
-
-      for (const [index, child] of node.children.entries()) {
-        const keep =
-          (index >= first && index <= last) ||
-          // A sentinel is kept wherever the window is: one that is not in the DOM can never
-          // report that it came into view. A persisted row is kept because the roving tab stop
-          // lives on it.
-          child.layoutInfo.type === "loader" ||
-          this.host!.isPersistedKey(child.layoutInfo.key);
-
-        if (!keep) continue;
-
-        result.push(child.layoutInfo);
-        this.addVisibleLayoutInfos(result, child, rect);
-      }
-
-      return;
-    }
-
-    // The header, its row, and a row: every child of these is placed, so every one is reported.
+  private addVisibleLayoutInfos(result: LayoutInfo[], node: LayoutNode): void {
     for (const child of node.children) {
       result.push(child.layoutInfo);
-      this.addVisibleLayoutInfos(result, child, rect);
+      this.addVisibleLayoutInfos(result, child);
     }
-  }
-
-  /**
-   * The child whose band contains `y`, clamped to the ends.
-   *
-   * A row ending exactly on `y` counts as being before it, which is the edge rule the whole window
-   * turns on.
-   */
-  private binarySearch(items: LayoutNode[], y: number): number {
-    let low = 0;
-    let high = items.length - 1;
-
-    while (low <= high) {
-      const mid = (low + high) >> 1;
-      const rect = items[mid]!.layoutInfo.rect;
-
-      if (rect.maxY <= y) low = mid + 1;
-      else if (rect.y > y) high = mid - 1;
-      else return mid;
-    }
-
-    return Math.max(0, Math.min(items.length - 1, low));
   }
 
   protected getEstimatedRowHeight(): number {
@@ -246,7 +192,6 @@ export class TableLayout<
       children,
       layoutInfo,
       node: collection.getNode(collection.headerKey),
-      validRect: rect,
     };
   }
 
@@ -278,7 +223,7 @@ export class TableLayout<
     rect.height = height;
     rect.width = x - rect.x;
 
-    return { children: columns, layoutInfo, node, validRect: rect };
+    return { children: columns, layoutInfo, node };
   }
 
   protected buildColumn(node: VirtualizerNode, x: number, y: number): LayoutNode {
@@ -294,117 +239,138 @@ export class TableLayout<
     layoutInfo.zIndex = 1;
     layoutInfo.estimatedSize = isEstimated;
 
-    return { children: [], layoutInfo, node, validRect: layoutInfo.rect };
+    return { children: [], layoutInfo, node };
+  }
+
+  /**
+   * How many things the body places: a row per item, and the sentinel after them.
+   *
+   * The sentinel is one of them rather than a special case bolted on after, so the index knows
+   * where it sits and the rows around it do not have to be walked to find out.
+   */
+  protected override get placedCount(): number {
+    const collection = this.tableCollection;
+
+    return collection.rows.keys.length + (collection.loaderKey == null ? 0 : 1);
+  }
+
+  /**
+   * Where the index puts a body child.
+   *
+   * A row is not a root here — the body is — so what the index places is a child of the body, and
+   * the offset it gives is what lets a row nobody scrolled to be placed on its own. Pressing End
+   * asks for exactly that.
+   */
+  protected override indexedOffset(node: VirtualizerNode): number | null {
+    if (node.parentKey !== this.tableCollection.bodyKey) return null;
+
+    return this.offsets.startOf(node.index);
+  }
+
+  /**
+   * Hands a measurement to the index, or to the row that owns it.
+   *
+   * A cell's measurement is not a row's: a row is as tall as its **tallest** cell, so a cell that
+   * measured means the row has to be built again from all of them. `buildRow` is what works the
+   * height out, and what tells the index.
+   */
+  protected override recordMeasuredSize(layoutNode: LayoutNode, height: number): void {
+    const node = layoutNode.node;
+
+    if (!node) return;
+
+    if (node.type === "cell") {
+      if (node.parentKey != null) this.layoutNodes.delete(node.parentKey);
+
+      return;
+    }
+
+    if (node.parentKey === this.tableCollection.bodyKey) {
+      this.offsets.measure(node.key, height, node.index);
+    }
+  }
+
+  /** The key of the body child at `index`, which is a row until it is the sentinel. */
+  private bodyChildKey(index: number): VirtualizerKey | null {
+    const collection = this.tableCollection;
+    const rowKeys = collection.rows.keys;
+
+    return index < rowKeys.length ? rowKeys[index]! : collection.loaderKey;
+  }
+
+  protected override estimatedSizeAt(index: number): number {
+    if (index >= this.tableCollection.rows.keys.length) {
+      return this.loaderSize ?? this.getEstimatedRowHeight();
+    }
+
+    return this.getEstimatedRowHeight();
+  }
+
+  protected override configureOffsets(start: number = this.padding): void {
+    this.offsets.configure({
+      collection: this.tableCollection,
+      count: this.placedCount,
+      estimate: (index) => this.estimatedSizeAt(index),
+      gap: this.gap,
+      keyAt: (index) => this.bodyChildKey(index) ?? index,
+      start,
+    });
+  }
+
+  /**
+   * The body children placed wherever the window is.
+   *
+   * The sentinel, because one that is not in the DOM can never report that it came into view, so
+   * the next page would never be asked for. A persisted row, because the roving tab stop lives on
+   * it and losing its element drops focus to the document.
+   */
+  protected override indicesPlacedOutsideTheWindow(): Set<number> {
+    const collection = this.tableCollection;
+    const indices = this.persistedIndices(collection.rows.keys);
+
+    if (collection.loaderKey != null) indices.add(collection.rows.keys.length);
+
+    return indices;
   }
 
   protected buildRowGroup(y: number, node: VirtualizerNode): LayoutNode {
     const collection = this.tableCollection;
-    const rowKeys = collection.rows.keys;
     const rect = new Rect(this.padding, y, 0, 0);
     const layoutInfo = new LayoutInfo("rowgroup", node.key, rect);
     const children: LayoutNode[] = [];
-    const rowHeight = this.getEstimatedRowHeight() + this.gap;
     const startY = y;
 
-    // Until the scroll box has been measured there is no window, so no row is inside one. Upstream
-    // never reaches this: its collection is known before the first paint, so its header already
-    // has a height and every row already starts below the empty rectangle. Here the columns are
-    // registered from the DOM, so on the very first pass the header is nothing tall and the first
-    // row sits at the origin — inside an empty rectangle, if nothing said otherwise.
-    const hasWindow = this.requestedRect.area > 0;
-    // A persisted row is placed wherever the window is, because the roving tab stop lives on it.
-    const persisted = this.persistedIndices(rowKeys);
-    const childCount = rowKeys.length + (collection.loaderKey == null ? 0 : 1);
+    this.configureOffsets(startY);
 
     let width = 0;
-    let last = -1;
 
-    for (const index of this.rowIndicesToPlace(rowKeys.length, startY, rowHeight, persisted)) {
-      const child = collection.getNode(rowKeys[index]!);
+    for (const index of this.windowedIndices(this.window)) {
+      const key = this.bodyChildKey(index);
+      const child = key == null ? undefined : collection.getNode(key);
 
       if (!child) continue;
 
-      y += (index - last - 1) * rowHeight;
-      last = index;
+      const placed = this.buildChild(
+        child,
+        this.padding,
+        this.offsets.startOf(index),
+        layoutInfo.key,
+      );
 
-      // Rows outside the region asked about are accounted for rather than built, which is what
-      // makes a thousand rows cost a screenful. With a stride the arithmetic cannot predict this
-      // is the only place that can tell, so the walk still asks.
-      if (
-        !persisted.has(index) &&
-        (!hasWindow ||
-          (y + rowHeight < this.requestedRect.y && !this.isValid(child, y)) ||
-          y > this.requestedRect.maxY)
-      ) {
-        y += rowHeight;
-        continue;
-      }
-
-      const row = this.buildChild(child, this.padding, y, layoutInfo.key);
-
-      row.layoutInfo.parentKey = layoutInfo.key;
-      row.index = children.length;
-      y = row.layoutInfo.rect.maxY + this.gap;
-      width = Math.max(width, row.layoutInfo.rect.width);
-      children.push(row);
+      placed.layoutInfo.parentKey = layoutInfo.key;
+      placed.index = children.length;
+      width = Math.max(width, placed.layoutInfo.rect.width);
+      children.push(placed);
     }
-
-    // The sentinel is placed wherever the window is: one that is not in the DOM can never report
-    // that it came into view, so the next page would never be asked for.
-    const loaderNode =
-      collection.loaderKey == null ? null : collection.getNode(collection.loaderKey);
-
-    if (loaderNode) {
-      y += (rowKeys.length - last - 1) * rowHeight;
-      last = rowKeys.length;
-
-      const loader = this.buildChild(loaderNode, this.padding, y, layoutInfo.key);
-
-      loader.layoutInfo.parentKey = layoutInfo.key;
-      loader.index = children.length;
-      y = loader.layoutInfo.rect.maxY + this.gap;
-      width = Math.max(width, loader.layoutInfo.rect.width);
-      children.push(loader);
-    }
-
-    // The rows below the last one placed, so the scrollbar still describes the whole body.
-    y += (childCount - last - 1) * rowHeight;
-
-    // An empty body still fills the box, so the empty state has somewhere to sit.
-    if (collection.itemCount === 0) y = this.host!.size.height;
-    else y -= this.gap;
 
     rect.width = width;
-    rect.height = y - startY;
+    // An empty body still fills the box, so the empty state has somewhere to sit. Otherwise the
+    // index knows how tall the body is, rows nobody built included — which is what keeps the
+    // scrollbar describing the whole collection.
+    rect.height =
+      collection.itemCount === 0 ? this.host!.size.height - startY : this.offsets.total() - startY;
 
-    return { children, layoutInfo, node, validRect: rect.intersection(this.requestedRect) };
-  }
-
-  /**
-   * The row positions the pass walks, in order.
-   *
-   * With an arithmetic stride that is the slice the region covers plus whatever has to exist
-   * outside it, so a body of a hundred thousand rows costs a screenful of them. Without one every
-   * row is walked, because a row's offset is the total of the rows above it.
-   */
-  private rowIndicesToPlace(
-    rowCount: number,
-    startY: number,
-    rowHeight: number,
-    persisted: Set<number>,
-  ): number[] {
-    if (!this.hasArithmeticStride) return Array.from({ length: rowCount }, (_, index) => index);
-
-    const first = this.firstRequestedIndex(startY, rowHeight);
-    const last =
-      this.requestedRect.area > 0
-        ? Math.min(rowCount - 1, Math.floor((this.requestedRect.maxY - startY) / rowHeight))
-        : first - 1;
-    const indices = new Set(persisted);
-
-    for (let index = first; index <= last; index += 1) indices.add(index);
-
-    return [...indices].filter((index) => index < rowCount).sort((a, b) => a - b);
+    return { children, layoutInfo, node };
   }
 
   /** A row sits below the header, not at the top of the table. */
@@ -460,7 +426,11 @@ export class TableLayout<
     rect.width = this.headerWidth();
     rect.height = height;
 
-    return { children, layoutInfo, node, validRect: rect.intersection(this.requestedRect) };
+    // What the cells came to is the row's height, and the index is what the rows below it read to
+    // know where they sit. With a declared `rowSize` there is nothing to tell it.
+    if (this.rowSize == null) this.offsets.measure(node.key, height, node.index);
+
+    return { children, layoutInfo, node };
   }
 
   protected buildCell(node: VirtualizerNode, x: number, y: number): LayoutNode {
@@ -476,7 +446,7 @@ export class TableLayout<
     layoutInfo.zIndex = 1;
     layoutInfo.estimatedSize = isEstimated;
 
-    return { children: [], layoutInfo, node, validRect: layoutInfo.rect };
+    return { children: [], layoutInfo, node };
   }
 
   protected override buildLoader(node: VirtualizerNode, x: number, y: number): LayoutNode {
@@ -484,7 +454,6 @@ export class TableLayout<
 
     // The sentinel spans the table rather than the scroll container, the same as a row does.
     layoutNode.layoutInfo.rect.width = this.headerWidth();
-    layoutNode.validRect = layoutNode.layoutInfo.rect.intersection(this.requestedRect);
 
     return layoutNode;
   }

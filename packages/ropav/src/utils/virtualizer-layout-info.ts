@@ -106,13 +106,17 @@ export const layoutInfoToStyle = (
   // nearest scrolling ancestor rather than against that parent, so its offset is not relative.
   const isRelativeToParent = Boolean(parent && !(parent.allowOverflow && layoutInfo.isSticky));
   const offsetParent = isRelativeToParent ? parent! : null;
+  // A height nobody has measured is left to the content, and size containment with it. Writing the
+  // estimate onto the element and then measuring through it reads the guess back — the natural
+  // height *is* the measurement, and it is also the right height to render at meanwhile.
+  const isEstimated = layoutInfo.estimatedSize;
 
   return {
-    contain: "size layout style",
+    contain: isEstimated ? "layout style" : "size layout style",
     // A sticky element is laid out in normal flow. `inline-block` keeps several of them on one
     // line instead of each pushing the next onto a row of its own.
     display: layoutInfo.isSticky ? "inline-block" : undefined,
-    height: px(layoutInfo.rect.height),
+    height: isEstimated ? undefined : px(layoutInfo.rect.height),
     left: px(layoutInfo.rect.x - (offsetParent?.rect.x ?? 0)),
     opacity: layoutInfo.opacity,
     overflow: layoutInfo.allowOverflow ? "visible" : "hidden",

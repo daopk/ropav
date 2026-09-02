@@ -9,6 +9,7 @@ import type { VirtualizerKey } from "./virtualizer-layout-info";
 import { Rect, Size } from "./virtualizer-geometry";
 import { Layout } from "./virtualizer-layout";
 import { LayoutInfo } from "./virtualizer-layout-info";
+import { RowOffsets } from "./virtualizer-offsets";
 
 /**
  * A stack layout for the virtualizer, ported from React Aria's `ListLayout`.
@@ -17,25 +18,20 @@ import { LayoutInfo } from "./virtualizer-layout-info";
  * minus the padding. With `rowSize` given the geometry is arithmetic; without it each item is
  * placed at an estimate and corrected once it has been measured.
  *
- * The layout is lazy. It computes rows for the region it has been asked about — `requestedRect` —
- * and accounts for everything outside it arithmetically, so a thousand rows cost about as much as
- * a screenful. `validRect` records how much of that region is known-good, which is what lets a
- * measured row survive the next pass instead of being placed at an estimate again.
+ * Only the rows a window covers are built, and this is where it parts company with upstream. React
+ * Aria records a region it has computed — growing it to cover everywhere the window has been, and
+ * walking from the first row to add up offsets on the way — which makes the rendered set a
+ * function of where the window has *been* rather than of where it is, and makes a pass cost more
+ * the further down the collection it lands.
  *
- * Where the region goes next is the one place this parts company with upstream, which unions it
- * with everywhere the window has been. Anchored at the top as it starts out, that union never
- * moves off zero — so the rows above the window are re-walked on every pass and never dropped,
- * and a collection scrolled end to end ends up holding a layout node per row. With `rowSize` the
- * region moves with the window instead and the rows it leaves behind are pruned, because a row's
- * offset is a multiplication and nothing above it is needed to work it out.
+ * Here a {@link RowOffsets} index holds a start and a size for every row, measured or estimated,
+ * so an offset is a lookup and a window is a binary search. There is no region to be inside of, no
+ * cache that can disagree with the current scroll offset, and no row a scrollbar can reach that
+ * has no offset to answer with — which is what keeps a fast drag from landing on nothing.
  *
- * Three things are absent, all recorded as debt: the horizontal orientation, which no collection
- * in this library uses; the `section`/`header`/`separator` node types, which cannot reach a layout
- * through the data-driven collection this build has; and the same windowing for rows of a height
- * nobody declared, which still union and still walk from the first row. Getting them off that
- * walk needs the offsets kept as a running index — heights held by key, and totals at intervals
- * to resume from — rather than re-added from the top each pass. Nothing in this library asks for
- * a variable row yet, which is why the walk is still there.
+ * Two things are absent, both recorded as debt: the horizontal orientation, which no collection in
+ * this library uses, and the `section`/`header`/`separator` node types, which cannot reach a
+ * layout through the data-driven collection this build has.
  */
 
 /** The height React Aria falls back to when neither a fixed nor an estimated size is given. */
@@ -64,8 +60,6 @@ export interface ListLayoutOptions {
 export interface LayoutNode {
   layoutInfo: LayoutInfo;
   children: LayoutNode[];
-  /** The part of the layout info that has been computed against real data. */
-  validRect: Rect;
   node?: VirtualizerNode;
   index?: number;
 }
@@ -95,20 +89,15 @@ export class ListLayout<
 
   protected contentSize = new Size();
 
-  /** The region rows have been computed for. Everything outside it is only accounted for. */
-  protected requestedRect = new Rect();
+  /** Where every root sits, whether or not it has ever been built. */
+  protected offsets = new RowOffsets();
 
-  /** The part of `requestedRect` whose rows are known-good. */
-  protected validRect = new Rect();
+  /** The window the rendered set was built for, in content coordinates. */
+  protected window = new Rect();
 
   protected lastCollection: VirtualizerCollection | null = null;
 
   private invalidateEverything = false;
-
-  /** Where the loaders sit among the root keys, memoized on the collection they came from. */
-  private loaderIndices: number[] = [];
-
-  private loaderIndicesCollection: VirtualizerCollection | null = null;
 
   constructor(options: ListLayoutOptions = {}) {
     super();
@@ -130,6 +119,11 @@ export class ListLayout<
     this.ensureLayoutInfo(key);
 
     return this.layoutNodes.get(key)?.layoutInfo ?? null;
+  }
+
+  /** Where every root sits, for a caller that needs an offset rather than a rendered node. */
+  getRowOffsets(): RowOffsets {
+    return this.offsets;
   }
 
   /**
@@ -162,7 +156,7 @@ export class ListLayout<
   getVisibleLayoutInfos(rect: Rect): LayoutInfo[] {
     const searchRect = this.snapVisibleRect(rect);
 
-    this.layoutIfNeeded(searchRect);
+    this.layoutFor(searchRect);
 
     const result: LayoutInfo[] = [];
 
@@ -183,13 +177,13 @@ export class ListLayout<
   override update(context: InvalidationContext<Options>): void {
     const collection = this.host!.collection;
 
-    // Everything cached is worthless when the container resized or a size option changed, so the
-    // requested region shrinks back to what is on screen rather than being recomputed whole.
+    // A row's height follows its width, so a container that resized or a size option that moved
+    // makes every measurement a guess again.
     this.invalidateEverything = this.shouldInvalidateEverything(context);
 
     if (this.invalidateEverything) {
-      this.requestedRect = this.host!.visibleRect.copy();
       this.layoutNodes.clear();
+      this.offsets.reset();
     }
 
     const options = context.layoutOptions;
@@ -202,6 +196,10 @@ export class ListLayout<
     this.gap = options?.gap ?? this.gap;
     this.padding = options?.padding ?? this.padding;
     this.dropIndicatorThickness = options?.dropIndicatorThickness ?? this.dropIndicatorThickness;
+
+    // Before anything has asked for a window, the container's own visible rectangle is the best
+    // guess at one — and it is the same window `getVisibleLayoutInfos` is about to snap.
+    if (this.window.area <= 0) this.window = this.host!.visibleRect.copy();
 
     this.rootNodes = this.buildCollection();
 
@@ -219,7 +217,6 @@ export class ListLayout<
 
     this.lastCollection = collection;
     this.invalidateEverything = false;
-    this.validRect = this.requestedRect.copy();
   }
 
   override shouldInvalidateLayoutOptions(newOptions: Options, oldOptions: Options): boolean {
@@ -237,14 +234,16 @@ export class ListLayout<
   /**
    * Records a row's measured size.
    *
-   * Returns whether anything moved, which is the virtualizer's cue to lay out again. The rows
-   * below this one are the ones that moved, so the valid region is cut off at this row's offset
-   * rather than thrown away entirely.
+   * Returns whether anything moved, which is the virtualizer's cue to lay out again. The size goes
+   * to the index rather than only onto the rendered node, so the rows below it move even though
+   * none of them is in the window, and so the row keeps its height when the window comes back.
    */
   override updateItemSize(key: VirtualizerKey, size: Size): boolean {
     const layoutNode = this.layoutNodes.get(key);
 
-    if (!layoutNode) return false;
+    // A declared row size wins over anything measured, so taking the measurement would only be a
+    // layout pass that arrives at the height it already had.
+    if (!layoutNode || this.rowSize != null) return false;
 
     const layoutInfo = layoutNode.layoutInfo;
 
@@ -257,26 +256,7 @@ export class ListLayout<
 
     measured.rect.height = size.height;
     layoutNode.layoutInfo = measured;
-
-    // Replaced rather than shortened in place, and floored at nothing: a rectangle of negative
-    // extent has a negative area, which every `intersects` here reads as "nowhere" — so a row
-    // measuring shorter than its estimate could take the whole window out of the rendered set.
-    this.validRect = new Rect(
-      this.validRect.x,
-      this.validRect.y,
-      this.validRect.width,
-      Math.max(0, Math.min(this.validRect.height, layoutInfo.rect.y - this.validRect.y)),
-    );
-
-    if (layoutNode.node?.type === "item" || layoutNode.node?.type === "row") {
-      this.requestedRect = new Rect(
-        this.requestedRect.x,
-        this.requestedRect.y,
-        this.requestedRect.width,
-        Math.max(0, this.requestedRect.height + measured.rect.height - layoutInfo.rect.height),
-      );
-    }
-
+    this.recordMeasuredSize(layoutNode, size.height);
     this.replaceLayoutInfo(key, layoutInfo, measured);
 
     let parentKey = layoutInfo.parentKey;
@@ -287,6 +267,20 @@ export class ListLayout<
     }
 
     return true;
+  }
+
+  /**
+   * Hands a measurement to the index, when it is a root that the index places.
+   *
+   * A table's cell is measured too, but a cell does not sit among the roots — its row does, and
+   * the row is measured by its tallest cell, so the row's own measurement is the one that lands.
+   */
+  protected recordMeasuredSize(layoutNode: LayoutNode, height: number): void {
+    const node = layoutNode.node;
+
+    if (!node || node.parentKey != null) return;
+
+    this.offsets.measure(node.key, height, node.index);
   }
 
   protected shouldInvalidateEverything(context: InvalidationContext<Options>): boolean {
@@ -303,43 +297,52 @@ export class ListLayout<
   }
 
   /**
-   * Whether a row's offset is a multiplication rather than a running total.
-   *
-   * With a fixed row size nothing in the collection can be a height other than the stride, which
-   * is what lets the region move with the window instead of growing to cover everywhere it has
-   * been. A loader breaks it: the sentinel is sized by its own option, so every row after it sits
-   * at an offset no multiplication knows.
+   * The estimated size of a root, which is what the index places it at until it is measured.
    */
-  protected get hasArithmeticStride(): boolean {
-    return this.rowSize != null && this.rootLoaderIndices().length === 0;
-  }
+  protected estimatedSizeAt(index: number): number {
+    const node = this.host!.collection.getNode(this.host!.collection.rootKeys[index]!);
 
-  /** Where the loaders sit among the root keys, scanned once per collection rather than per pass. */
-  private rootLoaderIndices(): number[] {
-    const collection = this.host!.collection;
-
-    if (this.loaderIndicesCollection !== collection) {
-      this.loaderIndices = [];
-      collection.rootKeys.forEach((key, index) => {
-        if (collection.getNode(key)?.type === "loader") this.loaderIndices.push(index);
-      });
-      this.loaderIndicesCollection = collection;
+    if (node?.type === "loader") {
+      return this.loaderSize ?? this.rowSize ?? this.estimatedRowSize ?? DEFAULT_ROW_SIZE;
     }
 
-    return this.loaderIndices;
+    return this.rowSize ?? this.estimatedRowSize ?? DEFAULT_ROW_SIZE;
+  }
+
+  /** How many things the index places. The roots for a list; the body's children for a table. */
+  protected get placedCount(): number {
+    return this.host!.collection.rootKeys.length;
+  }
+
+  /** Points the index at the collection as it stands, which is what makes every offset answerable. */
+  protected configureOffsets(start: number = this.padding): void {
+    const collection = this.host!.collection;
+    const rootKeys = collection.rootKeys;
+
+    this.offsets.configure({
+      collection,
+      count: rootKeys.length,
+      estimate: (index) => this.estimatedSizeAt(index),
+      gap: this.gap,
+      keyAt: (index) => rootKeys[index]!,
+      start,
+    });
   }
 
   /**
-   * The root positions that are placed wherever the window is.
+   * The roots that are rendered wherever the window is.
    *
    * Loaders, because a sentinel that is not in the DOM can never report that it came into view,
    * so the next page would never be asked for. Persisted keys, because the roving tab stop lives
    * on the focused row and losing its element drops focus to the document.
    */
-  private indicesPlacedOutsideTheRegion(): Set<number> {
-    const indices = this.persistedIndices(this.host!.collection.rootKeys);
+  protected indicesPlacedOutsideTheWindow(): Set<number> {
+    const collection = this.host!.collection;
+    const indices = this.persistedIndices(collection.rootKeys);
 
-    for (const index of this.rootLoaderIndices()) indices.add(index);
+    collection.rootKeys.forEach((key, index) => {
+      if (collection.getNode(key)?.type === "loader") indices.add(index);
+    });
 
     return indices;
   }
@@ -368,65 +371,58 @@ export class ListLayout<
     return indices;
   }
 
-  /** Where the row at `index` sits, when the stride is arithmetic. */
+  /** Where the row at `index` sits. A lookup, for a row nobody has rendered as much as for one. */
   protected rowOffset(index: number): number {
-    return this.padding + index * ((this.rowSize ?? DEFAULT_ROW_SIZE) + this.gap);
+    return this.offsets.startOf(index);
   }
 
   /**
-   * The first root index the requested region can reach, or `0` when it cannot be worked out.
+   * The root indices the pass places, in order.
    *
-   * The rows above it are the ones the walk would only have counted, so starting there is the
-   * same layout for none of the walking.
+   * The window plus whatever has to exist outside it. There is nothing to walk to and nothing to
+   * account for afterwards: a row's offset is a lookup, so the rows above and below the window
+   * cost the pass nothing at all.
    */
-  protected firstRequestedIndex(offset: number, rowStride: number): number {
-    if (!this.hasArithmeticStride) return 0;
+  protected windowedIndices(rect: Rect): number[] {
+    const indices = this.indicesPlacedOutsideTheWindow();
 
-    // The row *before* the region is kept, matching the walk's own `y + rowStride < y0` skip.
-    return Math.max(0, Math.ceil((this.requestedRect.y - offset) / rowStride - 1));
+    // A window with no area is a container nobody has measured yet, not a window at the origin.
+    // Only what has to exist wherever the window is belongs in it.
+    if (rect.area > 0) {
+      const { first, last } = this.offsets.rangeFor(rect.y, rect.height);
+
+      for (let index = first; index <= last; index += 1) indices.add(index);
+    }
+
+    return [...indices]
+      .filter((index) => index >= 0 && index < this.placedCount)
+      .sort((a, b) => a - b);
   }
 
-  /**
-   * Moves the computed region onto `rect`, and covers every persisted key.
-   *
-   * The region only grows without bound when a row's offset depends on the rows above it. With a
-   * fixed stride it tracks the window instead, and the rows it has left behind are dropped —
-   * otherwise scrolling to the end of a long collection would leave a layout node per row cached
-   * for as long as the layout lived.
-   */
-  protected layoutIfNeeded(rect: Rect): void {
+  /** Builds the rendered set for a window, and drops what that window has left behind. */
+  protected layoutFor(rect: Rect): void {
     if (!this.lastCollection) return;
 
-    if (!this.requestedRect.containsRect(rect)) {
-      this.requestedRect = this.hasArithmeticStride ? rect.copy() : this.requestedRect.union(rect);
-      this.rootNodes = this.buildCollection();
-      // Nothing in the region was measured, so everything just placed in it is known-good.
-      if (this.hasArithmeticStride) {
-        this.validRect = this.requestedRect.copy();
-        this.pruneLayoutNodes();
-      }
-    }
-
-    for (const key of this.host!.persistedKeys) {
-      if (this.ensureLayoutInfo(key)) return;
-    }
+    this.window = rect.copy();
+    this.rootNodes = this.buildCollection();
+    this.pruneLayoutNodes();
   }
 
   /**
-   * Drops the rows the region has moved away from.
+   * Drops the rows the window has moved away from.
    *
    * Only rows and their cells: a table's header, its columns and its body are placed once and
    * read by everything else, and a row that something still depends on — the one holding the
    * roving tab stop — has to keep its element.
    */
-  private pruneLayoutNodes(): void {
+  protected pruneLayoutNodes(): void {
     for (const [key, layoutNode] of this.layoutNodes) {
       const type = layoutNode.node?.type ?? layoutNode.layoutInfo.type;
 
       if (type !== "item" && type !== "row" && type !== "cell") continue;
 
       if (
-        layoutNode.layoutInfo.rect.intersects(this.requestedRect) ||
+        layoutNode.layoutInfo.rect.intersects(this.window) ||
         this.host!.persistedKeys.has(key) ||
         (layoutNode.layoutInfo.parentKey != null &&
           this.host!.persistedKeys.has(layoutNode.layoutInfo.parentKey))
@@ -439,38 +435,25 @@ export class ListLayout<
   }
 
   /**
-   * Places a key the lazy pass never reached.
+   * Places a key the windowed pass never reached.
    *
    * Pressing End, or restoring focus to a selected row, asks about a key at an arbitrary offset.
-   * With a fixed stride that offset is arithmetic, so the one row is placed and nothing else is.
-   * Without one there is no way to know where it sits but to lay out everything above it.
+   * That offset is a lookup whatever the rows are, so the one row is placed and nothing else is.
    */
-  private ensureLayoutInfo(key: VirtualizerKey): boolean {
-    if (this.layoutNodes.has(key) || !this.lastCollection) return false;
+  private ensureLayoutInfo(key: VirtualizerKey): void {
+    if (this.layoutNodes.has(key) || !this.lastCollection) return;
 
     const node = this.lastCollection.getNode(key);
+    const offset = node == null ? null : this.indexedOffset(node);
 
-    if (this.hasArithmeticStride && (node?.type === "item" || node?.type === "row")) {
-      // A persisted row has to be in the tree that gets rendered and not only in the cache, so
-      // the pass runs again — which places it, because a persisted row is placed wherever it is.
-      if (this.host!.persistedKeys.has(key)) {
-        this.rootNodes = this.buildCollection();
+    if (node == null || offset == null) return;
 
-        return true;
-      }
+    this.buildChild(node, this.padding, offset, node.parentKey);
+  }
 
-      this.buildChild(node, this.padding, this.rowOffset(node.index), null);
-
-      return false;
-    }
-
-    if (this.requestedRect.area >= this.contentSize.area) return false;
-
-    this.requestedRect = new Rect(0, 0, Infinity, Infinity);
-    this.rootNodes = this.buildCollection();
-    this.requestedRect = new Rect(0, 0, this.contentSize.width, this.contentSize.height);
-
-    return true;
+  /** Where the index puts a node, or `null` for one it does not place. */
+  protected indexedOffset(node: VirtualizerNode): number | null {
+    return node.parentKey == null ? this.rowOffset(node.index) : null;
   }
 
   private replaceLayoutInfo(
@@ -482,8 +465,6 @@ export class ListLayout<
 
     if (!layoutNode) return;
 
-    layoutNode.validRect = layoutNode.validRect.intersection(this.validRect);
-
     if (layoutNode.layoutInfo === oldLayoutInfo) layoutNode.layoutInfo = newLayoutInfo;
   }
 
@@ -492,89 +473,22 @@ export class ListLayout<
     const rootKeys = collection.rootKeys;
     const nodes: LayoutNode[] = [];
     const isEmpty = collection.itemCount === 0;
-    const rowStride = (this.rowSize ?? this.estimatedRowSize ?? DEFAULT_ROW_SIZE) + this.gap;
-    const pending = this.indicesPlacedOutsideTheRegion();
-    // The rows above the region are the ones the walk would only have counted, so with an
-    // arithmetic stride it starts at the region instead of counting its way down to it.
-    //
-    // Clamped into the collection, and it has to be: `y` below is seeded from where the walk
-    // starts, so a region left describing an offset the data no longer reaches — what a filter
-    // does to a scrolled collection — would make the content size a function of the scroll
-    // offset rather than of the rows. The browser then clamps the offset against that very
-    // height, which holds the region exactly where it was.
-    const start = isEmpty
-      ? 0
-      : Math.min(this.firstRequestedIndex(offset, rowStride), Math.max(0, rootKeys.length - 1));
 
-    let y = (isEmpty ? 0 : offset) + start * rowStride;
+    this.configureOffsets(offset);
 
-    // What sits above the region is placed before the walk reaches it, at the offset the stride
-    // gives it. Only an arithmetic stride can start above zero, so that offset is exact.
-    for (const index of [...pending].sort((a, b) => a - b)) {
-      if (index >= start) break;
-
+    for (const index of this.windowedIndices(this.window)) {
       const node = collection.getNode(rootKeys[index]!);
 
-      if (node) nodes.push(this.buildChild(node, this.padding, offset + index * rowStride, null));
-
-      pending.delete(index);
+      if (node) nodes.push(this.buildChild(node, this.padding, this.offsets.startOf(index), null));
     }
 
-    for (let index = start; index < rootKeys.length; index += 1) {
-      const key = rootKeys[index]!;
-      const node = collection.getNode(key);
-
-      if (!node) continue;
-
-      const isRow = node.type === "item" || node.type === "row";
-
-      // Rows that end above the region asked about are accounted for, not built. This is what
-      // makes a thousand-row collection cost a screenful.
-      if (
-        isRow &&
-        y + rowStride < this.requestedRect.y &&
-        !this.isValid(node, y) &&
-        !pending.has(index)
-      ) {
-        y += rowStride;
-        continue;
-      }
-
-      const layoutNode = this.buildChild(node, this.padding, y, null);
-
-      y = layoutNode.layoutInfo.rect.maxY + this.gap;
-      nodes.push(layoutNode);
-      pending.delete(index);
-
-      if (!(isRow || node.type === "loader") || y <= this.requestedRect.maxY) continue;
-
-      // Past the region: place what has to exist wherever it sits at its estimated offset, then
-      // account for the rows in between so the scrollbar still describes the whole collection.
-      let lastIndex = index;
-
-      for (const pendingIndex of [...pending].sort((a, b) => a - b)) {
-        const pendingNode = collection.getNode(rootKeys[pendingIndex]!);
-
-        if (!pendingNode || pendingIndex <= lastIndex) continue;
-
-        y += (pendingIndex - lastIndex - 1) * rowStride;
-
-        const placed = this.buildChild(pendingNode, this.padding, y, null);
-
-        nodes.push(placed);
-        y = placed.layoutInfo.rect.maxY;
-        lastIndex = pendingIndex;
-      }
-
-      y += (rootKeys.length - lastIndex - 1) * rowStride;
-      break;
-    }
-
-    // The gap only sits *between* items, so the one added after the last is taken back.
-    y = Math.max(y - this.gap, 0);
-    y += isEmpty ? 0 : this.padding;
-
-    this.contentSize = new Size(this.host!.size.width, y);
+    // The height the whole collection comes to, which is what the scrollbar describes. It is the
+    // index that knows it, not the pass: every row has an offset whether or not it was built, so
+    // this stays a function of the data however far the window has been scrolled.
+    this.contentSize = new Size(
+      this.host!.size.width,
+      isEmpty ? 0 : this.offsets.total() + this.padding,
+    );
 
     return nodes;
   }
@@ -612,24 +526,19 @@ export class ListLayout<
 
   protected buildItem(node: VirtualizerNode, x: number, y: number): LayoutNode {
     const width = this.host!.size.width - this.padding - x;
+    const previous = this.layoutNodes.get(node.key);
     let height = this.rowSize;
     let isEstimated = false;
 
     if (height == null) {
-      const previous = this.layoutNodes.get(node.key);
-
-      // A row that has already been measured keeps that height. It is only an estimate again if
-      // the row got narrower or wider, or if the datum behind it changed — either can reflow it.
-      if (previous) {
-        height = previous.layoutInfo.rect.height;
-        isEstimated =
-          width !== previous.layoutInfo.rect.width ||
-          node !== previous.node ||
-          previous.layoutInfo.estimatedSize;
-      } else {
-        height = this.estimatedRowSize;
-        isEstimated = true;
-      }
+      // The index holds the height, not the cached node — which is what lets a row that scrolled
+      // out of the window and back in keep its measurement instead of being placed at an estimate
+      // for a frame. It is an estimate again if the row got narrower or wider, or if the datum
+      // behind it changed: either can reflow it.
+      height = this.offsets.size(node.index);
+      isEstimated =
+        !this.offsets.isMeasured(node.index) ||
+        (previous != null && (width !== previous.layoutInfo.rect.width || node !== previous.node));
     }
 
     const layoutInfo = new LayoutInfo(
@@ -644,16 +553,15 @@ export class ListLayout<
       children: [],
       layoutInfo,
       node,
-      validRect: layoutInfo.rect.intersection(this.requestedRect),
     };
   }
 
   /**
    * Whether a cached row can be reused as it stands.
    *
-   * Everything here has to hold: nothing global was invalidated, the datum is the same object,
-   * the row is at the same offset, it sits inside the known-good region, and the part of it that
-   * was computed covers the part now being asked about.
+   * Three things: nothing global was invalidated, the datum is the same object, and the row is
+   * still at the same offset. There is no region to be inside of any more — a row's offset comes
+   * from the index, so being at the offset the index gives it *is* the whole of being current.
    */
   protected isValid(node: VirtualizerNode, y: number): boolean {
     const cached = this.layoutNodes.get(node.key);
@@ -662,9 +570,7 @@ export class ListLayout<
       !this.invalidateEverything &&
       !!cached &&
       cached.node === node &&
-      cached.layoutInfo.rect.y === y &&
-      cached.layoutInfo.rect.intersects(this.validRect) &&
-      cached.validRect.containsRect(cached.layoutInfo.rect.intersection(this.requestedRect))
+      cached.layoutInfo.rect.y === y
     );
   }
 
@@ -679,7 +585,6 @@ export class ListLayout<
       children: [],
       layoutInfo,
       node,
-      validRect: layoutInfo.rect.intersection(this.requestedRect),
     };
   }
 

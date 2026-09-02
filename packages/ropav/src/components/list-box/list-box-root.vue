@@ -195,6 +195,8 @@ const scroll =
     onScrollStart: virtualizer.startScrolling,
     onSizeChange: virtualizer.setSize,
     onVisibleRectChange: virtualizer.setVisibleRect,
+    scrollAdjustment: () => virtualizer.scrollAdjustment.value,
+    takeScrollAdjustment: virtualizer.takeScrollAdjustment,
   });
 
 /**

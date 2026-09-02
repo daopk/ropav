@@ -67,9 +67,10 @@ describe("useVirtualizer", () => {
 
     const keys = keysOf(virtualizer);
 
-    // The window is 1000 to 1550: row 19 ends exactly on the top edge and row 31 starts on the
-    // bottom one, so both are in. Nothing above is kept — scrolling down overscans below only.
-    expect(keys[0]).toBe("item-19");
+    // The window is 1000 to 1550: row 19 ends exactly on the top edge, which counts as above it,
+    // and row 31 starts on the bottom one, which counts as in it. Nothing further above is kept —
+    // scrolling down overscans below only.
+    expect(keys[0]).toBe("item-20");
     expect(keys.at(-1)).toBe("item-31");
     expect(keys).not.toContain("item-0");
 
@@ -83,8 +84,8 @@ describe("useVirtualizer", () => {
     virtualizer.setVisibleRect(new Rect(0, 900, 300, 400));
 
     // Arrived from below, so the extra third is added above the viewport rather than under it:
-    // the window is 750 to 1300 instead of 900 to 1433, and starts five rows before row 18.
-    expect(keysOf(virtualizer)[0]).toBe("item-14");
+    // the window is 750 to 1300 instead of 900 to 1433, and starts four rows before row 18.
+    expect(keysOf(virtualizer)[0]).toBe("item-15");
 
     stop();
   });
@@ -183,5 +184,67 @@ describe("useVirtualizer", () => {
     expect(keysOf(virtualizer)).toEqual(["item-0", "item-1", "item-2", "item-3"]);
 
     scope.stop();
+  });
+});
+
+/**
+ * Putting a measurement back into the scroll offset.
+ *
+ * A row measured **above** the window moves every row below it, the window's own content
+ * included — so a collection of rows nobody declared a height for slides under the pointer as it
+ * is scrolled through, and the row a reader was looking at is not where they left it. The delta
+ * has to go back into the scroll offset, which is what holds the content still.
+ */
+describe("useVirtualizer scroll anchoring", () => {
+  /**
+   * Scrolled up, so the overscan sits above the viewport rather than under it — which is the only
+   * way a row above the window is rendered at all, and so the only way one gets measured.
+   */
+  const scrolled = () => {
+    const result = setup({ estimatedRowSize: 50, rowSize: null });
+
+    result.virtualizer.setVisibleRect(new Rect(0, 1_000, 300, 400));
+    result.virtualizer.setVisibleRect(new Rect(0, 900, 300, 400));
+    // Rows 15 to 17 are rendered above the viewport's own top edge at 900.
+    expect(keysOf(result.virtualizer)[0]).toBe("item-15");
+
+    return result;
+  };
+
+  it("reports the shift a row measured above the window caused", () => {
+    const { stop, virtualizer } = scrolled();
+
+    // Row 15 sits at 750..800, entirely above a viewport starting at 900.
+    virtualizer.updateItemSize("item-15", new Size(300, 130));
+
+    expect(virtualizer.scrollAdjustment.value).toBe(80);
+
+    stop();
+  });
+
+  it("reports nothing for a row measured inside the window", () => {
+    const { stop, virtualizer } = scrolled();
+
+    // Row 18 starts at 900, which is the viewport's own top edge. Growing it moves what is below
+    // it, and what is below it is what the reader is already looking at.
+    virtualizer.updateItemSize("item-18", new Size(300, 130));
+
+    expect(virtualizer.scrollAdjustment.value).toBe(0);
+
+    stop();
+  });
+
+  it("adds up the shifts until something takes them", () => {
+    const { stop, virtualizer } = scrolled();
+
+    virtualizer.updateItemSize("item-15", new Size(300, 130));
+    virtualizer.updateItemSize("item-16", new Size(300, 70));
+
+    expect(virtualizer.scrollAdjustment.value).toBe(100);
+    expect(virtualizer.takeScrollAdjustment()).toBe(100);
+    // Taken once and once only: applying the same shift twice would move the collection itself.
+    expect(virtualizer.scrollAdjustment.value).toBe(0);
+
+    stop();
   });
 });

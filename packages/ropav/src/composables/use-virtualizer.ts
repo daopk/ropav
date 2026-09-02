@@ -67,6 +67,15 @@ export interface UseVirtualizerReturn {
   endScrolling: () => void;
   /** Records a measured size, and lays out again when it moved anything. */
   updateItemSize: (key: VirtualizerKey, size: Size) => void;
+  /**
+   * How far the content under the window has been pushed by rows measured above it.
+   *
+   * Adding this to the scroll offset is what holds the collection still while the rows above it
+   * settle. Nothing here applies it — only whoever owns the scrolling element can.
+   */
+  scrollAdjustment: ComputedRef<number>;
+  /** Reads the accumulated shift and clears it, so it is applied once. */
+  takeScrollAdjustment: () => number;
   getLayoutInfo: (key: VirtualizerKey) => LayoutInfo | null;
   isPersistedKey: (key: VirtualizerKey) => boolean;
 }
@@ -88,6 +97,7 @@ export const useVirtualizer = <Options extends object = object>(
   const isScrolling = shallowRef(false);
   /** Bumped when something outside the reactive inputs invalidates the layout. */
   const revision = shallowRef(0);
+  const scrollAdjustment = shallowRef(0);
 
   const overscan = new OverscanManager();
 
@@ -259,6 +269,7 @@ export const useVirtualizer = <Options extends object = object>(
     getLayoutInfo: (key) => pass.value.layout.getLayoutInfo(key),
     isPersistedKey,
     isScrolling: computed(() => isScrolling.value),
+    scrollAdjustment: computed(() => scrollAdjustment.value),
     setSize: (next) => {
       if (!size.value.equals(next)) size.value = next;
     },
@@ -274,8 +285,32 @@ export const useVirtualizer = <Options extends object = object>(
     startScrolling: () => {
       isScrolling.value = true;
     },
+    takeScrollAdjustment: () => {
+      const pending = scrollAdjustment.value;
+
+      scrollAdjustment.value = 0;
+
+      return pending;
+    },
     updateItemSize: (key, measured) => {
-      if (!pass.value.layout.updateItemSize?.(key, measured)) return;
+      // The attached layout rather than `pass.value.layout`: reading the pass here would run a
+      // whole layout for every element measured, because the bump below is what makes the pass
+      // stale and the next element's measurement is what reads it again. A screenful of rows
+      // measuring in one flush would cost a screenful of layouts.
+      // Falls back to the pass only when nothing has read it yet, which a rendered element
+      // measuring itself always has.
+      const layout = attachedLayout ?? pass.value.layout;
+
+      const placed = layout.getLayoutInfo(key)?.rect;
+
+      if (!layout.updateItemSize?.(key, measured)) return;
+
+      // A row that changed height above the window pushed everything below it, the window's own
+      // content included. Held here rather than applied: this composable does not own the element
+      // that scrolls.
+      if (placed != null && placed.y < visibleRect.value.y) {
+        scrollAdjustment.value += measured.height - placed.height;
+      }
 
       pendingItemSizeChange = true;
       revision.value += 1;

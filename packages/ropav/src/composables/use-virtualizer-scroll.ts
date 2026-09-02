@@ -32,6 +32,16 @@ export interface UseVirtualizerScrollOptions {
   isScrolling: () => boolean;
   onVisibleRectChange: (rect: Rect) => void;
   onSizeChange: (size: Size) => void;
+  /**
+   * How far rows measured above the window have pushed the content under it, and a way to say the
+   * shift has been applied.
+   *
+   * Rows of a height nobody declared are placed at an estimate and corrected once they are in the
+   * DOM. A correction above the window moves everything below it — so without putting the shift
+   * back into the scroll offset, the collection slides under the pointer while it is read.
+   */
+  scrollAdjustment?: () => number;
+  takeScrollAdjustment?: () => number;
   onScrollStart?: () => void;
   onScrollEnd?: () => void;
 }
@@ -207,6 +217,21 @@ export const useVirtualizerScroll = (
       });
     },
     { flush: "post", immediate: true },
+  );
+
+  // After the layout has run, not during it: the shift is worked out from where the rows were,
+  // and the element has to be showing where they are now before the offset is moved to match.
+  watch(
+    () => options.scrollAdjustment?.() ?? 0,
+    (adjustment) => {
+      const element = getElement();
+
+      if (!element || adjustment === 0) return;
+
+      options.takeScrollAdjustment?.();
+      element.scrollTop += adjustment;
+    },
+    { flush: "post" },
   );
 
   onScopeDispose(() => {
