@@ -81,6 +81,9 @@
       var(--field-foreground, var(--foreground)) 2%
     );
     --field-placeholder: oklch(51.6% 0.02 36.66);
+    --field-shadow:
+      0 2px 4px 0 rgba(0, 0, 0, 0.04), 0 1px 2px 0 rgba(0, 0, 0, 0.06),
+      0 0 1px 0 rgba(0, 0, 0, 0.06);
 
     /* Status Colors */
     --danger: oklch(0.6291 0.2565 29.09);
@@ -184,6 +187,7 @@
       var(--field-foreground, var(--foreground)) 2%
     );
     --field-placeholder: oklch(70.5% 0.02 36.66);
+    --field-shadow: 0 0 0 0 transparent inset;
 
     /* Status Colors */
     --danger: oklch(0.6291 0.2565 29.09);

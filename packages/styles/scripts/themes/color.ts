@@ -3,17 +3,18 @@
  *
  * Ported from HeroUI v3's theme builder
  * (`apps/docs/src/app/[lang]/themes/utils/generate-theme-colors.ts`), which is where the
- * preset themes shipped in `themes/` come from. The maths is kept byte-for-byte so a
- * regenerated `default` still matches the hand-written `themes/default/variables.css`.
+ * preset themes shipped in `themes/` come from. The maths is kept byte-for-byte, so
+ * `--check-default` stays a meaningful comparison against the hand-written
+ * `themes/default.css`.
  *
  * Build-time only — nothing here ships to consumers. Run `pnpm generate:themes`.
  */
 
 /* -------------------------------------------------------------------------------------------------
- * Default Theme Values (from packages/styles/themes/default/variables.css)
+ * Default Theme Values (from packages/styles/themes/default.css)
  * -----------------------------------------------------------------------------------------------*/
 
-// Default accent values from variables.css: oklch(0.6204 0.195 253.83)
+// Default accent values from `themes/default.css`: oklch(0.6204 0.195 253.83)
 export const DEFAULT_ACCENT = {
   chroma: 0.195,
   hue: 253.83,
@@ -22,7 +23,7 @@ export const DEFAULT_ACCENT = {
 
 const SEMANTIC_HUE_BLEND_FACTOR = 0.12; // 12% influence from base hue
 
-// Default theme values from variables.css - these are the baseline that will be adjusted
+// Default theme values from `themes/default.css` - the baseline that will be adjusted
 const DEFAULT_THEME_VALUES = {
   dark: {
     background: { c: 0.005, h: 285.823, l: 0.12 },
@@ -66,7 +67,7 @@ const DEFAULT_THEME_VALUES = {
   },
 };
 
-// Semantic color defaults (from variables.css)
+// Semantic color defaults (from `themes/default.css`)
 const SEMANTIC_COLORS = {
   danger: {
     chromaDark: 0.1967,
@@ -710,7 +711,7 @@ export function generateThemeColors(params: ColorGenerationParams): GeneratedThe
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- * Static var()-based formulas that mirror packages/styles/themes/default/variables.css.
+ * Static var()-based formulas that mirror packages/styles/themes/default.css.
  * These must be re-declared on scoped elements because CSS custom properties
  * resolve var() at the element where they are defined, not where inherited.
  *
@@ -791,21 +792,6 @@ export function getDerivedColorFormulas(
     "--warning-soft-hover": `color-mix(in oklab, var(--warning) ${softHoverPct}, transparent)`,
   };
 }
-
-/**
- * Radius-derived variables
- */
-export const radiusDerivedVariables: Record<string, string> = {
-  "--radius-2xl": "calc(var(--radius) * 2)",
-  "--radius-3xl": "calc(var(--radius) * 3)",
-  "--radius-4xl": "calc(var(--radius) * 4)",
-  "--radius-field": "var(--field-radius, var(--radius-xl))",
-  "--radius-lg": "calc(var(--radius) * 1)",
-  "--radius-md": "calc(var(--radius) * 0.75)",
-  "--radius-sm": "calc(var(--radius) * 0.5)",
-  "--radius-xl": "calc(var(--radius) * 1.5)",
-  "--radius-xs": "calc(var(--radius) * 0.25)",
-};
 
 /**
  * Get all authored color variables as a flat record.

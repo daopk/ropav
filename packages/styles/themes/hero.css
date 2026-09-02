@@ -10,9 +10,9 @@
  * dark. Its `scripts/themes/presets.ts` entry records the accent seeds and the radius pair, which
  * is what the theme list and the Storybook toolbar read; `pnpm generate:themes` skips it.
  *
- * Colours and radii only, like every other theme — `--spacing`, `--cursor-*`, the primitives, the
- * shadows and `--backdrop` stay on `:root` / `.dark` in `themes/default.css`, which keeps matching
- * an element that carries a `data-theme`. The primitive *values* are spelled out rather than
+ * Colours, radii and the field shadow, like every other theme — `--spacing`, `--cursor-*`, the
+ * primitives, the surface and overlay shadows and `--backdrop` stay on `:root` / `.dark` in
+ * `themes/default.css`, which keeps matching an element that carries a `data-theme`. The primitive *values* are spelled out rather than
  * aliased through `var(--eclipse)`, so this palette holds whatever the default theme is tuned to.
  *
  * The `theme` layer is declared inside this file, so it can be imported with or without a
@@ -70,6 +70,9 @@
     --field-foreground: oklch(0.2103 0.0059 285.89);
     --field-placeholder: var(--muted);
     --field-border: transparent; /* no border by default on form fields */
+    --field-shadow:
+      0 2px 4px 0 rgba(0, 0, 0, 0.04), 0 1px 2px 0 rgba(0, 0, 0, 0.06),
+      0 0 1px 0 rgba(0, 0, 0, 0.06);
 
     /* Status Colors */
     --success: oklch(0.7329 0.1935 150.81);
@@ -180,6 +183,7 @@
     /* Form Fields */
     --field-background: oklch(0.2103 0.0059 285.89);
     --field-foreground: var(--foreground);
+    --field-shadow: 0 0 0 0 transparent inset; /* placeholder, so ring utilities still compose */
 
     /* Status Colors */
     --warning: oklch(0.8203 0.1388 76.34);

@@ -22,6 +22,19 @@ export const radiusCssMap = {
 
 export type RadiusId = keyof typeof radiusCssMap;
 
+/**
+ * `--field-shadow` for a preset that does not override it — the elevation form controls have
+ * carried since the port.
+ *
+ * Dark is a transparent placeholder rather than `none`: every ring in the library is a
+ * `box-shadow`, so the slot has to stay occupied for the ring utilities to compose into it.
+ */
+export const fieldShadowCss = {
+  dark: "0 0 0 0 transparent inset",
+  light:
+    "0 2px 4px 0 rgba(0, 0, 0, 0.04), 0 1px 2px 0 rgba(0, 0, 0, 0.06), 0 0 1px 0 rgba(0, 0, 0, 0.06)",
+} as const;
+
 export interface ThemePreset {
   /** Human-readable name, used in the generated file header and in docs. */
   label: string;
@@ -37,6 +50,8 @@ export interface ThemePreset {
   radius: RadiusId;
   /** `--field-radius`, for form controls. */
   formRadius: RadiusId;
+  /** `--field-shadow`, per scheme. Omit for `fieldShadowCss`. */
+  fieldShadow?: { light: string; dark: string };
   /** Exact semantic colours, where a brand's own palette beats the calculated one. */
   semanticOverrides?: SemanticOverrides;
 }
@@ -101,6 +116,7 @@ export const presets = {
   default: {
     base: BASE_DEFAULT,
     chroma: 0.195,
+    // The hand-written file halves this to 0.375rem, which the named scale cannot express.
     formRadius: "large",
     hue: 253.83,
     label: "Default",

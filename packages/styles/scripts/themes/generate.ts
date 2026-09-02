@@ -21,7 +21,7 @@ import {
   generateThemeColors,
   parseOklch,
 } from "./color";
-import { adaptiveAccents, presets, radiusCssMap, themeIds } from "./presets";
+import { adaptiveAccents, fieldShadowCss, presets, radiusCssMap, themeIds } from "./presets";
 
 const stylesDir = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 
@@ -43,7 +43,7 @@ const SKIP_DERIVED = new Set(["--tw-ring-color"]);
 
 /**
  * The scrollbar thumb tracks `--foreground`, so it has to be re-derived per theme rather
- * than living in the shared token file. Mirrors `themes/default/variables.css`.
+ * than living in the shared token file. Mirrors `themes/default.css`.
  */
 const SCROLLBAR_CHAIN: Record<string, string> = {
   "--scrollbar": "var(--scrollbar-thumb)",
@@ -55,9 +55,9 @@ const SCROLLBAR_CHAIN: Record<string, string> = {
  * Tokens that track `--foreground` and so cannot be left to `:root`.
  *
  * Everything else the default theme declares but a generated theme does not — `--spacing`,
- * `--cursor-*`, the primitives, the shadows, `--backdrop` — is either a constant or keyed
- * on the light/dark axis, and `:root` / `.dark` still match an element carrying a
- * `data-theme`, so those come through unchanged.
+ * `--cursor-*`, the primitives, the surface and overlay shadows, `--backdrop` — is either a
+ * constant or keyed on the light/dark axis, and `:root` / `.dark` still match an element
+ * carrying a `data-theme`, so those come through unchanged.
  */
 const FOREGROUND_LINKED: Record<string, string> = {
   "--link": "var(--foreground)",
@@ -118,6 +118,12 @@ function buildVariables(preset: ThemePreset, scheme: "light" | "dark") {
       : calculateAccentForeground(scheme === "light" ? 0 : 1, 0, 0);
     vars["--focus"] = accent;
   }
+
+  /*
+   * Emitted for both schemes, never one. `:root`'s dark placeholder and a theme's light block
+   * have equal specificity, so leaving dark out would let the light shadow win under `.dark`.
+   */
+  vars["--field-shadow"] = (preset.fieldShadow ?? fieldShadowCss)[scheme];
 
   delete vars["--scrollbar"];
 

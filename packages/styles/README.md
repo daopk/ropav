@@ -154,7 +154,8 @@ the chroma of the neutral ramp), a radius pair, and any exact brand colours that
 calculated ones.
 
 Those two stay hand-written, each file's header saying what the generator cannot reproduce about it.
-Their presets carry the label, the presentation order and the radii only.
+Their presets carry the label and the presentation order; the CSS is the source of truth for their
+tokens.
 
 ### Retheming
 
