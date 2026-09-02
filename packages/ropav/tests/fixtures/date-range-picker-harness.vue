@@ -3,7 +3,7 @@ import type { DateRangePickerHostProps } from "./date-range-picker-host.types";
 
 import { shallowRef } from "vue";
 
-import { useDateRangePicker } from "@/composables/use-date-range-picker";
+import { useDateRangePicker } from "@/components/date-range-picker/use-date-range-picker";
 import { useDateRangePickerState } from "@/composables/use-date-range-picker-state";
 import { provideFieldIdsContext } from "@/composables/use-field-ids";
 

@@ -1,9 +1,12 @@
-import type { CollectionKey, UseCollectionReturn } from "./use-collection";
-import type { CollectionSelection, UseSelectionManagerReturn } from "./use-selection-manager";
+import type { CollectionKey, UseCollectionReturn } from "../../composables/use-collection";
+import type {
+  CollectionSelection,
+  UseSelectionManagerReturn,
+} from "../../composables/use-selection-manager";
 
 import { watch } from "vue";
 
-import { announce } from "../utils/live-announcer";
+import { announce } from "../../utils/live-announcer";
 
 export interface UseGridSelectionAnnouncementOptions {
   collection: UseCollectionReturn;

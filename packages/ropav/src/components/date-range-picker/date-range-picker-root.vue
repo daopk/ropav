@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
 import type { DateRange } from "../../composables/use-calendar";
-import type { DateRangePickerFieldOptions } from "../../composables/use-date-range-picker";
 import type { DateFieldControl } from "../date-input-group";
 import type {
   DateRangePickerRootProps,
   DateRangePickerRootSlotProps,
 } from "./date-range-picker.types";
+import type { DateRangePickerFieldOptions } from "./use-date-range-picker";
 
 import { createCalendar as defaultCreateCalendar } from "@internationalized/date";
 import { dateRangePickerVariants } from "@ropav/styles";
@@ -13,7 +13,6 @@ import { computed, onScopeDispose, shallowRef, watch } from "vue";
 
 import { useDateField } from "../../composables/use-date-field";
 import { useDateFieldState } from "../../composables/use-date-field-state";
-import { useDateRangePicker } from "../../composables/use-date-range-picker";
 import { useDateRangePickerState } from "../../composables/use-date-range-picker-state";
 import { provideFieldIdsContext } from "../../composables/use-field-ids";
 import { useFocusWithin } from "../../composables/use-interaction-states";
@@ -27,6 +26,7 @@ import { provideOverlayTargetContext } from "../overlay";
 import { provideRangeCalendarOwnerContext } from "../range-calendar";
 
 import { provideDateRangePickerContext } from "./date-range-picker.context";
+import { useDateRangePicker } from "./use-date-range-picker";
 
 /*
  * Every three-state prop declares an explicit `undefined` default. Vue casts an absent boolean to

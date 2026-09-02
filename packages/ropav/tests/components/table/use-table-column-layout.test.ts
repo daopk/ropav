@@ -1,7 +1,7 @@
 import type {
   TableColumnDefinition,
   UseTableColumnLayoutReturn,
-} from "@/composables/use-table-column-layout";
+} from "@/components/table/use-table-column-layout";
 
 import { afterEach, describe, expect, it } from "vitest";
 import { effectScope, shallowRef } from "vue";
@@ -15,7 +15,7 @@ import {
   parseFractionalUnit,
   parseStaticWidth,
   useTableColumnLayout,
-} from "@/composables/use-table-column-layout";
+} from "@/components/table/use-table-column-layout";
 
 const scopes: (() => void)[] = [];
 

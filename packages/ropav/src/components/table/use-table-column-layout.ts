@@ -1,4 +1,4 @@
-import type { CollectionKey } from "./use-collection";
+import type { CollectionKey } from "../../composables/use-collection";
 import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
 import { computed, shallowRef, toValue, watch } from "vue";

@@ -9,7 +9,6 @@ import type { ListBoxRootProps, ListBoxRootSlotProps } from "./list-box.types";
 import { listboxVariants } from "@ropav/styles";
 import { computed, onScopeDispose, shallowRef, toValue } from "vue";
 
-import { toDragCollection } from "../../composables/drag-collection";
 import { useCollection } from "../../composables/use-collection";
 import { useCollectionAutoFocus } from "../../composables/use-collection-auto-focus";
 import { useDndPersistedKeys } from "../../composables/use-dnd-persisted-keys";
@@ -28,6 +27,7 @@ import {
   useVirtualizerConfigContext,
 } from "../virtualizer/virtualizer.context";
 
+import { toDragCollection } from "./drag-collection";
 import ListBoxDropIndicator from "./list-box-drop-indicator.vue";
 import { provideListBoxContext, useListBoxStateContext } from "./list-box.context";
 

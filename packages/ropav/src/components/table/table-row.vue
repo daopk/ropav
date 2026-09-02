@@ -1,16 +1,11 @@
 <script setup lang="ts" vapor>
-import type { TableCellMeta } from "../../composables/use-table-collection";
 import type { TableRowProps, TableRowSlotProps } from "./table.types";
+import type { TableCellMeta } from "./use-table-collection";
 
 import { computed, shallowRef, watch } from "vue";
 
 import { useId } from "../../composables/use-id";
 import { useInteractionStates } from "../../composables/use-interaction-states";
-import {
-  createTableRegistry,
-  isTableCellControl,
-  tableCellId,
-} from "../../composables/use-table-collection";
 import { dataAttr } from "../../utils/assertion";
 import { composeSlotClassName } from "../../utils/compose";
 import { visuallyHiddenStyle } from "../../utils/visually-hidden";
@@ -21,6 +16,7 @@ import {
   useTableGridContext,
   useTableVirtualizerContext,
 } from "./table.context";
+import { createTableRegistry, isTableCellControl, tableCellId } from "./use-table-collection";
 
 const props = defineProps<TableRowProps>();
 

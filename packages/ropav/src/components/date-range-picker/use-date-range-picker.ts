@@ -1,25 +1,30 @@
-import type { DayOfWeek } from "../utils/calendar";
-import type { FocusManager } from "../utils/focus";
-import type { PageBehavior } from "./use-calendar-state";
-import type { DateRangePickerState } from "./use-date-range-picker-state";
-import type { FieldIdsContext } from "./use-field-ids";
-import type { FormValidationState, ValidationResult } from "./use-form-validation-state";
-import type { UsePressHandlers } from "./use-press";
+import type { PageBehavior } from "../../composables/use-calendar-state";
+import type { DateRangePickerState } from "../../composables/use-date-range-picker-state";
+import type { FieldIdsContext } from "../../composables/use-field-ids";
+import type {
+  FormValidationState,
+  ValidationResult,
+} from "../../composables/use-form-validation-state";
+import type { UsePressHandlers } from "../../composables/use-press";
+import type { DayOfWeek } from "../../utils/calendar";
+import type { FocusManager } from "../../utils/focus";
 import type { DateValue } from "@internationalized/date";
 import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
 import { computed, toValue } from "vue";
 
-import { datepickerStrings } from "../i18n/datepicker";
-import { createFocusManager } from "../utils/focus";
-
-import { useDatePickerGroup } from "./use-date-picker-group";
-import { useDescription } from "./use-description";
-import { useFieldIds } from "./use-field-ids";
-import { DEFAULT_VALIDATION_RESULT, mergeValidation } from "./use-form-validation-state";
-import { useId } from "./use-id";
-import { useLocale } from "./use-locale";
-import { useLocalizedStringFormatter } from "./use-localized-string-formatter";
+import { useDatePickerGroup } from "../../composables/use-date-picker-group";
+import { useDescription } from "../../composables/use-description";
+import { useFieldIds } from "../../composables/use-field-ids";
+import {
+  DEFAULT_VALIDATION_RESULT,
+  mergeValidation,
+} from "../../composables/use-form-validation-state";
+import { useId } from "../../composables/use-id";
+import { useLocale } from "../../composables/use-locale";
+import { useLocalizedStringFormatter } from "../../composables/use-localized-string-formatter";
+import { datepickerStrings } from "../../i18n/datepicker";
+import { createFocusManager } from "../../utils/focus";
 
 export interface UseDateRangePickerOptions {
   id?: MaybeRefOrGetter<string | undefined>;

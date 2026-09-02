@@ -1,14 +1,13 @@
-import type { VirtualizerTableCollection } from "../utils/virtualizer-collection";
-import type { CollectionKey, UseCollectionReturn } from "./use-collection";
+import type { CollectionKey, UseCollectionReturn } from "../../composables/use-collection";
+import type { VirtualizerTableCollection } from "../../utils/virtualizer-collection";
 import type { TableColumnSize } from "./use-table-column-layout";
 import type { ComputedRef } from "vue";
 
 import { computed, shallowRef } from "vue";
 
-import { FOCUSABLE_SELECTOR } from "../utils/focus";
-import { createTableCollection } from "../utils/virtualizer-collection";
-
-import { useCollection } from "./use-collection";
+import { useCollection } from "../../composables/use-collection";
+import { FOCUSABLE_SELECTOR } from "../../utils/focus";
+import { createTableCollection } from "../../utils/virtualizer-collection";
 
 /** The least a registry needs from an entry: where it sits in the document. */
 export interface TableRegistryMeta {

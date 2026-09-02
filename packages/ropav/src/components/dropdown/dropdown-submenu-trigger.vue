@@ -5,11 +5,11 @@ import { computed, onScopeDispose, shallowRef, watch } from "vue";
 
 import { useId } from "../../composables/use-id";
 import { useSubmenuTriggerState } from "../../composables/use-overlay-trigger-state";
-import { useSafelyMouseToSubmenu } from "../../composables/use-safely-mouse-to-submenu";
 import { provideMenuItemPopupContext } from "../menu-item/menu-item.context";
 import { useMenuContext } from "../menu/menu.context";
 
 import { provideDropdownPopoverTarget, useDropdownContext } from "./dropdown.context";
+import { useSafelyMouseToSubmenu } from "./use-safely-mouse-to-submenu";
 
 /** How long the pointer has to rest on the trigger before the submenu opens. */
 const HOVER_DELAY_MS = 200;

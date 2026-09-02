@@ -3,11 +3,11 @@ import type { DrawerDialogProps } from "./drawer.types";
 
 import { computed, shallowRef, watch } from "vue";
 
-import { useDrawerDrag } from "../../composables/use-drawer-drag";
 import { provideFieldIdsContext, useFieldIds } from "../../composables/use-field-ids";
 import { provideSurfaceContext } from "../surface";
 
 import { useDrawerContext, useDrawerOverlayContext } from "./drawer.context";
+import { useDrawerDrag } from "./use-drawer-drag";
 
 const props = defineProps<DrawerDialogProps>();
 

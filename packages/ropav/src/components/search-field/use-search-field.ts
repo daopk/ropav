@@ -1,11 +1,11 @@
-import type { PressResponder } from "./press-responder";
-import type { UseTextFieldOptions, UseTextFieldReturn } from "./use-text-field";
+import type { PressResponder } from "../../composables/press-responder";
+import type { UseTextFieldOptions, UseTextFieldReturn } from "../../composables/use-text-field";
 import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
 import { computed, toValue } from "vue";
 
-import { usePress } from "./use-press";
-import { useTextField } from "./use-text-field";
+import { usePress } from "../../composables/use-press";
+import { useTextField } from "../../composables/use-text-field";
 
 export interface UseSearchFieldOptions extends Omit<UseTextFieldOptions, "type"> {
   /** Kind of control the browser should offer. @default "search" */

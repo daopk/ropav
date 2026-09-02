@@ -3,11 +3,11 @@ import type { DateInputGroupSegmentProps } from "./date-input-group.types";
 
 import { computed, shallowRef } from "vue";
 
-import { useDateSegment } from "../../composables/use-date-segment";
 import { useInteractionStates } from "../../composables/use-interaction-states";
 import { dataAttr } from "../../utils/assertion";
 
 import { useDateFieldControlContext, useDateInputGroupContext } from "./date-input-group.context";
+import { useDateSegment } from "./use-date-segment";
 
 const props = defineProps<DateInputGroupSegmentProps>();
 

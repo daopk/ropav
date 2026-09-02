@@ -2,23 +2,18 @@
 import type { CollectionKey } from "../../composables/use-collection";
 import type { UseDroppableCollectionReturn } from "../../composables/use-droppable-collection";
 import type { CollectionSelection } from "../../composables/use-selection-manager";
-import type { TableCollectionItems } from "../../composables/use-table-collection";
 import type { DropTargetDelegate } from "../../utils/dnd-types";
 import type { TableContentProps, TableSortDescriptor, TableSortDirection } from "./table.types";
+import type { TableCollectionItems } from "./use-table-collection";
 
 import { computed, shallowRef, watch } from "vue";
 
-import { toTableDragCollection } from "../../composables/table-drag-collection";
 import { useControllableState } from "../../composables/use-controllable-state";
 import { useDescription } from "../../composables/use-description";
 import { useDndPersistedKeys } from "../../composables/use-dnd-persisted-keys";
-import { useGridKeyboard } from "../../composables/use-grid-keyboard";
-import { useGridSelectionAnnouncement } from "../../composables/use-grid-selection-announcement";
 import { useId } from "../../composables/use-id";
 import { useLocale } from "../../composables/use-locale";
 import { useSelectionManager } from "../../composables/use-selection-manager";
-import { useTableCollection } from "../../composables/use-table-collection";
-import { buildColumnWidths, useTableColumnLayout } from "../../composables/use-table-column-layout";
 import { useTypeahead } from "../../composables/use-typeahead";
 import { useVirtualizer } from "../../composables/use-virtualizer";
 import { useVirtualizerScroll } from "../../composables/use-virtualizer-scroll";
@@ -32,6 +27,7 @@ import {
   useVirtualizerConfigContext,
 } from "../virtualizer/virtualizer.context";
 
+import { toTableDragCollection } from "./table-drag-collection";
 import {
   provideTableColumnLayoutContext,
   provideTableGridContext,
@@ -39,6 +35,10 @@ import {
   useTableContext,
   useTableResizableContainerContext,
 } from "./table.context";
+import { useGridKeyboard } from "./use-grid-keyboard";
+import { useGridSelectionAnnouncement } from "./use-grid-selection-announcement";
+import { useTableCollection } from "./use-table-collection";
+import { buildColumnWidths, useTableColumnLayout } from "./use-table-column-layout";
 
 // `disallowEmptySelection` carries three states: a Boolean prop with no default is cast to
 // `false`, which reads as a caller decision the selection manager would then honour.

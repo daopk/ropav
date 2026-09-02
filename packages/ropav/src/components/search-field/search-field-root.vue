@@ -7,12 +7,12 @@ import { computed, watch } from "vue";
 import { providePressResponder } from "../../composables/press-responder";
 import { useAutocompleteInputContext } from "../../composables/use-autocomplete";
 import { provideFieldIdsContext } from "../../composables/use-field-ids";
-import { useSearchField } from "../../composables/use-search-field";
 import { provideTextFieldControlContext } from "../../composables/use-text-field";
 import { dataAttr } from "../../utils/assertion";
 import { provideFieldErrorContext } from "../field-error";
 
 import { provideSearchFieldContext } from "./search-field.context";
+import { useSearchField } from "./use-search-field";
 
 // Every three-state prop declares an explicit `undefined` default. Vue casts an absent boolean
 // to `false`, and a `false` here reads as the caller claiming that state: for `isInvalid` in

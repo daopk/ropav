@@ -6,7 +6,6 @@ import { computed, shallowRef, watch } from "vue";
 import { useDescription } from "../../composables/use-description";
 import { useId } from "../../composables/use-id";
 import { useInteractionStates } from "../../composables/use-interaction-states";
-import { tableColumnHeaderId } from "../../composables/use-table-collection";
 import { dataAttr } from "../../utils/assertion";
 import { composeSlotClassName } from "../../utils/compose";
 import { getCollectionTextValue } from "../../utils/text-value";
@@ -19,6 +18,7 @@ import {
   useTableGridContext,
   useTableVirtualizerContext,
 } from "./table.context";
+import { tableColumnHeaderId } from "./use-table-collection";
 
 const props = defineProps<TableColumnProps>();
 

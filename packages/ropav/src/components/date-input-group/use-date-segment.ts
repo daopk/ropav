@@ -1,20 +1,19 @@
-import type { FocusManager } from "../utils/focus";
-import type { DateFieldState, DateSegment } from "./use-date-field-state";
+import type { DateFieldState, DateSegment } from "../../composables/use-date-field-state";
+import type { FocusManager } from "../../utils/focus";
 import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
 import { CalendarDate, toCalendar } from "@internationalized/date";
 import { NumberParser } from "@internationalized/number";
 import { computed, onScopeDispose, toValue } from "vue";
 
-import { isIOS } from "../utils/platform";
-
-import { useDateFormatter } from "./use-date-formatter";
-import { useDisplayNames } from "./use-display-names";
-import { useFilter } from "./use-filter";
-import { useId } from "./use-id";
-import { useLabels } from "./use-labels";
-import { useLocale } from "./use-locale";
-import { useSpinButton } from "./use-spin-button";
+import { useDateFormatter } from "../../composables/use-date-formatter";
+import { useDisplayNames } from "../../composables/use-display-names";
+import { useFilter } from "../../composables/use-filter";
+import { useId } from "../../composables/use-id";
+import { useLabels } from "../../composables/use-labels";
+import { useLocale } from "../../composables/use-locale";
+import { useSpinButton } from "../../composables/use-spin-button";
+import { isIOS } from "../../utils/platform";
 
 export interface UseDateSegmentOptions {
   /** The segment this is behaviour for. A getter, because the field rebuilds them on every edit. */

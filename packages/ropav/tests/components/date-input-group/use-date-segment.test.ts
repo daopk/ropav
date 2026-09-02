@@ -1,11 +1,11 @@
-import type { DateSegmentReady } from "../fixtures/date-segment.types";
+import type { DateSegmentReady } from "../../fixtures/date-segment.types";
 
 import { CalendarDate, CalendarDateTime } from "@internationalized/date";
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it } from "vitest";
 import { nextTick } from "vue";
 
-import Harness from "../fixtures/date-segment-harness.vue";
+import Harness from "../../fixtures/date-segment-harness.vue";
 
 const setup = (props: Record<string, unknown> = {}) => {
   let ready!: DateSegmentReady;

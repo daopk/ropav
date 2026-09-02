@@ -3,7 +3,7 @@ import type { DateSegmentPartProps } from "./date-segment.types";
 
 import { shallowRef } from "vue";
 
-import { useDateSegment } from "@/composables/use-date-segment";
+import { useDateSegment } from "@/components/date-input-group/use-date-segment";
 
 const props = defineProps<DateSegmentPartProps>();
 

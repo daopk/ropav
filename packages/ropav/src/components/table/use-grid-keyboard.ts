@@ -1,12 +1,12 @@
-import type { CollectionKey } from "./use-collection";
-import type { ListKeyboardLayoutDelegate } from "./use-list-keyboard";
-import type { UseSelectionManagerReturn } from "./use-selection-manager";
+import type { CollectionKey } from "../../composables/use-collection";
+import type { ListKeyboardLayoutDelegate } from "../../composables/use-list-keyboard";
+import type { UseSelectionManagerReturn } from "../../composables/use-selection-manager";
 import type { UseTableCollectionReturn } from "./use-table-collection";
 import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
 import { computed, nextTick, shallowRef, toValue, watch } from "vue";
 
-import { focusableIn, getScrollParent, isScrollable } from "../utils/focus";
+import { focusableIn, getScrollParent, isScrollable } from "../../utils/focus";
 
 import { isTableCellControl } from "./use-table-collection";
 

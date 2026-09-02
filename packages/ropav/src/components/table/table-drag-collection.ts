@@ -1,5 +1,5 @@
-import type { DragCollection, DragCollectionNode, DragKey } from "../utils/dnd-types";
-import type { CollectionKey } from "./use-collection";
+import type { CollectionKey } from "../../composables/use-collection";
+import type { DragCollection, DragCollectionNode, DragKey } from "../../utils/dnd-types";
 import type { UseTableCollectionReturn } from "./use-table-collection";
 
 /**

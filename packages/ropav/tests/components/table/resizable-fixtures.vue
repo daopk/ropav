@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type { TableFixtureResizableColumn } from "./fixtures.types";
+import type { TableColumnSize } from "@/components/table/use-table-column-layout";
 import type { CollectionKey } from "@/composables/use-collection";
-import type { TableColumnSize } from "@/composables/use-table-column-layout";
 
 import {
   TableBody,

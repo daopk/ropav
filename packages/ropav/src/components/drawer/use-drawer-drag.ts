@@ -1,4 +1,4 @@
-import type { DrawerPlacement } from "../components/drawer/drawer.types";
+import type { DrawerPlacement } from "./drawer.types";
 import type { MaybeRefOrGetter } from "vue";
 
 import { toValue, watch } from "vue";

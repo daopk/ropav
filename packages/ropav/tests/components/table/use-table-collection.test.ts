@@ -1,10 +1,10 @@
-import type { CollectionKey } from "@/composables/use-collection";
 import type {
   TableCellMeta,
   TableColumnMeta,
   TableRegistry,
   UseTableCollectionReturn,
-} from "@/composables/use-table-collection";
+} from "@/components/table/use-table-collection";
+import type { CollectionKey } from "@/composables/use-collection";
 
 import { afterEach, describe, expect, it } from "vitest";
 import { computed, effectScope } from "vue";
@@ -15,7 +15,7 @@ import {
   tableCellId,
   tableColumnHeaderId,
   useTableCollection,
-} from "@/composables/use-table-collection";
+} from "@/components/table/use-table-collection";
 
 const scopes: (() => void)[] = [];
 const containers: HTMLElement[] = [];

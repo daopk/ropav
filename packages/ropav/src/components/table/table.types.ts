@@ -5,8 +5,8 @@ import type {
   SelectionBehavior,
   SelectionMode,
 } from "../../composables/use-selection-manager";
-import type { TableColumnSize } from "../../composables/use-table-column-layout";
 import type { DropTarget } from "../../utils/dnd-types";
+import type { TableColumnSize } from "./use-table-column-layout";
 import type { CheckboxVariants, TableVariants } from "@ropav/styles";
 
 export interface TableRootProps {

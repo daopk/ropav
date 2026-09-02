@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type { CollectionKey } from "../../composables/use-collection";
-import type { TableColumnSize } from "../../composables/use-table-column-layout";
 import type { TableResizableContainerProps } from "./table.types";
+import type { TableColumnSize } from "./use-table-column-layout";
 
 import { computed, onMounted, onUnmounted, shallowRef } from "vue";
 

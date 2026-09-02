@@ -112,7 +112,6 @@ export const HOST_EXPORTED_MODULES = {
   "use-password-manager-badge": ["input-otp"],
   "use-range-calendar": ["range-calendar"],
   "use-select": ["autocomplete", "select"],
-  "use-table-column-layout": ["table"],
   "use-toolbar": ["toolbar"],
 };
 
