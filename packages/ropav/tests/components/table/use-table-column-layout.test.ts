@@ -9,11 +9,6 @@ import { effectScope, shallowRef } from "vue";
 import {
   buildColumnWidths,
   calculateColumnSizes,
-  getMaxWidth,
-  getMinWidth,
-  isStaticWidth,
-  parseFractionalUnit,
-  parseStaticWidth,
   useTableColumnLayout,
 } from "@/components/table/use-table-column-layout";
 
@@ -54,89 +49,23 @@ const setUp = (columns: TableColumnDefinition[], tableWidth = 1000) => {
 };
 
 describe("useTableColumnLayout", () => {
-  describe("parsing a width", () => {
-    it.each([
-      [150, true],
-      ["50%", true],
-      ["1fr", false],
-      ["2fr", false],
-      [undefined, false],
-    ])("treats %s as static: %s", (width, expected) => {
-      expect(isStaticWidth(width)).toBe(expected);
-    });
-
-    it("reads the number in front of fr", () => {
-      expect(parseFractionalUnit("3fr")).toBe(3);
-    });
-
-    // React Aria warns and carries on rather than throwing, so an unrecognised width still lays out.
-    it("falls back to one fraction for anything it cannot read", () => {
-      expect(parseFractionalUnit("wide")).toBe(1);
-      expect(parseFractionalUnit(200)).toBe(1);
-    });
-
-    it("resolves a percentage against the table width", () => {
-      expect(parseStaticWidth("25%", 800)).toBe(200);
-    });
-
-    it("refuses a width that is neither pixels nor a percentage", () => {
-      expect(() => parseStaticWidth("1fr", 800)).toThrow(/percentages or numbers/);
-    });
-
-    it("leaves a missing minimum at zero and a missing maximum unbounded", () => {
-      expect(getMinWidth(undefined, 800)).toBe(0);
-      expect(getMaxWidth(undefined, 800)).toBe(Number.MAX_SAFE_INTEGER);
-    });
-  });
-
+  /*
+   * The solver itself lives in `utils/flex-sizing.ts` and is covered by its own suite. What is
+   * left here is the precedence this wrapper adds on top of it.
+   */
   describe("dividing the table width", () => {
-    it("splits it evenly between equal fractions", () => {
-      expect(sizes(900, [column("a"), column("b"), column("c")])).toEqual([300, 300, 300]);
-    });
-
-    it("weights the split by each fraction", () => {
-      expect(sizes(900, [column("a", { defaultWidth: "2fr" }), column("b")])).toEqual([600, 300]);
-    });
-
-    it("gives a static column its pixels and the rest to the fractions", () => {
-      expect(sizes(1000, [column("a", { defaultWidth: 200 }), column("b"), column("c")])).toEqual([
+    it("reads a column width written as a pixel string", () => {
+      expect(sizes(1000, [column("a", { width: "200px" }), column("b"), column("c")])).toEqual([
         200, 400, 400,
       ]);
     });
 
-    it("resolves a percentage column before dividing what is left", () => {
-      expect(sizes(1000, [column("a", { defaultWidth: "20%" }), column("b")])).toEqual([200, 800]);
-    });
-
-    // The minimum is honoured first, then whatever is left is shared out again.
-    it("holds a column at its minimum and redistributes the rest", () => {
-      expect(sizes(400, [column("a", { minWidth: 300 }), column("b"), column("c")])).toEqual([
-        300, 75, 75,
-      ]);
-    });
-
-    it("holds a column at its maximum and gives the surplus to the others", () => {
-      expect(sizes(900, [column("a", { maxWidth: 100 }), column("b"), column("c")])).toEqual([
-        100, 400, 400,
-      ]);
+    it("reads a column width written as a bare number string", () => {
+      expect(sizes(1000, [column("a", { width: "200" }), column("b")])).toEqual([200, 800]);
     });
 
     it("keeps every column at the default minimum of 75", () => {
       expect(sizes(100, [column("a"), column("b")])).toEqual([75, 75]);
-    });
-
-    // Rounding each column on its own would drift; the remainder is carried instead.
-    it("sums to the table width even when the split does not divide evenly", () => {
-      const result = sizes(1000, [column("a"), column("b"), column("c")]);
-
-      expect(result.reduce((total, width) => total + width, 0)).toBe(1000);
-      expect(result).toEqual([333, 334, 333]);
-    });
-
-    it("hands the sub-pixel remainder to the last column", () => {
-      const result = sizes(900.5, [column("a"), column("b")]);
-
-      expect(result).toEqual([450, 450.5]);
     });
 
     it("prefers a width already changed by a resize over the declared one", () => {

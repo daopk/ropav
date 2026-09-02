@@ -1,17 +1,11 @@
 import type { UseSliderStateOptions } from "@/composables/use-slider-state";
 
 import { describe, expect, it, vi } from "vitest";
-import { effectScope, shallowRef } from "vue";
+import { shallowRef } from "vue";
 
 import { useSliderState } from "@/composables/use-slider-state";
 
-/** Run a composable in a disposable scope, mirroring a component lifetime. */
-const withScope = <T>(setup: () => T): [T, () => void] => {
-  const scope = effectScope();
-  const result = scope.run(setup) as T;
-
-  return [result, () => scope.stop()];
-};
+import { withScope } from "../harness/scope";
 
 const setup = (options: Partial<UseSliderStateOptions> = {}) =>
   withScope(() =>

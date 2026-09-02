@@ -1,17 +1,10 @@
 import type { MoveEndEvent, MoveMoveEvent, MoveStartEvent } from "@/composables/use-move";
 
 import { describe, expect, it } from "vitest";
-import { effectScope } from "vue";
 
 import { useMove } from "@/composables/use-move";
 
-/** Run a composable in a disposable scope, mirroring a component lifetime. */
-const withScope = <T>(setup: () => T): [T, () => void] => {
-  const scope = effectScope();
-  const result = scope.run(setup) as T;
-
-  return [result, () => scope.stop()];
-};
+import { withScope } from "../harness/scope";
 
 const setup = () => {
   const element = document.createElement("div");

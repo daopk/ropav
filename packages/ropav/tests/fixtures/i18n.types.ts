@@ -2,6 +2,7 @@ import type { DisplayNames } from "@/composables/use-display-names";
 import type { Filter } from "@/composables/use-filter";
 import type { CalendarStringKey } from "@/i18n/calendar";
 import type { DateFormatter } from "@internationalized/date";
+import type { NumberFormatOptions } from "@internationalized/number";
 import type { LocalizedString, LocalizedStringFormatter } from "@internationalized/string";
 import type { ComputedRef } from "vue";
 
@@ -16,10 +17,14 @@ export interface I18nHostReady {
 }
 
 export interface I18nHostProps {
+  /** Options handed to the collator. Read once, as the composable itself reads them. */
+  collatorOptions?: Intl.CollatorOptions;
   /** Options handed to the date formatter. */
   dateOptions?: Intl.DateTimeFormatOptions;
   /** Options handed to the collator behind the filter, e.g. `{sensitivity: "base"}`. */
   filterOptions?: Intl.CollatorOptions;
+  /** Options handed to the number formatter. */
+  numberOptions?: NumberFormatOptions;
   onReady?: (ready: I18nHostReady) => void;
 }
 

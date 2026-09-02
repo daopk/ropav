@@ -1,17 +1,11 @@
 import type { PressEvent } from "@/composables/use-press";
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { effectScope, nextTick, shallowRef } from "vue";
+import { nextTick, shallowRef } from "vue";
 
 import { usePress } from "@/composables/use-press";
 
-/** Run a composable in a disposable scope, mirroring a component lifetime. */
-const withScope = <T>(setup: () => T): [T, () => void] => {
-  const scope = effectScope();
-  const result = scope.run(setup) as T;
-
-  return [result, () => scope.stop()];
-};
+import { withScope } from "../harness/scope";
 
 /**
  * A real element in the document is needed rather than a bare event object: the press machine

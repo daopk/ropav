@@ -2,18 +2,12 @@ import type { UseColorAreaStateOptions } from "@/composables/use-color-area-stat
 import type { Color } from "@/utils/color-types";
 
 import { describe, expect, it, vi } from "vitest";
-import { effectScope, shallowRef } from "vue";
+import { shallowRef } from "vue";
 
 import { useColorAreaState } from "@/composables/use-color-area-state";
 import { parseColor } from "@/utils/color";
 
-/** Run a composable in a disposable scope, mirroring a component lifetime. */
-const withScope = <T>(setup: () => T): [T, () => void] => {
-  const scope = effectScope();
-  const result = scope.run(setup) as T;
-
-  return [result, () => scope.stop()];
-};
+import { withScope } from "../harness/scope";
 
 const setup = (options: UseColorAreaStateOptions = {}) =>
   withScope(() => useColorAreaState(options));

@@ -1,17 +1,11 @@
 import type { LongPressEvent } from "@/composables/use-long-press";
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { effectScope, nextTick } from "vue";
+import { nextTick } from "vue";
 
 import { useLongPress } from "@/composables/use-long-press";
 
-/** Run a composable in a disposable scope, mirroring a component lifetime. */
-const withScope = <T>(setup: () => T): [T, () => void] => {
-  const scope = effectScope();
-  const result = scope.run(setup) as T;
-
-  return [result, () => scope.stop()];
-};
+import { withScope } from "../harness/scope";
 
 const setup = (options: Parameters<typeof useLongPress>[0] = {}) => {
   const element = document.createElement("button");

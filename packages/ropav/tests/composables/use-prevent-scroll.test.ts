@@ -1,15 +1,9 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { effectScope, nextTick, shallowRef } from "vue";
+import { nextTick, shallowRef } from "vue";
 
 import { usePreventScroll } from "@/composables/use-prevent-scroll";
 
-/** Run a composable in a disposable scope, mirroring a component lifetime. */
-const withScope = <T>(setup: () => T): [T, () => void] => {
-  const scope = effectScope();
-  const result = scope.run(setup) as T;
-
-  return [result, () => scope.stop()];
-};
+import { withScope } from "../harness/scope";
 
 afterEach(() => {
   document.documentElement.style.overflow = "";

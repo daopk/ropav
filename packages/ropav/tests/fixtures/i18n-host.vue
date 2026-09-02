@@ -12,11 +12,11 @@ import { calendarStrings } from "@/i18n/calendar";
 const props = defineProps<I18nHostProps>();
 
 props.onReady?.({
-  collator: useCollator(),
+  collator: useCollator(props.collatorOptions),
   dateFormatter: useDateFormatter(() => props.dateOptions),
   displayNames: useDisplayNames(),
   filter: useFilter(props.filterOptions),
-  numberFormatter: useNumberFormatter(),
+  numberFormatter: useNumberFormatter(() => props.numberOptions),
   strings: useLocalizedStringFormatter(calendarStrings),
 });
 </script>

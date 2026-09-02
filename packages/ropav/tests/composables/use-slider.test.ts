@@ -1,18 +1,12 @@
 import type { SliderState } from "@/composables/use-slider-state";
 
 import { describe, expect, it, vi } from "vitest";
-import { effectScope, shallowRef } from "vue";
+import { shallowRef } from "vue";
 
 import { useSlider } from "@/composables/use-slider";
 import { useSliderState } from "@/composables/use-slider-state";
 
-/** Run a composable in a disposable scope, mirroring a component lifetime. */
-const withScope = <T>(setup: () => T): [T, () => void] => {
-  const scope = effectScope();
-  const result = scope.run(setup) as T;
-
-  return [result, () => scope.stop()];
-};
+import { withScope } from "../harness/scope";
 
 /**
  * jsdom lays nothing out, so the track is given a size by hand — the composable reads it to

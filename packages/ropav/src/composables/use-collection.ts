@@ -3,6 +3,8 @@ import type { ComputedRef } from "vue";
 
 import { computed, shallowRef } from "vue";
 
+import { sortByDocumentOrder } from "../utils/document-order";
+
 export type CollectionKey = string | number;
 
 export interface CollectionItemMeta {
@@ -121,16 +123,7 @@ export const useCollection = (options: UseCollectionOptions = {}): UseCollection
   };
 
   const domOrderedKeys = () =>
-    [...items.entries()]
-      // A detached node makes `compareDocumentPosition` return DISCONNECTED, which leaves the
-      // comparator non-transitive — enough to throw inside the engine's sort on some shapes.
-      .filter(([, meta]) => meta.element()?.isConnected)
-      .sort(([, a], [, b]) =>
-        a.element()!.compareDocumentPosition(b.element()!) & Node.DOCUMENT_POSITION_FOLLOWING
-          ? -1
-          : 1,
-      )
-      .map(([key]) => key);
+    sortByDocumentOrder([...items.entries()], ([, meta]) => meta.element()).map(([key]) => key);
 
   const keyAt = (index: number): CollectionKey | null => {
     const keys = orderedKeys();

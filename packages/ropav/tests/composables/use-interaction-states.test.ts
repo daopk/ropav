@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { effectScope, shallowRef } from "vue";
+import { shallowRef } from "vue";
 
 import {
   getInteractionModality,
@@ -10,13 +10,7 @@ import {
   useInteractionStates,
 } from "@/composables/use-interaction-states";
 
-/** Run a composable in a disposable scope, mirroring a component lifetime. */
-const withScope = <T>(setup: () => T): [T, () => void] => {
-  const scope = effectScope();
-  const result = scope.run(setup) as T;
-
-  return [result, () => scope.stop()];
-};
+import { withScope } from "../harness/scope";
 
 const pointerEvent = (type: string, init: PointerEventInit = {}) =>
   new PointerEvent(type, { button: 0, pointerType: "mouse", ...init });

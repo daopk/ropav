@@ -13,8 +13,10 @@ provideLocale(() => props.locale);
 
 <template>
   <I18nHost
+    :collator-options="props.collatorOptions"
     :date-options="props.dateOptions"
     :filter-options="props.filterOptions"
+    :number-options="props.numberOptions"
     :on-ready="props.onReady"
   />
 </template>

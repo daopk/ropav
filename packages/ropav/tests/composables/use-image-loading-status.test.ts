@@ -1,7 +1,9 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { effectScope, nextTick, shallowRef } from "vue";
+import { nextTick, shallowRef } from "vue";
 
 import { useImageLoadingStatus } from "@/composables/use-image-loading-status";
+
+import { withScope } from "../harness/scope";
 
 /** Stand-in for `window.Image`, which jsdom never actually loads. */
 class FakeImage {
@@ -44,13 +46,6 @@ class FakeImage {
     }
   }
 }
-
-const withScope = <T>(setup: () => T): [T, () => void] => {
-  const scope = effectScope();
-  const result = scope.run(setup) as T;
-
-  return [result, () => scope.stop()];
-};
 
 beforeEach(() => {
   FakeImage.instances = [];
