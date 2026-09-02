@@ -91,6 +91,15 @@ export type {
 } from "./range-calendar.context";
 
 /* -------------------------------------------------------------------------------------------------
+ * Composables
+ * -----------------------------------------------------------------------------------------------*/
+export type { AnyCalendarState, DateRange } from "../../composables/use-calendar";
+
+export type { CalendarHeadingFormatOptions } from "../../composables/use-calendar-heading";
+
+export type { RangeCalendarCommitBehavior } from "../../composables/use-range-calendar";
+
+/* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
 export { rangeCalendarVariants } from "@ropav/styles";

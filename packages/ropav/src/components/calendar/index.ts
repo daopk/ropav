@@ -95,6 +95,13 @@ export type {
 } from "./calendar.context";
 
 /* -------------------------------------------------------------------------------------------------
+ * Composables
+ * -----------------------------------------------------------------------------------------------*/
+export type { AnyCalendarState, UseCalendarReturn } from "../../composables/use-calendar";
+
+export type { CalendarHeadingFormatOptions } from "../../composables/use-calendar-heading";
+
+/* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
 export { calendarVariants } from "@ropav/styles";

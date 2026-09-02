@@ -43,6 +43,13 @@ export { provideInputOTPContext, useInputOTPContext } from "./input-otp.context"
 export type { InputOTPContext } from "./input-otp.context";
 
 /* -------------------------------------------------------------------------------------------------
+ * Composables
+ * -----------------------------------------------------------------------------------------------*/
+export type { InputOTPTextAlign } from "../../composables/use-input-otp";
+
+export type { PushPasswordManagerStrategy } from "../../composables/use-password-manager-badge";
+
+/* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
 export { inputOTPVariants } from "@ropav/styles";

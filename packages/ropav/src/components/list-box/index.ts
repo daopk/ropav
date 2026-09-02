@@ -41,6 +41,13 @@ export {
 export type { ListBoxContext, ListBoxStateContext } from "./list-box.context";
 
 /* -------------------------------------------------------------------------------------------------
+ * Composables
+ * -----------------------------------------------------------------------------------------------*/
+export type { UseDraggableCollectionStateReturn } from "../../composables/use-draggable-collection-state";
+
+export type { UseDroppableCollectionStateReturn } from "../../composables/use-droppable-collection-state";
+
+/* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
 export { listboxVariants } from "@ropav/styles";

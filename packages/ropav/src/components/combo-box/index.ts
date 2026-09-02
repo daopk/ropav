@@ -41,6 +41,11 @@ export { useComboBoxContext } from "./combo-box.context";
 export type { ComboBoxContext } from "./combo-box.context";
 
 /* -------------------------------------------------------------------------------------------------
+ * Composables
+ * -----------------------------------------------------------------------------------------------*/
+export type { UseComboBoxReturn } from "../../composables/use-combo-box";
+
+/* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
 export { comboBoxVariants } from "@ropav/styles";

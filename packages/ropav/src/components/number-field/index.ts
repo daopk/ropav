@@ -44,6 +44,11 @@ export { provideNumberFieldContext, useNumberFieldContext } from "./number-field
 export type { NumberFieldContext } from "./number-field.context";
 
 /* -------------------------------------------------------------------------------------------------
+ * Composables
+ * -----------------------------------------------------------------------------------------------*/
+export type { NumberFieldStepper, UseNumberFieldReturn } from "../../composables/use-number-field";
+
+/* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
 export { numberFieldVariants } from "@ropav/styles";

@@ -1,4 +1,25 @@
-import type { MenuTriggerType } from "@/index";
+import type {
+  AnyCalendarState,
+  CalendarHeadingFormatOptions,
+  CalendarYearPickerFormatOptions,
+  DateRange,
+  ImageLoadingStatus,
+  InputOTPTextAlign,
+  MenuTriggerType,
+  NumberFieldStepper,
+  PushPasswordManagerStrategy,
+  RangeCalendarCommitBehavior,
+  TableColumnSize,
+  ToolbarOrientation,
+  UseCalendarReturn,
+  UseComboBoxReturn,
+  UseDisclosureGroupNavigationOptions,
+  UseDisclosureGroupNavigationReturn,
+  UseDraggableCollectionStateReturn,
+  UseDroppableCollectionStateReturn,
+  UseNumberFieldReturn,
+  UseSelectReturn,
+} from "@/index";
 
 /*
  * Types that a public prop names and the composables barrel does not carry, pinned by naming them.
@@ -10,8 +31,28 @@ import type { MenuTriggerType } from "@/index";
  * names the type and asks the compiler to resolve it from the package entry.
  *
  * Covered by `pnpm typecheck`, which includes `tests`, and never shipped — `tsconfig.build.json`
- * takes `src` alone. One entry per type, keyed by the component whose barrel carries it.
+ * takes `src` alone. One entry per type, keyed by the component whose barrel carries it. A type
+ * appears twice when two components' props both name it; each subpath has to carry its own.
  */
 export interface HostExportedTypes {
+  "autocomplete: UseSelectReturn": UseSelectReturn;
+  "avatar: ImageLoadingStatus": ImageLoadingStatus;
+  "calendar-year-picker: CalendarYearPickerFormatOptions": CalendarYearPickerFormatOptions;
+  "calendar: AnyCalendarState": AnyCalendarState;
+  "calendar: CalendarHeadingFormatOptions": CalendarHeadingFormatOptions;
+  "calendar: UseCalendarReturn": UseCalendarReturn;
+  "combo-box: UseComboBoxReturn": UseComboBoxReturn;
+  "date-range-picker: DateRange": DateRange;
+  "disclosure-group: UseDisclosureGroupNavigationOptions": UseDisclosureGroupNavigationOptions;
+  "disclosure-group: UseDisclosureGroupNavigationReturn": UseDisclosureGroupNavigationReturn;
   "dropdown: MenuTriggerType": MenuTriggerType;
+  "input-otp: InputOTPTextAlign": InputOTPTextAlign;
+  "input-otp: PushPasswordManagerStrategy": PushPasswordManagerStrategy;
+  "list-box: UseDraggableCollectionStateReturn": UseDraggableCollectionStateReturn;
+  "list-box: UseDroppableCollectionStateReturn": UseDroppableCollectionStateReturn;
+  "number-field: NumberFieldStepper": NumberFieldStepper;
+  "number-field: UseNumberFieldReturn": UseNumberFieldReturn;
+  "range-calendar: RangeCalendarCommitBehavior": RangeCalendarCommitBehavior;
+  "table: TableColumnSize": TableColumnSize;
+  "toolbar: ToolbarOrientation": ToolbarOrientation;
 }

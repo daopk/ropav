@@ -57,6 +57,11 @@ export { useAutocompleteContext } from "./autocomplete.context";
 export type { AutocompleteContext } from "./autocomplete.context";
 
 /* -------------------------------------------------------------------------------------------------
+ * Composables
+ * -----------------------------------------------------------------------------------------------*/
+export type { UseSelectReturn } from "../../composables/use-select";
+
+/* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
 export { autocompleteVariants } from "@ropav/styles";

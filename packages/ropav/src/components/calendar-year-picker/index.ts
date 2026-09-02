@@ -52,6 +52,13 @@ export { provideYearPickerContext, useYearPickerContext } from "./calendar-year-
 export type { YearPickerContext } from "./calendar-year-picker.context";
 
 /* -------------------------------------------------------------------------------------------------
+ * Composables
+ * -----------------------------------------------------------------------------------------------*/
+export type { CalendarHeadingFormatOptions } from "../../composables/use-calendar-heading";
+
+export type { CalendarYearPickerFormatOptions } from "../../composables/use-calendar-year-picker";
+
+/* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
 export { calendarYearPickerVariants } from "@ropav/styles";

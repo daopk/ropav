@@ -81,6 +81,11 @@ export {
 export type { DateRangePickerContext } from "./date-range-picker.context";
 
 /* -------------------------------------------------------------------------------------------------
+ * Composables
+ * -----------------------------------------------------------------------------------------------*/
+export type { DateRange } from "../../composables/use-calendar";
+
+/* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
 export { dateInputGroupVariants, dateRangePickerVariants } from "@ropav/styles";
