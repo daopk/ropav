@@ -72,6 +72,8 @@ export {
   useToastQueue,
 } from "./toast-queue";
 
+export type { Timer } from "./toast-queue";
+
 export type { ToastFunction, UseToastQueueReturn } from "./toast-queue";
 
 export {

@@ -194,21 +194,34 @@ describe("the composables barrel", () => {
 
 describe("public type surface", () => {
   /*
-   * A public prop type may name a type from a private composable — `DropdownRootProps.trigger` names
-   * `MenuTriggerType`. The component's own barrel then has to export that name, or a consumer can
-   * pass the prop and cannot annotate it.
+   * A public prop or context type may name a type the barrel does not export, and then a consumer
+   * can read the value and cannot annotate it. `DropdownRootProps.trigger` named `MenuTriggerType`
+   * that way, and `SplitterContext.state` named `SplitterState`.
+   *
+   * Two sources qualify, and they are the two whose reachability this package controls: a private
+   * composable, and a module of the component's own directory. Anything from `vue`, `@ropav/styles`
+   * or `utils` is reachable by other means and is not the concern here.
    *
    * Over-approximates: a type imported into a public type source but used only in a non-exported
    * position is still reported. Re-exporting it is harmless, so that is the cheaper error to make.
    * Follows one hop, so a type source importing from another type source is not traced.
    */
-  it("names every private composable type a public prop needs", () => {
+  it("names every type a public prop or context needs", () => {
     const stranded = components.flatMap((name) => {
       const indexSource = readComponentIndex(name);
       const exported = exportedNames(indexSource);
 
+      /*
+       * `.types.ts` and `.context.ts` only. Those two files exist to declare the shape a consumer
+       * sees, so a name they import has to be nameable. An implementation module the barrel also
+       * re-exports from — `toast-queue.ts`, for its `Timer` — carries types on private members that
+       * are nobody's business, and following it would report `ToastAction` forever.
+       */
       const typeSources = parseStatements(indexSource)
-        .filter((statement) => statement.isExport && /^\.\/[a-z0-9.-]+$/.test(statement.source))
+        .filter(
+          (statement) =>
+            statement.isExport && /^\.\/[a-z0-9-]+\.(types|context)$/.test(statement.source),
+        )
         .map((statement) => statement.source);
 
       return [...new Set(typeSources)].flatMap((source) => {
@@ -219,14 +232,17 @@ describe("public type surface", () => {
         return parseStatements(fs.readFileSync(file, "utf8"))
           .filter((statement) => !statement.isExport)
           .flatMap((statement) => {
-            const module = /^\.\.\/\.\.\/composables\/([a-z0-9-]+)$/.exec(statement.source)?.[1];
+            const composable = /^\.\.\/\.\.\/composables\/([a-z0-9-]+)$/.exec(
+              statement.source,
+            )?.[1];
+            const sibling = /^\.\/([a-z0-9.-]+)$/.exec(statement.source)?.[1];
 
-            if (!module || PUBLIC.has(module)) return [];
+            if (composable ? PUBLIC.has(composable) : !sibling) return [];
 
             return statement.specifiers
               .map(localName)
               .filter((one) => !exported.has(one))
-              .map((one) => `${name}: ${one} (from ${module})`);
+              .map((one) => `${name}: ${one} (from ${composable ?? `./${sibling}`})`);
           });
       });
     });

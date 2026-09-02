@@ -26,6 +26,8 @@ export type {
   SplitterHandleSlotProps,
 } from "./splitter.types";
 
+export type { SplitterOrientation, SplitterSize } from "./splitter.state";
+
 /* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
@@ -33,7 +35,7 @@ export { useSplitterContext } from "./splitter.context";
 
 export type { SplitterContext } from "./splitter.context";
 
-export type { SplitterOrientation, SplitterSize } from "./splitter.state";
+export type { SplitterState } from "./splitter.state";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants

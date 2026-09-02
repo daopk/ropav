@@ -9,7 +9,9 @@ import type {
   NumberFieldStepper,
   PushPasswordManagerStrategy,
   RangeCalendarCommitBehavior,
+  SplitterState,
   TableColumnSize,
+  Timer,
   ToolbarOrientation,
   UseCalendarReturn,
   UseComboBoxReturn,
@@ -53,6 +55,8 @@ export interface HostExportedTypes {
   "number-field: NumberFieldStepper": NumberFieldStepper;
   "number-field: UseNumberFieldReturn": UseNumberFieldReturn;
   "range-calendar: RangeCalendarCommitBehavior": RangeCalendarCommitBehavior;
+  "splitter: SplitterState": SplitterState;
   "table: TableColumnSize": TableColumnSize;
+  "toast: Timer": Timer;
   "toolbar: ToolbarOrientation": ToolbarOrientation;
 }
