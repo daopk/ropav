@@ -1,0 +1,149 @@
+/* Splitter styles */
+
+/*
+ * Orientation is a modifier class rather than a `[data-orientation]` descendant selector, and
+ * that is not a style preference. A splitter nests — a vertical group inside a panel of a
+ * horizontal one is the ordinary case — so `.splitter[data-orientation="horizontal"]
+ * .splitter__handle` would reach the inner group's handle as well as its own and lay it out on
+ * the wrong axis. Every rule below therefore sits on the part it styles.
+ *
+ * The modifier also buys the Storybook forced-colors sweep, which collects `[class*='--']` and a
+ * fixed state list that does not include `data-dragging`. Without a modifier the handle — the one
+ * part of this component that paints anything — would never be audited.
+ */
+
+.splitter {
+  @apply isolate flex h-full w-full;
+}
+
+.splitter--horizontal {
+  @apply flex-row;
+}
+
+.splitter--vertical {
+  @apply flex-col;
+}
+
+/* A flex item's automatic minimum is its content, so without `min-w-0`/`min-h-0` a panel holding
+ * a long word or a wide table cannot be dragged narrower than that content and the drag silently
+ * stops responding partway along the track.
+ *
+ * `flex-1` is the unmanaged fallback only. The component writes the whole `flex` shorthand inline;
+ * an inline `flex-basis` alone would leave this `flex-grow: 1` in place and the panel would grow
+ * straight back past the size it was given. */
+.splitter__panel {
+  @apply relative min-h-0 min-w-0 flex-1 overflow-hidden;
+}
+
+/* The flex item is the gutter, and it is transparent. The line you see is `::after`, absolutely
+ * positioned, which is what lets it thicken on hover without the gutter changing width and
+ * reflowing both panels by a pixel. `.slider__thumb::after` carries its knob the same way. */
+.splitter__handle {
+  --splitter-gutter: calc(var(--spacing) * 2);
+  /* Overhang on each side. 8 + 8 + 8 gives a 24px target, which is WCAG 2.5.8 Target Size. */
+  --splitter-grip: calc(var(--spacing) * 2);
+
+  @apply relative z-10 flex shrink-0 grow-0 items-center justify-center self-stretch;
+  @apply bg-transparent outline-none select-none no-highlight;
+
+  /* The gesture is ours; the browser must not also pan or scroll from a drag on this. */
+  @apply touch-none;
+
+  &::after {
+    @apply pointer-events-none absolute rounded-sm bg-separator content-[''];
+
+    /* Flattened to `Canvas` the divider stops existing rather than weakening — the whole part
+     * *is* its background, which is why `separator.css` restates its colour the same way. */
+    @media (forced-colors: active) {
+      background-color: CanvasText;
+    }
+
+    /**
+     * Transitions
+     * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
+     */
+    transition:
+      background-color 150ms var(--ease-out),
+      inline-size 150ms var(--ease-out),
+      block-size 150ms var(--ease-out);
+    @apply motion-reduce:transition-none;
+  }
+
+  &:hover::after,
+  &[data-hovered="true"]::after,
+  &[data-dragging="true"]::after {
+    @apply bg-accent;
+
+    /* `bg-separator` and `bg-accent` both flatten to `Canvas`, so without this the resting and
+     * active states are byte-identical under the mode and grabbing the handle shows nothing. */
+    @media (forced-colors: active) {
+      background-color: Highlight;
+    }
+  }
+
+  &:focus-visible,
+  &[data-focus-visible="true"] {
+    @apply status-focused;
+  }
+
+  &[data-disabled="true"] {
+    @apply status-disabled;
+
+    /* `status-disabled` reaches `color` and `border-color`, and the line is neither. */
+    &::after {
+      @media (forced-colors: active) {
+        background-color: GrayText;
+      }
+    }
+  }
+}
+
+/* The invisible hit area. A negative `inset` rather than a transparent border: forced colors turns
+ * a transparent *border-color* opaque — the trap `slider.css` documents at both ends of its track
+ * — and a bordered grip would render as two solid blocks flanking every divider. `inset` has no
+ * such behaviour, so this needs no forced-colors rule of its own. */
+.splitter__handle-grip {
+  @apply absolute inset-0 bg-transparent;
+}
+
+/* A horizontal group puts its panels side by side, so the divider is a vertical line. */
+.splitter__handle--horizontal {
+  @apply cursor-col-resize;
+
+  inline-size: var(--splitter-gutter);
+
+  &::after {
+    @apply inset-y-0 w-px;
+  }
+
+  &:hover::after,
+  &[data-hovered="true"]::after,
+  &[data-dragging="true"]::after {
+    @apply w-0.5;
+  }
+
+  & > .splitter__handle-grip {
+    inset-inline: calc(var(--splitter-grip) * -1);
+  }
+}
+
+/* A vertical group stacks its panels, so the divider is a horizontal line. */
+.splitter__handle--vertical {
+  @apply cursor-row-resize;
+
+  block-size: var(--splitter-gutter);
+
+  &::after {
+    @apply inset-x-0 h-px;
+  }
+
+  &:hover::after,
+  &[data-hovered="true"]::after,
+  &[data-dragging="true"]::after {
+    @apply h-0.5;
+  }
+
+  & > .splitter__handle-grip {
+    inset-block: calc(var(--splitter-grip) * -1);
+  }
+}

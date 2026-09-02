@@ -235,6 +235,27 @@ describe("public type surface", () => {
   });
 });
 
+describe("public composables", () => {
+  /*
+   * No exception list, deliberately. This failed for dozens of modules against the old barrel,
+   * which is why it ships last: landing it earlier would have meant an allowlist, and an allowlist
+   * would have made it decoration. A composable the package calls supported API has a test.
+   */
+  it("each have a test of their own", () => {
+    const suites = new Set(
+      fs
+        .readdirSync(path.join(rootDir, "tests/composables"))
+        .filter((name) => name.endsWith(".test.ts")),
+    );
+
+    const untested = PUBLIC_MODULES.filter(
+      (module) => !suites.has(`${module}.test.ts`) && !suites.has(`${module}.browser.test.ts`),
+    );
+
+    expect(untested).toEqual([]);
+  });
+});
+
 describe("private composables", () => {
   it("are absent from the barrel", () => {
     expect(privateModules.filter((module) => barrelExports.includes(module))).toEqual([]);
