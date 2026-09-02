@@ -163,6 +163,28 @@ export interface SidebarItemTrailingProps {
   class?: string;
 }
 
+export interface SidebarItemTooltipProps {
+  class?: string;
+  /**
+   * What the tooltip says — the item's own label, which the rail has taken out of sight.
+   *
+   * Restated rather than read off `Sidebar.ItemLabel`, because the label is a slot and its text is
+   * whatever a caller rendered into it; reaching into the DOM to find out would tie the tooltip to
+   * a markup shape neither part promises.
+   */
+  label?: string;
+  /**
+   * How long the pointer has to rest on the item before the tooltip opens.
+   *
+   * Left to the theme's `--tooltip-delay` by default, the same as every other tooltip. A rail is a
+   * good reason to want this shorter — the label is the only way to read the item, not a hint
+   * beside one — but that is a decision about the whole product's tooltips, not about this part.
+   */
+  delay?: number;
+  /** How long it stays after the pointer leaves. Left to the theme by default. */
+  closeDelay?: number;
+}
+
 /** State an item hands to its slot, matching the link's render props plus the sidebar's shape. */
 export interface SidebarItemSlotProps {
   isCurrent: boolean;

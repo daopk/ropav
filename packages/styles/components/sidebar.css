@@ -241,6 +241,13 @@
   @apply hidden;
 }
 
+/* The tooltip's own trigger is `inline-block`, and inside the nav's column that would shrink the
+ * item it wraps down to its contents. An item is a full-width row and has to stay one whether or
+ * not it has a tooltip hanging off it. */
+.sidebar__item-tooltip {
+  @apply block w-full;
+}
+
 /* ==========================================================================
    Inset — the content beside the sidebar
    ========================================================================== */

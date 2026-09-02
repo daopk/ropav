@@ -28,6 +28,7 @@ export const sidebarVariants = tv({
     item: "sidebar__item",
     itemIcon: "sidebar__item-icon",
     itemLabel: "sidebar__item-label",
+    itemTooltip: "sidebar__item-tooltip",
     itemTrailing: "sidebar__item-trailing",
     panel: "sidebar__panel",
     rail: "sidebar__rail",

@@ -8,8 +8,6 @@ import IconHouse from "~icons/gravity-ui/house";
 import IconMagnifier from "~icons/gravity-ui/magnifier";
 import IconPerson from "~icons/gravity-ui/person";
 
-import { TooltipContent, TooltipRoot, TooltipTrigger } from "../tooltip";
-
 import SidebarContent from "./sidebar-content.vue";
 import SidebarFooter from "./sidebar-footer.vue";
 import SidebarGroupLabel from "./sidebar-group-label.vue";
@@ -18,6 +16,7 @@ import SidebarHeader from "./sidebar-header.vue";
 import SidebarInset from "./sidebar-inset.vue";
 import SidebarItemIcon from "./sidebar-item-icon.vue";
 import SidebarItemLabel from "./sidebar-item-label.vue";
+import SidebarItemTooltip from "./sidebar-item-tooltip.vue";
 import SidebarItemTrailing from "./sidebar-item-trailing.vue";
 import SidebarItem from "./sidebar-item.vue";
 import SidebarPanel from "./sidebar-panel.vue";
@@ -45,14 +44,12 @@ const components = {
   SidebarItem,
   SidebarItemIcon,
   SidebarItemLabel,
+  SidebarItemTooltip,
   SidebarItemTrailing,
   SidebarPanel,
   SidebarRail,
   SidebarSeparator,
   SidebarTrigger,
-  Tooltip: TooltipRoot,
-  TooltipContent,
-  TooltipTrigger,
 };
 
 /** The page beside the nav, so every story shows the sidebar against something. */
@@ -252,7 +249,9 @@ export const Mobile: Story = {
 
 /**
  * A collapsed item keeps its name for a screen reader but shows only an icon, so a pointer user
- * has nothing to read. The item hands `isCollapsed` to its slot, which is what a Tooltip hangs off.
+ * has nothing to read. `Sidebar.ItemTooltip` fills that in, and only there: it sits on the side
+ * away from the panel, and it goes quiet the moment the label is back on screen — expand this from
+ * the trigger and hovering an item says nothing, because the word is already next to the pointer.
  */
 export const WithTooltips: Story = {
   render: () => ({
@@ -263,24 +262,24 @@ export const WithTooltips: Story = {
           <SidebarContent>
             <SidebarGroup>
               <SidebarGroupLabel>Workspace</SidebarGroupLabel>
-              <Tooltip>
-                <TooltipTrigger>
-                  <SidebarItem href="#">
-                    <SidebarItemIcon><IconHouse /></SidebarItemIcon>
-                    <SidebarItemLabel>Home</SidebarItemLabel>
-                  </SidebarItem>
-                </TooltipTrigger>
-                <TooltipContent>Home</TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger>
-                  <SidebarItem href="#">
-                    <SidebarItemIcon><IconEnvelope /></SidebarItemIcon>
-                    <SidebarItemLabel>Inbox</SidebarItemLabel>
-                  </SidebarItem>
-                </TooltipTrigger>
-                <TooltipContent>Inbox</TooltipContent>
-              </Tooltip>
+              <SidebarItemTooltip label="Home">
+                <SidebarItem href="#" aria-current="page">
+                  <SidebarItemIcon><IconHouse /></SidebarItemIcon>
+                  <SidebarItemLabel>Home</SidebarItemLabel>
+                </SidebarItem>
+              </SidebarItemTooltip>
+              <SidebarItemTooltip label="Inbox">
+                <SidebarItem href="#">
+                  <SidebarItemIcon><IconEnvelope /></SidebarItemIcon>
+                  <SidebarItemLabel>Inbox</SidebarItemLabel>
+                </SidebarItem>
+              </SidebarItemTooltip>
+              <SidebarItemTooltip label="Search">
+                <SidebarItem href="#">
+                  <SidebarItemIcon><IconMagnifier /></SidebarItemIcon>
+                  <SidebarItemLabel>Search</SidebarItemLabel>
+                </SidebarItem>
+              </SidebarItemTooltip>
             </SidebarGroup>
           </SidebarContent>
         </SidebarPanel>

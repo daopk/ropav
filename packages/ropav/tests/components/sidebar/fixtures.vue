@@ -13,6 +13,7 @@ import {
   SidebarItem,
   SidebarItemIcon,
   SidebarItemLabel,
+  SidebarItemTooltip,
   SidebarItemTrailing,
   SidebarPanel,
   SidebarRail,
@@ -34,6 +35,8 @@ const props = withDefaults(
         noGroupLabel?: boolean;
         /** Leaves the rail out, for a sidebar driven by its trigger alone. */
         noRail?: boolean;
+        /** Wraps every item in a tooltip, which only speaks up once the panel is a rail. */
+        withTooltips?: boolean;
       }
   >(),
   {
@@ -45,6 +48,7 @@ const props = withDefaults(
     isResizable: undefined,
     noGroupLabel: undefined,
     noRail: undefined,
+    withTooltips: undefined,
   },
 );
 
@@ -82,17 +86,29 @@ const defaultItems: SidebarFixtureItem[] = [
       <SidebarContent>
         <SidebarGroup aria-label="Fallback">
           <SidebarGroupLabel v-if="!props.noGroupLabel">Workspace</SidebarGroupLabel>
-          <SidebarItem
-            v-for="item in props.items ?? defaultItems"
-            :key="item.label"
-            :aria-current="item.isCurrent ? 'page' : undefined"
-            :href="item.href"
-            :is-disabled="item.isDisabled"
-          >
-            <SidebarItemIcon><svg /></SidebarItemIcon>
-            <SidebarItemLabel>{{ item.label }}</SidebarItemLabel>
-            <SidebarItemTrailing v-if="item.badge">{{ item.badge }}</SidebarItemTrailing>
-          </SidebarItem>
+          <template v-for="item in props.items ?? defaultItems" :key="item.label">
+            <SidebarItemTooltip v-if="props.withTooltips" :label="item.label">
+              <SidebarItem
+                :aria-current="item.isCurrent ? 'page' : undefined"
+                :href="item.href"
+                :is-disabled="item.isDisabled"
+              >
+                <SidebarItemIcon><svg /></SidebarItemIcon>
+                <SidebarItemLabel>{{ item.label }}</SidebarItemLabel>
+                <SidebarItemTrailing v-if="item.badge">{{ item.badge }}</SidebarItemTrailing>
+              </SidebarItem>
+            </SidebarItemTooltip>
+            <SidebarItem
+              v-else
+              :aria-current="item.isCurrent ? 'page' : undefined"
+              :href="item.href"
+              :is-disabled="item.isDisabled"
+            >
+              <SidebarItemIcon><svg /></SidebarItemIcon>
+              <SidebarItemLabel>{{ item.label }}</SidebarItemLabel>
+              <SidebarItemTrailing v-if="item.badge">{{ item.badge }}</SidebarItemTrailing>
+            </SidebarItem>
+          </template>
         </SidebarGroup>
         <SidebarSeparator />
       </SidebarContent>

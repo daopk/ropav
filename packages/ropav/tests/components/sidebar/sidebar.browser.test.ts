@@ -261,3 +261,99 @@ describe("a narrow viewport", () => {
     await expectNoA11yViolations(dialog);
   });
 });
+
+describe("tooltips", () => {
+  /**
+   * Hovered the way a pointer arrives, and waited out rather than stepped through.
+   *
+   * The delay is the theme's, so this asks the tooltip whether it opened at all rather than when —
+   * the wait is generous on purpose, because a test that raced the delay would pass or fail on how
+   * loaded the machine was.
+   */
+  const hoverAndWait = async (element: HTMLElement) => {
+    element.dispatchEvent(
+      new PointerEvent("pointerenter", { bubbles: false, pointerType: "mouse" }),
+    );
+    await new Promise((resolve) => setTimeout(resolve, 2200));
+
+    return document.body.querySelector<HTMLElement>(".tooltip");
+  };
+
+  it("says the label on the rail, on the side away from the panel", async () => {
+    await parkPointer();
+
+    const { container } = mount({ breakpoint: WIDE, defaultExpanded: false, withTooltips: true });
+
+    await settled(slot(container, "sidebar-panel"));
+
+    const tip = await hoverAndWait(slot(container, "tooltip-trigger"));
+
+    expect(tip).not.toBeNull();
+    expect(tip!.textContent!.trim()).toBe("Home");
+    // `end` resolved against a left-hand sidebar in a left-to-right page.
+    expect(tip!.getAttribute("data-placement")).toBe("right");
+  });
+
+  it("mirrors to the other side for a sidebar on the trailing edge", async () => {
+    await parkPointer();
+
+    const { container } = mount({
+      breakpoint: WIDE,
+      defaultExpanded: false,
+      side: "right",
+      withTooltips: true,
+    });
+
+    await settled(slot(container, "sidebar-panel"));
+
+    const tip = await hoverAndWait(slot(container, "tooltip-trigger"));
+
+    expect(tip!.getAttribute("data-placement")).toBe("left");
+  });
+
+  /* The label is on screen already, and a tooltip repeating the word beside the pointer is noise. */
+  it("stays quiet while the label is on screen", async () => {
+    await parkPointer();
+
+    const { container } = mount({ breakpoint: WIDE, withTooltips: true });
+
+    await settled(slot(container, "sidebar-panel"));
+
+    expect(await hoverAndWait(slot(container, "tooltip-trigger"))).toBeNull();
+  });
+
+  /* A drawer shows every label, so there is nothing for a tooltip to fill in there either. */
+  it("stays quiet inside the drawer", async () => {
+    await parkPointer();
+
+    mount({ breakpoint: NARROW, defaultMobileOpen: true, withTooltips: true });
+
+    await nextTick();
+
+    const dialog = document.body.querySelector<HTMLElement>("[data-slot='drawer-dialog']")!;
+
+    await settled(dialog);
+
+    expect(await hoverAndWait(slot(dialog, "tooltip-trigger"))).toBeNull();
+  });
+
+  /* An item is a full-width row; the tooltip's own trigger is `inline-block` and would shrink it. */
+  it("does not change the row it wraps", async () => {
+    await parkPointer();
+
+    const plain = mount({ breakpoint: WIDE });
+
+    await settled(slot(plain.container, "sidebar-panel"));
+
+    const width = slot(plain.container, "sidebar-item").getBoundingClientRect().width;
+
+    const wrapped = mount({ breakpoint: WIDE, withTooltips: true });
+
+    await settled(slot(wrapped.container, "sidebar-panel"));
+
+    expect(slot(wrapped.container, "sidebar-item").getBoundingClientRect().width).toBe(width);
+    // The item inside is focusable already, so the wrapper adds no second interactive element.
+    expect(slot(wrapped.container, "tooltip-trigger").hasAttribute("tabindex")).toBe(false);
+    expect(slot(wrapped.container, "tooltip-trigger").hasAttribute("role")).toBe(false);
+  });
+});
