@@ -115,11 +115,42 @@ export const useScrollShadow = (options: UseScrollShadowProps): UseScrollShadowR
       const observer =
         typeof ResizeObserver === "undefined" ? undefined : new ResizeObserver(checkOverflow);
 
-      observer?.observe(current);
+      /**
+       * The container **and** everything directly inside it.
+       *
+       * Watching the container alone sees only half of what makes a region scrollable: the other
+       * half is the content growing while the region keeps its size, which is what an accordion or
+       * a disclosure opening inside one does. Nothing scrolls and nothing resizes, so a check that
+       * waits for either turns up only once the reader scrolls — by which point the shadow has
+       * stopped being the hint it exists to be.
+       *
+       * Direct children are enough. In normal flow nothing can grow the scrollable area without
+       * growing one of them, so watching deeper would cost an entry per row and report the same
+       * thing.
+       */
+      const observe = () => {
+        observer?.disconnect();
+        observer?.observe(current);
+        for (const child of Array.from(current.children)) observer?.observe(child);
+      };
+
+      observe();
+
+      // Children come and go, and a new one has to be picked up before it can be measured.
+      const mutations =
+        typeof MutationObserver === "undefined"
+          ? undefined
+          : new MutationObserver(() => {
+              observe();
+              checkOverflow();
+            });
+
+      mutations?.observe(current, { childList: true });
 
       onCleanup(() => {
         current.removeEventListener("scroll", checkOverflow);
         observer?.disconnect();
+        mutations?.disconnect();
         cancelPendingFrame();
         previous = null;
       });

@@ -559,4 +559,43 @@ describe("the scroll region", () => {
     expect(content.hasAttribute("data-bottom-scroll")).toBe(false);
     expect(getComputedStyle(content).maskImage).toBe("none");
   });
+
+  /*
+   * The case that reads as the fade being broken: nothing scrolled, nothing resized, the nav simply
+   * grew. A submenu opening changes what is inside the scroll region without changing the region
+   * itself, so a `ResizeObserver` watching only the container has nothing to report.
+   */
+  it("fades when a submenu grows the nav past the panel", async () => {
+    await parkPointer();
+
+    const { container } = mount({
+      breakpoint: WIDE,
+      class: "h-56",
+      items: [{ href: "/one", label: "One" }],
+      withNested: true,
+    });
+
+    await settled(slot(container, "sidebar-panel"));
+
+    const content = slot(container, "sidebar-content");
+
+    /*
+     * A scrollbar taking layout width when the nav overflows would resize the container and set the
+     * check off by accident, which is exactly the accident this case exists to rule out — on a
+     * platform with overlay scrollbars it never happens. Reserving the gutter up front means the
+     * only thing that changes is what is inside.
+     */
+    content.style.overflowY = "scroll";
+
+    expect(content.scrollHeight).toBeLessThanOrEqual(content.clientHeight + 1);
+
+    slot(container, "sidebar-collapsible-trigger").click();
+    await settled(slot(container, "sidebar-sub-menu"));
+
+    expect(content.scrollHeight).toBeGreaterThan(content.clientHeight);
+
+    await waitUntil("the fade catches up with the taller nav", () =>
+      content.hasAttribute("data-bottom-scroll"),
+    );
+  });
 });
