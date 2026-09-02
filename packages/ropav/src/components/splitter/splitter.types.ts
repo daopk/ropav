@@ -12,6 +12,11 @@ export interface SplitterRootProps {
   sizes?: SplitterSize[];
   /** Sizes the splitter starts at, when the caller is not controlling them. */
   defaultSizes?: SplitterSize[];
+  /**
+   * Where the layout is remembered between visits, under `ropav:splitter:<id>` in `localStorage`.
+   * Read once after mount, and discarded unless it still matches the panels on screen.
+   */
+  autoSaveId?: string;
   /** Suppresses every handle. */
   isDisabled?: boolean;
   /** How far one arrow press moves a handle, in pixels. @default 10 */

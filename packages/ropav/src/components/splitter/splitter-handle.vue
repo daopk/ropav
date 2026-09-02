@@ -12,7 +12,12 @@ import { composeSlotClassName } from "../../utils/compose";
 
 import { useSplitterContext } from "./splitter.context";
 
-const props = withDefaults(defineProps<SplitterHandleProps>(), { isDisabled: undefined });
+const props = withDefaults(defineProps<SplitterHandleProps>(), {
+  isDisabled: undefined,
+  // A real default rather than the tri-state `undefined` the other booleans use: Vue casts an
+  // absent boolean prop to `false`, so "not given" and "turned off" are indistinguishable here.
+  resetOnDoubleClick: true,
+});
 
 defineSlots<{ default?: (props: SplitterHandleSlotProps) => unknown }>();
 
@@ -128,6 +133,23 @@ const isAxisKey = (key: string) =>
     ? key === "ArrowUp" || key === "ArrowDown" || key === "Up" || key === "Down"
     : key === "ArrowLeft" || key === "ArrowRight" || key === "Left" || key === "Right";
 
+/** The panel `Enter` acts on: the one before the handle when it can shut, else the one after. */
+const collapsibleNeighbour = () => {
+  const pair = state.neighbours(handleKey.value);
+
+  if (!pair) return null;
+
+  const keys = state.panelKeys.value;
+
+  for (const index of [pair.before, pair.after]) {
+    const key = keys[index];
+
+    if (key != null && state.getPanel(key)?.isCollapsible()) return key;
+  }
+
+  return null;
+};
+
 const jump = (delta: number) => {
   state.startResize(handleKey.value);
   state.resize(handleKey.value, delta);
@@ -136,6 +158,17 @@ const jump = (delta: number) => {
 
 const onKeydown = (event: KeyboardEvent) => {
   if (isDisabled.value) return;
+
+  if (event.key === "Enter") {
+    const target = collapsibleNeighbour();
+
+    if (target == null) return;
+
+    event.preventDefault();
+    state.toggleCollapse(target);
+
+    return;
+  }
 
   if (event.key === "Home" || event.key === "End") {
     event.preventDefault();
@@ -155,6 +188,24 @@ const onKeydown = (event: KeyboardEvent) => {
 
   readDirection();
   moveHandlers.onKeydown(event);
+};
+
+/**
+ * Reset rather than arithmetic: dropping the stored sizes lets the panels' declared defaults take
+ * over, and the solver refills the container by construction. A collapsed neighbour is reopened on
+ * the way, which is why this and `Enter` are separate gestures — one returns a panel to where the
+ * user left it, the other to where the author put it.
+ */
+const onDblclick = () => {
+  if (isDisabled.value || !props.resetOnDoubleClick) return;
+
+  const pair = state.neighbours(handleKey.value);
+
+  if (!pair) return;
+
+  const keys = state.panelKeys.value;
+
+  state.reset([keys[pair.before]!, keys[pair.after]!]);
 };
 
 const onPointerdown = (event: PointerEvent) => {
@@ -194,6 +245,7 @@ const onPointerdown = (event: PointerEvent) => {
     role="separator"
     :tabindex="isDisabled ? -1 : 0"
     @blur="states.onBlur"
+    @dblclick="onDblclick"
     @focus="states.onFocus"
     @keydown="onKeydown"
     @pointerdown="onPointerdown"

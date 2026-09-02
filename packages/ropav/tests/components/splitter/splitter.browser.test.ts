@@ -5,6 +5,7 @@ import { nextTick } from "vue";
 
 import { parkPointer } from "../../harness/park-pointer";
 import { settled } from "../../harness/settle";
+import { waitUntil } from "../../harness/wait-until";
 
 import Fixture from "./fixtures.vue";
 import NestedFixture from "./nested-fixtures.vue";
@@ -228,6 +229,38 @@ describe("Splitter (browser)", () => {
     const outside = document.elementFromPoint(box.right + 4, box.top + box.height / 2);
 
     expect(handle.contains(outside)).toBe(true);
+    unmount();
+  });
+
+  /*
+   * The reason a drag writes each panel back in the unit it declared: a pixel sidebar is a pixel
+   * sidebar at every container size, and the fractions beside it absorb the difference. This also
+   * covers the `ResizeObserver` wiring, which no jsdom test can reach — the shared stub there
+   * never calls back.
+   */
+  it("holds a pixel panel across a container resize while the fractions re-divide", async () => {
+    await parkPointer();
+
+    const { container, unmount } = await render({
+      panels: [{ defaultSize: "240px", id: "a" }, { id: "b" }],
+    });
+    const root = slot(container, "splitter");
+    const widths = () =>
+      slots(container, "splitter-panel").map((panel) =>
+        Math.round(panel.getBoundingClientRect().width),
+      );
+
+    const wide = widths();
+
+    expect(wide[0]).toBe(240);
+
+    root.style.width = "24rem";
+    await waitUntil("the splitter re-measures its container", () => widths()[1] !== wide[1]);
+
+    const narrow = widths();
+
+    expect(narrow[0]).toBe(240);
+    expect(narrow[1]).toBeLessThan(wide[1]!);
     unmount();
   });
 

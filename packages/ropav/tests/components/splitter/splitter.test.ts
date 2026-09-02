@@ -367,4 +367,117 @@ describe("Splitter", () => {
       unmount();
     });
   });
+  describe("collapsing", () => {
+    const collapsible = {
+      panels: [{ collapsedSize: 0, id: "a", isCollapsible: true, minSize: 200 }, { id: "b" }],
+    };
+
+    it("shuts and reopens the collapsible neighbour on Enter", async () => {
+      const { container, unmount } = await render(collapsible);
+      const handle = slot(container, "splitter-handle");
+
+      await key(handle, "Enter");
+      expect(slots(container, "splitter-panel").map(basisOf)).toEqual([0, 1000]);
+
+      await key(handle, "Enter");
+      expect(basisOf(slots(container, "splitter-panel")[0]!)).toBeGreaterThan(0);
+      unmount();
+    });
+
+    it("marks a collapsed panel", async () => {
+      const { container, unmount } = await render(collapsible);
+
+      await key(slot(container, "splitter-handle"), "Enter");
+
+      expect(slots(container, "splitter-panel")[0]!.dataset["collapsed"]).toBe("true");
+      unmount();
+    });
+
+    /* `overflow: hidden` leaves the contents in the tab order; only `inert` takes them out. */
+    it("takes a collapsed panel's contents out of the tab order", async () => {
+      const { container, unmount } = await render(collapsible);
+
+      await key(slot(container, "splitter-handle"), "Enter");
+
+      expect(slots(container, "splitter-panel")[0]!.hasAttribute("inert")).toBe(true);
+      unmount();
+    });
+
+    it("reports the collapse and the expansion to the caller", async () => {
+      const onCollapse = vi.fn();
+      const onExpand = vi.fn();
+      const { container, unmount } = await render({ ...collapsible, onCollapse, onExpand });
+      const handle = slot(container, "splitter-handle");
+
+      await key(handle, "Enter");
+      expect(onCollapse).toHaveBeenCalledWith("a");
+
+      await key(handle, "Enter");
+      expect(onExpand).toHaveBeenCalledWith("a");
+      unmount();
+    });
+
+    it("leaves Enter alone when neither neighbour can collapse", async () => {
+      const { container, unmount } = await render();
+
+      await key(slot(container, "splitter-handle"), "Enter");
+
+      expect(slots(container, "splitter-panel").map(basisOf)).toEqual([500, 500]);
+      unmount();
+    });
+  });
+  describe("resetting", () => {
+    const dbl = (element: HTMLElement) => {
+      element.dispatchEvent(new MouseEvent("dblclick", { bubbles: true, cancelable: true }));
+
+      return nextTick();
+    };
+
+    it("puts both neighbours back to their default size on a double click", async () => {
+      const { container, unmount } = await render({
+        panels: [{ defaultSize: "300px", id: "a" }, { id: "b" }],
+      });
+      const handle = slot(container, "splitter-handle");
+
+      await key(handle, "End");
+      expect(basisOf(slots(container, "splitter-panel")[0]!)).toBeGreaterThan(300);
+
+      await dbl(handle);
+
+      expect(slots(container, "splitter-panel").map(basisOf)).toEqual([300, 700]);
+      unmount();
+    });
+
+    it("reopens a collapsed neighbour it resets", async () => {
+      const { container, unmount } = await render({
+        panels: [{ defaultSize: "300px", id: "a", isCollapsible: true, minSize: 100 }, { id: "b" }],
+      });
+      const handle = slot(container, "splitter-handle");
+
+      await key(handle, "Enter");
+      expect(slots(container, "splitter-panel")[0]!.dataset["collapsed"]).toBe("true");
+
+      await dbl(handle);
+
+      expect(slots(container, "splitter-panel")[0]!.dataset["collapsed"]).toBeUndefined();
+      expect(slots(container, "splitter-panel").map(basisOf)).toEqual([300, 700]);
+      unmount();
+    });
+
+    it("leaves the layout alone when the caller turns the gesture off", async () => {
+      const { container, unmount } = await render({
+        noReset: true,
+        panels: [{ defaultSize: "300px", id: "a" }, { id: "b" }],
+      });
+      const handle = slot(container, "splitter-handle");
+
+      await key(handle, "End");
+      const after = slots(container, "splitter-panel").map(basisOf);
+
+      await dbl(handle);
+
+      expect(slots(container, "splitter-panel").map(basisOf)).toEqual(after);
+      unmount();
+    });
+  });
 });
