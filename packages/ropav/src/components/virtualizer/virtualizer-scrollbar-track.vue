@@ -1,30 +1,25 @@
 <script setup lang="ts" vapor>
 import type { Size } from "../../utils/virtualizer-geometry";
 
+import { virtualizerVariants } from "@ropav/styles";
 import { computed } from "vue";
 
 import { useInteractionStates } from "../../composables/use-interaction-states";
 import { useMove } from "../../composables/use-move";
 import { dataAttr } from "../../utils/assertion";
 
-import { useTableContext, useTableVirtualizerContext } from "./table.context";
+import { useVirtualizerStateContext } from "./virtualizer.context";
 
 /**
- * One axis of the scrollbar a windowed table draws for itself, in place of the native one it hides.
+ * One axis of the scrollbar a windowed collection draws for itself: a track, and the thumb in it.
  *
- * A native thumb is moved by the compositor, which draws every frame at the new offset with
- * whatever rows the main thread last committed — and across a long collection those rows are
- * always somewhere else, so the body is empty for as long as the main thread takes to catch up.
- * This thumb is moved by the main thread: a pointer move sets the offset and the rows for it in
- * one task, so no frame is ever drawn with rows that were built for another offset.
- *
- * A pointer affordance and nothing more, like the native one: the box stays the focusable
- * scroller, the keyboard reaches every offset through the grid, and the wheel still scrolls it
- * natively. Hidden from assistive technology for the same reason a native scrollbar is not exposed.
+ * The thumb is moved by the main thread. Every pointer move sets the scroll offset and the rows for
+ * it in one task, so no frame is ever drawn with rows that were built for another offset — which is
+ * what a native thumb, moved by the compositor, cannot promise. See `VirtualizerScrollbar`.
  */
 const props = defineProps<{ orientation: "horizontal" | "vertical" }>();
 
-/** How thick the bar is, across its axis. */
+/** How thick the track is, across its axis. */
 const THICKNESS = 10;
 
 /** The shortest the thumb gets: a long collection would otherwise leave nothing to grab. */
@@ -36,21 +31,21 @@ const MIN_THUMB_LENGTH = 32;
  */
 const PAGE_FRACTION = 0.875;
 
-const { slots } = useTableContext();
-const virtualizer = useTableVirtualizerContext();
+const state = useVirtualizerStateContext();
 
-if (!virtualizer) {
-  throw new Error("`TableScrollbar` was rendered outside of a windowed table.");
+if (!state) {
+  throw new Error("`VirtualizerScrollbarTrack` was rendered outside of a windowed collection.");
 }
 
-const { scroll } = virtualizer;
+const { scroll } = state;
+const styles = virtualizerVariants();
 
 const isVertical = props.orientation === "vertical";
 
-/** A size measured along this bar's axis. */
+/** A size measured along this track's axis. */
 const along = (size: Size) => (isVertical ? size.height : size.width);
 
-/** A size measured across it, which is the other bar's axis. */
+/** A size measured across it, which is the other track's axis. */
 const across = (size: Size) => (isVertical ? size.width : size.height);
 
 const viewport = computed(() => along(scroll.size.value));
@@ -58,8 +53,17 @@ const viewport = computed(() => along(scroll.size.value));
 /** How far the box can scroll along this axis. */
 const range = computed(() => Math.max(0, along(scroll.scrollSize.value) - viewport.value));
 
-/** Whether the other axis overflows too, which is when the two bars leave each other a corner. */
-const hasCorner = computed(() => across(scroll.scrollSize.value) > across(scroll.size.value));
+/** Whether the box scrolls along this axis at all, rather than clipping it. */
+const scrolls = computed(() =>
+  isVertical ? scroll.box.value.scrollsY : scroll.box.value.scrollsX,
+);
+
+/** Whether the other axis has a track too, which is when the two leave each other a corner. */
+const hasCorner = computed(
+  () =>
+    (isVertical ? scroll.box.value.scrollsX : scroll.box.value.scrollsY) &&
+    across(scroll.scrollSize.value) > across(scroll.size.value),
+);
 
 const trackLength = computed(() => Math.max(0, viewport.value - (hasCorner.value ? THICKNESS : 0)));
 
@@ -88,7 +92,7 @@ const thumbOffset = computed(() =>
     : 0,
 );
 
-const isVisible = computed(() => range.value > 0);
+const isVisible = computed(() => scrolls.value && range.value > 0);
 
 const scrollTo = (value: number) => {
   scroll.scrollTo(isVertical ? { top: value } : { left: value });
@@ -100,7 +104,7 @@ const states = useInteractionStates();
  * Dragging the thumb
  * -----------------------------------------------------------------------------------------------*/
 
-/** The offset the press started from, and how far the pointer has travelled along the bar since. */
+/** The offset the press started from, and how far the pointer has travelled along the track since. */
 let startOffset = 0;
 let dragged = 0;
 
@@ -141,7 +145,7 @@ const onThumbPointerdown = (event: PointerEvent) => {
 const onTrackPointerdown = (event: PointerEvent) => {
   if (event.button !== 0) return;
 
-  // Not a focus change: the box is the scroller, and focus stays wherever it was in the grid.
+  // Not a focus change: the box is the scroller, and focus stays wherever it was in the collection.
   event.preventDefault();
 
   const track = event.currentTarget as HTMLElement;
@@ -184,18 +188,18 @@ const thumbStyle = computed(() =>
 <template>
   <div
     v-if="isVisible"
-    :class="slots.scrollbar()"
+    :class="styles.scrollbarTrack()"
     :data-orientation="orientation"
-    data-slot="table-scrollbar"
+    data-slot="virtualizer-scrollbar-track"
     :style="trackStyle"
     @pointerdown="onTrackPointerdown"
   >
     <div
-      :class="slots.scrollbarThumb()"
+      :class="styles.scrollbarThumb()"
       :data-hovered="dataAttr(states.isHovered.value)"
       :data-orientation="orientation"
       :data-pressed="dataAttr(states.isPressed.value)"
-      data-slot="table-scrollbar-thumb"
+      data-slot="virtualizer-scrollbar-thumb"
       :style="thumbStyle"
       @pointerdown="onThumbPointerdown"
       @pointerenter="states.onPointerenter"

@@ -52,11 +52,27 @@ export interface ScrollToOffset {
   top?: number;
 }
 
+/** What the container's own style says about it, as far as a scrollbar drawn for it has to know. */
+export interface ScrollBoxInfo {
+  /** Which way the inline axis runs, which decides which edge the content starts at. */
+  direction: "ltr" | "rtl";
+  /** How far the content sits in from the container's top edge. */
+  paddingTop: number;
+  /** How far the content sits in from the container's inline start edge. */
+  paddingInlineStart: number;
+  /** Whether the container scrolls along the inline axis, rather than clipping or letting content out. */
+  scrollsX: boolean;
+  /** Whether the container scrolls along the block axis. */
+  scrollsY: boolean;
+}
+
 export interface UseVirtualizerScrollReturn {
   /** The style for the wrapper that gives the container something to scroll. */
   contentStyle: ComputedRef<Record<string, string | undefined>>;
   /** Re-measures the container. Called on mount, on resize, and by tests. */
   measure: () => void;
+  /** The container's padding and which of its axes scroll, read whenever it is measured. */
+  scrollBox: ComputedRef<ScrollBoxInfo>;
   /**
    * How far the container is scrolled, as the element reports it.
    *
@@ -99,10 +115,44 @@ export const useVirtualizerScroll = (
 
   const scrollOffset = shallowRef(new Point());
   const scrollSize = shallowRef(new SizeClass());
+  const scrollBox = shallowRef<ScrollBoxInfo>({
+    direction: "ltr",
+    paddingInlineStart: 0,
+    paddingTop: 0,
+    scrollsX: false,
+    scrollsY: false,
+  });
 
   let isMeasuring = false;
 
   const getElement = () => toValue(options.element) ?? null;
+
+  /** Whether an overflow value is one the browser scrolls, rather than clips or lets out. */
+  const scrolls = (overflow: string) =>
+    overflow === "auto" || overflow === "scroll" || overflow === "overlay";
+
+  /** Reads what the container's style says about it, for the scrollbar drawn against it. */
+  const readBox = (element: HTMLElement) => {
+    const style = getComputedStyle(element);
+    const next: ScrollBoxInfo = {
+      direction: style.direction === "rtl" ? "rtl" : "ltr",
+      paddingInlineStart: Number.parseFloat(style.paddingInlineStart) || 0,
+      paddingTop: Number.parseFloat(style.paddingTop) || 0,
+      scrollsX: scrolls(style.overflowX),
+      scrollsY: scrolls(style.overflowY),
+    };
+    const current = scrollBox.value;
+
+    if (
+      current.direction !== next.direction ||
+      current.paddingInlineStart !== next.paddingInlineStart ||
+      current.paddingTop !== next.paddingTop ||
+      current.scrollsX !== next.scrollsX ||
+      current.scrollsY !== next.scrollsY
+    ) {
+      scrollBox.value = next;
+    }
+  };
 
   /** Reads where the element is scrolled to, and how far it could go. */
   const readScroll = (element: HTMLElement) => {
@@ -241,6 +291,8 @@ export const useVirtualizerScroll = (
 
     if (viewportChanged) state.viewportSize = new SizeClass(viewportWidth, viewportHeight);
 
+    readBox(element);
+
     const clientWidth = element.clientWidth;
     const clientHeight = element.clientHeight;
 
@@ -338,6 +390,7 @@ export const useVirtualizerScroll = (
       };
     }),
     measure,
+    scrollBox: computed(() => scrollBox.value),
     scrollOffset: computed(() => scrollOffset.value),
     scrollSize: computed(() => scrollSize.value),
     scrollTo,

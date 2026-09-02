@@ -1,5 +1,6 @@
+import type { ScrollBoxInfo, ScrollToOffset } from "../../composables/use-virtualizer-scroll";
 import type { ItemDropTarget } from "../../utils/dnd-types";
-import type { Size } from "../../utils/virtualizer-geometry";
+import type { Point, Size } from "../../utils/virtualizer-geometry";
 import type { Layout } from "../../utils/virtualizer-layout";
 import type { LayoutInfo, VirtualizerKey } from "../../utils/virtualizer-layout-info";
 import type { ComputedRef, ShallowRef } from "vue";
@@ -29,8 +30,24 @@ export const [useVirtualizerConfigContext, provideVirtualizerConfigContext] =
     strict: false,
   });
 
+/** The scroll box as the scrollbar a windowed collection draws for itself reads it. */
+export interface VirtualizerScrollState {
+  /** How far the box is scrolled. The inline axis runs negative in a right-to-left box. */
+  offset: ComputedRef<Point>;
+  /** The box's own size, which is what it shows of the content at once. */
+  size: ComputedRef<Size>;
+  /** The box's scrollable overflow — everything it could show. */
+  scrollSize: ComputedRef<Size>;
+  /** The box's padding, and which of its axes scroll at all. */
+  box: ComputedRef<ScrollBoxInfo>;
+  /** Scrolls the box from the main thread, so the rows and the offset are committed together. */
+  scrollTo: (offset: ScrollToOffset) => void;
+}
+
 /** What a virtualized collection hands its own parts, so they can describe themselves. */
 export interface VirtualizerStateContext {
+  /** The scroll box, for the scrollbar the collection draws in place of the native one. */
+  scroll: VirtualizerScrollState;
   /** How many items the collection holds, which is not how many are rendered. */
   itemCount: ComputedRef<number>;
   /** An item's position among all of them, zero-based. */

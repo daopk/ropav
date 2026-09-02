@@ -21,7 +21,7 @@ import { useVirtualizerScroll } from "../../composables/use-virtualizer-scroll";
 import { dataAttr } from "../../utils/assertion";
 import { createListCollection } from "../../utils/virtualizer-collection";
 import { provideSeparatorContext } from "../separator/separator.context";
-import { VirtualizerItem } from "../virtualizer";
+import { VirtualizerItem, VirtualizerScrollbar } from "../virtualizer";
 import {
   provideVirtualizerStateContext,
   useVirtualizerConfigContext,
@@ -343,7 +343,7 @@ if (owner) {
   useCollectionAutoFocus({ autoFocus: owner.autoFocus, element, keyboard, selection });
 }
 
-if (virtualizer && virtualizerConfig) {
+if (virtualizer && virtualizerConfig && scroll) {
   provideVirtualizerStateContext({
     getIndex: (key) => collection.getIndex(key),
     getDropTargetLayoutInfo: virtualizerConfig.layout.value.getDropTargetLayoutInfo?.bind(
@@ -351,6 +351,13 @@ if (virtualizer && virtualizerConfig) {
     ),
     getLayoutInfo: virtualizer.getLayoutInfo,
     itemCount: computed(() => source.value?.itemCount ?? 0),
+    scroll: {
+      box: scroll.scrollBox,
+      offset: scroll.scrollOffset,
+      scrollSize: scroll.scrollSize,
+      scrollTo: scroll.scrollTo,
+      size: virtualizer.size,
+    },
     shouldObserveItemSize: virtualizerConfig.shouldObserveItemSize,
     updateItemSize: virtualizer.updateItemSize,
   });
@@ -371,6 +378,15 @@ const isEmpty = computed(() => collection.size.value === 0);
  * rendered, so swapping the options out for the empty state would leave it empty for good.
  */
 const hasEmptySlot = computed(() => Boolean(callerSlots["empty"]));
+
+/**
+ * A windowed listbox hides the native scrollbar and draws its own in the content wrapper below: a
+ * native thumb is moved by the compositor, a frame ahead of the options, and across a long
+ * collection that frame shows an empty list. Wheel, trackpad and keyboard scrolling stay native.
+ */
+const rootStyle = computed(() =>
+  isVirtualized.value ? { scrollbarWidth: "none" as const } : undefined,
+);
 </script>
 
 <template>
@@ -390,6 +406,7 @@ const hasEmptySlot = computed(() => Boolean(callerSlots["empty"]));
     data-orientation="vertical"
     data-slot="list-box"
     role="listbox"
+    :style="rootStyle"
     :tabindex="keyboard.collectionTabIndex.value"
     @dragenter="droppable?.handlers.onDragenter($event)"
     @dragleave="droppable?.handlers.onDragleave($event)"
@@ -410,6 +427,7 @@ const hasEmptySlot = computed(() => Boolean(callerSlots["empty"]));
       <slot name="empty" />
     </div>
     <div v-if="isVirtualized" role="presentation" :style="scroll?.contentStyle.value">
+      <VirtualizerScrollbar />
       <template v-for="view in virtualizer?.visibleViews.value" :key="view.key">
         <ListBoxDropIndicator
           v-if="rendersDropIndicators"

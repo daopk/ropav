@@ -22,13 +22,13 @@ import { composeSlotClassName } from "../../utils/compose";
 import { TreeDropTargetDelegate } from "../../utils/dnd-tree-drop-target-delegate";
 import { announce } from "../../utils/live-announcer";
 import { Size } from "../../utils/virtualizer-geometry";
+import VirtualizerScrollbar from "../virtualizer/virtualizer-scrollbar.vue";
 import {
   provideVirtualizerStateContext,
   useVirtualizerConfigContext,
 } from "../virtualizer/virtualizer.context";
 
 import { toTableDragCollection } from "./table-drag-collection";
-import TableScrollbar from "./table-scrollbar.vue";
 import {
   provideTableColumnLayoutContext,
   provideTableGridContext,
@@ -461,12 +461,6 @@ if (virtualizer && collection.virtualized && scroll) {
     contentStyle: scroll.contentStyle,
     getLayoutInfo: virtualizer.getLayoutInfo,
     rowViews,
-    scroll: {
-      offset: scroll.scrollOffset,
-      scrollSize: scroll.scrollSize,
-      scrollTo: scroll.scrollTo,
-      size: virtualizer.size,
-    },
     setHasLoader: (value) => {
       hasLoader.value = value;
     },
@@ -482,6 +476,13 @@ if (virtualizer && collection.virtualized && scroll) {
     getIndex: (key) => collection.rows.getIndex(key),
     getLayoutInfo: virtualizer.getLayoutInfo,
     itemCount: computed(() => collection.rows.size.value),
+    scroll: {
+      box: scroll.scrollBox,
+      offset: scroll.scrollOffset,
+      scrollSize: scroll.scrollSize,
+      scrollTo: scroll.scrollTo,
+      size: virtualizer.size,
+    },
     shouldObserveItemSize: virtualizerConfig!.shouldObserveItemSize,
     updateItemSize: virtualizer.updateItemSize,
   });
@@ -532,37 +533,15 @@ watch(sortDescription, (description) => {
  * held to the widths it was given. Virtualized there is no CSS table to hold: the elements are
  * divs, every cell is placed absolutely, and `min-content` on a div would collapse it.
  *
- * A windowed table hides the native scrollbar and draws its own instead. A native thumb is moved
- * by the compositor, which draws every frame at the new offset with whatever rows the main thread
- * last committed — across a long collection those are always off screen, so the body is empty
- * until the main thread catches up. The table's own thumb moves the offset from the main thread,
- * and the rows with it. Wheel, trackpad and keyboard scrolling stay native.
+ * A windowed table hides the native scrollbar and draws its own in the content wrapper below: a
+ * native thumb is moved by the compositor, a frame ahead of the rows, and across a long collection
+ * that frame shows an empty body. Wheel, trackpad and keyboard scrolling stay native.
  */
 const tableStyle = computed(() => {
   if (isVirtualized) return { scrollbarWidth: "none" };
 
   return layout ? { tableLayout: "fixed", width: "min-content" } : undefined;
 });
-
-/**
- * Where the scrollbars hang: a box of no height, as wide as the viewport, stuck to the viewport's
- * top and inline start. A bar placed at its edges therefore sits at the viewport's edges however
- * far the content has been scrolled along either axis. It lives inside the content wrapper rather
- * than beside it because a stuck box cannot leave its containing block, and only the wrapper is
- * tall enough to stay stuck to for the whole of the scroll.
- */
-const scrollbarsStyle = computed(() =>
-  virtualizer
-    ? {
-        height: "0px",
-        "inset-inline-start": "0px",
-        position: "sticky" as const,
-        top: "0px",
-        width: `${virtualizer.size.value.width}px`,
-        zIndex: 2,
-      }
-    : undefined,
-);
 </script>
 
 <template>
@@ -592,10 +571,7 @@ const scrollbarsStyle = computed(() =>
     @keydown.capture="typeahead.onKeydownCapture"
   >
     <div v-if="isVirtualized" role="presentation" :style="scroll?.contentStyle.value">
-      <div aria-hidden="true" data-slot="table-scrollbars" :style="scrollbarsStyle">
-        <TableScrollbar orientation="vertical" />
-        <TableScrollbar orientation="horizontal" />
-      </div>
+      <VirtualizerScrollbar />
       <slot />
     </div>
     <slot v-else />

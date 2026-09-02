@@ -63,11 +63,11 @@ const centreOf = (element: Element) => {
 
 const scrollbar = (grid: HTMLElement, orientation: "horizontal" | "vertical") =>
   grid.querySelector<HTMLElement>(
-    `[data-slot="table-scrollbar"][data-orientation="${orientation}"]`,
+    `[data-slot="virtualizer-scrollbar-track"][data-orientation="${orientation}"]`,
   );
 
 const thumbOf = (bar: HTMLElement) =>
-  bar.querySelector<HTMLElement>('[data-slot="table-scrollbar-thumb"]')!;
+  bar.querySelector<HTMLElement>('[data-slot="virtualizer-scrollbar-thumb"]')!;
 
 /**
  * A drag on a thumb, moved on `window` where the move composable listens.
@@ -384,7 +384,7 @@ describe("Table virtualization (browser)", () => {
     it("leaves a plain table its native scrollbar", async () => {
       const { container, grid, unmount } = await render({ withoutVirtualizer: true });
 
-      expect(container.querySelector('[data-slot="table-scrollbar"]')).toBeNull();
+      expect(container.querySelector('[data-slot="virtualizer-scrollbar"]')).toBeNull();
       expect(getComputedStyle(grid).scrollbarWidth).not.toBe("none");
 
       unmount();

@@ -5,9 +5,7 @@ import type { UseDraggableItemReturn } from "../../composables/use-draggable-ite
 import type { UseDroppableCollectionStateReturn } from "../../composables/use-droppable-collection-state";
 import type { UseSelectionManagerReturn } from "../../composables/use-selection-manager";
 import type { VirtualizerView } from "../../composables/use-virtualizer";
-import type { ScrollToOffset } from "../../composables/use-virtualizer-scroll";
 import type { VirtualizerTableCollection } from "../../utils/virtualizer-collection";
-import type { Point, Size } from "../../utils/virtualizer-geometry";
 import type { LayoutInfo, VirtualizerKey } from "../../utils/virtualizer-layout-info";
 import type { TableSortDescriptor, TableSortDirection } from "./table.types";
 import type { UseGridKeyboardReturn } from "./use-grid-keyboard";
@@ -178,18 +176,6 @@ export const [useTableColumnContext, provideTableColumnContext] = createContext<
   { name: "TableColumnContext" },
 );
 
-/** The scroll box as the scrollbars a windowed table draws for itself read it. */
-export interface TableScrollState {
-  /** How far the box is scrolled. The inline axis runs negative in a right-to-left box. */
-  offset: ComputedRef<Point>;
-  /** The box's own size, which is what it shows of the content at once. */
-  size: ComputedRef<Size>;
-  /** The box's scrollable overflow — everything it could show. */
-  scrollSize: ComputedRef<Size>;
-  /** Scrolls the box from the main thread, so the rows and the offset are committed together. */
-  scrollTo: (offset: ScrollToOffset) => void;
-}
-
 export interface TableVirtualizerContext {
   /**
    * The collection the layout walks. It is what names the header, the body and each cell, so a
@@ -201,7 +187,6 @@ export interface TableVirtualizerContext {
   rowViews: ComputedRef<VirtualizerView[]>;
   /** What gives the scroll box the height of the whole collection rather than of the window. */
   contentStyle: ComputedRef<Record<string, string | number | undefined>>;
-  scroll: TableScrollState;
   /**
    * The rows' data, handed **up** from the body.
    *

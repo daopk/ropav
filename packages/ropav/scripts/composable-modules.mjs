@@ -113,6 +113,7 @@ export const HOST_EXPORTED_MODULES = {
   "use-range-calendar": ["range-calendar"],
   "use-select": ["autocomplete", "select"],
   "use-toolbar": ["toolbar"],
+  "use-virtualizer-scroll": ["virtualizer"],
 };
 
 /**

@@ -55,6 +55,43 @@ const press = (element: HTMLElement, key: string) => {
   element.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key }));
 };
 
+const POINTER = { bubbles: true, button: 0, pointerId: 1, pointerType: "mouse" } as const;
+
+const scrollbar = (listbox: HTMLElement, orientation: "horizontal" | "vertical") =>
+  listbox.querySelector<HTMLElement>(
+    `[data-slot="virtualizer-scrollbar-track"][data-orientation="${orientation}"]`,
+  );
+
+const thumbOf = (track: HTMLElement) =>
+  track.querySelector<HTMLElement>('[data-slot="virtualizer-scrollbar-thumb"]')!;
+
+/** The top edge of the box's scrollport, inside its border. */
+const scrollportTop = (listbox: HTMLElement) =>
+  listbox.getBoundingClientRect().top + listbox.clientTop;
+
+/**
+ * A drag on the thumb, moved on `window` where the move composable listens. Only a tick is
+ * awaited after the move, on purpose: the options for the new offset have to be in the DOM before
+ * the browser can draw a frame at it. Returns the release.
+ */
+const dragThumb = async (thumb: HTMLElement, by: number) => {
+  const box = thumb.getBoundingClientRect();
+  const x = box.left + box.width / 2;
+  const y = box.top + box.height / 2;
+
+  thumb.dispatchEvent(new PointerEvent("pointerdown", { ...POINTER, clientX: x, clientY: y }));
+  window.dispatchEvent(
+    new PointerEvent("pointermove", { ...POINTER, clientX: x, clientY: y + by }),
+  );
+  await nextTick();
+
+  return () => {
+    window.dispatchEvent(
+      new PointerEvent("pointerup", { ...POINTER, clientX: x, clientY: y + by }),
+    );
+  };
+};
+
 /**
  * Everything here needs a real layout: the container is only scrollable because the stylesheet
  * applies `overflow-y-auto`, the window only moves because the browser fires real scroll events,
@@ -147,6 +184,82 @@ describe("ListBox virtualization (browser)", () => {
     await expectNoA11yViolations(container, PALETTE_CONTRAST_DEBT);
 
     unmount();
+  });
+
+  /**
+   * The scrollbar is the listbox's own, shared with the table: a native thumb is moved by the
+   * compositor a frame ahead of the options, so a fast drag across a long collection shows an
+   * empty list. What is particular to a listbox is its padding — the options start inside it, and
+   * the bar has to hang from the box's own corner all the same.
+   */
+  describe("scrollbar", () => {
+    it("hides the native scrollbar and draws its own down the edge of the padded box", async () => {
+      const { listbox, unmount } = await render();
+      const track = scrollbar(listbox, "vertical")!;
+      const box = listbox.getBoundingClientRect();
+      const rect = track.getBoundingClientRect();
+
+      expect(getComputedStyle(listbox).scrollbarWidth).toBe("none");
+      // Not exposed, as the native one is not: the listbox stays the focusable scroller.
+      expect(track.closest('[aria-hidden="true"]')).not.toBeNull();
+      // Along the box's own edge and the whole of its height, not the options' — the padding the
+      // options sit inside is taken back so the bar hangs from the box's corner.
+      expect(rect.right).toBeCloseTo(box.left + listbox.clientLeft + listbox.clientWidth, 0);
+      expect(rect.top).toBeCloseTo(scrollportTop(listbox), 0);
+      expect(rect.height).toBeCloseTo(listbox.clientHeight, 0);
+      // The box clips sideways rather than scrolling, so that axis gets no track.
+      expect(getComputedStyle(listbox).overflowX).not.toMatch(/auto|scroll/);
+      expect(scrollbar(listbox, "horizontal")).toBeNull();
+
+      unmount();
+    });
+
+    it("moves the options with the thumb in the same tick, with no frame in between", async () => {
+      const { listbox, unmount } = await render();
+      const release = await dragThumb(thumbOf(scrollbar(listbox, "vertical")!), 100);
+      // A hundred pixels of the thumb's travel — the track less the thumb, held to its floor — in
+      // content: the content less the box.
+      const travel = listbox.clientHeight - 32;
+      const range = listbox.scrollHeight - listbox.clientHeight;
+
+      expect(listbox.scrollTop).toBeCloseTo((100 / travel) * range, -1);
+
+      // The options already in the DOM cover the box at the new offset.
+      const options = [...listbox.querySelectorAll<HTMLElement>('[role="option"]')];
+      const top = scrollportTop(listbox);
+
+      expect(options[0]!.getBoundingClientRect().top).toBeLessThanOrEqual(top);
+      expect(options.at(-1)!.getBoundingClientRect().bottom).toBeGreaterThanOrEqual(
+        top + listbox.clientHeight,
+      );
+
+      release();
+      unmount();
+    });
+
+    it("follows a scroll the box made on its own", async () => {
+      const { listbox, scrollTo, unmount } = await render();
+      const thumb = thumbOf(scrollbar(listbox, "vertical")!);
+
+      await scrollTo(listbox.scrollHeight);
+
+      // At the end of the content, the thumb is at the end of the track.
+      expect(thumb.getBoundingClientRect().bottom).toBeCloseTo(
+        scrollportTop(listbox) + listbox.clientHeight,
+        0,
+      );
+
+      unmount();
+    });
+
+    it("leaves a plain listbox its native scrollbar", async () => {
+      const { container, listbox, unmount } = await render({ withoutVirtualizer: true });
+
+      expect(container.querySelector('[data-slot="virtualizer-scrollbar"]')).toBeNull();
+      expect(getComputedStyle(listbox).scrollbarWidth).not.toBe("none");
+
+      unmount();
+    });
   });
 });
 
