@@ -54,6 +54,7 @@ const props = withDefaults(defineProps<ComboBoxFixtureProps>(), {
   placeholder: "Search animals...",
   selectionMode: undefined,
   value: undefined,
+  size: undefined,
   variant: undefined,
   withCustomIndicator: undefined,
   withCustomValue: undefined,
@@ -97,6 +98,7 @@ const emit = defineEmits<{
       :menu-trigger="props.menuTrigger"
       :name="props.name"
       :selection-mode="props.selectionMode"
+      :size="props.size"
       :value="props.value"
       :variant="props.variant"
       @change="emit('change', $event)"

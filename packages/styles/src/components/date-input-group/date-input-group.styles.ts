@@ -5,6 +5,7 @@ import { tv } from "tailwind-variants";
 export const dateInputGroupVariants = tv({
   defaultVariants: {
     fullWidth: false,
+    size: "md",
     variant: "primary",
   },
   slots: {
@@ -20,6 +21,15 @@ export const dateInputGroupVariants = tv({
       false: {},
       true: {
         base: "date-input-group--full-width",
+      },
+    },
+    size: {
+      lg: {
+        base: "date-input-group--lg",
+      },
+      md: {},
+      sm: {
+        base: "date-input-group--sm",
       },
     },
     variant: {

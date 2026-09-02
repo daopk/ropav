@@ -120,7 +120,7 @@
 }
 
 .select__value {
-  @apply flex-1 text-start text-base wrap-break-word text-current sm:text-sm;
+  @apply flex-1 text-start wrap-break-word text-current;
 
   &[data-placeholder="true"] {
     @apply text-field-placeholder;
@@ -221,6 +221,34 @@
     [data-slot="list-box-item-indicator"]
     [data-slot="list-box-item-indicator--checkmark"] {
     @apply transition-none;
+  }
+}
+
+/* ==========================================================================
+   Size variants
+   ========================================================================== */
+
+/* The trigger's own metrics, and the option rows in a popover that is portalled out of this tree -
+ * which is why the popover carries its own size class rather than being reached from the base. */
+.select--sm .select__trigger {
+  @apply min-h-8 field-line-sm;
+}
+
+.select--lg .select__trigger {
+  @apply min-h-10 field-line-lg;
+}
+
+.select__popover--sm {
+  [data-slot="list-box-item"] {
+    @apply min-h-8 py-1;
+  }
+}
+
+.select__popover--lg {
+  @apply text-base;
+
+  [data-slot="list-box-item"] {
+    @apply min-h-10 py-2;
   }
 }
 

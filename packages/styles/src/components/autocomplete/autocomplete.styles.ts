@@ -5,6 +5,7 @@ import { tv } from "tailwind-variants";
 export const autocompleteVariants = tv({
   defaultVariants: {
     fullWidth: false,
+    size: "md",
     variant: "primary",
   },
   slots: {
@@ -22,6 +23,17 @@ export const autocompleteVariants = tv({
       true: {
         base: "autocomplete--full-width",
         trigger: "autocomplete__trigger--full-width",
+      },
+    },
+    size: {
+      lg: {
+        base: "autocomplete--lg",
+        popover: "autocomplete__popover--lg",
+      },
+      md: {},
+      sm: {
+        base: "autocomplete--sm",
+        popover: "autocomplete__popover--sm",
       },
     },
     variant: {

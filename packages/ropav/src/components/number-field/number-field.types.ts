@@ -14,6 +14,8 @@ export interface NumberFieldRootProps {
   class?: string;
   /** Visual variant. @default "primary" */
   variant?: NumberFieldVariants["variant"];
+  /** How tall the field stands, matching a button of the same size. @default "md" */
+  size?: NumberFieldVariants["size"];
   /** Whether the field stretches to fill its container. */
   fullWidth?: boolean;
   /** The number in the field. Makes it controlled. `null` means no number at all. */

@@ -157,7 +157,7 @@ const selectedText = computed(() => {
   return new Intl.ListFormat(locale.value.locale).format(texts);
 });
 
-const styles = computed(() => comboBoxVariants({ fullWidth: props.fullWidth }));
+const styles = computed(() => comboBoxVariants({ fullWidth: props.fullWidth, size: props.size }));
 
 const isDisabled = computed(() => Boolean(props.isDisabled));
 
@@ -182,9 +182,12 @@ provideFieldErrorContext({ validation: state.displayValidation });
  */
 provideTextFieldControlContext(comboBox.control);
 
-// Carries the variant alone, which is the one thing the `Input` inside styles itself from. The
-// React build routes it through its own combo box context for the same purpose.
-provideTextFieldContext({ variant: computed(() => props.variant) });
+// Carries what the `Input` inside styles itself from - its variant and its size, and nothing
+// else. The React build routes the variant through its own combo box context for the same purpose.
+provideTextFieldContext({
+  size: computed(() => props.size),
+  variant: computed(() => props.variant),
+});
 
 provideComboBoxContext({
   comboBox,

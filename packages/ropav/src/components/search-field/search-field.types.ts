@@ -13,6 +13,8 @@ export interface SearchFieldRootProps {
   class?: string;
   /** Visual variant. @default "primary" */
   variant?: SearchFieldVariants["variant"];
+  /** How tall the field stands, matching a button of the same size. @default "md" */
+  size?: SearchFieldVariants["size"];
   /** Whether the field stretches to fill its container. */
   fullWidth?: boolean;
   /** Text in the field. Makes it controlled. */

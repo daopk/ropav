@@ -192,3 +192,27 @@
 .search-field__group--full-width {
   @apply w-full;
 }
+
+/* ==========================================================================
+   Size variants
+   ========================================================================== */
+
+.search-field--sm {
+  .search-field__group {
+    @apply h-8;
+  }
+
+  .search-field__input {
+    @apply field-line-sm;
+  }
+}
+
+.search-field--lg {
+  .search-field__group {
+    @apply h-10;
+  }
+
+  .search-field__input {
+    @apply field-line-lg;
+  }
+}

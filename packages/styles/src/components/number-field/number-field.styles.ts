@@ -5,6 +5,7 @@ import { tv } from "tailwind-variants";
 export const numberFieldVariants = tv({
   defaultVariants: {
     fullWidth: false,
+    size: "md",
     variant: "primary",
   },
   slots: {
@@ -20,6 +21,15 @@ export const numberFieldVariants = tv({
       true: {
         base: "number-field--full-width",
         group: "number-field__group--full-width",
+      },
+    },
+    size: {
+      lg: {
+        base: "number-field--lg",
+      },
+      md: {},
+      sm: {
+        base: "number-field--sm",
       },
     },
     variant: {

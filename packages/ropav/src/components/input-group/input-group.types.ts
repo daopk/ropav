@@ -8,6 +8,11 @@ export interface InputGroupRootProps {
   class?: string;
   /** Visual variant. Taken from the surrounding field when unset. @default "primary" */
   variant?: InputGroupVariants["variant"];
+  /**
+   * How tall the group stands, matching a button of the same size. Taken from the surrounding
+   * field when unset. @default "md"
+   */
+  size?: InputGroupVariants["size"];
   /** Whether the group stretches to fill its container. */
   fullWidth?: boolean;
   /**

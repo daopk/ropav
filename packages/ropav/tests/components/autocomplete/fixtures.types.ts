@@ -34,6 +34,7 @@ export interface AutocompleteFixtureProps {
   form?: string;
   placeholder?: string;
   variant?: "primary" | "secondary";
+  size?: "sm" | "md" | "lg";
   fullWidth?: boolean;
   /** Whether the search field narrows the options at all. */
   withFilter?: boolean;

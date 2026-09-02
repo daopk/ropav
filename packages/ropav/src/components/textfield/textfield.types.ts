@@ -12,6 +12,11 @@ export interface TextFieldRootProps {
   class?: string;
   /** Visual variant handed down to the control inside. @default "primary" */
   variant?: "primary" | "secondary";
+  /**
+   * How tall the control inside stands, matching a button of the same size. Handed to the control
+   * unless it declares one of its own. @default "md"
+   */
+  size?: "sm" | "md" | "lg";
   /** Whether the field stretches to fill its container. */
   fullWidth?: boolean;
   /** Text in the field. Makes it controlled. */

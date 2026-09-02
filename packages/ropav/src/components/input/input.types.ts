@@ -14,6 +14,11 @@ export interface InputRootProps {
   value?: string;
   /** Visual variant. Taken from the surrounding field when unset. @default "primary" */
   variant?: InputVariants["variant"];
+  /**
+   * How tall the control stands, matching a button of the same size. Taken from the surrounding
+   * field when unset. @default "md"
+   */
+  size?: InputVariants["size"];
   /** Whether the control stretches to fill its container. */
   fullWidth?: boolean;
   /**

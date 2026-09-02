@@ -19,6 +19,7 @@ const props = withDefaults(defineProps<InputGroupRootProps>(), {
   isDisabled: undefined,
   isInvalid: undefined,
   isReadOnly: undefined,
+  size: undefined,
   variant: undefined,
 });
 
@@ -37,11 +38,16 @@ const setElement = (next: unknown) => {
 // Each named apart from the prop it resolves: an identifier matching a prop name resolves to
 // the prop inside the template, which would silently drop the value coming from the field.
 const resolvedVariant = computed(() => props.variant ?? textField?.variant.value);
+const resolvedSize = computed(() => props.size ?? textField?.size.value);
 const resolvedIsDisabled = computed(() => props.isDisabled ?? control?.isDisabled.value ?? false);
 const resolvedIsInvalid = computed(() => props.isInvalid ?? control?.isInvalid.value ?? false);
 
 const slots = computed(() =>
-  inputGroupVariants({ fullWidth: props.fullWidth, variant: resolvedVariant.value }),
+  inputGroupVariants({
+    fullWidth: props.fullWidth,
+    size: resolvedSize.value,
+    variant: resolvedVariant.value,
+  }),
 );
 
 provideInputGroupContext({ slots });

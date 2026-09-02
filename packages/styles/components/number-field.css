@@ -238,3 +238,62 @@
 .number-field__group--full-width {
   @apply w-full;
 }
+
+/* ==========================================================================
+   Size variants
+   ========================================================================== */
+
+/* The stepper column stays 4px wider than the field is tall, as it is at `md`. */
+.number-field--sm {
+  .number-field__group {
+    @apply h-8;
+
+    &:has([slot="decrement"]) {
+      grid-template-columns: 36px 1fr;
+    }
+
+    &:has([slot="increment"]) {
+      grid-template-columns: 1fr 36px;
+    }
+
+    &:has([slot="decrement"]):has([slot="increment"]) {
+      grid-template-columns: 36px 1fr 36px;
+    }
+  }
+
+  .number-field__input {
+    @apply field-line-sm;
+  }
+
+  .number-field__increment-button,
+  .number-field__decrement-button {
+    @apply w-9;
+  }
+}
+
+.number-field--lg {
+  .number-field__group {
+    @apply h-10;
+
+    &:has([slot="decrement"]) {
+      grid-template-columns: 44px 1fr;
+    }
+
+    &:has([slot="increment"]) {
+      grid-template-columns: 1fr 44px;
+    }
+
+    &:has([slot="decrement"]):has([slot="increment"]) {
+      grid-template-columns: 44px 1fr 44px;
+    }
+  }
+
+  .number-field__input {
+    @apply field-line-lg;
+  }
+
+  .number-field__increment-button,
+  .number-field__decrement-button {
+    @apply w-11;
+  }
+}

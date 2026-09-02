@@ -224,6 +224,39 @@ export const Default: Story = {
   }),
 };
 
+/**
+ * The three heights a button stands at, so a combo box and a button of the same size line up.
+ *
+ * The popover follows the field: an option row is as tall as the control it dropped from, and a
+ * `lg` one reads at 16px throughout rather than switching to 14px in the list.
+ */
+export const Sizes: Story = {
+  render: () => ({
+    components,
+    setup: () => ({ byName, items: SHORT_ANIMALS, sizes: ["sm", "md", "lg"] as const }),
+    template: `
+      <div class="flex flex-col gap-4">
+        <div v-for="size in sizes" :key="size" class="flex items-center gap-3">
+          <ComboBox
+            v-slot="{items: matches}"
+            class="w-[200px]"
+            :item-text-value="byName"
+            :items="items"
+            :size="size"
+          >
+            <ComboBoxInputGroup>
+              <Input placeholder="Search animals..." />
+              <ComboBoxTrigger />
+            </ComboBoxInputGroup>
+            ${popoverTemplate}
+          </ComboBox>
+          <Button :size="size" variant="secondary">Button {{ size }}</Button>
+        </div>
+      </div>
+    `,
+  }),
+};
+
 export const FullWidth: Story = {
   render: () => ({
     components,

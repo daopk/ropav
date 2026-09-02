@@ -86,6 +86,32 @@ export const Default: Story = {
  * Named by an element instead of by a string, which is how a menu under a heading takes its name
  * without repeating it.
  */
+/** A row as tall as a field of the same size, for a menu standing beside one. */
+export const Sizes: Story = {
+  render: () => ({
+    components,
+    setup: () => ({ sizes: ["sm", "md", "lg"] as const }),
+    template: `
+      <div class="flex items-start gap-4">
+        <Surface v-for="size in sizes" :key="size" class="w-52 p-0">
+          <Menu :aria-label="'File actions ' + size" :size="size">
+            <MenuItem id="new-file" text-value="New file">
+              <Label>New file</Label>
+            </MenuItem>
+            <MenuItem id="copy-link" text-value="Copy link">
+              <Label>Copy link</Label>
+            </MenuItem>
+            <Separator />
+            <MenuItem id="delete-file" text-value="Delete file" variant="danger">
+              <Label>Delete file</Label>
+            </MenuItem>
+          </Menu>
+        </Surface>
+      </div>
+    `,
+  }),
+};
+
 export const NamedByAHeading: Story = {
   render: () => ({
     components,

@@ -65,7 +65,7 @@ const field = useNumberField({
 });
 
 const slots = computed(() =>
-  numberFieldVariants({ fullWidth: props.fullWidth, variant: props.variant }),
+  numberFieldVariants({ fullWidth: props.fullWidth, size: props.size, variant: props.variant }),
 );
 
 provideFieldIdsContext(field.fieldIds);

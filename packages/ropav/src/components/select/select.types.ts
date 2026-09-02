@@ -68,6 +68,8 @@ export interface SelectRootProps<T = unknown> {
   ariaLabelledby?: string;
   ariaDescribedby?: string;
   variant?: SelectVariants["variant"];
+  /** How tall the trigger stands, matching a button of the same size. @default "md" */
+  size?: SelectVariants["size"];
   fullWidth?: boolean;
 }
 

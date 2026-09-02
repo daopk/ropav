@@ -23,3 +23,22 @@
     @apply ms-[3%] w-[94%];
   }
 }
+
+/* ==========================================================================
+   Size variants
+   ========================================================================== */
+
+/* A row is as tall as a field of the same size, so a collection standing beside one lines up. */
+.list-box--sm {
+  [data-slot="list-box-item"] {
+    @apply min-h-8 py-1;
+  }
+}
+
+.list-box--lg {
+  @apply text-base;
+
+  [data-slot="list-box-item"] {
+    @apply min-h-10 py-2;
+  }
+}

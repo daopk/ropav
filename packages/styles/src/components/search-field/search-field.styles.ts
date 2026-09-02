@@ -5,6 +5,7 @@ import { tv } from "tailwind-variants";
 export const searchFieldVariants = tv({
   defaultVariants: {
     fullWidth: false,
+    size: "md",
     variant: "primary",
   },
   slots: {
@@ -20,6 +21,15 @@ export const searchFieldVariants = tv({
       true: {
         base: "search-field--full-width",
         group: "search-field__group--full-width",
+      },
+    },
+    size: {
+      lg: {
+        base: "search-field--lg",
+      },
+      md: {},
+      sm: {
+        base: "search-field--sm",
       },
     },
     variant: {

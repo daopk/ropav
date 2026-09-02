@@ -106,7 +106,7 @@ const selectedText = computed(() => {
 });
 
 const styles = computed(() =>
-  selectVariants({ fullWidth: props.fullWidth, variant: props.variant }),
+  selectVariants({ fullWidth: props.fullWidth, size: props.size, variant: props.variant }),
 );
 
 provideFieldIdsContext(select.fieldIds.context);

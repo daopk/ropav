@@ -126,6 +126,36 @@ const FILE_ACTIONS = [
   },
 ];
 
+/** A row as tall as a field of the same size, for a list standing beside one. */
+export const Sizes: Story = {
+  render: () => ({
+    components,
+    setup: () => ({ sizes: ["sm", "md", "lg"] as const, users: USERS.slice(0, 3) }),
+    template: `
+      <div class="flex items-start gap-4">
+        <ListBox
+          v-for="size in sizes"
+          :key="size"
+          :aria-label="'Users ' + size"
+          class="w-[180px]"
+          selection-mode="single"
+          :size="size"
+        >
+          <ListBoxItem
+            v-for="user in users"
+            :id="user.id"
+            :key="user.id"
+            :text-value="user.name"
+          >
+            <Label>{{ user.name }}</Label>
+            <ListBoxItemIndicator />
+          </ListBoxItem>
+        </ListBox>
+      </div>
+    `,
+  }),
+};
+
 export const WithSections: Story = {
   render: () => ({
     components,

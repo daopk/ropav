@@ -204,6 +204,23 @@ describe("Input", () => {
       unmount();
     });
 
+    it("takes the field's size when it sets none of its own", () => {
+      const { control, unmount } = render({ fieldSize: "sm", inField: true });
+
+      expect(control).toHaveClass("input--sm");
+
+      unmount();
+    });
+
+    it("lets its own size win over the field's", () => {
+      const { control, unmount } = render({ fieldSize: "sm", inField: true, size: "lg" });
+
+      expect(control).toHaveClass("input--lg");
+      expect(control).not.toHaveClass("input--sm");
+
+      unmount();
+    });
+
     it("lets its own variant win over the field's", () => {
       const { control, unmount } = render({
         fieldVariant: "secondary",

@@ -174,6 +174,26 @@
   }
 }
 
+/* ==========================================================================
+   Size variants
+   ========================================================================== */
+
+/* The input inside sizes itself from the context the root provides, so only the option rows are
+ * left - reached from the popover's own class, since it is teleported out of this tree. */
+.combo-box__popover--sm {
+  [data-slot="list-box-item"] {
+    @apply min-h-8 py-1;
+  }
+}
+
+.combo-box__popover--lg {
+  @apply text-base;
+
+  [data-slot="list-box-item"] {
+    @apply min-h-10 py-2;
+  }
+}
+
 /* Full width modifier */
 .combo-box--full-width {
   @apply w-full;

@@ -34,11 +34,13 @@ const setElement = (next: unknown) => {
 };
 
 const resolvedVariant = computed(() => props.variant ?? textField?.variant.value);
+const resolvedSize = computed(() => props.size ?? textField?.size.value);
 
 const styles = computed(() =>
   textAreaVariants({
     class: props.class,
     fullWidth: props.fullWidth,
+    size: resolvedSize.value,
     variant: resolvedVariant.value,
   }),
 );

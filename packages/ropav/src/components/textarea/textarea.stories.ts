@@ -41,6 +41,20 @@ export const Variants: Story = {
   }),
 };
 
+/** The same three sizes the rest of the fields take, scaling the padding and the type. */
+export const Sizes: Story = {
+  render: () => ({
+    components,
+    template: `
+      <div class="flex w-[280px] flex-col gap-3">
+        <TextArea full-width placeholder="Small" size="sm" />
+        <TextArea full-width placeholder="Medium" size="md" />
+        <TextArea full-width placeholder="Large" size="lg" />
+      </div>
+    `,
+  }),
+};
+
 export const FullWidth: Story = {
   render: () => ({
     components,

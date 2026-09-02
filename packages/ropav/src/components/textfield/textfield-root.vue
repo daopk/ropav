@@ -74,7 +74,10 @@ const field = useTextField({
 
 provideFieldIdsContext(field.fieldIds);
 provideTextFieldControlContext(field);
-provideTextFieldContext({ variant: computed(() => props.variant) });
+provideTextFieldContext({
+  size: computed(() => props.size),
+  variant: computed(() => props.variant),
+});
 provideFieldErrorContext({ validation: field.validation.displayValidation });
 
 const styles = computed(() =>

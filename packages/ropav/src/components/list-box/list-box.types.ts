@@ -49,6 +49,8 @@ export interface ListBoxRootProps<T = unknown> {
   disallowEmptySelection?: boolean;
   /** Visual variant. */
   variant?: ListBoxVariants["variant"];
+  /** How tall a row stands, matching a field of the same size. @default "md" */
+  size?: ListBoxVariants["size"];
   /** Drag and drop behaviour, from `useDragAndDrop`. */
   dragAndDropHooks?: DragAndDropHooks;
 }

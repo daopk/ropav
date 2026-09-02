@@ -8,6 +8,8 @@ export interface ColorInputGroupRootProps {
   class?: string;
   /** Visual variant. @default "primary" */
   variant?: ColorInputGroupVariants["variant"];
+  /** How tall the group stands, matching a button of the same size. @default "md" */
+  size?: ColorInputGroupVariants["size"];
   /** Whether the group stretches to fill its container. */
   fullWidth?: boolean;
   /**

@@ -5,6 +5,7 @@ import { tv } from "tailwind-variants";
 export const comboBoxVariants = tv({
   defaultVariants: {
     fullWidth: false,
+    size: "md",
   },
   slots: {
     base: "combo-box",
@@ -19,6 +20,17 @@ export const comboBoxVariants = tv({
       true: {
         base: "combo-box--full-width",
         inputGroup: "combo-box__input-group--full-width",
+      },
+    },
+    /* The field itself is the `Input` inside, which takes its own size class from the context the
+     * root provides. Only the popover is left, and it is teleported out of this tree. */
+    size: {
+      lg: {
+        popover: "combo-box__popover--lg",
+      },
+      md: {},
+      sm: {
+        popover: "combo-box__popover--sm",
       },
     },
   },

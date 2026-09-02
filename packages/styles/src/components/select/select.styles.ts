@@ -5,6 +5,7 @@ import { tv } from "tailwind-variants";
 export const selectVariants = tv({
   defaultVariants: {
     fullWidth: false,
+    size: "md",
     variant: "primary",
   },
   slots: {
@@ -20,6 +21,17 @@ export const selectVariants = tv({
       true: {
         base: "select--full-width",
         trigger: "select__trigger--full-width",
+      },
+    },
+    size: {
+      lg: {
+        base: "select--lg",
+        popover: "select__popover--lg",
+      },
+      md: {},
+      sm: {
+        base: "select--sm",
+        popover: "select__popover--sm",
       },
     },
     variant: {

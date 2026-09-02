@@ -34,11 +34,13 @@ const setElement = (next: unknown) => {
 // Named apart from the prop it resolves: an identifier matching a prop name resolves to the
 // prop inside the template, which would drop the value coming from the field.
 const resolvedVariant = computed(() => props.variant ?? textField?.variant.value);
+const resolvedSize = computed(() => props.size ?? textField?.size.value);
 
 const styles = computed(() =>
   inputVariants({
     class: props.class,
     fullWidth: props.fullWidth,
+    size: resolvedSize.value,
     variant: resolvedVariant.value,
   }),
 );

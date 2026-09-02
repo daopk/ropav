@@ -31,7 +31,7 @@ const props = withDefaults(defineProps<DateInputGroupRootProps>(), {
 defineSlots<{ default?: (props: DateInputGroupRootSlotProps) => unknown }>();
 
 const slots = computed(() =>
-  dateInputGroupVariants({ fullWidth: props.fullWidth, variant: props.variant }),
+  dateInputGroupVariants({ fullWidth: props.fullWidth, size: props.size, variant: props.variant }),
 );
 
 provideDateInputGroupContext({ slots });

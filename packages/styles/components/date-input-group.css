@@ -189,3 +189,23 @@
 .date-input-group--full-width {
   @apply w-full;
 }
+
+/* ==========================================================================
+   Size variants
+   ========================================================================== */
+
+.date-input-group--sm {
+  @apply h-8;
+
+  .date-input-group__input {
+    @apply field-line-sm;
+  }
+}
+
+.date-input-group--lg {
+  @apply h-10;
+
+  .date-input-group__input {
+    @apply field-line-lg;
+  }
+}

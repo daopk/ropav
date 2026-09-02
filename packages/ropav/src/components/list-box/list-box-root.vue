@@ -57,7 +57,9 @@ const callerSlots = defineSlots<{
  */
 const itemOf = (node?: VirtualizerNode) => node?.content as T | undefined;
 
-const styles = computed(() => listboxVariants({ class: props.class, variant: props.variant }));
+const styles = computed(() =>
+  listboxVariants({ class: props.class, size: props.size, variant: props.variant }),
+);
 
 /**
  * The state this listbox runs on, which is not always its own.

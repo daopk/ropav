@@ -44,7 +44,7 @@ const resolvedIsDisabled = computed(() => props.isDisabled ?? control?.isDisable
 const resolvedIsInvalid = computed(() => props.isInvalid ?? control?.isInvalid.value ?? false);
 
 const slots = computed(() =>
-  colorInputGroupVariants({ fullWidth: props.fullWidth, variant: props.variant }),
+  colorInputGroupVariants({ fullWidth: props.fullWidth, size: props.size, variant: props.variant }),
 );
 
 provideColorInputGroupContext({ slots });

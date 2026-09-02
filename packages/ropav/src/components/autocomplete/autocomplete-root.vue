@@ -116,7 +116,7 @@ const selectedText = computed(() => {
 });
 
 const styles = computed(() =>
-  autocompleteVariants({ fullWidth: props.fullWidth, variant: props.variant }),
+  autocompleteVariants({ fullWidth: props.fullWidth, size: props.size, variant: props.variant }),
 );
 
 const isDisabled = computed(() => Boolean(props.isDisabled));

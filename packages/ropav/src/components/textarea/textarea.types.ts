@@ -14,6 +14,11 @@ export interface TextAreaRootProps {
   value?: string;
   /** Visual variant. Taken from the surrounding field when unset. @default "primary" */
   variant?: TextAreaVariants["variant"];
+  /**
+   * How much room the text is given, matching a field of the same size. Taken from the
+   * surrounding field when unset. @default "md"
+   */
+  size?: TextAreaVariants["size"];
   /** Whether the control stretches to fill its container. */
   fullWidth?: boolean;
   /**

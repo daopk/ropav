@@ -640,6 +640,49 @@ export const MultipleSelect: Story = {
   },
 };
 
+/**
+ * The three heights a button stands at, so an autocomplete and a button of the same size line up.
+ *
+ * The popover follows the trigger: an option row is as tall as the control it dropped from, and a
+ * `lg` one reads at 16px throughout rather than switching to 14px in the list.
+ */
+export const Sizes: Story = {
+  render: () => {
+    const filter = useFilter({ sensitivity: "base" });
+
+    return {
+      components,
+      setup: () => ({
+        byName,
+        contains: filter.value.contains,
+        items: ANIMALS,
+        sizes: ["sm", "md", "lg"] as const,
+      }),
+      template: `
+        <div class="flex flex-col gap-4">
+          <div v-for="size in sizes" :key="size" class="flex items-center gap-3">
+            <Autocomplete
+              class="w-[200px]"
+              :item-text-value="byName"
+              :items="items"
+              placeholder="Select an animal"
+              selection-mode="single"
+              :size="size"
+            >
+              <AutocompleteTrigger>
+                <AutocompleteValue />
+                <AutocompleteIndicator />
+              </AutocompleteTrigger>
+              ${popoverTemplate("Search animals...")}
+            </Autocomplete>
+            <Button :size="size" variant="secondary">Button {{ size }}</Button>
+          </div>
+        </div>
+      `,
+    };
+  },
+};
+
 export const FullWidth: Story = {
   render: () => {
     const filter = useFilter({ sensitivity: "base" });

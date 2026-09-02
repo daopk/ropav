@@ -55,6 +55,7 @@ const props = withDefaults(defineProps<AutocompleteFixtureProps>(), {
   placeholder: "Select an animal",
   selectionMode: undefined,
   value: undefined,
+  size: undefined,
   variant: undefined,
   withClearButton: undefined,
   withCustomIndicator: undefined,
@@ -97,6 +98,7 @@ const filter = useFilter({ sensitivity: "base" });
       :on-clear="props.onClear"
       :placeholder="props.placeholder"
       :selection-mode="props.selectionMode"
+      :size="props.size"
       :value="props.value"
       :variant="props.variant"
       @change="emit('change', $event)"

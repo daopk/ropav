@@ -72,6 +72,30 @@ export const Default: Story = {
   }),
 };
 
+/** The three heights a button stands at, set on the group that draws the field. */
+export const Sizes: Story = {
+  render: () => ({
+    components,
+    setup: () => ({ sizes: ["sm", "md", "lg"] as const }),
+    template: `
+      <div class="flex flex-col gap-4">
+        <ColorField
+          v-for="size in sizes"
+          :key="size"
+          class="w-[280px]"
+          default-value="#0485F7"
+          :name="'size-' + size"
+        >
+          <Label>Size {{ size }}</Label>
+          <ColorFieldGroup :size="size">
+            <ColorFieldInput />
+          </ColorFieldGroup>
+        </ColorField>
+      </div>
+    `,
+  }),
+};
+
 export const Variants: Story = {
   render: () => ({
     components,

@@ -6,9 +6,12 @@ import type {
   SelectionBehavior,
   SelectionMode,
 } from "../../composables/use-selection-manager";
+import type { MenuVariants } from "@ropav/styles";
 
 export interface MenuRootProps {
   class?: string;
+  /** How tall a row stands, matching a field of the same size. @default "md" */
+  size?: MenuVariants["size"];
   /** Overrides the menu's id, which a trigger's `aria-controls` points at. */
   id?: string;
   /** The id of the element naming the menu, normally its trigger. */

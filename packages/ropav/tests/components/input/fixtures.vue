@@ -9,6 +9,7 @@ const props = withDefaults(defineProps<InputFixtureProps>(), {
   isFieldDisabled: undefined,
   isFieldInvalid: undefined,
   value: undefined,
+  size: undefined,
   variant: undefined,
 });
 
@@ -22,6 +23,7 @@ defineEmits<{ change: [value: string]; "update:value": [value: string] }>();
       :is-disabled="props.isFieldDisabled"
       :is-invalid="props.isFieldInvalid"
       :placeholder="props.fieldPlaceholder"
+      :size="props.fieldSize"
       :value="props.fieldValue"
       :variant="props.fieldVariant"
     >
@@ -31,6 +33,7 @@ defineEmits<{ change: [value: string]; "update:value": [value: string] }>();
         :full-width="props.fullWidth"
         :placeholder="props.placeholder"
         :required="props.required"
+        :size="props.size"
         :type="props.type"
         :value="props.value"
         :variant="props.variant"
@@ -45,6 +48,7 @@ defineEmits<{ change: [value: string]; "update:value": [value: string] }>();
       :full-width="props.fullWidth"
       :placeholder="props.placeholder"
       :required="props.required"
+      :size="props.size"
       :type="props.type"
       :value="props.value"
       :variant="props.variant"

@@ -63,6 +63,33 @@ export const Default: Story = {
   }),
 };
 
+/** The three heights a button stands at. The stepper columns follow the field. */
+export const Sizes: Story = {
+  render: () => ({
+    components,
+    setup: () => ({ sizes: ["sm", "md", "lg"] as const }),
+    template: `
+      <div class="flex flex-col gap-4">
+        <NumberFieldRoot
+          v-for="size in sizes"
+          :key="size"
+          :default-value="100"
+          :min-value="0"
+          :name="'size-' + size"
+          :size="size"
+        >
+          <Label>Size {{ size }}</Label>
+          <NumberFieldGroup>
+            <NumberFieldDecrementButton />
+            <NumberFieldInput class="w-[120px]" />
+            <NumberFieldIncrementButton />
+          </NumberFieldGroup>
+        </NumberFieldRoot>
+      </div>
+    `,
+  }),
+};
+
 export const Variants: Story = {
   render: () => ({
     components,

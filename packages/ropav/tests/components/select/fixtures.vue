@@ -41,6 +41,7 @@ const props = withDefaults(defineProps<SelectFixtureProps>(), {
   name: undefined,
   placeholder: "Select one",
   value: undefined,
+  size: undefined,
   variant: undefined,
 });
 
@@ -67,6 +68,7 @@ const emit = defineEmits<{
     :name="props.name"
     :placeholder="props.placeholder"
     :selection-mode="props.selectionMode"
+    :size="props.size"
     :value="props.value"
     :variant="props.variant"
     @change="emit('change', $event)"

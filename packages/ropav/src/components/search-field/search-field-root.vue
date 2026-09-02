@@ -111,7 +111,7 @@ watch(
 );
 
 const slots = computed(() =>
-  searchFieldVariants({ fullWidth: props.fullWidth, variant: props.variant }),
+  searchFieldVariants({ fullWidth: props.fullWidth, size: props.size, variant: props.variant }),
 );
 
 provideFieldIdsContext(field.fieldIds);

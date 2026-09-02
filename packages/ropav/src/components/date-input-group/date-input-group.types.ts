@@ -11,6 +11,8 @@ export interface DateInputGroupRootProps {
   class?: string;
   /** Visual variant. @default "primary" */
   variant?: DateInputGroupVariants["variant"];
+  /** How tall the group stands, matching a button of the same size. @default "md" */
+  size?: DateInputGroupVariants["size"];
   /** Whether the group stretches to fill its container. */
   fullWidth?: boolean;
   /** Whether the group reads as disabled. Taken from the field it sits in when unset. */

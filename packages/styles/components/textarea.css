@@ -102,3 +102,15 @@
 .textarea--full-width {
   @apply w-full;
 }
+
+/* ==========================================================================
+   Size variants
+   ========================================================================== */
+
+.textarea--sm {
+  @apply field-line-sm;
+}
+
+.textarea--lg {
+  @apply field-line-lg;
+}

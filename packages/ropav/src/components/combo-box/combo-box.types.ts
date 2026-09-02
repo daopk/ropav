@@ -15,6 +15,7 @@ import type {
 } from "../../composables/use-select-state";
 import type { DisabledBehavior } from "../../composables/use-selection-manager";
 import type { Placement } from "../../utils/position";
+import type { ComboBoxVariants } from "@ropav/styles";
 
 /**
  * A combo box is a text field that filters a list of options, and the text is part of the value.
@@ -106,6 +107,8 @@ export interface ComboBoxRootProps<T = unknown> {
   ariaLabel?: string;
   ariaLabelledby?: string;
   ariaDescribedby?: string;
+  /** How tall the field stands, matching a button of the same size. @default "md" */
+  size?: ComboBoxVariants["size"];
   /** Whether the combo box stretches to fill its container. */
   fullWidth?: boolean;
   /** Visual variant the `Input` inside picks up. @default "primary" */

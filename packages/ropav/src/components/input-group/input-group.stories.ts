@@ -122,6 +122,32 @@ export const Variants: Story = {
   }),
 };
 
+/**
+ * The size is set once on the field and the group inside follows, the way the variant does.
+ *
+ * Setting it on the group itself works too, and wins - which is what a group standing outside any
+ * field has to do.
+ */
+export const Sizes: Story = {
+  render: () => ({
+    components,
+    setup: () => ({ sizes: ["sm", "md", "lg"] as const }),
+    template: `
+      <div class="flex flex-col gap-4">
+        <TextField v-for="size in sizes" :key="size" class="w-[280px]" name="email" :size="size">
+          <Label>Size {{ size }}</Label>
+          <InputGroupRoot>
+            <InputGroupPrefix>
+              <IconEnvelope class="size-4 text-muted" />
+            </InputGroupPrefix>
+            <InputGroupInput placeholder="name@email.com" />
+          </InputGroupRoot>
+        </TextField>
+      </div>
+    `,
+  }),
+};
+
 export const FullWidth: Story = {
   render: () => ({
     components,

@@ -8,6 +8,7 @@ export interface InputFixtureProps extends InputRootProps {
   /** The field's own placeholder, for the same reason. */
   fieldPlaceholder?: string;
   fieldVariant?: InputRootProps["variant"];
+  fieldSize?: InputRootProps["size"];
   isFieldDisabled?: boolean;
   isFieldInvalid?: boolean;
   /** Wraps everything in a `<form>` with a real reset button. */

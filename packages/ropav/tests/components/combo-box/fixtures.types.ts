@@ -39,6 +39,7 @@ export interface ComboBoxFixtureProps {
   formValue?: "key" | "text";
   placeholder?: string;
   variant?: "primary" | "secondary";
+  size?: "sm" | "md" | "lg";
   fullWidth?: boolean;
   /** Whether a `Label` is rendered, since the field is named by it. */
   withLabel?: boolean;

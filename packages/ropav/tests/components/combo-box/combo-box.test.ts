@@ -134,6 +134,27 @@ describe("ComboBox", () => {
       expect(popoverOf(result)!.className).toContain("combo-box__popover");
     });
 
+    it("hands its size to the input and to the popover", async () => {
+      // Two channels, because the parts are in two trees: the input takes its size from the text
+      // field context, and the popover is teleported out of the root entirely.
+      const result = render({ size: "sm" });
+
+      await open(result);
+
+      expect(result.container.querySelector('[data-slot="input"]')!.className).toContain(
+        "input--sm",
+      );
+      expect(popoverOf(result)!.className).toContain("combo-box__popover--sm");
+    });
+
+    it("leaves the default size unmarked", () => {
+      const result = render({ size: "md" });
+
+      expect(result.container.querySelector('[data-slot="input"]')!.className).not.toMatch(
+        /input--(sm|md|lg)/,
+      );
+    });
+
     it("merges a class of the caller's own rather than replacing the block", () => {
       const result = render({
         inputGroupClass: "my-group",

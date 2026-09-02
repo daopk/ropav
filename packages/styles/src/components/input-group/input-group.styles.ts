@@ -5,6 +5,7 @@ import { tv } from "tailwind-variants";
 export const inputGroupVariants = tv({
   defaultVariants: {
     fullWidth: false,
+    size: "md",
     variant: "primary",
   },
   slots: {
@@ -18,6 +19,15 @@ export const inputGroupVariants = tv({
       false: {},
       true: {
         base: "input-group--full-width",
+      },
+    },
+    size: {
+      lg: {
+        base: "input-group--lg",
+      },
+      md: {},
+      sm: {
+        base: "input-group--sm",
       },
     },
     variant: {

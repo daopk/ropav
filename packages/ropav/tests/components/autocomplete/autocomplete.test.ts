@@ -137,6 +137,29 @@ describe("Autocomplete", () => {
       expect(result.screen.queryByRole("searchbox")).toBeNull();
     });
 
+    it("carries the size modifier on the root and on the popover", async () => {
+      // The popover is teleported out of the root, so it cannot be reached from the root's
+      // modifier and has to carry one of its own.
+      const result = render({ size: "sm" });
+
+      await open(result);
+
+      expect(result.container.querySelector('[data-slot="autocomplete"]')!.className).toContain(
+        "autocomplete--sm",
+      );
+      expect(
+        result.baseElement.querySelector('[data-slot="autocomplete-popover"]')!.className,
+      ).toContain("autocomplete__popover--sm");
+    });
+
+    it("leaves the default size unmarked", () => {
+      const result = render({ size: "md" });
+
+      expect(result.container.querySelector('[data-slot="autocomplete"]')!.className).not.toMatch(
+        /autocomplete--(sm|md|lg)/,
+      );
+    });
+
     it("merges a class into each part rather than replacing it", async () => {
       const result = render({
         indicatorClass: "my-indicator",

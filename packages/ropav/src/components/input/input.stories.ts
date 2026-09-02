@@ -39,6 +39,20 @@ export const Variants: Story = {
   }),
 };
 
+/** The three heights a button stands at, so an input and a button of the same size line up. */
+export const Sizes: Story = {
+  render: () => ({
+    components,
+    template: `
+      <div class="flex w-[240px] flex-col gap-3">
+        <Input full-width placeholder="Small" size="sm" />
+        <Input full-width placeholder="Medium" size="md" />
+        <Input full-width placeholder="Large" size="lg" />
+      </div>
+    `,
+  }),
+};
+
 export const FullWidth: Story = {
   render: () => ({
     components,

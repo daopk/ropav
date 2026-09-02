@@ -5,6 +5,8 @@ import { createContext } from "../../utils/create-context";
 export interface TextFieldContext {
   /** Visual variant the control inside picks up when it declares none of its own. */
   variant: ComputedRef<"primary" | "secondary" | undefined>;
+  /** Size the control inside picks up when it declares none of its own. */
+  size: ComputedRef<"sm" | "md" | "lg" | undefined>;
 }
 
 /**

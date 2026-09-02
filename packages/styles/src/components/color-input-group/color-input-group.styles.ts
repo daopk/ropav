@@ -5,6 +5,7 @@ import { tv } from "tailwind-variants";
 export const colorInputGroupVariants = tv({
   defaultVariants: {
     fullWidth: false,
+    size: "md",
     variant: "primary",
   },
   slots: {
@@ -18,6 +19,15 @@ export const colorInputGroupVariants = tv({
       false: {},
       true: {
         base: "color-input-group--full-width",
+      },
+    },
+    size: {
+      lg: {
+        base: "color-input-group--lg",
+      },
+      md: {},
+      sm: {
+        base: "color-input-group--sm",
       },
     },
     variant: {

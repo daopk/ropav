@@ -145,6 +145,12 @@ const field = `
   </DateRangePickerGroup>
 `;
 
+/** The same field, with the size handed to the group that draws it. */
+const sizedField = field.replace(
+  "<DateRangePickerGroup full-width>",
+  '<DateRangePickerGroup full-width :size="size">',
+);
+
 const meta: StoryMeta = {
   component: DateRangePickerRoot,
   parameters: {
@@ -156,6 +162,28 @@ const meta: StoryMeta = {
 export default meta;
 
 type Story = StoryObj<typeof meta>;
+
+/** The three heights a button stands at, set on the group that draws the field. */
+export const Sizes: Story = {
+  render: () => ({
+    components,
+    setup: () => ({ ...bindings, sizes: ["sm", "md", "lg"] as const }),
+    template: `
+      <div class="flex flex-col gap-4">
+        <DateRangePickerRoot
+          v-for="size in sizes"
+          :key="size"
+          class="w-[320px]"
+          :end-name="'end-' + size"
+          :start-name="'start-' + size"
+        >
+          <Label>Size {{ size }}</Label>
+          ${sizedField}
+        </DateRangePickerRoot>
+      </div>
+    `,
+  }),
+};
 
 export const Default: Story = {
   render: () => ({

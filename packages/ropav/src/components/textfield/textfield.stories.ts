@@ -42,6 +42,22 @@ export const Default: Story = {
   }),
 };
 
+/** The field sets the size once and the control inside picks it up. */
+export const Sizes: Story = {
+  render: () => ({
+    components,
+    setup: () => ({ sizes: ["sm", "md", "lg"] as const }),
+    template: `
+      <div class="flex flex-col gap-4">
+        <TextField v-for="size in sizes" :key="size" class="w-[280px]" name="name" :size="size">
+          <Label>Size {{ size }}</Label>
+          <Input placeholder="Your name" />
+        </TextField>
+      </div>
+    `,
+  }),
+};
+
 export const FullWidth: Story = {
   render: () => ({
     components,

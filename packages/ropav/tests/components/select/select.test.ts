@@ -88,6 +88,27 @@ describe("Select", () => {
       expect(trigger).toHaveClass("select__trigger--full-width");
     });
 
+    it("carries the size modifier on the root and on the popover", async () => {
+      // The popover is teleported out of the root, so it cannot be reached from the root's
+      // modifier and has to carry one of its own.
+      const { root, trigger } = await render({ size: "sm" });
+
+      expect(root).toHaveClass("select--sm");
+
+      press(trigger);
+      await settle();
+
+      expect(document.querySelector('[data-slot="select-popover"]')).toHaveClass(
+        "select__popover--sm",
+      );
+    });
+
+    it("leaves the default size unmarked", async () => {
+      const { root } = await render({ size: "md" });
+
+      expect(root.className).not.toMatch(/select--(sm|md|lg)/);
+    });
+
     it("keeps a caller's class on every part, beside the BEM one", async () => {
       const { root, trigger, value } = await render({
         indicatorClass: "my-indicator",

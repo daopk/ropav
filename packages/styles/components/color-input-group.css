@@ -142,3 +142,23 @@
 .color-input-group--full-width {
   @apply w-full;
 }
+
+/* ==========================================================================
+   Size variants
+   ========================================================================== */
+
+.color-input-group--sm {
+  @apply h-8;
+
+  .color-input-group__input {
+    @apply field-line-sm;
+  }
+}
+
+.color-input-group--lg {
+  @apply h-10;
+
+  .color-input-group__input {
+    @apply field-line-lg;
+  }
+}

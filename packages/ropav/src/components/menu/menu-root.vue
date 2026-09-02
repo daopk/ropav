@@ -29,7 +29,7 @@ const callerSlots = defineSlots<{
   empty?: () => unknown;
 }>();
 
-const styles = computed(() => menuVariants({ class: props.class }));
+const styles = computed(() => menuVariants({ class: props.class, size: props.size }));
 
 // A menu lays its own children out, so a rule between two of them has to take part in that
 // layout rather than being the block-level `hr` it would be on its own.

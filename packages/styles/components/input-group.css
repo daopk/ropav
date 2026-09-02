@@ -214,3 +214,25 @@
 .input-group--full-width {
   @apply w-full;
 }
+
+/* ==========================================================================
+   Size variants
+   ========================================================================== */
+
+/* The shell states the floor and the control inside carries the metrics, which is the same split
+ * the base makes - the group may grow around a textarea, so it cannot state a height. */
+.input-group--sm {
+  @apply min-h-8;
+
+  .input-group__input {
+    @apply field-line-sm;
+  }
+}
+
+.input-group--lg {
+  @apply min-h-10;
+
+  .input-group__input {
+    @apply field-line-lg;
+  }
+}

@@ -67,6 +67,31 @@ export const Default: Story = {
   }),
 };
 
+/** The three heights a button stands at, so a search field and a button line up. */
+export const Sizes: Story = {
+  render: () => ({
+    components,
+    setup: () => ({ sizes: ["sm", "md", "lg"] as const }),
+    template: `
+      <div class="flex flex-col gap-4">
+        <SearchFieldRoot
+          v-for="size in sizes"
+          :key="size"
+          :name="'size-' + size"
+          :size="size"
+        >
+          <Label>Size {{ size }}</Label>
+          <SearchFieldGroup>
+            <SearchFieldSearchIcon />
+            <SearchFieldInput class="w-[280px]" placeholder="Search..." />
+            <SearchFieldClearButton />
+          </SearchFieldGroup>
+        </SearchFieldRoot>
+      </div>
+    `,
+  }),
+};
+
 export const Variants: Story = {
   render: () => ({
     components,

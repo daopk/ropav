@@ -276,6 +276,41 @@ export const Variants: Story = {
   }),
 };
 
+/**
+ * The three heights a button stands at, so a select and a button of the same size line up.
+ *
+ * The popover follows the trigger: an option row is as tall as the trigger it dropped from, and a
+ * `lg` select reads at 16px throughout rather than switching to 14px in the list.
+ */
+export const Sizes: Story = {
+  render: () => ({
+    components,
+    setup: () => ({ byName, items: SHORT_STATES, sizes: ["sm", "md", "lg"] as const }),
+    template: `
+      <div class="flex flex-col gap-4">
+        <div v-for="size in sizes" :key="size" class="flex items-center gap-3">
+          <Select
+            class="w-[200px]"
+            :item-text-value="byName"
+            :items="items"
+            placeholder="Select one"
+            :size="size"
+          >
+            <SelectTrigger>
+              <SelectValue />
+              <SelectIndicator />
+            </SelectTrigger>
+            <SelectPopover>
+              <ListBox>${optionsTemplate}</ListBox>
+            </SelectPopover>
+          </Select>
+          <Button :size="size" variant="secondary">Button {{ size }}</Button>
+        </div>
+      </div>
+    `,
+  }),
+};
+
 export const FullWidth: Story = {
   render: () => ({
     components,
