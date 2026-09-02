@@ -4,6 +4,7 @@
  * Convenience for docs and playgrounds. Apps should import only the themes they offer.
  * Import without a `layer()` wrapper.
  */
+@import "./hero.css";
 @import "./sky.css";
 @import "./lavender.css";
 @import "./mint.css";

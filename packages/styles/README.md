@@ -126,8 +126,9 @@ did before the other themes existed.
 
 ### Bundled themes
 
-Eleven, ported from HeroUI's theme gallery. The default one is already in `@ropav/styles`; the rest are
-opt-in, one file each:
+The default one, plus a theme per brand ported from HeroUI's gallery — `hero` among them, being
+HeroUI's own palette. The default is already in `@ropav/styles`; the others are opt-in, one file
+each:
 
 ```css
 @import "@ropav/styles";
@@ -136,10 +137,10 @@ opt-in, one file each:
 
 | `data-theme` | | `data-theme` | | `data-theme` |
 | --- | --- | --- | --- | --- |
-| `default` | | `netflix` | | `airbnb` |
+| `default` | | `mint` | | `coinbase` |
+| `hero` | | `netflix` | | `airbnb` |
 | `sky` | | `uber` | | `discord` |
 | `lavender` | | `spotify` | | `rabbit` |
-| `mint` | | `coinbase` | | |
 
 Each carries both a light and a dark palette, so a theme is a brand rather than an appearance. There is
 no `netflix-dark` — it is `data-theme="netflix"` plus `class="dark"`.
@@ -147,10 +148,13 @@ no `netflix-dark` — it is `data-theme="netflix"` plus `class="dark"`.
 `themes/all.css` pulls in all of them at once. That is for docs and playgrounds; an app should import
 only the themes it actually offers, since each is around 10 kB before compression.
 
-The ten non-default themes are **generated** — edit `scripts/themes/presets.ts` and run
+Every theme but `default` and `hero` is **generated** — edit `scripts/themes/presets.ts` and run
 `pnpm generate:themes`, never the CSS. A preset is four numbers (accent lightness, chroma and hue, plus
 the chroma of the neutral ramp), a radius pair, and any exact brand colours that should beat the
 calculated ones.
+
+Those two stay hand-written, each file's header saying what the generator cannot reproduce about it.
+Their presets carry the label, the presentation order and the radii only.
 
 ### Retheming
 

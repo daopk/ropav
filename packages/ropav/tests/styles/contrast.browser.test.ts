@@ -6,6 +6,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import "../../../styles/themes/airbnb.css";
 import "../../../styles/themes/coinbase.css";
 import "../../../styles/themes/discord.css";
+import "../../../styles/themes/hero.css";
 import "../../../styles/themes/lavender.css";
 import "../../../styles/themes/mint.css";
 import "../../../styles/themes/netflix.css";
@@ -20,9 +21,9 @@ import "../../../styles/themes/uber.css";
  * The story suite in `@ropav/storybook` runs axe over the rendered library, which is what finds
  * *which* pairings occur in real composition. It cannot own this: it renders one theme, and a
  * contrast failure is a property of two tokens rather than of the story that happened to put them
- * together. Re-rendering every story once per theme would rediscover the same handful of pairs
- * eleven times over, so the pairs it found are checked here directly instead - no rendering, all
- * twenty-two combinations, and a failure names the token rather than the component.
+ * together. Re-rendering every story once per theme would rediscover the same handful of pairs in
+ * every one of them, so the pairs it found are checked here directly instead - no rendering, every
+ * theme-and-scheme combination, and a failure names the token rather than the component.
  *
  * The floor is WCAG AA for normal text. Large text and disabled controls are exempt and are not
  * listed; every pair below carries ordinary body text somewhere in the library.
@@ -36,6 +37,7 @@ const THEMES = [
   "airbnb",
   "coinbase",
   "discord",
+  "hero",
   "lavender",
   "mint",
   "netflix",
@@ -100,6 +102,8 @@ const PAIRS: readonly Pair[] = [
       "airbnb/dark", // 3.43
       "discord/light", // 4.49
       "discord/dark", // 4.49
+      "hero/light", // 3.59
+      "hero/dark", // 3.59
     ],
   },
   {
@@ -109,6 +113,7 @@ const PAIRS: readonly Pair[] = [
       "default/light", // 3.27
       "airbnb/dark", // 3.65
       "discord/light", // 4.20
+      "hero/light", // 3.27
       "lavender/light", // 3.26
       "mint/light", // 3.30
       "netflix/dark", // 3.00
@@ -125,6 +130,8 @@ const PAIRS: readonly Pair[] = [
       "default/dark", // 4.35
       "discord/light", // 4.24
       "discord/dark", // 3.56
+      "hero/light", // 3.48
+      "hero/dark", // 4.35
       "lavender/light", // 3.46
       "lavender/dark", // 4.32
       "mint/light", // 3.51

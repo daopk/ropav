@@ -1,9 +1,8 @@
 /**
- * Emits `themes/<id>/` for every preset except `default`.
+ * Emits `themes/<id>.css` for every preset except the hand-written ones — see `HANDWRITTEN`.
  *
- * `default` stays hand-written: it uses readable aliases (`var(--white)`, `var(--eclipse)`)
- * that the generator cannot produce. Pass `--check-default` to emit it to stdout instead,
- * for comparing the generator against the hand-written file.
+ * Pass `--check-default` to emit the default theme to stdout instead, for comparing the
+ * generator against the hand-written file.
  *
  * Run with `pnpm generate:themes`. Output is committed — consumers never run this.
  */
@@ -25,6 +24,16 @@ import {
 import { adaptiveAccents, presets, radiusCssMap, themeIds } from "./presets";
 
 const stylesDir = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
+
+/**
+ * Themes whose CSS is hand-written, and so must not be overwritten here.
+ *
+ * Both tint their neutral ramp off a different hue than their accent, with a grey chroma that
+ * varies per token — neither of which one preset can express. `default` additionally aliases the
+ * primitives (`var(--white)`, `var(--eclipse)`), which the generator cannot produce at all. Their
+ * presets carry the label, the presentation order and the radii only.
+ */
+const HANDWRITTEN = new Set<ThemeId>(["default", "hero"]);
 
 /**
  * `--tw-ring-color` is a Tailwind internal; the hand-written default does not set it and
@@ -217,7 +226,7 @@ function main() {
     return;
   }
 
-  const generated = themeIds.filter((id) => id !== "default");
+  const generated = themeIds.filter((id) => !HANDWRITTEN.has(id));
 
   const themesDir = join(stylesDir, "themes");
 
@@ -231,13 +240,17 @@ function main() {
     return file;
   });
 
+  // Every theme but `default`, which already ships in `index.css` — the hand-written ones
+  // included, so this is not the same list as what was just generated.
+  const bundled = themeIds.filter((id) => id !== "default");
+
   const all = `/**
  * Every bundled theme — GENERATED, do not edit by hand.
  *
  * Convenience for docs and playgrounds. Apps should import only the themes they offer.
  * Import without a \`layer()\` wrapper.
  */
-${generated.map((id) => `@import "./${id}.css";`).join("\n")}
+${bundled.map((id) => `@import "./${id}.css";`).join("\n")}
 `;
 
   const allFile = join(themesDir, "all.css");

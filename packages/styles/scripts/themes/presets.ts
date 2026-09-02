@@ -130,6 +130,20 @@ export const presets = {
     },
   },
 
+  /**
+   * Hand-written like `default`, and for the same reason — see `themes/hero.css`. This entry
+   * carries the label, the presentation order and the radii only.
+   */
+  hero: {
+    base: BASE_DEFAULT,
+    chroma: 0.195,
+    formRadius: "large",
+    hue: 253.83,
+    label: "Hero",
+    lightness: 0.6204,
+    radius: "medium",
+  },
+
   lavender: {
     base: BASE_DEFAULT,
     chroma: 0.13,
@@ -250,11 +264,12 @@ export const presets = {
 export type ThemeId = keyof typeof presets;
 
 /**
- * Presentation order: `default` first, then the rest as HeroUI's theme gallery lists them.
+ * Presentation order: `default` first, then `hero`, then the rest as HeroUI's gallery lists them.
  * Drives `themes/all.css` and the Storybook toolbar.
  */
 export const themeIds: ThemeId[] = [
   "default",
+  "hero",
   "sky",
   "lavender",
   "mint",

@@ -44,7 +44,7 @@ afterEach(() => {
 describe("theme layer (browser)", () => {
   it("leaves the document on the default theme when other themes are loaded", () => {
     // Importing a theme must not apply it. Every bundled theme is scoped to its own
-    // `data-theme`, so loading ten of them changes nothing until one is asked for.
+    // `data-theme`, so loading them all changes nothing until one is asked for.
     expect(token(root(), "--accent")).toBe("oklch(0.6204 0.195 253.83)");
   });
 

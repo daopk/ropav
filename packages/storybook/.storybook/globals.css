@@ -9,7 +9,7 @@
 /* Storybook's own slightly-warmer grey, for the default theme only.
  *
  * Scoped on purpose: this is unlayered author CSS, so it outranks every cascade layer. Left
- * on a bare `:root` it would repaint all eleven themes the same colour and the toolbar would
+ * on a bare `:root` it would repaint every theme the same colour and the toolbar would
  * look broken. */
 :root:not([data-theme]),
 [data-theme="default"] {

@@ -17,7 +17,7 @@ import { PALETTE_CONTRAST_DEBT, expectNoA11yViolations } from "@ropav/testing/he
  *
  * It lives in `ropav`'s token matrix instead, which is the better home for it anyway: a contrast
  * failure is a property of two tokens rather than of the story that happened to pair them, so the
- * matrix checks each pair across all eleven themes and both schemes, names the token when one
+ * matrix checks each pair across every theme and both schemes, names the token when one
  * fails, and lists what it lets through with the measurement beside it. What the matrix cannot do
  * is discover which pairings actually occur - that is this sweep's job. Run it once with the rule
  * on after adding a component, and carry any new pairing across.

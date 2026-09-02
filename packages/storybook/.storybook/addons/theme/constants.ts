@@ -3,13 +3,14 @@ export const SCHEME_GLOBAL_TYPE_ID = "ropav-scheme";
 
 /**
  * The two axes are orthogonal: `data-theme` picks the palette, the `light`/`dark` class
- * picks the appearance. Every theme ships both, so a single list would need 22 entries.
+ * picks the appearance. Every theme ships both, so a single list would have to enumerate every theme twice.
  *
  * This is also the only enumeration of the bundled themes outside `@ropav/styles` itself -
  * keep it in step with `packages/styles/scripts/themes/presets.ts`.
  */
 export const THEME_VALUES = [
   "default",
+  "hero",
   "sky",
   "lavender",
   "mint",
@@ -37,6 +38,7 @@ export interface ThemeOption {
 
 export const THEME_OPTIONS: ThemeOption[] = [
   { value: "default", title: "Default" },
+  { value: "hero", title: "Hero" },
   { value: "sky", title: "Sky" },
   { value: "lavender", title: "Lavender" },
   { value: "mint", title: "Mint" },

@@ -27,7 +27,7 @@ export const findA11yViolations = async (
 /**
  * The contrast failures that belong to the palette rather than to any component.
  *
- * Measured across all eleven themes: `--accent` pairs with `--accent-foreground` at 3.59:1 and
+ * Measured across every theme: `--accent` pairs with `--accent-foreground` at 3.59:1 and
  * `--danger` with the page at 3.27:1, both under the 4.5:1 WCAG AA floor for normal text. They come
  * from `@ropav/styles`, so every component that paints with them inherits the finding and none of
  * them can fix it.
