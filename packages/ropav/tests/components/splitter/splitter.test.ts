@@ -67,7 +67,7 @@ describe("Splitter", () => {
       expect(slot(container, "splitter")).toBeTruthy();
       expect(slots(container, "splitter-panel")).toHaveLength(2);
       expect(slots(container, "splitter-handle")).toHaveLength(1);
-      expect(slot(container, "splitter-handle-grip")).toBeTruthy();
+      expect(slot(container, "splitter-handle-target")).toBeTruthy();
       unmount();
     });
 
@@ -81,7 +81,26 @@ describe("Splitter", () => {
       expect(slot(container, "splitter-handle").className).toContain(
         "splitter__handle--horizontal",
       );
-      expect(slot(container, "splitter-handle-grip").className).toContain("splitter__handle-grip");
+      expect(slot(container, "splitter-handle-target").className).toContain(
+        "splitter__handle-target",
+      );
+      unmount();
+    });
+
+    it("leaves out the grip until a handle asks for one", async () => {
+      const { container, unmount } = await render();
+
+      expect(container.querySelector("[data-slot='splitter-handle-grip']")).toBeNull();
+      unmount();
+    });
+
+    it("renders the grip, hidden from assistive technology, when asked for one", async () => {
+      const { container, unmount } = await render({ showGrip: true });
+      const grip = slot(container, "splitter-handle-grip");
+
+      expect(grip.className).toContain("splitter__handle-grip");
+      expect(grip.className).toContain("splitter__handle-grip--horizontal");
+      expect(grip.getAttribute("aria-hidden")).toBe("true");
       unmount();
     });
 
@@ -119,6 +138,15 @@ describe("Splitter", () => {
       expect(slot(container, "splitter").dataset["orientation"]).toBe("vertical");
       expect(slot(container, "splitter").className).toContain("splitter--vertical");
       expect(slot(container, "splitter-handle").className).toContain("splitter__handle--vertical");
+      unmount();
+    });
+
+    it("gives the grip the modifier of its own axis", async () => {
+      const { container, unmount } = await render({ orientation: "vertical", showGrip: true });
+
+      expect(slot(container, "splitter-handle-grip").className).toContain(
+        "splitter__handle-grip--vertical",
+      );
       unmount();
     });
 

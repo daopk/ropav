@@ -252,10 +252,17 @@ const onPointerdown = (event: PointerEvent) => {
     @pointerenter="states.onPointerenter"
     @pointerleave="states.onPointerleave"
   >
+    <!-- Before the target, which is the hit area and has to stay on top of it. -->
     <span
+      v-if="props.showGrip"
       aria-hidden="true"
       :class="composeSlotClassName(slots.handleGrip)"
       data-slot="splitter-handle-grip"
+    />
+    <span
+      aria-hidden="true"
+      :class="composeSlotClassName(slots.handleTarget)"
+      data-slot="splitter-handle-target"
     />
     <slot
       :is-disabled="isDisabled"

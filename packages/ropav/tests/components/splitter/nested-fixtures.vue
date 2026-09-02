@@ -1,9 +1,11 @@
 <script setup lang="ts" vapor>
 import { Splitter, SplitterHandle, SplitterPanel } from "@/components/splitter";
+
+const props = defineProps<{ class?: string }>();
 </script>
 
 <template>
-  <Splitter aria-label="Outer" orientation="horizontal">
+  <Splitter aria-label="Outer" :class="props.class" orientation="horizontal">
     <SplitterPanel id="outer-start">Sidebar</SplitterPanel>
     <SplitterHandle id="outer-handle" />
     <SplitterPanel id="outer-end">

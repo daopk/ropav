@@ -14,6 +14,8 @@ const props = defineProps<
      */
     noReset?: boolean;
     panels?: SplitterFixturePanel[];
+    /** Turns the visible grip on for every handle. */
+    showGrip?: boolean;
     /** Renders an unbreakable word, to prove a panel can still be dragged narrower than it. */
     withWideContent?: boolean;
   }
@@ -49,6 +51,7 @@ const defaultPanels: SplitterFixturePanel[] = [{ id: "start" }, { id: "end" }];
         v-if="index > 0"
         :id="`handle-${index - 1}`"
         :reset-on-double-click="props.noReset ? false : undefined"
+        :show-grip="props.showGrip"
       />
       <SplitterPanel
         :id="panel.id"

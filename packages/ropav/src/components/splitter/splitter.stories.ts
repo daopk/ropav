@@ -23,10 +23,13 @@ const meta: StoryMeta = {
     },
   },
   component: SplitterRoot,
-  // A splitter fills whatever contains it, so without a sized box there is nothing to divide.
+  // A splitter fills whatever contains it, so without a sized box there is nothing to divide. The
+  // box clips, because a panel dragged shut leaves its divider flush against the edge and a straight
+  // line at the edge runs on past a rounded corner.
   decorators: [
     () => ({
-      template: '<div class="h-72 w-[42rem] max-w-full rounded-lg border"><story /></div>',
+      template:
+        '<div class="h-72 w-[42rem] max-w-full overflow-hidden rounded-lg border"><story /></div>',
     }),
   ],
   parameters: {
@@ -70,6 +73,29 @@ export const Vertical: Story = {
         <SplitterHandle />
         <SplitterPanel default-size="1fr">
           <div :class="pane">Console</div>
+        </SplitterPanel>
+      </Splitter>
+    `,
+  }),
+};
+
+/**
+ * The divider is a hairline whatever else happens; the grip is what makes it look grabbable, and it
+ * is opt-in per handle. Turn it off and the grab area is unchanged — it was never the visible part.
+ */
+export const WithGrip: Story = {
+  args: { isDisabled: false, orientation: "horizontal" },
+  render: (args) => ({
+    components,
+    setup: () => ({ args, pane }),
+    template: `
+      <Splitter aria-label="Editor layout" :is-disabled="args.isDisabled" :orientation="args.orientation">
+        <SplitterPanel default-size="1fr">
+          <div :class="pane">Sidebar</div>
+        </SplitterPanel>
+        <SplitterHandle show-grip />
+        <SplitterPanel default-size="2fr">
+          <div :class="pane">Editor</div>
         </SplitterPanel>
       </Splitter>
     `,

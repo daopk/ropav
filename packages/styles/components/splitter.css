@@ -8,8 +8,8 @@
  * the wrong axis. Every rule below therefore sits on the part it styles.
  *
  * The modifier also buys the Storybook forced-colors sweep, which collects `[class*='--']` and a
- * fixed state list that does not include `data-dragging`. Without a modifier the handle — the one
- * part of this component that paints anything — would never be audited.
+ * fixed state list that does not include `data-dragging`. Without one the two parts that paint
+ * anything — the handle and its grip — would never be audited.
  */
 
 .splitter {
@@ -35,13 +35,35 @@
   @apply relative min-h-0 min-w-0 flex-1 overflow-hidden;
 }
 
-/* The flex item is the gutter, and it is transparent. The line you see is `::after`, absolutely
+/* The flex item is the gutter and paints nothing itself. The line you see is `::after`, absolutely
  * positioned, which is what lets it thicken on hover without the gutter changing width and
  * reflowing both panels by a pixel. `.slider__thumb::after` carries its knob the same way. */
 .splitter__handle {
-  --splitter-gutter: calc(var(--spacing) * 2);
-  /* Overhang on each side. 8 + 8 + 8 gives a 24px target, which is WCAG 2.5.8 Target Size. */
-  --splitter-grip: calc(var(--spacing) * 2);
+  /* The gutter is the line, with nothing either side of it. Dead space inside the gutter shows up
+   * as a gap wherever a nested group's divider meets this one — the panel between them clips its own
+   * contents, so the inner line cannot reach across to close it. `1px` rather than a spacing step,
+   * the same hairline `separator.css` writes as `h-px`/`w-px`, and both the flex item and `::after`
+   * are measured from it so a retuned token cannot let the gap back in. */
+  --splitter-gutter: 1px;
+  /* The whole grab area, gutter included — a hairline is not a target anyone can hit, so the target
+   * part overhangs it and every hit test lands there. Held as the total rather than as the overhang
+   * because the total is the number that means something, and it is off the spacing grid for the
+   * same reason: what is being sized is a target, not a step.
+   *
+   * Under the 24px WCAG 2.5.8 asks for, resting on that rule's spacing exception instead — what
+   * flanks a divider is a panel, not another target, so no two targets' circles can meet here. The
+   * overhang is also panel edge that stops taking clicks, and a scrollbar sits exactly there, which
+   * is why this is kept tight rather than widened to the letter of the rule. */
+  --splitter-target: 15px;
+  /* The pill's short axis and its long one. It is positioned rather than laid out, so it straddles a
+   * gutter narrower than itself without the panels giving up a pixel. */
+  --splitter-grip-thickness: calc(var(--spacing) * 1);
+  --splitter-grip-length: calc(var(--spacing) * 6);
+  /* How long the pointer has to stay before the divider lights up. A grab area many times the width
+   * of the line is one a pointer crosses on its way somewhere else, and a divider that flares at
+   * every crossing reads as a twitch rather than an invitation. Waiting means only an approach that
+   * settles counts. */
+  --splitter-highlight-delay: 500ms;
 
   @apply relative z-10 flex shrink-0 grow-0 items-center justify-center self-stretch;
   @apply bg-transparent outline-none select-none no-highlight;
@@ -81,6 +103,35 @@
     }
   }
 
+  /* The grip answers to the same states as the line, and is reached as a direct child so a nested
+   * group's own grip is left alone. */
+  &:hover > .splitter__handle-grip,
+  &[data-hovered="true"] > .splitter__handle-grip,
+  &[data-dragging="true"] > .splitter__handle-grip {
+    @apply bg-accent;
+
+    @media (forced-colors: active) {
+      background-color: Highlight;
+    }
+  }
+
+  /* Delayed on the way in and immediate on the way out: the delay lives here rather than in the
+   * base rule, so leaving drops the highlight at once and a pointer that only passes through never
+   * starts the transition at all. It covers the thickening too — both are the same flare. */
+  &:hover::after,
+  &[data-hovered="true"]::after,
+  &:hover > .splitter__handle-grip,
+  &[data-hovered="true"] > .splitter__handle-grip {
+    transition-delay: var(--splitter-highlight-delay);
+  }
+
+  /* Once a drag is under way the intent is not in question, so it skips the wait. Last, because a
+   * drag usually starts from a hover and has to win. */
+  &[data-dragging="true"]::after,
+  &[data-dragging="true"] > .splitter__handle-grip {
+    transition-delay: 0ms;
+  }
+
   &:focus-visible,
   &[data-focus-visible="true"] {
     @apply status-focused;
@@ -89,8 +140,10 @@
   &[data-disabled="true"] {
     @apply status-disabled;
 
-    /* `status-disabled` reaches `color` and `border-color`, and the line is neither. */
-    &::after {
+    /* `status-disabled` reaches `color` and `border-color`, and neither the line nor the grip is
+     * either of those. */
+    &::after,
+    & > .splitter__handle-grip {
       @media (forced-colors: active) {
         background-color: GrayText;
       }
@@ -98,12 +151,47 @@
   }
 }
 
-/* The invisible hit area. A negative `inset` rather than a transparent border: forced colors turns
- * a transparent *border-color* opaque — the trap `slider.css` documents at both ends of its track
- * — and a bordered grip would render as two solid blocks flanking every divider. `inset` has no
- * such behaviour, so this needs no forced-colors rule of its own. */
-.splitter__handle-grip {
+/* The invisible hit area — named for the target size it exists to reach, and kept apart from the
+ * grip because that one is the part you can see. A negative `inset` rather than a transparent
+ * border: forced colors turns a transparent *border-color* opaque — the trap `slider.css` documents
+ * at both ends of its track — and a bordered target would render as two solid blocks flanking every
+ * divider. `inset` has no such behaviour, so this needs no forced-colors rule of its own. */
+.splitter__handle-target {
   @apply absolute inset-0 bg-transparent;
+}
+
+/* The visible grab affordance, and only that — the gesture belongs to the handle, the hit area to
+ * the target. No insets: an absolutely positioned child of a flex container takes its static
+ * position from the container's own alignment, which is the same `items-center justify-center` that
+ * centres the line above. `drawer.css` carries its handle bar as a child element the same way.
+ *
+ * Sized from custom properties rather than utilities so a theme can retune the pill without
+ * restating both axes in both orientations. */
+.splitter__handle-grip {
+  @apply pointer-events-none absolute rounded-full bg-separator;
+
+  /* The whole part *is* its background, so the mode flattening it onto the page removes the grip
+   * rather than weakening it — the same reason the line restates its colour. */
+  @media (forced-colors: active) {
+    background-color: CanvasText;
+  }
+
+  /**
+   * Transitions
+   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
+   */
+  transition: background-color 150ms var(--ease-out);
+  @apply motion-reduce:transition-none;
+}
+
+.splitter__handle-grip--horizontal {
+  inline-size: var(--splitter-grip-thickness);
+  block-size: var(--splitter-grip-length);
+}
+
+.splitter__handle-grip--vertical {
+  inline-size: var(--splitter-grip-length);
+  block-size: var(--splitter-grip-thickness);
 }
 
 /* A horizontal group puts its panels side by side, so the divider is a vertical line. */
@@ -113,17 +201,19 @@
   inline-size: var(--splitter-gutter);
 
   &::after {
-    @apply inset-y-0 w-px;
+    @apply inset-y-0;
+
+    inline-size: var(--splitter-gutter);
   }
 
   &:hover::after,
   &[data-hovered="true"]::after,
   &[data-dragging="true"]::after {
-    @apply w-0.5;
+    inline-size: calc(var(--splitter-gutter) * 2);
   }
 
-  & > .splitter__handle-grip {
-    inset-inline: calc(var(--splitter-grip) * -1);
+  & > .splitter__handle-target {
+    inset-inline: calc((var(--splitter-target) - var(--splitter-gutter)) / -2);
   }
 }
 
@@ -134,16 +224,18 @@
   block-size: var(--splitter-gutter);
 
   &::after {
-    @apply inset-x-0 h-px;
+    @apply inset-x-0;
+
+    block-size: var(--splitter-gutter);
   }
 
   &:hover::after,
   &[data-hovered="true"]::after,
   &[data-dragging="true"]::after {
-    @apply h-0.5;
+    block-size: calc(var(--splitter-gutter) * 2);
   }
 
-  & > .splitter__handle-grip {
-    inset-block: calc(var(--splitter-grip) * -1);
+  & > .splitter__handle-target {
+    inset-block: calc((var(--splitter-target) - var(--splitter-gutter)) / -2);
   }
 }

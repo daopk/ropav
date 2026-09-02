@@ -219,7 +219,7 @@ describe("Splitter (browser)", () => {
     vertical.unmount();
   });
 
-  /* A one-pixel line is not a target anyone can hit, so the grip reaches past the gutter. */
+  /* A one-pixel line is not a target anyone can hit, so the target reaches past the gutter. */
   it("extends the grab area past the divider", async () => {
     await parkPointer();
 
@@ -229,6 +229,114 @@ describe("Splitter (browser)", () => {
     const outside = document.elementFromPoint(box.right + 4, box.top + box.height / 2);
 
     expect(handle.contains(outside)).toBe(true);
+    unmount();
+  });
+
+  it("draws the grip along the divider's own axis", async () => {
+    const horizontal = await render({ showGrip: true });
+    const upright = slot(horizontal.container, "splitter-handle-grip").getBoundingClientRect();
+
+    expect(upright.width).toBeGreaterThan(0);
+    expect(upright.height).toBeGreaterThan(upright.width);
+    horizontal.unmount();
+
+    const vertical = await render({ orientation: "vertical", showGrip: true });
+    const flat = slot(vertical.container, "splitter-handle-grip").getBoundingClientRect();
+
+    expect(flat.height).toBeGreaterThan(0);
+    expect(flat.width).toBeGreaterThan(flat.height);
+    vertical.unmount();
+  });
+
+  it("recolours the grip along with the divider on hover", async () => {
+    await parkPointer();
+
+    const { container, unmount } = await render({ showGrip: true });
+    const handle = slot(container, "splitter-handle");
+    const grip = slot(container, "splitter-handle-grip");
+
+    const resting = getComputedStyle(grip).backgroundColor;
+
+    handle.dispatchEvent(new PointerEvent("pointerenter", { bubbles: true, pointerType: "mouse" }));
+    await nextTick();
+    await settled(grip);
+
+    expect(getComputedStyle(grip).backgroundColor).not.toBe(resting);
+    unmount();
+  });
+
+  /*
+   * A grab area many times the width of the line is one a pointer crosses on its way somewhere else,
+   * so the flare waits it out. Asserted on the delay itself rather than by sampling a colour
+   * part-way through one: that would be asserting the clock rather than the stylesheet.
+   */
+  it("waits out a pointer passing through before it highlights, but never a drag", async () => {
+    await parkPointer();
+
+    const { container, unmount } = await render({ showGrip: true });
+    const handle = slot(container, "splitter-handle");
+    const grip = slot(container, "splitter-handle-grip");
+    const delays = () => [
+      Number.parseFloat(getComputedStyle(handle, "::after").transitionDelay),
+      Number.parseFloat(getComputedStyle(grip).transitionDelay),
+    ];
+
+    expect(delays()).toEqual([0, 0]);
+
+    handle.dispatchEvent(new PointerEvent("pointerenter", { bubbles: true, pointerType: "mouse" }));
+    await nextTick();
+
+    for (const delay of delays()) expect(delay).toBeGreaterThan(0);
+
+    /* And the drag rule has to win from here, because a drag starts from a hover. */
+    const from = await startDrag(handle);
+
+    await moveBy(from, 20);
+
+    expect(handle.dataset["dragging"]).toBe("true");
+    expect(delays()).toEqual([0, 0]);
+
+    await endDrag();
+    unmount();
+  });
+
+  /* Positioned rather than laid out, which is what lets it straddle a gutter narrower than it is. */
+  it("costs the panels nothing to show a grip", async () => {
+    const plain = await render();
+    const before = shares(plain.container);
+
+    plain.unmount();
+
+    const gripped = await render({ showGrip: true });
+
+    expect(shares(gripped.container)).toEqual(before);
+    gripped.unmount();
+  });
+
+  /*
+   * Why the gutter is a hairline with no dead space either side. A panel clips its own contents, so
+   * an inner group's divider cannot reach back across a gap to meet the outer one — the only way the
+   * two lines meet is for there to be no gap in the first place.
+   *
+   * Measured off the lines rather than the handles: the handle boxes are adjacent at any gutter
+   * width, which is exactly the assertion that would pass while the gap was still there.
+   */
+  it("meets an outer divider with no gap when groups are nested", async () => {
+    const { container, unmount } = renderVapor(NestedFixture, {
+      props: { class: "h-64 w-[40rem]" },
+    });
+
+    await nextTick();
+    await settled(container);
+
+    const [outer, inner] = slots(container, "splitter-handle");
+    const gutter = outer!.getBoundingClientRect();
+    const width = Number.parseFloat(getComputedStyle(outer!, "::after").width);
+
+    /* The outer line is centred in its gutter; the inner one spans its own handle end to end. */
+    const outerLineEnd = gutter.left + (gutter.width + width) / 2;
+
+    expect(inner!.getBoundingClientRect().left).toBeCloseTo(outerLineEnd, 0);
     unmount();
   });
 
@@ -266,6 +374,13 @@ describe("Splitter (browser)", () => {
 
   it("has no accessibility violations", async () => {
     const { container, unmount } = await render();
+
+    await expectNoA11yViolations(container);
+    unmount();
+  });
+
+  it("has no accessibility violations with a grip", async () => {
+    const { container, unmount } = await render({ showGrip: true });
 
     await expectNoA11yViolations(container);
     unmount();

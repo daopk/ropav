@@ -62,6 +62,11 @@ export interface SplitterHandleProps {
   /** Whether a double-click puts both neighbours back to their default size. @default true */
   resetOnDoubleClick?: boolean;
   /**
+   * Draws a grip across the middle of the divider, purely decorative — the grab area reaches well
+   * past it either way. @default false
+   */
+  showGrip?: boolean;
+  /**
    * Accessible name. Declared as `ariaLabel`, not `aria-label`: Vue normalises prop names, so a
    * hyphenated declaration would never be matched. @default "Resize panel"
    */
