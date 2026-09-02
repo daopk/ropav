@@ -28,13 +28,21 @@ const render = async (props: Record<string, unknown> = {}) => {
  * spacing the listbox gets from adjacent-sibling margins instead of a flex gap.
  */
 describe("ListBox (browser)", () => {
-  it("makes room for the indicator only when one is present", async () => {
-    const withIndicator = await render({ selectionMode: "single", withIndicator: true });
-    const withoutIndicator = await render({ selectionMode: "single" });
+  it("makes room for the indicator only while it is drawing a checkmark", async () => {
+    const withIndicator = await render({
+      defaultSelectedKeys: ["1"],
+      selectionMode: "single",
+      withIndicator: true,
+    });
+    const withoutIndicator = await render({ defaultSelectedKeys: ["1"], selectionMode: "single" });
+    const [selected, unselected] = withIndicator.items();
 
-    // `.list-box-item:has(.list-box-item__indicator)` is the rule under test; it cannot resolve
-    // without the real stylesheet.
-    expect(getComputedStyle(withIndicator.items()[0]!).paddingInlineEnd).toBe("28px");
+    // `.list-box-item[aria-selected="true"]:has(.list-box-item__indicator)` is the rule under test;
+    // it cannot resolve without the real stylesheet. The indicator is absolute and holds its
+    // checkmark hidden until the option is selected, so an unselected one keeps the full width for
+    // its label.
+    expect(getComputedStyle(selected!).paddingInlineEnd).toBe("28px");
+    expect(getComputedStyle(unselected!).paddingInlineEnd).toBe("8px");
     expect(getComputedStyle(withoutIndicator.items()[0]!).paddingInlineEnd).toBe("8px");
 
     withIndicator.unmount();

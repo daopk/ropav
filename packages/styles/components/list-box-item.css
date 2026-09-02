@@ -26,8 +26,10 @@
     @apply pointer-events-none text-wrap select-none;
   }
 
-  /* Add inline-end padding when indicator is present */
-  &:has(.list-box-item__indicator) {
+  /* Room for the checkmark, only while it is drawn. The repeated attribute is what outranks the
+   * `px` the picker popovers reset on this same item. */
+  &[data-slot="list-box-item"][aria-selected="true"]:has(.list-box-item__indicator),
+  &[data-slot="list-box-item"][data-selected="true"]:has(.list-box-item__indicator) {
     @apply pe-7;
   }
 
