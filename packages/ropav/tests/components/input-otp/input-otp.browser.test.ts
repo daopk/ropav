@@ -21,25 +21,18 @@ const renderInputOTP = (props: Record<string, unknown> = {}) => {
 };
 
 /**
- * Poll rather than sleep.
+ * Moves the caret and tells the engine about it, in the one task.
  *
- * Everything the boxes are drawn from reaches the engine through the document's `selectionchange`,
- * which the browser queues as a task rather than firing inline — so the mirror lands some time
- * after the call that moved the caret, and the render lands after that. A fixed sleep is a guess at
- * how long the pair takes, and the guess is what a loaded machine invalidates. This waits for the
- * answer instead, and says what it was waiting for when it never comes.
+ * `selectionchange` is the only news the engine gets of a caret move, and the browser queues it
+ * rather than firing it inline. Meanwhile the engine re-reads the selection on a timer, for the
+ * moves that arrive with no event at all — an autofill, say. So between a programmatic move and the
+ * browser's own event, that timer can land first and take the raw caret for an insert point, which
+ * snaps the next move the other way and leaves the mirror there. Handing the move over by hand
+ * leaves nothing to interleave, and is what the engine itself does for a deletion.
  */
-const waitUntil = async (what: string, predicate: () => boolean, budget = 2000): Promise<void> => {
-  const started = performance.now();
-
-  while (performance.now() - started < budget) {
-    if (predicate()) return;
-
-    await new Promise((resolve) => requestAnimationFrame(resolve));
-    await nextTick();
-  }
-
-  throw new Error(`timed out after ${budget}ms waiting for ${what}`);
+const moveCaret = (control: HTMLInputElement, start: number, end: number) => {
+  control.setSelectionRange(start, end);
+  document.dispatchEvent(new Event("selectionchange"));
 };
 
 /**
@@ -145,7 +138,7 @@ describe("InputOTP (browser)", () => {
 
     await userEvent.click(control);
     await userEvent.keyboard("{Backspace}");
-    await waitUntil("the caret to walk back a box", () => activeIndex(container) === 2);
+    await nextTick();
 
     expect(slotAt(2)).toHaveTextContent("");
     expect(activeIndex(container)).toBe(2);
@@ -162,8 +155,12 @@ describe("InputOTP (browser)", () => {
     const { container, control, unmount } = renderInputOTP({ defaultValue: "123456" });
 
     await userEvent.click(control);
-    control.setSelectionRange(2, 2);
-    await waitUntil("the caret to snap onto a single box", () => activeIndex(container) === 1);
+    // Where the caret was is what gives the drop a direction, so it is stated rather than left to
+    // whatever the click did with it: from the end of a full code, a drop inside snaps onto the box
+    // to its left.
+    moveCaret(control, 5, 6);
+    moveCaret(control, 2, 2);
+    await nextTick();
 
     expect(activeIndex(container)).toBe(1);
     expect(control.selectionStart).toBe(1);
@@ -176,11 +173,8 @@ describe("InputOTP (browser)", () => {
     const { container, control, unmount } = renderInputOTP({ defaultValue: "123456" });
 
     await userEvent.click(control);
-    control.setSelectionRange(0, 6);
-    await waitUntil(
-      "the whole code to be mirrored as selected",
-      () => activeIndex(container) === 0,
-    );
+    moveCaret(control, 0, 6);
+    await nextTick();
 
     const active = [...container.querySelectorAll('[data-slot="input-otp-slot"]')].map(
       (element) => element.getAttribute("data-active") === "true",
@@ -192,16 +186,13 @@ describe("InputOTP (browser)", () => {
   });
 
   it("replaces the whole code when a full selection is typed over", async () => {
-    const { container, control, slotAt, unmount } = renderInputOTP({ defaultValue: "123456" });
+    const { control, slotAt, unmount } = renderInputOTP({ defaultValue: "123456" });
 
     await userEvent.click(control);
-    control.setSelectionRange(0, 6);
     // The keystroke has to land on a selection the engine has already taken in, or it replaces a
     // caret rather than the whole code — which is the thing under test.
-    await waitUntil(
-      "the whole code to be mirrored as selected",
-      () => activeIndex(container) === 0,
-    );
+    moveCaret(control, 0, 6);
+    await nextTick();
     await userEvent.keyboard("9");
     await nextTick();
 
