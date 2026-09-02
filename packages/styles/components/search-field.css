@@ -88,7 +88,7 @@
 }
 
 .search-field__input {
-  @apply flex-1 rounded-none border-0 bg-transparent px-3 py-2 text-base shadow-none outline-none sm:text-sm;
+  @apply flex-1 rounded-none border-0 bg-transparent px-3 field-line-md shadow-none outline-none;
 
   /* Hide browser default search clear button */
   &::-webkit-search-cancel-button,

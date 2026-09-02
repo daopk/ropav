@@ -97,7 +97,7 @@
 }
 
 .number-field__input {
-  @apply min-w-0 rounded-none border-0 bg-transparent px-3 py-2 text-base tabular-nums shadow-none outline-none sm:text-sm;
+  @apply min-w-0 rounded-none border-0 bg-transparent px-3 field-line-md tabular-nums shadow-none outline-none;
 
   /* Remove border radius on left side when decrement button is present */
   .number-field__group:has([slot="decrement"]) & {

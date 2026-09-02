@@ -24,7 +24,7 @@
 
 /* Link - page number button (ghost button style) */
 .pagination__link {
-  @apply relative isolate inline-flex size-9 origin-center items-center justify-center rounded-3xl text-sm font-medium whitespace-nowrap outline-none select-none no-highlight md:size-8;
+  @apply relative isolate inline-flex size-8 origin-center items-center justify-center rounded-3xl text-sm font-medium whitespace-nowrap outline-none select-none no-highlight;
 
   cursor: var(--cursor-interactive);
 
@@ -88,7 +88,7 @@
 
 /* Ellipsis */
 .pagination__ellipsis {
-  @apply inline-flex size-9 items-center justify-center text-sm text-muted select-none md:size-8;
+  @apply inline-flex size-8 items-center justify-center text-sm text-muted select-none;
 }
 
 /* Navigation buttons (Previous / Next) */
@@ -107,7 +107,7 @@
 
 .pagination--sm {
   .pagination__link {
-    @apply size-8 text-xs md:size-7;
+    @apply size-7 text-xs;
 
     &:active,
     &[data-pressed="true"] {
@@ -120,7 +120,7 @@
   }
 
   .pagination__ellipsis {
-    @apply size-8 text-xs md:size-7;
+    @apply size-7 text-xs;
   }
 
   .pagination__summary {
@@ -134,7 +134,7 @@
 
 .pagination--lg {
   .pagination__link {
-    @apply size-10 text-base md:size-9;
+    @apply size-9 text-base;
 
     &:active,
     &[data-pressed="true"] {
@@ -147,7 +147,7 @@
   }
 
   .pagination__ellipsis {
-    @apply size-10 text-base md:size-9;
+    @apply size-9 text-base;
   }
 
   .pagination__summary {

@@ -2,7 +2,7 @@
 
 /* Base button styles */
 .button {
-  @apply relative isolate inline-flex h-10 w-fit origin-center items-center justify-center gap-2 rounded-3xl px-4 text-sm font-medium whitespace-nowrap outline-none select-none no-highlight md:h-9;
+  @apply relative isolate inline-flex h-9 w-fit origin-center items-center justify-center gap-2 rounded-3xl px-4 text-sm font-medium whitespace-nowrap outline-none select-none no-highlight;
 
   /**
    * Transitions
@@ -69,17 +69,13 @@
 
   /* SVG icon styling - exclude spinner and link-icon svgs */
   & svg:not([data-slot="spinner"] svg, [data-slot="link-icon"] svg) {
-    @apply pointer-events-none -mx-0.5 my-0.5 size-5 shrink-0 self-center sm:my-1 sm:size-4;
+    @apply pointer-events-none -mx-0.5 my-1 size-4 shrink-0 self-center;
   }
 }
 
 /* Size variants */
 .button--sm {
-  @apply h-9 px-3 md:h-8;
-
-  & svg:not([data-slot="spinner"] svg, [data-slot="link-icon"] svg) {
-    @apply size-4;
-  }
+  @apply h-8 px-3;
 
   &:active,
   &[data-pressed="true"] {
@@ -92,7 +88,7 @@
 }
 
 .button--lg {
-  @apply h-11 text-base md:h-10;
+  @apply h-10 text-base;
 
   &:active,
   &[data-pressed="true"] {
@@ -168,15 +164,15 @@
 
 /* Icon-only modifier */
 .button--icon-only {
-  @apply w-10 p-0 md:w-9;
+  @apply w-9 p-0;
 }
 
 .button--icon-only.button--sm {
-  @apply w-9 md:w-8;
+  @apply w-8;
 }
 
 .button--icon-only.button--lg {
-  @apply w-11 md:w-10;
+  @apply w-10;
 }
 
 /* Full width modifier */

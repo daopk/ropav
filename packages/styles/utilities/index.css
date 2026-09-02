@@ -151,3 +151,30 @@
   scrollbar-gutter: auto;
   -ms-overflow-style: none;
 }
+
+/* === Field metrics === */
+/*
+ * One line of a field, at each size. The size scale is the control scale: 32px, 36px, 40px, the
+ * same three heights a button stands at, so a field and a button of the same size line up.
+ *
+ * The padding is what carries it rather than a height, because a field is content-driven - some
+ * shells grow (a group around a textarea, a multi-select trigger wrapping its chips) and a height
+ * would fight them. The shell states its own floor: `min-h-8` / `min-h-9` / `min-h-10` where it may
+ * grow, `h-8` / `h-9` / `h-10` where it may not.
+ *
+ * The padding also changes at `sm` where the type does. 16px type below that breakpoint is what
+ * stops mobile Safari zooming the page on focus, and 16px sets a 24px line where 14px sets a 20px
+ * one - so the padding gives back the 4px difference and the height comes out the same either way.
+ * `lg` keeps 16px throughout, as the large button does.
+ */
+@utility field-line-sm {
+  @apply py-1 text-base sm:py-1.5 sm:text-sm;
+}
+
+@utility field-line-md {
+  @apply py-1.5 text-base sm:py-2 sm:text-sm;
+}
+
+@utility field-line-lg {
+  @apply py-2 text-base;
+}
