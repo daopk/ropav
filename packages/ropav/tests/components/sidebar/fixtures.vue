@@ -41,6 +41,8 @@ const props = withDefaults(
         noRail?: boolean;
         /** Wraps every item in a tooltip, which only speaks up once the panel is a rail. */
         withTooltips?: boolean;
+        /** Turns the scroll region's fade off, which is on unless someone says otherwise. */
+        showScrollShadow?: boolean;
         /** Adds a nav item with rows of its own, after the flat ones. */
         withNested?: boolean;
         /** Whether that item starts with its rows showing. */
@@ -57,6 +59,7 @@ const props = withDefaults(
     noGroupLabel: undefined,
     noRail: undefined,
     nestedExpanded: undefined,
+    showScrollShadow: true,
     withNested: undefined,
     withTooltips: undefined,
   },
@@ -79,6 +82,7 @@ const defaultItems: SidebarFixtureItem[] = [
   <Sidebar
     :auto-save-id="props.autoSaveId"
     :breakpoint="props.breakpoint"
+    :class="props.class"
     :collapsible="props.collapsible"
     :default-expanded="props.defaultExpanded"
     :default-mobile-open="props.defaultMobileOpen"
@@ -93,7 +97,7 @@ const defaultItems: SidebarFixtureItem[] = [
   >
     <SidebarPanel :aria-label="props.ariaLabel">
       <SidebarHeader>Acme</SidebarHeader>
-      <SidebarContent>
+      <SidebarContent :show-scroll-shadow="props.showScrollShadow">
         <SidebarGroup aria-label="Fallback">
           <SidebarGroupLabel v-if="!props.noGroupLabel">Workspace</SidebarGroupLabel>
           <template v-for="item in props.items ?? defaultItems" :key="item.label">

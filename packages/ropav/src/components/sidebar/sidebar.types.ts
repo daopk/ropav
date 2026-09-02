@@ -74,6 +74,16 @@ export interface SidebarHeaderProps {
 
 export interface SidebarContentProps {
   class?: string;
+  /**
+   * Whether the scroll region fades at whichever edge has more nav beyond it.
+   *
+   * On by default, and it costs nothing when there is nothing to say: the fade is a mask keyed on
+   * attributes that only appear once the region actually overflows, so a nav short enough to fit is
+   * left exactly as it was. @default true
+   */
+  showScrollShadow?: boolean;
+  /** How deep the fade runs, in pixels. Also how far focus is kept clear of it. @default 40 */
+  scrollShadowSize?: number;
 }
 
 export interface SidebarFooterProps {

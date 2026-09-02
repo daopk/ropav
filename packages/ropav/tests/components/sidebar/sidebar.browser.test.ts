@@ -5,6 +5,7 @@ import { nextTick } from "vue";
 
 import { parkPointer } from "../../harness/park-pointer";
 import { settled } from "../../harness/settle";
+import { waitUntil } from "../../harness/wait-until";
 
 import Fixture from "./fixtures.vue";
 
@@ -458,5 +459,104 @@ describe("an item with rows of its own", () => {
 
     await settled(slot(container, "sidebar-panel"));
     await expectNoA11yViolations(container);
+  });
+});
+
+describe("the scroll region", () => {
+  /** Enough rows to overflow the short panel the cases below give it. */
+  const many = Array.from({ length: 14 }, (_, index) => ({
+    href: `/row-${index}`,
+    label: `Row ${index}`,
+  }));
+
+  it("is the shadow container itself, and keeps the nav's own scrollbar", async () => {
+    await parkPointer();
+
+    const { container } = mount({ breakpoint: WIDE });
+
+    await settled(slot(container, "sidebar-panel"));
+
+    const content = slot(container, "sidebar-content");
+    const style = getComputedStyle(content);
+
+    // The fade has to be on the element that scrolls; a wrapper around it would fade a box that
+    // never moves.
+    expect(content.className).toContain("scroll-shadow");
+    expect(content.className).toContain("sidebar__content");
+    // `scroll-shadow.css` is imported long after `sidebar.css`, so this is the two-class rule
+    // winning `scrollbar-thin` back from `.scroll-shadow--vertical`.
+    expect(style.scrollbarWidth).toBe("thin");
+  });
+
+  /*
+   * The thing that makes the fade safe rather than merely pretty: focus scrolls an item to the
+   * nearest edge, which is exactly where the fade is, so without this a keyboard user would tab
+   * down the nav landing on item after item with its focus ring faded out.
+   */
+  it("keeps focus clear of the fade", async () => {
+    await parkPointer();
+
+    const { container } = mount({ breakpoint: WIDE });
+
+    await settled(slot(container, "sidebar-panel"));
+
+    const style = getComputedStyle(slot(container, "sidebar-content"));
+
+    expect(Number.parseFloat(style.scrollPaddingBlockStart)).toBeGreaterThan(0);
+    expect(style.scrollPaddingBlockStart).toBe(style.scrollPaddingBlockEnd);
+  });
+
+  it("says nothing while the nav fits", async () => {
+    await parkPointer();
+
+    const { container } = mount({ breakpoint: WIDE });
+
+    await settled(slot(container, "sidebar-panel"));
+
+    const content = slot(container, "sidebar-content");
+
+    expect(content.scrollHeight).toBeLessThanOrEqual(content.clientHeight + 1);
+    expect(content.hasAttribute("data-bottom-scroll")).toBe(false);
+    expect(getComputedStyle(content).maskImage).toBe("none");
+  });
+
+  it("fades at the edge with more nav beyond it", async () => {
+    await parkPointer();
+
+    const { container } = mount({ breakpoint: WIDE, class: "h-40", items: many });
+
+    await settled(slot(container, "sidebar-panel"));
+
+    const content = slot(container, "sidebar-content");
+
+    expect(content.scrollHeight).toBeGreaterThan(content.clientHeight);
+
+    // The composable batches its write into an animation frame, so the attribute lands a frame
+    // after the overflow does.
+    await waitUntil("the fade reports more nav below", () =>
+      content.hasAttribute("data-bottom-scroll"),
+    );
+
+    expect(content.getAttribute("data-bottom-scroll")).toBe("true");
+    expect(getComputedStyle(content).maskImage).not.toBe("none");
+  });
+
+  it("stays out of the way when it is turned off", async () => {
+    await parkPointer();
+
+    const { container } = mount({
+      breakpoint: WIDE,
+      class: "h-40",
+      items: many,
+      showScrollShadow: false,
+    });
+
+    await settled(slot(container, "sidebar-panel"));
+
+    const content = slot(container, "sidebar-content");
+
+    expect(content.scrollHeight).toBeGreaterThan(content.clientHeight);
+    expect(content.hasAttribute("data-bottom-scroll")).toBe(false);
+    expect(getComputedStyle(content).maskImage).toBe("none");
   });
 });

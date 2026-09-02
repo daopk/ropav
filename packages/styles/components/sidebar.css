@@ -117,9 +117,32 @@
 }
 
 /* The scroll region. `overflow-x-hidden` because the panel narrows around its contents during the
- * collapse transition, and without it every frame of that transition would flash a scrollbar. */
+ * collapse transition, and without it every frame of that transition would flash a scrollbar.
+ *
+ * `scroll-padding` is what makes the fade safe rather than merely pretty. Focus scrolls an item to
+ * the nearest edge, which is exactly where the fade is, so a keyboard user tabbing down the nav
+ * would land on item after item with its focus ring faded out. The padding moves that landing
+ * point clear of the fade. Sized from the same property the fade is, so retuning one moves both. */
 .sidebar__content {
-  @apply flex min-h-0 flex-1 scrollbar-thin flex-col gap-1 overflow-x-hidden overflow-y-auto p-2;
+  @apply flex min-h-0 flex-1 flex-col gap-1 overflow-x-hidden overflow-y-auto p-2;
+
+  scroll-padding-block: var(--scroll-shadow-size, 0px);
+}
+
+/* Two classes to beat one: `scroll-shadow.css` is imported under Layout, long after this file under
+ * Navigation, so `.scroll-shadow--vertical`'s `scrollbar` wins at equal specificity and the nav
+ * would grow a full-width scrollbar the moment it became a shadow container. */
+.sidebar__content.scroll-shadow {
+  @apply scrollbar-thin;
+
+  /* The fade is a `mask-image` over the rows, which in Forced Colors Mode means system-coloured
+   * text dissolving into the background. That mode is chosen by people who need the opposite of
+   * subtlety, so the affordance is dropped rather than softened — the scrollbar still says the
+   * region scrolls. */
+  @media (forced-colors: active) {
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
 }
 
 .sidebar__footer {
