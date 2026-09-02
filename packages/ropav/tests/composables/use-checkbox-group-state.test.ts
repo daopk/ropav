@@ -1,4 +1,4 @@
-import type { CheckboxGroupState } from "@/composables";
+import type { CheckboxGroupState } from "@/composables/use-checkbox-group-state";
 
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it, vi } from "vitest";

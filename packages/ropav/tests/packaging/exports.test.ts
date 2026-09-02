@@ -9,6 +9,8 @@ import {
   readComponentDirs,
 } from "../../scripts/component-dirs.mjs";
 
+import { barrelStarExports, parseStatements, reExportsFrom } from "./parse-exports";
+
 /*
  * Three lists decide what a consumer can reach, and nothing used to hold them together: the barrel
  * at `src/components/index.ts` is hand-written, the build entries come from `vite.config.ts`, and
@@ -25,38 +27,10 @@ const { components, missingIndex } = readComponentDirs(componentsDir);
 const readIndex = (name: string) =>
   fs.readFileSync(path.join(componentsDir, name, "index.ts"), "utf8");
 
-/** `import { … } from "…"`, `export { … } from "…"`, and the bare `export { … }` in between. */
-const NAMED_STATEMENT = /(import|export)(\s+type)?\s*\{([^}]*)\}\s*(?:from\s*"([^"]+)")?/g;
-
-interface NamedStatement {
-  isExport: boolean;
-  isTypeOnly: boolean;
-  /** Specifiers as written, so `X as Y` survives for the alias check. */
-  specifiers: string[];
-  /** Empty for a bare `export { … }`, which re-exports names imported further up the file. */
-  source: string;
-}
-
-const parseStatements = (source: string): NamedStatement[] =>
-  [...source.matchAll(NAMED_STATEMENT)].map((match) => ({
-    isExport: match[1] === "export",
-    isTypeOnly: Boolean(match[2]),
-    source: match[4] ?? "",
-    specifiers: (match[3] ?? "")
-      .split(",")
-      .map((specifier) => specifier.trim())
-      .filter(Boolean),
-  }));
-
-/** The name a specifier is known by locally: `X as Y` binds `Y`, a bare `X` binds `X`. */
-const localName = (specifier: string) => specifier.split(" as ").at(-1)?.trim() ?? specifier;
-
 /** The `export * from "./name"` lines in the barrel, in the order they appear. */
-const barrelExports = [
-  ...fs
-    .readFileSync(path.join(componentsDir, "index.ts"), "utf8")
-    .matchAll(/^export \* from "\.\/([^"]+)";$/gm),
-].map((match) => match[1] ?? "");
+const barrelExports = barrelStarExports(
+  fs.readFileSync(path.join(componentsDir, "index.ts"), "utf8"),
+);
 
 describe("component directories", () => {
   it("all have an index.ts", () => {
@@ -100,28 +74,8 @@ describe.each([...INTERNAL_DIRS])("internal directory %s", (internal) => {
       ),
   );
 
-  /**
-   * What each barrel re-exports out of this directory, either straight through or by way of a
-   * local import — every host uses the second form, because it also feeds the compound object.
-   */
-  const reExportsOf = (name: string) => {
-    const statements = parseStatements(readIndex(name));
-    const imported = new Set(
-      statements
-        .filter((statement) => !statement.isExport && statement.source === specifier)
-        .flatMap((statement) => statement.specifiers.map(localName)),
-    );
-
-    return statements
-      .filter((statement) => statement.isExport)
-      .flatMap((statement) =>
-        statement.source === specifier
-          ? statement.specifiers
-          : statement.source === ""
-            ? statement.specifiers.filter((one) => imported.has(one.split(" as ")[0]?.trim() ?? ""))
-            : [],
-      );
-  };
+  /** What each barrel re-exports out of this directory. */
+  const reExportsOf = (name: string) => reExportsFrom(readIndex(name), specifier);
 
   /** The barrels that put a part of this directory into their own public API. */
   const hosts = components.filter((name) => reExportsOf(name).length > 0);

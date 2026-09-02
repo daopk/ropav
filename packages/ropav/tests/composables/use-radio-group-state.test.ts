@@ -1,4 +1,4 @@
-import type { RadioGroupState } from "@/composables";
+import type { RadioGroupState } from "@/composables/use-radio-group-state";
 
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it, vi } from "vitest";

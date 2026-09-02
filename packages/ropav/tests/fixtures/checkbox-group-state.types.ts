@@ -1,4 +1,8 @@
-import type { CheckboxGroupState, ValidationBehavior, ValidationFunction } from "@/composables";
+import type { CheckboxGroupState } from "@/composables/use-checkbox-group-state";
+import type {
+  ValidationBehavior,
+  ValidationFunction,
+} from "@/composables/use-form-validation-state";
 
 export interface CheckboxGroupStateHostProps {
   /** Item values to render an input for. */

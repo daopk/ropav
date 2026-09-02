@@ -1,5 +1,6 @@
 import type { ColorSliderHarnessProps } from "../fixtures/color-slider.types";
-import type { ColorSliderState, UseColorSliderReturn } from "@/composables";
+import type { UseColorSliderReturn } from "@/composables/use-color-slider";
+import type { ColorSliderState } from "@/composables/use-color-slider-state";
 
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it } from "vitest";

@@ -1,8 +1,5 @@
-import type {
-  CollectionKey,
-  UseCollectionReturn,
-  UseSingleSelectListStateReturn,
-} from "@/composables";
+import type { CollectionKey, UseCollectionReturn } from "@/composables/use-collection";
+import type { UseSingleSelectListStateReturn } from "@/composables/use-single-select-list-state";
 
 export interface SingleSelectListStateHostProps {
   /** Keys to register an item for, in document order. */

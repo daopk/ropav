@@ -1,5 +1,6 @@
 import type { TabListStateHostProps } from "../fixtures/tab-list-state.types";
-import type { CollectionKey, UseTabListStateReturn } from "@/composables";
+import type { CollectionKey } from "@/composables/use-collection";
+import type { UseTabListStateReturn } from "@/composables/use-tab-list-state";
 
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it, vi } from "vitest";

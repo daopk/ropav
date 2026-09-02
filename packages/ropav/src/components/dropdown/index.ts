@@ -50,6 +50,11 @@ export { useDropdownContext, useDropdownPopoverTarget } from "./dropdown.context
 export type { DropdownContext, DropdownPopoverTarget } from "./dropdown.context";
 
 /* -------------------------------------------------------------------------------------------------
+ * Composables
+ * -----------------------------------------------------------------------------------------------*/
+export type { MenuTriggerType } from "../../composables/use-menu-trigger";
+
+/* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
 export { dropdownVariants } from "@ropav/styles";

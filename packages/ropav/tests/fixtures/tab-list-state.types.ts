@@ -1,4 +1,5 @@
-import type { CollectionKey, UseCollectionReturn, UseTabListStateReturn } from "@/composables";
+import type { CollectionKey, UseCollectionReturn } from "@/composables/use-collection";
+import type { UseTabListStateReturn } from "@/composables/use-tab-list-state";
 
 export interface TabListStateHostProps {
   /** Keys to register a tab for, in document order. */

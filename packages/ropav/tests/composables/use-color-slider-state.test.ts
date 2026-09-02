@@ -1,4 +1,4 @@
-import type { ColorSliderState } from "@/composables";
+import type { ColorSliderState } from "@/composables/use-color-slider-state";
 import type { Color } from "@/utils/color-types";
 
 import { renderVapor } from "@ropav/testing/helpers/vue";

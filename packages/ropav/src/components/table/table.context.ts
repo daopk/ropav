@@ -1,9 +1,3 @@
-import type {
-  TableCellMeta,
-  TableCollectionItems,
-  TableRegistry,
-  UseTableCollectionReturn,
-} from "../../composables";
 import type { CollectionKey } from "../../composables/use-collection";
 import type { DragAndDropHooks } from "../../composables/use-drag-and-drop";
 import type { UseDraggableCollectionStateReturn } from "../../composables/use-draggable-collection-state";
@@ -11,6 +5,12 @@ import type { UseDraggableItemReturn } from "../../composables/use-draggable-ite
 import type { UseDroppableCollectionStateReturn } from "../../composables/use-droppable-collection-state";
 import type { UseGridKeyboardReturn } from "../../composables/use-grid-keyboard";
 import type { UseSelectionManagerReturn } from "../../composables/use-selection-manager";
+import type {
+  TableCellMeta,
+  TableCollectionItems,
+  TableRegistry,
+  UseTableCollectionReturn,
+} from "../../composables/use-table-collection";
 import type {
   TableColumnSize,
   UseTableColumnLayoutReturn,

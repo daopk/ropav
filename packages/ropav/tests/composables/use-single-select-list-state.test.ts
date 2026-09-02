@@ -1,5 +1,6 @@
 import type { SingleSelectListStateHostProps } from "../fixtures/single-select-list-state.types";
-import type { CollectionKey, UseSingleSelectListStateReturn } from "@/composables";
+import type { CollectionKey } from "@/composables/use-collection";
+import type { UseSingleSelectListStateReturn } from "@/composables/use-single-select-list-state";
 
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it, vi } from "vitest";

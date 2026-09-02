@@ -1,5 +1,6 @@
 import type { ColorAreaHarnessProps } from "../fixtures/color-area.types";
-import type { ColorAreaState, UseColorAreaReturn } from "@/composables";
+import type { UseColorAreaReturn } from "@/composables/use-color-area";
+import type { ColorAreaState } from "@/composables/use-color-area-state";
 
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it, vi } from "vitest";

@@ -1,4 +1,5 @@
-import type { ColorAreaState, UseColorAreaReturn } from "@/composables";
+import type { UseColorAreaReturn } from "@/composables/use-color-area";
+import type { ColorAreaState } from "@/composables/use-color-area-state";
 import type { Color, ColorChannel, ColorSpace } from "@/utils/color-types";
 
 export interface ColorAreaHostProps {
