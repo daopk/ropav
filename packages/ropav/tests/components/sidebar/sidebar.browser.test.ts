@@ -102,6 +102,46 @@ describe("resizing", () => {
     expect(rail.getAttribute("aria-valuenow")).toBe("316");
   });
 
+  /*
+   * A width the rail cannot read off the declaration — `rem` here, and nothing at all is the same
+   * case — so the only number available is a measurement of the panel. Taken during setup that
+   * measurement is zero, because the tree is still being built and an element outside the document
+   * has no width; the first drag then starts from nothing and snaps the panel to its minimum,
+   * where the pointer has to travel the whole width back before the edge moves again.
+   */
+  it("knows how wide the panel is before anything is declared in pixels", async () => {
+    await parkPointer();
+
+    const { container } = mount({ breakpoint: WIDE, defaultWidth: "18rem", isResizable: true });
+
+    await settled(slot(container, "sidebar-panel"));
+
+    expect(slot(container, "sidebar-rail").getAttribute("aria-valuenow")).toBe(
+      String(Math.round(widthOf(container))),
+    );
+  });
+
+  it("starts the first drag from the width on screen, not from nothing", async () => {
+    await parkPointer();
+
+    const { container } = mount({
+      breakpoint: WIDE,
+      defaultWidth: "18rem",
+      isResizable: true,
+      maxWidth: 400,
+      minWidth: 200,
+    });
+
+    await settled(slot(container, "sidebar-panel"));
+
+    const before = widthOf(container);
+
+    await drag(slot(container, "sidebar-rail"), 40);
+    await settled(slot(container, "sidebar-panel"));
+
+    expect(widthOf(container)).toBe(before + 40);
+  });
+
   it("clamps at both ends rather than snapping shut", async () => {
     await parkPointer();
 

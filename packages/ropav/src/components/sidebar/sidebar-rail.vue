@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type { SidebarRailProps, SidebarRailSlotProps } from "./sidebar.types";
 
-import { computed, shallowRef, watch } from "vue";
+import { computed, onMounted, shallowRef, watch } from "vue";
 
 import { useInteractionStates } from "../../composables/use-interaction-states";
 import { useMove } from "../../composables/use-move";
@@ -51,18 +51,25 @@ const declaredWidth = computed(() => {
 /**
  * The starting point, for a sidebar sized by the stylesheet with no declared width to read.
  *
- * Taken once, when the panel appears: nothing is in flight then, so this is the one moment a
- * measurement is the truth. Every later change goes through `declaredWidth`.
+ * Read on mount and never during setup, which is not a detail: a watcher's immediate run happens
+ * synchronously while the tree is still being built, and an element that is not in the document
+ * yet measures zero. Nothing would correct it either — the panel is registered by then, so the
+ * element never changes and the watcher never fires again. A rail left holding that zero starts
+ * every first drag from nothing and snaps the panel straight to its minimum, where it stays until
+ * the pointer has travelled the whole width back.
+ *
+ * The watcher stays for the panel actually changing — the drawer handing it back on the way out of
+ * a narrow viewport — where post-flush is the right moment and there is a new element to measure.
  */
 const measuredWidth = shallowRef(0);
 
-watch(
-  panelEl,
-  () => {
-    measuredWidth.value = panelEl.value?.offsetWidth ?? 0;
-  },
-  { flush: "post", immediate: true },
-);
+const measure = () => {
+  measuredWidth.value = panelEl.value?.offsetWidth ?? 0;
+};
+
+onMounted(measure);
+
+watch(panelEl, measure, { flush: "post" });
 
 const width = computed(() => declaredWidth.value ?? measuredWidth.value);
 
