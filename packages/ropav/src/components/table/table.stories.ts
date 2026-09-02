@@ -1,5 +1,6 @@
 import type { CollectionSelection } from "../../composables/use-selection-manager";
 import type { StoryMeta } from "../../utils/story-meta";
+import type { User } from "../../utils/story-users";
 import type { TableRootProps, TableSortDescriptor } from "./table.types";
 import type { StoryObj } from "@storybook/vue3-vite";
 import type { SortingState, Updater } from "@tanstack/vue-table";
@@ -23,6 +24,7 @@ import IconTray from "~icons/gravity-ui/tray";
 
 import { useDragAndDrop } from "../../composables/use-drag-and-drop";
 import { avatarSrc } from "../../utils/story-assets";
+import { generateUsers } from "../../utils/story-users";
 import { TableLayout } from "../../utils/virtualizer-table-layout";
 import { AvatarFallback, AvatarImage, AvatarRoot } from "../avatar";
 import { Button } from "../button";
@@ -134,15 +136,6 @@ type Story = StoryObj<{ variant: TableRootProps["variant"] }>;
 /* -------------------------------------------------------------------------------------------------
  * Sample Data
  * -----------------------------------------------------------------------------------------------*/
-interface User {
-  id: number;
-  image_url: string;
-  name: string;
-  role: string;
-  status: "Active" | "Inactive" | "On Leave";
-  email: string;
-}
-
 const users: User[] = [
   {
     email: "kate@acme.com",
@@ -997,83 +990,6 @@ export const EmptyStateDemo: Story = {
 /* -------------------------------------------------------------------------------------------------
  * Virtualization
  * -----------------------------------------------------------------------------------------------*/
-const ROLES = [
-  "Software Engineer",
-  "Senior Engineer",
-  "Staff Engineer",
-  "Product Manager",
-  "Designer",
-  "Data Analyst",
-  "QA Engineer",
-  "DevOps Engineer",
-  "Marketing Manager",
-  "Sales Representative",
-];
-
-const STATUSES: User["status"][] = ["Active", "Inactive", "On Leave"];
-
-const FIRST_NAMES = [
-  "Emma",
-  "Liam",
-  "Olivia",
-  "Noah",
-  "Ava",
-  "James",
-  "Sophia",
-  "Oliver",
-  "Isabella",
-  "Lucas",
-  "Mia",
-  "Ethan",
-  "Charlotte",
-  "Mason",
-  "Amelia",
-  "Logan",
-  "Harper",
-  "Alexander",
-  "Ella",
-  "Benjamin",
-];
-
-const LAST_NAMES = [
-  "Smith",
-  "Johnson",
-  "Williams",
-  "Brown",
-  "Jones",
-  "Garcia",
-  "Miller",
-  "Davis",
-  "Rodriguez",
-  "Martinez",
-  "Anderson",
-  "Taylor",
-  "Thomas",
-  "Jackson",
-  "White",
-  "Harris",
-  "Clark",
-  "Lewis",
-  "Robinson",
-  "Walker",
-];
-
-/** The same rows in the same order as the React story, so the two can be compared row by row. */
-const generateUsers = (count: number): User[] =>
-  Array.from({ length: count }, (_, index) => {
-    const firstName = FIRST_NAMES[index % FIRST_NAMES.length]!;
-    const lastName = LAST_NAMES[Math.floor(index / FIRST_NAMES.length) % LAST_NAMES.length]!;
-
-    return {
-      email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}@acme.com`,
-      id: index + 1,
-      image_url: avatarSrc("red"),
-      name: `${firstName} ${lastName}`,
-      role: ROLES[index % ROLES.length]!,
-      status: STATUSES[index % STATUSES.length]!,
-    };
-  });
-
 /**
  * A thousand rows, of which only a screenful is ever in the DOM.
  *
@@ -1091,6 +1007,46 @@ export const Virtualization: Story = {
           <TableScrollContainer>
             <TableContent
               aria-label="Virtualized table with 1000 rows"
+              class="h-[500px] min-w-[700px] scrollbar overflow-auto"
+            >
+              <TableHeader class="h-full w-full">
+                <TableColumn id="name" is-row-header :min-width="160">Name</TableColumn>
+                <TableColumn id="role" :min-width="220">Role</TableColumn>
+                <TableColumn id="email" :min-width="240">Email</TableColumn>
+              </TableHeader>
+              <TableBody :item-text-value="(user) => user.name" :items="users">
+                <template #default="{item}">
+                  <TableRow :id="item.id">
+                    <TableCell>{{ item.name }}</TableCell>
+                    <TableCell>{{ item.role }}</TableCell>
+                    <TableCell>{{ item.email }}</TableCell>
+                  </TableRow>
+                </template>
+              </TableBody>
+            </TableContent>
+          </TableScrollContainer>
+        </Table>
+      </Virtualizer>
+    `,
+  }),
+};
+
+/**
+ * A hundred thousand rows, for dragging the scrollbar across.
+ *
+ * Every frame of a drag lands the window somewhere it has never been, so every frame mounts a
+ * whole screenful of rows. This is where that cost is felt, and where it has to fit in a frame.
+ */
+export const VirtualizationHundredThousandRows: Story = {
+  render: () => ({
+    components,
+    setup: () => ({ layout: TableLayout, users: generateUsers(100_000) }),
+    template: `
+      <Virtualizer :layout="layout" :layout-options="{rowSize: 42, headingSize: 42}">
+        <Table>
+          <TableScrollContainer>
+            <TableContent
+              aria-label="Virtualized table with a hundred thousand rows"
               class="h-[500px] min-w-[700px] scrollbar overflow-auto"
             >
               <TableHeader class="h-full w-full">
