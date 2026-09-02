@@ -54,3 +54,43 @@ export const [useSidebarGroupContext, provideSidebarGroupContext] =
     name: "SidebarGroupContext",
     strict: false,
   });
+
+/**
+ * What a collapsible nav item offers the trigger and the submenu inside it.
+ *
+ * Strict: a trigger or an indicator outside a collapsible has nothing to open and nothing to point
+ * at, so the absence of one is a mistake rather than a state to render around.
+ */
+export interface SidebarCollapsibleContext {
+  /** Whether the children are showing. Always false while the sidebar is a rail — see the note on
+   * `toggle` for why the rail is the one place this does not follow the item's own state. */
+  isExpanded: ComputedRef<boolean>;
+  isDisabled: ComputedRef<boolean>;
+  /**
+   * Opens and shuts the children.
+   *
+   * On the rail it opens the sidebar first. The children are not rendered at that width, so a
+   * trigger that only flipped its own flag would be a control that visibly does nothing; opening
+   * the panel is what the press was asking for either way.
+   */
+  toggle: () => void;
+  /** The trigger's id, which names the submenu. */
+  triggerId: ComputedRef<string>;
+  /** The submenu's id, which the trigger's `aria-controls` points at. */
+  subMenuId: ComputedRef<string>;
+}
+
+export const [useSidebarCollapsibleContext, provideSidebarCollapsibleContext] =
+  createContext<SidebarCollapsibleContext>({ name: "SidebarCollapsibleContext" });
+
+/**
+ * Whether a row is inside a submenu, which is all an item needs to know to style itself as a child.
+ *
+ * Loose and a bare boolean: an item outside a submenu is the ordinary case, not an error, and
+ * carrying the answer down beats a prop every child row would have to remember.
+ */
+export const [useSidebarSubMenuContext, provideSidebarSubMenuContext] = createContext<boolean>({
+  defaultValue: false,
+  name: "SidebarSubMenuContext",
+  strict: false,
+});

@@ -280,3 +280,77 @@ describe("autoSaveId", () => {
     expect(localStorage.length).toBe(0);
   });
 });
+
+describe("an item with rows of its own", () => {
+  it("names its rows and points the trigger at them", () => {
+    const { container } = renderVapor(Fixture, { props: { withNested: true } });
+    const trigger = slot(container, "sidebar-collapsible-trigger");
+    const sub = slot(container, "sidebar-sub-menu");
+
+    expect(trigger.getAttribute("aria-controls")).toBe(sub.id);
+    expect(trigger.getAttribute("aria-expanded")).toBe("false");
+    expect(sub.getAttribute("role")).toBe("group");
+    expect(sub.getAttribute("aria-labelledby")).toBe(trigger.id);
+  });
+
+  /* `useDisclosurePanel` writes `hidden="until-found"`, which is what keeps a shut row off the tab
+   * order while leaving find-in-page able to reveal it. */
+  it("keeps a shut row out of the tab order", async () => {
+    const { container } = renderVapor(Fixture, { props: { withNested: true } });
+
+    expect(slot(container, "sidebar-sub-menu").getAttribute("hidden")).toBe("until-found");
+
+    await press(slot(container, "sidebar-collapsible-trigger"));
+
+    expect(slot(container, "sidebar-sub-menu").hasAttribute("hidden")).toBe(false);
+  });
+
+  it("styles a child as a child and leaves a top row alone", () => {
+    const { container } = renderVapor(Fixture, { props: { withNested: true } });
+    const rows = slots(container, "sidebar-item");
+
+    expect(rows[0]!.className).not.toContain("sidebar__item--sub");
+    expect(rows.at(-1)!.className).toContain("sidebar__item--sub");
+  });
+
+  /*
+   * The decision the whole shape turns on. A child row carries no icon, so on the rail it would be
+   * a nameless blank — the rows are not rendered there at all, and the trigger stops claiming to
+   * control a region that is not on the page.
+   */
+  it("leaves its rows out on the rail", () => {
+    const { container } = renderVapor(Fixture, {
+      props: { defaultExpanded: false, nestedExpanded: true, withNested: true },
+    });
+    const trigger = slot(container, "sidebar-collapsible-trigger");
+
+    expect(container.querySelector("[data-slot='sidebar-sub-menu']")).toBeNull();
+    expect(trigger.hasAttribute("aria-controls")).toBe(false);
+    expect(trigger.hasAttribute("aria-expanded")).toBe(false);
+  });
+
+  /* The press was asking for the rows, and the rows live at the wider size. */
+  it("opens the sidebar and its rows together when pressed on the rail", async () => {
+    const { container } = renderVapor(Fixture, {
+      props: { defaultExpanded: false, withNested: true },
+    });
+
+    await press(slot(container, "sidebar-collapsible-trigger"));
+
+    expect(slot(container, "sidebar").hasAttribute("data-collapsed")).toBe(false);
+    expect(slot(container, "sidebar-sub-menu").getAttribute("data-expanded")).toBe("true");
+  });
+
+  it("remembers the fold across a trip to the rail", async () => {
+    const { container } = renderVapor(Fixture, {
+      props: { nestedExpanded: true, withNested: true },
+    });
+
+    expect(slot(container, "sidebar-sub-menu").getAttribute("data-expanded")).toBe("true");
+
+    await press(slot(container, "sidebar-trigger"));
+    await press(slot(container, "sidebar-trigger"));
+
+    expect(slot(container, "sidebar-sub-menu").getAttribute("data-expanded")).toBe("true");
+  });
+});

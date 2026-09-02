@@ -4,6 +4,8 @@ import type { SidebarRailProps, SidebarRootProps } from "@/components/sidebar";
 
 import {
   Sidebar,
+  SidebarCollapsible,
+  SidebarCollapsibleTrigger,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
@@ -17,7 +19,9 @@ import {
   SidebarItemTrailing,
   SidebarPanel,
   SidebarRail,
+  SidebarItemIndicator,
   SidebarSeparator,
+  SidebarSubMenu,
   SidebarTrigger,
 } from "@/components/sidebar";
 
@@ -37,6 +41,10 @@ const props = withDefaults(
         noRail?: boolean;
         /** Wraps every item in a tooltip, which only speaks up once the panel is a rail. */
         withTooltips?: boolean;
+        /** Adds a nav item with rows of its own, after the flat ones. */
+        withNested?: boolean;
+        /** Whether that item starts with its rows showing. */
+        nestedExpanded?: boolean;
       }
   >(),
   {
@@ -48,6 +56,8 @@ const props = withDefaults(
     isResizable: undefined,
     noGroupLabel: undefined,
     noRail: undefined,
+    nestedExpanded: undefined,
+    withNested: undefined,
     withTooltips: undefined,
   },
 );
@@ -110,6 +120,17 @@ const defaultItems: SidebarFixtureItem[] = [
             </SidebarItem>
           </template>
         </SidebarGroup>
+        <SidebarCollapsible v-if="props.withNested" :default-expanded="props.nestedExpanded">
+          <SidebarCollapsibleTrigger>
+            <SidebarItemIcon><svg /></SidebarItemIcon>
+            <SidebarItemLabel>Reports</SidebarItemLabel>
+            <SidebarItemIndicator />
+          </SidebarCollapsibleTrigger>
+          <SidebarSubMenu>
+            <SidebarItem href="/weekly">Weekly</SidebarItem>
+            <SidebarItem href="/monthly">Monthly</SidebarItem>
+          </SidebarSubMenu>
+        </SidebarCollapsible>
         <SidebarSeparator />
       </SidebarContent>
       <SidebarFooter>Ada</SidebarFooter>

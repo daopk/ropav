@@ -1,3 +1,5 @@
+import SidebarCollapsibleTrigger from "./sidebar-collapsible-trigger.vue";
+import SidebarCollapsible from "./sidebar-collapsible.vue";
 import SidebarContent from "./sidebar-content.vue";
 import SidebarFooter from "./sidebar-footer.vue";
 import SidebarGroupLabel from "./sidebar-group-label.vue";
@@ -5,6 +7,7 @@ import SidebarGroup from "./sidebar-group.vue";
 import SidebarHeader from "./sidebar-header.vue";
 import SidebarInset from "./sidebar-inset.vue";
 import SidebarItemIcon from "./sidebar-item-icon.vue";
+import SidebarItemIndicator from "./sidebar-item-indicator.vue";
 import SidebarItemLabel from "./sidebar-item-label.vue";
 import SidebarItemTooltip from "./sidebar-item-tooltip.vue";
 import SidebarItemTrailing from "./sidebar-item-trailing.vue";
@@ -13,12 +16,15 @@ import SidebarPanel from "./sidebar-panel.vue";
 import SidebarRail from "./sidebar-rail.vue";
 import SidebarRoot from "./sidebar-root.vue";
 import SidebarSeparator from "./sidebar-separator.vue";
+import SidebarSubMenu from "./sidebar-sub-menu.vue";
 import SidebarTrigger from "./sidebar-trigger.vue";
 
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
 export const Sidebar = Object.assign(SidebarRoot, {
+  Collapsible: SidebarCollapsible,
+  CollapsibleTrigger: SidebarCollapsibleTrigger,
   Content: SidebarContent,
   Footer: SidebarFooter,
   Group: SidebarGroup,
@@ -27,6 +33,7 @@ export const Sidebar = Object.assign(SidebarRoot, {
   Inset: SidebarInset,
   Item: SidebarItem,
   ItemIcon: SidebarItemIcon,
+  ItemIndicator: SidebarItemIndicator,
   ItemLabel: SidebarItemLabel,
   ItemTooltip: SidebarItemTooltip,
   ItemTrailing: SidebarItemTrailing,
@@ -34,6 +41,7 @@ export const Sidebar = Object.assign(SidebarRoot, {
   Rail: SidebarRail,
   Root: SidebarRoot,
   Separator: SidebarSeparator,
+  SubMenu: SidebarSubMenu,
   Trigger: SidebarTrigger,
 });
 
@@ -57,6 +65,10 @@ export {
   SidebarItemTrailing,
   SidebarItemTooltip,
   SidebarRail,
+  SidebarCollapsible,
+  SidebarCollapsibleTrigger,
+  SidebarItemIndicator,
+  SidebarSubMenu,
 };
 
 export type {
@@ -81,6 +93,13 @@ export type {
   SidebarItemSlotProps,
   SidebarRailProps,
   SidebarRailSlotProps,
+  SidebarCollapsibleProps,
+  SidebarCollapsibleEmits,
+  SidebarCollapsibleTriggerProps,
+  SidebarCollapsibleSlotProps,
+  SidebarCollapsibleTriggerSlotProps,
+  SidebarItemIndicatorProps,
+  SidebarSubMenuProps,
   SidebarSide,
   SidebarSlotProps,
   SidebarPartSlotProps,
@@ -90,7 +109,7 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * State
  * -----------------------------------------------------------------------------------------------*/
-export type { SidebarCollapsible, SidebarState } from "./sidebar.state";
+export type { SidebarCollapsibleMode, SidebarState } from "./sidebar.state";
 
 /* -------------------------------------------------------------------------------------------------
  * Borrowed Types
@@ -103,9 +122,18 @@ export type { LinkCurrent } from "../link/link.types";
 /* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
-export { useSidebarContext, useSidebarGroupContext } from "./sidebar.context";
+export {
+  useSidebarCollapsibleContext,
+  useSidebarContext,
+  useSidebarGroupContext,
+  useSidebarSubMenuContext,
+} from "./sidebar.context";
 
-export type { SidebarContext, SidebarGroupContext } from "./sidebar.context";
+export type {
+  SidebarCollapsibleContext,
+  SidebarContext,
+  SidebarGroupContext,
+} from "./sidebar.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants

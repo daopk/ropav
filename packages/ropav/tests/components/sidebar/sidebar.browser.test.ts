@@ -397,3 +397,66 @@ describe("tooltips", () => {
     expect(slot(wrapped.container, "tooltip-trigger").hasAttribute("role")).toBe(false);
   });
 });
+
+describe("an item with rows of its own", () => {
+  it("animates the fold rather than jumping", async () => {
+    await parkPointer();
+
+    const { container } = mount({ breakpoint: WIDE, withNested: true });
+
+    await settled(slot(container, "sidebar-panel"));
+
+    const sub = slot(container, "sidebar-sub-menu");
+    const shut = sub.getBoundingClientRect().height;
+
+    slot(container, "sidebar-collapsible-trigger").click();
+    await nextTick();
+
+    // Mid-flight: the height is a pixel value on its way somewhere, not the `auto` it settles on.
+    expect(sub.getAnimations({ subtree: true }).length).toBeGreaterThan(0);
+
+    await settled(sub);
+
+    expect(shut).toBe(0);
+    expect(sub.getBoundingClientRect().height).toBeGreaterThan(0);
+  });
+
+  it("draws the line its rows hang from", async () => {
+    await parkPointer();
+
+    const { container } = mount({ breakpoint: WIDE, nestedExpanded: true, withNested: true });
+
+    await settled(slot(container, "sidebar-panel"));
+
+    const style = getComputedStyle(slot(container, "sidebar-sub-menu"));
+
+    expect(style.borderInlineStartStyle).toBe("solid");
+    expect(Number.parseFloat(style.borderInlineStartWidth)).toBeGreaterThan(0);
+  });
+
+  it("turns its indicator a quarter, and takes it off the rail", async () => {
+    await parkPointer();
+
+    const open = mount({ breakpoint: WIDE, nestedExpanded: true, withNested: true });
+    const shut = mount({ breakpoint: WIDE, withNested: true });
+    const rail = mount({ breakpoint: WIDE, defaultExpanded: false, withNested: true });
+
+    for (const view of [open, shut, rail]) await settled(slot(view.container, "sidebar-panel"));
+
+    const rotationOf = (root: HTMLElement) =>
+      getComputedStyle(slot(root, "sidebar-item-indicator")).rotate;
+
+    expect(rotationOf(open.container)).toBe("0deg");
+    expect(rotationOf(shut.container)).toBe("-90deg");
+    expect(getComputedStyle(slot(rail.container, "sidebar-item-indicator")).display).toBe("none");
+  });
+
+  it("has no violations with its rows open", async () => {
+    await parkPointer();
+
+    const { container } = mount({ breakpoint: WIDE, nestedExpanded: true, withNested: true });
+
+    await settled(slot(container, "sidebar-panel"));
+    await expectNoA11yViolations(container);
+  });
+});

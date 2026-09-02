@@ -2,12 +2,19 @@ import type { StoryMeta } from "../../utils/story-meta";
 import type { StoryObj } from "@storybook/vue3-vite";
 
 import IconBell from "~icons/gravity-ui/bell";
+import IconBookOpen from "~icons/gravity-ui/book-open";
+import IconCubes from "~icons/gravity-ui/cubes-3";
 import IconEnvelope from "~icons/gravity-ui/envelope";
+import IconFlask from "~icons/gravity-ui/flask";
 import IconGear from "~icons/gravity-ui/gear";
 import IconHouse from "~icons/gravity-ui/house";
 import IconMagnifier from "~icons/gravity-ui/magnifier";
+import IconPalette from "~icons/gravity-ui/palette";
 import IconPerson from "~icons/gravity-ui/person";
+import IconPersons from "~icons/gravity-ui/persons";
 
+import SidebarCollapsibleTrigger from "./sidebar-collapsible-trigger.vue";
+import SidebarCollapsible from "./sidebar-collapsible.vue";
 import SidebarContent from "./sidebar-content.vue";
 import SidebarFooter from "./sidebar-footer.vue";
 import SidebarGroupLabel from "./sidebar-group-label.vue";
@@ -15,6 +22,7 @@ import SidebarGroup from "./sidebar-group.vue";
 import SidebarHeader from "./sidebar-header.vue";
 import SidebarInset from "./sidebar-inset.vue";
 import SidebarItemIcon from "./sidebar-item-icon.vue";
+import SidebarItemIndicator from "./sidebar-item-indicator.vue";
 import SidebarItemLabel from "./sidebar-item-label.vue";
 import SidebarItemTooltip from "./sidebar-item-tooltip.vue";
 import SidebarItemTrailing from "./sidebar-item-trailing.vue";
@@ -23,18 +31,26 @@ import SidebarPanel from "./sidebar-panel.vue";
 import SidebarRail from "./sidebar-rail.vue";
 import SidebarRoot from "./sidebar-root.vue";
 import SidebarSeparator from "./sidebar-separator.vue";
+import SidebarSubMenu from "./sidebar-sub-menu.vue";
 import SidebarTrigger from "./sidebar-trigger.vue";
 
 // Registered under flat names: a story template is compiled at runtime with no binding metadata,
 // so a dotted tag would be looked up as a component literally named "Sidebar.Item".
 const components = {
   IconBell,
+  IconBookOpen,
+  IconCubes,
   IconEnvelope,
+  IconFlask,
   IconGear,
   IconHouse,
   IconMagnifier,
+  IconPalette,
   IconPerson,
+  IconPersons,
   Sidebar: SidebarRoot,
+  SidebarCollapsible,
+  SidebarCollapsibleTrigger,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
@@ -43,12 +59,14 @@ const components = {
   SidebarInset,
   SidebarItem,
   SidebarItemIcon,
+  SidebarItemIndicator,
   SidebarItemLabel,
   SidebarItemTooltip,
   SidebarItemTrailing,
   SidebarPanel,
   SidebarRail,
   SidebarSeparator,
+  SidebarSubMenu,
   SidebarTrigger,
 };
 
@@ -282,6 +300,86 @@ export const WithTooltips: Story = {
               </SidebarItemTooltip>
             </SidebarGroup>
           </SidebarContent>
+        </SidebarPanel>
+        <SidebarRail />
+        ${page}
+      </Sidebar>
+    `,
+  }),
+};
+
+/**
+ * A nav item that opens rows of its own. The parent is an ordinary-looking row with a chevron; the
+ * children indent under a line down the gutter they share, and the fold animates rather than jumps.
+ *
+ * On the icon rail the children are not rendered at all — a child row carries no icon, so at 56px
+ * it would be a nameless blank. Pressing a parent there opens the sidebar and its rows together,
+ * because that is what the press was asking for.
+ */
+export const NestedItems: Story = {
+  render: () => ({
+    components,
+    template: `
+      <Sidebar collapsible="icon">
+        <SidebarPanel>
+          <SidebarHeader v-slot="{ isCollapsed }">
+            <span class="flex h-8 items-center gap-2 px-1.5 text-sm font-semibold">
+              <span class="flex size-5 shrink-0 items-center justify-center rounded-sm bg-accent text-xs text-accent-foreground">R</span>
+              <span v-if="!isCollapsed" class="truncate">Ropav</span>
+            </span>
+          </SidebarHeader>
+          <SidebarContent>
+            <SidebarGroup>
+              <SidebarGroupLabel>Library</SidebarGroupLabel>
+              <SidebarItem href="#" aria-current="page">
+                <SidebarItemIcon><IconBookOpen /></SidebarItemIcon>
+                <SidebarItemLabel>Guides</SidebarItemLabel>
+              </SidebarItem>
+              <SidebarCollapsible default-expanded>
+                <SidebarCollapsibleTrigger>
+                  <SidebarItemIcon><IconCubes /></SidebarItemIcon>
+                  <SidebarItemLabel>Components</SidebarItemLabel>
+                  <SidebarItemIndicator />
+                </SidebarCollapsibleTrigger>
+                <SidebarSubMenu>
+                  <SidebarItem href="#">Buttons</SidebarItem>
+                  <SidebarItem href="#">Inputs</SidebarItem>
+                  <SidebarItem href="#">Overlays</SidebarItem>
+                </SidebarSubMenu>
+              </SidebarCollapsible>
+              <SidebarCollapsible>
+                <SidebarCollapsibleTrigger>
+                  <SidebarItemIcon><IconPalette /></SidebarItemIcon>
+                  <SidebarItemLabel>Tokens</SidebarItemLabel>
+                  <SidebarItemIndicator />
+                </SidebarCollapsibleTrigger>
+                <SidebarSubMenu>
+                  <SidebarItem href="#">Colour</SidebarItem>
+                  <SidebarItem href="#">Spacing</SidebarItem>
+                  <SidebarItem href="#">Type</SidebarItem>
+                </SidebarSubMenu>
+              </SidebarCollapsible>
+            </SidebarGroup>
+            <SidebarSeparator />
+            <SidebarGroup>
+              <SidebarGroupLabel>Workspace</SidebarGroupLabel>
+              <SidebarItem href="#">
+                <SidebarItemIcon><IconFlask /></SidebarItemIcon>
+                <SidebarItemLabel>Playground</SidebarItemLabel>
+              </SidebarItem>
+              <SidebarItem href="#">
+                <SidebarItemIcon><IconPersons /></SidebarItemIcon>
+                <SidebarItemLabel>Team</SidebarItemLabel>
+                <SidebarItemTrailing><span class="text-xs text-muted">3</span></SidebarItemTrailing>
+              </SidebarItem>
+            </SidebarGroup>
+          </SidebarContent>
+          <SidebarFooter>
+            <SidebarItem href="#">
+              <SidebarItemIcon><IconPerson /></SidebarItemIcon>
+              <SidebarItemLabel>Ada Lovelace</SidebarItemLabel>
+            </SidebarItem>
+          </SidebarFooter>
         </SidebarPanel>
         <SidebarRail />
         ${page}

@@ -11,7 +11,7 @@ import { composeSlotClassName } from "../../utils/compose";
 import { openLink } from "../../utils/open-link";
 import { useRouterContext } from "../router-provider/router-provider.context";
 
-import { useSidebarContext } from "./sidebar.context";
+import { useSidebarContext, useSidebarSubMenuContext } from "./sidebar.context";
 
 // Every prop whose type includes `boolean` declares an explicit `undefined` default. Vue casts an
 // absent boolean to `false`, and a union containing boolean is enough for that to happen — the
@@ -30,6 +30,12 @@ defineSlots<{ default?: (props: SidebarItemSlotProps) => unknown }>();
 
 const { slots, state } = useSidebarContext();
 const router = useRouterContext();
+
+// Read from where the row was written rather than taken as a prop, so a child styles itself as one
+// without every row in a submenu having to say so.
+const isSub = useSidebarSubMenuContext();
+
+const className = computed(() => composeSlotClassName(slots.value.item, props.class, { isSub }));
 
 const isDisabled = computed(() => Boolean(props.isDisabled));
 
@@ -95,7 +101,7 @@ const onClick = (event: MouseEvent) => {
     :aria-describedby="props.ariaDescribedby"
     :aria-label="props.ariaLabel"
     :aria-labelledby="props.ariaLabelledby"
-    :class="composeSlotClassName(slots.item, props.class)"
+    :class="className"
     :data-collapsed="dataAttr(state.isCollapsed.value)"
     :data-current="dataAttr(isCurrent)"
     :data-focus-visible="dataAttr(interaction.isFocusVisible.value)"
@@ -134,7 +140,7 @@ const onClick = (event: MouseEvent) => {
     :aria-describedby="props.ariaDescribedby"
     :aria-label="props.ariaLabel"
     :aria-labelledby="props.ariaLabelledby"
-    :class="composeSlotClassName(slots.item, props.class)"
+    :class="className"
     :data-collapsed="dataAttr(state.isCollapsed.value)"
     :data-current="dataAttr(isCurrent)"
     :data-disabled="dataAttr(isDisabled)"

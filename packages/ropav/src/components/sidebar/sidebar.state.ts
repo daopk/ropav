@@ -4,11 +4,16 @@ import { computed, shallowRef, toValue } from "vue";
 
 import { useControllableState } from "../../composables/use-controllable-state";
 
-/** How the panel gets out of the way. `none` pins it open, and the trigger has nothing to do. */
-export type SidebarCollapsible = "icon" | "offcanvas" | "none";
+/**
+ * How the panel gets out of the way. `none` pins it open, and the trigger has nothing to do.
+ *
+ * Named for the mode rather than for the prop it fills, because `SidebarCollapsible` is the
+ * collapsible nav item — a component, and the more obvious owner of the bare name.
+ */
+export type SidebarCollapsibleMode = "icon" | "offcanvas" | "none";
 
 export interface UseSidebarStateOptions {
-  collapsible: MaybeRefOrGetter<SidebarCollapsible | undefined>;
+  collapsible: MaybeRefOrGetter<SidebarCollapsibleMode | undefined>;
   /** Whether the viewport is narrow enough that the panel has become a drawer. */
   isMobile: MaybeRefOrGetter<boolean | undefined>;
   /** Whether the panel is expanded on a wide viewport. Set, the sidebar never writes its own. */
@@ -26,7 +31,7 @@ export interface UseSidebarStateOptions {
 }
 
 export interface SidebarState {
-  collapsible: ComputedRef<SidebarCollapsible>;
+  collapsible: ComputedRef<SidebarCollapsibleMode>;
   isMobile: ComputedRef<boolean>;
   /** Whether the panel is expanded on a wide viewport. */
   isExpanded: ComputedRef<boolean>;

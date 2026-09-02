@@ -249,6 +249,93 @@
 }
 
 /* ==========================================================================
+   Nested items
+   ========================================================================== */
+
+/* Points along the row while the children are shut and turns to point down at them once they are
+ * showing — a quarter turn, not the half turn `disclosure.css` uses.
+ *
+ * The difference is deliberate. A disclosure's indicator sits beside a heading and only has to say
+ * open or shut; this one sits at the end of a nav row and has a direction to mean, so the shut
+ * state points the way the rows will come from. `rtl` turns it the other way for the same reason
+ * it is `ms-auto` and not `ml-auto`. */
+.sidebar__item-indicator {
+  @apply ms-auto size-3.5 shrink-0 -rotate-90 text-muted rtl:rotate-90;
+
+  /**
+   * Transitions
+   */
+  @apply transition duration-250 motion-reduce:transition-none;
+
+  &[data-expanded="true"] {
+    @apply rotate-0;
+  }
+}
+
+/* Nothing left to point at once the sidebar is a rail: the children are not rendered there at all,
+ * and a chevron promising something that never opens is worse than no chevron. */
+.sidebar__item-indicator[data-collapsed="true"] {
+  @apply hidden;
+}
+
+/* The rows under a nav item, indented and gathered by a line down the gutter they share. One border
+ * on the container rather than one per row, so the line runs unbroken from the first child to the
+ * last however many there are. */
+.sidebar__sub-menu {
+  /* The row's own inline padding plus half its icon, which lands the line on the icon's centre.
+   * Written from those two rather than as the number they come to, so retuning either moves the
+   * line with it instead of leaving it a few pixels off. */
+  --sidebar-sub-indent: calc(var(--spacing) * 2 + calc(var(--spacing) * 4) / 2);
+
+  @apply flex min-w-0 flex-col gap-0.5 border-s border-separator;
+
+  margin-inline-start: var(--sidebar-sub-indent);
+  padding-inline-start: calc(var(--spacing) * 2);
+
+  /* A border is one of the few things Forced Colors Mode recolours rather than flattens, so the
+   * line survives on its own — but only while it has a colour left to recolour. */
+  @media (forced-colors: active) {
+    border-inline-start-color: CanvasText;
+  }
+}
+
+/*
+ * The collapse is a JS contract, not a CSS one: `useDisclosurePanel` writes both the height and the
+ * `hidden` attribute, and nothing in any stylesheet ever sets `--disclosure-panel-height`. The
+ * variable keeps that composable's name rather than taking a sidebar one, because the composable is
+ * what fills it in — a `--sidebar-sub-menu-height` here would stay empty forever.
+ *
+ * Held apart from the base because a submenu that is always open has nobody writing the variable,
+ * and `height: var(--disclosure-panel-height)` with nothing behind it would leave the rows sitting
+ * under an `opacity: 0` that never lifts.
+ */
+.sidebar__sub-menu--collapsible {
+  opacity: 0;
+  height: var(--disclosure-panel-height);
+  overflow: clip;
+
+  /**
+   * Transitions
+   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
+   */
+  transition:
+    height 200ms var(--ease-out-quad),
+    opacity 200ms var(--ease-out);
+  @apply motion-reduce:transition-none;
+
+  &[data-expanded="true"] {
+    will-change: height, opacity;
+    opacity: 1;
+  }
+}
+
+/* A child row carries no icon, so it gives up the gap that was holding one and drops to the weight
+ * of what it is — a destination under a heading rather than another heading. */
+.sidebar__item--sub {
+  @apply gap-0 font-normal;
+}
+
+/* ==========================================================================
    Inset — the content beside the sidebar
    ========================================================================== */
 

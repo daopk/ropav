@@ -27,6 +27,7 @@ export const sidebarVariants = tv({
     inset: "sidebar__inset",
     item: "sidebar__item",
     itemIcon: "sidebar__item-icon",
+    itemIndicator: "sidebar__item-indicator",
     itemLabel: "sidebar__item-label",
     itemTooltip: "sidebar__item-tooltip",
     itemTrailing: "sidebar__item-trailing",
@@ -34,6 +35,7 @@ export const sidebarVariants = tv({
     rail: "sidebar__rail",
     railTarget: "sidebar__rail-target",
     separator: "sidebar__separator",
+    subMenu: "sidebar__sub-menu",
     trigger: "sidebar__trigger",
   },
   variants: {
@@ -55,11 +57,25 @@ export const sidebarVariants = tv({
         panel: "sidebar__panel--drawer",
       },
     },
+    // Whether this submenu folds. Resolved by the submenu at call time rather than by the root,
+    // because one sidebar holds items that fold and items that do not.
+    isCollapsible: {
+      true: {
+        subMenu: "sidebar__sub-menu--collapsible",
+      },
+    },
     // Whether the rail resizes rather than only toggling. Not folded into `collapsible`, because
     // the two are independent: a sidebar that cannot collapse at all can still be dragged wider.
     isResizable: {
       true: {
         rail: "sidebar__rail--resizable",
+      },
+    },
+    // Whether the row is a child under another item. Resolved by the item at call time, from the
+    // submenu it finds itself inside rather than from a prop a caller has to remember on every row.
+    isSub: {
+      true: {
+        item: "sidebar__item--sub",
       },
     },
     side: {

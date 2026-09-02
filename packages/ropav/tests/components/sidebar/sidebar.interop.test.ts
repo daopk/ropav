@@ -3,15 +3,19 @@ import { afterEach, describe, expect, it } from "vitest";
 import { h, nextTick } from "vue";
 
 import {
+  SidebarCollapsible,
+  SidebarCollapsibleTrigger,
   SidebarContent,
   SidebarGroup,
   SidebarGroupLabel,
   SidebarInset,
   SidebarItem,
+  SidebarItemIndicator,
   SidebarItemLabel,
   SidebarPanel,
   SidebarRail,
   SidebarRoot,
+  SidebarSubMenu,
   SidebarTrigger,
 } from "@/components/sidebar";
 
@@ -116,5 +120,66 @@ describe("mounted from a VDOM host", () => {
     expect(slot(container, "sidebar-group").getAttribute("aria-labelledby")).toBe(
       slot(container, "sidebar-group-label").id,
     );
+  });
+});
+
+describe("an item with rows of its own, mounted from a VDOM host", () => {
+  const mountNested = () =>
+    renderInterop(SidebarRoot, {
+      slots: {
+        default: () => [
+          h(SidebarPanel, null, {
+            default: () => [
+              h(SidebarContent, null, {
+                default: () => [
+                  h(SidebarCollapsible, null, {
+                    default: () => [
+                      h(SidebarCollapsibleTrigger, null, {
+                        default: () => [
+                          h(SidebarItemLabel, null, { default: () => "Reports" }),
+                          h(SidebarItemIndicator),
+                        ],
+                      }),
+                      h(SidebarSubMenu, null, {
+                        default: () => [
+                          h(SidebarItem, { href: "/weekly" }, { default: () => "Weekly" }),
+                        ],
+                      }),
+                    ],
+                  }),
+                ],
+              }),
+            ],
+          }),
+        ],
+      },
+    });
+
+  it("wires the trigger, the submenu and the indicator through the host", () => {
+    const { container } = mountNested();
+    const trigger = slot(container, "sidebar-collapsible-trigger");
+
+    expect(trigger.getAttribute("aria-controls")).toBe(slot(container, "sidebar-sub-menu").id);
+    expect(slot(container, "sidebar-item-indicator")).not.toBeNull();
+  });
+
+  /*
+   * The submenu's own context is the reason this file exists twice over: a child row learns it is a
+   * child from where it was written, and written in a VDOM host that lookup resolves against the
+   * host rather than against the submenu that rendered it.
+   */
+  it("tells a child row it is a child", () => {
+    const { container } = mountNested();
+
+    expect(slot(container, "sidebar-item").className).toContain("sidebar__item--sub");
+  });
+
+  it("opens on the trigger", async () => {
+    const { container } = mountNested();
+
+    slot(container, "sidebar-collapsible-trigger").click();
+    await nextTick();
+
+    expect(slot(container, "sidebar-sub-menu").getAttribute("data-expanded")).toBe("true");
   });
 });

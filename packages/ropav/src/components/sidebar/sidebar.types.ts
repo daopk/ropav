@@ -1,6 +1,6 @@
 import type { PressEvent } from "../../composables/use-press";
 import type { LinkCurrent } from "../link/link.types";
-import type { SidebarCollapsible } from "./sidebar.state";
+import type { SidebarCollapsibleMode } from "./sidebar.state";
 import type { SidebarVariants } from "@ropav/styles";
 
 /** Which edge of the page the panel sits on. */
@@ -11,7 +11,7 @@ export interface SidebarRootProps {
   /** @default "left" */
   side?: SidebarSide;
   /** How the panel gets out of the way. `none` pins it open. @default "icon" */
-  collapsible?: SidebarCollapsible;
+  collapsible?: SidebarCollapsibleMode;
   /** Whether the panel is expanded. Set, the sidebar reports a toggle rather than acting on it. */
   isExpanded?: boolean;
   /** Whether the panel starts expanded, when the caller is not controlling it. @default true */
@@ -163,6 +163,52 @@ export interface SidebarItemTrailingProps {
   class?: string;
 }
 
+export interface SidebarCollapsibleProps {
+  class?: string;
+  /** Whether the rows under this item are showing. Set, it reports a toggle rather than acting. */
+  isExpanded?: boolean;
+  /** Whether they start showing, when the caller is not controlling it. @default false */
+  defaultExpanded?: boolean;
+  isDisabled?: boolean;
+}
+
+export interface SidebarCollapsibleEmits {
+  expandedChange: [isExpanded: boolean];
+  "update:isExpanded": [isExpanded: boolean];
+}
+
+export interface SidebarCollapsibleTriggerProps {
+  class?: string;
+  isDisabled?: boolean;
+  ariaLabel?: string;
+}
+
+export interface SidebarSubMenuProps {
+  class?: string;
+  /** Names the list of children. @default the trigger names it */
+  ariaLabel?: string;
+}
+
+export interface SidebarItemIndicatorProps {
+  class?: string;
+}
+
+/** State a collapsible item hands to its slot. */
+export interface SidebarCollapsibleSlotProps {
+  isExpanded: boolean;
+  isDisabled: boolean;
+  /** Whether the sidebar itself has narrowed to its rail, where the children are not rendered. */
+  isCollapsed: boolean;
+}
+
+/** State the trigger hands to its slot. */
+export interface SidebarCollapsibleTriggerSlotProps extends SidebarCollapsibleSlotProps {
+  isHovered: boolean;
+  isFocused: boolean;
+  isFocusVisible: boolean;
+  isPressed: boolean;
+}
+
 export interface SidebarItemTooltipProps {
   class?: string;
   /**
@@ -207,7 +253,7 @@ export interface SidebarTriggerProps {
 /** State the root hands to its slot. */
 export interface SidebarSlotProps {
   side: SidebarSide;
-  collapsible: SidebarCollapsible;
+  collapsible: SidebarCollapsibleMode;
   isOpen: boolean;
   isExpanded: boolean;
   /** Narrowed rather than hidden. Always false where the panel is a drawer. */
