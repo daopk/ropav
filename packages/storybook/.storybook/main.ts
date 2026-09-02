@@ -1,10 +1,8 @@
 import type { StorybookConfig } from "@storybook/vue3-vite";
 
-import { readFileSync } from "node:fs";
+import { globSync, readFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
-
-import { sync as globSync } from "glob";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 

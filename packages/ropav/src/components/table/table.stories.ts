@@ -5,10 +5,12 @@ import type { StoryObj } from "@storybook/vue3-vite";
 import type { SortingState, Updater } from "@tanstack/vue-table";
 
 import {
-  getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useVueTable,
+  createPaginatedRowModel,
+  createSortedRowModel,
+  rowPaginationFeature,
+  rowSortingFeature,
+  tableFeatures,
+  useTable,
 } from "@tanstack/vue-table";
 import { computed, shallowRef } from "vue";
 import IconChevronRight from "~icons/gravity-ui/chevron-right";
@@ -793,6 +795,13 @@ export const ExpandableRows: Story = {
 /* -------------------------------------------------------------------------------------------------
  * TanStack Table
  * -----------------------------------------------------------------------------------------------*/
+const TANSTACK_FEATURES = tableFeatures({
+  paginatedRowModel: createPaginatedRowModel(),
+  rowPaginationFeature,
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+});
+
 const TANSTACK_COLUMNS = [
   { accessorKey: "name", header: "Name" },
   { accessorKey: "role", header: "Role" },
@@ -828,17 +837,15 @@ export const TanStackTable: Story = {
     setup: () => {
       const sorting = shallowRef<SortingState>([]);
 
-      const table = useVueTable({
+      const table = useTable({
         get columns() {
           return TANSTACK_COLUMNS;
         },
         get data() {
           return users;
         },
-        getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
-        getSortedRowModel: getSortedRowModel(),
-        initialState: { pagination: { pageSize: ROWS_PER_PAGE } },
+        features: TANSTACK_FEATURES,
+        initialState: { pagination: { pageIndex: 0, pageSize: ROWS_PER_PAGE } },
         onSortingChange: (updater: Updater<SortingState>) => {
           sorting.value = typeof updater === "function" ? updater(sorting.value) : updater;
         },
@@ -849,7 +856,7 @@ export const TanStackTable: Story = {
         },
       });
 
-      const pageIndex = computed(() => table.getState().pagination.pageIndex);
+      const pageIndex = computed(() => table.atoms.pagination.get().pageIndex);
 
       return {
         end: computed(() => Math.min((pageIndex.value + 1) * ROWS_PER_PAGE, users.length)),
@@ -895,7 +902,7 @@ export const TanStackTable: Story = {
               </TableHeader>
               <TableBody>
                 <TableRow v-for="row of rows" :id="row.id" :key="row.id">
-                  <TableCell v-for="cell of row.getVisibleCells()" :key="cell.id">
+                  <TableCell v-for="cell of row.getAllCells()" :key="cell.id">
                     <Chip
                       v-if="cell.column.id === 'status'"
                       :color="statusColor[cell.getValue()]"

@@ -1,29 +1,25 @@
 packages:
   - "packages/**/**"
 
-# The vue toolchain moves in lockstep: `@vue/compiler-vapor` must match `vue` exactly, and
-# `vue` itself is pinned to an RC (dist-tag `rc`; `latest` is still 3.5.x and carries no vapor).
-# `peerDependencies` deliberately stay literal ranges, never `catalog:`: `clean-package` strips
-# `devDependencies` at `prepack` but keeps peer ranges, so a `catalog:` left in one would ship
-# unresolved to consumers.
-#
-# `typescript` is an alias, not a version: `typescript-native-bridge` keeps the classic TypeScript
-# API that Volar compiles `.vue` templates through, and runs the tsgo 7.0.2 Go checker behind it.
-# Plain `typescript@7` cannot be used here — it drops the `typescript/lib/tsc` subpath that
-# `vue-tsc` resolves, and every `vue-tsc` release so far caps its peer range below 6.1. Revisit
-# once TypeScript 7.1 stabilises the programmatic API and `vue-tsc` supports it directly.
 catalog:
+  "@tailwindcss/cli": 4.3.3
+  "@tailwindcss/postcss": 4.3.3
+  "@tailwindcss/vite": 4.3.3
+  "@types/node": 24.13.3
   "@vitejs/plugin-vue": 6.0.8
+  "@vitest/browser": 4.1.11
+  "@vitest/browser-playwright": 4.1.11
   "@vue/compiler-vapor": 3.6.0-rc.6
+  tailwindcss: 4.3.3
   typescript: npm:typescript-native-bridge@6.0.3-bridge.15.tsgo.7.0.2
   vite: 8.2.2
+  vitest: 4.1.11
   vue: 3.6.0-rc.6
-  vue-tsc: 3.3.10
+  vue-tsc: 3.3.11
 
 overrides:
   shiki: 3.20.0
   ts-morph: 27.0.2
-  typescript: npm:typescript-native-bridge@6.0.3-bridge.15.tsgo.7.0.2
 
 onlyBuiltDependencies:
   - "@parcel/watcher"

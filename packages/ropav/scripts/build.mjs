@@ -1,10 +1,10 @@
 /* eslint-disable no-console */
 import { execSync } from "node:child_process";
+import { existsSync } from "node:fs";
+import { cp, readdir, readFile, rename, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import zlib from "node:zlib";
-
-import fs from "fs-extra";
 
 import { readComponentDirs } from "./component-dirs.mjs";
 
@@ -14,7 +14,7 @@ const distDir = path.join(rootDir, "dist");
 
 async function clean() {
   console.log("🧹 Cleaning dist directory...");
-  await fs.remove(distDir);
+  await rm(distDir, { force: true, recursive: true });
 }
 
 async function build() {
@@ -24,7 +24,7 @@ async function build() {
 
 async function buildStyles() {
   console.log("🎨 Creating styles export...");
-  await fs.copy(path.join(rootDir, "src/styles.css"), path.join(distDir, "styles.css"));
+  await cp(path.join(rootDir, "src/styles.css"), path.join(distDir, "styles.css"));
   console.log("✅ Styles export created successfully");
 }
 
@@ -37,36 +37,34 @@ async function generateTypes() {
 
   const tsconfigPath = path.join(rootDir, "tsconfig.build.json");
 
-  await fs.writeJson(
-    tsconfigPath,
-    {
-      compilerOptions: {
-        allowSyntheticDefaultImports: true,
-        declaration: true,
-        declarationMap: false,
-        emitDeclarationOnly: true,
-        esModuleInterop: true,
-        forceConsistentCasingInFileNames: true,
-        isolatedModules: true,
-        lib: ["DOM", "DOM.Iterable", "ESNext"],
-        module: "ESNext",
-        moduleResolution: "bundler",
-        outDir: "./dist",
-        paths: { "@/*": ["./src/*"] },
-        resolveJsonModule: true,
-        rootDir: "./src",
-        skipLibCheck: true,
-        strict: true,
-        target: "ESNext",
-        verbatimModuleSyntax: true,
-      },
-      // `story-meta.ts` is a story-authoring type only, and it names a devDependency —
-      // shipping its declaration would leave a dangling reference in the package.
-      exclude: ["node_modules", "**/*.stories.*", "**/*.test.*", "src/utils/story-meta.ts", "dist"],
-      include: ["src"],
+  const tsconfig = {
+    compilerOptions: {
+      allowSyntheticDefaultImports: true,
+      declaration: true,
+      declarationMap: false,
+      emitDeclarationOnly: true,
+      esModuleInterop: true,
+      forceConsistentCasingInFileNames: true,
+      isolatedModules: true,
+      lib: ["DOM", "DOM.Iterable", "ESNext"],
+      module: "ESNext",
+      moduleResolution: "bundler",
+      outDir: "./dist",
+      paths: { "@/*": ["./src/*"] },
+      resolveJsonModule: true,
+      rootDir: "./src",
+      skipLibCheck: true,
+      strict: true,
+      target: "ESNext",
+      verbatimModuleSyntax: true,
     },
-    { spaces: 2 },
-  );
+    // `story-meta.ts` is a story-authoring type only, and it names a devDependency —
+    // shipping its declaration would leave a dangling reference in the package.
+    exclude: ["node_modules", "**/*.stories.*", "**/*.test.*", "src/utils/story-meta.ts", "dist"],
+    include: ["src"],
+  };
+
+  await writeFile(tsconfigPath, `${JSON.stringify(tsconfig, null, 2)}\n`);
 
   try {
     execSync("vue-tsc --project tsconfig.build.json", { cwd: rootDir, stdio: "inherit" });
@@ -74,14 +72,14 @@ async function generateTypes() {
     await rewriteDeclarationSpecifiers();
     console.log("✅ TypeScript declarations generated successfully");
   } finally {
-    await fs.remove(tsconfigPath);
+    await rm(tsconfigPath, { force: true });
   }
 }
 
 /** Walk `dist` and hand every file to `visit`. */
 async function walkDist(visit) {
   async function walk(dir) {
-    for (const entry of await fs.readdir(dir, { withFileTypes: true })) {
+    for (const entry of await readdir(dir, { withFileTypes: true })) {
       const entryPath = path.join(dir, entry.name);
 
       if (entry.isDirectory()) await walk(entryPath);
@@ -113,13 +111,13 @@ async function renameSfcDeclarations() {
     const target = `${filePath.slice(0, -suffix.length)}.d.ts`;
 
     // A `button.ts` sitting beside `button.vue` would have claimed this name already.
-    if (fs.existsSync(target)) {
+    if (existsSync(target)) {
       throw new Error(
         `Cannot rename ${path.relative(distDir, filePath)}: ${path.basename(target)} exists`,
       );
     }
 
-    await fs.rename(filePath, target);
+    await rename(filePath, target);
     renamed++;
   });
 
@@ -151,8 +149,8 @@ async function rewriteDeclarationSpecifiers() {
     const target = specifier.endsWith(".vue") ? specifier.slice(0, -".vue".length) : specifier;
     const resolved = path.resolve(path.dirname(fromFile), target);
 
-    if (fs.existsSync(path.join(resolved, "index.d.ts"))) return `${target}/index.js`;
-    if (fs.existsSync(`${resolved}.d.ts`)) return `${target}.js`;
+    if (existsSync(path.join(resolved, "index.d.ts"))) return `${target}/index.js`;
+    if (existsSync(`${resolved}.d.ts`)) return `${target}.js`;
 
     unresolved.push(`${path.relative(distDir, fromFile)} → ${specifier}`);
 
@@ -162,7 +160,7 @@ async function rewriteDeclarationSpecifiers() {
   await walkDist(async (filePath) => {
     if (!filePath.endsWith(".d.ts")) return;
 
-    const source = await fs.readFile(filePath, "utf8");
+    const source = await readFile(filePath, "utf8");
     const output = source.replace(RELATIVE_SPECIFIER, (match, lead, quote, specifier) => {
       const next = withExtension(specifier, filePath);
 
@@ -172,7 +170,7 @@ async function rewriteDeclarationSpecifiers() {
       return `${lead}${quote}${next}${quote}`;
     });
 
-    if (output !== source) await fs.writeFile(filePath, output);
+    if (output !== source) await writeFile(filePath, output);
   });
 
   if (unresolved.length > 0) {
@@ -197,9 +195,9 @@ async function measureBundleSizes() {
   const sizes = { components: {}, css: {}, main: {}, total: { gzip: 0, min: 0 } };
 
   async function measureFile(filePath) {
-    if (!(await fs.pathExists(filePath))) return null;
+    if (!existsSync(filePath)) return null;
 
-    const content = await fs.readFile(filePath);
+    const content = await readFile(filePath);
 
     return {
       gzip: (zlib.gzipSync(content, { level: 9 }).length / 1000).toFixed(2),
@@ -221,8 +219,8 @@ async function measureBundleSizes() {
 
   const componentsDir = path.join(distDir, "components");
 
-  if (await fs.pathExists(componentsDir)) {
-    for (const componentDir of await fs.readdir(componentsDir)) {
+  if (existsSync(componentsDir)) {
+    for (const componentDir of await readdir(componentsDir)) {
       const size = await measureFile(path.join(componentsDir, componentDir, "index.js"));
 
       if (!size) continue;
@@ -243,7 +241,7 @@ async function measureBundleSizes() {
 
   const sizesPath = path.join(rootDir, "bundle-sizes.json");
 
-  await fs.writeJson(sizesPath, sizes, { spaces: 2 });
+  await writeFile(sizesPath, `${JSON.stringify(sizes, null, 2)}\n`);
 
   console.log("\n📦 Bundle Size Report");
   console.log("═".repeat(50));

@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 /* eslint-disable no-console */
 import { execSync } from "child_process";
+import { rm } from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
-
-import fs from "fs-extra";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
@@ -12,7 +11,7 @@ const distDir = path.join(rootDir, "dist");
 
 async function clean() {
   console.log("🧹 Cleaning dist directory...");
-  await fs.remove(distDir);
+  await rm(distDir, { force: true, recursive: true });
 }
 
 async function build() {

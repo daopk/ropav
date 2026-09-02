@@ -17,7 +17,7 @@
     "vue": "catalog:"
   },
   "devDependencies": {
-    "@iconify-json/gravity-ui": "1.2.10",
+    "@iconify-json/gravity-ui": "1.2.14",
     "@iconify-json/ic": "1.2.4",
     "@iconify-json/logos": "1.2.13",
     "@iconify-json/streamline-logos": "1.2.0",
@@ -29,21 +29,20 @@
     "@storybook/addon-vitest": "10.5.10",
     "@storybook/vue3": "10.5.10",
     "@storybook/vue3-vite": "10.5.10",
-    "@tailwindcss/postcss": "4.3.0",
-    "@tailwindcss/vite": "4.3.0",
+    "@tailwindcss/postcss": "catalog:",
+    "@tailwindcss/vite": "catalog:",
     "@vitejs/plugin-vue": "catalog:",
-    "@vitest/browser": "4.1.10",
-    "@vitest/browser-playwright": "4.1.10",
+    "@vitest/browser": "catalog:",
+    "@vitest/browser-playwright": "catalog:",
     "@vue/compiler-vapor": "catalog:",
-    "glob": "13.0.0",
     "playwright": "1.62.1",
-    "postcss": "8.5.23",
+    "postcss": "8.5.26",
     "storybook": "10.5.10",
-    "tailwindcss": "4.3.0",
+    "tailwindcss": "catalog:",
     "typescript": "catalog:",
     "unplugin-icons": "23.0.1",
     "vite": "catalog:",
-    "vitest": "4.1.10",
+    "vitest": "catalog:",
     "vue-tsc": "catalog:"
   }
 }

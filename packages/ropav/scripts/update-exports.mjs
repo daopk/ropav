@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 /* eslint-disable no-console */
+import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-
-import fs from "fs-extra";
 
 import { readComponentDirs } from "./component-dirs.mjs";
 
@@ -34,7 +33,7 @@ function scanComponents() {
  * Called after clean-package has already backed up and cleaned the file.
  */
 async function generateExports() {
-  const packageJson = await fs.readJson(PACKAGE_JSON_PATH);
+  const packageJson = JSON.parse(await readFile(PACKAGE_JSON_PATH, "utf8"));
   const components = scanComponents();
 
   console.log(`📦 Found ${components.length} components`);
@@ -64,7 +63,7 @@ async function generateExports() {
 
   packageJson.exports = exports;
 
-  await fs.writeJson(PACKAGE_JSON_PATH, packageJson, { spaces: 2 });
+  await writeFile(PACKAGE_JSON_PATH, `${JSON.stringify(packageJson, null, 2)}\n`);
   console.log(`✅ Updated package.json exports (${components.length} components)`);
 }
 
