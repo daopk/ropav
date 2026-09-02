@@ -19,6 +19,7 @@
   [data-theme="lavender"] {
     color-scheme: light;
 
+    --component-radius: calc(var(--radius) * 3);
     --field-radius: 0.75rem;
     --radius: 0.5rem;
 

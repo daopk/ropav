@@ -121,7 +121,7 @@
 
 /* Individual tab */
 .tabs__tab {
-  @apply relative flex h-8 w-full items-center justify-center rounded-3xl px-4 text-center text-sm font-medium text-muted outline-none no-highlight;
+  @apply relative flex h-8 w-full items-center justify-center rounded-component px-4 text-center text-sm font-medium text-muted outline-none no-highlight;
 
   z-index: 1;
   cursor: var(--cursor-interactive);
@@ -221,7 +221,7 @@
 
 /* Tab indicator - React Aria's SelectionIndicator */
 .tabs__indicator {
-  @apply absolute start-0 top-0 size-full rounded-3xl bg-segment shadow-surface;
+  @apply absolute start-0 top-0 size-full rounded-component bg-segment shadow-surface;
 
   z-index: -1;
 

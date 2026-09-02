@@ -222,10 +222,9 @@ describe("Button (browser)", () => {
   it("has no axe violations", async () => {
     const { container, unmount } = renderButton();
 
-    // `color-contrast` is scoped out, not silenced: the primary button pairs
-    // `--accent` (#0485F7) with `--accent-foreground` (#FCFCFC) for 3.59:1, under the
-    // 4.5:1 WCAG AA floor for normal text. Both come from `@ropav/styles`, so the
-    // finding belongs to the palette, not to this component.
+    // `color-contrast` is scoped out, not silenced: the primary button pairs `--accent`
+    // with `--accent-foreground` under the 4.5:1 WCAG AA floor for normal text. Both come
+    // from `@ropav/styles`, so the finding belongs to the palette, not to this component.
     await expectNoA11yViolations(container, PALETTE_CONTRAST_DEBT);
 
     unmount();

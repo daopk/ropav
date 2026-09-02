@@ -24,7 +24,7 @@
 
 /* Link - page number button (ghost button style) */
 .pagination__link {
-  @apply relative isolate inline-flex size-8 origin-center items-center justify-center rounded-3xl text-sm font-medium whitespace-nowrap outline-none select-none no-highlight;
+  @apply relative isolate inline-flex size-8 origin-center items-center justify-center rounded-component text-sm font-medium whitespace-nowrap outline-none select-none no-highlight;
 
   cursor: var(--cursor-interactive);
 

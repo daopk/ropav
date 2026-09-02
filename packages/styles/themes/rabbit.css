@@ -19,6 +19,7 @@
   [data-theme="rabbit"] {
     color-scheme: light;
 
+    --component-radius: calc(var(--radius) * 3);
     --field-radius: 1rem;
     --radius: 0.5rem;
 

@@ -40,6 +40,7 @@
     /* Radius */
     --radius: 0.5rem;
     --field-radius: calc(var(--radius) * 0.75);
+    --component-radius: var(--field-radius);
 
     /* == Light Theme Variables == */
 
@@ -73,7 +74,7 @@
     --default: oklch(94% 0.001 286.375);
     --default-foreground: var(--eclipse);
 
-    --accent: oklch(0.6204 0.195 253.83);
+    --accent: oklch(0.62 0.2 260);
     --accent-foreground: var(--snow);
 
     /* Form Fields */

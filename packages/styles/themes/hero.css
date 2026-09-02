@@ -32,6 +32,7 @@
     /* Radius */
     --radius: 0.5rem;
     --field-radius: calc(var(--radius) * 1.5);
+    --component-radius: calc(var(--radius) * 3);
 
     /* == Light Theme Variables == */
 

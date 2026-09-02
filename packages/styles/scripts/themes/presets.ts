@@ -115,12 +115,12 @@ export const presets = {
 
   default: {
     base: BASE_DEFAULT,
-    chroma: 0.195,
+    chroma: 0.2,
     // The hand-written file halves this to 0.375rem, which the named scale cannot express.
     formRadius: "large",
-    hue: 253.83,
+    hue: 260,
     label: "Default",
-    lightness: 0.6204,
+    lightness: 0.62,
     radius: "medium",
   },
 

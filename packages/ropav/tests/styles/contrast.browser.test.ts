@@ -96,8 +96,8 @@ const PAIRS: readonly Pair[] = [
     bg: "--accent",
     fg: "--accent-foreground",
     knownDebt: [
-      "default/light", // 3.59
-      "default/dark", // 3.59
+      "default/light", // 3.63
+      "default/dark", // 3.63
       "airbnb/light", // 3.43
       "airbnb/dark", // 3.43
       "discord/light", // 4.49

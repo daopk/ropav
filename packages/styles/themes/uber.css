@@ -19,6 +19,7 @@
   [data-theme="uber"] {
     color-scheme: light;
 
+    --component-radius: calc(var(--radius) * 3);
     --field-radius: 0.25rem;
     --radius: 0.25rem;
 

@@ -116,6 +116,17 @@
   --radius-3xl: calc(var(--radius) * 3); /* 1.5rem (24px) */
   --radius-4xl: calc(var(--radius) * 4); /* 2rem (32px) */
 
+  /* The one radius every control and surface reads, so a theme can pair them with its fields
+   * instead. Unset falls through to the pill-ish 3x that every theme but `default` still wants.
+   * Kept off the `--radius-*` scale on purpose: overriding a scale step would leave `2xl`
+   * larger than `3xl`.
+   *
+   * This alias is for the utilities only - `inline` substitutes it into `rounded-component`, so
+   * the var() resolves at the element wearing the class. Raw CSS must say
+   * `var(--component-radius)` instead: read through this alias, the var() resolves here on
+   * `:root` and then inherits the root theme's value into every `data-theme` subtree. */
+  --radius-component: var(--component-radius, calc(var(--radius) * 3));
+
   /* Transition Timing Functions  */
   --ease-smooth: ease; /* same as transition: ease; */
   /* These custom curves are made by https://twitter.com/bdc */

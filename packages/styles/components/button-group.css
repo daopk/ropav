@@ -26,32 +26,32 @@
 
 /* Apply border radius to first button (start edge) */
 .button-group--horizontal .button:first-child {
-  @apply rounded-s-3xl;
+  @apply rounded-s-component;
 }
 
 /* Apply border radius to last button (end edge) */
 .button-group--horizontal .button:last-child {
-  @apply rounded-e-3xl;
+  @apply rounded-e-component;
 }
 
 /* If only one button, apply both rounded edges */
 .button-group--horizontal .button:first-child:last-child {
-  @apply rounded-3xl;
+  @apply rounded-component;
 }
 
 /* Apply border radius to first button (top edge) in vertical */
 .button-group--vertical .button:first-child {
-  @apply rounded-t-3xl;
+  @apply rounded-t-component;
 }
 
 /* Apply border radius to last button (bottom edge) in vertical */
 .button-group--vertical .button:last-child {
-  @apply rounded-b-3xl;
+  @apply rounded-b-component;
 }
 
 /* If only one button in vertical, apply all rounded edges */
 .button-group--vertical .button:first-child:last-child {
-  @apply rounded-3xl;
+  @apply rounded-component;
 }
 
 /* Remove scale transform on active/pressed state for buttons in group */

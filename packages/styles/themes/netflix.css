@@ -19,6 +19,7 @@
   [data-theme="netflix"] {
     color-scheme: light;
 
+    --component-radius: calc(var(--radius) * 3);
     --field-radius: 0.125rem;
     --radius: 0.125rem;
 

@@ -177,7 +177,7 @@
   @apply relative;
   @apply flex w-full flex-col;
   @apply bg-overlay shadow-overlay outline-none;
-  border-radius: min(32px, var(--radius-3xl));
+  border-radius: min(32px, var(--component-radius));
   @apply p-6;
   @apply pointer-events-auto;
 

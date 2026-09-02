@@ -116,7 +116,7 @@
 /* Surface variant */
 .accordion--surface {
   @apply bg-surface;
-  border-radius: min(32px, var(--radius-3xl));
+  border-radius: min(32px, var(--component-radius));
 
   /* Forced Colors Mode flattens the fill onto the page and strips the shadow, so the container
    * stops having any shape and its contents sit loose on the page. */
@@ -147,13 +147,13 @@
 
   /* Special rounding for first and last items in surface variant */
   &:first-child [data-slot="accordion-trigger"] {
-    border-start-start-radius: min(32px, var(--radius-3xl));
-    border-start-end-radius: min(32px, var(--radius-3xl));
+    border-start-start-radius: min(32px, var(--component-radius));
+    border-start-end-radius: min(32px, var(--component-radius));
   }
 
   &:last-child:not(:has([data-slot="accordion-trigger"][aria-expanded="true"]))
     [data-slot="accordion-trigger"] {
-    border-end-start-radius: min(32px, var(--radius-3xl));
-    border-end-end-radius: min(32px, var(--radius-3xl));
+    border-end-start-radius: min(32px, var(--component-radius));
+    border-end-end-radius: min(32px, var(--component-radius));
   }
 }

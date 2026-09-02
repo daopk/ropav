@@ -185,6 +185,9 @@ function renderTheme(id: ThemeId) {
   const dark = buildVariables(preset, "dark");
 
   const layout = {
+    // Only `default` pairs its components with its fields. Emitted for every theme regardless,
+    // or `:root`'s value would inherit into a `data-theme` subtree.
+    "--component-radius": "calc(var(--radius) * 3)",
     "--field-radius": radiusCssMap[preset.formRadius],
     "--radius": radiusCssMap[preset.radius],
   };

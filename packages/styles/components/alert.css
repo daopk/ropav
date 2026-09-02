@@ -11,7 +11,7 @@
     outline: 1px solid CanvasText;
     outline-offset: -1px;
   }
-  border-radius: min(32px, var(--radius-3xl));
+  border-radius: min(32px, var(--component-radius));
 }
 
 /* Alert elements */

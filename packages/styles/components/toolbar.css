@@ -28,7 +28,7 @@
 
 /* Attached variant */
 .toolbar--attached {
-  @apply rounded-3xl bg-surface p-1 shadow-overlay;
+  @apply rounded-component bg-surface p-1 shadow-overlay;
 
   /* Forced Colors Mode flattens the fill onto the page and strips the shadow, so the container
    * stops having any shape and its contents sit loose on the page. */

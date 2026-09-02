@@ -4,7 +4,7 @@
 .card {
   @apply relative flex flex-col gap-3 overflow-visible p-4;
   @apply shadow-surface;
-  border-radius: min(32px, var(--radius-3xl));
+  border-radius: min(32px, var(--component-radius));
 }
 
 /* Element - header */

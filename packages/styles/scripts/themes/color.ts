@@ -11,10 +11,13 @@
  */
 
 /* -------------------------------------------------------------------------------------------------
- * Default Theme Values (from packages/styles/themes/default.css)
+ * Baseline theme values (from packages/styles/themes/hero.css)
+ *
+ * HeroUI's own palette, which `default` started from and has since been retuned away from —
+ * `hero` is the copy that still matches these numbers.
  * -----------------------------------------------------------------------------------------------*/
 
-// Default accent values from `themes/default.css`: oklch(0.6204 0.195 253.83)
+// Baseline accent, the hue every preset's semantic blend is measured against.
 export const DEFAULT_ACCENT = {
   chroma: 0.195,
   hue: 253.83,
@@ -23,7 +26,7 @@ export const DEFAULT_ACCENT = {
 
 const SEMANTIC_HUE_BLEND_FACTOR = 0.12; // 12% influence from base hue
 
-// Default theme values from `themes/default.css` - the baseline that will be adjusted
+// Baseline theme values from `themes/hero.css` - what a preset adjusts
 const DEFAULT_THEME_VALUES = {
   dark: {
     background: { c: 0.005, h: 285.823, l: 0.12 },
@@ -67,7 +70,7 @@ const DEFAULT_THEME_VALUES = {
   },
 };
 
-// Semantic color defaults (from `themes/default.css`)
+// Semantic color defaults (from `themes/hero.css`)
 const SEMANTIC_COLORS = {
   danger: {
     chromaDark: 0.1967,
