@@ -368,6 +368,21 @@ describe("Splitter", () => {
       expect(onResize).toHaveBeenCalledWith(["1.02fr", "0.98fr"]);
       unmount();
     });
+
+    // An arrow press is a whole gesture of its own, so it opens and closes one like a drag does.
+    it("brackets an arrow press with the gesture it is", async () => {
+      const onResizeEnd = vi.fn();
+      const onResizeStart = vi.fn();
+      const { container, unmount } = await render({ onResizeEnd, onResizeStart });
+
+      await key(slot(container, "splitter-handle"), "ArrowRight");
+
+      expect(onResizeStart).toHaveBeenCalledTimes(1);
+      expect(onResizeStart).toHaveBeenCalledWith(["1fr", "1fr"]);
+      expect(onResizeEnd).toHaveBeenCalledTimes(1);
+      expect(onResizeEnd).toHaveBeenCalledWith(["1.02fr", "0.98fr"]);
+      unmount();
+    });
   });
 
   describe("disabled", () => {

@@ -38,6 +38,8 @@ const state = useSplitterState({
     emit("expand", key);
     schedulePersist();
   },
+  onResizeEnd: (sizes) => emit("resizeEnd", sizes),
+  onResizeStart: (sizes) => emit("resizeStart", sizes),
   onSizesChange: (sizes) => {
     emit("update:sizes", sizes);
     emit("resize", sizes);

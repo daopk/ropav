@@ -42,6 +42,10 @@ export interface UseSplitterStateOptions {
   sizes: MaybeRefOrGetter<SplitterSize[] | undefined>;
   defaultSizes: MaybeRefOrGetter<SplitterSize[] | undefined>;
   onSizesChange?: (sizes: SplitterSize[]) => void;
+  /** A gesture opened. Fires on the first movement, not on the press before it. */
+  onResizeStart?: (sizes: SplitterSize[]) => void;
+  /** A gesture closed, let go of or cancelled. Reports where the panels actually landed. */
+  onResizeEnd?: (sizes: SplitterSize[]) => void;
   onCollapse?: (key: CollectionKey) => void;
   onExpand?: (key: CollectionKey) => void;
 }
@@ -63,6 +67,17 @@ const unitOf = (size: SplitterSize | null | undefined): SizeUnit => {
 
 /** Trim the float a division leaves behind, without pinning the value to whole pixels. */
 const round = (value: number) => Number(value.toFixed(4));
+
+const isSameLayout = (a: number[], b: number[]) =>
+  a.length === b.length && a.every((size, index) => size === b[index]);
+
+const isSameSet = (a: Set<CollectionKey>, b: Set<CollectionKey>) => {
+  if (a.size !== b.size) return false;
+
+  for (const key of a) if (!b.has(key)) return false;
+
+  return true;
+};
 
 const registry = <Meta extends { element: () => HTMLElement | null }>() => {
   // A plain Map rather than `reactive`: the values are getter bundles, and wrapping them in a
@@ -139,6 +154,7 @@ export interface SplitterState {
   /** Apply a pixel delta measured from the snapshot `startResize` took. */
   resize: (handleKey: CollectionKey, totalDelta: number) => void;
   endResize: () => void;
+  /** Put the panels back where the drag opened, reported like any other move. */
   cancelResize: () => void;
 
   collapse: (key: CollectionKey) => void;
@@ -304,15 +320,24 @@ export const useSplitterState = (options: UseSplitterStateOptions): SplitterStat
     let released = release(Math.abs(delta));
     let applied = legalize(growing, base[growing]! + released.taken) - base[growing]!;
 
+    /*
+     * Both of the checks below weigh `applied` against `taken` at the precision the sizes are kept
+     * to rather than exactly. The two are the same quantity reached by different arithmetic — one
+     * adds the release to the growing panel and subtracts it again, the other accumulates it — and
+     * a minimum that resolves off a whole pixel, as a percentage of an odd track does, leaves them
+     * a last bit apart. Read exactly, that hair sends every move through the second pass and then
+     * out through the conservation bail, which abandons the move and leaves a handle reporting
+     * where it already is as the far end it could reach.
+     */
     // The grow-side clamp changed how much is actually wanted, so ask the shrinking side again
     // for exactly that. A third pass could only re-derive the second.
-    if (applied !== released.taken) {
+    if (round(applied) !== round(released.taken)) {
       released = release(Math.max(applied, 0));
       applied = legalize(growing, base[growing]! + released.taken) - base[growing]!;
     }
 
     // Conservation beats the snap: a panel cannot take more than the other side let go of.
-    if (applied > released.taken) return [...base];
+    if (round(applied) > round(released.taken)) return [...base];
 
     const next = released.next;
 
@@ -366,7 +391,8 @@ export const useSplitterState = (options: UseSplitterStateOptions): SplitterStat
 
   /** The pixel layout a drag measures its deltas against, taken once when the drag opens. */
   let snapshot: number[] = [];
-  let snapshotStored: Map<CollectionKey, SplitterSize> | null = null;
+  /** What this drag last committed, so a move resolving to the same layout can be dropped. */
+  let committed: number[] | null = null;
 
   const applyPixels = (pixels: number[]) => {
     const next = toDeclared(pixels);
@@ -387,14 +413,15 @@ export const useSplitterState = (options: UseSplitterStateOptions): SplitterStat
       if (!wasCollapsed.has(key)) remembered.set(key, stored.value.get(key) ?? "1fr");
     }
 
-    collapsed.value = shut;
+    if (!isSameSet(collapsed.value, shut)) collapsed.value = shut;
+
     commit(next);
 
     for (const key of shut) if (!wasCollapsed.has(key)) options.onCollapse?.(key);
     for (const key of wasCollapsed) if (!shut.has(key)) options.onExpand?.(key);
   };
 
-  const neighboursOf = (handleKey: CollectionKey) => {
+  const resolveNeighbours = (handleKey: CollectionKey) => {
     const element = handles.get(handleKey)?.element();
 
     if (!element) return null;
@@ -411,6 +438,32 @@ export const useSplitterState = (options: UseSplitterStateOptions): SplitterStat
     if (before < 0 || before + 1 >= panels.keys.value.length) return null;
 
     return { after: before + 1, before };
+  };
+
+  /*
+   * Emptied whenever either registry changes, which is the same assumption the key order already
+   * makes: nothing moves in the DOM without re-registering. Worth holding because the sweep is a
+   * DOM read per panel, and it runs once per pointer move for the drag itself and again for every
+   * handle's `aria-valuenow`.
+   */
+  const neighbourCache = computed(() => {
+    void panels.keys.value;
+    void handles.keys.value;
+
+    return new Map<CollectionKey, { after: number; before: number } | null>();
+  });
+
+  const neighboursOf = (handleKey: CollectionKey) => {
+    const cache = neighbourCache.value;
+    const hit = cache.get(handleKey);
+
+    if (hit !== undefined) return hit;
+
+    const pair = resolveNeighbours(handleKey);
+
+    cache.set(handleKey, pair);
+
+    return pair;
   };
 
   const collapse = (key: CollectionKey) => {
@@ -446,6 +499,12 @@ export const useSplitterState = (options: UseSplitterStateOptions): SplitterStat
 
     if (!pair || base.length === 0) return null;
 
+    /*
+     * Read afresh every time. Holding these for the length of a gesture looks safe — they are a
+     * cascade over bounds that do not move — but the retreating end is capped by the room left in
+     * the panel past the edge, which is what the drag is spending, and the forward end drifts once
+     * a commit has round-tripped the pixels through the declared units.
+     */
     return {
       max: resolveDelta(base, pair.before, Number.MAX_SAFE_INTEGER)[pair.before]!,
       min: resolveDelta(base, pair.before, -Number.MAX_SAFE_INTEGER)[pair.before]!,
@@ -455,17 +514,33 @@ export const useSplitterState = (options: UseSplitterStateOptions): SplitterStat
 
   return {
     availableSize,
+    /*
+     * A cancel is the drag's last move, back to where it opened. Going through the same path as a
+     * move is what makes the revert visible: `onSizesChange` carries it, so a controlled caller is
+     * told to write the old sizes back rather than being left holding the value the drag last
+     * reached, and a panel the drag shut is reopened with the `onExpand` to match.
+     */
     cancelResize: () => {
-      if (snapshotStored) {
-        stored.value = snapshotStored;
-        snapshotStored = null;
-      }
+      if (resizingHandle.value == null) return;
+
+      // Held where it opened already, so nothing is put back — `resize`'s own reason, that
+      // committing the same layout twice reports a size nobody moved.
+      if (snapshot.length > 0 && !isSameLayout(committed ?? [], snapshot)) applyPixels(snapshot);
+
+      committed = null;
       resizingHandle.value = null;
+
+      // After the revert, so the sizes reported are the ones the panels went back to.
+      options.onResizeEnd?.(sizes.value);
     },
     collapse,
     endResize: () => {
-      snapshotStored = null;
+      const wasResizing = resizingHandle.value != null;
+
+      committed = null;
       resizingHandle.value = null;
+
+      if (wasResizing) options.onResizeEnd?.(sizes.value);
     },
     expand,
     getPanel: (key) => panels.get(key),
@@ -501,7 +576,14 @@ export const useSplitterState = (options: UseSplitterStateOptions): SplitterStat
 
       if (!pair) return;
 
-      applyPixels(resolveDelta(snapshot, pair.before, totalDelta));
+      const pixels = resolveDelta(snapshot, pair.before, totalDelta);
+
+      // Once the edge is against a limit every further move resolves to the same pixels, and
+      // committing them again would invalidate the layout and re-report a size nobody moved.
+      if (committed && isSameLayout(committed, pixels)) return;
+
+      committed = pixels;
+      applyPixels(pixels);
     },
     resizingHandle: computed(() => resizingHandle.value),
     setAvailableSize: (size) => {
@@ -521,8 +603,10 @@ export const useSplitterState = (options: UseSplitterStateOptions): SplitterStat
     sizes,
     startResize: (handleKey) => {
       snapshot = [...layout.value];
-      snapshotStored = new Map(stored.value);
+      committed = snapshot;
       resizingHandle.value = handleKey;
+
+      options.onResizeStart?.(sizes.value);
     },
     toggleCollapse: (key) => {
       if (collapsed.value.has(key)) expand(key);

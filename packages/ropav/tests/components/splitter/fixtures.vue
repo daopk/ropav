@@ -26,6 +26,8 @@ defineEmits<{
   collapse: [key: string | number];
   expand: [key: string | number];
   resize: [sizes: SplitterSize[]];
+  resizeEnd: [sizes: SplitterSize[]];
+  resizeStart: [sizes: SplitterSize[]];
 }>();
 
 const defaultPanels: SplitterFixturePanel[] = [{ id: "start" }, { id: "end" }];
@@ -44,6 +46,8 @@ const defaultPanels: SplitterFixturePanel[] = [{ id: "start" }, { id: "end" }];
     @collapse="$emit('collapse', $event)"
     @expand="$emit('expand', $event)"
     @resize="$emit('resize', $event)"
+    @resize-end="$emit('resizeEnd', $event)"
+    @resize-start="$emit('resizeStart', $event)"
     @update:sizes="$emit('update:sizes', $event)"
   >
     <template v-for="(panel, index) of props.panels ?? defaultPanels" :key="panel.id">

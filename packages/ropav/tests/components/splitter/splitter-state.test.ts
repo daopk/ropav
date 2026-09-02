@@ -255,6 +255,93 @@ describe("splitter state", () => {
      * land somewhere short of where the drag started. Recomputing from the snapshot makes it
      * reversible.
      */
+    /*
+     * The reachable ends look like they would hold still for a whole gesture — a cascade over
+     * bounds that never move — so it is tempting to resolve them once instead of twice a frame for
+     * every handle. They do not hold still: how far the edge can retreat is capped by the room left
+     * in the panel after it, which is the very thing the drag is spending. A held reading would
+     * publish a stale `aria-valuemin` for as long as the pointer was down.
+     */
+    it("reads the reachable range afresh, because a drag moves it", () => {
+      const { handleKeys, state } = setUp([
+        { key: "a", minSize: 100 },
+        { key: "b", maxSize: 550, minSize: 100 },
+        { key: "c", minSize: 100 },
+      ]);
+      const handleKey = handleKeys[0]!;
+
+      state.startResize(handleKey);
+
+      const opening = state.handleRange(handleKey)!;
+
+      state.resize(handleKey, 400);
+
+      const during = state.handleRange(handleKey)!;
+
+      expect(opening.min).toBe(117);
+      expect(during.min).toBe(283);
+
+      state.endResize();
+
+      // What the drag published has to be what a reading taken from scratch gives.
+      expect(during).toEqual(state.handleRange(handleKey));
+    });
+
+    /*
+     * A percentage minimum of an odd track resolves to a fraction of a pixel, while the layout is
+     * solved in whole ones — so the two sides of the cascade's conservation check come out a last
+     * bit apart. Read exactly, that hair looks like the growing panel taking more than was let go
+     * of, the whole move is abandoned, and both handles end up reporting where they already sit as
+     * the far end they could reach.
+     */
+    it("reaches the real ends when a percentage minimum lands off a whole pixel", () => {
+      const { handleKeys, state } = setUp([
+        { key: "a", minSize: "15%" },
+        { key: "b", minSize: "20%" },
+        { key: "c", minSize: "15%" },
+      ]);
+
+      // Not the harness's round thousand: there every one of these minimums is a whole number of
+      // pixels and the arithmetic lines up by luck.
+      state.setAvailableSize(668);
+
+      expect(state.layout.value).toEqual([223, 222, 223]);
+
+      const first = state.handleRange(handleKeys[0]!)!;
+      const second = state.handleRange(handleKeys[1]!)!;
+
+      // 15% of 668, which is how far the first panel can actually be squeezed — not the 223 it is
+      // sitting at.
+      expect(first.min).toBeCloseTo(100.2, 4);
+      expect(first.now).toBe(223);
+
+      // And the other handle's far end, which the same bail used to pin to its current size.
+      expect(second.max).toBeCloseTo(344.8, 4);
+      expect(second.now).toBe(222);
+    });
+
+    it("re-resolves the neighbours when a panel joins and leaves", () => {
+      const { handleKeys, state } = setUp([{ key: "a" }, { key: "b" }]);
+      const root = document.body.firstElementChild!;
+
+      expect(state.neighbours(handleKeys[0]!)).toEqual({ after: 1, before: 0 });
+
+      const handleElement = document.createElement("div");
+      const panelElement = document.createElement("div");
+
+      root.append(handleElement, panelElement);
+      state.registerHandle("late", { element: () => handleElement, size: () => HANDLE_SIZE });
+
+      const unregister = state.registerPanel("c", panelMeta("c", panelElement));
+
+      expect(state.neighbours("late")).toEqual({ after: 2, before: 1 });
+
+      unregister();
+
+      expect(state.neighbours("late")).toBeNull();
+      expect(state.neighbours(handleKeys[0]!)).toEqual({ after: 1, before: 0 });
+    });
+
     it("returns to where it started after being dragged past a minimum and back", () => {
       const { handleKeys, state } = setUp([{ key: "a" }, { key: "b", minSize: 400 }]);
 
@@ -266,6 +353,49 @@ describe("splitter state", () => {
       expect(state.layout.value).toEqual([500, 500]);
     });
 
+    it("opens and closes a gesture once, whatever happens in between", () => {
+      const onResizeEnd = vi.fn();
+      const onResizeStart = vi.fn();
+      const { handleKeys, state } = setUp([{ key: "a" }, { key: "b" }], {
+        onResizeEnd,
+        onResizeStart,
+      });
+
+      state.startResize(handleKeys[0]!);
+      state.resize(handleKeys[0]!, 100);
+      state.resize(handleKeys[0]!, 200);
+      state.endResize();
+
+      expect(onResizeStart).toHaveBeenCalledTimes(1);
+      expect(onResizeStart).toHaveBeenCalledWith(["1fr", "1fr"]);
+      expect(onResizeEnd).toHaveBeenCalledTimes(1);
+      expect(onResizeEnd).toHaveBeenCalledWith(["1.4fr", "0.6fr"]);
+    });
+
+    // So a caller tracking the gesture can never be left holding one that never closed.
+    it("closes the gesture with the sizes a cancel put back", () => {
+      const onResizeEnd = vi.fn();
+      const { handleKeys, state } = setUp([{ key: "a" }, { key: "b" }], { onResizeEnd });
+
+      state.startResize(handleKeys[0]!);
+      state.resize(handleKeys[0]!, 200);
+      state.cancelResize();
+
+      expect(onResizeEnd).toHaveBeenCalledTimes(1);
+      expect(onResizeEnd).toHaveBeenCalledWith(["1fr", "1fr"]);
+      expect(state.layout.value).toEqual([500, 500]);
+    });
+
+    it("reports no gesture for a start that never opened one", () => {
+      const onResizeEnd = vi.fn();
+      const { state } = setUp([{ key: "a" }, { key: "b" }], { onResizeEnd });
+
+      state.endResize();
+      state.cancelResize();
+
+      expect(onResizeEnd).not.toHaveBeenCalled();
+    });
+
     it("puts the snapshot back when a drag is cancelled", () => {
       const { handleKeys, state } = setUp([{ key: "a" }, { key: "b" }]);
 
@@ -274,6 +404,77 @@ describe("splitter state", () => {
       state.cancelResize();
 
       expect(state.layout.value).toEqual([500, 500]);
+    });
+
+    /*
+     * Reverting behind the caller's back would leave a `v-model:sizes` holding the value the drag
+     * last reached while the panels sat back where it opened.
+     */
+    it("reports the revert when a drag is cancelled", () => {
+      const onSizesChange = vi.fn();
+      const { handleKeys, state } = setUp([{ key: "a" }, { key: "b" }], { onSizesChange });
+
+      state.startResize(handleKeys[0]!);
+      state.resize(handleKeys[0]!, 200);
+      state.cancelResize();
+
+      expect(onSizesChange).toHaveBeenLastCalledWith(["1fr", "1fr"]);
+    });
+
+    /* Controlled, the caller owns the sizes, so being told to go back is the only way back. */
+    it("tells a controlled caller to go back when a drag is cancelled", () => {
+      const onSizesChange = vi.fn();
+      const { handleKeys, state } = setUp([{ key: "a" }, { key: "b" }], {
+        onSizesChange,
+        sizes: () => ["300px", "1fr"],
+      });
+
+      state.startResize(handleKeys[0]!);
+      state.resize(handleKeys[0]!, 100);
+      state.cancelResize();
+
+      expect(onSizesChange).toHaveBeenLastCalledWith([300, "1fr"]);
+    });
+
+    it("reopens a panel the cancelled drag shut", () => {
+      const onExpand = vi.fn();
+      const { handleKeys, state } = setUp(
+        [{ collapsedSize: 0, isCollapsible: true, key: "a", minSize: 200 }, { key: "b" }],
+        { onExpand },
+      );
+
+      state.startResize(handleKeys[0]!);
+      state.resize(handleKeys[0]!, -410);
+      expect(state.isCollapsed("a")).toBe(true);
+
+      state.cancelResize();
+
+      expect(state.isCollapsed("a")).toBe(false);
+      expect(state.layout.value).toEqual([500, 500]);
+      expect(onExpand).toHaveBeenCalledWith("a");
+    });
+
+    it("reports nothing for a cancel with nothing to put back", () => {
+      const onSizesChange = vi.fn();
+      const { handleKeys, state } = setUp([{ key: "a" }, { key: "b" }], { onSizesChange });
+
+      state.startResize(handleKeys[0]!);
+      state.cancelResize();
+
+      expect(onSizesChange).not.toHaveBeenCalled();
+    });
+
+    it("stays put when there is no drag to cancel", () => {
+      const onSizesChange = vi.fn();
+      const { handleKeys, state } = setUp([{ key: "a" }, { key: "b" }], { onSizesChange });
+
+      drag(state, handleKeys[0]!, 200);
+      onSizesChange.mockClear();
+
+      state.cancelResize();
+
+      expect(state.layout.value).toEqual([700, 300]);
+      expect(onSizesChange).not.toHaveBeenCalled();
     });
   });
 
@@ -322,13 +523,33 @@ describe("splitter state", () => {
       expect(state.layout.value).toEqual([300, 300]);
     });
 
-    it("reports the sizes to the caller on every move", () => {
+    it("reports the sizes to the caller as the edge moves", () => {
       const onSizesChange = vi.fn();
       const { handleKeys, state } = setUp([{ key: "a" }, { key: "b" }], { onSizesChange });
 
       drag(state, handleKeys[0]!, 100);
 
       expect(onSizesChange).toHaveBeenCalledWith(["1.2fr", "0.8fr"]);
+    });
+
+    /*
+     * Past the limit every further move resolves to the layout already on screen, and reporting
+     * that again would have every listener re-render for an edge that did not move.
+     */
+    it("reports nothing further once the edge is against a limit", () => {
+      const onSizesChange = vi.fn();
+      const { handleKeys, state } = setUp([{ key: "a", maxSize: 550 }, { key: "b" }], {
+        onSizesChange,
+      });
+
+      state.startResize(handleKeys[0]!);
+      state.resize(handleKeys[0]!, 100);
+      state.resize(handleKeys[0]!, 200);
+      state.resize(handleKeys[0]!, 300);
+      state.endResize();
+
+      expect(onSizesChange).toHaveBeenCalledTimes(1);
+      expect(state.layout.value).toEqual([550, 450]);
     });
   });
 
