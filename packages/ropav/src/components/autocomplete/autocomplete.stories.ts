@@ -9,6 +9,7 @@ import IconMapPin from "~icons/gravity-ui/map-pin";
 
 import { useFilter } from "../../composables/use-filter";
 import { avatarSrc } from "../../utils/story-assets";
+import { useClippedLabels } from "../../utils/story-truncation";
 import { ListLayout } from "../../utils/virtualizer-list-layout";
 import { AvatarFallback, AvatarImage, AvatarRoot } from "../avatar";
 import { ButtonRoot } from "../button";
@@ -33,6 +34,7 @@ import { SpinnerRoot } from "../spinner";
 import { SurfaceRoot } from "../surface";
 import { TagRoot } from "../tag";
 import { TagGroupList, TagGroupRoot } from "../tag-group";
+import { TooltipContent, TooltipRoot, TooltipTrigger } from "../tooltip";
 import { VirtualizerRoot } from "../virtualizer";
 
 import AutocompleteClearButton from "./autocomplete-clear-button.vue";
@@ -80,6 +82,9 @@ const components = {
   Tag: TagRoot,
   TagGroup: TagGroupRoot,
   TagGroupList,
+  Tooltip: TooltipRoot,
+  TooltipContent,
+  TooltipTrigger,
   Virtualizer: VirtualizerRoot,
 };
 
@@ -313,6 +318,14 @@ const generateUsers = (count: number) =>
       name: `${firstName} ${lastName}`,
     };
   });
+
+const DEPARTMENTS = [
+  { id: "grants", name: "Directorate-General for Research, Innovation and Grants Administration" },
+  { id: "legal", name: "Legal" },
+  { id: "procurement", name: "Office of Procurement and Vendor Relationship Management" },
+  { id: "people", name: "People Operations" },
+  { id: "safety", name: "Department of Occupational Health, Safety and Environmental Compliance" },
+];
 
 const byName = (item: { name: string }) => item.name;
 
@@ -787,6 +800,82 @@ export const WithDisabledOptions: Story = {
             <AutocompleteIndicator />
           </AutocompleteTrigger>
           ${popoverTemplate("Search animals...")}
+        </Autocomplete>
+      `,
+    };
+  },
+};
+
+/**
+ * A label too long for the popover is truncated, and says the rest in a tooltip.
+ *
+ * Two things have to agree for that to work — the popover already takes the trigger's width, so
+ * only the label is left. It is its own `min-w-0` box, or a `nowrap` flex child refuses to shrink
+ * below its text. And the tooltip trigger gives up the role and the tab stop it would otherwise
+ * claim: an `option` may not contain another widget, and there is nothing to focus here anyway —
+ * the option already carries the full text as its accessible name, so a screen reader never sees
+ * the truncation at all.
+ *
+ * The tooltip is for the sighted reader, which is why it also opens on `isFocusVisible`: arrowing
+ * through the list has to reveal the same text hovering does. It also comes in faster than the
+ * 1500ms the theme asks for - this one finishes a label the reader is already trying to read, and a
+ * wait that long reads as nothing happening at all.
+ */
+export const TruncatedOptions: Story = {
+  render: () => {
+    const filter = useFilter({ sensitivity: "base" });
+
+    return {
+      components,
+      setup: () => ({
+        ...useClippedLabels(),
+        byName,
+        contains: filter.value.contains,
+        items: DEPARTMENTS,
+      }),
+      template: `
+        <Autocomplete
+          class="w-[256px]"
+          default-value="grants"
+          :item-text-value="byName"
+          :items="items"
+          placeholder="Select a department"
+          selection-mode="single"
+        >
+          <Label>Department</Label>
+          <AutocompleteTrigger>
+            <AutocompleteValue class="min-w-0 truncate" />
+            <AutocompleteIndicator />
+          </AutocompleteTrigger>
+          <AutocompletePopover>
+            <AutocompleteFilter :filter="contains">
+              <template #default="{items: matches}">
+                ${searchTemplate("Search departments...")}
+                <ListBox>
+                  ${emptyTemplate("No departments found")}
+                  <ListBoxItem
+                    v-for="item in matches"
+                    :id="item.id"
+                    :key="item.id"
+                    v-slot="{ isFocusVisible }"
+                    :text-value="item.name"
+                  >
+                    <Tooltip :delay="300" :is-open="isFocusVisible || undefined">
+                      <TooltipTrigger class="min-w-0 flex-1" role="presentation" tabindex="-1">
+                        <span :ref="(element) => measure(item.id, element)" class="block truncate">
+                          {{ item.name }}
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent v-if="clipped.has(item.id)" placement="right">
+                        {{ item.name }}
+                      </TooltipContent>
+                    </Tooltip>
+                    <ListBoxItemIndicator />
+                  </ListBoxItem>
+                </ListBox>
+              </template>
+            </AutocompleteFilter>
+          </AutocompletePopover>
         </Autocomplete>
       `,
     };

@@ -7,6 +7,7 @@ import { computed, shallowRef } from "vue";
 import IconChevronsExpandVertical from "~icons/gravity-ui/chevrons-expand-vertical";
 
 import { avatarSrc } from "../../utils/story-assets";
+import { useClippedLabels } from "../../utils/story-truncation";
 import { AvatarFallback, AvatarImage, AvatarRoot } from "../avatar";
 import { ButtonRoot } from "../button";
 import { ChipLabel, ChipRoot } from "../chip";
@@ -20,6 +21,7 @@ import { ListBoxItemIndicator, ListBoxItemRoot } from "../list-box-item";
 import { ListBoxSectionRoot } from "../list-box-section";
 import { SeparatorRoot } from "../separator";
 import { SpinnerRoot } from "../spinner";
+import { TooltipContent, TooltipRoot, TooltipTrigger } from "../tooltip";
 
 import SelectIndicator from "./select-indicator.vue";
 import SelectPopover from "./select-popover.vue";
@@ -54,6 +56,9 @@ const components = {
   SelectValue,
   Separator: SeparatorRoot,
   Spinner: SpinnerRoot,
+  Tooltip: TooltipRoot,
+  TooltipContent,
+  TooltipTrigger,
 };
 
 const meta: StoryMeta = {
@@ -175,6 +180,14 @@ const USERS = [
     id: "5",
     name: "Jane",
   },
+];
+
+const ORGANISATIONS = [
+  { id: "compania", name: "Compañía Internacional de Servicios Financieros y Consultoría, S.A." },
+  { id: "acme", name: "Acme Ltd" },
+  { id: "lotterie", name: "Nordwestdeutsche Klassenlotterie Verwaltungsgesellschaft mbH & Co. KG" },
+  { id: "kubota", name: "Kubota" },
+  { id: "rijks", name: "Rijksinstituut voor Volksgezondheid en Milieu, Bilthoven" },
 ];
 
 const CONTROLLED_STATES = [
@@ -398,6 +411,66 @@ export const WithDisabledOptions: Story = {
         </SelectTrigger>
         <SelectPopover>
           <ListBox>${optionsTemplate}</ListBox>
+        </SelectPopover>
+      </Select>
+    `,
+  }),
+};
+
+/**
+ * A label too long for the popover is truncated, and says the rest in a tooltip.
+ *
+ * Three things have to agree for that to work. The popover takes the trigger's width rather than
+ * only its minimum, or a long option widens the whole thing instead of being clipped. The label is
+ * its own `min-w-0` box, or a `nowrap` flex child refuses to shrink below its text. And the tooltip
+ * trigger gives up the role and the tab stop it would otherwise claim: an `option` may not contain
+ * another widget, and there is nothing to focus here anyway — the option already carries the full
+ * text as its accessible name, so a screen reader never sees the truncation at all.
+ *
+ * The tooltip is for the sighted reader, which is why it also opens on `isFocusVisible`: arrowing
+ * through the list has to reveal the same text hovering does. It also comes in faster than the
+ * 1500ms the theme asks for - this one finishes a label the reader is already trying to read, and a
+ * wait that long reads as nothing happening at all.
+ */
+export const TruncatedOptions: Story = {
+  render: () => ({
+    components,
+    setup: () => ({ ...useClippedLabels(), byName, items: ORGANISATIONS }),
+    template: `
+      <Select
+        class="w-[256px]"
+        default-value="lotterie"
+        :item-text-value="byName"
+        :items="items"
+        placeholder="Select an organisation"
+      >
+        <Label>Organisation</Label>
+        <SelectTrigger>
+          <SelectValue class="min-w-0 truncate" />
+          <SelectIndicator />
+        </SelectTrigger>
+        <SelectPopover class="w-(--trigger-width)">
+          <ListBox>
+            <ListBoxItem
+              v-for="item in items"
+              :id="item.id"
+              :key="item.id"
+              v-slot="{ isFocusVisible }"
+              :text-value="item.name"
+            >
+              <Tooltip :delay="300" :is-open="isFocusVisible || undefined">
+                <TooltipTrigger class="min-w-0 flex-1" role="presentation" tabindex="-1">
+                  <span :ref="(element) => measure(item.id, element)" class="block truncate">
+                    {{ item.name }}
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent v-if="clipped.has(item.id)" placement="right">
+                  {{ item.name }}
+                </TooltipContent>
+              </Tooltip>
+              <ListBoxItemIndicator />
+            </ListBoxItem>
+          </ListBox>
         </SelectPopover>
       </Select>
     `,
