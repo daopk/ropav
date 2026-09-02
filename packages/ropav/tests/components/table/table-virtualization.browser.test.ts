@@ -132,22 +132,22 @@ describe("Table virtualization (browser)", () => {
     unmount();
   });
 
-  it("paints the row's focus ring across cells inside contained wrappers", async () => {
+  it("paints the row's focus ring across the cells of a contained row", async () => {
     const { grid, unmount } = await render();
 
     press(grid, "ArrowDown");
     await settle();
 
     const row = document.activeElement as HTMLElement;
-    const wrapper = row.parentElement!;
     const cell = row.querySelector<HTMLElement>('[data-slot="table-cell"]')!;
 
-    expect(wrapper.getAttribute("role")).toBe("presentation");
-    expect(getComputedStyle(wrapper).contain).toBe("size layout style");
-    // The ring is a shadow split across the cells, and every wrapper between the row and them
-    // lets content overflow so no part of it is clipped away.
-    expect(getComputedStyle(wrapper).overflow).toBe("visible");
-    expect(getComputedStyle(cell.parentElement!).overflow).toBe("visible");
+    // The row and its cells carry the layout's geometry themselves, with nothing between them.
+    expect(cell.parentElement).toBe(row);
+    expect(getComputedStyle(row).contain).toBe("size layout style");
+    // The ring is a shadow split across the cells, and the row lets content overflow so no part
+    // of it is clipped away.
+    expect(getComputedStyle(row).overflow).toBe("visible");
+    expect(getComputedStyle(cell).overflow).toBe("visible");
     expect(getComputedStyle(cell).boxShadow).not.toBe("none");
 
     unmount();

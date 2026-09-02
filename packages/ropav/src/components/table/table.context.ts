@@ -91,6 +91,14 @@ export interface TableRowContext {
   /** The cells of this row, which is how a cell learns which column it sits under. */
   cells: TableRegistry<TableCellMeta>;
   /**
+   * The position a cell takes among its siblings until the registry has read the DOM.
+   *
+   * Cells set up in template order, so the count of those before it is where a cell sits — and
+   * knowing it during the first render is what lets a windowed cell be placed under its column
+   * the moment it mounts, rather than a tick later in a second pass over every cell of the row.
+   */
+  claimCellIndex: () => number;
+  /**
    * What `Table.DragHandle` needs to turn a pressable into this row's drag control, or `null`
    * when the table is not draggable.
    *

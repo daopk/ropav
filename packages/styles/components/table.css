@@ -205,9 +205,9 @@
     border-end-end-radius: min(32px, var(--radius-2xl));
   }
 
-  /* Virtualized: elements are divs, not tr/td. VirtualizerItem wrappers
-     break :first-child/:last-child on rows and cells, so round the body
-     itself and clip overflow instead. */
+  /* Virtualized: elements are divs, not tr/td, and only a window of the rows
+     is in the DOM, so :first-child/:last-child name the window's edges rather
+     than the table's. Round the body itself and clip overflow instead. */
   &:not(tbody) {
     @apply relative h-full overflow-clip;
     border-radius: min(32px, var(--radius-2xl));

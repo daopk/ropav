@@ -1,4 +1,6 @@
 <script setup lang="ts" vapor>
+import type { DragAttrs } from "../../composables/use-drag";
+import type { ItemDropTarget } from "../../utils/dnd-types";
 import type { TableRowProps, TableRowSlotProps } from "./table.types";
 import type { TableCellMeta } from "./use-table-collection";
 
@@ -9,6 +11,7 @@ import { useInteractionStates } from "../../composables/use-interaction-states";
 import { dataAttr } from "../../utils/assertion";
 import { composeSlotClassName } from "../../utils/compose";
 import { visuallyHiddenStyle } from "../../utils/visually-hidden";
+import { useVirtualizerItem } from "../virtualizer/use-virtualizer-item";
 
 import {
   provideTableRowContext,
@@ -73,13 +76,15 @@ const textValue = () => {
     .join(" ");
 };
 
+// The key is watched with the element: a windowed row keeps its element and takes another item
+// when the window moves, and the registries have to follow it to the new key.
 watch(
-  element,
-  (current, _previous, onCleanup) => {
+  [element, rowKey],
+  ([current, key], _previous, onCleanup) => {
     if (!current) return;
 
     onCleanup(
-      collection.rows.register(rowKey.value, {
+      collection.rows.register(key, {
         element: () => element.value,
         isDisabled: () => false,
         textValue,
@@ -89,7 +94,7 @@ watch(
     // Nesting is registered beside the collection rather than in it, so the row collection stays
     // the plain shape the selection manager and the typeahead take.
     onCleanup(
-      collection.tree.register(rowKey.value, {
+      collection.tree.register(key, {
         element: () => element.value,
         hasChildRows: () => hasChildRows.value,
         level: () => props.level ?? 0,
@@ -129,7 +134,16 @@ const position = computed(() => collection.tree.position(rowKey.value));
  */
 const draggable =
   dragState && dragAndDropHooks?.useDraggableItem
-    ? dragAndDropHooks.useDraggableItem({ hasDragButton: true, key: rowKey.value }, dragState)
+    ? dragAndDropHooks.useDraggableItem(
+        // Read on every use, for the same reason the registrations above follow the key.
+        {
+          hasDragButton: true,
+          get key() {
+            return rowKey.value;
+          },
+        },
+        dragState,
+      )
     : null;
 
 /**
@@ -141,10 +155,20 @@ const draggable =
  */
 const dropIndicatorElement = shallowRef<HTMLElement | null>(null);
 
+const dropTarget = computed<ItemDropTarget>(() => ({
+  dropPosition: "on",
+  key: rowKey.value,
+  type: "item",
+}));
+
 const dropIndicator =
   dropState && dragAndDropHooks?.useDropIndicator
     ? dragAndDropHooks.useDropIndicator(
-        { target: { dropPosition: "on", key: rowKey.value, type: "item" } },
+        {
+          get target() {
+            return dropTarget.value;
+          },
+        },
         dropState,
         dropIndicatorElement,
       )
@@ -154,13 +178,20 @@ const isDragging = computed(() => dragState?.isDragging(rowKey.value) ?? false);
 const isDropTarget = computed(() => dropIndicator?.isDropTarget.value ?? false);
 const allowsDragging = computed(() => draggable != null);
 
-/** Attributes from the drag half. Never listeners — Vapor re-attaches every `on*` key spread
- * through `v-bind` on each render, so those are wired statically with `@event` instead. */
-const dragAttrs = computed(() => draggable?.attrs.value ?? {});
+/**
+ * Attributes from the drag half, bound by name below. Never listeners — Vapor re-attaches every
+ * `on*` key spread through `v-bind` on each render, so those are wired statically with `@event`.
+ * Not spread either: an object spread onto the element turns every attribute on it into a merged
+ * lookup, paid on every mount, and a windowed row mounts on every scroll.
+ */
+const dragAttrs = computed<DragAttrs>(() => draggable?.attrs.value ?? {});
+
+let claimedCells = 0;
 
 provideTableRowContext({
   ariaLabelledBy,
   cells,
+  claimCellIndex: () => claimedCells++,
   drag: draggable,
   hasChildRows,
   isDisabled,
@@ -189,6 +220,27 @@ const onFocus = (event: FocusEvent) => {
  * body's first row is two. A tree grid reports depth instead, exactly as React Aria does.
  */
 const virtualizer = useTableVirtualizerContext();
+
+/**
+ * Where the row sits, when the table is windowed.
+ *
+ * The row is its own wrapper: it carries the geometry the layout gave it rather than sitting inside
+ * an element that does. Every row of the window mounts on a scroll that moves it, and a wrapper
+ * would be a second component and a second element for each of them.
+ */
+const layoutInfo = computed(() => (virtualizer ? virtualizer.getLayoutInfo(rowKey.value) : null));
+
+const parentLayoutInfo = computed(() =>
+  virtualizer ? virtualizer.getLayoutInfo(virtualizer.collection.value.bodyKey) : null,
+);
+
+const placement = virtualizer
+  ? useVirtualizerItem({
+      element,
+      layoutInfo: () => layoutInfo.value,
+      parentLayoutInfo: () => parentLayoutInfo.value,
+    })
+  : null;
 
 const ariaRowIndex = computed(() => {
   if (!virtualizer || isTree.value) return undefined;
@@ -234,7 +286,7 @@ const onClick = (event: MouseEvent) => {
   <component
     :is="virtualizer ? 'div' : 'tr'"
     ref="element"
-    v-bind="dragAttrs"
+    :aria-describedby="dragAttrs['aria-describedby']"
     :aria-disabled="isDisabled || undefined"
     :aria-expanded="isTree && hasChildRows ? isExpanded : undefined"
     :aria-labelledby="ariaLabelledBy || undefined"
@@ -259,8 +311,9 @@ const onClick = (event: MouseEvent) => {
     :data-selected="dataAttr(isSelected)"
     :data-selection-mode="selectionMode === 'none' ? undefined : selectionMode"
     data-slot="table-row"
+    :draggable="dragAttrs.draggable"
     role="row"
-    :style="{ '--table-row-level': level }"
+    :style="[placement?.style.value, { '--table-row-level': level }]"
     :tabindex="keyboard.rowTabIndex(rowKey)"
     @blur="states.onBlur"
     @click="onClick"

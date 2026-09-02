@@ -64,9 +64,14 @@ export interface UseDragHandlers {
   onClick?: (event: MouseEvent) => void;
 }
 
+/** Attributes for a draggable element. Attributes only, never listeners. */
+export interface DragAttrs {
+  draggable?: "true" | "false";
+  "aria-describedby"?: string;
+}
+
 export interface UseDragReturn {
-  /** Attributes for the draggable element. Attributes only, never listeners. */
-  attrs: ComputedRef<{ draggable: "true" | "false"; "aria-describedby"?: string }>;
+  attrs: ComputedRef<Required<Pick<DragAttrs, "draggable">> & DragAttrs>;
   handlers: UseDragHandlers;
   /** Attributes for the explicit drag control, when there is one. */
   dragButtonAttrs: ComputedRef<{ "aria-describedby": string | undefined }>;

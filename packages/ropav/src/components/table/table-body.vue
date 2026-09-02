@@ -25,6 +25,11 @@ const { collection, dropState } = useTableGridContext();
 const virtualizer = useTableVirtualizerContext();
 
 /**
+ * The rows are keyed by the slot the virtualizer hands them rather than by their own key, so a
+ * window that moved keeps its elements and changes what they show. Everything a row derives from
+ * its item — its key, its registrations, its drag target — has to follow the item for that to
+ * hold, which is the row's side of the bargain.
+ *
  * A row node's datum, back as the item type it came in as.
  *
  * `VirtualizerNode.content` is `unknown` on purpose — the virtualizer carries data it never looks
@@ -85,9 +90,9 @@ const emptyStateStyle = computed(() => (virtualizer ? { display: "contents" } : 
  * A windowed body renders its own drop indicators; a plain one leaves them to the caller.
  *
  * Not a second way of doing the same thing — it is the only way. An indicator is positioned
- * against the row wrappers it sits between, which makes it their **sibling**, and this is the
- * level that produces them. Markup written in the row slot lands *inside* one wrapper, where an
- * absolute offset would be measured from the wrong origin and clipped by its overflow.
+ * against the rows it sits between, which makes it their **sibling**, and this is the level that
+ * produces them. Markup written in the row slot lands *inside* a row, where an absolute offset
+ * would be measured from the wrong origin.
  */
 const rendersDropIndicators = computed(() => virtualizer != null && dropState != null);
 
@@ -105,14 +110,12 @@ const lastRowKey = computed(() => collection.rows.getLastKey());
       role="rowgroup"
     >
       <template v-if="virtualizer">
-        <template v-for="view in virtualizer.rowViews.value" :key="view.key">
+        <template v-for="view in virtualizer.rowViews.value" :key="view.slot">
           <TableDropIndicator
             v-if="rendersDropIndicators"
             :target="{ dropPosition: 'before', key: view.key, type: 'item' }"
           />
-          <TableVirtualizerItem :layout-info="view.layoutInfo" :parent-layout-info="layoutInfo">
-            <slot :index="view.node?.index" :item="itemOf(view.node)" />
-          </TableVirtualizerItem>
+          <slot :index="view.node?.index" :item="itemOf(view.node)" />
         </template>
         <TableDropIndicator
           v-if="rendersDropIndicators && lastRowKey != null"

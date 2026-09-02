@@ -1,12 +1,14 @@
 <script setup lang="ts" vapor>
-import type { LayoutInfo } from "../../utils/virtualizer-layout-info";
+import type { VirtualizerItemProps } from "../virtualizer/virtualizer.types";
 
-import { VirtualizerItem } from "../virtualizer";
+import { shallowRef } from "vue";
+
+import { useVirtualizerItem } from "../virtualizer/use-virtualizer-item";
 
 import { useTableVirtualizerContext } from "./table.context";
 
 /**
- * A `VirtualizerItem` wrapper for a table part, or nothing at all.
+ * The wrapper around a part of a virtualized table, or nothing at all.
  *
  * A part of a virtualized table sits inside a wrapper carrying the geometry the layout worked out
  * for it, and a part of a plain table sits inside nothing. That is one element's difference in
@@ -17,26 +19,31 @@ import { useTableVirtualizerContext } from "./table.context";
  * column's geometry only exists once the column has registered itself from the DOM, so a wrapper
  * conditional on the geometry would destroy the element whose registration created it, unregister
  * it, and flap between the two branches for ever.
+ *
+ * The wrapper is rendered here rather than delegated to `VirtualizerItem`: a drop indicator mounts
+ * one of these for every row of the window, and a scroll that replaces the window pays for every
+ * component instance in it. Rows and cells go further and carry their geometry themselves.
  */
-const props = defineProps<{
-  /** Where this part goes, or `null` while the layout cannot say yet. */
-  layoutInfo?: LayoutInfo | null;
-  /** The enclosing part's layout info, which the offset is relative to. */
-  parentLayoutInfo?: LayoutInfo | null;
-}>();
+const props = defineProps<VirtualizerItemProps>();
 
 defineSlots<{ default?: () => unknown }>();
 
 const isVirtualized = useTableVirtualizerContext() != null;
+
+const element = shallowRef<HTMLElement | null>(null);
+
+const style = isVirtualized
+  ? useVirtualizerItem({
+      element,
+      layoutInfo: () => props.layoutInfo,
+      parentLayoutInfo: () => props.parentLayoutInfo,
+    }).style
+  : null;
 </script>
 
 <template>
-  <VirtualizerItem
-    v-if="isVirtualized"
-    :layout-info="props.layoutInfo"
-    :parent-layout-info="props.parentLayoutInfo"
-  >
+  <div v-if="isVirtualized" ref="element" role="presentation" :style="style">
     <slot />
-  </VirtualizerItem>
+  </div>
   <slot v-else />
 </template>

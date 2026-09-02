@@ -1,5 +1,5 @@
 import type { DragKey } from "../utils/dnd-types";
-import type { UseDragHandlers } from "./use-drag";
+import type { DragAttrs, UseDragHandlers } from "./use-drag";
 import type { UseDraggableCollectionStateReturn } from "./use-draggable-collection-state";
 import type { PressEvent } from "./use-press";
 import type { ComputedRef, MaybeRefOrGetter } from "vue";
@@ -28,7 +28,7 @@ export interface UseDraggableItemOptions {
 }
 
 export interface UseDraggableItemReturn {
-  attrs: ComputedRef<Record<string, unknown>>;
+  attrs: ComputedRef<DragAttrs>;
   handlers: UseDragHandlers;
   dragButtonAttrs: ComputedRef<{
     "aria-describedby": string | undefined;
@@ -125,7 +125,7 @@ export const useDraggableItem = (
     attrs: computed(() => {
       if (isDisabled.value) return {};
 
-      const attrs: Record<string, unknown> = { ...drag.attrs.value };
+      const attrs: DragAttrs = { ...drag.attrs.value };
 
       if (description.value !== undefined) {
         // A long press selects rather than drags when the item has an action, so promising

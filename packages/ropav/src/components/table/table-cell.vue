@@ -8,8 +8,8 @@ import { useInteractionStates } from "../../composables/use-interaction-states";
 import { dataAttr } from "../../utils/assertion";
 import { composeSlotClassName } from "../../utils/compose";
 import { getCollectionTextValue } from "../../utils/text-value";
+import { useVirtualizerItem } from "../virtualizer/use-virtualizer-item";
 
-import TableVirtualizerItem from "./table-virtualizer-item.vue";
 import {
   useTableContext,
   useTableGridContext,
@@ -25,7 +25,7 @@ defineSlots<{ default?: (props: TableCellSlotProps) => unknown }>();
 const { slots } = useTableContext();
 const { collection, collectionId, keyboard, selection, tableId, treeColumn } =
   useTableGridContext();
-const { cells, hasChildRows, isExpanded, level, rowKey } = useTableRowContext();
+const { cells, claimCellIndex, hasChildRows, isExpanded, level, rowKey } = useTableRowContext();
 
 // A cell has no identity of its own in the public API — it is the nth cell of its row — so the
 // registration key is internal and the rendered key is derived from the column it lands under.
@@ -49,8 +49,14 @@ watch(
 );
 
 // Which column this cell sits under, exactly as React Aria pairs the nth cell with the nth
-// column. `-1` until the registration settles at the end of the first tick.
-const index = computed(() => cells.indexOf(cellKey.value));
+// column. The registry answers once the registration settles at the end of the first tick; until
+// then the cell's place in setup order stands in, so the first render is already complete.
+const claimedIndex = claimCellIndex();
+const index = computed(() => {
+  const registered = cells.indexOf(cellKey.value);
+
+  return registered < 0 ? claimedIndex : registered;
+});
 const columnKey = computed(() => (index.value < 0 ? null : collection.columns.keyAt(index.value)));
 
 const isRowHeader = computed(
@@ -87,12 +93,10 @@ const onFocus = (event: FocusEvent) => {
 };
 
 /**
- * Virtualized, the cell sits inside a wrapper carrying the column's width and offset.
+ * Virtualized, the cell carries the column's width and offset itself, as the row does its own.
  *
  * The geometry is found by the cell the row and the column meet at, which means the row has to
- * carry the `id` its item was keyed by — that key is half of the pair. Until the cell registry has
- * settled the column is unknown and there is no wrapper yet, the same tick `data-column-index` is
- * missing for.
+ * carry the `id` its item was keyed by — that key is half of the pair.
  */
 const virtualizer = useTableVirtualizerContext();
 
@@ -107,42 +111,49 @@ const layoutInfo = computed(() => {
 const parentLayoutInfo = computed(() =>
   virtualizer ? virtualizer.getLayoutInfo(rowKey.value) : null,
 );
+
+const placement = virtualizer
+  ? useVirtualizerItem({
+      element,
+      layoutInfo: () => layoutInfo.value,
+      parentLayoutInfo: () => parentLayoutInfo.value,
+    })
+  : null;
 </script>
 
 <template>
-  <TableVirtualizerItem :layout-info="layoutInfo" :parent-layout-info="parentLayoutInfo">
-    <component
-      :is="virtualizer ? 'div' : 'td'"
-      :id="cellId"
-      ref="element"
-      :aria-colindex="virtualizer && index >= 0 ? index + 1 : undefined"
-      :class="composeSlotClassName(slots.cell, props.class)"
-      :data-collection="collectionId"
-      :data-column-index="index < 0 ? undefined : index"
-      :data-disabled="dataAttr(isDisabled)"
-      :data-expanded="dataAttr(isExpanded)"
-      :data-focus-visible="dataAttr(states.isFocusVisible.value)"
-      :data-focused="dataAttr(states.isFocused.value)"
-      :data-has-child-items="dataAttr(hasChildRows)"
-      :data-key="columnKey == null ? undefined : `${rowKey}:${columnKey}`"
-      :data-level="level"
-      :data-pressed="dataAttr(states.isPressed.value)"
-      :data-selected="dataAttr(isSelected)"
-      data-slot="table-cell"
-      :data-tree-column="dataAttr(isTreeColumn)"
-      :role="isRowHeader ? 'rowheader' : 'gridcell'"
-      :tabindex="keyboard.cellTabIndex(rowKey, columnKey)"
-      @blur="states.onBlur"
-      @focus="onFocus"
-      @pointerdown="states.onPointerdown"
-    >
-      <slot
-        :has-child-rows="hasChildRows"
-        :is-disabled="isDisabled"
-        :is-expanded="isExpanded"
-        :is-selected="isSelected"
-        :is-tree-column="isTreeColumn"
-      />
-    </component>
-  </TableVirtualizerItem>
+  <component
+    :is="virtualizer ? 'div' : 'td'"
+    :id="cellId"
+    ref="element"
+    :aria-colindex="virtualizer && index >= 0 ? index + 1 : undefined"
+    :class="composeSlotClassName(slots.cell, props.class)"
+    :data-collection="collectionId"
+    :data-column-index="index < 0 ? undefined : index"
+    :data-disabled="dataAttr(isDisabled)"
+    :data-expanded="dataAttr(isExpanded)"
+    :data-focus-visible="dataAttr(states.isFocusVisible.value)"
+    :data-focused="dataAttr(states.isFocused.value)"
+    :data-has-child-items="dataAttr(hasChildRows)"
+    :data-key="columnKey == null ? undefined : `${rowKey}:${columnKey}`"
+    :data-level="level"
+    :data-pressed="dataAttr(states.isPressed.value)"
+    :data-selected="dataAttr(isSelected)"
+    data-slot="table-cell"
+    :data-tree-column="dataAttr(isTreeColumn)"
+    :role="isRowHeader ? 'rowheader' : 'gridcell'"
+    :style="placement?.style.value"
+    :tabindex="keyboard.cellTabIndex(rowKey, columnKey)"
+    @blur="states.onBlur"
+    @focus="onFocus"
+    @pointerdown="states.onPointerdown"
+  >
+    <slot
+      :has-child-rows="hasChildRows"
+      :is-disabled="isDisabled"
+      :is-expanded="isExpanded"
+      :is-selected="isSelected"
+      :is-tree-column="isTreeColumn"
+    />
+  </component>
 </template>

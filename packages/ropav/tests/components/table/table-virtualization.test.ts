@@ -60,7 +60,7 @@ const rowsOf = (grid: HTMLElement) => [
 const rowKeys = (grid: HTMLElement) =>
   rowsOf(grid).map((row) => row.getAttribute("data-key") ?? "");
 
-/** The wrapper the layout positions a part with, which is the part's parent when virtualized. */
+/** The wrapper the layout positions a part with. Rows and cells are their own, and have none. */
 const wrapperOf = (element: Element) => element.parentElement!;
 
 const cellsOf = (row: HTMLElement) => [
@@ -106,7 +106,7 @@ describe("Table virtualization", () => {
       // the top edge counts as being above the window.
       expect(rowKeys(grid)[0]).toBe("115");
       expect(rowKeys(grid)).not.toContain("1");
-      expect(wrapperOf(rowsOf(grid)[0]!).style.top).toBe(`${114 * 42}px`);
+      expect(rowsOf(grid)[0]!.style.top).toBe(`${114 * 42}px`);
 
       unmount();
     });
@@ -193,7 +193,7 @@ describe("Table virtualization", () => {
 
     it("stacks the rows at the offsets the layout worked out", async () => {
       const { grid, unmount } = await renderVirtualized();
-      const [first, second] = rowsOf(grid).map(wrapperOf);
+      const [first, second] = rowsOf(grid);
 
       expect(first!.style.position).toBe("absolute");
       expect(first!.style.top).toBe("0px");
@@ -208,7 +208,7 @@ describe("Table virtualization", () => {
 
     it("lines each cell up under its own column", async () => {
       const { grid, unmount } = await renderVirtualized();
-      const cells = cellsOf(rowsOf(grid)[0]!).map(wrapperOf);
+      const cells = cellsOf(rowsOf(grid)[0]!);
 
       expect(cells.map((cell) => cell.style.left)).toEqual(["0px", "230px", "460px"]);
       expect(cells.map((cell) => cell.style.width)).toEqual(["230px", "230px", "240px"]);

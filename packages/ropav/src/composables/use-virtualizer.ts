@@ -22,10 +22,12 @@ import { overscannedRect } from "../utils/virtualizer-overscan";
  *
  * Two pieces of upstream are deliberately gone:
  *
- * `ReusableView` and its recycling. React swaps the content of existing elements as they scroll
- * out of view, and defers reordering the DOM until scrolling stops because reordering is what
- * costs. A keyed `v-for` does the same swapping for free here, and it keeps the DOM in
- * collection order at every moment — which is what a screen reader walks.
+ * `ReusableView` as a class. Its idea is kept — see {@link VirtualizerView.slot} — because a
+ * keyed `v-for` on its own cannot spare a window that moved wholesale: every key in it is new, so
+ * every row mounts anew, and a scrollbar dragged across a long collection lands on nothing for as
+ * long as the mounting takes. Reordering is not deferred as React defers it: the rendered set is
+ * kept in collection order at every moment, which is what a screen reader walks, and moving an
+ * element is cheap next to mounting one.
  *
  * The scroll anchor. Upstream calls `UNSTABLE_getScrollAnchorInfo` on the layout, but no layout
  * implements it, so the whole tracker resolves to nothing for every collection in this build.
@@ -34,6 +36,15 @@ import { overscannedRect } from "../utils/virtualizer-overscan";
 /** One rendered element: a layout info, what it was built from, and anything nested inside it. */
 export interface VirtualizerView {
   key: VirtualizerKey;
+  /**
+   * The element this view is rendered into, as a number that outlives the key.
+   *
+   * A key that leaves the window frees its slot, and the next key to arrive takes it. A collection
+   * that keys its rendered items by this rather than by `key` keeps the element and its component
+   * when the window moves and changes what they show — which is what makes a window that moved
+   * wholesale cost a screenful of updates rather than a screenful of mounts.
+   */
+  slot: number;
   layoutInfo: LayoutInfo;
   parentKey: VirtualizerKey | null;
   node?: VirtualizerNode;
@@ -228,6 +239,41 @@ export const useVirtualizer = <Options extends object = object>(
     return { contentSize, layout, layoutInfos };
   });
 
+  /** Which slot each key of the last pass held. Plain state: it is history, not something derived. */
+  let slotByKey = new Map<VirtualizerKey, number>();
+  let nextSlot = 0;
+
+  /**
+   * Hands every key in the pass a slot, keeping the one it had.
+   *
+   * The slots of the keys that left are handed out in the order their keys were rendered, to the
+   * arriving keys in the order they will be: a window that moved wholesale therefore keeps every
+   * slot in place, and a window that moved by a row moves one element.
+   */
+  const assignSlots = (layoutInfos: LayoutInfo[]): Map<VirtualizerKey, number> => {
+    const next = new Map<VirtualizerKey, number>();
+    const arriving: VirtualizerKey[] = [];
+
+    for (const { key } of layoutInfos) {
+      const slot = slotByKey.get(key);
+
+      if (slot == null) arriving.push(key);
+      else next.set(key, slot);
+    }
+
+    const freed: number[] = [];
+
+    for (const [key, slot] of slotByKey) {
+      if (!next.has(key)) freed.push(slot);
+    }
+
+    for (const key of arriving) next.set(key, freed.length > 0 ? freed.shift()! : nextSlot++);
+
+    slotByKey = next;
+
+    return next;
+  };
+
   /**
    * The layout infos arrive parents first, so a child always finds its parent already built. One
    * whose parent is not in the window is treated as a root rather than dropped — losing it would
@@ -238,6 +284,7 @@ export const useVirtualizer = <Options extends object = object>(
     const collection = options.collection();
     const views = new Map<VirtualizerKey, VirtualizerView>();
     const roots: VirtualizerView[] = [];
+    const slots = assignSlots(layoutInfos);
 
     for (const layoutInfo of layoutInfos) {
       const view: VirtualizerView = {
@@ -246,6 +293,7 @@ export const useVirtualizer = <Options extends object = object>(
         layoutInfo,
         node: collection.getNode(layoutInfo.key),
         parentKey: layoutInfo.parentKey,
+        slot: slots.get(layoutInfo.key)!,
       };
 
       views.set(view.key, view);

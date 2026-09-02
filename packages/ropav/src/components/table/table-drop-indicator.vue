@@ -33,9 +33,19 @@ const virtualizerState = useVirtualizerStateContext();
 
 const element = shallowRef<HTMLElement | null>(null);
 
+// Read on every use: the body keys its indicators by slot, so this one follows the gap it stands
+// in as the window moves.
 const indicator =
   dropState && dragAndDropHooks?.useDropIndicator
-    ? dragAndDropHooks.useDropIndicator({ target: props.target }, dropState, element)
+    ? dragAndDropHooks.useDropIndicator(
+        {
+          get target() {
+            return props.target;
+          },
+        },
+        dropState,
+        element,
+      )
     : null;
 
 const isHidden = computed(() => indicator?.isHidden.value ?? true);
