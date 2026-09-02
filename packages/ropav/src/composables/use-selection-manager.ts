@@ -195,15 +195,16 @@ export const useSelectionManager = (
   };
 
   /** The keys from `from` to `to` inclusive, in document order whichever way round they are. */
-  const keyRange = (from: CollectionKey, to: CollectionKey) => {
-    const keys = collection.orderedKeys();
-    const start = keys.indexOf(from);
-    const end = keys.indexOf(to);
+  const keyRange = (from: CollectionKey, to: CollectionKey) =>
+    collection.withOrder(() => {
+      const keys = collection.orderedKeys();
+      const start = collection.getIndex(from);
+      const end = collection.getIndex(to);
 
-    if (start === -1 || end === -1) return [];
+      if (start === -1 || end === -1) return [];
 
-    return keys.slice(Math.min(start, end), Math.max(start, end) + 1);
-  };
+      return keys.slice(Math.min(start, end), Math.max(start, end) + 1);
+    });
 
   const extendSelection = (key: CollectionKey) => {
     if (selectionMode.value === "none") return;

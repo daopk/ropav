@@ -368,25 +368,26 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
     return next ?? (step === 1 ? getLastKey() : getFirstKey());
   };
 
-  const getKeyForSearch = (search: string, fromKey?: CollectionKey | null) => {
-    // Starts *at* `fromKey` rather than after it, matching React Aria: a longer search has to
-    // be able to keep matching the item it is already on.
-    let key = fromKey ?? getFirstKey();
+  const getKeyForSearch = (search: string, fromKey?: CollectionKey | null) =>
+    collection.withOrder(() => {
+      // Starts *at* `fromKey` rather than after it, matching React Aria: a longer search has to
+      // be able to keep matching the item it is already on.
+      let key = fromKey ?? getFirstKey();
 
-    while (key != null) {
-      const item = collection.getItem(key);
+      while (key != null) {
+        const item = collection.getItem(key);
 
-      if (!item) return null;
+        if (!item) return null;
 
-      const text = item.textValue();
+        const text = item.textValue();
 
-      if (text && collator.compare(text.slice(0, search.length), search) === 0) return key;
+        if (text && collator.compare(text.slice(0, search.length), search) === 0) return key;
 
-      key = walk(collection.getKeyAfter(key), 1);
-    }
+        key = walk(collection.getKeyAfter(key), 1);
+      }
 
-    return null;
-  };
+      return null;
+    });
 
   const land = (element: HTMLElement, scroll?: boolean) => {
     // Under virtual focus the caret belongs to a control outside the collection, so the item is
@@ -467,108 +468,112 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
       return true;
     };
 
-    switch (event.key) {
-      case "ArrowDown": {
-        move(focused == null ? getFirstKey() : getKeyBelow(focused));
+    // One reading of the order for the whole press: the arrows, paging and the walks that
+    // skip disabled items all ask for neighbours in a loop.
+    collection.withOrder(() => {
+      switch (event.key) {
+        case "ArrowDown": {
+          move(focused == null ? getFirstKey() : getKeyBelow(focused));
 
-        return;
+          return;
+        }
+        case "ArrowUp": {
+          move(focused == null ? getLastKey() : getKeyAbove(focused));
+
+          return;
+        }
+        case "ArrowRight": {
+          if (!answersInlineAxis()) return;
+          move(focused == null ? getFirstKey() : getKeyRightOf(focused));
+
+          return;
+        }
+        case "ArrowLeft": {
+          if (!answersInlineAxis()) return;
+          move(focused == null ? getLastKey() : getKeyLeftOf(focused));
+
+          return;
+        }
+        case "Home": {
+          // Shift+Home from nowhere would extend a selection that has no anchor.
+          if (focused == null && event.shiftKey) return;
+          move(getFirstKey(), false);
+
+          return;
+        }
+        case "End": {
+          if (focused == null && event.shiftKey) return;
+          move(getLastKey(), false);
+
+          return;
+        }
+        case "PageUp": {
+          move(focused == null ? getFirstKey() : pageStep(focused, -1));
+
+          return;
+        }
+        case "PageDown": {
+          move(focused == null ? getLastKey() : pageStep(focused, 1));
+
+          return;
+        }
+        case "a": {
+          if (!(event.ctrlKey || event.metaKey) || toValue(options.disallowSelectAll)) return;
+          if (selection.selectionMode.value !== "multiple") return;
+
+          selection.selectAll();
+          event.preventDefault();
+          event.stopPropagation();
+
+          return;
+        }
+        case "Escape": {
+          if (escapeKeyBehavior.value !== "clearSelection" || selection.isEmpty.value) return;
+
+          // Only claimed when it actually cleared something, so an Escape that does nothing here
+          // still reaches an enclosing overlay that wants to close.
+          selection.clearSelection();
+          event.preventDefault();
+          event.stopPropagation();
+
+          return;
+        }
+        case "Tab": {
+          // Nothing inside is a tab stop under virtual focus, so there is nothing to park and the
+          // key belongs to whatever holds real focus.
+          if (isVirtual.value) return;
+
+          // Park focus at the far end and hand back to the browser, so one Tab leaves the whole
+          // collection rather than stepping through every item.
+          const focusable = focusableIn(element);
+          const edge = event.shiftKey ? element : focusable.at(-1);
+
+          edge?.focus();
+
+          return;
+        }
+        case "Enter": {
+          if (focused == null || toValue(options.disallowActivation)) return;
+
+          options.onAction?.(focused);
+          event.preventDefault();
+
+          return;
+        }
+        case " ": {
+          if (focused == null || toValue(options.disallowActivation)) return;
+
+          if (selection.selectionMode.value === "none") options.onAction?.(focused);
+          else selection.select(focused, { isShiftPressed: event.shiftKey });
+
+          event.preventDefault();
+
+          return;
+        }
+        default:
+          return;
       }
-      case "ArrowUp": {
-        move(focused == null ? getLastKey() : getKeyAbove(focused));
-
-        return;
-      }
-      case "ArrowRight": {
-        if (!answersInlineAxis()) return;
-        move(focused == null ? getFirstKey() : getKeyRightOf(focused));
-
-        return;
-      }
-      case "ArrowLeft": {
-        if (!answersInlineAxis()) return;
-        move(focused == null ? getLastKey() : getKeyLeftOf(focused));
-
-        return;
-      }
-      case "Home": {
-        // Shift+Home from nowhere would extend a selection that has no anchor.
-        if (focused == null && event.shiftKey) return;
-        move(getFirstKey(), false);
-
-        return;
-      }
-      case "End": {
-        if (focused == null && event.shiftKey) return;
-        move(getLastKey(), false);
-
-        return;
-      }
-      case "PageUp": {
-        move(focused == null ? getFirstKey() : pageStep(focused, -1));
-
-        return;
-      }
-      case "PageDown": {
-        move(focused == null ? getLastKey() : pageStep(focused, 1));
-
-        return;
-      }
-      case "a": {
-        if (!(event.ctrlKey || event.metaKey) || toValue(options.disallowSelectAll)) return;
-        if (selection.selectionMode.value !== "multiple") return;
-
-        selection.selectAll();
-        event.preventDefault();
-        event.stopPropagation();
-
-        return;
-      }
-      case "Escape": {
-        if (escapeKeyBehavior.value !== "clearSelection" || selection.isEmpty.value) return;
-
-        // Only claimed when it actually cleared something, so an Escape that does nothing here
-        // still reaches an enclosing overlay that wants to close.
-        selection.clearSelection();
-        event.preventDefault();
-        event.stopPropagation();
-
-        return;
-      }
-      case "Tab": {
-        // Nothing inside is a tab stop under virtual focus, so there is nothing to park and the
-        // key belongs to whatever holds real focus.
-        if (isVirtual.value) return;
-
-        // Park focus at the far end and hand back to the browser, so one Tab leaves the whole
-        // collection rather than stepping through every item.
-        const focusable = focusableIn(element);
-        const edge = event.shiftKey ? element : focusable.at(-1);
-
-        edge?.focus();
-
-        return;
-      }
-      case "Enter": {
-        if (focused == null || toValue(options.disallowActivation)) return;
-
-        options.onAction?.(focused);
-        event.preventDefault();
-
-        return;
-      }
-      case " ": {
-        if (focused == null || toValue(options.disallowActivation)) return;
-
-        if (selection.selectionMode.value === "none") options.onAction?.(focused);
-        else selection.select(focused, { isShiftPressed: event.shiftKey });
-
-        event.preventDefault();
-
-        return;
-      }
-      default:
-        return;
-    }
+    });
   };
 
   const onFocusin = (event: FocusEvent) => {

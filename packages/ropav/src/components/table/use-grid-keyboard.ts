@@ -515,94 +515,102 @@ export const useGridKeyboard = (options: UseGridKeyboardOptions): UseGridKeyboar
       }
     };
 
-    switch (event.key) {
-      case "ArrowDown": {
-        move(from.rowKey == null && from.columnKey == null ? firstKey(from, true) : keyBelow(from));
+    // One reading of the row order for the whole press: the arrows and paging walk rows in a
+    // loop, skipping the ones focus cannot land on.
+    collection.rows.withOrder(() => {
+      switch (event.key) {
+        case "ArrowDown": {
+          move(
+            from.rowKey == null && from.columnKey == null ? firstKey(from, true) : keyBelow(from),
+          );
 
-        return;
+          return;
+        }
+        case "ArrowUp": {
+          move(
+            from.rowKey == null && from.columnKey == null ? lastKey(from, true) : keyAbove(from),
+          );
+
+          return;
+        }
+        case "ArrowRight": {
+          if (handleExpansion(event, from, isReversed() ? "collapse" : "expand")) return;
+          move(keyRightOf(from));
+
+          return;
+        }
+        case "ArrowLeft": {
+          if (handleExpansion(event, from, isReversed() ? "expand" : "collapse")) return;
+          move(keyLeftOf(from));
+
+          return;
+        }
+        case "Home": {
+          // Shift+Home from nowhere would extend a selection that has no anchor.
+          if (from.rowKey == null && from.columnKey == null && event.shiftKey) return;
+          move(firstKey(from, isModified));
+
+          return;
+        }
+        case "End": {
+          if (from.rowKey == null && from.columnKey == null && event.shiftKey) return;
+          move(lastKey(from, isModified));
+
+          return;
+        }
+        case "PageUp": {
+          move(pageStep(from, -1));
+
+          return;
+        }
+        case "PageDown": {
+          move(pageStep(from, 1));
+
+          return;
+        }
+        case "a": {
+          if (!isModified || toValue(options.disallowSelectAll)) return;
+          if (selection.selectionMode.value !== "multiple") return;
+
+          selection.selectAll();
+          event.preventDefault();
+          event.stopPropagation();
+
+          return;
+        }
+        case "Escape": {
+          if (escapeKeyBehavior.value !== "clearSelection" || selection.isEmpty.value) return;
+
+          // Only claimed when it actually cleared something, so an Escape that does nothing here
+          // still reaches an enclosing overlay that wants to close.
+          selection.clearSelection();
+          event.preventDefault();
+          event.stopPropagation();
+
+          return;
+        }
+        case " ": {
+          if (from.rowKey == null || selection.selectionMode.value === "none") return;
+
+          selection.select(from.rowKey, { isShiftPressed: event.shiftKey });
+          event.preventDefault();
+
+          return;
+        }
+        case "Tab": {
+          // Park focus at the far end and hand back to the browser, so one Tab leaves the whole
+          // grid rather than stepping through every cell.
+          const focusable = focusableIn(element);
+          const edge = event.shiftKey ? element : focusable.at(-1);
+
+          edge?.focus();
+
+          return;
+        }
+        default:
+          return;
       }
-      case "ArrowUp": {
-        move(from.rowKey == null && from.columnKey == null ? lastKey(from, true) : keyAbove(from));
-
-        return;
-      }
-      case "ArrowRight": {
-        if (handleExpansion(event, from, isReversed() ? "collapse" : "expand")) return;
-        move(keyRightOf(from));
-
-        return;
-      }
-      case "ArrowLeft": {
-        if (handleExpansion(event, from, isReversed() ? "expand" : "collapse")) return;
-        move(keyLeftOf(from));
-
-        return;
-      }
-      case "Home": {
-        // Shift+Home from nowhere would extend a selection that has no anchor.
-        if (from.rowKey == null && from.columnKey == null && event.shiftKey) return;
-        move(firstKey(from, isModified));
-
-        return;
-      }
-      case "End": {
-        if (from.rowKey == null && from.columnKey == null && event.shiftKey) return;
-        move(lastKey(from, isModified));
-
-        return;
-      }
-      case "PageUp": {
-        move(pageStep(from, -1));
-
-        return;
-      }
-      case "PageDown": {
-        move(pageStep(from, 1));
-
-        return;
-      }
-      case "a": {
-        if (!isModified || toValue(options.disallowSelectAll)) return;
-        if (selection.selectionMode.value !== "multiple") return;
-
-        selection.selectAll();
-        event.preventDefault();
-        event.stopPropagation();
-
-        return;
-      }
-      case "Escape": {
-        if (escapeKeyBehavior.value !== "clearSelection" || selection.isEmpty.value) return;
-
-        // Only claimed when it actually cleared something, so an Escape that does nothing here
-        // still reaches an enclosing overlay that wants to close.
-        selection.clearSelection();
-        event.preventDefault();
-        event.stopPropagation();
-
-        return;
-      }
-      case " ": {
-        if (from.rowKey == null || selection.selectionMode.value === "none") return;
-
-        selection.select(from.rowKey, { isShiftPressed: event.shiftKey });
-        event.preventDefault();
-
-        return;
-      }
-      case "Tab": {
-        // Park focus at the far end and hand back to the browser, so one Tab leaves the whole
-        // grid rather than stepping through every cell.
-        const focusable = focusableIn(element);
-        const edge = event.shiftKey ? element : focusable.at(-1);
-
-        edge?.focus();
-
-        return;
-      }
-      default:
-        return;
-    }
+    });
   };
 
   /** Where focus should land when it first enters the grid. */

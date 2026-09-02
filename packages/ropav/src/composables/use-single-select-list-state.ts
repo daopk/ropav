@@ -61,20 +61,21 @@ export const useSingleSelectListState = (
     disabledKeySet.value.has(key) || Boolean(collection.getItem(key)?.isDisabled());
 
   /** The first item that can be selected, or the first item when none of them can. */
-  const findDefaultSelectedKey = (): CollectionKey | null => {
-    let key = collection.getFirstKey();
+  const findDefaultSelectedKey = (): CollectionKey | null =>
+    collection.withOrder(() => {
+      let key = collection.getFirstKey();
 
-    while (key != null && isKeyDisabled(key) && key !== collection.getLastKey()) {
-      key = collection.getKeyAfter(key);
-    }
+      while (key != null && isKeyDisabled(key) && key !== collection.getLastKey()) {
+        key = collection.getKeyAfter(key);
+      }
 
-    // Every item is disabled. The first one reads better than the last.
-    if (key != null && isKeyDisabled(key) && key === collection.getLastKey()) {
-      key = collection.getFirstKey();
-    }
+      // Every item is disabled. The first one reads better than the last.
+      if (key != null && isKeyDisabled(key) && key === collection.getLastKey()) {
+        key = collection.getFirstKey();
+      }
 
-    return key;
-  };
+      return key;
+    });
 
   const stored = useControllableState<CollectionKey | null>({
     defaultValue: options.defaultSelectedKey ?? null,

@@ -95,25 +95,26 @@ export const useSelect = <T>(
   // and tuned for prefix searching rather than sorting.
   const collator = useCollator({ sensitivity: "base", usage: "search" });
 
-  const getKeyForSearch = (search: string, fromKey?: CollectionKey | null) => {
-    // Starts *at* `fromKey` rather than after it, matching React Aria: a longer search has to be
-    // able to keep matching the option it is already on.
-    let key = fromKey ?? state.collection.getFirstKey();
+  const getKeyForSearch = (search: string, fromKey?: CollectionKey | null) =>
+    state.collection.withOrder(() => {
+      // Starts *at* `fromKey` rather than after it, matching React Aria: a longer search has to be
+      // able to keep matching the option it is already on.
+      let key = fromKey ?? state.collection.getFirstKey();
 
-    while (key != null) {
-      const item = state.collection.getItem(key);
+      while (key != null) {
+        const item = state.collection.getItem(key);
 
-      if (!item) return null;
+        if (!item) return null;
 
-      const text = item.textValue();
+        const text = item.textValue();
 
-      if (text && collator.value.compare(text.slice(0, search.length), search) === 0) return key;
+        if (text && collator.value.compare(text.slice(0, search.length), search) === 0) return key;
 
-      key = state.collection.getKeyAfter(key);
-    }
+        key = state.collection.getKeyAfter(key);
+      }
 
-    return null;
-  };
+      return null;
+    });
 
   const typeahead = useTypeahead({
     focusedKey: () => state.selectedKey.value,

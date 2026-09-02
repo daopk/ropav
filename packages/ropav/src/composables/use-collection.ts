@@ -41,8 +41,47 @@ export interface UseCollectionReturn {
   getKeyBefore: (key: CollectionKey) => CollectionKey | null;
   /** The item's position among its siblings, or `-1` when it is not in the collection. */
   getIndex: (key: CollectionKey) => number;
+  /**
+   * Run `operation` against a single reading of the collection's order.
+   *
+   * Wrap anything that walks the collection more than once — arrow navigation, paging, typeahead,
+   * extending a selection. See {@link useCollection} for why this is scoped rather than cached.
+   */
+  withOrder: <T>(operation: () => T) => T;
   /** Register an item and return the call that unregisters it. */
   register: (key: CollectionKey, meta: CollectionItemMeta) => () => void;
+}
+
+/**
+ * `key → index` for a data-backed collection, memoized on the source itself.
+ *
+ * A source is rebuilt whenever its data changes — it is handed over out of a `computed` — so its
+ * identity is already the right cache key and nothing has to invalidate this by hand. Held weakly,
+ * so a collection that has gone away takes its map with it.
+ *
+ * This is what keeps `getIndex` off a scan on the one path that has no operation to scope to:
+ * `aria-posinset` and `aria-rowindex` are read during render, once per item, and a virtualized
+ * collection's source holds every item rather than the rendered window.
+ */
+const sourceIndices = new WeakMap<VirtualizerCollection, Map<CollectionKey, number>>();
+
+const indicesOf = (source: VirtualizerCollection): Map<CollectionKey, number> => {
+  const cached = sourceIndices.get(source);
+
+  if (cached) return cached;
+
+  const indices = new Map(source.keys.map((key, index) => [key, index]));
+
+  sourceIndices.set(source, indices);
+
+  return indices;
+};
+
+/** One reading of the collection's order, and the positions within it. */
+interface CollectionOrder {
+  keys: CollectionKey[];
+  /** The key's position, or `-1` when the order does not hold it. */
+  indexOf: (key: CollectionKey) => number;
 }
 
 /**
@@ -53,7 +92,7 @@ export interface UseCollectionReturn {
  * rendering a slot is what creates its DOM, so there is no "render to inspect" pass. The flow
  * is inverted instead — each item registers itself, and the parent asks the DOM for the order.
  *
- * Two choices carry the weight:
+ * Three choices carry the weight:
  *
  * Metadata is stored as **getters**, not values, so the parent always reads an item's current
  * text and disabled state. Nothing has to re-register when a prop changes, and no
@@ -63,8 +102,20 @@ export interface UseCollectionReturn {
  * invalidated by a counter bumped on register and unregister — but reordering items that are
  * already registered changes their document order without touching that counter, which would
  * silently break arrow navigation. Order is only ever read on an interaction (a keypress, a
- * focus change, extending a selection), never during render, so re-sorting per call is both
- * correct and cheap. `size` stays reactive because it *is* read during render.
+ * focus change, extending a selection), never during render, so `size` stays reactive — because
+ * it *is* read during render — while order deliberately stays outside reactivity.
+ *
+ * Sorting the DOM per call, however, is only cheap for a *single* read, and the callers that
+ * matter walk the collection one neighbour at a time: typeahead, paging, and skipping disabled
+ * items all ask for a neighbour in a loop. Sorting inside that loop is quadratic, and a search
+ * that matches nothing walks the whole collection twice. {@link UseCollectionReturn.withOrder}
+ * is what those callers wrap themselves in: the order is read once and every step reads that one
+ * snapshot.
+ *
+ * The snapshot is **scoped to one synchronous operation** rather than cached across operations,
+ * because caching is the very thing the second choice above rules out. Vue flushes renders on
+ * `nextTick`, so the DOM cannot reorder itself in the middle of a keydown handler — which is
+ * exactly as long as a snapshot is allowed to live. It must never become a `computed`.
  *
  * A collection that is virtualized cannot work that way at all: all but a window of its items are
  * absent from the DOM, so asking the DOM would answer for the window and call the rest
@@ -112,28 +163,57 @@ export const useCollection = (options: UseCollectionOptions = {}): UseCollection
     };
   };
 
-  const orderedKeys = (): CollectionKey[] => {
+  const domOrderedKeys = () =>
+    sortByDocumentOrder([...items.entries()], ([, meta]) => meta.element()).map(([key]) => key);
+
+  const buildOrder = (): CollectionOrder => {
     const sourced = source();
 
     // Data order is the collection's order. Reading the DOM would answer for the window only,
     // and would put the first key at whatever happens to be scrolled into view.
-    if (sourced) return sourced.keys;
+    const keys = sourced ? sourced.keys : domOrderedKeys();
 
-    return domOrderedKeys();
+    // Built on demand, so the reads that only want a key at a position — the ends, a neighbour's
+    // successor — pay nothing for it. The data path's map is memoized on the source.
+    let indices = sourced ? indicesOf(sourced) : null;
+
+    return {
+      indexOf: (key) => {
+        indices ??= new Map(keys.map((entry, index) => [entry, index]));
+
+        return indices.get(key) ?? -1;
+      },
+      keys,
+    };
   };
 
-  const domOrderedKeys = () =>
-    sortByDocumentOrder([...items.entries()], ([, meta]) => meta.element()).map(([key]) => key);
+  /** The order this operation is reading, or a fresh reading for a call that stands alone. */
+  let scoped: CollectionOrder | null = null;
+  let depth = 0;
 
-  const keyAt = (index: number): CollectionKey | null => {
-    const keys = orderedKeys();
+  const order = (): CollectionOrder => scoped ?? buildOrder();
 
-    return keys[index] ?? null;
+  const withOrder = <T>(operation: () => T): T => {
+    // Re-entrant, so a caller that wraps its own handler does not fight one of the walks inside
+    // it wrapping itself. The outermost scope owns the snapshot.
+    if (depth === 0) scoped = buildOrder();
+    depth += 1;
+
+    try {
+      return operation();
+    } finally {
+      depth -= 1;
+      if (depth === 0) scoped = null;
+    }
   };
+
+  const orderedKeys = (): CollectionKey[] => order().keys;
+
+  const keyAt = (index: number): CollectionKey | null => order().keys[index] ?? null;
 
   const neighbour = (key: CollectionKey, step: -1 | 1): CollectionKey | null => {
-    const keys = orderedKeys();
-    const index = keys.indexOf(key);
+    const { indexOf, keys } = order();
+    const index = indexOf(key);
 
     if (index === -1) return null;
 
@@ -159,7 +239,7 @@ export const useCollection = (options: UseCollectionOptions = {}): UseCollection
       return items.get(key)?.element() ?? null;
     },
     getFirstKey: () => keyAt(0),
-    getIndex: (key) => orderedKeys().indexOf(key),
+    getIndex: (key) => order().indexOf(key),
     getItem: (key) => {
       track();
 
@@ -167,7 +247,7 @@ export const useCollection = (options: UseCollectionOptions = {}): UseCollection
     },
     getKeyAfter: (key) => neighbour(key, 1),
     getKeyBefore: (key) => neighbour(key, -1),
-    getLastKey: () => keyAt(orderedKeys().length - 1),
+    getLastKey: () => order().keys.at(-1) ?? null,
     orderedKeys,
     register,
     size: computed(() => {
@@ -175,5 +255,6 @@ export const useCollection = (options: UseCollectionOptions = {}): UseCollection
 
       return source()?.itemCount ?? items.size;
     }),
+    withOrder,
   };
 };

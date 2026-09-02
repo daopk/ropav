@@ -280,6 +280,116 @@ describe("useCollection", () => {
   });
 });
 
+describe("one reading of the order per operation", () => {
+  /**
+   * The DOM comparisons a run costs. This is what compounds: one sort is `n log n` of them, and
+   * re-reading the order per step turns that into `n² log n`.
+   */
+  const countComparisons = (run: () => void) => {
+    const original = Node.prototype.compareDocumentPosition;
+    let calls = 0;
+
+    Node.prototype.compareDocumentPosition = function (other: Node) {
+      calls += 1;
+
+      return original.call(this, other);
+    };
+
+    try {
+      run();
+    } finally {
+      Node.prototype.compareDocumentPosition = original;
+    }
+
+    return calls;
+  };
+
+  /** A typeahead-shaped walk: every item reached one neighbour at a time. */
+  const walkAll = (collection: UseCollectionReturn) => {
+    let key = collection.getFirstKey();
+
+    while (key != null) key = collection.getKeyAfter(key);
+  };
+
+  const keysFor = (count: number) => Array.from({ length: count }, (_, index) => index);
+
+  it("costs one sort to walk the whole collection", () => {
+    const collection = createCollection();
+
+    populate(collection, keysFor(200));
+
+    const oneSort = countComparisons(() => collection.orderedKeys());
+    const walk = countComparisons(() => collection.withOrder(() => walkAll(collection)));
+
+    expect(oneSort).toBeGreaterThan(0);
+    expect(walk).toBe(oneSort);
+  });
+
+  it("does not grow the cost of a walk with the item count", () => {
+    const small = createCollection();
+    const large = createCollection();
+
+    populate(small, keysFor(100));
+    populate(large, keysFor(400));
+
+    const smallCost = countComparisons(() => small.withOrder(() => walkAll(small)));
+    const largeCost = countComparisons(() => large.withOrder(() => walkAll(large)));
+
+    // Four times the items is one bigger sort, not four hundred of them. The headroom is
+    // deliberate: what is being pinned is `n log n` growth rather than `n² log n`.
+    expect(largeCost).toBeLessThan(smallCost * 10);
+  });
+
+  it("shares one snapshot with a nested scope", () => {
+    const collection = createCollection();
+
+    populate(collection, keysFor(100));
+
+    const oneSort = countComparisons(() => collection.orderedKeys());
+    const nested = countComparisons(() =>
+      collection.withOrder(() => collection.withOrder(() => walkAll(collection))),
+    );
+
+    expect(nested).toBe(oneSort);
+  });
+
+  it("re-reads the order for the next operation", () => {
+    const collection = createCollection();
+    const { container, elements } = populate(collection, ["a", "b", "c"]);
+
+    expect(collection.withOrder(() => collection.orderedKeys())).toEqual(["a", "b", "c"]);
+
+    container.prepend(elements.get("c")!);
+
+    // A snapshot that outlived its operation would answer with the order from the last one,
+    // which is the staleness that keeps order out of a `computed` in the first place.
+    expect(collection.withOrder(() => collection.orderedKeys())).toEqual(["c", "a", "b"]);
+  });
+
+  it("hands back what the operation returned", () => {
+    const collection = createCollection();
+
+    populate(collection, ["a"]);
+
+    expect(collection.withOrder(() => collection.getFirstKey())).toBe("a");
+  });
+
+  it("drops the snapshot when the operation throws", () => {
+    const collection = createCollection();
+    const { container, elements } = populate(collection, ["a", "b"]);
+
+    expect(() =>
+      collection.withOrder(() => {
+        throw new Error("nope");
+      }),
+    ).toThrow("nope");
+
+    container.prepend(elements.get("b")!);
+
+    expect(collection.orderedKeys()).toEqual(["b", "a"]);
+  });
+});
+
 describe("useCollection with a data source", () => {
   const users = Array.from({ length: 1000 }, (_, index) => ({
     id: `user-${index}`,
@@ -347,5 +457,47 @@ describe("useCollection with a data source", () => {
 
     expect(collection.size.value).toBe(2);
     expect(collection.orderedKeys()).toEqual(["a", "b"]);
+  });
+
+  it("looks a position up without scanning the data", () => {
+    const keys = users.map((user) => user.id);
+    const scan = keys.indexOf.bind(keys);
+    let scans = 0;
+
+    Object.defineProperty(keys, "indexOf", {
+      configurable: true,
+      value: (...args: Parameters<typeof scan>) => {
+        scans += 1;
+
+        return scan(...args);
+      },
+    });
+
+    // One source object for the collection's whole life, which is what a `computed` hands over.
+    const source: VirtualizerCollection = { ...listSource(), keys, rootKeys: keys };
+    const collection = createSourcedCollection(() => source);
+
+    // `aria-posinset` and `aria-rowindex` ask this once per rendered item, every render.
+    expect(collection.getIndex("user-0")).toBe(0);
+    expect(collection.getIndex("user-500")).toBe(500);
+    expect(collection.getIndex("user-999")).toBe(999);
+    expect(collection.getIndex("nobody")).toBe(-1);
+    expect(collection.getKeyAfter("user-500")).toBe("user-501");
+
+    expect(scans).toBe(0);
+  });
+
+  it("answers from the source it is handed now, not the one before it", () => {
+    let items = users.slice(0, 10);
+    const collection = createSourcedCollection(() =>
+      createListCollection({ getTextValue: (user) => user.name, items }),
+    );
+
+    expect(collection.getIndex("user-9")).toBe(9);
+
+    items = users.slice(5, 15);
+
+    expect(collection.getIndex("user-9")).toBe(4);
+    expect(collection.getFirstKey()).toBe("user-5");
   });
 });
