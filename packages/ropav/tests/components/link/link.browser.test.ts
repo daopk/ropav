@@ -9,6 +9,8 @@ import { LinkRoot } from "@/components/link";
 import { parkPointer } from "../../harness/park-pointer";
 import { settled } from "../../harness/settle";
 
+import RouterFixture from "./router-fixtures.vue";
+
 const renderLink = (props: Record<string, unknown> = {}) =>
   renderVapor(LinkRoot, {
     props,
@@ -267,5 +269,35 @@ describe("Link (browser)", () => {
     await expectNoA11yViolations(span.container, PALETTE_CONTRAST_DEBT);
 
     span.unmount();
+  });
+
+  /**
+   * The jsdom suite dispatches the click by hand, because jsdom performs no default action for
+   * Enter on an anchor. That default action is the claim the interception rests on — every
+   * keyboard activation reaching the router is a native click the browser made — so it is only
+   * provable here.
+   */
+  it("hands Enter to the router, by the same click a pointer would make", async () => {
+    const navigate = vi.fn();
+    // Blocked in the bubble phase, not the capture phase `blockNavigation` uses: a capture-phase
+    // `preventDefault` reaches the link's own handler as an already-cancelled click, which is
+    // exactly the case the interception stands down for. Bubbling lands after it instead.
+    const block = (event: MouseEvent) => event.preventDefault();
+
+    document.addEventListener("click", block);
+    restoreNavigation = () => document.removeEventListener("click", block);
+
+    const { container, unmount } = renderVapor(RouterFixture, {
+      props: { href: "/next", navigate },
+    });
+    const link = linkIn(container);
+
+    link.focus();
+    await userEvent.keyboard("{Enter}");
+    await nextTick();
+
+    expect(navigate).toHaveBeenCalledWith("/next", undefined);
+
+    unmount();
   });
 });

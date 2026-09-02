@@ -64,6 +64,7 @@ export * from "./progress-circle";
 export * from "./radio";
 export * from "./radio-group";
 export * from "./range-calendar";
+export * from "./router-provider";
 export * from "./scroll-shadow";
 export * from "./search-field";
 export * from "./segmented-control";

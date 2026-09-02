@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 
 import Fixture from "./fixtures.vue";
+import RouterFixture from "./router-fixtures.vue";
 
 const renderLink = (props: Record<string, unknown> = {}) => {
   const result = renderVapor(Fixture, { props: { href: "#target", ...props } });
@@ -300,6 +301,221 @@ describe("Link", () => {
       const icon = link.querySelector('[data-slot="link-icon"]')!;
 
       expect(link.firstElementChild).toBe(icon);
+
+      unmount();
+    });
+  });
+});
+
+/**
+ * Navigation is intercepted in exactly one place, the anchor's click handler, and every activation
+ * path converges there: a pointer press completes on the click, Enter on an anchor produces a
+ * native click because `usePress` carves anchors out of its keyboard default handling, and a
+ * screen reader arrives as a virtual click. jsdom performs none of those default actions, so the
+ * click is dispatched by hand here and the browser suite is where Enter is proven.
+ */
+describe("Link routing", () => {
+  const renderRouted = (props: Record<string, unknown> = {}) => {
+    const navigate = vi.fn();
+    const result = renderVapor(RouterFixture, { props: { href: "/next", navigate, ...props } });
+    const link = result.container.querySelector('[data-slot="link"]');
+
+    if (!link) throw new Error("link not rendered");
+
+    return { ...result, link, navigate };
+  };
+
+  const click = (element: Element, init: MouseEventInit = {}) => {
+    const event = new MouseEvent("click", {
+      bubbles: true,
+      button: 0,
+      cancelable: true,
+      ...init,
+    });
+
+    element.dispatchEvent(event);
+
+    return event;
+  };
+
+  describe("with a router above it", () => {
+    it("hands a plain click to the router instead of the browser", () => {
+      const { link, navigate, unmount } = renderRouted();
+      const event = click(link);
+
+      expect(navigate).toHaveBeenCalledWith("/next", undefined);
+      // Without this the browser navigates as well, which in an application is a page reload.
+      expect(event.defaultPrevented).toBe(true);
+
+      unmount();
+    });
+
+    it("passes the router options through with it", () => {
+      const { link, navigate, unmount } = renderRouted({ routerOptions: { replace: true } });
+
+      click(link);
+
+      expect(navigate).toHaveBeenCalledWith("/next", { replace: true });
+
+      unmount();
+    });
+
+    it("hands over the href as written, not the one the anchor renders", () => {
+      // The anchor has to carry the real URL for a middle-click and for "copy link address",
+      // but a router wants back the path it was given.
+      const { link, navigate, unmount } = renderRouted({
+        resolveHref: (href: string) => `/base${href}`,
+      });
+
+      expect(link).toHaveAttribute("href", "/base/next");
+
+      click(link);
+
+      expect(navigate).toHaveBeenCalledWith("/next", undefined);
+
+      unmount();
+    });
+
+    it("still calls a click listener", () => {
+      const onClick = vi.fn();
+      const { link, unmount } = renderRouted({ onClick });
+
+      click(link);
+
+      expect(onClick).toHaveBeenCalledTimes(1);
+
+      unmount();
+    });
+
+    it("never reaches the router from a disabled link", () => {
+      // A disabled link renders as a span, so there is no anchor to read a destination off.
+      const { link, navigate, unmount } = renderRouted({ isDisabled: true });
+
+      click(link);
+
+      expect(link.tagName).toBe("SPAN");
+      expect(navigate).not.toHaveBeenCalled();
+
+      unmount();
+    });
+  });
+
+  describe("leaves the browser the clicks only it can serve", () => {
+    it.each([
+      ["Command held, for a new tab on macOS", { metaKey: true }],
+      ["Control held, for a new tab on Windows", { ctrlKey: true }],
+      ["Alt held, for a download", { altKey: true }],
+      ["Shift held, for a new window", { shiftKey: true }],
+    ])("%s", (_label, modifiers) => {
+      const { link, navigate, unmount } = renderRouted();
+      const event = click(link, modifiers);
+
+      expect(navigate).not.toHaveBeenCalled();
+      expect(event.defaultPrevented).toBe(false);
+
+      unmount();
+    });
+
+    it("a link aimed at another target", () => {
+      const { link, navigate, unmount } = renderRouted({ target: "_blank" });
+      const event = click(link);
+
+      expect(navigate).not.toHaveBeenCalled();
+      expect(event.defaultPrevented).toBe(false);
+
+      unmount();
+    });
+
+    it("a link that downloads rather than navigates", () => {
+      const { link, navigate, unmount } = renderRouted({ download: "report.pdf" });
+      const event = click(link);
+
+      expect(navigate).not.toHaveBeenCalled();
+      expect(event.defaultPrevented).toBe(false);
+
+      unmount();
+    });
+
+    it("a link leaving the origin, which is not the router's to resolve", () => {
+      const { link, navigate, unmount } = renderRouted({ href: "https://example.com/next" });
+      const event = click(link);
+
+      expect(navigate).not.toHaveBeenCalled();
+      expect(event.defaultPrevented).toBe(false);
+
+      unmount();
+    });
+
+    it("a click something upstream has already cancelled", () => {
+      // Whoever called `preventDefault` first keeps the last word. A listener the consumer puts
+      // on the link itself is not that — it falls through onto the same element and runs after
+      // the component's own — so the case is a canceller in the capture phase above it.
+      const { link, navigate, unmount } = renderRouted();
+      const cancel = (event: MouseEvent) => event.preventDefault();
+
+      document.addEventListener("click", cancel, { capture: true });
+      click(link);
+      document.removeEventListener("click", cancel, { capture: true });
+
+      expect(navigate).not.toHaveBeenCalled();
+
+      unmount();
+    });
+
+    it("every click, when there is no router at all", () => {
+      const { link, unmount } = renderLink({ href: "/next" });
+      const event = click(link);
+
+      expect(event.defaultPrevented).toBe(false);
+
+      unmount();
+    });
+  });
+
+  describe("the current page, asked of the router", () => {
+    it("resolves to the current page when the router says so", () => {
+      const { link, unmount } = renderRouted({
+        ariaCurrent: "auto",
+        isCurrent: (href: string) => href === "/next",
+      });
+
+      expect(link).toHaveAttribute("aria-current", "page");
+      expect(link).toHaveAttribute("data-current", "true");
+
+      unmount();
+    });
+
+    it("says nothing when the router says otherwise", () => {
+      const { link, unmount } = renderRouted({ ariaCurrent: "auto", isCurrent: () => false });
+
+      expect(link).not.toHaveAttribute("aria-current");
+      expect(link).not.toHaveAttribute("data-current");
+
+      unmount();
+    });
+
+    it("says nothing when the router was given no predicate", () => {
+      const { link, unmount } = renderRouted({ ariaCurrent: "auto" });
+
+      expect(link).not.toHaveAttribute("aria-current");
+
+      unmount();
+    });
+
+    it("says nothing when there is no router at all", () => {
+      const { link, unmount } = renderLink({ ariaCurrent: "auto", href: "/next" });
+
+      // `"auto"` is not an ARIA token; leaking it would claim a current state no reader knows.
+      expect(link).not.toHaveAttribute("aria-current");
+
+      unmount();
+    });
+
+    it("leaves a link that named its own value alone", () => {
+      // Asking is opt-in per link, so a router cannot quietly restate what a link already said.
+      const { link, unmount } = renderRouted({ ariaCurrent: "step", isCurrent: () => true });
+
+      expect(link).toHaveAttribute("aria-current", "step");
 
       unmount();
     });

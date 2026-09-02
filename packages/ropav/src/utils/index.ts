@@ -22,6 +22,7 @@ export * from "./form-value";
 export * from "./incomplete-date";
 export * from "./locale";
 export * from "./number";
+export * from "./open-link";
 export * from "./platform";
 export * from "./position";
 export * from "./text-value";

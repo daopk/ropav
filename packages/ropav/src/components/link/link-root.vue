@@ -1,6 +1,6 @@
 <script setup lang="ts" vapor>
 import type { PressEvent } from "../../composables/use-press";
-import type { LinkRootProps, LinkRootSlotProps } from "./link.types";
+import type { LinkCurrent, LinkRootProps, LinkRootSlotProps } from "./link.types";
 
 import { linkVariants } from "@ropav/styles";
 import { computed } from "vue";
@@ -8,7 +8,9 @@ import { computed } from "vue";
 import { useInteractionStates } from "../../composables/use-interaction-states";
 import { usePress } from "../../composables/use-press";
 import { dataAttr } from "../../utils/assertion";
+import { openLink } from "../../utils/open-link";
 import { useFieldsetContext } from "../fieldset/fieldset.context";
+import { useRouterContext } from "../router-provider/router-provider.context";
 
 import { provideLinkContext } from "./link.context";
 
@@ -20,6 +22,7 @@ const props = withDefaults(defineProps<LinkRootProps>(), {
   ariaCurrent: undefined,
   download: undefined,
   isDisabled: undefined,
+  routerOptions: undefined,
 });
 
 // Activation is published as a press rather than left to the DOM click. A link with no href
@@ -30,6 +33,7 @@ const emit = defineEmits<{ press: [event: PressEvent] }>();
 defineSlots<{ default?: (props: LinkRootSlotProps) => unknown }>();
 
 const fieldset = useFieldsetContext();
+const router = useRouterContext();
 
 const resolvedIsDisabled = computed(() => Boolean(props.isDisabled ?? fieldset?.isDisabled.value));
 
@@ -61,7 +65,22 @@ const role = computed(() => (isAnchor.value ? undefined : "link"));
 // A disabled link should not be reachable at all, so it gets none.
 const tabindex = computed(() => (resolvedIsDisabled.value ? undefined : 0));
 
-const isCurrent = computed(() => Boolean(props.ariaCurrent));
+// `"auto"` is not an ARIA token, so it is resolved here and never reaches the DOM. Asking is
+// opt-in per link: a link that names its own value, or names none, is untouched by the router.
+const ariaCurrent = computed<Exclude<LinkCurrent, "auto"> | undefined>(() => {
+  if (props.ariaCurrent !== "auto") return props.ariaCurrent;
+
+  return props.href && router?.isCurrent(props.href) ? "page" : undefined;
+});
+
+const isCurrent = computed(() => Boolean(ariaCurrent.value));
+
+// What the anchor carries, which a middle-click opens and "copy link address" yields — so it is
+// the router's resolved URL where there is one, base path and hash mode included. The router is
+// handed `props.href` on navigation instead: it wants back the path it was given.
+const resolvedHref = computed(() =>
+  props.href === undefined ? undefined : (router?.resolveHref(props.href) ?? props.href),
+);
 
 // Chained by hand rather than spread: a listener reaching a vapor element through `v-bind` is
 // re-attached on every render and can be dropped mid-dispatch.
@@ -74,12 +93,22 @@ const onPointerleave = (event: PointerEvent) => {
   interaction.onPointerleave();
   press.handlers.onPointerleave(event);
 };
+
+// The single point where navigation is intercepted. Every activation path arrives here: a pointer
+// press completes on the click, Enter on an anchor produces a native click because `usePress`
+// carves anchors out of its keyboard default handling, and a screen reader sends a virtual click.
+// `openLink` stands aside when there is no router, and for every click the browser must keep —
+// a modifier held, a foreign origin, a download, another target.
+const onClick = (event: MouseEvent) => {
+  press.handlers.onClick(event);
+  openLink(event, { href: props.href, router, routerOptions: props.routerOptions });
+};
 </script>
 
 <template>
   <a
     v-if="isAnchor"
-    :aria-current="props.ariaCurrent"
+    :aria-current="ariaCurrent"
     :aria-describedby="props.ariaDescribedby"
     :aria-label="props.ariaLabel"
     :aria-labelledby="props.ariaLabelledby"
@@ -91,7 +120,7 @@ const onPointerleave = (event: PointerEvent) => {
     :data-pressed="dataAttr(press.isPressed.value)"
     data-slot="link"
     :download="props.download"
-    :href="props.href"
+    :href="resolvedHref"
     :hreflang="props.hrefLang"
     :ping="props.ping"
     :referrerpolicy="props.referrerPolicy"
@@ -99,7 +128,7 @@ const onPointerleave = (event: PointerEvent) => {
     :tabindex="tabindex"
     :target="props.target"
     @blur="interaction.onBlur"
-    @click="press.handlers.onClick"
+    @click="onClick"
     @dragstart="press.handlers.onDragstart"
     @focus="interaction.onFocus"
     @keydown="press.handlers.onKeydown"
@@ -120,7 +149,7 @@ const onPointerleave = (event: PointerEvent) => {
   </a>
   <span
     v-else
-    :aria-current="props.ariaCurrent"
+    :aria-current="ariaCurrent"
     :aria-describedby="props.ariaDescribedby"
     :aria-disabled="resolvedIsDisabled || undefined"
     :aria-label="props.ariaLabel"

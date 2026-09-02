@@ -33,6 +33,7 @@ const props = withDefaults(defineProps<LinkFixtureProps>(), { isDisabled: undefi
     :href="props.href"
     :is-disabled="props.isDisabled"
     :rel="props.rel"
+    :router-options="props.routerOptions"
     :target="props.target"
     @click="props.onClick"
   >

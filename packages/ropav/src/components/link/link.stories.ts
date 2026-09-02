@@ -1,14 +1,17 @@
 import type { StoryMeta } from "../../utils/story-meta";
 import type { StoryObj } from "@storybook/vue3-vite";
 
+import { ref } from "vue";
+
 import { buttonVariants } from "../button";
 import { ExternalLinkIcon } from "../icons";
+import { RouterProvider } from "../router-provider";
 
 import { Link, LinkIcon, LinkRoot } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata to
 // resolve `Link.Icon` through, so dot notation cannot be used here.
-const components = { ExternalLinkIcon, LinkIcon, LinkRoot };
+const components = { ExternalLinkIcon, LinkIcon, LinkRoot, RouterProvider };
 
 const meta: StoryMeta = {
   component: Link,
@@ -149,6 +152,65 @@ export const UnderlineVariants: Story = {
           </div>
         </div>
       </div>
+    `,
+  }),
+};
+
+/**
+ * A router stands in for the application's own, since Storybook runs without one. The three links
+ * asking `aria-current="auto"` never reload the page: their clicks reach `navigate` instead, and
+ * the route below follows. The two beneath them are the cases a router cannot serve, so the
+ * browser keeps them.
+ */
+export const Routing: Story = {
+  render: () => ({
+    components,
+    setup: () => {
+      const path = ref("/inbox");
+
+      return {
+        isCurrent: (href: string) => href === path.value,
+        navigate: (href: string) => {
+          path.value = href;
+        },
+        path,
+      };
+    },
+    template: `
+      <RouterProvider :is-current="isCurrent" :navigate="navigate">
+        <div class="flex flex-col gap-6">
+          <nav class="flex items-center gap-4">
+            <LinkRoot
+              v-for="href in ['/inbox', '/drafts', '/sent']"
+              :key="href"
+              aria-current="auto"
+              class="no-underline data-[current=true]:font-semibold data-[current=true]:underline"
+              :href="href"
+            >
+              {{ href.slice(1) }}
+            </LinkRoot>
+          </nav>
+
+          <p class="text-sm text-muted">
+            Route: <code>{{ path }}</code> — no reload, and no vue-router in the library.
+          </p>
+
+          <div class="flex flex-col gap-2">
+            <p class="text-sm text-muted">The browser keeps these:</p>
+            <div class="flex items-center gap-4">
+              <LinkRoot
+                href="https://github.com/daopk/ropav"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Another origin
+                <LinkIcon />
+              </LinkRoot>
+              <LinkRoot download="notes.txt" href="/notes.txt">A download</LinkRoot>
+            </div>
+          </div>
+        </div>
+      </RouterProvider>
     `,
   }),
 };

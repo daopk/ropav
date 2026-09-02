@@ -10,9 +10,16 @@ export type LinkReferrerPolicy =
   | "strict-origin-when-cross-origin"
   | "unsafe-url";
 
-/** What assistive technology accepts for `aria-current`. */
+/**
+ * What assistive technology accepts for `aria-current`, plus `"auto"`.
+ *
+ * `"auto"` is not an ARIA token and never reaches the DOM. It asks the router supplied by
+ * `RouterProvider` whether this link's href addresses the route showing now, resolving to
+ * `"page"` when it does and to nothing at all when it does not — or when no router was supplied.
+ */
 export type LinkCurrent =
   | boolean
+  | "auto"
   | "date"
   | "false"
   | "location"
@@ -36,8 +43,13 @@ export interface LinkRootProps {
    * there is no href for the browser to follow, matching React.
    */
   isDisabled?: boolean;
-  /** Marks the link as the one for the current page. */
+  /** Marks the link as the one for the current page. `"auto"` asks the router instead. */
   ariaCurrent?: LinkCurrent;
+  /**
+   * Passed through to the router's `navigate` alongside the href, for whatever options the
+   * application's router accepts. Ignored without a `RouterProvider` above.
+   */
+  routerOptions?: unknown;
   ariaLabel?: string;
   ariaLabelledby?: string;
   ariaDescribedby?: string;
