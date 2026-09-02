@@ -43,6 +43,20 @@
     fill: var(--overlay);
   }
 
+  /**
+   * With an arrow, the edge treatment moves off the body and onto the pair.
+   *
+   * The arrow is a second shape filled with the body's own colour, overlapping it so no seam can
+   * open between them — which leaves nothing for a per-shape edge to be right about: a shadow or
+   * hairline painted on the body alone stops at the join, and one painted on the arrow crosses
+   * it. `--overlay-edge` is a filter, and a filter sees the two shapes as one image, so whatever
+   * edge it draws follows their combined silhouette.
+   */
+  &:has([data-slot="popover-overlay-arrow-group"]) {
+    box-shadow: none;
+    filter: var(--overlay-edge, none);
+  }
+
   /* Arrow rotation based on placement */
   &[data-placement="bottom"] [data-slot="popover-overlay-arrow"] {
     rotate: 180deg;

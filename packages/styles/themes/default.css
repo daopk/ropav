@@ -171,6 +171,13 @@
     --overlay-shadow:
       0 2px 8px 0 rgba(0, 0, 0, 0.06), 0 -6px 12px 0 rgba(0, 0, 0, 0.03),
       0 14px 28px 0 rgba(0, 0, 0, 0.08);
+    /* The edge of an overlay that has an arrow, as a filter over the combined silhouette:
+     * `--overlay-shadow` restated as drop-shadows, so the shadow wraps the arrow too. A theme
+     * whose overlays wear a hairline instead points this at `url(#ropav-overlay-edge)` — the
+     * filter every arrow carries — and colours the line with `--overlay-edge-line`. */
+    --overlay-edge: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.06))
+      drop-shadow(0 -6px 12px rgba(0, 0, 0, 0.03)) drop-shadow(0 14px 28px rgba(0, 0, 0, 0.08));
+    --overlay-edge-line: transparent;
     --field-shadow:
       0 2px 4px 0 rgba(0, 0, 0, 0.02), 0 1px 2px 0 rgba(0, 0, 0, 0.03),
       0 0 1px 0 rgba(0, 0, 0, 0.03);
@@ -241,6 +248,10 @@
     /* Shadows */
     --surface-shadow: 0 0 0 0 transparent inset; /* No shadow on dark mode */
     --overlay-shadow: 0 0 1px 0 rgba(255, 255, 255, 0.3) inset;
+    /* The arrowed overlays' edge: the same hairline, drawn by the filter the arrow carries so it
+     * follows the arrow's silhouette as well as the body's. */
+    --overlay-edge: url(#ropav-overlay-edge);
+    --overlay-edge-line: rgba(255, 255, 255, 0.3);
     --field-shadow: 0 0 0 0 transparent inset; /* Transparent shadow to allow ring utilities to work */
 
     /* Calculated Colors */

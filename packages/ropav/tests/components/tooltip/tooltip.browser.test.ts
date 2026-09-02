@@ -317,9 +317,46 @@ describe("Tooltip (browser)", () => {
       expect(Math.round(rect(group).left + rect(group).width / 2)).toBe(
         Math.round(rect(trigger).left + rect(trigger).width / 2),
       );
-      // Pinned to the edge the tooltip is placed against rather than floating in the middle. The
-      // declaration is `100%`, and a computed style reports it resolved against the tooltip.
-      expect(Math.round(rect(group).top)).toBe(Math.round(rect(tooltipElement()).bottom));
+      // Overlapping the edge the tooltip is placed against, not merely touching it: shapes that
+      // touch each antialias the shared row at fractional device pixel ratios, and the page
+      // bleeds through the seam. The 2px is the shape's straight skirt, so the flare that meets
+      // the body's edge stays whole.
+      expect(Math.round(rect(tooltipElement()).bottom - rect(group).top)).toBe(2);
+
+      result.unmount();
+    });
+
+    it("moves the edge treatment onto the combined silhouette", async () => {
+      const result = render({ shouldFlip: false, showArrow: true, withArrow: true });
+
+      place(result);
+
+      await open(result);
+
+      const styles = getComputedStyle(tooltipElement());
+
+      // The arrow overlaps a body it is filled to match, so an edge painted on the body alone
+      // would stop at the join. With an arrow present the body's own shadow steps aside and the
+      // edge is a filter, which follows the silhouette of body and arrow as one. The light theme
+      // spells `--overlay-edge` as drop-shadows, which is what the suite runs under.
+      expect(styles.boxShadow).toBe("none");
+      expect(styles.filter).toContain("drop-shadow");
+
+      result.unmount();
+    });
+
+    it("keeps the body's own shadow when there is no arrow", async () => {
+      const result = render({ shouldFlip: false });
+
+      place(result);
+
+      await open(result);
+
+      const styles = getComputedStyle(tooltipElement());
+
+      expect(styles.boxShadow).not.toBe("none");
+      expect(styles.filter).not.toContain("drop-shadow");
+      expect(styles.filter).not.toContain("url");
 
       result.unmount();
     });
