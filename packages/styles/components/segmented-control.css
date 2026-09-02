@@ -1,0 +1,193 @@
+/* ==========================================================================
+   SegmentedControl - one choice out of a few, drawn as a pill that slides
+
+   Structure (explicit composition):
+     .segmented-control                → role="radiogroup", the track the pill slides in
+       .segmented-control__item        → button[role="radio"]
+         .segmented-control__indicator
+   ========================================================================== */
+
+.segmented-control {
+  @apply relative inline-flex w-max items-center bg-default p-1;
+
+  /* The same corner a button of this size wears, not a larger one stepped out by the padding.
+   * The size scale already lines the track up with a button and a field; a corner of its own
+   * would break that agreement at exactly the place two of them sit side by side.
+   *
+   * Read through `var(--component-radius)` rather than the `rounded-component` utility, because
+   * raw CSS resolves the alias on `:root` and then inherits the root theme's radius into every
+   * `data-theme` subtree. */
+  border-radius: min(32px, var(--component-radius));
+
+  /* Forced Colors Mode flattens the track's fill onto the page, which leaves the pill sitting
+   * in nothing. `CanvasText` is the platform's own edge; an outline rather than a border so
+   * nothing shifts. */
+  @media (forced-colors: active) {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
+
+  /* Disabled state */
+  &[data-disabled="true"] {
+    @apply status-disabled;
+  }
+}
+
+/* ==========================================================================
+   Segment
+   ========================================================================== */
+
+.segmented-control__item {
+  @apply relative inline-flex h-7 min-w-0 shrink-0 appearance-none items-center justify-center gap-2 rounded-component border-0 bg-transparent px-3 text-center text-sm font-medium whitespace-nowrap text-muted outline-none select-none no-highlight;
+
+  z-index: 1;
+  cursor: var(--cursor-interactive);
+
+  /**
+   * Transitions
+   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
+   */
+  transition:
+    color 150ms var(--ease-smooth),
+    opacity 150ms var(--ease-smooth);
+  @apply motion-reduce:transition-none;
+
+  /* Selected state */
+  &[data-selected="true"] {
+    @apply text-segment-foreground;
+
+    /* Sits on top of the indicator, which forced colors paints `Highlight`. `forced-color-adjust`
+     * suppresses the `Canvas` backplate Chromium would otherwise paint behind this label - it
+     * covers the indicator, and black-on-black is exactly what it would leave. */
+    @media (forced-colors: active) {
+      forced-color-adjust: none;
+      color: HighlightText;
+    }
+  }
+
+  /* Hover states - both approaches for compatibility */
+  @media (hover: hover) {
+    &:not([data-selected="true"]):not([data-disabled="true"]):hover,
+    &[data-hovered="true"]:not([data-selected="true"]):not([data-disabled="true"]) {
+      @apply text-foreground;
+    }
+  }
+
+  /* Pressed states - both approaches for compatibility */
+  &:not([data-disabled="true"]):active,
+  &[data-pressed="true"]:not([data-disabled="true"]) {
+    @apply opacity-70;
+  }
+
+  /* Focus states - comprehensive fallback */
+  &:focus-visible:not(:focus),
+  &[data-focus-visible="true"] {
+    @apply status-focused;
+
+    /* Written after the utility, which sets this same property. Inset and offsetless so the ring
+     * stays inside the track's padding instead of spilling over its rounded edge - the same
+     * correction ToggleButtonGroup makes for an attached row. */
+    --tw-ring-offset-width: 0px;
+    @apply ring-inset;
+  }
+
+  /* Disabled state */
+  &:disabled,
+  &[data-disabled="true"] {
+    @apply status-disabled;
+  }
+}
+
+/* ==========================================================================
+   Separator - a hairline between adjacent segments. Rendered inside each
+   segment and pinned to its leading edge, so it divides that segment from the
+   one before it rather than being a node between the two.
+   ========================================================================== */
+
+.segmented-control__separator {
+  @apply pointer-events-none absolute start-0 top-1/4 h-1/2 w-px rounded-sm bg-muted/25;
+
+  /**
+   * Transitions
+   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
+   */
+  transition: opacity 150ms var(--ease-smooth);
+  @apply motion-reduce:transition-none;
+
+  /* Nothing to divide in front of the first segment. */
+  .segmented-control__item:first-child & {
+    @apply opacity-0;
+  }
+}
+
+/* The pill covers its own leading divider, and the divider on the segment that follows would
+   otherwise sit hard against the pill's trailing edge. Both step aside as it arrives. */
+.segmented-control__item[data-selected="true"] .segmented-control__separator,
+.segmented-control__item[data-selected="true"]
+  + .segmented-control__item
+  .segmented-control__separator {
+  @apply opacity-0;
+}
+
+/* ==========================================================================
+   Indicator - React Aria's SelectionIndicator. One is rendered inside every
+   segment and only the selected one is present, so what looks like a pill
+   sliding along is one element handing its place to the next.
+   ========================================================================== */
+
+.segmented-control__indicator {
+  @apply absolute start-0 top-0 size-full rounded-component bg-segment shadow-surface;
+
+  z-index: -1;
+
+  /* The indicator is a background and nothing else, so Forced Colors Mode flattens it away
+   * and nothing marks the selected segment. `Highlight` behind `HighlightText` is the
+   * platform's own pairing for a selected segment. */
+  @media (forced-colors: active) {
+    background-color: Highlight;
+  }
+
+  /**
+   * Transitions
+   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
+   *
+   * `useSharedElement` reads this very declaration to decide what to carry across the handoff,
+   * so the stylesheet stays the only place that decides what animates. `height` is listed even
+   * though the pill only travels along one axis today, so a vertical orientation needs no
+   * change here.
+   */
+  transition-duration: 250ms;
+  transition-property: translate, width, height;
+  transition-timing-function: var(--ease-out-fluid);
+  @apply motion-reduce:transition-none;
+}
+
+/* ==========================================================================
+   Sizes - the outer track lands on the control scale (32/36/40px), so a
+   segmented control lines up with a button or a field of the same size. The
+   track's own `p-1` is the 8px difference.
+   ========================================================================== */
+
+.segmented-control--sm .segmented-control__item {
+  @apply h-6 px-2.5 text-xs;
+}
+
+.segmented-control--md {
+  /* No styles as this is the default size */
+}
+
+.segmented-control--lg .segmented-control__item {
+  @apply h-8 px-4;
+}
+
+/* ==========================================================================
+   Full width modifier
+   ========================================================================== */
+
+.segmented-control--full-width {
+  @apply flex w-full;
+
+  .segmented-control__item {
+    @apply flex-1;
+  }
+}

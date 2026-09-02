@@ -61,6 +61,7 @@ export * from "./radio";
 export * from "./radio-group";
 export * from "./scroll-shadow";
 export * from "./search-field";
+export * from "./segmented-control";
 export * from "./select";
 export * from "./separator";
 export * from "./skeleton";
