@@ -1086,7 +1086,7 @@ export const Virtualization: Story = {
     components,
     setup: () => ({ layout: TableLayout, users: generateUsers(1000) }),
     template: `
-      <Virtualizer :layout="layout" :layout-options="{rowHeight: 42, headingHeight: 42}">
+      <Virtualizer :layout="layout" :layout-options="{rowSize: 42, headingSize: 42}">
         <Table>
           <TableScrollContainer>
             <TableContent
@@ -1246,7 +1246,7 @@ export const VirtualizedDragAndDrop: Story = {
       };
     },
     template: `
-      <Virtualizer :layout="layout" :layout-options="{rowHeight: 42, headingHeight: 42}">
+      <Virtualizer :layout="layout" :layout-options="{rowSize: 42, headingSize: 42}">
         <Table>
           <TableScrollContainer>
             <TableContent

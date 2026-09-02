@@ -23,9 +23,9 @@ import { useFilter } from "@/composables/use-filter";
 import { ListLayout } from "@/utils/virtualizer-list-layout";
 
 /** A windowed autocomplete, which is the one case the options cannot all be in the DOM. */
-const props = withDefaults(defineProps<{ count?: number; rowHeight?: number }>(), {
+const props = withDefaults(defineProps<{ count?: number; rowSize?: number }>(), {
   count: 1000,
-  rowHeight: 50,
+  rowSize: 50,
 });
 
 const filter = useFilter({ sensitivity: "base" });
@@ -70,7 +70,7 @@ const byName = (item: { name: string }) => item.name;
               <SearchFieldInput placeholder="Search users..." />
             </SearchFieldGroup>
           </SearchFieldRoot>
-          <VirtualizerRoot :layout="ListLayout" :layout-options="{ rowHeight: props.rowHeight }">
+          <VirtualizerRoot :layout="ListLayout" :layout-options="{ rowSize: props.rowSize }">
             <ListBoxRoot class="h-[300px] overflow-y-auto" :item-text-value="byName" :items="items">
               <template #default="{ item }">
                 <ListBoxItemRoot

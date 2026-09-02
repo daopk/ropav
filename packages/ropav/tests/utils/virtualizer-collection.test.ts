@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { createListCollection, defaultItemKey } from "@/utils/virtualizer-collection";
+import {
+  createListCollection,
+  createTableCollection,
+  defaultItemKey,
+} from "@/utils/virtualizer-collection";
 
 const users = [
   { id: "a", name: "Ada" },
@@ -61,5 +65,39 @@ describe("createListCollection", () => {
 
     expect(collection.getChildNodes("a")).toEqual([]);
     expect(collection.getNode("missing")).toBeUndefined();
+  });
+});
+
+describe("createTableCollection", () => {
+  const columnKeys = ["name", "role", "email"];
+
+  const tableOf = (rowCount: number) =>
+    createTableCollection({
+      columnKeys,
+      idPrefix: "t",
+      items: Array.from({ length: rowCount }, (_, index) => ({ id: index })),
+    });
+
+  it("holds a node per row rather than a node per cell", () => {
+    const collection = tableOf(1000);
+
+    // The header, its row, the columns, the body, and one node per row. A cell is not among them:
+    // holding one per column per row is the one count that grows with the data, and it would be
+    // paid before the first paint.
+    expect(collection.keys).toHaveLength(1000 + columnKeys.length + 3);
+    expect(collection.getNode(collection.cellKey(0, "name"))).toBeUndefined();
+    expect(collection.getChildNodes(0)).toEqual([]);
+  });
+
+  it("names the cell where a row and a column meet without holding one", () => {
+    const collection = tableOf(2);
+
+    expect(collection.cellKey(1, "role")).toBe("1:role");
+    expect(collection.getNode(1)?.type).toBe("row");
+  });
+
+  it("grows by a node per row as the data grows", () => {
+    // What the count used to be multiplied by: three columns meant four nodes a row, not one.
+    expect(tableOf(2000).keys.length - tableOf(1000).keys.length).toBe(1000);
   });
 });

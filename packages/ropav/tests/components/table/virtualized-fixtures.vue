@@ -26,7 +26,7 @@ const props = withDefaults(
   defineProps<{
     isLoading?: boolean;
     items?: VirtualizedUser[];
-    rowHeight?: number;
+    rowSize?: number;
     selectionMode?: "multiple" | "none" | "single";
     withLoadMore?: boolean;
     withoutVirtualizer?: boolean;
@@ -34,7 +34,7 @@ const props = withDefaults(
   {
     isLoading: undefined,
     items: (): VirtualizedUser[] => [],
-    rowHeight: 42,
+    rowSize: 42,
     selectionMode: "none",
     withLoadMore: undefined,
     withoutVirtualizer: undefined,
@@ -48,7 +48,7 @@ const emit = defineEmits<{ loadMore: [] }>();
   <VirtualizerRoot
     v-if="!props.withoutVirtualizer"
     :layout="TableLayout"
-    :layout-options="{ headingHeight: props.rowHeight, rowHeight: props.rowHeight }"
+    :layout-options="{ headingSize: props.rowSize, rowSize: props.rowSize }"
   >
     <TableRoot>
       <TableScrollContainer>

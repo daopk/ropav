@@ -381,7 +381,7 @@ export const Virtualization: Story = {
     components,
     setup: () => ({ layout: ListLayout, users: generateUsers(1000) }),
     template: `
-      <Virtualizer :layout="layout" :layout-options="{rowHeight: 50}">
+      <Virtualizer :layout="layout" :layout-options="{rowSize: 50}">
         <ListBox
           aria-label="Virtualized list with 1000 items"
           class="h-[400px] w-[300px] overflow-y-auto"

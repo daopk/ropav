@@ -1314,7 +1314,7 @@ export const Virtualization: Story = {
                     <SearchFieldClearButton />
                   </SearchFieldGroup>
                 </SearchField>
-                <Virtualizer :layout="layout" :layout-options="{rowHeight: 50}">
+                <Virtualizer :layout="layout" :layout-options="{rowSize: 50}">
                   <ListBox
                     class="h-[400px] overflow-y-auto"
                     :item-text-value="byName"

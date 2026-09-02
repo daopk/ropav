@@ -111,12 +111,6 @@ describe("ListLayout", () => {
       expect(layout.getLayoutInfo("item-2")?.rect).toEqual(new Rect(0, 40, 300, 20));
       expect(layout.getContentSize()).toEqual(new Size(300, 200));
     });
-
-    it("accepts React Aria's deprecated rowHeight alias, which the stories still pass", () => {
-      const layout = attach(new ListLayout({ rowHeight: 50 }), createHost({ itemCount: 2 }));
-
-      expect(layout.getLayoutInfo("item-1")?.rect.height).toBe(50);
-    });
   });
 
   describe("visible layout infos", () => {
@@ -210,6 +204,11 @@ describe("ListLayout", () => {
 class CountingListLayout extends ListLayout {
   built: VirtualizerKey[] = [];
 
+  /** How many rows are held in the cache right now, which is what pruning is observed by. */
+  get cachedKeys(): VirtualizerKey[] {
+    return [...this.layoutNodes.keys()];
+  }
+
   protected override buildItem(node: VirtualizerNode, x: number, y: number) {
     this.built.push(node.key);
 
@@ -234,46 +233,66 @@ describe("ListLayout laziness", () => {
     );
   });
 
-  it("grows the placed region as the window moves down, and never shrinks it", () => {
+  it("moves the placed region with the window rather than growing to cover both", () => {
     const layout = attach(new CountingListLayout({ rowSize: 50 }), createHost({ itemCount: 1000 }));
 
     layout.getVisibleLayoutInfos(new Rect(0, 0, 300, 400));
+    layout.built.length = 0;
     layout.getVisibleLayoutInfos(new Rect(0, 500, 300, 400));
 
-    // The requested region is a union, so scrolling down extends it rather than moving it.
-    // Rows above stay placed, which is what makes scrolling back up cost nothing.
-    const placed = new Set(layout.built);
-
-    expect(placed.has("item-0")).toBe(true);
-    // The union reaches 900px, so row 18 is the last one placed and row 19 is still only counted.
-    expect(placed.has("item-18")).toBe(true);
-    expect(placed.has("item-19")).toBe(false);
+    // A fixed stride puts every row at a known offset, so the rows above the window are not
+    // needed to know where the ones inside it sit. Only the new window is placed.
+    expect(new Set(layout.built)).toEqual(
+      new Set(Array.from({ length: 10 }, (_, index) => `item-${index + 9}`)),
+    );
   });
 
-  it("skips the rows above the region after the container resizes mid-scroll", () => {
-    const scrolled = createHost({ itemCount: 1000, visibleRect: new Rect(0, 20_000, 300, 400) });
-    const layout = attach(new CountingListLayout({ rowSize: 50 }), scrolled);
+  it("drops the rows the window has left behind", () => {
+    const layout = attach(new CountingListLayout({ rowSize: 50 }), createHost({ itemCount: 1000 }));
 
-    layout.built.length = 0;
-    // A resize is what drops the cache and re-anchors the region on what is on screen. Only
-    // then can the layout skip: rows 0 to 398 are counted, not placed.
-    layout.update({ sizeChanged: true });
-    layout.getVisibleLayoutInfos(scrolled.visibleRect);
+    layout.getVisibleLayoutInfos(new Rect(0, 0, 300, 400));
+    layout.getVisibleLayoutInfos(new Rect(0, 20_000, 300, 400));
 
-    const placed = new Set(layout.built);
-
-    expect(placed.has("item-100")).toBe(false);
-    expect(placed.has("item-400")).toBe(true);
-    expect(placed.size).toBeLessThan(20);
+    // Scrolling the length of a long collection used to leave a layout node per row behind it.
+    expect(layout.cachedKeys).not.toContain("item-0");
+    expect(layout.cachedKeys).toContain("item-400");
+    expect(layout.cachedKeys.length).toBeLessThan(20);
   });
 
-  it("computes the whole layout when asked about a key it never reached", () => {
+  it("keeps a persisted row placed once the window has moved past it", () => {
+    const layout = attach(
+      new CountingListLayout({ rowSize: 50 }),
+      createHost({ itemCount: 1000, persistedKeys: ["item-0"] }),
+    );
+
+    layout.getVisibleLayoutInfos(new Rect(0, 20_000, 300, 400));
+
+    // The roving tab stop lives on the focused row, so pruning it would drop focus outright.
+    expect(layout.cachedKeys).toContain("item-0");
+    expect(layout.getLayoutInfo("item-0")?.rect).toEqual(new Rect(0, 0, 300, 50));
+  });
+
+  it("places one row rather than the whole collection when asked about a key by index", () => {
     const layout = attach(new CountingListLayout({ rowSize: 50 }), createHost({ itemCount: 1000 }));
 
     layout.built.length = 0;
 
-    // What pressing End does: a key at an arbitrary offset, whose position cannot be known
-    // without placing everything above it.
+    // What pressing End does. With a fixed stride the offset is a multiplication, so the row is
+    // placed on its own rather than by laying out everything above it.
+    expect(layout.getLayoutInfo("item-999")?.rect).toEqual(new Rect(0, 49_950, 300, 50));
+    expect(layout.built).toEqual(["item-999"]);
+  });
+
+  it("lays out everything above a key it never reached when rows vary in height", () => {
+    const layout = attach(
+      new CountingListLayout({ estimatedRowSize: 50 }),
+      createHost({ itemCount: 1000 }),
+    );
+
+    layout.built.length = 0;
+
+    // A measured row can be any height, so there is no way to know where this one sits without
+    // adding up the rows above it.
     expect(layout.getLayoutInfo("item-999")?.rect).toEqual(new Rect(0, 49_950, 300, 50));
     expect(new Set(layout.built).size).toBe(1000);
   });
@@ -338,9 +357,6 @@ describe("ListLayout measured rows", () => {
     expect(layout.shouldInvalidateLayoutOptions({ rowSize: 50 }, { rowSize: 50 })).toBe(false);
     expect(layout.shouldInvalidateLayoutOptions({ rowSize: 60 }, { rowSize: 50 })).toBe(true);
     expect(layout.shouldInvalidateLayoutOptions({ gap: 4 }, {})).toBe(true);
-    // The deprecated alias has to compare against the current name, or a story that passes
-    // `rowHeight` would look unchanged forever.
-    expect(layout.shouldInvalidateLayoutOptions({ rowSize: 50 }, { rowHeight: 50 })).toBe(false);
   });
   /**
    * Resolving a drop from a point, which is the whole reason a layout can be a drop delegate.

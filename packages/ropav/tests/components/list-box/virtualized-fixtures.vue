@@ -11,13 +11,13 @@ import { ListLayout } from "@/utils/virtualizer-list-layout";
 const props = withDefaults(
   defineProps<{
     items?: FixtureItem[];
-    rowHeight?: number;
+    rowSize?: number;
     selectionMode?: "none" | "single" | "multiple";
     withoutVirtualizer?: boolean;
   }>(),
   {
     items: (): FixtureItem[] => [],
-    rowHeight: 50,
+    rowSize: 50,
     selectionMode: "none",
     withoutVirtualizer: undefined,
   },
@@ -28,7 +28,7 @@ const props = withDefaults(
   <VirtualizerRoot
     v-if="!props.withoutVirtualizer"
     :layout="ListLayout"
-    :layout-options="{ rowHeight: props.rowHeight }"
+    :layout-options="{ rowSize: props.rowSize }"
   >
     <ListBoxRoot
       aria-label="Users"

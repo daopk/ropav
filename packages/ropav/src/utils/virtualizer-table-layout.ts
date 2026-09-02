@@ -318,6 +318,7 @@ export class TableLayout<
 
   protected buildRowGroup(y: number, node: VirtualizerNode): LayoutNode {
     const collection = this.tableCollection;
+    const rowKeys = collection.rows.keys;
     const rect = new Rect(this.padding, y, 0, 0);
     const layoutInfo = new LayoutInfo("rowgroup", node.key, rect);
     const children: LayoutNode[] = [];
@@ -330,17 +331,29 @@ export class TableLayout<
     // registered from the DOM, so on the very first pass the header is nothing tall and the first
     // row sits at the origin — inside an empty rectangle, if nothing said otherwise.
     const hasWindow = this.requestedRect.area > 0;
+    // A persisted row is placed wherever the window is, because the roving tab stop lives on it.
+    const persisted = this.persistedIndices(rowKeys);
+    const childCount = rowKeys.length + (collection.loaderKey == null ? 0 : 1);
 
     let width = 0;
+    let last = -1;
 
-    for (const child of collection.getChildNodes(node.key)) {
+    for (const index of this.rowIndicesToPlace(rowKeys.length, startY, rowHeight, persisted)) {
+      const child = collection.getNode(rowKeys[index]!);
+
+      if (!child) continue;
+
+      y += (index - last - 1) * rowHeight;
+      last = index;
+
       // Rows outside the region asked about are accounted for rather than built, which is what
-      // makes a thousand rows cost a screenful. A loader is always built: a sentinel that is not
-      // in the DOM can never report that it came into view, so the next page is never asked for.
+      // makes a thousand rows cost a screenful. With a stride the arithmetic cannot predict this
+      // is the only place that can tell, so the walk still asks.
       if (
-        (!hasWindow && child.type !== "loader") ||
-        (y + rowHeight < this.requestedRect.y && !this.isValid(child, y)) ||
-        (y > this.requestedRect.maxY && child.type !== "loader")
+        !persisted.has(index) &&
+        (!hasWindow ||
+          (y + rowHeight < this.requestedRect.y && !this.isValid(child, y)) ||
+          y > this.requestedRect.maxY)
       ) {
         y += rowHeight;
         continue;
@@ -355,6 +368,27 @@ export class TableLayout<
       children.push(row);
     }
 
+    // The sentinel is placed wherever the window is: one that is not in the DOM can never report
+    // that it came into view, so the next page would never be asked for.
+    const loaderNode =
+      collection.loaderKey == null ? null : collection.getNode(collection.loaderKey);
+
+    if (loaderNode) {
+      y += (rowKeys.length - last - 1) * rowHeight;
+      last = rowKeys.length;
+
+      const loader = this.buildChild(loaderNode, this.padding, y, layoutInfo.key);
+
+      loader.layoutInfo.parentKey = layoutInfo.key;
+      loader.index = children.length;
+      y = loader.layoutInfo.rect.maxY + this.gap;
+      width = Math.max(width, loader.layoutInfo.rect.width);
+      children.push(loader);
+    }
+
+    // The rows below the last one placed, so the scrollbar still describes the whole body.
+    y += (childCount - last - 1) * rowHeight;
+
     // An empty body still fills the box, so the empty state has somewhere to sit.
     if (collection.itemCount === 0) y = this.host!.size.height;
     else y -= this.gap;
@@ -365,6 +399,65 @@ export class TableLayout<
     return { children, layoutInfo, node, validRect: rect.intersection(this.requestedRect) };
   }
 
+  /**
+   * The row positions the pass walks, in order.
+   *
+   * With an arithmetic stride that is the slice the region covers plus whatever has to exist
+   * outside it, so a body of a hundred thousand rows costs a screenful of them. Without one every
+   * row is walked, because a row's offset is the total of the rows above it.
+   */
+  private rowIndicesToPlace(
+    rowCount: number,
+    startY: number,
+    rowHeight: number,
+    persisted: Set<number>,
+  ): number[] {
+    if (!this.hasArithmeticStride) return Array.from({ length: rowCount }, (_, index) => index);
+
+    const first = this.firstRequestedIndex(startY, rowHeight);
+    const last =
+      this.requestedRect.area > 0
+        ? Math.min(rowCount - 1, Math.floor((this.requestedRect.maxY - startY) / rowHeight))
+        : first - 1;
+    const indices = new Set(persisted);
+
+    for (let index = first; index <= last; index += 1) indices.add(index);
+
+    return [...indices].filter((index) => index < rowCount).sort((a, b) => a - b);
+  }
+
+  /** A row sits below the header, not at the top of the table. */
+  protected override rowOffset(index: number): number {
+    const header = this.layoutNodes.get(this.tableCollection.headerKey);
+    const origin = header == null ? this.padding : header.layoutInfo.rect.maxY + this.gap;
+
+    return origin + index * (this.getEstimatedRowHeight() + this.gap);
+  }
+
+  /**
+   * The cells of one row, derived rather than looked up.
+   *
+   * A virtualized table renders one cell per column, so the cell where this row meets each column
+   * is known without anyone having rendered it — and building them here rather than holding them
+   * in the collection is what keeps the node count proportional to the window instead of to the
+   * data. A cell that has been placed before keeps the node it was placed from, so a rebuilt row
+   * does not have to measure its cells again.
+   */
+  private buildCellNodes(rowKey: VirtualizerKey): VirtualizerNode[] {
+    const collection = this.tableCollection;
+
+    return collection.columnKeys.map((columnKey, index) => {
+      const key = collection.cellKey(rowKey, columnKey);
+      const placed = this.layoutNodes.get(key)?.node;
+
+      // A cell's index is its column's, which is what pairs it with a width — so a node kept from
+      // before is only the same cell while the column has not moved.
+      return placed?.index === index
+        ? placed
+        : { childKeys: [], index, key, parentKey: rowKey, type: "cell" as const };
+    });
+  }
+
   protected buildRow(node: VirtualizerNode, x: number, y: number): LayoutNode {
     const rect = new Rect(x, y, 0, 0);
     const layoutInfo = new LayoutInfo("row", node.key, rect);
@@ -372,9 +465,7 @@ export class TableLayout<
 
     let height = 0;
 
-    for (const child of this.tableCollection.getChildNodes(node.key)) {
-      if (child.type !== "cell") continue;
-
+    for (const child of this.buildCellNodes(node.key)) {
       const cell = this.buildChild(child, x, y, layoutInfo.key);
 
       cell.index = children.length;

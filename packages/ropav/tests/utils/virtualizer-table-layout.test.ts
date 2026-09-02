@@ -84,7 +84,7 @@ const rowsIn = (layout: TableLayout, rect: Rect) =>
 describe("TableLayout", () => {
   describe("laying out the header", () => {
     it("stacks the header above the body and sticks it there", () => {
-      const { layout } = setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }), {
+      const { layout } = setUp(new TableLayout({ headingSize: 42, rowSize: 42 }), {
         itemCount: 1000,
       });
       const header = layout.getLayoutInfo("t-header")!;
@@ -100,7 +100,7 @@ describe("TableLayout", () => {
     });
 
     it("places each column at the running total of the widths it was given", () => {
-      const { layout } = setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }), {
+      const { layout } = setUp(new TableLayout({ headingSize: 42, rowSize: 42 }), {
         itemCount: 3,
       });
 
@@ -110,7 +110,7 @@ describe("TableLayout", () => {
     });
 
     it("stacks the columns back to front", () => {
-      const { layout } = setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }), {
+      const { layout } = setUp(new TableLayout({ headingSize: 42, rowSize: 42 }), {
         itemCount: 3,
       });
 
@@ -119,7 +119,7 @@ describe("TableLayout", () => {
     });
 
     it("gives a column with no width of its own no width at all", () => {
-      const { layout } = setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }), {
+      const { layout } = setUp(new TableLayout({ headingSize: 42, rowSize: 42 }), {
         columnKeys: ["name", "unmeasured"],
         columnWidths: new Map([["name", 300]]),
         itemCount: 1,
@@ -131,7 +131,7 @@ describe("TableLayout", () => {
 
   describe("laying out a row", () => {
     it("puts each cell under its column and the row under the header", () => {
-      const { layout } = setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }), {
+      const { layout } = setUp(new TableLayout({ headingSize: 42, rowSize: 42 }), {
         itemCount: 3,
       });
 
@@ -144,7 +144,7 @@ describe("TableLayout", () => {
     });
 
     it("lets every part spill outside its own box", () => {
-      const { layout } = setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }), {
+      const { layout } = setUp(new TableLayout({ headingSize: 42, rowSize: 42 }), {
         itemCount: 1,
       });
 
@@ -156,7 +156,7 @@ describe("TableLayout", () => {
 
     it("takes the row's width from the header rather than from its own cells", () => {
       // The columns come to 300 while the container is 700 wide, and the row follows the columns.
-      const { layout } = setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }), {
+      const { layout } = setUp(new TableLayout({ headingSize: 42, rowSize: 42 }), {
         columnKeys: ["name"],
         columnWidths: new Map([["name", 300]]),
         itemCount: 2,
@@ -173,6 +173,11 @@ describe("TableLayout", () => {
     class CountingTableLayout extends TableLayout {
       built: VirtualizerKey[] = [];
 
+      /** What is held in the cache right now, which is what pruning is observed by. */
+      get cachedKeys(): VirtualizerKey[] {
+        return [...this.layoutNodes.keys()];
+      }
+
       protected override buildRow(node: VirtualizerNode, x: number, y: number): LayoutNode {
         this.built.push(node.key);
 
@@ -181,7 +186,7 @@ describe("TableLayout", () => {
     }
 
     it("builds a screenful of rows out of a thousand", () => {
-      const { layout } = setUp(new CountingTableLayout({ headingHeight: 42, rowHeight: 42 }), {
+      const { layout } = setUp(new CountingTableLayout({ headingSize: 42, rowSize: 42 }), {
         itemCount: 1000,
       });
 
@@ -191,8 +196,69 @@ describe("TableLayout", () => {
       expect(layout.getContentSize().height).toBe(42_042);
     });
 
+    it("visits a screenful of rows rather than every row above the window", () => {
+      const collection = createTableCollection({
+        columnKeys: COLUMNS,
+        idPrefix: "t",
+        items: makeItems(10_000),
+      });
+
+      let visited = 0;
+      const counted: VirtualizerTableCollection = {
+        ...collection,
+        getChildNodes: (key) => {
+          const children = collection.getChildNodes(key);
+
+          visited += children.length;
+
+          return children;
+        },
+        getNode: (key) => {
+          visited += 1;
+
+          return collection.getNode(key);
+        },
+      };
+      const layout = new TableLayout({ headingSize: 42, rowSize: 42 });
+
+      layout.host = {
+        collection: counted,
+        isPersistedKey: () => false,
+        persistedKeys: new Set(),
+        size: new Size(700, 500),
+        visibleRect: new Rect(0, 0, 700, 500),
+      };
+      layout.update({ layoutOptions: { columnWidths: WIDTHS } });
+      visited = 0;
+
+      // Near the end of the body, where the walk used to count its way down from the first row —
+      // and where asking the body for its children used to hand back every one of them.
+      layout.getVisibleLayoutInfos(new Rect(0, 419_958, 700, 500));
+
+      expect(visited).toBeGreaterThan(0);
+      expect(visited).toBeLessThan(100);
+    });
+
+    it("holds no more rows after scrolling to the end than it did at the top", () => {
+      const { layout } = setUp(new CountingTableLayout({ headingSize: 42, rowSize: 42 }), {
+        itemCount: 10_000,
+      });
+
+      layout.getVisibleLayoutInfos(new Rect(0, 0, 700, 500));
+
+      const atTop = layout.cachedKeys.length;
+
+      layout.getVisibleLayoutInfos(new Rect(0, 419_958, 700, 500));
+
+      // Jumping to the end used to leave a layout node behind for every row and every cell it
+      // passed on the way.
+      expect(atTop).toBeLessThan(100);
+      expect(layout.cachedKeys.length).toBeLessThanOrEqual(atTop);
+      expect(layout.cachedKeys).not.toContain(1);
+    });
+
     it("places a row it never built once it is asked about by key", () => {
-      const { layout } = setUp(new CountingTableLayout({ headingHeight: 42, rowHeight: 42 }), {
+      const { layout } = setUp(new CountingTableLayout({ headingSize: 42, rowSize: 42 }), {
         itemCount: 1000,
       });
 
@@ -205,7 +271,7 @@ describe("TableLayout", () => {
 
   describe("choosing what is visible", () => {
     it("snaps the rectangle to whole rows, ignoring the gap", () => {
-      const { layout } = setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }), {
+      const { layout } = setUp(new TableLayout({ headingSize: 42, rowSize: 42 }), {
         itemCount: 1000,
       });
 
@@ -217,7 +283,7 @@ describe("TableLayout", () => {
     });
 
     it("reports parents before children", () => {
-      const { layout } = setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }), {
+      const { layout } = setUp(new TableLayout({ headingSize: 42, rowSize: 42 }), {
         itemCount: 2,
       });
 
@@ -240,7 +306,7 @@ describe("TableLayout", () => {
     });
 
     it("keeps the header in view once the rows have scrolled past it", () => {
-      const { layout } = setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }), {
+      const { layout } = setUp(new TableLayout({ headingSize: 42, rowSize: 42 }), {
         itemCount: 1000,
       });
       const keys = keysIn(layout, new Rect(0, 5000, 700, 500));
@@ -253,7 +319,7 @@ describe("TableLayout", () => {
     });
 
     it("keeps a persisted row in view wherever it is", () => {
-      const { layout } = setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }), {
+      const { layout } = setUp(new TableLayout({ headingSize: 42, rowSize: 42 }), {
         itemCount: 1000,
         persistedKeys: [1],
       });
@@ -264,7 +330,7 @@ describe("TableLayout", () => {
     });
 
     it("keeps the loading sentinel in view even at the top of the table", () => {
-      const { layout } = setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }), {
+      const { layout } = setUp(new TableLayout({ headingSize: 42, rowSize: 42 }), {
         hasLoader: true,
         itemCount: 1000,
       });
@@ -278,7 +344,7 @@ describe("TableLayout", () => {
 
   describe("an empty body", () => {
     it("fills the container so the empty state has somewhere to sit", () => {
-      const { layout } = setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }));
+      const { layout } = setUp(new TableLayout({ headingSize: 42, rowSize: 42 }));
 
       // Down to the bottom of the container rather than a container's worth below the header.
       expect(rectOf(layout, "t-body")).toEqual(new Rect(0, 42, 700, 458));
@@ -288,7 +354,7 @@ describe("TableLayout", () => {
 
   describe("changing the column widths", () => {
     it("moves every cell to the right of the one that changed", () => {
-      const { layout, update } = setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }), {
+      const { layout, update } = setUp(new TableLayout({ headingSize: 42, rowSize: 42 }), {
         itemCount: 3,
       });
 
@@ -309,7 +375,7 @@ describe("TableLayout", () => {
     });
 
     it("asks to be laid out again only when a width really moved", () => {
-      const layout = new TableLayout({ headingHeight: 42, rowHeight: 42 });
+      const layout = new TableLayout({ headingSize: 42, rowSize: 42 });
       const same = new Map(WIDTHS);
 
       expect(
@@ -356,7 +422,7 @@ describe("TableLayout", () => {
    */
   describe("drop targets", () => {
     const dropSetUp = (scrollTop = 0) =>
-      setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }), {
+      setUp(new TableLayout({ headingSize: 42, rowSize: 42 }), {
         itemCount: 1000,
         visibleRect: new Rect(0, scrollTop, 700, 500),
       });
@@ -398,7 +464,7 @@ describe("TableLayout", () => {
     });
 
     it("falls back to the whole collection when there are no rows", () => {
-      const { layout } = setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }), {
+      const { layout } = setUp(new TableLayout({ headingSize: 42, rowSize: 42 }), {
         itemCount: 0,
       });
 

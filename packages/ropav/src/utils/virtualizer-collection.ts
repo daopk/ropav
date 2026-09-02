@@ -83,7 +83,12 @@ export interface VirtualizerTableCollection extends VirtualizerCollection {
   loaderKey: VirtualizerKey | null;
   /** The columns, in order. A cell's position among them is what pairs it with a width. */
   columnKeys: VirtualizerKey[];
-  /** The key of the cell where a row and a column meet. */
+  /**
+   * The key of the cell where a row and a column meet.
+   *
+   * A cell is not a node of this collection — this is what stands in for one, so the layout can
+   * name a cell it is about to place and a rendered cell can look its own geometry back up.
+   */
   cellKey: (rowKey: VirtualizerKey, columnKey: VirtualizerKey) => VirtualizerKey;
   /**
    * The same nodes seen as a flat list of rows.
@@ -116,12 +121,17 @@ export interface CreateTableCollectionOptions<T> {
 
 /**
  * The two-dimensional collection a table layout walks: a header holding one row of columns, and a
- * body holding a row per item with a cell per column.
+ * body holding a row per item.
  *
  * React Aria gets this shape from its hidden render pass, where every cell a row rendered is a
  * node of the collection. There is no such pass here, so the cells are **derived**: a virtualized
- * table renders one cell per column, so the cell where row `r` meets column `c` is known without
- * anyone having rendered it. That is what lets the layout place a row that is nowhere in the DOM.
+ * table renders one cell per column, so the cell where row `r` meets column `c` is known from
+ * {@link VirtualizerTableCollection.cellKey} without anyone having rendered it. That is what lets
+ * the layout place a row that is nowhere in the DOM.
+ *
+ * Nothing here holds a cell, and deliberately: a cell per column per row is the one count that
+ * grows with the data rather than with the window, and it would be paid in full before the first
+ * paint. The layout builds the cells of the rows it places, and drops them with those rows.
  *
  * Consequently a `colSpan` is not expressible — every cell is exactly one column wide.
  */
@@ -175,12 +185,11 @@ export const createTableCollection = <T>(
 
   items.forEach((item, index) => {
     const rowKey = getKey(item, index);
-    const cellKeys = columnKeys.map((columnKey) => cellKey(rowKey, columnKey));
 
     rowKeys.push(rowKey);
     bodyChildKeys.push(rowKey);
     add({
-      childKeys: cellKeys,
+      childKeys: [],
       content: item,
       index,
       isDisabled: isDisabled?.(item) ?? false,
@@ -188,13 +197,6 @@ export const createTableCollection = <T>(
       parentKey: bodyKey,
       textValue: getTextValue?.(item),
       type: "row",
-    });
-
-    // A cell's index is its column's, which is what pairs it with a width. Built eagerly rather
-    // than on demand: the layout asks for a row's children whenever it places that row, so a lazy
-    // pass would only move the same work behind a cache.
-    cellKeys.forEach((key, columnIndex) => {
-      add({ childKeys: [], index: columnIndex, key, parentKey: rowKey, type: "cell" });
     });
   });
 
