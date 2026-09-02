@@ -31,6 +31,7 @@ export * from "./virtualizer-geometry";
 export * from "./virtualizer-layout";
 export * from "./virtualizer-layout-info";
 export * from "./virtualizer-list-layout";
+export * from "./virtualizer-offsets";
 export * from "./virtualizer-overscan";
 export * from "./virtualizer-table-layout";
 export * from "./visually-hidden";
