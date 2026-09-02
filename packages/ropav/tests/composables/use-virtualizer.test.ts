@@ -67,27 +67,33 @@ describe("useVirtualizer", () => {
 
     const keys = keysOf(virtualizer);
 
-    // The window is 1000 to 1550: row 19 ends exactly on the top edge, which counts as above it,
-    // and row 31 starts on the bottom one, which counts as in it. Nothing further above is kept —
-    // scrolling down overscans below only.
-    expect(keys[0]).toBe("item-20");
+    // A third of the viewport is overscanned either side, so the window is 850 to 1550: row 16
+    // ends exactly on the top edge, which counts as above it, and row 31 starts on the bottom
+    // one, which counts as in it.
+    expect(keys[0]).toBe("item-17");
     expect(keys.at(-1)).toBe("item-31");
     expect(keys).not.toContain("item-0");
 
     stop();
   });
 
-  it("overscans behind the scroll once the direction reverses", () => {
-    const { stop, virtualizer } = setup();
+  it("renders the same set however the offset was arrived at", () => {
+    const arrivedFromAbove = setup();
 
-    virtualizer.setVisibleRect(new Rect(0, 1_000, 300, 400));
-    virtualizer.setVisibleRect(new Rect(0, 900, 300, 400));
+    arrivedFromAbove.virtualizer.setVisibleRect(new Rect(0, 900, 300, 400));
 
-    // Arrived from below, so the extra third is added above the viewport rather than under it:
-    // the window is 750 to 1300 instead of 900 to 1433, and starts four rows before row 18.
-    expect(keysOf(virtualizer)[0]).toBe("item-15");
+    const arrivedFromBelow = setup();
 
-    stop();
+    arrivedFromBelow.virtualizer.setVisibleRect(new Rect(0, 1_800, 300, 400));
+    arrivedFromBelow.virtualizer.setVisibleRect(new Rect(0, 900, 300, 400));
+
+    // React Aria overscans in the direction of travel, from a velocity it never resets — so the
+    // same offset renders a different set depending on which way it was last moving, and a
+    // collection sitting still keeps whichever side it happened to stop on.
+    expect(keysOf(arrivedFromBelow.virtualizer)).toEqual(keysOf(arrivedFromAbove.virtualizer));
+
+    arrivedFromAbove.stop();
+    arrivedFromBelow.stop();
   });
 
   it("renders nothing until the container has been measured", () => {

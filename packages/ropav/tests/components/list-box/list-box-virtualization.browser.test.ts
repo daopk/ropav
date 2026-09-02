@@ -79,8 +79,9 @@ describe("ListBox virtualization (browser)", () => {
     await scrollTo(1_000);
 
     expect(keys()).not.toContain("user-0");
-    // Row 19 ends exactly on the top edge, which counts as above the window.
-    expect(keys()[0]).toBe("user-20");
+    // A third of the viewport is overscanned above as well as below, so the window opens at 850
+    // — which row 16 ends exactly on, and a row ending on the top edge counts as above it.
+    expect(keys()[0]).toBe("user-17");
 
     unmount();
   });
@@ -249,6 +250,44 @@ describe("ListBox virtualization with rows of no declared height (browser)", () 
     // The measurement is held by key in the index, not on the rendered node, so a row that
     // scrolled away and back is not placed at an estimate for a frame first.
     expect(wrappers(listbox)[0]!.getBoundingClientRect().height).toBeCloseTo(before, 0);
+
+    unmount();
+  });
+});
+
+/**
+ * The size the window costs, against a collection large enough that anything proportional to it
+ * would be obvious.
+ *
+ * Structural rather than timed: a wall clock in CI measures the machine. What these hold is the
+ * shape — a pass is the window, mounting is a window, and the far end of a hundred thousand rows
+ * costs what the near end does.
+ */
+describe("ListBox virtualization at a hundred thousand rows (browser)", () => {
+  const many = Array.from({ length: 100_000 }, (_, index) => ({
+    email: `user${index}@ropav.com`,
+    id: `user-${index}`,
+    lines: index % 3 === 0 ? 3 : 0,
+    name: `User ${index}`,
+  }));
+
+  it("mounts a screenful and holds it at either end", async () => {
+    const { keys, listbox, scrollTo, unmount } = await render({
+      estimatedRowSize: 40,
+      items: many,
+    });
+
+    expect(keys().length).toBeLessThan(30);
+
+    await scrollTo(listbox.scrollHeight - 400);
+
+    expect(keys().length).toBeLessThan(30);
+    expect(keys()).toContain("user-99999");
+
+    await scrollTo(0);
+
+    expect(keys().length).toBeLessThan(30);
+    expect(keys()[0]).toBe("user-0");
 
     unmount();
   });

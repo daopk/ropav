@@ -11,7 +11,7 @@ import type { ComputedRef } from "vue";
 import { computed, shallowRef } from "vue";
 
 import { Rect, Size } from "../utils/virtualizer-geometry";
-import { OverscanManager } from "../utils/virtualizer-overscan";
+import { overscannedRect } from "../utils/virtualizer-overscan";
 
 /**
  * The virtualizer, ported from React Aria's `Virtualizer` and `useVirtualizerState`.
@@ -98,8 +98,6 @@ export const useVirtualizer = <Options extends object = object>(
   /** Bumped when something outside the reactive inputs invalidates the layout. */
   const revision = shallowRef(0);
   const scrollAdjustment = shallowRef(0);
-
-  const overscan = new OverscanManager();
 
   const persistedKeys = () => options.persistedKeys?.() ?? new Set<VirtualizerKey>();
 
@@ -225,7 +223,7 @@ export const useVirtualizer = <Options extends object = object>(
     lastPass.size = containerSize;
 
     const contentSize = layout.getContentSize();
-    const layoutInfos = layout.getVisibleLayoutInfos(overscan.getOverscannedRect());
+    const layoutInfos = layout.getVisibleLayoutInfos(overscannedRect(rect));
 
     return { contentSize, layout, layoutInfos };
   });
@@ -276,9 +274,6 @@ export const useVirtualizer = <Options extends object = object>(
     setVisibleRect: (rect) => {
       if (visibleRect.value.equals(rect)) return;
 
-      // Velocity is measured where the scroll lands, not where the layout runs, so that the
-      // direction of travel is known before the next window is asked for.
-      overscan.setVisibleRect(rect);
       visibleRect.value = rect;
     },
     size: computed(() => size.value),

@@ -101,11 +101,12 @@ describe("Table virtualization", () => {
 
       await scrollTo(grid, 5_000);
 
-      // Snapped back to 4998, which row 118 ends exactly on — and a row ending on the top edge
-      // counts as being above the window.
-      expect(rowKeys(grid)[0]).toBe("119");
+      // A third of the viewport is overscanned above as well as below, so the window opens at
+      // 4998 - 166.67 snapped back to 4788, which row 114 ends exactly on — and a row ending on
+      // the top edge counts as being above the window.
+      expect(rowKeys(grid)[0]).toBe("115");
       expect(rowKeys(grid)).not.toContain("1");
-      expect(wrapperOf(rowsOf(grid)[0]!).style.top).toBe(`${118 * 42}px`);
+      expect(wrapperOf(rowsOf(grid)[0]!).style.top).toBe(`${114 * 42}px`);
 
       unmount();
     });

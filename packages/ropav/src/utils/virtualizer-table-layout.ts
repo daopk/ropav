@@ -17,7 +17,7 @@ import { ListLayout } from "./virtualizer-list-layout";
  * that the widths a browser lays a plain table out with and the widths this places cells at are
  * the same numbers.
  *
- * Two departures from upstream, both deliberate:
+ * Departures from upstream, all deliberate:
  *
  * **No horizontal windowing.** Upstream drops cells and columns that are scrolled off to the side
  * and keeps a list of sticky indices — the selection column, and every row header column, so a row
@@ -31,8 +31,11 @@ import { ListLayout } from "./virtualizer-list-layout";
  * visible range in three passes. Asking the virtualizer about each candidate instead gives the same
  * set in the same order, because the children are already in order.
  *
- * **The visible rectangle is copied before it is snapped**, where upstream writes through the
- * argument. The caller hands over a throwaway rectangle either way, so the result is the same.
+ * **The body's children are the window.** Upstream builds a region and then binary searches inside
+ * it for the rows the rectangle covers, clamping to the ends when it finds none — which renders a
+ * single off-screen row whenever the region and the rectangle have come apart. The index decides
+ * which rows those are before any of them is placed, so there is nothing left to search and no
+ * clamp to land on.
  */
 
 /** The height React Aria falls back to when neither a fixed nor an estimated height is given. */

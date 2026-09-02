@@ -196,8 +196,9 @@ export const useVirtualizerScroll = (
       const document = element.ownerDocument;
 
       // Capturing on the document, because a scroll event does not bubble: this is the only way
-      // to hear about an ancestor scrolling the container out of the viewport.
-      document.addEventListener("scroll", onScroll, true);
+      // to hear about an ancestor scrolling the container out of the viewport. Passive, because
+      // nothing here cancels a scroll and a listener that might would hold the compositor up.
+      document.addEventListener("scroll", onScroll, { capture: true, passive: true });
       window.addEventListener("resize", measure);
 
       const observer =
@@ -211,7 +212,7 @@ export const useVirtualizerScroll = (
       measure();
 
       onCleanup(() => {
-        document.removeEventListener("scroll", onScroll, true);
+        document.removeEventListener("scroll", onScroll, { capture: true });
         window.removeEventListener("resize", measure);
         observer?.disconnect();
       });
