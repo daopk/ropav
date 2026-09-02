@@ -88,25 +88,6 @@ export class TableLayout<
   }
 
   /**
-   * The rectangle grown to whole rows.
-   *
-   * The table's own stride, which ignores the gap and does not compensate for how far the top edge
-   * moved — the list layout does both. Kept as upstream has it, because one extra row rendered is
-   * one row of difference against the React build.
-   */
-  protected override snapVisibleRect(rect: Rect): Rect {
-    if (rect.height <= 1) return rect;
-
-    const rowHeight = this.getEstimatedRowHeight();
-    const snapped = rect.copy();
-
-    snapped.y = Math.floor(snapped.y / rowHeight) * rowHeight;
-    snapped.height = Math.ceil(snapped.height / rowHeight) * rowHeight;
-
-    return snapped;
-  }
-
-  /**
    * Every layout info to render, parents before children.
    *
    * The rows are found by a binary search rather than by testing each one against the rectangle,

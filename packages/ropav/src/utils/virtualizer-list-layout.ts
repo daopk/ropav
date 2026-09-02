@@ -136,8 +136,12 @@ export class ListLayout<
    * The rectangle grown to whole rows.
    *
    * Without this a one-pixel scroll would change which rows fall inside the rectangle, and the set
-   * of rendered elements would churn on every frame. A table snaps differently — its own row
-   * stride ignores the gap — so this is the one part of the walk a subclass replaces.
+   * of rendered elements would churn on every frame.
+   *
+   * The stride has to be the one rows are actually placed at, gap included, and the height has to
+   * absorb however far the top edge moved. Upstream's table snaps by the bare row height and lets
+   * the bottom edge fall wherever it lands, which costs a gap of coverage per screen — so a window
+   * arrived at by scrolling ends one gap short of where it was asked to reach.
    */
   protected snapVisibleRect(rect: Rect): Rect {
     if (rect.height <= 1) return rect;
@@ -254,10 +258,23 @@ export class ListLayout<
     measured.rect.height = size.height;
     layoutNode.layoutInfo = measured;
 
-    this.validRect.height = Math.min(this.validRect.height, layoutInfo.rect.y - this.validRect.y);
+    // Replaced rather than shortened in place, and floored at nothing: a rectangle of negative
+    // extent has a negative area, which every `intersects` here reads as "nowhere" — so a row
+    // measuring shorter than its estimate could take the whole window out of the rendered set.
+    this.validRect = new Rect(
+      this.validRect.x,
+      this.validRect.y,
+      this.validRect.width,
+      Math.max(0, Math.min(this.validRect.height, layoutInfo.rect.y - this.validRect.y)),
+    );
 
     if (layoutNode.node?.type === "item" || layoutNode.node?.type === "row") {
-      this.requestedRect.height += measured.rect.height - layoutInfo.rect.height;
+      this.requestedRect = new Rect(
+        this.requestedRect.x,
+        this.requestedRect.y,
+        this.requestedRect.width,
+        Math.max(0, this.requestedRect.height + measured.rect.height - layoutInfo.rect.height),
+      );
     }
 
     this.replaceLayoutInfo(key, layoutInfo, measured);
@@ -479,7 +496,15 @@ export class ListLayout<
     const pending = this.indicesPlacedOutsideTheRegion();
     // The rows above the region are the ones the walk would only have counted, so with an
     // arithmetic stride it starts at the region instead of counting its way down to it.
-    const start = isEmpty ? 0 : this.firstRequestedIndex(offset, rowStride);
+    //
+    // Clamped into the collection, and it has to be: `y` below is seeded from where the walk
+    // starts, so a region left describing an offset the data no longer reaches — what a filter
+    // does to a scrolled collection — would make the content size a function of the scroll
+    // offset rather than of the rows. The browser then clamps the offset against that very
+    // height, which holds the region exactly where it was.
+    const start = isEmpty
+      ? 0
+      : Math.min(this.firstRequestedIndex(offset, rowStride), Math.max(0, rootKeys.length - 1));
 
     let y = (isEmpty ? 0 : offset) + start * rowStride;
 

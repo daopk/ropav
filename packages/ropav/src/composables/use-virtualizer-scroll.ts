@@ -26,7 +26,7 @@ const SCROLL_END_DELAY = 300;
 export interface UseVirtualizerScrollOptions {
   /** The element that scrolls — the collection itself. */
   element: MaybeRefOrGetter<HTMLElement | null | undefined>;
-  /** The size of everything the layout produced, used to clamp an over-scroll. */
+  /** The size of everything the layout produced, which is what gives the container its scroll. */
   contentSize: () => Size;
   /** Whether the collection is mid-scroll, which the content wrapper turns off pointers for. */
   isScrolling: () => boolean;
@@ -109,12 +109,13 @@ export const useVirtualizerScroll = (
     if (!element || !(target instanceof Node) || !target.contains(element)) return;
 
     if (target === element) {
-      const contentSize = options.contentSize();
-
-      // Clamped so an elastic over-scroll past either end does not shake the window.
+      // Clamped so an elastic over-scroll past either end does not shake the window, and clamped
+      // against the element rather than against the layout: the browser is the one that knows how
+      // tall the thing it is scrolling is *as rendered*, and asking the layout pulls a whole pass
+      // forward for the offset this handler is about to replace.
       state.scrollPosition = new Point(
-        Math.max(0, Math.min(element.scrollLeft, contentSize.width - state.size.width)),
-        Math.max(0, Math.min(element.scrollTop, contentSize.height - state.size.height)),
+        Math.max(0, Math.min(element.scrollLeft, element.scrollWidth - state.size.width)),
+        Math.max(0, Math.min(element.scrollTop, element.scrollHeight - state.size.height)),
       );
     } else {
       // An ancestor or the page scrolled: the container did not move inside itself, it moved

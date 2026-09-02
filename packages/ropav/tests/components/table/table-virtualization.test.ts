@@ -19,9 +19,23 @@ const users = Array.from({ length: 1000 }, (_, index) => ({
 const measure = async (grid: HTMLElement, size = { height: 500, width: 700 }) => {
   Object.defineProperty(grid, "clientWidth", { configurable: true, value: size.width });
   Object.defineProperty(grid, "clientHeight", { configurable: true, value: size.height });
+  trackScrollExtent(grid);
   window.dispatchEvent(new Event("resize"));
   await nextTick();
   await nextTick();
+};
+
+/**
+ * jsdom computes no scroll extent either, so an over-scroll would clamp against nothing. Read it
+ * off the wrapper the layout sized, which is what a browser would be reporting for it.
+ */
+const trackScrollExtent = (container: HTMLElement) => {
+  const wrapper = () => container.querySelector<HTMLElement>(':scope > [role="presentation"]');
+  const extent = (axis: "height" | "width") => () =>
+    Number.parseFloat(wrapper()?.style[axis] ?? "") || 0;
+
+  Object.defineProperty(container, "scrollHeight", { configurable: true, get: extent("height") });
+  Object.defineProperty(container, "scrollWidth", { configurable: true, get: extent("width") });
 };
 
 const scrollTo = async (grid: HTMLElement, top: number) => {

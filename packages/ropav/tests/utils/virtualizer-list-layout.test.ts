@@ -490,3 +490,45 @@ describe("ListLayout measured rows", () => {
     });
   });
 });
+
+/**
+ * A collection that shrinks under a window scrolled past its new end.
+ *
+ * This is what a client-side filter does to a virtualized listbox: the window is left describing
+ * an offset the data no longer reaches. The content size has to come back as a function of the
+ * data, because the browser clamps `scrollTop` against the height the wrapper reports — so a
+ * content size derived from the stale offset is a fixed point that nothing can scroll out of.
+ */
+describe("ListLayout under a shrinking collection", () => {
+  const shrink = (layout: ListLayout, host: VirtualizerLayoutHost, itemCount: number) => {
+    (host as { collection: VirtualizerCollection }).collection = createListCollection({
+      items: makeItems(itemCount),
+    });
+    layout.update({ contentChanged: true });
+  };
+
+  it("reports a content size the data explains, not the offset it was left at", () => {
+    const host = createHost({ itemCount: 1000 });
+    const layout = attach(new ListLayout({ rowSize: 50 }), host);
+
+    layout.getVisibleLayoutInfos(new Rect(0, 20_000, 300, 400));
+    shrink(layout, host, 4);
+
+    expect(layout.getContentSize()).toEqual(new Size(300, 200));
+  });
+
+  it("comes back with rows once the height it reports has clamped the offset", () => {
+    const host = createHost({ itemCount: 1000 });
+    const layout = attach(new ListLayout({ rowSize: 50 }), host);
+
+    layout.getVisibleLayoutInfos(new Rect(0, 20_000, 300, 400));
+    shrink(layout, host, 4);
+
+    // Nothing re-runs on its own. The wrapper reports a height, the browser clamps `scrollTop`
+    // against it, and only the moved offset asks for a layout again — so a height that still
+    // describes the old offset is a fixed point the collection never scrolls out of.
+    const clamped = Math.max(0, layout.getContentSize().height - 400);
+
+    expect(keysIn(layout, new Rect(0, clamped, 300, 400))).not.toEqual([]);
+  });
+});

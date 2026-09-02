@@ -16,6 +16,12 @@ const mockGeometry = (element: HTMLElement, size: { width: number; height: numbe
   Object.defineProperty(element, "clientHeight", { configurable: true, value: size.height });
 };
 
+/** What the browser reports for the wrapper it is scrolling, which is what an over-scroll clamps to. */
+const mockScrollExtent = (element: HTMLElement, size: { width: number; height: number }) => {
+  Object.defineProperty(element, "scrollWidth", { configurable: true, value: size.width });
+  Object.defineProperty(element, "scrollHeight", { configurable: true, value: size.height });
+};
+
 interface SetupOptions {
   container?: { width: number; height: number };
   contentSize?: Size;
@@ -30,6 +36,8 @@ const setup = (options: SetupOptions = {}) => {
   mockGeometry(element, options.container ?? { height: 400, width: 300 });
 
   const contentSize = shallowRef(options.contentSize ?? new Size(300, 50_000));
+
+  mockScrollExtent(element, contentSize.value);
   const isScrolling = shallowRef(false);
   const rects: Rect[] = [];
   const sizes: Size[] = [];
@@ -179,5 +187,57 @@ describe("useVirtualizerScroll", () => {
     scrollTo(500);
 
     expect(rects).toHaveLength(before);
+  });
+});
+
+/**
+ * What a scroll event is allowed to touch.
+ *
+ * The content size the handler clamps against comes from the layout, and reading it pulls a whole
+ * layout pass forward — for the offset the handler is about to replace. So every scroll event runs
+ * the layout twice, once against the old offset and once against the new one. The browser already
+ * knows how tall the thing it is scrolling is; that is what the clamp should ask.
+ */
+describe("useVirtualizerScroll and the layout", () => {
+  it("does not ask the layout for its content size while handling a scroll", () => {
+    const element = document.createElement("div");
+
+    document.body.appendChild(element);
+    mockGeometry(element, { height: 400, width: 300 });
+    mockScrollExtent(element, { height: 1_000, width: 300 });
+
+    const rects: Rect[] = [];
+    let reads = 0;
+
+    const scope = effectScope();
+
+    scope.run(() =>
+      useVirtualizerScroll({
+        contentSize: () => {
+          reads += 1;
+
+          return new Size(300, 1_000);
+        },
+        element,
+        isScrolling: () => false,
+        onScrollEnd: () => {},
+        onScrollStart: () => {},
+        onSizeChange: () => {},
+        onVisibleRectChange: (rect) => rects.push(rect),
+      }),
+    );
+
+    setups.push(() => {
+      scope.stop();
+      element.remove();
+    });
+
+    reads = 0;
+    element.scrollTop = 999_999;
+    element.dispatchEvent(new Event("scroll", { bubbles: false }));
+
+    expect(reads).toBe(0);
+    // Still clamped: 1000 of content less the 400 on screen.
+    expect(rects.at(-1)).toEqual(new Rect(0, 600, 300, 400));
   });
 });

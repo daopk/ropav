@@ -1,5 +1,9 @@
 import type { VirtualizerTableCollection } from "@/utils/virtualizer-collection";
-import type { VirtualizerLayoutHost, VirtualizerNode } from "@/utils/virtualizer-layout";
+import type {
+  VirtualizerCollection,
+  VirtualizerLayoutHost,
+  VirtualizerNode,
+} from "@/utils/virtualizer-layout";
 import type { VirtualizerKey } from "@/utils/virtualizer-layout-info";
 import type { LayoutNode } from "@/utils/virtualizer-list-layout";
 
@@ -270,7 +274,7 @@ describe("TableLayout", () => {
   });
 
   describe("choosing what is visible", () => {
-    it("snaps the rectangle to whole rows, ignoring the gap", () => {
+    it("snaps the rectangle to whole rows so a scroll within one row does not churn", () => {
       const { layout } = setUp(new TableLayout({ headingSize: 42, rowSize: 42 }), {
         itemCount: 1000,
       });
@@ -492,5 +496,96 @@ describe("TableLayout", () => {
         layout.getDropTargetLayoutInfo({ dropPosition: "before", key: 5, type: "item" }).rect,
       ).toEqual(new Rect(rowRect.x, rowRect.y - 1, rowRect.width, 2));
     });
+  });
+});
+
+/**
+ * The window has to be covered edge to edge.
+ *
+ * Two strides decide where a row is rendered — the one the rectangle is snapped by and the one
+ * rows are placed at — and they only agree when there is no gap. Where they part company the
+ * region and the row grid drift, and the drift is a whole row per screen of scroll.
+ */
+describe("TableLayout with a gap between rows", () => {
+  const gapped = (itemCount = 1000) =>
+    setUp(new TableLayout({ gap: 8, headingSize: 42, rowSize: 42 }), { itemCount });
+
+  const rectsIn = (layout: TableLayout, rect: Rect) =>
+    layout
+      .getVisibleLayoutInfos(rect)
+      .filter((layoutInfo) => layoutInfo.type === "row")
+      .map((layoutInfo) => layoutInfo.rect);
+
+  it("covers the top edge of a window it jumped to", () => {
+    const { layout } = gapped();
+    const window = new Rect(0, 20_000, 700, 500);
+    const rects = rectsIn(layout, window);
+
+    expect(rects).not.toEqual([]);
+    expect(rects[0]!.y).toBeLessThanOrEqual(window.y);
+  });
+
+  it("covers the bottom edge of a window it jumped to", () => {
+    const { layout } = gapped();
+    const window = new Rect(0, 20_000, 700, 500);
+    const rects = rectsIn(layout, window);
+
+    expect(rects.at(-1)!.maxY).toBeGreaterThanOrEqual(window.maxY);
+  });
+
+  it("holds the window whatever offset it lands on", () => {
+    const { layout } = gapped();
+    // The body starts below the header, and the collection ends where it ends. Between those two
+    // the window has to be covered; outside them there is nothing to cover it with.
+    const bodyTop = layout.getLayoutInfo(1)!.rect.y;
+    const bodyBottom = layout.getContentSize().height;
+
+    // A drag lands wherever it lands. Each of these is a jump the region has to re-anchor on,
+    // and a stride that is one gap out drifts a row further with every one of them.
+    for (const y of [0, 137, 4_000, 4_137, 19_999, 20_450, 40_000]) {
+      const window = new Rect(0, y, 700, 500);
+      const rects = rectsIn(layout, window);
+
+      expect(rects[0]!.y).toBeLessThanOrEqual(Math.max(window.y, bodyTop));
+      expect(rects.at(-1)!.maxY).toBeGreaterThanOrEqual(Math.min(window.maxY, bodyBottom));
+    }
+  });
+});
+
+/**
+ * A body left describing an offset the data no longer reaches, which is what a filter does.
+ *
+ * The table accounts for every row from the body's own origin rather than seeding the walk from
+ * the region, so its content size survives where the list's did not. What both owe is the frame
+ * after: the height reported here is what the browser clamps the offset against, and only the
+ * moved offset asks for another layout.
+ */
+describe("TableLayout under a shrinking collection", () => {
+  const shrunk = (itemCount: number) => {
+    const { host, layout } = setUp(new TableLayout({ headingSize: 42, rowSize: 42 }), {
+      itemCount: 1000,
+    });
+
+    layout.getVisibleLayoutInfos(new Rect(0, 20_000, 700, 500));
+
+    (host as { collection: VirtualizerCollection }).collection = createTableCollection({
+      columnKeys: COLUMNS,
+      idPrefix: "t",
+      items: makeItems(itemCount),
+    });
+    layout.update({ contentChanged: true, layoutOptions: { columnWidths: WIDTHS } });
+
+    return layout;
+  };
+
+  it("reports a content size the data explains", () => {
+    expect(shrunk(4).getContentSize().height).toBe(42 + 4 * 42);
+  });
+
+  it("comes back with rows once the height it reports has clamped the offset", () => {
+    const layout = shrunk(4);
+    const clamped = Math.max(0, layout.getContentSize().height - 500);
+
+    expect(rowsIn(layout, new Rect(0, clamped, 700, 500))).not.toEqual([]);
   });
 });
