@@ -83,7 +83,7 @@
   },
   "peerDependencies": {
     "tailwindcss": ">=4.0.0",
-    "vue": "^3.6.0-rc.5"
+    "vue": "^3.6.0-rc.6"
   },
   "clean-package": "./clean-package.config.json"
 }

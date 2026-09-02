@@ -121,14 +121,10 @@ describe("SearchField", () => {
     });
 
     it("supports another type", () => {
-      // Read off the property, not the attribute: Vue writes `type` as a DOM property and
-      // skips it when it already matches, and an input's own default is `text` — so asking for
-      // `text` renders no attribute at all. The same reason `type="submit"` never appears on a
-      // button.
       const { control, unmount } = renderSearchField({ type: "text" });
 
       expect(control.type).toBe("text");
-      expect(control).not.toHaveAttribute("type");
+      expect(control).toHaveAttribute("type", "text");
 
       unmount();
     });

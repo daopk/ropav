@@ -124,11 +124,9 @@ describe("TextArea", () => {
     it("keeps its reset source in its children, where a textarea's lives", () => {
       const { control, unmount } = render({ value: "pinned", withForm: true });
 
-      // `defaultValue` is the one IDL that writes the right half of either element. A textarea has
-      // no `value` attribute at all, so an assertion written for an input would pass here while
-      // proving nothing.
+      // The children, never the `value` attribute: vapor writes that attribute on every control it
+      // binds a value to, and on a textarea it is inert markup no reset ever reads.
       expectResetSource(control, "pinned");
-      expect(control.hasAttribute("value")).toBe(false);
 
       unmount();
     });

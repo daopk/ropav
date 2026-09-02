@@ -283,13 +283,11 @@ describe("TextField", () => {
   });
 
   describe("control attributes", () => {
-    it("defaults the control to text without writing the attribute", () => {
-      // Vue writes `type` as a DOM property and skips an unchanged value, and `el.type` is
-      // already "text". No CSS keys on `[type]`, so this only matters when asserting.
+    it("defaults the control to text", () => {
       const { control, unmount } = renderField();
 
       expect((control as HTMLInputElement).type).toBe("text");
-      expect(control).not.toHaveAttribute("type");
+      expect(control).toHaveAttribute("type", "text");
 
       unmount();
     });

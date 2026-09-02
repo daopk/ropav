@@ -68,9 +68,7 @@ describe("useTextField", () => {
       const { control, field } = renderField();
 
       expect(field.attrs.value["type"]).toBe("text");
-      // Vue writes `type` as a DOM property and skips an unchanged value, so the default
-      // never reaches the markup as an attribute.
-      expect(control.getAttribute("type")).toBeNull();
+      expect(control.getAttribute("type")).toBe("text");
       expect((control as HTMLInputElement).type).toBe("text");
     });
 

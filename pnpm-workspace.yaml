@@ -14,10 +14,10 @@ packages:
 # once TypeScript 7.1 stabilises the programmatic API and `vue-tsc` supports it directly.
 catalog:
   "@vitejs/plugin-vue": 6.0.8
-  "@vue/compiler-vapor": 3.6.0-rc.5
+  "@vue/compiler-vapor": 3.6.0-rc.6
   typescript: npm:typescript-native-bridge@6.0.3-bridge.15.tsgo.7.0.2
   vite: 8.2.2
-  vue: 3.6.0-rc.5
+  vue: 3.6.0-rc.6
   vue-tsc: 3.3.10
 
 overrides:
