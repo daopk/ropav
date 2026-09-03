@@ -151,15 +151,15 @@
   &[data-placement="bottom"] {
     @apply w-full;
     @apply max-h-[85vh];
-    border-start-start-radius: min(32px, var(--radius-2xl));
-    border-start-end-radius: min(32px, var(--radius-2xl));
+    border-start-start-radius: min(32px, var(--component-radius));
+    border-start-end-radius: min(32px, var(--component-radius));
   }
 
   &[data-placement="top"] {
     @apply w-full;
     @apply max-h-[85vh];
-    border-end-start-radius: min(32px, var(--radius-2xl));
-    border-end-end-radius: min(32px, var(--radius-2xl));
+    border-end-start-radius: min(32px, var(--component-radius));
+    border-end-end-radius: min(32px, var(--component-radius));
   }
 
   /* Left/right placement: auto width, full height */

@@ -80,7 +80,9 @@
 }
 
 .calendar__nav-button {
-  @apply flex size-6 items-center justify-center rounded-2xl text-accent-soft-foreground;
+  @apply flex size-6 items-center justify-center text-accent-soft-foreground;
+
+  border-radius: min(32px, var(--component-radius));
 
   will-change: scale;
 
@@ -179,7 +181,9 @@
  * -------------------------------------------------------------------------- */
 .calendar__cell {
   /* Cell (td) wrapper styles - margins now work with grid layout */
-  @apply relative flex aspect-square size-full items-center justify-center rounded-3xl text-center text-sm font-medium outline-none no-highlight;
+  @apply relative flex aspect-square size-full items-center justify-center text-center text-sm font-medium outline-none no-highlight;
+
+  border-radius: min(32px, var(--component-radius));
 
   /* Eight states repaint a day, several of them in pairs — today and hovered, selected and
    * pressed, selected and outside the month. One declaration cannot tell them apart, so each

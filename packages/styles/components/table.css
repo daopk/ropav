@@ -24,7 +24,8 @@
 
 .table-root--primary {
   @apply bg-surface-secondary px-1 pb-1;
-  border-radius: min(32px, calc(var(--radius) * 2.5));
+
+  border-radius: min(32px, var(--component-radius));
 
   /* Forced Colors Mode flattens the fill onto the page and strips the shadow, so the container
    * stops having any shape and its contents sit loose on the page. */
@@ -58,8 +59,8 @@
     th.table__column:first-child,
     [role="row"] > [role="presentation"]:first-of-type > .table__column
   ) {
-  border-start-start-radius: min(32px, var(--radius-2xl));
-  border-end-start-radius: min(32px, var(--radius-2xl));
+  border-start-start-radius: min(32px, var(--component-radius));
+  border-end-start-radius: min(32px, var(--component-radius));
 }
 
 .table-root--secondary
@@ -67,8 +68,8 @@
     th.table__column:last-child,
     [role="row"] > [role="presentation"]:last-of-type > .table__column
   ) {
-  border-start-end-radius: min(32px, var(--radius-2xl));
-  border-end-end-radius: min(32px, var(--radius-2xl));
+  border-start-end-radius: min(32px, var(--component-radius));
+  border-end-end-radius: min(32px, var(--component-radius));
 }
 
 /* Secondary: body has no shadow or rounded corners */
@@ -194,16 +195,16 @@
      (border-radius on <tbody> itself has no effect).
      Logical properties so corners follow `dir` in RTL. */
   & tr:first-child td:first-child {
-    border-start-start-radius: min(32px, var(--radius-2xl));
+    border-start-start-radius: min(32px, var(--component-radius));
   }
   & tr:first-child td:last-child {
-    border-start-end-radius: min(32px, var(--radius-2xl));
+    border-start-end-radius: min(32px, var(--component-radius));
   }
   & tr:last-child td:first-child {
-    border-end-start-radius: min(32px, var(--radius-2xl));
+    border-end-start-radius: min(32px, var(--component-radius));
   }
   & tr:last-child td:last-child {
-    border-end-end-radius: min(32px, var(--radius-2xl));
+    border-end-end-radius: min(32px, var(--component-radius));
   }
 
   /* Virtualized: elements are divs, not tr/td, and only a window of the rows
@@ -211,7 +212,7 @@
      than the table's. Round the body itself and clip overflow instead. */
   &:not(tbody) {
     @apply relative h-full overflow-clip;
-    border-radius: min(32px, var(--radius-2xl));
+    border-radius: min(32px, var(--component-radius));
   }
 }
 

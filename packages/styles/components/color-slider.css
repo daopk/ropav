@@ -53,7 +53,9 @@
   }
 
   .color-slider__track {
-    @apply relative rounded-2xl;
+    @apply relative;
+
+    border-radius: min(32px, var(--component-radius));
 
     grid-area: track;
     /* Edge cap pseudo-elements */
@@ -68,7 +70,9 @@
 
   .color-slider__thumb {
     /* Flex container for centering */
-    @apply absolute flex cursor-grab items-center justify-center rounded-2xl no-highlight;
+    @apply absolute flex cursor-grab items-center justify-center no-highlight;
+
+    border-radius: min(32px, var(--component-radius));
 
     /* Border to create white ring around the thumb */
     @apply border-3 border-white shadow-overlay;
@@ -129,7 +133,8 @@
       }
 
       &::before {
-        @apply rounded-ss-2xl rounded-es-2xl;
+        border-start-start-radius: min(32px, var(--component-radius));
+        border-end-start-radius: min(32px, var(--component-radius));
         inset-inline-start: -0.625rem;
         box-shadow:
           inset 1px 0 0 0 rgba(0, 0, 0, 0.1),
@@ -141,7 +146,8 @@
       }
 
       &::after {
-        @apply rounded-se-2xl rounded-ee-2xl;
+        border-start-end-radius: min(32px, var(--component-radius));
+        border-end-end-radius: min(32px, var(--component-radius));
         inset-inline-end: -0.625rem;
         box-shadow:
           inset -1px 0 0 0 rgba(0, 0, 0, 0.1),
@@ -219,8 +225,8 @@
 
       &::before {
         bottom: -0.625rem;
-        border-end-start-radius: 999px;
-        border-end-end-radius: 999px;
+        border-end-start-radius: min(32px, var(--component-radius));
+        border-end-end-radius: min(32px, var(--component-radius));
         /* Left, right, and bottom borders for bottom cap */
         box-shadow:
           inset 1px 0 0 0 rgba(0, 0, 0, 0.1),
@@ -233,8 +239,8 @@
 
       &::after {
         top: -0.625rem;
-        border-start-start-radius: 999px;
-        border-start-end-radius: 999px;
+        border-start-start-radius: min(32px, var(--component-radius));
+        border-start-end-radius: min(32px, var(--component-radius));
         /* Left, right, and top borders for top cap */
         box-shadow:
           inset 1px 0 0 0 rgba(0, 0, 0, 0.1),

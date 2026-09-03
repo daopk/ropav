@@ -35,7 +35,9 @@
 }
 
 .typography-prose code {
-  @apply rounded-md bg-default px-1.5 py-0.5 font-mono text-sm text-foreground;
+  @apply bg-default px-1.5 py-0.5 font-mono text-sm text-foreground;
+
+  border-radius: min(32px, var(--component-radius));
 
   /* Code is marked out by a tinted background and nothing else, so forced colors leaves it
    * indistinguishable from the prose around it - the monospace face is all that is left. */
@@ -70,7 +72,9 @@
 }
 
 .typography-prose pre {
-  @apply my-4 overflow-x-auto rounded-xl bg-default p-4 font-mono text-sm leading-relaxed;
+  @apply my-4 overflow-x-auto bg-default p-4 font-mono text-sm leading-relaxed;
+
+  border-radius: min(32px, var(--component-radius));
 
   /* Code is marked out by a tinted background and nothing else, so forced colors leaves it
    * indistinguishable from the prose around it - the monospace face is all that is left. */
@@ -89,7 +93,9 @@
 }
 
 .typography-prose img {
-  @apply my-4 rounded-xl;
+  @apply my-4;
+
+  border-radius: min(32px, var(--component-radius));
 }
 
 .typography--h1 {
@@ -129,7 +135,9 @@
 }
 
 .typography--code {
-  @apply rounded-md bg-default px-1.5 py-0.5 font-mono text-sm text-foreground;
+  @apply bg-default px-1.5 py-0.5 font-mono text-sm text-foreground;
+
+  border-radius: min(32px, var(--component-radius));
 
   /* Code is marked out by a tinted background and nothing else, so forced colors leaves it
    * indistinguishable from the prose around it - the monospace face is all that is left. */

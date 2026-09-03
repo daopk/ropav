@@ -80,7 +80,9 @@
 }
 
 .range-calendar__nav-button {
-  @apply flex size-6 items-center justify-center rounded-xl text-accent-soft-foreground;
+  @apply flex size-6 items-center justify-center text-accent-soft-foreground;
+
+  border-radius: min(32px, var(--component-radius));
 
   will-change: scale;
 
@@ -178,7 +180,12 @@
  * RangeCalendar Cells
  * -------------------------------------------------------------------------- */
 .range-calendar__cell {
-  @apply relative z-1 mx-0 my-[2px] rounded-3xl p-0 outline-none;
+  @apply relative z-1 mx-0 my-[2px] p-0 outline-none;
+
+  --range-calendar-day-radius: min(32px, var(--component-radius));
+  --range-calendar-wrap-radius: calc(var(--range-calendar-day-radius) / 3);
+
+  border-radius: var(--range-calendar-day-radius);
   cursor: var(--cursor-interactive);
 
   /* The range track paints on the cell and the day paints on the button inside it, so both sets
@@ -209,7 +216,9 @@
 
   /* Inner interactive circle/capsule (equivalent to React Aria "button-base") */
   .range-calendar__cell-button {
-    @apply flex aspect-square w-full items-center justify-center rounded-3xl text-sm font-medium text-foreground no-highlight;
+    @apply flex aspect-square w-full items-center justify-center text-sm font-medium text-foreground no-highlight;
+
+    border-radius: var(--range-calendar-day-radius);
 
     will-change: scale;
     transition: scale 200ms var(--ease-out);
@@ -272,16 +281,22 @@
 
   /* Round row boundaries so the range track looks continuous across weeks */
   &[data-selected="true"]:is(td:first-child > *, [aria-disabled] + td > *) {
-    @apply rounded-ss-lg rounded-es-lg;
+    border-start-start-radius: var(--range-calendar-wrap-radius);
+    border-end-start-radius: var(--range-calendar-wrap-radius);
+
     &[data-selection-start="true"] {
-      @apply rounded-ss-3xl rounded-es-3xl;
+      border-start-start-radius: var(--range-calendar-day-radius);
+      border-end-start-radius: var(--range-calendar-day-radius);
     }
   }
 
   &[data-selected="true"]:is(td:last-child > *, td:has(+ [aria-disabled]) > *) {
-    @apply rounded-se-lg rounded-ee-lg;
+    border-start-end-radius: var(--range-calendar-wrap-radius);
+    border-end-end-radius: var(--range-calendar-wrap-radius);
+
     &[data-selection-end="true"] {
-      @apply rounded-se-3xl rounded-ee-3xl;
+      border-start-end-radius: var(--range-calendar-day-radius);
+      border-end-end-radius: var(--range-calendar-day-radius);
     }
   }
 
@@ -309,11 +324,13 @@
   } */
 
   &[data-selection-start="true"]:not([data-outside-month="true"]) {
-    @apply rounded-ss-3xl rounded-es-3xl;
+    border-start-start-radius: var(--range-calendar-day-radius);
+    border-end-start-radius: var(--range-calendar-day-radius);
   }
 
   &[data-selection-end="true"]:not([data-outside-month="true"]) {
-    @apply rounded-se-3xl rounded-ee-3xl;
+    border-start-end-radius: var(--range-calendar-day-radius);
+    border-end-end-radius: var(--range-calendar-day-radius);
   }
 
   /* Pressed state */
@@ -372,11 +389,13 @@
   td:has(> .range-calendar__cell[data-outside-month="true"])
   + td
   > .range-calendar__cell[data-selected="true"] {
-  @apply rounded-ss-lg rounded-es-lg;
+  border-start-start-radius: var(--range-calendar-wrap-radius);
+  border-end-start-radius: var(--range-calendar-wrap-radius);
 
   &[data-outside-month="true"],
   &[data-selection-start="true"] {
-    @apply rounded-ss-3xl rounded-es-3xl;
+    border-start-start-radius: var(--range-calendar-day-radius);
+    border-end-start-radius: var(--range-calendar-day-radius);
   }
 }
 
@@ -386,11 +405,13 @@
     + td > .range-calendar__cell[data-outside-month="true"]
   )
   > .range-calendar__cell[data-selected="true"] {
-  @apply rounded-se-lg rounded-ee-lg;
+  border-start-end-radius: var(--range-calendar-wrap-radius);
+  border-end-end-radius: var(--range-calendar-wrap-radius);
 
   &[data-outside-month="true"],
   &[data-selection-end="true"] {
-    @apply rounded-se-3xl rounded-ee-3xl;
+    border-start-end-radius: var(--range-calendar-day-radius);
+    border-end-end-radius: var(--range-calendar-day-radius);
   }
 }
 

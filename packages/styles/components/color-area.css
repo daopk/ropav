@@ -4,7 +4,9 @@
 
 /* Base styles */
 .color-area {
-  @apply relative w-full max-w-56 shrink-0 rounded-2xl no-highlight;
+  @apply relative w-full max-w-56 shrink-0 no-highlight;
+
+  border-radius: min(32px, var(--component-radius));
 
   /* Square aspect ratio */
   aspect-ratio: 1 / 1;
@@ -41,7 +43,9 @@
    ========================================================================== */
 
 .color-area__thumb {
-  @apply size-4 rounded-xl will-change-[width,height];
+  @apply size-4 will-change-[width,height];
+
+  border-radius: min(32px, var(--component-radius));
 
   /* Current color from React Aria */
   background-color: var(--color-area-thumb-color);

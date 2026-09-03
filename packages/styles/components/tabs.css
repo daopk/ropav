@@ -16,7 +16,7 @@
 .tabs__list-container {
   @apply relative bg-default;
 
-  border-radius: calc(var(--radius) * 2.5);
+  border-radius: min(32px, var(--component-radius));
 
   /* Vertical scroller fills the container height so overflow detection
      engages when the wrapper height is constrained (e.g. h-[240px]) */

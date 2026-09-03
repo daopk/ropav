@@ -21,7 +21,9 @@
   }
 
   .slider__track {
-    @apply relative rounded-xl bg-default;
+    @apply relative bg-default;
+
+    border-radius: min(32px, var(--component-radius));
 
     grid-area: track;
 
@@ -46,7 +48,9 @@
 
   .slider__thumb {
     /* Flex container for centering pseudo-elements */
-    @apply absolute flex cursor-grab items-center justify-center rounded-xl bg-accent no-highlight;
+    @apply absolute flex cursor-grab items-center justify-center bg-accent no-highlight;
+
+    border-radius: min(32px, var(--component-radius));
 
     /* The wrapper is the fill colour in ordinary use, which hides it against the fill. Flattened
      * to `Canvas` it would punch a hole through the fill instead, so it steps back and lets
@@ -63,8 +67,10 @@
 
     /* after: Visible thumb element */
     &::after {
-      @apply relative z-10 rounded-lg bg-accent-foreground text-black shadow-field;
+      @apply relative z-10 bg-accent-foreground text-black shadow-field;
       content: "";
+
+      border-radius: min(32px, var(--component-radius));
 
       /* Both the knob's fill and the shadow that separates it from the track are gone under
        * forced colors. `Canvas` inside a `CanvasText` ring reads against the bare track on one
