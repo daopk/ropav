@@ -131,6 +131,8 @@
 /* Toast close button */
 .toast__close-button {
   @apply pointer-events-none absolute -end-1 -top-1 size-5 border-border bg-default opacity-0 sm:border sm:bg-overlay;
+
+  --toast-close-button-bg-hover: var(--default);
   transition: opacity 150ms var(--ease-smooth);
   @apply motion-reduce:transition-none;
   /* Overrides close button default icon size from 16px to 12px */
@@ -142,7 +144,7 @@
   @media (hover: hover) {
     &:hover,
     &[data-hovered="true"] {
-      @apply bg-default;
+      background-color: var(--toast-close-button-bg-hover);
     }
   }
 }

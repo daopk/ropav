@@ -213,7 +213,8 @@ stale the moment a token moves. `themes/shared/theme.css` holds what is derived 
 A component's own properties are the third tier, declared on its block and private to its file —
 `--button-bg`, `--switch-control-bg-checked-hover`, `--sidebar-rail-line`. The convention:
 
-> **A color a state rule paints goes through a custom property.**
+> **A color a state rule paints goes through a custom property — where more than one state paints
+> that property.**
 
 That is what makes one state retunable on its own. A color written straight into the rule is not:
 the resting and the lit value are the same property on the same element, so the one declaration a
@@ -227,6 +228,11 @@ So a caller sets the property instead, and the states that read the others are l
 <!-- No line at rest; it still flares on hover and while dragging. -->
 <SidebarRoot class="[--sidebar-rail-line:transparent]">
 ```
+
+The qualifier is what keeps this from becoming surface for its own sake. Where exactly one state
+paints a property, a caller can name that state from the call site — `hover:bg-*`, `focus-visible:outline-*` —
+and there is no other state for it to flatten, so no property is minted. It is the second state
+painting the same thing that makes the call site unable to tell them apart.
 
 Defaults chain, so retuning one carries the states below it unless they are set too —
 `--sidebar-rail-line-dragging` follows `--sidebar-rail-line-hover`, the way `--button-bg-pressed`

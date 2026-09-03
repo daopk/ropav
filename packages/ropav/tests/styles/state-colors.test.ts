@@ -13,6 +13,10 @@ import { describe, expect, it } from "vitest";
  * option is to restate ropav's whole state set behind `:not()`, which drifts silently the day a
  * state is added.
  *
+ * Only a property painted in more than one state needs this. Painted in exactly one, a caller can
+ * name that state from the call site — `hover:bg-*` — and there is no other state for it to
+ * flatten, so a property of its own would be surface for nothing.
+ *
  * This is the part that keeps the convention from drifting back. Everything not yet converted is
  * ledgered below with its count; a new state colour in a clean file fails outright, and one added
  * to a ledgered file pushes its count over and fails too.
@@ -34,6 +38,25 @@ const colorNames = new Set([
 
 const COLOR_UTILITY =
   /^(bg|text|border|ring|fill|stroke|outline|shadow|decoration|caret|placeholder|accent|from|to|via)-(.+)$/;
+
+/** Which property each utility prefix paints, so paints on the same one can be counted together. */
+const PAINTS: Record<string, string> = {
+  accent: "accent-color",
+  bg: "background-color",
+  border: "border-color",
+  caret: "caret-color",
+  decoration: "text-decoration-color",
+  fill: "fill",
+  from: "background-image",
+  outline: "outline-color",
+  placeholder: "color",
+  ring: "box-shadow",
+  shadow: "box-shadow",
+  stroke: "stroke",
+  text: "color",
+  to: "background-image",
+  via: "background-image",
+};
 
 const COLOR_PROPERTY =
   /^(color|background|background-color|border(-[a-z]+)?-color|fill|stroke|outline-color|text-decoration-color|box-shadow)$/;
@@ -73,12 +96,37 @@ const isStateSelector = (selector: string) => {
   );
 };
 
-type Finding = { file: string; line: number; selector: string; what: string };
+type Paint = {
+  file: string;
+  line: number;
+  /** The painted box: class names and pseudo-elements, every state marker stripped. */
+  part: string;
+  property: string;
+  selector: string;
+  state: boolean;
+  /** Already read from a custom property, so there is nothing to flag. */
+  viaProperty: boolean;
+  what: string;
+};
 
-/** Every colour a state rule paints without reading a property first. */
-const audit = () => {
+const STATE_MARKER = /\[[a-z-]+(?:=(?:"[^"]*"|[^\]]*))?\]|:not\([^)]*\)|:is\([^)]*\)/g;
+
+const partOf = (blocks: string[]) =>
+  blocks
+    .filter((block) => !block.startsWith("@"))
+    .join(" ")
+    .replace(STATE_MARKER, "")
+    .replace(STATE_PSEUDO, "")
+    .replaceAll(/[&>,]/g, " ")
+    .split(/\s+/)
+    .filter((token) => token.startsWith(".") || token.startsWith("::"))
+    .sort()
+    .join("");
+
+/** Every colour a component paints, resting and stateful alike. */
+const allPaints = () => {
   const dir = path.join(STYLES, "components");
-  const findings: Finding[] = [];
+  const paints: Paint[] = [];
 
   for (const file of readdirSync(dir).filter((name) => name.endsWith(".css"))) {
     if (file === "index.css") continue;
@@ -115,10 +163,14 @@ const audit = () => {
 
       // Forced Colors Mode has to use the system keywords, which are not a component's to theme.
       if (blocks.some((block) => block.includes("forced-colors"))) continue;
-      if (!blocks.some(isStateSelector)) continue;
 
-      const selector = blocks.filter((block) => !block.startsWith("@")).join(" ");
-      const record = (what: string) => findings.push({ file, line: index + 1, selector, what });
+      const shared = {
+        file,
+        line: index + 1,
+        part: partOf(blocks) || file,
+        selector: blocks.filter((block) => !block.startsWith("@")).join(" "),
+        state: blocks.some(isStateSelector),
+      };
 
       if (line.startsWith("@apply")) {
         for (const utility of line
@@ -130,9 +182,14 @@ const audit = () => {
 
           if (DELEGATED.has(bare)) continue;
 
-          const suffix = COLOR_UTILITY.exec(bare)?.[2];
+          const parts = COLOR_UTILITY.exec(bare);
+          const prefix = parts?.[1];
+          const suffix = parts?.[2];
 
-          if (suffix && (colorNames.has(suffix) || suffix.startsWith("["))) record(bare);
+          if (!prefix || !suffix) continue;
+          if (!colorNames.has(suffix) && !suffix.startsWith("[")) continue;
+
+          paints.push({ ...shared, property: PAINTS[prefix]!, viaProperty: false, what: bare });
         }
 
         continue;
@@ -140,13 +197,34 @@ const audit = () => {
 
       const [, property, value] = /^([a-z-]+)\s*:\s*(.+);$/.exec(line) ?? [];
 
-      if (property && value && COLOR_PROPERTY.test(property) && !value.includes("var(--")) {
-        record(line);
+      if (property && value && COLOR_PROPERTY.test(property)) {
+        paints.push({
+          ...shared,
+          property: property.replace(/^border-[a-z]+-color$/, "border-color"),
+          viaProperty: value.includes("var(--"),
+          what: line,
+        });
       }
     }
   }
 
-  return findings;
+  return paints;
+};
+
+/**
+ * A state colour that has to become a property: the same box paints that property somewhere else
+ * too, so no one declaration from a call site can reach this state alone.
+ */
+const audit = () => {
+  const paints = allPaints();
+  const box = (paint: Paint) => `${paint.file}|${paint.part}|${paint.property}`;
+  const painted = new Map<string, number>();
+
+  for (const paint of paints) painted.set(box(paint), (painted.get(box(paint)) ?? 0) + 1);
+
+  return paints.filter(
+    (paint) => paint.state && !paint.viaProperty && painted.get(box(paint))! > 1,
+  );
 };
 
 /**
@@ -154,40 +232,33 @@ const audit = () => {
  * component means dropping its entry — the goal is an empty object.
  */
 const KNOWN_DEBT: Record<string, number> = {
-  "accordion.css": 1,
   "autocomplete.css": 3,
   "breadcrumbs.css": 1,
-  "calendar-year-picker.css": 6,
-  "calendar.css": 13,
-  "checkbox.css": 18,
+  "calendar-year-picker.css": 5,
+  "calendar.css": 12,
+  "checkbox.css": 16,
   "close-button.css": 1,
   "color-input-group.css": 1,
-  "color-slider.css": 1,
-  "combo-box.css": 3,
+  "combo-box.css": 2,
   "date-input-group.css": 7,
   "input-group.css": 1,
   "input-otp.css": 3,
   "input.css": 1,
   "label.css": 2,
   "link.css": 2,
-  "list-box-item.css": 1,
-  "menu-item.css": 1,
   "number-field.css": 2,
-  "radio-group.css": 1,
-  "radio.css": 5,
-  "range-calendar.css": 12,
+  "range-calendar.css": 10,
   "search-field.css": 1,
   "segmented-control.css": 2,
   "select.css": 2,
-  "switch.css": 3,
+  "switch.css": 2,
   "table.css": 8,
-  "tabs.css": 2,
+  "tabs.css": 1,
   "tag.css": 5,
   "textarea.css": 1,
-  "toast.css": 3,
 };
 
-const describeAll = (findings: Finding[]) =>
+const describeAll = (findings: Paint[]) =>
   findings.map((f) => `${f.file}:${f.line}  ${f.what}  in  ${f.selector}`).join("\n");
 
 const counts = () => {
