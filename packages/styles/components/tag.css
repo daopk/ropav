@@ -4,6 +4,17 @@
 
   @apply relative inline-flex items-center gap-1 rounded-xl font-medium select-none no-highlight;
 
+  /* The fill and label, per state. The variants re-point these and declare nothing else. */
+  --tag-bg: transparent;
+  --tag-bg-hover: var(--tag-bg);
+  --tag-bg-selected: var(--accent-soft);
+  --tag-bg-selected-hover: var(--accent-soft-hover);
+  --tag-fg: currentcolor;
+  --tag-fg-selected: var(--accent-soft-foreground);
+
+  background-color: var(--tag-bg);
+  color: var(--tag-fg);
+
   transition:
     color 100ms var(--ease-smooth),
     scale 100ms var(--ease-smooth),
@@ -22,6 +33,13 @@
   @media (forced-colors: active) {
     outline: 1px solid ButtonBorder;
     outline-offset: -1px;
+  }
+
+  /* Hover state (when not selected or disabled) */
+  @media (hover: hover) {
+    &:is(:hover, [data-hovered="true"]):not([data-selected="true"]):not([data-disabled="true"]) {
+      background-color: var(--tag-bg-hover);
+    }
   }
 
   /* SVG icon styling */
@@ -46,13 +64,15 @@
 
 /* Selected state */
 .tag:is([data-selected="true"], [aria-selected="true"]) {
-  @apply bg-accent-soft text-accent-soft-foreground;
+  background-color: var(--tag-bg-selected);
+  color: var(--tag-fg-selected);
+
   @apply forced-selected;
 
   /* Selected + Hover state */
   @media (hover: hover) {
     &:is(:hover, [data-hovered="true"]) {
-      @apply bg-accent-soft-hover;
+      background-color: var(--tag-bg-selected-hover);
     }
   }
 }
@@ -72,25 +92,15 @@
 
 /* Variant */
 .tag--default {
-  @apply bg-default text-default-foreground;
-
-  /* Hover state (when not selected or disabled) */
-  @media (hover: hover) {
-    &:is(:hover, [data-hovered="true"]):not([data-selected="true"]):not([data-disabled="true"]) {
-      @apply bg-default-hover;
-    }
-  }
+  --tag-bg: var(--default);
+  --tag-bg-hover: var(--default-hover);
+  --tag-fg: var(--default-foreground);
 }
 
 .tag--surface {
-  @apply bg-surface text-surface-foreground;
-
-  /* Hover state (when not selected or disabled) */
-  @media (hover: hover) {
-    &:is(:hover, [data-hovered="true"]):not([data-selected="true"]):not([data-disabled="true"]) {
-      @apply bg-surface-hover;
-    }
-  }
+  --tag-bg: var(--surface);
+  --tag-bg-hover: var(--surface-hover);
+  --tag-fg: var(--surface-foreground);
 }
 
 /* Remove Button  */

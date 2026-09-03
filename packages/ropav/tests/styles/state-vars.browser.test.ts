@@ -15,8 +15,8 @@ import { afterEach, describe, expect, it } from "vitest";
  */
 
 type State = {
-  /** The `data-*` that turns this state on, or `null` for the resting one. */
-  attr: string | null;
+  /** The `data-*`s that turn this state on together, or `null` for the resting one. */
+  attr: string[] | null;
   /** Knobs this state chains through by default, so retuning one of them moves it too. */
   follows?: string[];
   /** The knob a caller sets. */
@@ -54,9 +54,9 @@ const parts: Part[] = [
     stateHost: ".sidebar__rail",
     states: [
       { attr: null, knob: "--sidebar-rail-line", paints: "var(--separator)" },
-      { attr: "data-hovered", knob: "--sidebar-rail-line-hover", paints: "var(--accent)" },
+      { attr: ["data-hovered"], knob: "--sidebar-rail-line-hover", paints: "var(--accent)" },
       {
-        attr: "data-dragging",
+        attr: ["data-dragging"],
         follows: ["--sidebar-rail-line-hover"],
         knob: "--sidebar-rail-line-dragging",
         paints: "var(--accent)",
@@ -71,14 +71,14 @@ const parts: Part[] = [
     stateHost: ".sidebar__item",
     states: [
       { attr: null, knob: "--sidebar-item-bg", paints: "transparent" },
-      { attr: "data-hovered", knob: "--sidebar-item-bg-hover", paints: "var(--default)" },
+      { attr: ["data-hovered"], knob: "--sidebar-item-bg-hover", paints: "var(--default)" },
       {
-        attr: "data-pressed",
+        attr: ["data-pressed"],
         follows: ["--sidebar-item-bg-hover"],
         knob: "--sidebar-item-bg-pressed",
         paints: "var(--default)",
       },
-      { attr: "data-current", knob: "--sidebar-item-bg-current", paints: "var(--accent-soft)" },
+      { attr: ["data-current"], knob: "--sidebar-item-bg-current", paints: "var(--accent-soft)" },
     ],
   },
   {
@@ -90,7 +90,7 @@ const parts: Part[] = [
     states: [
       { attr: null, knob: "--sidebar-item-fg", paints: "var(--foreground)", prop: "color" },
       {
-        attr: "data-current",
+        attr: ["data-current"],
         knob: "--sidebar-item-fg-current",
         paints: "var(--accent-soft-foreground)",
         prop: "color",
@@ -105,8 +105,8 @@ const parts: Part[] = [
     stateHost: ".input",
     states: [
       { attr: null, knob: "--input-bg", paints: "var(--field-background, var(--default))" },
-      { attr: "data-hovered", knob: "--input-bg-hover", paints: "var(--field-hover)" },
-      { attr: "data-focused", knob: "--input-bg-focus", paints: "var(--field-focus)" },
+      { attr: ["data-hovered"], knob: "--input-bg-hover", paints: "var(--field-hover)" },
+      { attr: ["data-focused"], knob: "--input-bg-focus", paints: "var(--field-focus)" },
     ],
   },
   {
@@ -119,8 +119,8 @@ const parts: Part[] = [
     stateHost: ".input",
     states: [
       { attr: null, knob: "--input-bg", paints: "var(--default)" },
-      { attr: "data-hovered", knob: "--input-bg-hover", paints: "var(--default-hover)" },
-      { attr: "data-focused", knob: "--input-bg-focus", paints: "var(--default)" },
+      { attr: ["data-hovered"], knob: "--input-bg-hover", paints: "var(--default-hover)" },
+      { attr: ["data-focused"], knob: "--input-bg-focus", paints: "var(--default)" },
     ],
   },
   {
@@ -134,12 +134,12 @@ const parts: Part[] = [
     states: [
       { attr: null, knob: "--search-field-group-bg", paints: "var(--default)" },
       {
-        attr: "data-hovered",
+        attr: ["data-hovered"],
         knob: "--search-field-group-bg-hover",
         paints: "var(--default-hover)",
       },
       {
-        attr: "data-invalid",
+        attr: ["data-invalid"],
         knob: "--search-field-group-bg-focus",
         paints: "var(--default)",
       },
@@ -161,16 +161,62 @@ const parts: Part[] = [
         prop: "textDecorationColor",
       },
       {
-        attr: "data-hovered",
+        attr: ["data-hovered"],
         knob: "--link-decoration-hover",
         paints: "color-mix(in oklab, var(--muted) 50%, transparent)",
         prop: "textDecorationColor",
       },
       {
-        attr: "data-pressed",
+        attr: ["data-pressed"],
         knob: "--link-decoration-pressed",
         paints: "var(--muted)",
         prop: "textDecorationColor",
+      },
+    ],
+  },
+  {
+    // A variant that re-points the whole set and declares nothing else, plus the first state that
+    // needs two attributes at once.
+    html: `<span class="tag tag--default"></span>`,
+    knobHost: ".tag",
+    name: "the tag's fill",
+    paint: ".tag",
+    stateHost: ".tag",
+    states: [
+      { attr: null, knob: "--tag-bg", paints: "var(--default)" },
+      { attr: ["data-hovered"], knob: "--tag-bg-hover", paints: "var(--default-hover)" },
+      { attr: ["data-selected"], knob: "--tag-bg-selected", paints: "var(--accent-soft)" },
+      {
+        attr: ["data-selected", "data-hovered"],
+        knob: "--tag-bg-selected-hover",
+        paints: "var(--accent-soft-hover)",
+      },
+    ],
+  },
+  {
+    // The states sit on the row but the cell is what paints, so this also covers a knob read one
+    // level below where the state lives.
+    html: `<table><tbody><tr class="table__row"><td class="table__cell"></td></tr></tbody></table>`,
+    knobHost: ".table__cell",
+    name: "the table row's fill",
+    paint: ".table__cell",
+    stateHost: ".table__row",
+    states: [
+      { attr: null, knob: "--table-cell-bg", paints: "var(--surface)" },
+      {
+        attr: ["data-hovered"],
+        knob: "--table-cell-bg-hover",
+        paints: "color-mix(in oklab, var(--surface) 40%, transparent)",
+      },
+      {
+        attr: ["data-selected"],
+        knob: "--table-cell-bg-selected",
+        paints: "color-mix(in oklab, var(--surface) 10%, transparent)",
+      },
+      {
+        attr: ["data-drop-target"],
+        knob: "--table-cell-bg-drop-target",
+        paints: "var(--accent-soft)",
       },
     ],
   },
@@ -183,9 +229,9 @@ const parts: Part[] = [
     stateHost: ".splitter__handle",
     states: [
       { attr: null, knob: "--splitter-line", paints: "var(--separator)" },
-      { attr: "data-hovered", knob: "--splitter-line-hover", paints: "var(--accent)" },
+      { attr: ["data-hovered"], knob: "--splitter-line-hover", paints: "var(--accent)" },
       {
-        attr: "data-dragging",
+        attr: ["data-dragging"],
         follows: ["--splitter-line-hover"],
         knob: "--splitter-line-dragging",
         paints: "var(--accent)",
@@ -200,9 +246,9 @@ const parts: Part[] = [
     stateHost: ".splitter__handle",
     states: [
       { attr: null, knob: "--splitter-grip-bg", paints: "var(--separator)" },
-      { attr: "data-hovered", knob: "--splitter-grip-bg-hover", paints: "var(--accent)" },
+      { attr: ["data-hovered"], knob: "--splitter-grip-bg-hover", paints: "var(--accent)" },
       {
-        attr: "data-dragging",
+        attr: ["data-dragging"],
         follows: ["--splitter-grip-bg-hover"],
         knob: "--splitter-grip-bg-dragging",
         paints: "var(--accent)",
@@ -246,7 +292,7 @@ const setUp = (part: Part, state: State) => {
   const root = mount(part.html);
   const stateHost = root.querySelector(part.stateHost)!;
 
-  if (state.attr) stateHost.setAttribute(state.attr, "true");
+  for (const attr of state.attr ?? []) stateHost.setAttribute(attr, "true");
 
   return root;
 };

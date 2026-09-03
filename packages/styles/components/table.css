@@ -92,14 +92,10 @@
 /* Secondary: rows are transparent and keep bottom border on every row */
 .table-root--secondary .table__row {
   .table__cell {
-    @apply border-b border-separator-tertiary/50 bg-transparent;
-  }
+    @apply border-b border-separator-tertiary/50;
 
-  @media (hover: hover) {
-    &:hover .table__cell,
-    &[data-hovered="true"] .table__cell {
-      @apply bg-default/50;
-    }
+    --table-cell-bg: transparent;
+    --table-cell-bg-hover: color-mix(in oklab, var(--default) 50%, transparent);
   }
 }
 
@@ -126,7 +122,12 @@
    Table Column (<th>)
    -------------------------------------------------------------------------- */
 .table__column {
-  @apply relative px-4 py-2.5 text-start text-xs font-medium text-muted;
+  @apply relative px-4 py-2.5 text-start text-xs font-medium;
+
+  --table-column-fg: var(--muted);
+  --table-column-fg-hover: var(--foreground);
+
+  color: var(--table-column-fg);
 
   /* Separator between columns — a short vertical line on the right edge */
   &::after {
@@ -146,7 +147,7 @@
   @media (hover: hover) {
     &[data-allows-sorting="true"]:hover,
     &[data-allows-sorting="true"][data-hovered="true"] {
-      @apply text-foreground;
+      color: var(--table-column-fg-hover);
     }
   }
 
@@ -232,13 +233,14 @@
   @media (hover: hover) {
     &:hover .table__cell,
     &[data-hovered="true"] .table__cell {
-      @apply bg-surface/40;
+      background-color: var(--table-cell-bg-hover);
     }
   }
 
   /* Selected state */
   &[data-selected="true"] .table__cell {
-    @apply bg-surface/10;
+    background-color: var(--table-cell-bg-selected);
+
     @apply forced-selected;
   }
 
@@ -261,7 +263,7 @@
 
   /* Drop target state */
   &[data-drop-target="true"] .table__cell {
-    @apply bg-accent-soft;
+    background-color: var(--table-cell-bg-drop-target);
   }
 }
 
@@ -269,7 +271,16 @@
    Table Cell (<td>)
    -------------------------------------------------------------------------- */
 .table__cell {
-  @apply h-full bg-surface px-4 py-3 align-middle text-sm text-foreground;
+  @apply h-full px-4 py-3 align-middle text-sm text-foreground;
+
+  /* The row's fill, per state, declared on the cell because that is what paints — Firefox clips a
+   * row's own background outside the border radius. `.table-root--secondary` re-points two. */
+  --table-cell-bg: var(--surface);
+  --table-cell-bg-hover: color-mix(in oklab, var(--surface) 40%, transparent);
+  --table-cell-bg-selected: color-mix(in oklab, var(--surface) 10%, transparent);
+  --table-cell-bg-drop-target: var(--accent-soft);
+
+  background-color: var(--table-cell-bg);
 
   @apply border-b border-separator-tertiary/50;
 
@@ -354,24 +365,37 @@
    -------------------------------------------------------------------------- */
 .table__column-resizer {
   /* Match the ::after separator: absolute, right edge, short vertical line */
-  @apply absolute end-0 top-1/2 h-4 w-px -translate-y-1/2 rounded-sm bg-separator;
+  @apply absolute end-0 top-1/2 h-4 w-px -translate-y-1/2 rounded-sm;
   /* Make it interactive — wider hit area with transparent padding */
   @apply box-content translate-x-1/2 cursor-col-resize touch-none px-2;
   /* Reset appearance */
   @apply border-none bg-clip-content outline-none;
 
+  --table-resizer-bg: var(--separator);
+  --table-resizer-bg-hover: var(--accent);
+  --table-resizer-bg-resizing: var(--table-resizer-bg-hover);
+  --table-resizer-bg-focus-visible: var(--focus);
+
+  background-color: var(--table-resizer-bg);
+
   &[data-hovered="true"],
   &:hover {
-    @apply h-full w-0.5 bg-accent;
+    @apply h-full w-0.5;
+
+    background-color: var(--table-resizer-bg-hover);
   }
 
   &[data-resizing="true"] {
-    @apply h-full w-0.5 bg-accent;
+    @apply h-full w-0.5;
+
+    background-color: var(--table-resizer-bg-resizing);
   }
 
   &[data-focus-visible="true"],
   &:focus-visible {
-    @apply h-full w-0.5 bg-focus;
+    @apply h-full w-0.5;
+
+    background-color: var(--table-resizer-bg-focus-visible);
   }
 }
 

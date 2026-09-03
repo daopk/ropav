@@ -1,6 +1,13 @@
 /* Date input group styles */
 .date-input-group {
-  @apply inline-flex h-9 items-center overflow-hidden rounded-field border bg-field text-sm text-field-foreground shadow-field outline-none;
+  @apply inline-flex h-9 items-center overflow-hidden rounded-field border text-sm text-field-foreground shadow-field outline-none;
+
+  /* The fill, per state. The `--secondary` variant re-points these and declares nothing else. */
+  --date-input-group-bg: var(--field-background, var(--default));
+  --date-input-group-bg-hover: var(--field-hover);
+  --date-input-group-bg-focus: var(--field-focus);
+
+  background-color: var(--date-input-group-bg);
   border-width: var(--border-width-field);
   border-color: var(--field-border);
 
@@ -23,7 +30,7 @@
   @media (hover: hover) {
     &:hover:not(:focus-within),
     &[data-hovered="true"]:not([data-focus-within="true"]) {
-      @apply bg-field-hover;
+      background-color: var(--date-input-group-bg-hover);
       border-color: var(--field-border-hover);
     }
   }
@@ -51,7 +58,7 @@
   /* Invalid state */
   &[data-invalid="true"] {
     @apply status-invalid-field;
-    background-color: var(--field-focus);
+    background-color: var(--date-input-group-bg-focus);
     border-color: var(--color-field-border-invalid);
   }
 
@@ -101,20 +108,38 @@
 .date-input-group__segment {
   @apply inline-block rounded-md px-0.5 text-end text-nowrap outline-none;
 
+  /* The fill and the digits, per state. Five states repaint the text here, so a caller retuning
+   * any one of them from a single declaration would take the other four with it. */
+  --date-input-group-segment-bg: transparent;
+  --date-input-group-segment-bg-focused: var(--accent-soft);
+  --date-input-group-segment-bg-invalid-focused: var(--danger-soft);
+  --date-input-group-segment-fg: currentcolor;
+  --date-input-group-segment-fg-literal: var(--muted);
+  --date-input-group-segment-fg-placeholder: var(--field-placeholder, var(--muted));
+  --date-input-group-segment-fg-focused: var(--accent-soft-foreground);
+  --date-input-group-segment-fg-invalid: var(--danger);
+  --date-input-group-segment-fg-invalid-focused: var(--danger-soft-foreground);
+
+  background-color: var(--date-input-group-segment-bg);
+  color: var(--date-input-group-segment-fg);
+
   /* Segment separators styling "/" */
   &[data-type="literal"] {
-    @apply p-0 text-muted;
+    @apply p-0;
+
+    color: var(--date-input-group-segment-fg-literal);
   }
 
   /* Placeholder styling */
   &[data-placeholder="true"] {
-    @apply text-field-placeholder;
+    color: var(--date-input-group-segment-fg-placeholder);
   }
 
   /* Focused segment */
   &:focus,
   &[data-focused="true"] {
-    @apply bg-accent-soft text-accent-soft-foreground;
+    background-color: var(--date-input-group-segment-bg-focused);
+    color: var(--date-input-group-segment-fg-focused);
   }
 
   /* Disabled segment */
@@ -124,12 +149,13 @@
 
   /* Invalid segment */
   &[data-invalid="true"] {
-    @apply text-danger;
+    color: var(--date-input-group-segment-fg-invalid);
 
     /* Focused segment */
     &:focus,
     &[data-focused="true"] {
-      @apply bg-danger-soft text-danger-soft-foreground;
+      background-color: var(--date-input-group-segment-bg-invalid-focused);
+      color: var(--date-input-group-segment-fg-invalid-focused);
     }
   }
 }
@@ -151,30 +177,10 @@
 
 .date-input-group--secondary {
   @apply shadow-none;
-  background-color: var(--date-input-group-bg);
 
   --date-input-group-bg: var(--default);
   --date-input-group-bg-hover: var(--default-hover);
   --date-input-group-bg-focus: var(--default);
-
-  @media (hover: hover) {
-    &:hover:not(:focus-within),
-    &[data-hovered="true"]:not([data-focus-within="true"]) {
-      background-color: var(--date-input-group-bg-hover);
-    }
-  }
-
-  &:focus-within,
-  &[data-focus-within="true"] {
-    background-color: var(--date-input-group-bg-focus);
-  }
-
-  /* Invalid state */
-  &[data-invalid="true"] {
-    @apply status-invalid-field;
-    border-color: var(--color-field-border-invalid);
-    background-color: var(--date-input-group-bg-focus);
-  }
 
   [data-slot="date-input-group-input"] {
     @apply bg-transparent;

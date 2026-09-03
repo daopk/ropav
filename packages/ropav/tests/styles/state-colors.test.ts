@@ -245,10 +245,7 @@ const KNOWN_DEBT: Record<string, number> = {
   "calendar-year-picker.css": 5,
   "calendar.css": 12,
   "checkbox.css": 16,
-  "date-input-group.css": 7,
   "range-calendar.css": 10,
-  "table.css": 8,
-  "tag.css": 5,
 };
 
 const describeAll = (findings: Paint[]) =>
