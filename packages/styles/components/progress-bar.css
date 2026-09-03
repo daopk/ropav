@@ -13,6 +13,12 @@
   /* Default color token (accent) */
   --progress-bar-fill: var(--accent);
 
+  /* Derived from the fill rather than declared per colour: mixing toward the track's own colour
+   * lands lighter in the light theme and darker in the dark one, so the band separates whichever
+   * side of the fill it falls on. */
+  --progress-bar-stripe: color-mix(in oklab, var(--progress-bar-fill) 80%, var(--default));
+  --progress-bar-stripe-size: 1rem;
+
   [data-slot="label"] {
     @apply w-fit text-sm font-medium;
 
@@ -100,6 +106,10 @@
    ========================================================================== */
 
 .progress-bar--sm {
+  /* One 1rem tile spans more than the track is tall, so a 4px bar would show a single smear
+   * rather than a run of stripes. The tile tracks the height instead. */
+  --progress-bar-stripe-size: 0.5rem;
+
   .progress-bar__track {
     @apply h-1;
   }
@@ -110,6 +120,8 @@
 }
 
 .progress-bar--lg {
+  --progress-bar-stripe-size: 1.25rem;
+
   .progress-bar__track {
     @apply h-3;
   }
@@ -137,4 +149,66 @@
 
 .progress-bar--danger {
   --progress-bar-fill: var(--danger);
+}
+
+/* ==========================================================================
+   Stripes
+
+   The band paints on the fill's `::after`, not on the fill. `animation` on the fill itself is
+   already spoken for by the indeterminate slide, at a specificity a modifier class does not
+   reach, so a band put there would be the one that loses. On a box of its own it composes with
+   the slide instead of trading places with it.
+   ========================================================================== */
+
+.progress-bar--striped,
+.progress-bar--animated {
+  .progress-bar__fill::after {
+    @apply absolute inset-0 content-[''];
+
+    border-radius: inherit;
+
+    /* Tiled by `background-size` rather than repeated by the gradient, so one tile is exactly the
+     * distance the animation travels and the loop closes without a seam. */
+    background-image: linear-gradient(
+      45deg,
+      var(--progress-bar-stripe) 25%,
+      transparent 25% 50%,
+      var(--progress-bar-stripe) 50% 75%,
+      transparent 75%
+    );
+    background-size: var(--progress-bar-stripe-size) var(--progress-bar-stripe-size);
+  }
+
+  /* Forced colors flattens the fill to `Highlight` and leaves this `background-image` painting over
+   * it in author colours. */
+  @media (forced-colors: active) {
+    .progress-bar__fill::after {
+      content: none;
+    }
+  }
+}
+
+.progress-bar--animated {
+  .progress-bar__fill {
+    /* On the host, not inside the `::after` block: the variant carries its own `::before`/`::after`
+     * slot, and written under the pseudo-element instead its ancestor condition would land after
+     * the pseudo-element and compile to an empty `:is()`. Stopped this way the band stays put
+     * rather than disappearing, which is `--striped`. */
+    @apply motion-reduce:animate-none;
+
+    &::after {
+      animation: progress-bar-stripes 1s linear infinite;
+    }
+
+    /* Travelling toward the inline end is what reads as progress; in RTL that is the other way. */
+    &:dir(rtl)::after {
+      animation-direction: reverse;
+    }
+  }
+}
+
+@keyframes progress-bar-stripes {
+  to {
+    background-position-x: var(--progress-bar-stripe-size);
+  }
 }

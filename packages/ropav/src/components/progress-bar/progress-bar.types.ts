@@ -5,6 +5,13 @@ export interface ProgressBarRootProps {
   class?: string;
   color?: ProgressBarVariants["color"];
   size?: ProgressBarVariants["size"];
+  /** Whether a diagonal band is laid over the fill. */
+  isStriped?: boolean;
+  /**
+   * Whether the band travels. Turns the band on by itself, so `isStriped` is only needed for a
+   * still one. Under reduced motion it settles into that still band rather than disappearing.
+   */
+  isAnimated?: boolean;
   /** Current progress. @default 0 */
   value?: number;
   /** @default 0 */

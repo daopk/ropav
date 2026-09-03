@@ -5,6 +5,8 @@ import { tv } from "tailwind-variants";
 export const progressBarVariants = tv({
   defaultVariants: {
     color: "accent",
+    isAnimated: false,
+    isStriped: false,
     size: "md",
   },
   slots: {
@@ -29,6 +31,18 @@ export const progressBarVariants = tv({
       },
       warning: {
         base: "progress-bar--warning",
+      },
+    },
+    isAnimated: {
+      false: {},
+      true: {
+        base: "progress-bar--animated",
+      },
+    },
+    isStriped: {
+      false: {},
+      true: {
+        base: "progress-bar--striped",
       },
     },
     size: {

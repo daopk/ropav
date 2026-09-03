@@ -28,7 +28,14 @@ const state = useProgressValue({
   value: () => props.value,
   valueLabel: () => props.valueLabel,
 });
-const slots = computed(() => progressBarVariants({ color: props.color, size: props.size }));
+const slots = computed(() =>
+  progressBarVariants({
+    color: props.color,
+    isAnimated: props.isAnimated,
+    isStriped: props.isStriped,
+    size: props.size,
+  }),
+);
 
 provideProgressBarContext({ slots, state });
 </script>

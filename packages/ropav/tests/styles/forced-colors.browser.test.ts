@@ -210,6 +210,21 @@ describe("forced colors mode (browser)", () => {
     expect(styleOf(fill).backgroundColor).toBe(systemColor("Highlight"));
   });
 
+  it("takes the progress bar's band off the flattened fill", () => {
+    // The override forces `background-color` and leaves `background-image` alone, so the band
+    // would go on painting in author colours over the `Highlight` the fill became - handing back
+    // exactly the contrast the flattening bought.
+    const host = mount(`
+      <div class="progress-bar progress-bar--animated">
+        <div class="progress-bar__track"><div class="progress-bar__fill"></div></div>
+      </div>
+    `);
+    const fill = host.querySelector<HTMLElement>(".progress-bar__fill")!;
+
+    expect(styleOf(fill).backgroundColor).toBe(systemColor("Highlight"));
+    expect(styleOf(fill, "::after").content).toBe("none");
+  });
+
   it("keeps the progress ring's arc apart from its track", () => {
     // Forced colors leaves SVG strokes alone, so this one renders in the library's own palette
     // unless it is mapped over. The track steps aside rather than taking a keyword: every one

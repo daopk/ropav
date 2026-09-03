@@ -41,6 +41,21 @@ describe("ProgressBar under a vdom host", () => {
     unmount();
   });
 
+  it("carries the band's modifier onto host-authored parts", () => {
+    const { container, unmount } = renderInterop(ProgressBarRoot, {
+      props: { isAnimated: true, value: 40 },
+      slots: {
+        default: () => [h(ProgressBarTrack, null, { default: () => h(ProgressBarFill) })],
+      },
+    });
+
+    expect(container.querySelector('[data-slot="progress-bar"]')).toHaveClass(
+      "progress-bar--animated",
+    );
+
+    unmount();
+  });
+
   it("keeps host-authored parts indeterminate", () => {
     const { container, unmount } = render(true);
 

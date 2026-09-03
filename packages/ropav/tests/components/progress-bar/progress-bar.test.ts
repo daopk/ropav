@@ -121,6 +121,27 @@ describe("ProgressBar", () => {
     unmount();
   });
 
+  it.each([
+    ["isAnimated", "progress-bar--animated"],
+    ["isStriped", "progress-bar--striped"],
+  ] as const)("applies the %s modifier", (prop, expected) => {
+    const { container, unmount } = renderVapor(Fixture, { props: { [prop]: true } });
+
+    expect(part(container, "progress-bar")).toHaveClass(expected);
+
+    unmount();
+  });
+
+  it("leaves a bar nobody asked to band unbanded", () => {
+    const { container, unmount } = renderVapor(Fixture, { props: { value: 60 } });
+
+    expect(part(container, "progress-bar")?.className).not.toMatch(
+      /progress-bar--(animated|striped)/,
+    );
+
+    unmount();
+  });
+
   it("merges caller classes onto every public part", () => {
     const { container, unmount } = renderVapor(Fixture, {
       props: {
