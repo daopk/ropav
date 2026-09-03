@@ -1,6 +1,8 @@
 /* Base styles */
 .chip {
-  @apply inline-flex w-fit shrink-0 items-center gap-0.5 rounded-2xl px-2 py-0.5 text-xs leading-5 font-medium;
+  @apply inline-flex w-fit shrink-0 items-center gap-0.5 px-2 py-0.5 text-xs leading-5 font-medium;
+
+  border-radius: min(32px, var(--component-radius));
 
   /* Default tokens */
   --chip-bg: var(--default);

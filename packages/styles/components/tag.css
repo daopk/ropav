@@ -2,7 +2,9 @@
 .tag {
   --optical-offset: 0.031em;
 
-  @apply relative inline-flex items-center gap-1 rounded-xl font-medium select-none no-highlight;
+  @apply relative inline-flex items-center gap-1 font-medium select-none no-highlight;
+
+  border-radius: min(32px, var(--component-radius));
 
   /* The fill and label, per state. The variants re-point these and declare nothing else. */
   --tag-bg: transparent;
@@ -87,7 +89,7 @@
 }
 
 .tag--lg {
-  @apply rounded-2xl px-2.5 py-1.5 text-sm;
+  @apply px-2.5 py-1.5 text-sm;
 }
 
 /* Variant */

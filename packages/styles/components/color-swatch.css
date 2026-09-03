@@ -17,7 +17,7 @@
 }
 
 .color-swatch--square {
-  @apply rounded-md;
+  border-radius: min(32px, var(--component-radius));
 }
 
 /* Size variants */

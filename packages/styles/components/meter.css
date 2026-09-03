@@ -26,7 +26,9 @@
   }
 
   .meter__track {
-    @apply relative overflow-hidden rounded-sm bg-default;
+    @apply relative overflow-hidden bg-default;
+
+    border-radius: min(32px, var(--component-radius));
 
     grid-area: track;
 
@@ -43,7 +45,9 @@
   }
 
   .meter__fill {
-    @apply absolute start-0 top-0 h-full rounded-sm;
+    @apply absolute start-0 top-0 h-full;
+
+    border-radius: min(32px, var(--component-radius));
 
     background-color: var(--meter-fill);
 
@@ -73,11 +77,7 @@
 
 .meter--sm {
   .meter__track {
-    @apply h-1 rounded-xs;
-  }
-
-  .meter__fill {
-    @apply rounded-xs;
+    @apply h-1;
   }
 }
 
@@ -87,11 +87,7 @@
 
 .meter--lg {
   .meter__track {
-    @apply h-3 rounded-md;
-  }
-
-  .meter__fill {
-    @apply rounded-md;
+    @apply h-3;
   }
 }
 
