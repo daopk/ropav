@@ -124,6 +124,28 @@ const parts: Part[] = [
     ],
   },
   {
+    // The variant here is an ancestor rather than the element itself, so it also covers a knob
+    // re-pointed from one selector up.
+    html: `<div class="search-field--secondary"><div class="search-field__group"></div></div>`,
+    knobHost: ".search-field__group",
+    name: "the secondary search field's group",
+    paint: ".search-field__group",
+    stateHost: ".search-field__group",
+    states: [
+      { attr: null, knob: "--search-field-group-bg", paints: "var(--default)" },
+      {
+        attr: "data-hovered",
+        knob: "--search-field-group-bg-hover",
+        paints: "var(--default-hover)",
+      },
+      {
+        attr: "data-invalid",
+        knob: "--search-field-group-bg-focus",
+        paints: "var(--default)",
+      },
+    ],
+  },
+  {
     html: SPLITTER,
     knobHost: ".splitter__handle",
     name: "the splitter handle's line",

@@ -15,7 +15,14 @@
 }
 
 .number-field__group {
-  @apply grid h-9 items-center overflow-hidden rounded-field border bg-field text-sm text-field-foreground shadow-field outline-none;
+  @apply grid h-9 items-center overflow-hidden rounded-field border text-sm text-field-foreground shadow-field outline-none;
+
+  /* The fill, per state. The `--secondary` variant re-points these and declares nothing else. */
+  --number-field-group-bg: var(--field-background, var(--default));
+  --number-field-group-bg-hover: var(--field-hover);
+  --number-field-group-bg-focus: var(--field-focus);
+
+  background-color: var(--number-field-group-bg);
   border-width: var(--border-width-field);
   border-color: var(--field-border);
 
@@ -50,7 +57,7 @@
   @media (hover: hover) {
     &:hover:not(:focus-within),
     &[data-hovered="true"]:not([data-focus-within="true"]) {
-      @apply bg-field-hover;
+      background-color: var(--number-field-group-bg-hover);
       border-color: var(--field-border-hover);
     }
   }
@@ -60,13 +67,13 @@
   &:focus-within {
     @apply status-focused-field;
     border-color: var(--field-border-focus);
-    background-color: var(--field-focus);
+    background-color: var(--number-field-group-bg-focus);
   }
 
   /* Invalid state */
   &[data-invalid="true"] {
     @apply status-invalid-field;
-    background-color: var(--field-focus);
+    background-color: var(--number-field-group-bg-focus);
     border-color: var(--color-field-border-invalid);
   }
 
@@ -87,7 +94,7 @@
    */
   &:has([data-slot="number-field-input"]:-webkit-autofill),
   &:has([data-slot="number-field-input"]:autofill) {
-    background-color: var(--field-focus);
+    background-color: var(--number-field-group-bg-focus);
     border-color: var(--field-border-focus);
   }
 }
@@ -192,30 +199,10 @@
 
 .number-field--secondary .number-field__group {
   @apply shadow-none;
-  background-color: var(--number-field-group-bg);
 
   --number-field-group-bg: var(--default);
   --number-field-group-bg-hover: var(--default-hover);
   --number-field-group-bg-focus: var(--default);
-
-  @media (hover: hover) {
-    &:hover:not(:focus-within),
-    &[data-hovered="true"]:not([data-focus-within="true"]) {
-      background-color: var(--number-field-group-bg-hover);
-    }
-  }
-
-  &:focus-within,
-  &[data-focus-within="true"] {
-    background-color: var(--number-field-group-bg-focus);
-  }
-
-  /* Invalid state */
-  &[data-invalid="true"] {
-    @apply status-invalid-field;
-    border-color: var(--color-field-border-invalid);
-    background-color: var(--number-field-group-bg-focus);
-  }
 
   [data-slot="number-field-input"] {
     @apply bg-transparent;

@@ -15,7 +15,14 @@
 }
 
 .select__trigger {
-  @apply relative isolate inline-flex min-h-9 rounded-field border bg-field px-3 field-line-md text-field-foreground shadow-field outline-none select-none no-highlight;
+  @apply relative isolate inline-flex min-h-9 rounded-field border px-3 field-line-md text-field-foreground shadow-field outline-none select-none no-highlight;
+
+  /* The fill, per state. The `--secondary` variant re-points these and declares nothing else. */
+  --select-trigger-bg: var(--field-background, var(--default));
+  --select-trigger-bg-hover: var(--field-hover);
+  --select-trigger-bg-focus: var(--field-focus);
+
+  background-color: var(--select-trigger-bg);
 
   /* Forced Colors Mode flattens the fill onto the page and strips the shadow, leaving a field that
    * reads as bare text - `--border-width-field` is 0, so the declared border brings nothing back on
@@ -47,7 +54,7 @@
   @media (hover: hover) {
     &:hover,
     &[data-hovered="true"] {
-      @apply bg-field-hover;
+      background-color: var(--select-trigger-bg-hover);
       border-color: var(--field-border-hover);
     }
   }
@@ -57,7 +64,7 @@
   &[data-focus-visible="true"] {
     @apply status-focused;
     border-color: var(--field-border-focus);
-    background-color: var(--field-focus);
+    background-color: var(--select-trigger-bg-focus);
   }
 
   /* Focus state */
@@ -69,7 +76,7 @@
   .select[data-invalid="true"] &,
   .select[aria-invalid="true"] & {
     @apply status-invalid-field;
-    background-color: var(--field-focus);
+    background-color: var(--select-trigger-bg-focus);
   }
 
   /* Disabled state */
@@ -87,32 +94,10 @@
 
 .select--secondary .select__trigger {
   @apply shadow-none;
-  background-color: var(--select-trigger-bg);
 
   --select-trigger-bg: var(--default);
   --select-trigger-bg-hover: var(--default-hover);
   --select-trigger-bg-focus: var(--default);
-
-  @media (hover: hover) {
-    &:hover,
-    &[data-hovered="true"] {
-      background-color: var(--select-trigger-bg-hover);
-    }
-  }
-
-  &:focus-visible:not(:focus),
-  &[data-focus-visible="true"] {
-    background-color: var(--select-trigger-bg-focus);
-  }
-
-  &:focus,
-  &[data-focus="true"] {
-  }
-
-  .select[data-invalid="true"] &,
-  .select[aria-invalid="true"] & {
-    background-color: var(--select-trigger-bg-focus);
-  }
 }
 
 .select__value {
