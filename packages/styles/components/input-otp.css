@@ -15,7 +15,14 @@
 /* Individual slot box - fully rounded, standalone */
 .input-otp__slot {
   @apply relative flex h-10 w-9.5 min-w-0 flex-1 items-center justify-center;
-  @apply border bg-field text-field-foreground shadow-field;
+  @apply border text-field-foreground shadow-field;
+
+  /* The fill, per state. The `--secondary` variant re-points these and declares nothing else. */
+  --input-otp-slot-bg: var(--field-background, var(--default));
+  --input-otp-slot-bg-hover: var(--field-hover);
+  --input-otp-slot-bg-focus: var(--field-focus);
+
+  background-color: var(--input-otp-slot-bg);
   @apply rounded-field text-sm font-semibold outline-none;
 
   border-width: var(--border-width-field);
@@ -31,19 +38,21 @@
   @media (hover: hover) {
     &:hover,
     &[data-hovered="true"] {
-      @apply bg-field-hover;
+      background-color: var(--input-otp-slot-bg-hover);
       border-color: var(--field-border-hover);
     }
   }
 
   /* Active/Focus */
   &[data-active="true"] {
-    @apply z-10 bg-field-focus status-focused-field;
+    @apply z-10 status-focused-field;
+
+    background-color: var(--input-otp-slot-bg-focus);
   }
 
   /* Filled */
   &[data-filled="true"] {
-    @apply bg-field-focus;
+    background-color: var(--input-otp-slot-bg-focus);
   }
 
   /* Disabled */
@@ -54,7 +63,7 @@
   /* Invalid */
   &[data-invalid="true"] {
     @apply status-invalid-field;
-    background-color: var(--field-focus);
+    background-color: var(--input-otp-slot-bg-focus);
   }
 }
 
@@ -84,23 +93,10 @@
 
 .input-otp--secondary .input-otp__slot {
   @apply shadow-none;
-  background-color: var(--input-otp-slot-bg);
 
   --input-otp-slot-bg: var(--default);
   --input-otp-slot-bg-hover: var(--default-hover);
   --input-otp-slot-bg-focus: var(--default);
-
-  @media (hover: hover) {
-    &:hover,
-    &[data-hovered="true"] {
-      background-color: var(--input-otp-slot-bg-hover);
-    }
-  }
-
-  &[data-active="true"],
-  &[data-filled="true"] {
-    background-color: var(--input-otp-slot-bg-focus);
-  }
 }
 
 /* Animations */

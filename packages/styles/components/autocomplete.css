@@ -105,10 +105,15 @@
 }
 
 .autocomplete__value {
-  @apply flex-1 text-start wrap-break-word text-current;
+  @apply flex-1 text-start wrap-break-word;
+
+  --autocomplete-value-fg: currentcolor;
+  --autocomplete-value-fg-placeholder: var(--field-placeholder, var(--muted));
+
+  color: var(--autocomplete-value-fg);
 
   &[data-placeholder="true"] {
-    @apply text-field-placeholder;
+    color: var(--autocomplete-value-fg-placeholder);
   }
 
   /* Removes the list-box-item indicator element from the autocomplete value*/

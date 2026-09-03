@@ -43,10 +43,15 @@
 }
 
 .combo-box__value {
-  @apply text-sm wrap-break-word text-field-foreground empty:hidden;
+  @apply text-sm wrap-break-word empty:hidden;
+
+  --combo-box-value-fg: var(--field-foreground, var(--foreground));
+  --combo-box-value-fg-placeholder: var(--field-placeholder, var(--muted));
+
+  color: var(--combo-box-value-fg);
 
   &[data-placeholder="true"] {
-    @apply text-field-placeholder;
+    color: var(--combo-box-value-fg-placeholder);
   }
 
   /* Removes the list-box-item indicator element from the combo-box value */

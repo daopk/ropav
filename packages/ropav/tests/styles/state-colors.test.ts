@@ -178,7 +178,8 @@ const allPaints = () => {
           .replace(/;$/, "")
           .split(/\s+/)) {
           // Drop any variant prefix, the `!` and an opacity modifier — `hover:bg-default/50!`.
-          const [bare = ""] = (utility.replace(/!$/, "").split(":").pop() ?? "").split("/");
+          const variants = utility.replace(/!$/, "");
+          const [bare = ""] = (variants.split(":").pop() ?? "").split("/");
 
           if (DELEGATED.has(bare)) continue;
 
@@ -189,7 +190,16 @@ const allPaints = () => {
           if (!prefix || !suffix) continue;
           if (!colorNames.has(suffix) && !suffix.startsWith("[")) continue;
 
-          paints.push({ ...shared, property: PAINTS[prefix]!, viaProperty: false, what: bare });
+          // `after:bg-*` paints the pseudo-element, which is a different box from the element.
+          const pseudo = /(?:^|:)(before|after):/.exec(variants);
+
+          paints.push({
+            ...shared,
+            part: shared.part + (pseudo ? `::${pseudo[1]}` : ""),
+            property: PAINTS[prefix]!,
+            viaProperty: false,
+            what: bare,
+          });
         }
 
         continue;
@@ -232,22 +242,19 @@ const audit = () => {
  * component means dropping its entry — the goal is an empty object.
  */
 const KNOWN_DEBT: Record<string, number> = {
-  "autocomplete.css": 3,
+  "autocomplete.css": 2,
   "breadcrumbs.css": 1,
   "calendar-year-picker.css": 5,
   "calendar.css": 12,
   "checkbox.css": 16,
   "close-button.css": 1,
-  "combo-box.css": 2,
+  "combo-box.css": 1,
   "date-input-group.css": 7,
-  "input-group.css": 1,
-  "input-otp.css": 3,
-  "label.css": 2,
+  "label.css": 1,
   "link.css": 2,
   "number-field.css": 1,
   "range-calendar.css": 10,
   "segmented-control.css": 2,
-  "select.css": 1,
   "switch.css": 2,
   "table.css": 8,
   "tabs.css": 1,
