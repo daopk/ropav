@@ -99,6 +99,17 @@ describe("mounted from a VDOM host", () => {
     expect(slot(container, "sidebar-rail").getAttribute("aria-controls")).toBe(panelId);
   });
 
+  /* Three parts the root never rendered itself, each dressed from a variant only the root resolved
+   * — and two of them resolving a variant of their own where they stand, which the shell's has to
+   * survive. */
+  it("dresses every part from the shell's variant", () => {
+    const { container } = mount({ variant: "inset" });
+
+    expect(slot(container, "sidebar-panel").className).toContain("sidebar__panel--bare");
+    expect(slot(container, "sidebar-inset").className).toContain("sidebar__inset--card");
+    expect(slot(container, "sidebar-rail").className).toContain("sidebar__rail--quiet");
+  });
+
   /* The state has to reach parts the root never rendered itself, which is the whole point. */
   it("tells every part about a collapse", async () => {
     const { container } = mount();

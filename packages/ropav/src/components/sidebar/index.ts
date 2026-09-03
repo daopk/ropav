@@ -101,6 +101,7 @@ export type {
   SidebarItemIndicatorProps,
   SidebarSubMenuProps,
   SidebarSide,
+  SidebarVariant,
   SidebarSlotProps,
   SidebarPartSlotProps,
   SidebarTriggerSlotProps,

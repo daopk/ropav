@@ -16,6 +16,7 @@ export const sidebarVariants = tv({
   defaultVariants: {
     collapsible: "icon",
     side: "left",
+    variant: "sidebar",
   },
   slots: {
     base: "sidebar",
@@ -87,6 +88,28 @@ export const sidebarVariants = tv({
         base: "sidebar--right",
         panel: "sidebar__panel--right",
       },
+    },
+    /*
+     * How much chrome the shell paints. Each slot's modifier is named for what that slot does
+     * rather than for the value, the way `inDrawer` becomes `--drawer` and `isSub` becomes
+     * `--sub`: `inset` is already a slot, so echoing the value would read `sidebar__inset--inset`,
+     * and `sidebar__panel--inset` would be false besides — under it the panel is the bare one and
+     * the inset is the card.
+     *
+     * `sidebar` emits nothing, because the base rules already are that look. A modifier saying so
+     * would be an empty rule restating the block above it.
+     */
+    variant: {
+      floating: {
+        panel: "sidebar__panel--floating",
+        rail: "sidebar__rail--quiet",
+      },
+      inset: {
+        inset: "sidebar__inset--card",
+        panel: "sidebar__panel--bare",
+        rail: "sidebar__rail--quiet",
+      },
+      sidebar: {},
     },
   },
 });

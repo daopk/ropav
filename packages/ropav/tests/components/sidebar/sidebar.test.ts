@@ -354,3 +354,43 @@ describe("an item with rows of its own", () => {
     expect(slot(container, "sidebar-sub-menu").getAttribute("data-expanded")).toBe("true");
   });
 });
+
+describe("the variant", () => {
+  it("leaves the shell painting itself when nothing asks otherwise", () => {
+    const { container } = renderVapor(Fixture);
+
+    expect(slot(container, "sidebar-panel").className).not.toMatch(/--(bare|floating)\b/);
+    expect(slot(container, "sidebar-inset").className).not.toContain("sidebar__inset--card");
+    expect(slot(container, "sidebar-rail").className).not.toContain("sidebar__rail--quiet");
+  });
+
+  it("stands the panel off as a card of its own, on floating", () => {
+    const { container } = renderVapor(Fixture, { props: { variant: "floating" } });
+
+    expect(slot(container, "sidebar-panel").className).toContain("sidebar__panel--floating");
+    expect(slot(container, "sidebar-rail").className).toContain("sidebar__rail--quiet");
+  });
+
+  it("bares the panel and makes the page beside it the card, on inset", () => {
+    const { container } = renderVapor(Fixture, { props: { variant: "inset" } });
+
+    expect(slot(container, "sidebar-panel").className).toContain("sidebar__panel--bare");
+    expect(slot(container, "sidebar-inset").className).toContain("sidebar__inset--card");
+    expect(slot(container, "sidebar-rail").className).toContain("sidebar__rail--quiet");
+  });
+
+  /*
+   * The panel and the rail each resolve a variant of their own where they stand — the drawer the
+   * one is in, the drag the other allows — and the shell's has to survive that. It does because a
+   * part's variants are laid over the shell's rather than put in their place, which is the kind of
+   * guarantee that goes quiet when it goes: every assertion above would still pass.
+   */
+  it("survives the variants a part resolves for itself", () => {
+    const { container } = renderVapor(Fixture, { props: { isResizable: true, variant: "inset" } });
+    const rail = slot(container, "sidebar-rail");
+
+    expect(rail.className).toContain("sidebar__rail--resizable");
+    expect(rail.className).toContain("sidebar__rail--quiet");
+    expect(slot(container, "sidebar-panel").className).toContain("sidebar__panel--bare");
+  });
+});

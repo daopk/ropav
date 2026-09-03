@@ -19,6 +19,15 @@
    * stylesheet reads. */
   --sidebar-width: calc(var(--spacing) * 64);
   --sidebar-width-icon: calc(var(--spacing) * 14);
+  /* The gap a card stands off by and the corner it wears, for the variants where something is
+   * a card: the panel under `--floating`, the inset under `--card`. One pair rather than two,
+   * because a variant makes exactly one of them a card and a second set would be the same two
+   * numbers under a name that is wrong half the time.
+   *
+   * The corner is the one every container in the library wears, so a sidebar's card and a Card
+   * dropped beside it round the same. */
+  --sidebar-card-gap: calc(var(--spacing) * 2);
+  --sidebar-card-radius: min(32px, var(--component-radius));
   /* The rail's line and the grab area around it, matching `splitter.css` — same hairline, same
    * reasoning about a target no one can hit, same wait before it flares. */
   --sidebar-rail-gutter: 1px;
@@ -77,6 +86,27 @@
   @apply border-s border-separator/50;
 }
 
+/* Neither fill nor line: the panel has stopped being a surface, and the inset beside it is the one
+ * that paints. After the side modifiers, whose border this has to beat at equal specificity, and
+ * before `--drawer`, which stays last for the reason given there. */
+.sidebar__panel--bare {
+  @apply border-0 bg-transparent;
+}
+
+/* The panel as a card of its own, standing off the page on every side. A whole border rather than
+ * the side modifiers' single edge, which at equal specificity is enough to overwrite it — no
+ * `border-0` first.
+ *
+ * The margin is what the rail then sits in, and that gap is already dividing the two, which is why
+ * this variant quiets the line: a hairline inside it would be a second answer to the same question.
+ */
+.sidebar__panel--floating {
+  @apply border border-separator/50 shadow-surface;
+
+  margin: var(--sidebar-card-gap);
+  border-radius: var(--sidebar-card-radius);
+}
+
 /* Collapsing to icons is the default, so the width it collapses to lives on the mode that has one
  * and `--none` is the empty rule. */
 .sidebar__panel--icon[data-collapsed="true"] {
@@ -94,18 +124,26 @@
   @apply border-0 bg-transparent;
 
   inline-size: 0;
+  /* And the standing-off a card variant asks for, which on a box no longer there is a gap held
+   * open around nothing — the same fault as the hairline, a little wider. */
+  margin: 0;
 }
 
 .sidebar__panel--none {
 }
 
 /* Inside a drawer the panel is no longer the surface — the dialog is, and it paints, sizes and
- * slides itself. The panel gives all three up and becomes the column that fills what it was handed.
- * Last of the panel's modifiers, so it beats the widths above at equal specificity. */
+ * slides itself. The panel gives all of that up and becomes the column that fills what it was
+ * handed, the standing-off and the corner of a card variant included: the dialog is already the
+ * shape, and a card inset within it would be a second one drawn inside the first.
+ * Last of the panel's modifiers, so it beats the widths and the card geometry above at equal
+ * specificity. */
 .sidebar__panel--drawer {
   @apply size-full border-0 bg-transparent;
 
   inline-size: auto;
+  margin: 0;
+  border-radius: 0;
   transition: none;
 }
 
@@ -374,6 +412,27 @@
   @apply relative flex min-w-0 flex-1 flex-col overflow-hidden bg-background;
 }
 
+/* The page beside a bare panel, and now the thing that paints. `--surface` rather than the base
+ * rule's `--background`: this stopped being the page's background the moment it became a plate
+ * lying on one, which is what `--surface` names.
+ *
+ * The first of this component's modifiers to *add* paint rather than drop it, which is what puts it
+ * in front of the forced-colors sweep as a box with something to lose. Under the mode the fill
+ * flattens onto the page behind it and the shadow goes, leaving the contents sitting loose — so it
+ * takes the same inset outline every container that paints takes, offset inwards so nothing moves
+ * and the radius above still holds it. */
+.sidebar__inset--card {
+  @apply bg-surface text-surface-foreground shadow-surface;
+
+  margin: var(--sidebar-card-gap);
+  border-radius: var(--sidebar-card-radius);
+
+  @media (forced-colors: active) {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
+}
+
 /* ==========================================================================
    Rail — the edge strip
    ========================================================================== */
@@ -465,6 +524,26 @@
  * `--cursor-interactive` on the base rule already covers it. */
 .sidebar__rail--resizable {
   @apply cursor-col-resize;
+}
+
+/* Nothing left for the line to divide once something else is drawing that division — a card's own
+ * edge, or the gap it stands in — so it goes quiet in every state.
+ *
+ * Re-pointing the properties rather than restating the state rules, the shape `.input--secondary`
+ * takes: a `background-color` here would lose to `.sidebar__rail:hover::after` on specificity, and
+ * restating that set drifts the day a state is added to it.
+ *
+ * All three, and the third is not redundant. `--sidebar-rail-line-dragging` is declared on the
+ * shell as a `var()` of the hover one, so it is substituted there, against the shell's value; only
+ * the resolved colour reaches this far. Re-pointing hover here arrives too late for it, and a drag
+ * would still flare.
+ *
+ * The line comes back under Forced Colors Mode, on purpose: those blocks paint system keywords,
+ * which are not a component's to quiet. */
+.sidebar__rail--quiet {
+  --sidebar-rail-line: transparent;
+  --sidebar-rail-line-hover: transparent;
+  --sidebar-rail-line-dragging: transparent;
 }
 
 /* The invisible hit area, overhanging the hairline on both sides. A negative `inset` rather than a

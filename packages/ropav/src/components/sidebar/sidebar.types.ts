@@ -6,10 +6,25 @@ import type { SidebarVariants } from "@ropav/styles";
 /** Which edge of the page the panel sits on. */
 export type SidebarSide = NonNullable<SidebarVariants["side"]>;
 
+/** How much of the shell's chrome the sidebar paints. */
+export type SidebarVariant = NonNullable<SidebarVariants["variant"]>;
+
 export interface SidebarRootProps {
   class?: string;
   /** @default "left" */
   side?: SidebarSide;
+  /**
+   * How much chrome the shell paints.
+   *
+   * `floating` stands the panel off as a card of its own. `inset` bares the panel and makes the
+   * content beside it the card instead. Both quiet the rail, whose line has nothing left to divide,
+   * and both take their gap and corner from `--sidebar-card-gap` and `--sidebar-card-radius`.
+   *
+   * A panel that should merely stop painting says so with one utility — `class="bg-transparent"` —
+   * since nothing else paints that fill and there is no state set for it to flatten.
+   * @default "sidebar"
+   */
+  variant?: SidebarVariant;
   /** How the panel gets out of the way. `none` pins it open. @default "icon" */
   collapsible?: SidebarCollapsibleMode;
   /** Whether the panel is expanded. Set, the sidebar reports a toggle rather than acting on it. */

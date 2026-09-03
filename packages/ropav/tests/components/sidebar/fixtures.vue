@@ -90,6 +90,7 @@ const defaultItems: SidebarFixtureItem[] = [
     :is-expanded="props.isExpanded"
     :is-mobile-open="props.isMobileOpen"
     :side="props.side"
+    :variant="props.variant"
     :width="props.width"
     @expanded-change="$emit('expandedChange', $event)"
     @update:is-expanded="$emit('update:isExpanded', $event)"

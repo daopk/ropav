@@ -137,6 +137,10 @@ const meta: StoryMeta = {
       control: { type: "select" },
       options: ["left", "right"],
     },
+    variant: {
+      control: { type: "select" },
+      options: ["sidebar", "floating", "inset"],
+    },
   },
   component: SidebarRoot,
   // A sidebar fills whatever contains it, so without a sized box the panel has no height to run
@@ -157,13 +161,20 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
+/* The shared box paints nothing, and a card standing on nothing reads as the whole box — the lift
+ * these variants exist to show is only visible against a page. It also gives the forced-colors
+ * sweep something to measure the card's outline against. */
+const onPage = () => ({
+  template: '<div class="size-full bg-background"><story /></div>',
+});
+
 export const Default: Story = {
-  args: { collapsible: "icon", side: "left" },
+  args: { collapsible: "icon", side: "left", variant: "sidebar" },
   render: (args) => ({
     components,
     setup: () => ({ args, nav, page }),
     template: `
-      <Sidebar :collapsible="args.collapsible" :side="args.side">
+      <Sidebar :collapsible="args.collapsible" :side="args.side" :variant="args.variant">
         <SidebarPanel>${nav}</SidebarPanel>
         <SidebarRail />
         ${page}
@@ -208,6 +219,43 @@ export const RightSide: Story = {
       <Sidebar side="right">
         <SidebarPanel>${nav}</SidebarPanel>
         <SidebarRail />
+        ${page}
+      </Sidebar>
+    `,
+  }),
+};
+
+/**
+ * The panel as a card of its own, standing off the page on every side. The rail sits in the gap it
+ * leaves, and the line it would otherwise draw goes quiet — the gap is already the division.
+ */
+export const Floating: Story = {
+  decorators: [onPage],
+  render: () => ({
+    components,
+    template: `
+      <Sidebar variant="floating">
+        <SidebarPanel>${nav}</SidebarPanel>
+        <SidebarRail is-resizable />
+        ${page}
+      </Sidebar>
+    `,
+  }),
+};
+
+/**
+ * The other way round: the panel is bared and the page beside it is the card. The shape an app
+ * shell takes when the window behind both is the surface — a translucent one especially, where a
+ * panel painting its own fill would stack a second tint over the first.
+ */
+export const Inset: Story = {
+  decorators: [onPage],
+  render: () => ({
+    components,
+    template: `
+      <Sidebar variant="inset">
+        <SidebarPanel>${nav}</SidebarPanel>
+        <SidebarRail is-resizable />
         ${page}
       </Sidebar>
     `,

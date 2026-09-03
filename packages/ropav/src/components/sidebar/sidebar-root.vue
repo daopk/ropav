@@ -115,7 +115,11 @@ onMounted(() => {
 const side = computed(() => props.side ?? "left");
 
 const slots = computed(() =>
-  sidebarVariants({ collapsible: state.collapsible.value, side: side.value }),
+  sidebarVariants({
+    collapsible: state.collapsible.value,
+    side: side.value,
+    variant: props.variant,
+  }),
 );
 
 const panelId = useId();

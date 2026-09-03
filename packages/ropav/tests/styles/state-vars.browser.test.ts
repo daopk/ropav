@@ -41,6 +41,7 @@ type Part = {
 };
 
 const SIDEBAR = `<div class="sidebar"><div class="sidebar__rail"></div></div>`;
+const QUIET_RAIL = `<div class="sidebar"><div class="sidebar__rail sidebar__rail--quiet"></div></div>`;
 const SPLITTER = `<div class="splitter__handle"><div class="splitter__handle-grip"></div></div>`;
 const ITEM = `<div class="sidebar__item"></div>`;
 
@@ -61,6 +62,29 @@ const parts: Part[] = [
         knob: "--sidebar-rail-line-dragging",
         paints: "var(--accent)",
       },
+    ],
+  },
+  {
+    /*
+     * The variant that quiets the line states all three knobs on the rail, and the third is why
+     * this case exists rather than being a copy of the one above: the shell declares the dragging
+     * colour as a `var()` of the hover one, so that substitution happens up there and only the
+     * resolved colour reaches the rail. Stating hover here would arrive too late for it.
+     *
+     * `knobHost` is the rail rather than the shell for the same reason — under this modifier a
+     * caller cannot reach the line from the root any more, because the modifier's declaration is
+     * the nearer one.
+     */
+    html: QUIET_RAIL,
+    knobHost: ".sidebar__rail",
+    name: "the quiet sidebar rail's line",
+    paint: ".sidebar__rail",
+    pseudo: "::after",
+    stateHost: ".sidebar__rail",
+    states: [
+      { attr: null, knob: "--sidebar-rail-line", paints: "transparent" },
+      { attr: ["data-hovered"], knob: "--sidebar-rail-line-hover", paints: "transparent" },
+      { attr: ["data-dragging"], knob: "--sidebar-rail-line-dragging", paints: "transparent" },
     ],
   },
   {

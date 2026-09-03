@@ -324,6 +324,7 @@ describe("forced colors mode (browser)", () => {
     ["alert", `<div class="alert alert--accent">x</div>`],
     ["avatar", `<span class="avatar avatar--md"><span class="avatar__fallback">AB</span></span>`],
     ["inline code", `<code class="typography--code">x</code>`],
+    ["sidebar inset card", `<div class="sidebar__inset sidebar__inset--card">x</div>`],
   ])("keeps the %s visible as a container", (_name, markup) => {
     // Each of these is a tinted fill plus a shadow, and the mode takes both - the contents end up
     // sitting loose on the page with nothing around them.
@@ -339,6 +340,12 @@ describe("forced colors mode (browser)", () => {
     const transparent = mount(`<div class="surface surface--transparent">x</div>`);
 
     expect(styleOf(transparent).outlineStyle).toBe("none");
+
+    // And a panel that has handed its fill to the page beside it is the same case one component
+    // down: there is no box to frame, only the card it gave up being.
+    const bare = mount(`<nav class="sidebar__panel sidebar__panel--bare">x</nav>`);
+
+    expect(styleOf(bare).outlineStyle).toBe("none");
   });
 
   it("keeps a separator drawing a line", () => {
