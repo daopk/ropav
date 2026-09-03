@@ -244,6 +244,15 @@
     @apply forced-selected;
   }
 
+  /* A selected row still answers the pointer. Without this the rule above swallows the hover -
+   * it is later and equally specific, so the row that is both reads as merely selected. */
+  @media (hover: hover) {
+    &[data-selected="true"]:hover .table__cell,
+    &[data-selected="true"][data-hovered="true"] .table__cell {
+      background-color: var(--table-cell-bg-selected-hover);
+    }
+  }
+
   /* Disabled state */
   &[aria-disabled="true"],
   &[data-disabled="true"] {
@@ -276,8 +285,9 @@
   /* The row's fill, per state, declared on the cell because that is what paints — Firefox clips a
    * row's own background outside the border radius. `.table-root--secondary` re-points two. */
   --table-cell-bg: var(--surface);
-  --table-cell-bg-hover: color-mix(in oklab, var(--surface) 40%, transparent);
-  --table-cell-bg-selected: color-mix(in oklab, var(--surface) 10%, transparent);
+  --table-cell-bg-hover: var(--surface-hover);
+  --table-cell-bg-selected: var(--accent-soft);
+  --table-cell-bg-selected-hover: var(--accent-soft-hover);
   --table-cell-bg-drop-target: var(--accent-soft);
 
   background-color: var(--table-cell-bg);

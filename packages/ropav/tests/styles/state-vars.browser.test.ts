@@ -206,12 +206,17 @@ const parts: Part[] = [
       {
         attr: ["data-hovered"],
         knob: "--table-cell-bg-hover",
-        paints: "color-mix(in oklab, var(--surface) 40%, transparent)",
+        paints: "var(--surface-hover)",
       },
       {
         attr: ["data-selected"],
         knob: "--table-cell-bg-selected",
-        paints: "color-mix(in oklab, var(--surface) 10%, transparent)",
+        paints: "var(--accent-soft)",
+      },
+      {
+        attr: ["data-selected", "data-hovered"],
+        knob: "--table-cell-bg-selected-hover",
+        paints: "var(--accent-soft-hover)",
       },
       {
         attr: ["data-drop-target"],
