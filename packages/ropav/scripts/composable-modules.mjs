@@ -45,6 +45,7 @@ export const PUBLIC_MODULES = [
   "use-disclosure-group",
   "use-dismissable",
   "use-drag-and-drop",
+  "use-drop",
   "use-enter-exit",
   "use-field-ids",
   "use-filter",

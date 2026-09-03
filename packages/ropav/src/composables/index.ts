@@ -20,6 +20,7 @@ export * from "./use-description";
 export * from "./use-disclosure-group";
 export * from "./use-dismissable";
 export * from "./use-drag-and-drop";
+export * from "./use-drop";
 export * from "./use-enter-exit";
 export * from "./use-field-ids";
 export * from "./use-filter";
