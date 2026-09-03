@@ -842,9 +842,15 @@ export function getColorVariablesForElement(
   vars["--segment"] = getValue(colors.segment);
   vars["--segment-foreground"] = getValue(colors.segmentForeground);
 
-  vars["--border"] = getValue(colors.border);
+  /* An edge, as an alpha of the surface foreground - `--surface-hover`'s reasoning, applied to
+   * a line. A flat neutral is picked against one fill and then disappears against any other of
+   * its own lightness: in the dark half `--separator` sat 0.7% from `--surface-secondary`, so a
+   * box drawn on the secondary fill had no edge left. */
+  vars["--border"] =
+    `color-mix(in oklab, var(--surface-foreground) ${isLight ? "14%" : "7%"}, transparent)`;
 
-  vars["--separator"] = getValue(colors.separator);
+  vars["--separator"] =
+    `color-mix(in oklab, var(--surface-foreground) ${isLight ? "12%" : "4%"}, transparent)`;
 
   // Field colors
   vars["--field-background"] = getValue(colors.fieldBackground);

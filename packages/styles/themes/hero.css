@@ -90,8 +90,12 @@
     --segment-foreground: oklch(0.2103 0.0059 285.89);
 
     /* Misc Colors */
-    --border: oklch(90% 0.004 286.32);
-    --separator: oklch(92% 0.004 286.32);
+    /* An edge, as an alpha of the surface foreground - `--surface-hover`'s reasoning, applied to a
+     * line. A flat neutral is picked against one fill and then disappears against any other of its
+     * own lightness: in the dark half `--separator` sat 0.7% from `--surface-secondary`, so a box
+     * drawn on the secondary fill had no edge left. */
+    --border: color-mix(in oklab, var(--surface-foreground) 14%, transparent);
+    --separator: color-mix(in oklab, var(--surface-foreground) 12%, transparent);
     --focus: var(--accent);
     --link: var(--foreground);
 
@@ -213,8 +217,8 @@
     --segment-foreground: var(--foreground);
 
     /* Misc Colors */
-    --border: oklch(28% 0.006 286.033);
-    --separator: oklch(25% 0.006 286.033);
+    --border: color-mix(in oklab, var(--surface-foreground) 7%, transparent);
+    --separator: color-mix(in oklab, var(--surface-foreground) 4%, transparent);
     --focus: var(--accent);
     --link: var(--foreground);
 

@@ -112,10 +112,10 @@
     --segment-foreground: oklch(21.03% 0 27.99);
 
     /* Borders and separators */
-    --border: oklch(90% 0 27.99);
+    --border: color-mix(in oklab, var(--surface-foreground) 14%, transparent);
     --border-secondary: color-mix(in oklab, var(--surface) 78%, var(--surface-foreground) 22%);
     --border-tertiary: color-mix(in oklab, var(--surface) 66%, var(--surface-foreground) 34%);
-    --separator: oklch(92% 0 27.99);
+    --separator: color-mix(in oklab, var(--surface-foreground) 12%, transparent);
     --separator-secondary: color-mix(in oklab, var(--surface) 85%, var(--surface-foreground) 15%);
     --separator-tertiary: color-mix(in oklab, var(--surface) 81%, var(--surface-foreground) 19%);
 
@@ -217,10 +217,10 @@
     --segment-foreground: oklch(99.11% 0 27.99);
 
     /* Borders and separators */
-    --border: oklch(28% 0 27.99);
+    --border: color-mix(in oklab, var(--surface-foreground) 7%, transparent);
     --border-secondary: color-mix(in oklab, var(--surface) 78%, var(--surface-foreground) 22%);
     --border-tertiary: color-mix(in oklab, var(--surface) 66%, var(--surface-foreground) 34%);
-    --separator: oklch(25% 0 27.99);
+    --separator: color-mix(in oklab, var(--surface-foreground) 4%, transparent);
     --separator-secondary: color-mix(in oklab, var(--surface) 85%, var(--surface-foreground) 15%);
     --separator-tertiary: color-mix(in oklab, var(--surface) 81%, var(--surface-foreground) 19%);
 
