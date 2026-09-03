@@ -140,6 +140,13 @@
     content: none;
   }
 
+  /* A column holding nothing but the select-all box has no heading for the line to divide from
+   * the next one, and where the end padding is collapsed it lands on the box's own edge and
+   * reads as a border the box grew. */
+  &:has(> .checkbox:only-child)::after {
+    content: none;
+  }
+
   /* Sortable columns */
   &[data-allows-sorting="true"] {
     cursor: var(--cursor-interactive);
