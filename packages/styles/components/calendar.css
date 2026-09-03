@@ -97,7 +97,7 @@
   @media (hover: hover) {
     &:hover,
     &[data-hovered="true"] {
-      @apply bg-default;
+      @apply bg-state-layer;
     }
   }
 
@@ -185,13 +185,13 @@
    * pressed, selected and outside the month. One declaration cannot tell them apart, so each
    * reads its own. */
   --calendar-cell-bg: transparent;
-  --calendar-cell-bg-hover: var(--default);
+  --calendar-cell-bg-hover: var(--state-layer);
   --calendar-cell-bg-pressed: var(--calendar-cell-bg-hover);
   --calendar-cell-bg-today: var(--accent-soft);
   --calendar-cell-bg-today-hover: var(--accent-soft-hover);
   --calendar-cell-bg-selected: var(--accent);
   --calendar-cell-bg-selected-pressed: var(--accent-hover);
-  --calendar-cell-bg-selected-outside-month: var(--default);
+  --calendar-cell-bg-selected-outside-month: var(--state-layer);
   --calendar-cell-fg: currentcolor;
   --calendar-cell-fg-today: var(--accent-soft-foreground);
   --calendar-cell-fg-selected: var(--accent-foreground);

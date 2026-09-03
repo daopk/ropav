@@ -97,7 +97,7 @@
   @media (hover: hover) {
     &:hover,
     &[data-hovered="true"] {
-      @apply bg-default;
+      @apply bg-state-layer;
     }
   }
 
@@ -188,10 +188,10 @@
   --range-calendar-cell-bg-selected: var(--accent-soft);
   --range-calendar-cell-bg-selected-outside-month: color-mix(
     in oklab,
-    var(--default) 20%,
+    var(--state-layer) 20%,
     transparent
   );
-  --range-calendar-day-bg-hover: var(--default);
+  --range-calendar-day-bg-hover: var(--state-layer);
   --range-calendar-day-bg-today: var(--accent-soft);
   --range-calendar-day-bg-today-hover: var(--accent-soft-hover);
   --range-calendar-day-bg-cap: var(--accent);

@@ -71,12 +71,12 @@ const parts: Part[] = [
     stateHost: ".sidebar__item",
     states: [
       { attr: null, knob: "--sidebar-item-bg", paints: "transparent" },
-      { attr: ["data-hovered"], knob: "--sidebar-item-bg-hover", paints: "var(--default)" },
+      { attr: ["data-hovered"], knob: "--sidebar-item-bg-hover", paints: "var(--state-layer)" },
       {
         attr: ["data-pressed"],
         follows: ["--sidebar-item-bg-hover"],
         knob: "--sidebar-item-bg-pressed",
-        paints: "var(--default)",
+        paints: "var(--state-layer)",
       },
       { attr: ["data-current"], knob: "--sidebar-item-bg-current", paints: "var(--accent-soft)" },
     ],
@@ -267,7 +267,7 @@ const parts: Part[] = [
       {
         attr: ["data-hovered"],
         knob: "--range-calendar-day-bg-hover",
-        paints: "var(--default)",
+        paints: "var(--state-layer)",
       },
     ],
   },

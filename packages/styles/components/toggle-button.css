@@ -129,8 +129,8 @@
 
 .toggle-button--ghost {
   --toggle-button-bg: transparent;
-  --toggle-button-bg-hover: var(--default);
-  --toggle-button-bg-pressed: var(--default);
+  --toggle-button-bg-hover: var(--state-layer);
+  --toggle-button-bg-pressed: var(--state-layer);
   --toggle-button-fg: var(--default-foreground);
 }
 

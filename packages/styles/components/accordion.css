@@ -121,7 +121,7 @@
     @media (hover: hover) {
       &:hover:not([aria-expanded="true"]),
       &[data-hovered="true"]:not([aria-expanded="true"]) {
-        @apply bg-default;
+        @apply bg-state-layer;
       }
     }
   }

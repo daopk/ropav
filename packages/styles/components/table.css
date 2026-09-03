@@ -95,7 +95,7 @@
     @apply border-b border-separator-tertiary/50;
 
     --table-cell-bg: transparent;
-    --table-cell-bg-hover: color-mix(in oklab, var(--default) 50%, transparent);
+    --table-cell-bg-hover: color-mix(in oklab, var(--state-layer) 50%, transparent);
   }
 }
 

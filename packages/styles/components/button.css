@@ -126,14 +126,14 @@
 .button--ghost,
 .button--outline {
   --button-bg: transparent;
-  --button-bg-hover: var(--default);
-  --button-bg-pressed: var(--default);
+  --button-bg-hover: var(--state-layer);
+  --button-bg-pressed: var(--state-layer);
   --button-fg: var(--default-foreground);
 }
 
 .button--outline {
   @apply border border-border;
-  --button-bg-hover: color-mix(in srgb, var(--default) 60%, transparent);
+  --button-bg-hover: color-mix(in oklab, var(--state-layer) 60%, transparent);
 }
 
 .button--danger {

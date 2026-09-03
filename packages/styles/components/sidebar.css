@@ -189,7 +189,7 @@
   /* The row's fill and label, per state. A caller retuning the resting pair used to flatten the
    * current page's along with it, since one declaration cannot tell the states apart. */
   --sidebar-item-bg: transparent;
-  --sidebar-item-bg-hover: var(--default);
+  --sidebar-item-bg-hover: var(--state-layer);
   --sidebar-item-bg-pressed: var(--sidebar-item-bg-hover);
   --sidebar-item-bg-current: var(--accent-soft);
   --sidebar-item-fg: var(--foreground);
@@ -484,7 +484,7 @@
   @apply inline-flex size-8 shrink-0 items-center justify-center rounded-component outline-none select-none no-highlight;
 
   --sidebar-trigger-bg: transparent;
-  --sidebar-trigger-bg-hover: var(--default);
+  --sidebar-trigger-bg-hover: var(--state-layer);
   --sidebar-trigger-fg: var(--muted);
   --sidebar-trigger-fg-hover: var(--foreground);
 

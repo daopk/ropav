@@ -50,7 +50,7 @@
   @media (hover: hover) {
     &:hover,
     &[data-hovered="true"] {
-      @apply bg-default;
+      @apply bg-state-layer;
     }
   }
 

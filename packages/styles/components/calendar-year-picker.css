@@ -121,7 +121,7 @@
 
   /* The fill and label, per state — selected and hovered land together on the current year. */
   --calendar-year-picker-year-cell-bg: transparent;
-  --calendar-year-picker-year-cell-bg-hover: var(--default);
+  --calendar-year-picker-year-cell-bg-hover: var(--state-layer);
   --calendar-year-picker-year-cell-bg-selected: var(--accent);
   --calendar-year-picker-year-cell-bg-selected-hover: var(--accent-hover);
   --calendar-year-picker-year-cell-fg: currentcolor;
