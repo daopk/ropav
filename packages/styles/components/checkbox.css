@@ -84,7 +84,11 @@
    ========================================================================== */
 
 .checkbox__control {
-  @apply relative inline-flex size-4 shrink-0 items-center justify-center overflow-hidden rounded-md border [border-width:var(--border-width-field)] shadow-field outline-none no-highlight;
+  @apply relative inline-flex size-4 shrink-0 items-center justify-center overflow-hidden border [border-width:var(--border-width-field)] shadow-field outline-none no-highlight;
+
+  /* The cap is what keeps the box reading square at 16px: the field radius is set for a 36px
+   * control, and worn whole here it looks twice as round as the field beside it. */
+  border-radius: min(var(--field-radius, calc(var(--radius) * 0.75)), 25%);
 
   /* Four things carry state here: the box's fill and edge, the glyph inside it, and the `::before`
    * that scales in behind the glyph. Checked and indeterminate share a colour, as do the two
@@ -116,7 +120,9 @@
 
   /* Background indicator pseudo-element */
   &::before {
-    @apply pointer-events-none absolute inset-0 z-0 origin-center scale-70 rounded-md opacity-0 content-[''];
+    @apply pointer-events-none absolute inset-0 z-0 origin-center scale-70 opacity-0 content-[''];
+
+    border-radius: inherit;
 
     background-color: var(--checkbox-control-fill);
 
