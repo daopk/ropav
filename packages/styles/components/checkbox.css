@@ -250,7 +250,10 @@
 .checkbox--secondary .checkbox__control {
   @apply shadow-none;
 
-  --checkbox-control-bg: var(--default);
+  /* No border and no shadow leave the fill as the only thing drawing this box, so a flat neutral
+   * erases it against any surface of the same lightness — a hovered table row is exactly that.
+   * The state layer is an alpha, so it keeps its step over whatever it lands on. */
+  --checkbox-control-bg: var(--state-layer);
 }
 
 /* Checkbox content — the clickable label (control + label text) */
