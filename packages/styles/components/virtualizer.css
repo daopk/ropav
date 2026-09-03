@@ -35,7 +35,15 @@
 
 .virtualizer__scrollbar-thumb {
   @apply absolute rounded-full;
-  background-color: var(--scrollbar-thumb);
+
+  /* The thumb's fill, per state. Three states paint it and one declaration cannot tell them
+   * apart, so each reads its own. Both lit values are an alpha rather than a neutral, so the
+   * thumb stays visible over whatever the scroller happens to be showing. */
+  --virtualizer-scrollbar-thumb-bg: var(--scrollbar-thumb);
+  --virtualizer-scrollbar-thumb-bg-hover: color-mix(in oklch, var(--foreground) 25%, transparent);
+  --virtualizer-scrollbar-thumb-bg-pressed: color-mix(in oklch, var(--foreground) 35%, transparent);
+
+  background-color: var(--virtualizer-scrollbar-thumb-bg);
 
   &[data-orientation="vertical"] {
     inset-inline: 2px;
@@ -48,12 +56,12 @@
   @media (hover: hover) {
     &:hover,
     &[data-hovered="true"] {
-      background-color: color-mix(in oklch, var(--foreground) 25%, transparent);
+      background-color: var(--virtualizer-scrollbar-thumb-bg-hover);
     }
   }
 
   &[data-pressed="true"] {
-    background-color: color-mix(in oklch, var(--foreground) 35%, transparent);
+    background-color: var(--virtualizer-scrollbar-thumb-bg-pressed);
   }
 
   /* Forced Colors Mode replaces the translucent fill with the canvas, and the thumb vanishes. */
