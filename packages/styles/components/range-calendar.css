@@ -97,7 +97,7 @@
   @media (hover: hover) {
     &:hover,
     &[data-hovered="true"] {
-      @apply bg-default text-accent-soft-foreground;
+      @apply bg-default;
     }
   }
 
@@ -181,6 +181,26 @@
   @apply relative z-1 mx-0 my-[2px] rounded-3xl p-0 outline-none;
   cursor: var(--cursor-interactive);
 
+  /* The range track paints on the cell and the day paints on the button inside it, so both sets
+   * are declared here and the button reads them by inheritance. A cap is a day at either end of
+   * the range; several states land in pairs, and one declaration cannot tell them apart. */
+  --range-calendar-cell-bg: transparent;
+  --range-calendar-cell-bg-selected: var(--accent-soft);
+  --range-calendar-cell-bg-selected-outside-month: color-mix(
+    in oklab,
+    var(--default) 20%,
+    transparent
+  );
+  --range-calendar-day-bg-hover: var(--default);
+  --range-calendar-day-bg-today: var(--accent-soft);
+  --range-calendar-day-bg-today-hover: var(--accent-soft-hover);
+  --range-calendar-day-bg-cap: var(--accent);
+  --range-calendar-day-bg-cap-pressed: var(--accent-hover);
+  --range-calendar-day-fg-today: var(--accent-soft-foreground);
+  --range-calendar-day-fg-cap: var(--accent-foreground);
+
+  background-color: var(--range-calendar-cell-bg);
+
   will-change: background-color, border-color;
   transition:
     box-shadow 100ms var(--ease-out),
@@ -209,7 +229,8 @@
   /* Today indicator */
   &[data-today="true"] {
     .range-calendar__cell-button {
-      @apply bg-accent-soft text-accent-soft-foreground;
+      background-color: var(--range-calendar-day-bg-today);
+      color: var(--range-calendar-day-fg-today);
 
       /* An edge rather than a fill, so today still reads as itself once it is also in range */
       @media (forced-colors: active) {
@@ -222,7 +243,7 @@
       &:hover:not([data-selected="true"]),
       &[data-hovered="true"]:not([data-selected="true"]) {
         .range-calendar__cell-button {
-          @apply bg-accent-soft-hover;
+          background-color: var(--range-calendar-day-bg-today-hover);
         }
       }
     }
@@ -230,7 +251,9 @@
 
   /* Range selected track (middle segment) */
   &[data-selected="true"]:not([data-outside-month="true"]) {
-    @apply rounded-none bg-accent-soft;
+    @apply rounded-none;
+
+    background-color: var(--range-calendar-cell-bg-selected);
 
     /* The track is a background and nothing else, so Forced Colors Mode flattens it into the
      * page and the range stops being visible. The day button declares its own `color`, so
@@ -268,7 +291,8 @@
     @apply z-2;
 
     .range-calendar__cell-button {
-      @apply bg-accent text-accent-foreground;
+      background-color: var(--range-calendar-day-bg-cap);
+      color: var(--range-calendar-day-fg-cap);
 
       /* Caps read the same as the track here. Forced colors offers one selection colour, and
        * spending it on the shape that matters - the range - beats splitting it. */
@@ -302,7 +326,7 @@
     &[data-selection-start="true"],
     &[data-selection-end="true"] {
       .range-calendar__cell-button {
-        @apply bg-accent-hover;
+        background-color: var(--range-calendar-day-bg-cap-pressed);
       }
     }
   }
@@ -312,7 +336,7 @@
     &:hover:not([data-selected="true"]),
     &[data-hovered="true"]:not([data-selected="true"]) {
       .range-calendar__cell-button {
-        @apply bg-default;
+        background-color: var(--range-calendar-day-bg-hover);
       }
     }
   }
@@ -326,7 +350,7 @@
       [data-selection-start="true"],
       [data-selection-end="true"]
     ) {
-    @apply bg-default/20;
+    background-color: var(--range-calendar-cell-bg-selected-outside-month);
   }
 
   /* Unavailable dates */
@@ -372,10 +396,15 @@
 
 /* Cell indicator - small dot at bottom center of cell */
 .range-calendar__cell-indicator {
-  @apply absolute bottom-1 left-1/2 size-[3px] -translate-x-1/2 rounded-xs bg-muted;
+  @apply absolute bottom-1 left-1/2 size-[3px] -translate-x-1/2 rounded-xs;
+
+  --range-calendar-cell-indicator-bg: var(--muted);
+  --range-calendar-cell-indicator-bg-selected: var(--accent-foreground);
+
+  background-color: var(--range-calendar-cell-indicator-bg);
 
   /* Indicator color changes when cell is selected */
   [data-selected="true"] > & {
-    @apply bg-accent-foreground;
+    background-color: var(--range-calendar-cell-indicator-bg-selected);
   }
 }

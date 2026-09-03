@@ -221,6 +221,57 @@ const parts: Part[] = [
     ],
   },
   {
+    // The most combinatorial box in the library: checked and indeterminate share a colour, and so
+    // do the two invalid pairings. The state lives on the block, the paint on the control.
+    html: `<div class="checkbox"><span class="checkbox__control"></span></div>`,
+    knobHost: ".checkbox__control",
+    name: "the checkbox control's fill",
+    paint: ".checkbox__control",
+    stateHost: ".checkbox",
+    states: [
+      {
+        attr: null,
+        knob: "--checkbox-control-bg",
+        paints: "var(--field-background, var(--default))",
+      },
+      {
+        attr: ["data-indeterminate"],
+        knob: "--checkbox-control-bg-checked",
+        paints: "var(--accent)",
+      },
+      {
+        attr: ["data-indeterminate", "data-invalid"],
+        knob: "--checkbox-control-bg-invalid",
+        paints: "var(--danger)",
+      },
+    ],
+  },
+  {
+    // The knobs are declared on the cell and read by the day button inside it.
+    html: `<div class="range-calendar__cell"><span class="range-calendar__cell-button"></span></div>`,
+    knobHost: ".range-calendar__cell",
+    name: "the range calendar's day",
+    paint: ".range-calendar__cell-button",
+    stateHost: ".range-calendar__cell",
+    states: [
+      {
+        attr: ["data-today"],
+        knob: "--range-calendar-day-bg-today",
+        paints: "var(--accent-soft)",
+      },
+      {
+        attr: ["data-selection-end"],
+        knob: "--range-calendar-day-bg-cap",
+        paints: "var(--accent)",
+      },
+      {
+        attr: ["data-hovered"],
+        knob: "--range-calendar-day-bg-hover",
+        paints: "var(--default)",
+      },
+    ],
+  },
+  {
     html: SPLITTER,
     knobHost: ".splitter__handle",
     name: "the splitter handle's line",

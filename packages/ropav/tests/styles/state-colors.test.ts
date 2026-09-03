@@ -258,10 +258,7 @@ const audit = () => {
  * Files still painting state colours directly, with the count each is down to. Converting a
  * component means dropping its entry — the goal is an empty object.
  */
-const KNOWN_DEBT: Record<string, number> = {
-  "checkbox.css": 13,
-  "range-calendar.css": 11,
-};
+const KNOWN_DEBT: Record<string, number> = {};
 
 const describeAll = (findings: Paint[]) =>
   findings.map((f) => `${f.file}:${f.line}  ${f.what}  in  ${f.selector}`).join("\n");

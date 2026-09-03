@@ -244,8 +244,9 @@ belongs in a theme rather than here. And Forced Colors Mode is not covered: thos
 system keywords, which are the only colors exempt from the override and not a component's to
 retune — `[--sidebar-rail-line:transparent]` leaves the line drawn under High Contrast, on purpose.
 
-`state-colors.test.ts` in the `ropav` package holds the components not yet converted, each with the
-count it is down to, and fails on a new state color anywhere else.
+`state-colors.test.ts` in the `ropav` package reads every component file and fails on a state color
+that does not go through a property. Its ledger of exceptions is currently empty, so an entry
+appearing there is debt to pay down rather than a licence to add more.
 
 ### Reduced motion
 
