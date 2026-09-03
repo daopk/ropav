@@ -24,6 +24,11 @@
   --sidebar-rail-gutter: 1px;
   --sidebar-rail-target: 15px;
   --sidebar-highlight-delay: 500ms;
+  /* What the line is painted with, at rest and lit. Separate properties so a caller can retune one
+   * state without flattening the rest onto a single colour. */
+  --sidebar-rail-line: var(--separator);
+  --sidebar-rail-line-hover: var(--accent);
+  --sidebar-rail-line-dragging: var(--sidebar-rail-line-hover);
 
   @apply isolate flex h-full w-full;
 }
@@ -179,7 +184,19 @@
    ========================================================================== */
 
 .sidebar__item {
-  @apply relative flex min-h-9 w-full min-w-0 items-center justify-start gap-2 rounded-component px-2 text-sm font-medium text-foreground no-underline outline-none no-highlight;
+  @apply relative flex min-h-9 w-full min-w-0 items-center justify-start gap-2 rounded-component px-2 text-sm font-medium no-underline outline-none no-highlight;
+
+  /* The row's fill and label, per state. A caller retuning the resting pair used to flatten the
+   * current page's along with it, since one declaration cannot tell the states apart. */
+  --sidebar-item-bg: transparent;
+  --sidebar-item-bg-hover: var(--default);
+  --sidebar-item-bg-pressed: var(--sidebar-item-bg-hover);
+  --sidebar-item-bg-current: var(--accent-soft);
+  --sidebar-item-fg: var(--foreground);
+  --sidebar-item-fg-current: var(--accent-soft-foreground);
+
+  background-color: var(--sidebar-item-bg);
+  color: var(--sidebar-item-fg);
 
   /* Cursor */
   cursor: var(--cursor-interactive);
@@ -193,7 +210,7 @@
   @media (hover: hover) {
     &:hover,
     &[data-hovered="true"] {
-      @apply bg-default;
+      background-color: var(--sidebar-item-bg-hover);
     }
   }
 
@@ -206,14 +223,15 @@
   /* Pressed state */
   &:active,
   &[data-pressed="true"] {
-    @apply bg-default;
+    background-color: var(--sidebar-item-bg-pressed);
   }
 
   /* The current page. Its whole job is to be the one item that stands out, so the mode flattening
    * the fill onto the page would take exactly the distinction away — hence `forced-selected`,
    * which is what the rest of the library reaches for to say "this one". */
   &[data-current="true"] {
-    @apply bg-accent-soft text-accent-soft-foreground;
+    background-color: var(--sidebar-item-bg-current);
+    color: var(--sidebar-item-fg-current);
 
     @apply forced-selected;
   }
@@ -378,8 +396,9 @@
   @apply motion-reduce:transition-none;
 
   &::after {
-    @apply pointer-events-none absolute inset-y-0 rounded-sm bg-separator content-[''];
+    @apply pointer-events-none absolute inset-y-0 rounded-sm content-[''];
 
+    background-color: var(--sidebar-rail-line);
     inline-size: var(--sidebar-rail-gutter);
 
     /* Flattened to `Canvas` the line stops existing rather than weakening — the whole part *is*
@@ -396,15 +415,7 @@
   &:hover::after,
   &[data-hovered="true"]::after,
   &[data-dragging="true"]::after {
-    @apply bg-accent;
-
     inline-size: calc(var(--sidebar-rail-gutter) * 2);
-
-    /* `bg-separator` and `bg-accent` both flatten to `Canvas`, so without this the resting and
-     * active states are byte-identical under the mode. */
-    @media (forced-colors: active) {
-      background-color: Highlight;
-    }
   }
 
   /* Delayed on the way in and immediate on the way out. A grab area many times the width of the
@@ -412,13 +423,25 @@
    * reads as a twitch rather than an invitation. */
   &:hover::after,
   &[data-hovered="true"]::after {
+    background-color: var(--sidebar-rail-line-hover);
     transition-delay: var(--sidebar-highlight-delay);
   }
 
   /* A drag under way is not in question, so it skips the wait. Last, because a drag usually starts
    * from a hover and has to win. */
   &[data-dragging="true"]::after {
+    background-color: var(--sidebar-rail-line-dragging);
     transition-delay: 0ms;
+  }
+
+  /* Every lit colour flattens to the same `Canvas` as the resting one, so without this the two are
+   * byte-identical under the mode. One block for all of them, after the colours it overrides. */
+  @media (forced-colors: active) {
+    &:hover::after,
+    &[data-hovered="true"]::after,
+    &[data-dragging="true"]::after {
+      background-color: Highlight;
+    }
   }
 
   &:focus-visible,
@@ -458,7 +481,15 @@
    ========================================================================== */
 
 .sidebar__trigger {
-  @apply inline-flex size-8 shrink-0 items-center justify-center rounded-component bg-transparent text-muted outline-none select-none no-highlight;
+  @apply inline-flex size-8 shrink-0 items-center justify-center rounded-component outline-none select-none no-highlight;
+
+  --sidebar-trigger-bg: transparent;
+  --sidebar-trigger-bg-hover: var(--default);
+  --sidebar-trigger-fg: var(--muted);
+  --sidebar-trigger-fg-hover: var(--foreground);
+
+  background-color: var(--sidebar-trigger-bg);
+  color: var(--sidebar-trigger-fg);
 
   /* Cursor */
   cursor: var(--cursor-interactive);
@@ -476,7 +507,8 @@
   @media (hover: hover) {
     &:hover,
     &[data-hovered="true"] {
-      @apply bg-default text-foreground;
+      background-color: var(--sidebar-trigger-bg-hover);
+      color: var(--sidebar-trigger-fg-hover);
     }
   }
 

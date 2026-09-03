@@ -64,6 +64,14 @@
    * every crossing reads as a twitch rather than an invitation. Waiting means only an approach that
    * settles counts. */
   --splitter-highlight-delay: 500ms;
+  /* What the line and the grip are painted with, at rest and lit. Separate properties so a caller
+   * can retune one state without flattening the rest onto a single colour. */
+  --splitter-line: var(--separator);
+  --splitter-line-hover: var(--accent);
+  --splitter-line-dragging: var(--splitter-line-hover);
+  --splitter-grip-bg: var(--separator);
+  --splitter-grip-bg-hover: var(--accent);
+  --splitter-grip-bg-dragging: var(--splitter-grip-bg-hover);
 
   @apply relative z-10 flex shrink-0 grow-0 items-center justify-center self-stretch;
   @apply bg-transparent outline-none select-none no-highlight;
@@ -76,7 +84,9 @@
   @apply motion-reduce:transition-none;
 
   &::after {
-    @apply pointer-events-none absolute rounded-sm bg-separator content-[''];
+    @apply pointer-events-none absolute rounded-sm content-[''];
+
+    background-color: var(--splitter-line);
 
     /* Flattened to `Canvas` the divider stops existing rather than weakening — the whole part
      * *is* its background, which is why `separator.css` restates its colour the same way. */
@@ -90,45 +100,46 @@
       block-size 150ms var(--ease-out);
   }
 
+  /* Delayed on the way in and immediate on the way out: the delay lives here rather than in the
+   * base rule, so leaving drops the highlight at once and a pointer that only passes through never
+   * starts the transition at all. It covers the thickening too — both are the same flare. */
   &:hover::after,
-  &[data-hovered="true"]::after,
-  &[data-dragging="true"]::after {
-    @apply bg-accent;
-
-    /* `bg-separator` and `bg-accent` both flatten to `Canvas`, so without this the resting and
-     * active states are byte-identical under the mode and grabbing the handle shows nothing. */
-    @media (forced-colors: active) {
-      background-color: Highlight;
-    }
+  &[data-hovered="true"]::after {
+    background-color: var(--splitter-line-hover);
+    transition-delay: var(--splitter-highlight-delay);
   }
 
   /* The grip answers to the same states as the line, and is reached as a direct child so a nested
    * group's own grip is left alone. */
   &:hover > .splitter__handle-grip,
-  &[data-hovered="true"] > .splitter__handle-grip,
-  &[data-dragging="true"] > .splitter__handle-grip {
-    @apply bg-accent;
-
-    @media (forced-colors: active) {
-      background-color: Highlight;
-    }
-  }
-
-  /* Delayed on the way in and immediate on the way out: the delay lives here rather than in the
-   * base rule, so leaving drops the highlight at once and a pointer that only passes through never
-   * starts the transition at all. It covers the thickening too — both are the same flare. */
-  &:hover::after,
-  &[data-hovered="true"]::after,
-  &:hover > .splitter__handle-grip,
   &[data-hovered="true"] > .splitter__handle-grip {
+    background-color: var(--splitter-grip-bg-hover);
     transition-delay: var(--splitter-highlight-delay);
   }
 
   /* Once a drag is under way the intent is not in question, so it skips the wait. Last, because a
    * drag usually starts from a hover and has to win. */
-  &[data-dragging="true"]::after,
-  &[data-dragging="true"] > .splitter__handle-grip {
+  &[data-dragging="true"]::after {
+    background-color: var(--splitter-line-dragging);
     transition-delay: 0ms;
+  }
+
+  &[data-dragging="true"] > .splitter__handle-grip {
+    background-color: var(--splitter-grip-bg-dragging);
+    transition-delay: 0ms;
+  }
+
+  /* Every lit colour flattens to the same `Canvas` as the resting one, so without this grabbing
+   * the handle shows nothing. One block for both parts, after the colours it overrides. */
+  @media (forced-colors: active) {
+    &:hover::after,
+    &[data-hovered="true"]::after,
+    &[data-dragging="true"]::after,
+    &:hover > .splitter__handle-grip,
+    &[data-hovered="true"] > .splitter__handle-grip,
+    &[data-dragging="true"] > .splitter__handle-grip {
+      background-color: Highlight;
+    }
   }
 
   &:focus-visible,
@@ -167,7 +178,9 @@
  * Sized from custom properties rather than utilities so a theme can retune the pill without
  * restating both axes in both orientations. */
 .splitter__handle-grip {
-  @apply pointer-events-none absolute rounded-full bg-separator;
+  @apply pointer-events-none absolute rounded-full;
+
+  background-color: var(--splitter-grip-bg);
 
   /* The whole part *is* its background, so the mode flattening it onto the page removes the grip
    * rather than weakening it — the same reason the line restates its colour. */

@@ -112,6 +112,11 @@ component that publishes it as an attribute.
 
 `components/button.css` is the densest example of both — read it before writing a new component file.
 
+**Every `ropav` component takes a `class` prop**, merged through its `tv()` recipe rather than
+concatenated, so a utility that conflicts with one the recipe already carries replaces it. That is
+the first thing to reach for. It cannot reach a part drawn in `::before`/`::after`, and it flattens
+every state of whatever property it sets — see [State colors](#state-colors) for the way round both.
+
 ## Theming
 
 Two independent axes. `data-theme` picks the palette, a `light`/`dark` class picks the appearance:
@@ -202,6 +207,39 @@ scrollbar set, and shadows.
 **`themes/default.css` is the source of truth — read it rather than a list in a README**, which goes
 stale the moment a token moves. `themes/shared/theme.css` holds what is derived from those tokens: the
 `--radius-xs` … `--radius-4xl` scale and the easing curves.
+
+### State colors
+
+A component's own properties are the third tier, declared on its block and private to its file —
+`--button-bg`, `--switch-control-bg-checked-hover`, `--sidebar-rail-line`. The convention:
+
+> **A color a state rule paints goes through a custom property.**
+
+That is what makes one state retunable on its own. A color written straight into the rule is not:
+the resting and the lit value are the same property on the same element, so the one declaration a
+caller writes to change either beats every state rule at once — and a utility beats them all
+whatever their specificity, `utilities` being a later layer than `components`. The only way left is
+to restate the whole state set behind `:not()`, which drifts silently the day a state is added.
+
+So a caller sets the property instead, and the states that read the others are left standing:
+
+```html
+<!-- No line at rest; it still flares on hover and while dragging. -->
+<SidebarRoot class="[--sidebar-rail-line:transparent]">
+```
+
+Defaults chain, so retuning one carries the states below it unless they are set too —
+`--sidebar-rail-line-dragging` follows `--sidebar-rail-line-hover`, the way `--button-bg-pressed`
+follows `--button-bg-hover`. Read `components/button.css` for the shape and
+`components/sidebar.css` for a part painted on a pseudo-element, which a class cannot reach at all.
+
+Two limits. The properties are per component and resolve to the tokens above, so a palette change
+belongs in a theme rather than here. And Forced Colors Mode is not covered: those blocks paint the
+system keywords, which are the only colors exempt from the override and not a component's to
+retune — `[--sidebar-rail-line:transparent]` leaves the line drawn under High Contrast, on purpose.
+
+`state-colors.test.ts` in the `ropav` package holds the components not yet converted, each with the
+count it is down to, and fails on a new state color anywhere else.
 
 ### Reduced motion
 
