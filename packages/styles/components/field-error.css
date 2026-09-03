@@ -2,10 +2,6 @@
 .field-error {
   @apply h-0 px-1 text-xs wrap-break-word text-danger opacity-0 data-visible:h-auto data-visible:opacity-100;
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     opacity 150ms var(--ease-out),
     height 350ms var(--ease-smooth);

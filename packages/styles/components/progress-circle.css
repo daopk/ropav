@@ -34,10 +34,6 @@
       stroke: Highlight;
     }
 
-    /**
-     * Transitions
-     * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-     */
     transition: stroke-dashoffset 300ms var(--ease-out);
     @apply motion-reduce:transition-none;
   }

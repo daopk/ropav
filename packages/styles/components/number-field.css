@@ -40,10 +40,6 @@
     grid-template-columns: 40px 1fr 40px;
   }
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     background-color 150ms var(--ease-smooth),
     border-color 150ms var(--ease-smooth),
@@ -142,10 +138,6 @@
   border-color: var(--field-border);
   border-style: solid;
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     background-color 150ms var(--ease-smooth),
     border-color 150ms var(--ease-smooth);

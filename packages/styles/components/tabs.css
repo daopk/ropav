@@ -29,10 +29,6 @@
   > .tabs__list-container__scroll-next {
     @apply absolute z-2 hidden size-4 cursor-(--cursor-interactive) items-center justify-center rounded-full border-0 bg-transparent p-0 text-foreground outline-none;
 
-    /**
-    * Transitions
-    * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-    */
     transition: opacity 150ms var(--ease-smooth);
     @apply motion-reduce:transition-none;
 
@@ -126,10 +122,6 @@
   z-index: 1;
   cursor: var(--cursor-interactive);
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     color 150ms var(--ease-smooth),
     background-color 150ms var(--ease-smooth),
@@ -182,10 +174,6 @@
 .tabs__separator {
   @apply pointer-events-none absolute rounded-sm bg-muted/25;
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition: opacity 150ms var(--ease-smooth);
   @apply motion-reduce:transition-none;
 
@@ -232,10 +220,6 @@
     background-color: Highlight;
   }
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition-duration: 250ms;
   transition-property: translate, width, height;
   transition-timing-function: var(--ease-out-fluid);

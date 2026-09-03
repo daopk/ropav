@@ -4,10 +4,6 @@
 .button {
   @apply relative isolate inline-flex h-9 w-fit origin-center items-center justify-center gap-2 rounded-component px-4 text-sm font-medium whitespace-nowrap outline-none select-none no-highlight;
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     transform 250ms var(--ease-smooth),
     background-color 100ms var(--ease-out),

@@ -84,10 +84,6 @@
 .checkbox__control {
   @apply relative inline-flex size-4 shrink-0 items-center justify-center overflow-hidden rounded-md border [border-width:var(--border-width-field)] border-field-border bg-field shadow-field outline-none no-highlight;
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     background-color 200ms var(--ease-out),
     border-color 200ms var(--ease-out),
@@ -100,15 +96,10 @@
   &::before {
     @apply pointer-events-none absolute inset-0 z-0 origin-center scale-70 rounded-md bg-accent opacity-0 content-[''];
 
-    /**
-     * Transitions
-     * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-     */
     transition:
       scale 100ms var(--ease-linear),
       opacity 200ms var(--ease-linear),
       background-color 200ms var(--ease-out);
-    @apply motion-reduce:transition-none;
   }
 
   /* Interactive states */

@@ -119,10 +119,7 @@
   @apply relative inline-flex h-8 items-center justify-center rounded-component px-2.5 text-sm font-medium outline-none select-none no-highlight;
   touch-action: manipulation;
 
-  /**
-   * Transitions – same as .tag
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
+  /* Same as `.tag`. */
   transition:
     color 100ms var(--ease-smooth),
     scale 100ms var(--ease-smooth),

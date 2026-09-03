@@ -85,10 +85,6 @@
 .popover__trigger {
   @apply inline-block;
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     color 150ms var(--ease-smooth),
     background-color 150ms var(--ease-smooth),

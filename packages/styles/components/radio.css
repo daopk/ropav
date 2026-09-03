@@ -54,10 +54,6 @@
 .radio__control {
   @apply relative inline-flex size-4 shrink-0 items-center justify-center rounded-lg border [border-width:var(--border-width-field)] border-field-border bg-field shadow-field outline-none no-highlight;
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     background-color 200ms var(--ease-out),
     border-color 200ms var(--ease-out),
@@ -134,6 +130,13 @@
   @apply absolute inset-0 flex items-center justify-center;
 
   pointer-events: none;
+
+  /* On the indicator, not in `:empty::before` where the transition lives: the variant reaches a
+   * pseudo-element from its originating element, and appending its condition after `::before`
+   * matches nothing. `:empty` because without it this ties with that rule and loses on order. */
+  &:empty {
+    @apply motion-reduce:transition-none;
+  }
 }
 
 /* :empty pseudo-class ensures these styles only apply when the indicator has no custom children
@@ -146,14 +149,9 @@
   height: 100%;
   scale: 1;
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     scale 200ms var(--ease-out),
     background-color 200ms var(--ease-out);
-  @apply motion-reduce:transition-none;
 }
 
 /* Selected state */

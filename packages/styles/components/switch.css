@@ -90,10 +90,6 @@
 
   background-color: var(--switch-control-bg);
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     background-color 250ms var(--ease-smooth),
     box-shadow 150ms var(--ease-out);
@@ -195,10 +191,6 @@
     color: Canvas;
   }
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     margin 300ms var(--ease-out-fluid),
     background-color 200ms var(--ease-out);

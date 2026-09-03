@@ -5,10 +5,6 @@
 .list-box-item {
   @apply relative flex min-h-9 w-full items-center justify-start gap-3 rounded-2xl px-2 py-1.5 outline-none no-highlight;
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     transform 250ms var(--ease-out-quart),
     box-shadow 150ms var(--ease-out);
@@ -93,10 +89,6 @@
 
   .list-box-item[aria-selected="true"] [data-slot="list-box-item-indicator--checkmark"],
   .list-box-item[data-selected="true"] [data-slot="list-box-item-indicator--checkmark"] {
-    /**
-     * Transitions
-     * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-     */
     transition: stroke-dashoffset 250ms linear;
     @apply motion-reduce:transition-none;
   }

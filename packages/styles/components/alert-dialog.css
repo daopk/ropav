@@ -10,10 +10,6 @@
   @apply inline-block;
   @apply cursor-(--cursor-interactive);
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     transform 250ms var(--ease-out-quart),
     background-color 150ms var(--ease-smooth),
@@ -57,10 +53,6 @@
     @apply animate-out duration-100 ease-out fade-out-0;
   }
 
-  /**
-   * Reduce Animation
-   * CRITICAL: motion-reduce must be AFTER animate for correct override specificity
-   */
   &[data-exiting="true"],
   &[data-entering="true"] {
     @apply will-change-[opacity];
@@ -126,10 +118,6 @@
     @apply animate-out duration-100 ease-out-quad fade-out-0 zoom-out-95;
   }
 
-  /**
-   * Reduce Animation
-   * CRITICAL: motion-reduce must be AFTER animate for correct override specificity
-   */
   &[data-exiting="true"],
   &[data-entering="true"] {
     @apply will-change-[opacity,transform];

@@ -55,10 +55,6 @@
       background-color: transparent;
     }
 
-    /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
     transition:
       background-color 250ms var(--ease-smooth),
       transform 250ms var(--ease-out),
@@ -79,10 +75,7 @@
         outline-offset: -2px;
       }
 
-      /**
-       * Transitions
-       */
-      @apply origin-center transition-all motion-reduce:transition-none;
+      @apply origin-center transition-all;
     }
 
     /* Dragging state - cursor changes and thumb scales down */

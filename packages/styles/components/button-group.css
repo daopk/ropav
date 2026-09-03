@@ -75,10 +75,6 @@
   position: absolute;
   pointer-events: none;
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition: opacity 150ms var(--ease-smooth);
   @apply motion-reduce:transition-none;
 

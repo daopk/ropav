@@ -28,10 +28,6 @@
 
   cursor: var(--cursor-interactive);
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     transform 250ms var(--ease-smooth),
     background-color 100ms var(--ease-out),

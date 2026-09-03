@@ -84,10 +84,6 @@
 
   will-change: scale;
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     transform 250ms var(--ease-out),
     background-color 100ms var(--ease-out),
@@ -186,10 +182,6 @@
   @apply relative flex aspect-square size-full items-center justify-center rounded-3xl text-center text-sm font-medium outline-none no-highlight;
 
   will-change: scale;
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     transform 250ms var(--ease-out),
     box-shadow 100ms var(--ease-out);

@@ -4,10 +4,6 @@
 
   @apply relative inline-flex items-center gap-1 rounded-xl font-medium select-none no-highlight;
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     color 100ms var(--ease-smooth),
     scale 100ms var(--ease-smooth),

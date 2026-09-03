@@ -19,10 +19,6 @@
     height: auto;
   }
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     background-color 150ms var(--ease-smooth),
     border-color 150ms var(--ease-smooth),
@@ -136,10 +132,6 @@
     padding-top: 0.5rem;
   }
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     background-color 150ms var(--ease-smooth),
     border-color 150ms var(--ease-smooth);
@@ -162,10 +154,6 @@
     padding-top: 0.5rem;
   }
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     background-color 150ms var(--ease-smooth),
     border-color 150ms var(--ease-smooth);

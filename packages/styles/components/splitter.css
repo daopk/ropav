@@ -71,6 +71,10 @@
   /* The gesture is ours; the browser must not also pan or scroll from a drag on this. */
   @apply touch-none;
 
+  /* On the host, not in `::after` where the transition lives: the variant reaches a pseudo-element
+   * from its originating element, and appending its condition after `::after` matches nothing. */
+  @apply motion-reduce:transition-none;
+
   &::after {
     @apply pointer-events-none absolute rounded-sm bg-separator content-[''];
 
@@ -80,15 +84,10 @@
       background-color: CanvasText;
     }
 
-    /**
-     * Transitions
-     * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-     */
     transition:
       background-color 150ms var(--ease-out),
       inline-size 150ms var(--ease-out),
       block-size 150ms var(--ease-out);
-    @apply motion-reduce:transition-none;
   }
 
   &:hover::after,
@@ -176,10 +175,6 @@
     background-color: CanvasText;
   }
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition: background-color 150ms var(--ease-out);
   @apply motion-reduce:transition-none;
 }

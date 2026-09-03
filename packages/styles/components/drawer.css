@@ -9,10 +9,6 @@
 .drawer__trigger {
   @apply inline-block cursor-(--cursor-interactive);
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     transform 250ms var(--ease-out-quart),
     background-color 150ms var(--ease-smooth),

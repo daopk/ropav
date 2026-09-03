@@ -43,10 +43,6 @@
   height: var(--disclosure-panel-height);
   overflow: clip;
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     height 200ms var(--ease-out-quad),
     opacity 200ms var(--ease-out);

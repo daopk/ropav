@@ -51,10 +51,6 @@
 
   inline-size: var(--sidebar-width);
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition: inline-size 200ms var(--ease-out);
   @apply motion-reduce:transition-none;
 }
@@ -188,10 +184,6 @@
   /* Cursor */
   cursor: var(--cursor-interactive);
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     background-color 150ms var(--ease-out),
     color 150ms var(--ease-out);
@@ -337,10 +329,6 @@
   height: var(--disclosure-panel-height);
   overflow: clip;
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     height 200ms var(--ease-out-quad),
     opacity 200ms var(--ease-out);
@@ -385,6 +373,10 @@
   inline-size: var(--sidebar-rail-gutter);
   cursor: var(--cursor-interactive);
 
+  /* On the host, not in `::after` where the transition lives: the variant reaches a pseudo-element
+   * from its originating element, and appending its condition after `::after` matches nothing. */
+  @apply motion-reduce:transition-none;
+
   &::after {
     @apply pointer-events-none absolute inset-y-0 rounded-sm bg-separator content-[''];
 
@@ -396,14 +388,9 @@
       background-color: CanvasText;
     }
 
-    /**
-     * Transitions
-     * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-     */
     transition:
       background-color 150ms var(--ease-out),
       inline-size 150ms var(--ease-out);
-    @apply motion-reduce:transition-none;
   }
 
   &:hover::after,
@@ -476,10 +463,6 @@
   /* Cursor */
   cursor: var(--cursor-interactive);
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     background-color 150ms var(--ease-out),
     color 150ms var(--ease-out);

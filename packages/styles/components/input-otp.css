@@ -21,10 +21,6 @@
   border-width: var(--border-width-field);
   border-color: var(--field-border);
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     background-color 150ms var(--ease-smooth),
     border-color 150ms var(--ease-smooth),
@@ -66,10 +62,6 @@
 .input-otp__slot-value {
   @apply text-lg leading-6 tracking-[-0.27px];
 
-  /**
-   * Animations
-   * CRITICAL: motion-reduce must be AFTER animation for correct override specificity
-   */
   animation: slot-value-in 250ms var(--ease-smooth) both;
   transform-origin: bottom center;
   @apply motion-reduce:animate-none;

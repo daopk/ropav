@@ -84,10 +84,6 @@
 
   will-change: scale;
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     transform 250ms var(--ease-out),
     background-color 100ms var(--ease-out),
@@ -186,10 +182,6 @@
   cursor: var(--cursor-interactive);
 
   will-change: background-color, border-color;
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     box-shadow 100ms var(--ease-out),
     border-color 100ms var(--ease-out);

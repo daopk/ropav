@@ -59,10 +59,6 @@
   /* Base Styles */
   @apply flex flex-1 items-center justify-between px-4 py-4 text-start text-sm font-medium no-highlight;
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     opacity 150ms var(--ease-out),
     box-shadow 150ms var(--ease-out);
@@ -98,10 +94,6 @@
   height: var(--disclosure-panel-height);
   overflow: clip;
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     height 200ms var(--ease-out-quad),
     opacity 200ms var(--ease-out);

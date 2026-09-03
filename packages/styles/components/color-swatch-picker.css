@@ -24,10 +24,6 @@
   /* Cursor */
   cursor: var(--cursor-interactive);
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     border-color 100ms var(--ease-out),
     box-shadow 100ms var(--ease-out);
@@ -68,10 +64,6 @@
 
   /* Inherit border-radius from item */
   border-radius: inherit;
-  /**
-  * Transitions
-  * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-  */
   transition: transform 100ms var(--ease-out);
   @apply transform-gpu motion-reduce:transition-none;
 

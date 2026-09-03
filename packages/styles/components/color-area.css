@@ -54,10 +54,6 @@
     0 0 0 1px rgba(0, 0, 0, 0.1),
     inset 0 0 0 1px rgba(0, 0, 0, 0.1);
 
-  /**
-   * Transitions
-   * CRITICAL: motion-reduce must be AFTER transition for correct override specificity
-   */
   transition:
     width 150ms var(--ease-out),
     height 150ms var(--ease-out);
