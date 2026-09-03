@@ -243,7 +243,6 @@ const KNOWN_DEBT: Record<string, number> = {
   "date-input-group.css": 7,
   "input-group.css": 1,
   "input-otp.css": 3,
-  "input.css": 1,
   "label.css": 2,
   "link.css": 2,
   "number-field.css": 2,
@@ -255,7 +254,6 @@ const KNOWN_DEBT: Record<string, number> = {
   "table.css": 8,
   "tabs.css": 1,
   "tag.css": 5,
-  "textarea.css": 1,
 };
 
 const describeAll = (findings: Paint[]) =>

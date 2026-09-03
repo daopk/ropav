@@ -1,5 +1,12 @@
 .input {
-  @apply rounded-field border bg-field px-3 field-line-md text-field-foreground shadow-field outline-none placeholder:text-field-placeholder;
+  @apply rounded-field border px-3 field-line-md text-field-foreground shadow-field outline-none placeholder:text-field-placeholder;
+
+  /* The fill, per state. The `--secondary` variant re-points these and declares nothing else. */
+  --input-bg: var(--field-background, var(--default));
+  --input-bg-hover: var(--field-hover);
+  --input-bg-focus: var(--field-focus);
+
+  background-color: var(--input-bg);
 
   border-width: var(--border-width-field);
   border-color: var(--field-border);
@@ -23,7 +30,7 @@
   @media (hover: hover) {
     &:hover:not(:focus):not(:focus-visible),
     &[data-hovered="true"]:not([data-focused="true"]):not([data-focus-visible="true"]) {
-      @apply bg-field-hover;
+      background-color: var(--input-bg-hover);
       border-color: var(--field-border-hover);
     }
   }
@@ -33,7 +40,7 @@
   &[data-focused="true"] {
     @apply status-focused-field;
     border-color: var(--field-border-focus);
-    background-color: var(--field-focus);
+    background-color: var(--input-bg-focus);
   }
 
   /* Focus visible state */
@@ -44,7 +51,7 @@
   /* Invalid state */
   &[data-invalid="true"] {
     @apply status-invalid-field;
-    background-color: var(--field-focus);
+    background-color: var(--input-bg-focus);
   }
 
   /* Disabled state */
@@ -62,34 +69,10 @@
 
 .input--secondary {
   @apply shadow-none;
-  background-color: var(--input-bg);
 
   --input-bg: var(--default);
   --input-bg-hover: var(--default-hover);
   --input-bg-focus: var(--default);
-
-  @media (hover: hover) {
-    &:hover:not(:focus):not(:focus-visible),
-    &[data-hovered="true"]:not([data-focus-visible="true"]):not([data-focused="true"]) {
-      background-color: var(--input-bg-hover);
-    }
-  }
-
-  &:focus,
-  &[data-focused="true"] {
-    background-color: var(--input-bg-focus);
-  }
-
-  /* Focus visible state */
-  &:focus-visible:not(:focus),
-  &[data-focus-visible="true"] {
-  }
-
-  /* Invalid state */
-  &[data-invalid="true"] {
-    @apply status-invalid-field;
-    background-color: var(--input-bg-focus);
-  }
 }
 
 /* Full width modifier */

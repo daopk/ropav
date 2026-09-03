@@ -98,6 +98,32 @@ const parts: Part[] = [
     ],
   },
   {
+    html: `<input class="input" />`,
+    knobHost: ".input",
+    name: "the field's fill",
+    paint: ".input",
+    stateHost: ".input",
+    states: [
+      { attr: null, knob: "--input-bg", paints: "var(--field-background, var(--default))" },
+      { attr: "data-hovered", knob: "--input-bg-hover", paints: "var(--field-hover)" },
+      { attr: "data-focused", knob: "--input-bg-focus", paints: "var(--field-focus)" },
+    ],
+  },
+  {
+    // The variant re-points the properties and declares no state rule of its own, so this is also
+    // what proves the base's rules read through to it.
+    html: `<input class="input input--secondary" />`,
+    knobHost: ".input",
+    name: "the secondary field's fill",
+    paint: ".input",
+    stateHost: ".input",
+    states: [
+      { attr: null, knob: "--input-bg", paints: "var(--default)" },
+      { attr: "data-hovered", knob: "--input-bg-hover", paints: "var(--default-hover)" },
+      { attr: "data-focused", knob: "--input-bg-focus", paints: "var(--default)" },
+    ],
+  },
+  {
     html: SPLITTER,
     knobHost: ".splitter__handle",
     name: "the splitter handle's line",
