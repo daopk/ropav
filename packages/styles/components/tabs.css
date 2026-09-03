@@ -117,7 +117,12 @@
 
 /* Individual tab */
 .tabs__tab {
-  @apply relative flex h-8 w-full items-center justify-center rounded-component px-4 text-center text-sm font-medium text-muted outline-none no-highlight;
+  @apply relative flex h-8 w-full items-center justify-center rounded-component px-4 text-center text-sm font-medium outline-none no-highlight;
+
+  --tabs-tab-fg: var(--muted);
+  --tabs-tab-fg-selected: var(--segment-foreground);
+
+  color: var(--tabs-tab-fg);
 
   z-index: 1;
   cursor: var(--cursor-interactive);
@@ -131,7 +136,7 @@
 
   /* Selected state */
   &[data-selected="true"] {
-    @apply text-segment-foreground;
+    color: var(--tabs-tab-fg-selected);
 
     /* Sits on top of the indicator, which forced colors paints `Highlight`. `forced-color-adjust`
      * suppresses the `Canvas` backplate Chromium would otherwise paint behind this label - it

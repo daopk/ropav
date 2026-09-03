@@ -140,7 +140,16 @@
 
 .number-field__increment-button,
 .number-field__decrement-button {
-  @apply flex h-full w-10 items-center justify-center rounded-none bg-transparent text-field-foreground outline-none;
+  @apply flex h-full w-10 items-center justify-center rounded-none text-field-foreground outline-none;
+
+  --number-field-button-bg: transparent;
+  --number-field-button-bg-pressed: color-mix(
+    in oklab,
+    var(--field-foreground, var(--foreground)) 10%,
+    transparent
+  );
+
+  background-color: var(--number-field-button-bg);
   border-width: var(--border-width-field);
   border-color: var(--field-border);
   border-style: solid;
@@ -166,7 +175,7 @@
   /* Pressed state */
   &:active,
   &[data-pressed="true"] {
-    @apply bg-field-foreground/10;
+    background-color: var(--number-field-button-bg-pressed);
     transform: scale(0.97);
   }
 

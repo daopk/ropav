@@ -1,6 +1,12 @@
 /* Base link styles */
 .link {
-  @apply relative inline-flex h-fit w-fit items-center rounded-xl font-medium text-link no-underline decoration-separator-tertiary decoration-[1.5px] underline-offset-4 no-highlight;
+  @apply relative inline-flex h-fit w-fit items-center rounded-xl font-medium text-link no-underline decoration-[1.5px] underline-offset-4 no-highlight;
+
+  --link-decoration: var(--separator-tertiary);
+  --link-decoration-hover: color-mix(in oklab, var(--muted) 50%, transparent);
+  --link-decoration-pressed: var(--muted);
+
+  text-decoration-color: var(--link-decoration);
 
   transition:
     color 100ms var(--ease-smooth),
@@ -16,7 +22,9 @@
   @media (hover: hover) {
     &:hover,
     &[data-hovered="true"] {
-      @apply underline decoration-muted/50;
+      @apply underline;
+
+      text-decoration-color: var(--link-decoration-hover);
 
       .link__icon {
         @apply opacity-100;
@@ -27,7 +35,9 @@
   /* Pressed state */
   &:active,
   &[data-pressed="true"] {
-    @apply underline decoration-muted;
+    @apply underline;
+
+    text-decoration-color: var(--link-decoration-pressed);
 
     .link__icon {
       @apply opacity-100;

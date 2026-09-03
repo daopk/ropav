@@ -1,7 +1,12 @@
 /* Base label styles */
 .label {
   /* Base styling */
-  @apply text-sm font-medium text-foreground;
+  @apply text-sm font-medium;
+
+  --label-fg: var(--foreground);
+  --label-fg-invalid: var(--danger);
+
+  color: var(--label-fg);
 }
 
 /*
@@ -24,5 +29,5 @@
 .label--invalid,
 [data-invalid="true"] .label,
 [aria-invalid="true"] .label {
-  @apply text-danger;
+  color: var(--label-fg-invalid);
 }

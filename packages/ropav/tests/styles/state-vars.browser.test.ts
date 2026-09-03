@@ -24,7 +24,7 @@ type State = {
   /** The value expression its default resolves to. */
   paints: string;
   /** `backgroundColor` unless the state paints the text instead. */
-  prop?: "backgroundColor" | "color";
+  prop?: "backgroundColor" | "color" | "textDecorationColor";
 };
 
 type Part = {
@@ -142,6 +142,35 @@ const parts: Part[] = [
         attr: "data-invalid",
         knob: "--search-field-group-bg-focus",
         paints: "var(--default)",
+      },
+    ],
+  },
+  {
+    // Not a fill, and the defaults are `color-mix()` rather than a bare token — both of which the
+    // property has to carry through unchanged.
+    html: `<a class="link"></a>`,
+    knobHost: ".link",
+    name: "the link's underline",
+    paint: ".link",
+    stateHost: ".link",
+    states: [
+      {
+        attr: null,
+        knob: "--link-decoration",
+        paints: "var(--separator-tertiary)",
+        prop: "textDecorationColor",
+      },
+      {
+        attr: "data-hovered",
+        knob: "--link-decoration-hover",
+        paints: "color-mix(in oklab, var(--muted) 50%, transparent)",
+        prop: "textDecorationColor",
+      },
+      {
+        attr: "data-pressed",
+        knob: "--link-decoration-pressed",
+        paints: "var(--muted)",
+        prop: "textDecorationColor",
       },
     ],
   },

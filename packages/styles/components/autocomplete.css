@@ -4,7 +4,14 @@
 }
 
 .autocomplete__trigger {
-  @apply relative isolate inline-flex min-h-9 rounded-field border bg-field px-3 field-line-md text-field-foreground shadow-field outline-none select-none no-highlight;
+  @apply relative isolate inline-flex min-h-9 rounded-field border px-3 field-line-md text-field-foreground shadow-field outline-none select-none no-highlight;
+
+  /* The fill, per state. The `--secondary` variant re-points these and declares nothing else. */
+  --autocomplete-trigger-bg: var(--field-background, var(--default));
+  --autocomplete-trigger-bg-hover: var(--field-hover);
+  --autocomplete-trigger-bg-focus: var(--field-focus);
+
+  background-color: var(--autocomplete-trigger-bg);
 
   /* Forced Colors Mode flattens the fill onto the page and strips the shadow, leaving a control
    * with nothing to say it is one. `ButtonBorder` is the keyword the platform uses for a
@@ -35,7 +42,7 @@
   @media (hover: hover) {
     &:hover:not(:has(.autocomplete__clear-button:hover)),
     &[data-hovered="true"]:not(:has(.autocomplete__clear-button:hover)) {
-      @apply bg-field-hover;
+      background-color: var(--autocomplete-trigger-bg-hover);
       border-color: var(--field-border-hover);
     }
   }
@@ -45,7 +52,7 @@
   &[data-focus-visible="true"] {
     @apply status-focused;
     border-color: var(--field-border-focus);
-    background-color: var(--field-focus);
+    background-color: var(--autocomplete-trigger-bg-focus);
   }
 
   /* Focus state */
@@ -57,7 +64,7 @@
   .autocomplete[data-invalid="true"] &,
   .autocomplete[aria-invalid="true"] & {
     @apply status-invalid-field;
-    background-color: var(--field-focus);
+    background-color: var(--autocomplete-trigger-bg-focus);
   }
 
   /* Disabled state */
@@ -75,33 +82,10 @@
 
 .autocomplete--secondary .autocomplete__trigger {
   @apply shadow-none;
-  background-color: var(--autocomplete-trigger-bg);
 
   --autocomplete-trigger-bg: var(--default);
   --autocomplete-trigger-bg-hover: var(--default-hover);
   --autocomplete-trigger-bg-focus: var(--default);
-
-  /* Exclude when clear button is hovered to prevent double hover effect */
-  @media (hover: hover) {
-    &:hover:not(:has(.autocomplete__clear-button:hover)),
-    &[data-hovered="true"]:not(:has(.autocomplete__clear-button:hover)) {
-      background-color: var(--autocomplete-trigger-bg-hover);
-    }
-  }
-
-  &:focus-visible:not(:focus),
-  &[data-focus-visible="true"] {
-    background-color: var(--autocomplete-trigger-bg-focus);
-  }
-
-  &:focus,
-  &[data-focus="true"] {
-  }
-
-  .autocomplete[data-invalid="true"] &,
-  .autocomplete[aria-invalid="true"] & {
-    background-color: var(--autocomplete-trigger-bg-focus);
-  }
 }
 
 .autocomplete__value {
@@ -253,7 +237,12 @@
 /* Clear Button styles */
 .autocomplete__clear-button {
   @apply relative isolate inline-flex h-6 w-6 shrink-0 origin-center items-center justify-center rounded-xl p-1 text-muted select-none no-highlight;
-  @apply me-0 size-5 shrink-0 self-center bg-transparent;
+  @apply me-0 size-5 shrink-0 self-center;
+
+  --autocomplete-clear-button-bg: transparent;
+  --autocomplete-clear-button-bg-hover: var(--default-hover);
+
+  background-color: var(--autocomplete-clear-button-bg);
 
   /* Cursor */
   cursor: var(--cursor-interactive);
@@ -281,7 +270,7 @@
   @media (hover: hover) {
     &:hover,
     &[data-hovered="true"] {
-      @apply bg-default-hover;
+      background-color: var(--autocomplete-clear-button-bg-hover);
     }
   }
 

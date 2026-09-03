@@ -66,11 +66,16 @@
   /* Remove default button styles */
   @apply border-none bg-transparent outline-none;
 
+  --combo-box-trigger-fg: var(--field-placeholder, var(--muted));
+  --combo-box-trigger-fg-hover: var(--field-foreground, var(--foreground));
+
+  color: var(--combo-box-trigger-fg);
+
   /* Hover state */
   @media (hover: hover) {
     &:hover,
     &[data-hovered="true"] {
-      @apply text-field-foreground;
+      color: var(--combo-box-trigger-fg-hover);
     }
   }
 

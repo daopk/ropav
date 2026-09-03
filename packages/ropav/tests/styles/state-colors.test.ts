@@ -242,22 +242,12 @@ const audit = () => {
  * component means dropping its entry — the goal is an empty object.
  */
 const KNOWN_DEBT: Record<string, number> = {
-  "autocomplete.css": 2,
-  "breadcrumbs.css": 1,
   "calendar-year-picker.css": 5,
   "calendar.css": 12,
   "checkbox.css": 16,
-  "close-button.css": 1,
-  "combo-box.css": 1,
   "date-input-group.css": 7,
-  "label.css": 1,
-  "link.css": 2,
-  "number-field.css": 1,
   "range-calendar.css": 10,
-  "segmented-control.css": 2,
-  "switch.css": 2,
   "table.css": 8,
-  "tabs.css": 1,
   "tag.css": 5,
 };
 

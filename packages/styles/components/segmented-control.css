@@ -38,7 +38,13 @@
    ========================================================================== */
 
 .segmented-control__item {
-  @apply relative inline-flex h-7 min-w-0 shrink-0 appearance-none items-center justify-center gap-2 rounded-component border-0 bg-transparent px-3 text-center text-sm font-medium whitespace-nowrap text-muted outline-none select-none no-highlight;
+  @apply relative inline-flex h-7 min-w-0 shrink-0 appearance-none items-center justify-center gap-2 rounded-component border-0 bg-transparent px-3 text-center text-sm font-medium whitespace-nowrap outline-none select-none no-highlight;
+
+  --segmented-control-item-fg: var(--muted);
+  --segmented-control-item-fg-hover: var(--foreground);
+  --segmented-control-item-fg-selected: var(--segment-foreground);
+
+  color: var(--segmented-control-item-fg);
 
   z-index: 1;
   cursor: var(--cursor-interactive);
@@ -50,7 +56,7 @@
 
   /* Selected state */
   &[data-selected="true"] {
-    @apply text-segment-foreground;
+    color: var(--segmented-control-item-fg-selected);
 
     /* Sits on top of the indicator, which forced colors paints `Highlight`. `forced-color-adjust`
      * suppresses the `Canvas` backplate Chromium would otherwise paint behind this label - it
@@ -65,7 +71,7 @@
   @media (hover: hover) {
     &:not([data-selected="true"]):not([data-disabled="true"]):hover,
     &[data-hovered="true"]:not([data-selected="true"]):not([data-disabled="true"]) {
-      @apply text-foreground;
+      color: var(--segmented-control-item-fg-hover);
     }
   }
 

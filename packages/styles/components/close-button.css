@@ -41,7 +41,12 @@
 
 /* Variants */
 .close-button--default {
-  @apply bg-default text-muted;
+  @apply text-muted;
+
+  --close-button-bg: var(--default);
+  --close-button-bg-hover: var(--default-hover);
+
+  background-color: var(--close-button-bg);
 
   /* Forced Colors Mode flattens the fill onto the page and strips the shadow, leaving a control
    * with nothing to say it is one. `ButtonBorder` is the keyword the platform uses for a
@@ -58,7 +63,7 @@
   @media (hover: hover) {
     &:hover,
     &[data-hovered="true"] {
-      @apply bg-default-hover;
+      background-color: var(--close-button-bg-hover);
     }
   }
 
