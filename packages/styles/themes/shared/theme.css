@@ -5,6 +5,7 @@
   --color-surface: var(--surface);
   --color-surface-foreground: var(--surface-foreground);
   --color-surface-hover: var(--surface-hover);
+  --color-state-layer: var(--state-layer);
 
   --color-surface-secondary: var(--surface-secondary);
   --color-surface-secondary-foreground: var(--surface-secondary-foreground);

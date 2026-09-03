@@ -729,6 +729,7 @@ export function getDerivedColorFormulas(
   const isLight = theme === "light";
   const vibrant = options?.vibrant ?? false;
   const [softPct, softHoverPct] = isLight ? ["15%", "20%"] : ["12%", "16%"];
+  const statePct = isLight ? "9%" : "7%";
 
   const vibrantSoftFg = "color-mix(in oklab, var(--VAR) 92%, var(--foreground) 8%)";
   const sfFg = (colorVar: string, accessibleFormula: string) =>
@@ -773,6 +774,7 @@ export function getDerivedColorFormulas(
       "color-mix(in oklab, var(--surface) 85%, var(--surface-foreground) 15%)",
     "--separator-tertiary":
       "color-mix(in oklab, var(--surface) 81%, var(--surface-foreground) 19%)",
+    "--state-layer": `color-mix(in oklab, var(--surface-foreground) ${statePct}, transparent)`,
     "--success-hover": "color-mix(in oklab, var(--success) 90%, var(--success-foreground) 10%)",
     "--success-soft": `color-mix(in oklab, var(--success) ${softPct}, transparent)`,
     "--success-soft-foreground": sfFg(

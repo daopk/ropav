@@ -98,6 +98,21 @@
     /* Calculated Colors */
     --surface-hover: color-mix(in oklab, var(--surface) 92%, var(--surface-foreground) 8%);
 
+    /* The layer a state paints on whatever is behind it, named for what it is rather than for one
+     * of the states it serves - hover reads it, so do a press and the muted selection a calendar
+     * gives a day outside the month. Distinct from `--surface-hover` above, which is a surface
+     * that has been tinted and stays opaque: this one is an alpha, so a component transparent at
+     * rest can mark a state without inventing a fill of its own.
+     *
+     * A neutral cannot do this job. It has to be picked against one background and is then wrong
+     * on every other - invisible against a fill of its own lightness, and against a translucent
+     * surface it cannot know what is behind at all. An alpha darkens whatever it lands on.
+     *
+     * The halves carry different percentages because compositing happens in sRGB while the palette
+     * is authored in Oklab: the same alpha reads stronger over a dark surface than a light one.
+     * These are the pair that lands where the flat neutral used to. */
+    --state-layer: color-mix(in oklab, var(--surface-foreground) 9%, transparent);
+
     --background-secondary: color-mix(in oklab, var(--background) 96%, var(--foreground) 4%);
     --background-tertiary: color-mix(in oklab, var(--background) 92%, var(--foreground) 8%);
     --background-inverse: var(--foreground);
@@ -205,6 +220,7 @@
 
     /* Calculated Colors */
     --surface-hover: color-mix(in oklab, var(--surface) 92%, var(--surface-foreground) 8%);
+    --state-layer: color-mix(in oklab, var(--surface-foreground) 7%, transparent);
 
     --background-secondary: color-mix(in oklab, var(--background) 96%, var(--foreground) 4%);
     --background-tertiary: color-mix(in oklab, var(--background) 92%, var(--foreground) 8%);

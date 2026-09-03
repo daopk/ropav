@@ -123,6 +123,7 @@
     --background-inverse: var(--foreground);
     --background-secondary: color-mix(in oklab, var(--background) 96%, var(--foreground) 4%);
     --background-tertiary: color-mix(in oklab, var(--background) 92%, var(--foreground) 8%);
+    --state-layer: color-mix(in oklab, var(--surface-foreground) 9%, transparent);
   }
 
   [data-theme="lavender"].dark,
@@ -227,5 +228,6 @@
     --background-inverse: var(--foreground);
     --background-secondary: color-mix(in oklab, var(--background) 96%, var(--foreground) 4%);
     --background-tertiary: color-mix(in oklab, var(--background) 92%, var(--foreground) 8%);
+    --state-layer: color-mix(in oklab, var(--surface-foreground) 7%, transparent);
   }
 }
