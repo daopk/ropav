@@ -165,6 +165,7 @@ export const Sizes: Story = {
         >
           <Label>Size {{ size }}</Label>
           ${sizedField}
+          ${calendar}
         </DatePickerRoot>
       </div>
     `,
