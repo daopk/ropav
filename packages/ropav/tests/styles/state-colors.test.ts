@@ -111,17 +111,20 @@ type Paint = {
 
 const STATE_MARKER = /\[[a-z-]+(?:=(?:"[^"]*"|[^\]]*))?\]|:not\([^)]*\)|:is\([^)]*\)/g;
 
-const partOf = (blocks: string[]) =>
-  blocks
-    .filter((block) => !block.startsWith("@"))
-    .join(" ")
+const partOf = (blocks: string[]) => {
+  const selector = blocks.filter((block) => !block.startsWith("@")).join(" ");
+  // `data-slot` names a part of a component, so it identifies a box; a state attribute does not.
+  // Deduped, because a comma-separated rule would otherwise name the same box once per selector.
+  const slots = [...selector.matchAll(/\[data-slot="([^"]+)"\]/g)].map((match) => `@${match[1]}`);
+  const rest = selector
     .replace(STATE_MARKER, "")
     .replace(STATE_PSEUDO, "")
     .replaceAll(/[&>,]/g, " ")
     .split(/\s+/)
-    .filter((token) => token.startsWith(".") || token.startsWith("::"))
-    .sort()
-    .join("");
+    .filter((token) => token.startsWith(".") || token.startsWith("::"));
+
+  return [...new Set([...rest, ...slots])].sort().join("");
+};
 
 /** Every colour a component paints, resting and stateful alike. */
 const allPaints = () => {
@@ -133,6 +136,7 @@ const allPaints = () => {
 
     const blocks: string[] = [];
     let inComment = false;
+    let pending = "";
 
     for (const [index, raw] of readFileSync(path.join(dir, file), "utf8").split("\n").entries()) {
       let line = raw.trim();
@@ -148,6 +152,19 @@ const allPaints = () => {
       }
 
       line = line.replace(/\/\*.*?\*\//g, "").trim();
+
+      if (!line && !pending) continue;
+
+      // A selector or a value can span lines; only `{`, `}` and `;` end a logical one.
+      if (!/[{};]$/.test(line)) {
+        pending += (pending ? " " : "") + line;
+        continue;
+      }
+
+      if (pending) {
+        line = `${pending} ${line}`;
+        pending = "";
+      }
 
       if (!line) continue;
 
@@ -197,7 +214,7 @@ const allPaints = () => {
             ...shared,
             part: shared.part + (pseudo ? `::${pseudo[1]}` : ""),
             property: PAINTS[prefix]!,
-            viaProperty: false,
+            viaProperty: suffix.includes("var(--"),
             what: bare,
           });
         }
@@ -242,10 +259,8 @@ const audit = () => {
  * component means dropping its entry — the goal is an empty object.
  */
 const KNOWN_DEBT: Record<string, number> = {
-  "calendar-year-picker.css": 5,
-  "calendar.css": 12,
-  "checkbox.css": 16,
-  "range-calendar.css": 10,
+  "checkbox.css": 13,
+  "range-calendar.css": 11,
 };
 
 const describeAll = (findings: Paint[]) =>

@@ -97,7 +97,7 @@
   @media (hover: hover) {
     &:hover,
     &[data-hovered="true"] {
-      @apply bg-default text-accent-soft-foreground;
+      @apply bg-default;
     }
   }
 
@@ -181,6 +181,25 @@
   /* Cell (td) wrapper styles - margins now work with grid layout */
   @apply relative flex aspect-square size-full items-center justify-center rounded-3xl text-center text-sm font-medium outline-none no-highlight;
 
+  /* Eight states repaint a day, several of them in pairs — today and hovered, selected and
+   * pressed, selected and outside the month. One declaration cannot tell them apart, so each
+   * reads its own. */
+  --calendar-cell-bg: transparent;
+  --calendar-cell-bg-hover: var(--default);
+  --calendar-cell-bg-pressed: var(--calendar-cell-bg-hover);
+  --calendar-cell-bg-today: var(--accent-soft);
+  --calendar-cell-bg-today-hover: var(--accent-soft-hover);
+  --calendar-cell-bg-selected: var(--accent);
+  --calendar-cell-bg-selected-pressed: var(--accent-hover);
+  --calendar-cell-bg-selected-outside-month: var(--default);
+  --calendar-cell-fg: currentcolor;
+  --calendar-cell-fg-today: var(--accent-soft-foreground);
+  --calendar-cell-fg-selected: var(--accent-foreground);
+  --calendar-cell-fg-outside-month: var(--muted);
+
+  background-color: var(--calendar-cell-bg);
+  color: var(--calendar-cell-fg);
+
   will-change: scale;
   transition:
     transform 250ms var(--ease-out),
@@ -197,7 +216,8 @@
 
   /* Today indicator */
   &[data-today="true"] {
-    @apply bg-accent-soft text-accent-soft-foreground;
+    background-color: var(--calendar-cell-bg-today);
+    color: var(--calendar-cell-fg-today);
 
     /* A tinted background is all that marks today, and forced colors flattens it onto the page.
      * An edge rather than a fill, so today still reads as itself once it is also selected. */
@@ -209,25 +229,27 @@
     @media (hover: hover) {
       &:hover:not([data-selected="true"]),
       &[data-hovered="true"]:not([data-selected="true"]) {
-        @apply bg-accent-soft-hover;
+        background-color: var(--calendar-cell-bg-today-hover);
       }
     }
   }
 
   /* Selected state */
   &[data-selected="true"] {
-    @apply bg-accent text-accent-foreground;
+    background-color: var(--calendar-cell-bg-selected);
+    color: var(--calendar-cell-fg-selected);
+
     @apply forced-selected;
   }
 
   /* Pressed state */
   &:active,
   &[data-pressed="true"] {
-    @apply bg-default;
+    background-color: var(--calendar-cell-bg-pressed);
     transform: scale(0.95);
 
     &[data-selected="true"] {
-      @apply bg-accent-hover;
+      background-color: var(--calendar-cell-bg-selected-pressed);
     }
   }
 
@@ -235,17 +257,19 @@
   @media (hover: hover) {
     &:hover:not([data-selected="true"]),
     &[data-hovered="true"]:not([data-selected="true"]) {
-      @apply bg-default;
+      background-color: var(--calendar-cell-bg-hover);
     }
   }
 
   /* Outside month (previous/next month days) */
   &[data-outside-month="true"] {
-    @apply text-muted opacity-50;
+    @apply opacity-50;
+
+    color: var(--calendar-cell-fg-outside-month);
   }
 
   &[data-selected="true"][data-outside-month="true"] {
-    @apply bg-default;
+    background-color: var(--calendar-cell-bg-selected-outside-month);
   }
 
   /* Unavailable dates */
@@ -264,10 +288,15 @@
 
 /* Cell indicator - small dot at bottom center of cell */
 .calendar__cell-indicator {
-  @apply absolute bottom-1 left-1/2 size-[3px] -translate-x-1/2 rounded-xs bg-muted;
+  @apply absolute bottom-1 left-1/2 size-[3px] -translate-x-1/2 rounded-xs;
+
+  --calendar-cell-indicator-bg: var(--muted);
+  --calendar-cell-indicator-bg-selected: var(--accent-foreground);
+
+  background-color: var(--calendar-cell-indicator-bg);
 
   /* Indicator color changes when cell is selected */
   [data-selected="true"] > & {
-    @apply bg-accent-foreground;
+    background-color: var(--calendar-cell-indicator-bg-selected);
   }
 }
