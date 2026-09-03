@@ -1,0 +1,78 @@
+/* Drop zone component styles */
+
+.drop-zone {
+  @apply relative flex w-full flex-col items-center justify-center gap-2 rounded-component p-6 text-center text-sm outline-none;
+
+  /* The dashed edge is this component's whole affordance, so it is painted from `--border`
+   * rather than `--field-border`: the default theme sets that to `transparent` with a width of
+   * `0`, which is right for an input sitting on a filled background and wrong for a region
+   * whose only boundary is the line itself. */
+  --drop-zone-border: var(--border);
+  --drop-zone-bg: transparent;
+  --drop-zone-fg: var(--muted);
+
+  border: var(--border-width) dashed var(--drop-zone-border);
+  background-color: var(--drop-zone-bg);
+  color: var(--drop-zone-fg);
+
+  transition:
+    background-color 150ms var(--ease-smooth),
+    border-color 150ms var(--ease-smooth);
+  @apply motion-reduce:transition-none;
+
+  @media (hover: hover) {
+    &:hover,
+    &[data-hovered="true"] {
+      --drop-zone-border: var(--field-border-hover);
+    }
+  }
+
+  /* The ring is painted for the hidden file input inside, which is what a keyboard focuses. */
+  &[data-focus-visible="true"] {
+    @apply status-focused;
+  }
+
+  /* A drag the zone would take. Both the line and the fill move, because the fill alone is a
+   * ~15% tint that a light theme barely separates from the page. */
+  &[data-drop-target="true"] {
+    --drop-zone-border: var(--accent);
+    --drop-zone-bg: var(--accent-soft);
+    --drop-zone-fg: var(--foreground);
+  }
+
+  /* A drag carrying a type `accept` rules out.
+   *
+   * Accept takes `--accent` to match the one drop state the library already had
+   * (`--table-cell-bg-drop-target`), which leaves the two verdicts a hue apart in most themes
+   * but nearly together in one whose accent is itself red — measured at hue 28 for both under
+   * `netflix`, separated only by lightness. That is a collision only the theme can settle, and
+   * the properties above are how: repoint `--drop-zone-border` and `--drop-zone-bg`. */
+  &[data-status="reject"] {
+    --drop-zone-border: var(--danger);
+    --drop-zone-bg: var(--danger-soft);
+    --drop-zone-fg: var(--foreground);
+  }
+
+  /* Forced Colors Mode forces every colour to a system keyword, so the accent and danger fills
+   * above flatten onto the page and the three states become one dashed box. The border is the
+   * only channel left that the platform still lets a rule choose, hence the keywords. */
+  @media (forced-colors: active) {
+    &[data-drop-target="true"] {
+      border-color: Highlight;
+    }
+
+    &[data-status="reject"] {
+      border-color: LinkText;
+    }
+  }
+
+  &[data-disabled="true"] {
+    @apply status-disabled;
+  }
+}
+
+.drop-zone__trigger {
+  @apply rounded-field underline underline-offset-2 outline-none;
+
+  cursor: var(--cursor-interactive);
+}

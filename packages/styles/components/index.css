@@ -98,6 +98,7 @@
  * ------------------------------------------------------------------------------------------------ */
 @import "./checkbox-group.css";
 @import "./checkbox.css";
+@import "./drop-zone.css";
 @import "./fieldset.css";
 @import "./input-otp.css";
 @import "./input.css";

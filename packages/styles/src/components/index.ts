@@ -32,6 +32,7 @@ export * from "./description";
 export * from "./drawer";
 export * from "./disclosure";
 export * from "./disclosure-group";
+export * from "./drop-zone";
 export * from "./dropdown";
 export * from "./empty-state";
 export * from "./error-message";
