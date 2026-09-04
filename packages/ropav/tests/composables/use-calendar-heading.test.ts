@@ -2,9 +2,9 @@ import type { CalendarState } from "@/composables/use-calendar-state";
 import type { UseCalendarYearPickerReturn } from "@/composables/use-calendar-year-picker";
 import type { ComputedRef } from "vue";
 
-import { CalendarDate } from "@internationalized/date";
+import { CalendarDate, ZonedDateTime, resetLocalTimeZone } from "@internationalized/date";
 import { renderVapor } from "@ropav/testing/helpers/vue";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 
 import Host from "../fixtures/calendar-heading-host.vue";
@@ -174,5 +174,58 @@ describe("useCalendarYearPicker", () => {
     const calendar = setup({ visibleYears: 3 });
 
     expect(calendar.years().items.value.map((item) => item.id)).toEqual([0, 1, 2]);
+  });
+});
+
+/**
+ * A year label is written by resolving a bare date to a moment and reading the year back off it,
+ * which only holds if that moment lands on the day it came from. Zones with a gap are where it
+ * would not, and the calendar's own default bounds are what put the window on a December 31: the
+ * slide off `maxValue` takes that bound's day of the year, not the focused date's.
+ *
+ * The zone is pinned on a zoned value rather than on the host, because the state only reads the
+ * host's zone through a formatter the library caches for the life of the module.
+ */
+describe("useCalendarYearPicker across a time zone gap", () => {
+  const ORIGINAL_TIME_ZONE = process.env["TZ"];
+
+  const EVERY_YEAR_ONCE = Array.from({ length: 200 }, (_, index) => String(1900 + index));
+
+  /** The bounds a calendar sets for itself, wide enough that the window has to slide to reach them. */
+  const labelsIn = (timeZone: string, offset: number) =>
+    setup({
+      maxValue: new CalendarDate(2099, 12, 31),
+      minValue: new CalendarDate(1900, 1, 1),
+      value: new ZonedDateTime(2026, 6, 15, timeZone, offset),
+      visibleYears: 200,
+    })
+      .years()
+      .items.value.map((item) => item.formatted);
+
+  afterEach(() => {
+    vi.useRealTimers();
+    process.env["TZ"] = ORIGINAL_TIME_ZONE;
+    resetLocalTimeZone();
+  });
+
+  it("counts every year where the zone drops a whole day", () => {
+    // The Line Islands crossed the date line at the end of 1994, so December 31 never happened
+    // there at all and a moment asked for on that day comes back in 1995.
+    expect(labelsIn("Pacific/Kiritimati", 14 * 60 * 60 * 1000)).toEqual(EVERY_YEAR_ONCE);
+  });
+
+  it("counts every year where the zone drops the end of a day", () => {
+    /*
+     * Vietnam moved an hour forward at 23:00 on the last day of 1942 and again of 1959. Only a
+     * picker built during that missing hour loses those two years to 1943 and 1960, because the
+     * conversion the library takes for the host's own zone starts from the current time of day —
+     * so the host's zone and the clock are both pinned into it.
+     */
+    process.env["TZ"] = "Asia/Saigon";
+    resetLocalTimeZone();
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date("2026-09-05T16:30:00Z"));
+
+    expect(labelsIn("Asia/Saigon", 7 * 60 * 60 * 1000)).toEqual(EVERY_YEAR_ONCE);
   });
 });

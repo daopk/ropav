@@ -14,6 +14,7 @@ const state = useCalendarState({
   defaultFocusedValue: () => props.defaultFocusedValue,
   maxValue: () => props.maxValue,
   minValue: () => props.minValue,
+  value: () => props.value,
   visibleDuration: () => props.visibleDuration,
 });
 

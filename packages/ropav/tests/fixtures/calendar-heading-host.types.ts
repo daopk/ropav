@@ -8,6 +8,8 @@ import type { DateDuration, DateValue } from "@internationalized/date";
 import type { ComputedRef } from "vue";
 
 export interface CalendarHeadingHostProps {
+  /** A zoned value is how a test pins the calendar's time zone. */
+  value?: DateValue | null;
   defaultFocusedValue?: DateValue | null;
   minValue?: DateValue | null;
   maxValue?: DateValue | null;

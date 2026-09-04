@@ -42,6 +42,17 @@ export interface UseCalendarYearPickerReturn {
 }
 
 /**
+ * A year is read off the calendar date in UTC, the one zone that never skips an hour or a day.
+ *
+ * A bare date has no zone of its own, so resolving one through the calendar's zone has to pick a
+ * moment for it, and midnight is not always available: where a zone drops the end of December 31 —
+ * or the whole day, as the ones that crossed the date line did — the moment slides forward into
+ * January and the year comes back one too high. Reading and writing the date in the same
+ * gapless zone keeps every label the year it was built from.
+ */
+const LABEL_TIME_ZONE = "UTC";
+
+/**
  * The list of years a calendar can jump to.
  *
  * Ported from react-aria's `packages/react-aria/src/calendar/useCalendarYearPicker.ts`
@@ -65,7 +76,7 @@ export const useCalendarYearPicker = (
       era:
         format?.era ||
         (focused.calendar.identifier === "gregory" && focused.era === "BC" ? "short" : undefined),
-      timeZone: state.timeZone.value,
+      timeZone: LABEL_TIME_ZONE,
       year: format?.year || "numeric",
     };
   });
@@ -102,14 +113,13 @@ export const useCalendarYearPicker = (
 
   const items = computed<CalendarYearPickerItem[]>(() => {
     const { maxDate, minDate } = bounds.value;
-    const timeZone = state.timeZone.value;
     const years: CalendarYearPickerItem[] = [];
     let date = minDate;
 
     while (date.compare(maxDate) <= 0) {
       years.push({
         date,
-        formatted: formatter.value.format(date.toDate(timeZone)),
+        formatted: formatter.value.format(date.toDate(LABEL_TIME_ZONE)),
         id: years.length,
       });
       date = date.add({ years: 1 });
