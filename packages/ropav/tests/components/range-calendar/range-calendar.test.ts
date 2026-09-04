@@ -1,7 +1,7 @@
 import type { DateRange } from "@/composables/use-calendar";
 import type { DateValue } from "@internationalized/date";
 
-import { CalendarDate } from "@internationalized/date";
+import { CalendarDate, createCalendar } from "@internationalized/date";
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
@@ -414,6 +414,27 @@ describe("RangeCalendar", () => {
       const headings = calendar.all("range-calendar-grid");
 
       expect(headings).toHaveLength(2);
+      calendar.unmount();
+    });
+  });
+
+  describe("the calendar system", () => {
+    /*
+     * A Japanese year is counted from the start of an era, so the default bounds cannot be
+     * assembled from the numbers 1900 and 2099 — that reads as the 1900th year of Reiwa, and the
+     * focused date used to be dragged two millennia forward to meet it.
+     */
+    it("holds the focused date inside bounds an era changes inside", () => {
+      const calendar = renderRangeCalendar({
+        createCalendar,
+        locale: "ja-JP-u-ca-japanese",
+        withYearPicker: true,
+      });
+
+      // 2026 Gregorian is Reiwa 8.
+      expect(calendar.slot("calendar-year-picker-trigger-heading").textContent?.trim()).toBe(
+        "令和8年6月",
+      );
       calendar.unmount();
     });
   });

@@ -67,7 +67,7 @@ const render = (props: Record<string, unknown> = {}) => {
         h(CalendarYearPickerGrid, null, {
           default: () =>
             h(CalendarYearPickerGridBody, null, {
-              default: ({ year }: { year: number }) => h(CalendarYearPickerCell, { year }),
+              default: ({ id }: { id: number }) => h(CalendarYearPickerCell, { id }),
             }),
         }),
       ],

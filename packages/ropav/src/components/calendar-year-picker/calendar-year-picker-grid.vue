@@ -1,4 +1,5 @@
 <script setup lang="ts" vapor>
+import type { YearPickerGridYear } from "./calendar-year-picker.context";
 import type { CalendarYearPickerGridProps } from "./calendar-year-picker.types";
 
 import { calendarYearPickerVariants } from "@ropav/styles";
@@ -42,16 +43,16 @@ const visibleYears = computed(() => {
 
 const picker = useCalendarYearPicker({ format: () => props.format, visibleYears }, state);
 
-const years = computed(() => picker.items.value.map((item) => item.date.year));
-
-const focusedYear = computed(
-  () => picker.items.value[picker.value.value]?.date.year ?? state.focusedDate.value.year,
+const years = computed<YearPickerGridYear[]>(() =>
+  picker.items.value.map((item) => ({
+    formatted: item.formatted,
+    id: item.id,
+    year: item.date.year,
+  })),
 );
 
-const getFormattedYear = (year: number) =>
-  picker.items.value.find((item) => item.date.year === year)?.formatted ?? String(year);
-
-const activeYear = shallowRef(focusedYear.value);
+const focusedId = computed(() => picker.value.value);
+const activeId = shallowRef(focusedId.value);
 
 /*
  * Lay the year grid over the day grid.
@@ -79,8 +80,8 @@ watchEffect(
   { flush: "post" },
 );
 
-const focusYearCell = (year: number) => {
-  element.value?.querySelector<HTMLElement>(`[data-year='${year}']`)?.focus();
+const focusYearCell = (id: number) => {
+  element.value?.querySelector<HTMLElement>(`[data-key='${id}']`)?.focus();
 };
 
 let frame: number | undefined;
@@ -101,33 +102,29 @@ onScopeDispose(cancelFrame);
 watch(isYearPickerOpen, (isOpen) => {
   if (!isOpen || years.value.length === 0) return;
 
-  const nextActiveYear = years.value.includes(focusedYear.value)
-    ? focusedYear.value
-    : years.value[0]!;
+  const nextActiveId = years.value[focusedId.value] ? focusedId.value : years.value[0]!.id;
 
-  activeYear.value = nextActiveYear;
+  activeId.value = nextActiveId;
 
   // A frame later, because the cells are hidden until the open state has been painted.
   cancelFrame();
   frame = requestAnimationFrame(() => {
     frame = undefined;
-    focusYearCell(nextActiveYear);
+    focusYearCell(nextActiveId);
   });
 });
 
 // A year the list no longer holds cannot stay active, or the arrows would have nowhere to start.
 watch([years, isYearPickerOpen], ([list, isOpen]) => {
   if (!isOpen || list.length === 0) return;
-  if (!list.includes(activeYear.value)) activeYear.value = list[0]!;
+  if (!list[activeId.value]) activeId.value = list[0]!.id;
 });
 
-const selectYear = (year: number) => {
-  const item = picker.items.value.find((entry) => entry.date.year === year);
-
-  if (!item) return;
+const selectYear = (id: number) => {
+  if (!years.value[id]) return;
 
   setIsYearPickerOpen(false);
-  picker.onChange(item.id);
+  picker.onChange(id);
 };
 
 /** Where each key moves within the grid, as an offset in the flat list of years. */
@@ -148,38 +145,33 @@ const onKeydown = (event: KeyboardEvent) => {
 
   if (!isYearPickerOpen.value || years.value.length === 0) return;
 
-  const currentIndex = years.value.indexOf(activeYear.value);
+  const current = activeId.value;
 
-  if (currentIndex === -1) return;
+  if (!years.value[current]) return;
 
   const last = years.value.length - 1;
   const step = STEPS[event.key];
-  let nextIndex = currentIndex;
+  let next = current;
 
-  if (step != null) nextIndex = Math.min(Math.max(currentIndex + step, 0), last);
-  else if (event.key === "Home") nextIndex = 0;
-  else if (event.key === "End") nextIndex = last;
+  if (step != null) next = Math.min(Math.max(current + step, 0), last);
+  else if (event.key === "Home") next = 0;
+  else if (event.key === "End") next = last;
   else return;
 
-  if (nextIndex === currentIndex) return;
-
-  const nextYear = years.value[nextIndex];
-
-  if (nextYear == null) return;
+  if (next === current) return;
 
   event.preventDefault();
-  activeYear.value = nextYear;
-  focusYearCell(nextYear);
+  activeId.value = next;
+  focusYearCell(next);
 };
 
 provideYearPickerGridContext({
-  activeYear: computed(() => activeYear.value),
-  focusedYear,
-  getFormattedYear,
+  activeId: computed(() => activeId.value),
+  focusedId,
   isYearPickerOpen,
   selectYear,
-  setActiveYear: (year) => {
-    activeYear.value = year;
+  setActiveId: (id) => {
+    activeId.value = id;
   },
   slots,
   years,

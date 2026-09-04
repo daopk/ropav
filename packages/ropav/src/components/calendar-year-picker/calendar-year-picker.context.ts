@@ -40,17 +40,29 @@ export const [useYearPickerTriggerContext, provideYearPickerTriggerContext] =
     name: "YearPickerTriggerContext",
   });
 
+/** One year on offer, and the place in the list that names it. */
+export interface YearPickerGridYear {
+  /**
+   * Where the year sits in the list.
+   *
+   * What identifies it, rather than the number: a Japanese or Minguo span can cross an era, and an
+   * era counts its years from one again, so 8 alone can be four of the years on offer.
+   */
+  id: number;
+  year: number;
+  formatted: string;
+}
+
 export interface YearPickerGridContext {
   slots: ComputedRef<ReturnType<typeof calendarYearPickerVariants>>;
   isYearPickerOpen: ComputedRef<boolean>;
-  /** The year the grid's own keyboard navigation is sitting on. */
-  activeYear: ComputedRef<number>;
-  /** The year the calendar is focused on, which is the selected one. */
-  focusedYear: ComputedRef<number>;
-  years: ComputedRef<number[]>;
-  getFormattedYear: (year: number) => string;
-  selectYear: (year: number) => void;
-  setActiveYear: (year: number) => void;
+  /** The year the grid's own keyboard navigation is sitting on, by its place in `years`. */
+  activeId: ComputedRef<number>;
+  /** The year the calendar is focused on, which is the selected one, by the same. */
+  focusedId: ComputedRef<number>;
+  years: ComputedRef<YearPickerGridYear[]>;
+  selectYear: (id: number) => void;
+  setActiveId: (id: number) => void;
 }
 
 /** The list of years, for the body and cells inside it. */

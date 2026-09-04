@@ -107,8 +107,8 @@ const calendar = `
       </CalendarGrid>
       <CalendarYearPickerGrid>
         <CalendarYearPickerGridBody>
-          <template #default="{year}">
-            <CalendarYearPickerCell :year="year" />
+          <template #default="{id}">
+            <CalendarYearPickerCell :id="id" />
           </template>
         </CalendarYearPickerGridBody>
       </CalendarYearPickerGrid>

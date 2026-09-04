@@ -1,12 +1,14 @@
-import type { CalendarDate, DateDuration, DateValue } from "@internationalized/date";
+import type { Calendar, DateDuration, DateValue } from "@internationalized/date";
 
 import {
+  CalendarDate,
   isSameDay,
   maxDate,
   minDate,
   startOfMonth,
   startOfWeek,
   startOfYear,
+  toCalendar,
   toCalendarDate,
 } from "@internationalized/date";
 
@@ -189,38 +191,25 @@ export const isEqualDuration = (a: DateDuration, b: DateDuration): boolean =>
 
 /* Year bounds and day-view grids. */
 
+/** The stretch of real time the default bounds cover, written as Gregorian years. */
+const DEFAULT_MIN_YEAR = 1900;
+const DEFAULT_MAX_YEAR = 2099;
+
 /**
- * How far a calendar system's year numbering sits from the Gregorian one.
+ * Default bounds spanning 1900 to 2099, expressed in `calendar`'s own year numbering.
  *
- * Used to turn the default 1900–2099 Gregorian bounds into the same span of real time in whatever
- * calendar the locale resolves to, so the year picker offers years the user recognises.
+ * Both ends are built Gregorian and converted rather than assembled from a year number, because a
+ * `CalendarDate` counts its year from the start of an era: Japanese 1900 is the 1900th year of
+ * Reiwa, two millennia out. A fixed offset per system cannot stand in for the conversion either,
+ * since an era can turn over inside the span — 1900 is Meiji, 2026 is Reiwa — and a year is not
+ * the same length in every calendar.
  */
-export const getGregorianYearOffset = (identifier: string): number => {
-  switch (identifier) {
-    case "buddhist":
-      return 543;
-    case "ethiopic":
-    case "ethioaa":
-      return -8;
-    case "coptic":
-      return -284;
-    case "hebrew":
-      return 3760;
-    case "indian":
-      return -78;
-    case "islamic-civil":
-    case "islamic-tbla":
-    case "islamic-umalqura":
-      return -579;
-    case "persian":
-      return -600;
-    case "roc":
-    case "japanese":
-    case "gregory":
-    default:
-      return 0;
-  }
-};
+export const getDefaultYearBounds = (
+  calendar: Calendar,
+): { maxValue: CalendarDate; minValue: CalendarDate } => ({
+  maxValue: toCalendar(new CalendarDate(DEFAULT_MAX_YEAR, 12, 31), calendar),
+  minValue: toCalendar(new CalendarDate(DEFAULT_MIN_YEAR, 1, 1), calendar),
+});
 
 /**
  * Every year start from `start` to `end` inclusive.

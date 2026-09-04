@@ -17,23 +17,19 @@ const props = withDefaults(defineProps<CalendarYearPickerCellProps>(), {
 
 defineSlots<{ default?: (props: CalendarYearPickerCellSlotProps) => unknown }>();
 
-const {
-  activeYear,
-  focusedYear,
-  getFormattedYear,
-  isYearPickerOpen,
-  selectYear,
-  setActiveYear,
-  slots,
-} = useYearPickerGridContext();
+const { activeId, focusedId, isYearPickerOpen, selectYear, setActiveId, slots, years } =
+  useYearPickerGridContext();
+
+const entry = computed(() => years.value[props.id]);
+const year = computed(() => entry.value?.year ?? props.id);
 
 /*
  * Reported through `data-selected` only, not `aria-selected`, which matches React: the year cells are
  * buttons rather than options, and RAC drops `aria-selected` on a button rather than emitting ARIA
  * the role does not allow.
  */
-const isSelected = computed(() => props.year === focusedYear.value);
-const formattedYear = computed(() => getFormattedYear(props.year));
+const isSelected = computed(() => props.id === focusedId.value);
+const formattedYear = computed(() => entry.value?.formatted ?? String(year.value));
 const styles = computed(() => slots.value.yearCell({ class: props.class }));
 
 /**
@@ -43,23 +39,24 @@ const styles = computed(() => slots.value.yearCell({ class: props.class }));
  * and while the picker is closed the whole list is, or Tab would walk through a hidden grid.
  */
 const isExcludedFromTabOrder = computed(
-  () => props.excludeFromTabOrder ?? !(isYearPickerOpen.value && props.year === activeYear.value),
+  () => props.excludeFromTabOrder ?? !(isYearPickerOpen.value && props.id === activeId.value),
 );
 
 const interaction = useInteractionStates();
 
 const slotProps = computed<CalendarYearPickerCellSlotProps>(() => ({
   formattedYear: formattedYear.value,
-  isCurrentYear: props.year === new Date().getFullYear(),
+  id: props.id,
+  isCurrentYear: year.value === new Date().getFullYear(),
   isOpen: isYearPickerOpen.value,
   isSelected: isSelected.value,
-  selectYear: () => selectYear(props.year),
-  year: props.year,
+  selectYear: () => selectYear(props.id),
+  year: year.value,
 }));
 
 const onFocus = () => {
   interaction.onFocus();
-  setActiveYear(props.year);
+  setActiveId(props.id);
 };
 </script>
 
@@ -69,14 +66,15 @@ const onFocus = () => {
     :class="styles"
     :data-focus-visible="dataAttr(interaction.isFocusVisible.value)"
     :data-hovered="dataAttr(interaction.isHovered.value)"
+    :data-key="props.id"
     :data-pressed="dataAttr(interaction.isPressed.value)"
     :data-selected="dataAttr(isSelected)"
     data-slot="calendar-year-picker-year-cell"
-    :data-year="props.year"
+    :data-year="year"
     :tabindex="isExcludedFromTabOrder ? -1 : undefined"
     type="button"
     @blur="interaction.onBlur"
-    @click="selectYear(props.year)"
+    @click="selectYear(props.id)"
     @focus="onFocus"
     @pointercancel="interaction.onPointerleave"
     @pointerdown="interaction.onPointerdown"

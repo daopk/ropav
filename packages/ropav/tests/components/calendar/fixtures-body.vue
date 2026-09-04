@@ -126,8 +126,8 @@ const props = withDefaults(defineProps<CalendarFixtureProps>(), {
     </CalendarGrid>
     <CalendarYearPickerGrid v-if="props.withYearPicker">
       <CalendarYearPickerGridBody>
-        <template #default="{ year }">
-          <CalendarYearPickerCell :year="year" />
+        <template #default="{ id }">
+          <CalendarYearPickerCell :id="id" />
         </template>
       </CalendarYearPickerGridBody>
     </CalendarYearPickerGrid>

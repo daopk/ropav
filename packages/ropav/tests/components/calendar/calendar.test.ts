@@ -549,5 +549,73 @@ describe("Calendar", () => {
       expect(createSpy).toHaveBeenCalledWith("buddhist");
       calendar.unmount();
     });
+
+    /*
+     * A Japanese year is counted from the start of an era, so the default bounds cannot be
+     * assembled from the numbers 1900 and 2099 — that reads as the 1900th year of Reiwa, and the
+     * focused date used to be dragged two millennia forward to meet it.
+     */
+    it("holds the focused date inside bounds an era changes inside", () => {
+      const calendar = renderCalendar({
+        createCalendar,
+        locale: "ja-JP-u-ca-japanese",
+        withYearPicker: true,
+      });
+
+      // 2026 Gregorian is Reiwa 8.
+      expect(calendar.slot("calendar-year-picker-trigger-heading").textContent?.trim()).toBe(
+        "令和8年6月",
+      );
+      calendar.unmount();
+    });
+
+    it("offers the eras the default bounds actually run through", () => {
+      const calendar = renderCalendar({
+        createCalendar,
+        locale: "ja-JP-u-ca-japanese",
+        withYearPicker: true,
+      });
+      const labels = calendar.years().map((cell) => cell.textContent?.trim());
+
+      // 1900 is Meiji 33 and 2099 is Reiwa 81, four era changes apart.
+      expect(labels).toHaveLength(200);
+      expect(labels.at(0)).toBe("明治33年");
+      expect(labels.at(-1)).toBe("令和81年");
+      calendar.unmount();
+    });
+
+    it("marks one year when the same number falls in several eras", () => {
+      const calendar = renderCalendar({
+        createCalendar,
+        locale: "ja-JP-u-ca-japanese",
+        withYearPicker: true,
+      });
+      const selected = calendar.years().filter((cell) => cell.dataset["selected"] === "true");
+
+      // Taishō, Shōwa, Heisei and Reiwa all reach a year 8, and each is its own cell.
+      expect(selected.map((cell) => cell.textContent?.trim())).toEqual(["令和8年"]);
+      calendar.unmount();
+    });
+
+    it("moves to the era the chosen cell shows, not the first year of that number", async () => {
+      const calendar = renderCalendar({
+        createCalendar,
+        defaultYearPickerOpen: true,
+        locale: "ja-JP-u-ca-japanese",
+        withYearPicker: true,
+      });
+
+      calendar
+        .years()
+        .find((cell) => cell.textContent?.trim() === "平成8年")!
+        .click();
+      await nextTick();
+
+      // Taishō 8 is the first year numbered 8 on offer, and is what a lookup by number would find.
+      expect(calendar.slot("calendar-year-picker-trigger-heading").textContent).toContain(
+        "平成8年",
+      );
+      calendar.unmount();
+    });
   });
 });

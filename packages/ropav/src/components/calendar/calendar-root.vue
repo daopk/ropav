@@ -2,9 +2,9 @@
 import type { CalendarValue } from "../../composables/use-calendar-state";
 import type { CalendarDayViewContext } from "./calendar.context";
 import type { CalendarRootProps, CalendarRootSlotProps } from "./calendar.types";
-import type { CalendarIdentifier, DateValue } from "@internationalized/date";
+import type { CalendarDate, CalendarIdentifier, DateValue } from "@internationalized/date";
 
-import { CalendarDate, DateFormatter, GregorianCalendar } from "@internationalized/date";
+import { DateFormatter, GregorianCalendar } from "@internationalized/date";
 import { calendarVariants } from "@ropav/styles";
 import { computed, shallowRef } from "vue";
 
@@ -13,7 +13,7 @@ import { useCalendarState } from "../../composables/use-calendar-state";
 import { useControllableState } from "../../composables/use-controllable-state";
 import { useLocale } from "../../composables/use-locale";
 import { dataAttr } from "../../utils/assertion";
-import { getGregorianYearOffset } from "../../utils/calendar";
+import { getDefaultYearBounds } from "../../utils/calendar";
 import { visuallyHiddenStyle } from "../../utils/visually-hidden";
 import { provideYearPickerContext } from "../calendar-year-picker/calendar-year-picker.context";
 
@@ -71,32 +71,24 @@ const isDateUnavailable = hasDateUnavailable
 const createCalendar = (identifier: CalendarIdentifier) =>
   props.createCalendar?.(identifier) ?? new GregorianCalendar();
 
-/**
- * Default bounds spanning 1900 to 2099, expressed in the locale's own calendar system.
- *
- * Without them the year picker would have nothing to size itself against. The offset is what keeps
- * "1900" the same stretch of real time in a Buddhist or Hebrew calendar rather than a year nobody
- * recognises.
- */
 const calendarSystem = computed(() =>
   createCalendar(
     new DateFormatter(locale.value.locale).resolvedOptions().calendar as CalendarIdentifier,
   ),
 );
 
-const yearOffset = computed(() => getGregorianYearOffset(calendarSystem.value.identifier));
+/**
+ * Default bounds spanning 1900 to 2099, expressed in the locale's own calendar system.
+ *
+ * Without them the year picker would have nothing to size itself against.
+ */
+const defaultBounds = computed(() => getDefaultYearBounds(calendarSystem.value));
 
 const minValue = computed(
-  () =>
-    props.minValue ??
-    owned.value.minValue ??
-    new CalendarDate(calendarSystem.value, 1900 + yearOffset.value, 1, 1),
+  () => props.minValue ?? owned.value.minValue ?? defaultBounds.value.minValue,
 );
 const maxValue = computed(
-  () =>
-    props.maxValue ??
-    owned.value.maxValue ??
-    new CalendarDate(calendarSystem.value, 2099 + yearOffset.value, 12, 31),
+  () => props.maxValue ?? owned.value.maxValue ?? defaultBounds.value.maxValue,
 );
 
 const state = useCalendarState({

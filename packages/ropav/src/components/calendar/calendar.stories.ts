@@ -137,8 +137,8 @@ const yearPickerHeader = `
 const yearPickerGrid = `
   <CalendarYearPickerGrid>
     <CalendarYearPickerGridBody>
-      <template #default="{year}">
-        <CalendarYearPickerCell :year="year" />
+      <template #default="{id}">
+        <CalendarYearPickerCell :id="id" />
       </template>
     </CalendarYearPickerGridBody>
   </CalendarYearPickerGrid>
@@ -1033,14 +1033,14 @@ export const YearPickerStyledCells: Story = {
         ${grid}
         <CalendarYearPickerGrid>
           <CalendarYearPickerGridBody>
-            <template #default="{isCurrentYear, isSelected, year}">
+            <template #default="{id, isCurrentYear, isSelected}">
               <CalendarYearPickerCell
+                :id="id"
                 :class="
                   isCurrentYear && !isSelected
                     ? 'text-accent ring-1 ring-accent/60 ring-inset'
                     : undefined
                 "
-                :year="year"
               />
             </template>
           </CalendarYearPickerGridBody>
@@ -1060,8 +1060,8 @@ export const YearPickerCustomCells: Story = {
         ${grid}
         <CalendarYearPickerGrid>
           <CalendarYearPickerGridBody>
-            <template #default="{isCurrentYear, isSelected, year}">
-              <CalendarYearPickerCell :year="year">
+            <template #default="{id, isCurrentYear, isSelected, year}">
+              <CalendarYearPickerCell :id="id">
                 <span class="inline-flex items-center gap-1">
                   <span>{{ year }}</span>
                   <span

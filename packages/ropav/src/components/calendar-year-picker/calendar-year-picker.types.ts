@@ -39,13 +39,20 @@ export interface CalendarYearPickerGridBodyProps {
 
 export interface CalendarYearPickerCellProps {
   class?: string;
-  year: number;
+  /**
+   * Which of the years on offer the cell draws, as its place in the list.
+   *
+   * The number itself will not do: a Japanese or Minguo span can cross an era, and an era counts
+   * its years from one again, so the same number can name several of the years on offer.
+   */
+  id: number;
   /** Keeps the cell out of the tab order. Defaults to whenever it is not the active year. */
   excludeFromTabOrder?: boolean;
 }
 
 /** State each year hands its slot, matching React's render props. */
 export interface CalendarYearPickerCellSlotProps {
+  id: number;
   year: number;
   formattedYear: string;
   isSelected: boolean;

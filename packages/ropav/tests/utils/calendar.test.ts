@@ -14,7 +14,7 @@ import {
   constrainValue,
   getDayViewGridRows,
   getDayViewWeekDayLabels,
-  getGregorianYearOffset,
+  getDefaultYearBounds,
   getYearRange,
   isDateInvalid,
   isEqualDuration,
@@ -243,37 +243,54 @@ describe("isEqualDuration", () => {
   });
 });
 
-describe("getGregorianYearOffset", () => {
-  it.each([
-    ["buddhist", 543],
-    ["ethiopic", -8],
-    ["ethioaa", -8],
-    ["coptic", -284],
-    ["hebrew", 3760],
-    ["indian", -78],
-    ["islamic-civil", -579],
-    ["islamic-tbla", -579],
-    ["islamic-umalqura", -579],
-    ["persian", -600],
-    ["roc", 0],
-    ["japanese", 0],
-    ["gregory", 0],
-  ])("offsets %s by %i", (identifier, offset) => {
-    expect(getGregorianYearOffset(identifier)).toBe(offset);
+describe("getDefaultYearBounds", () => {
+  const SYSTEMS = [
+    "buddhist",
+    "coptic",
+    "ethiopic",
+    "ethioaa",
+    "gregory",
+    "hebrew",
+    "indian",
+    "islamic-civil",
+    "islamic-tbla",
+    "islamic-umalqura",
+    "japanese",
+    "persian",
+    "roc",
+  ] as const;
+
+  it.each(SYSTEMS)("covers 1900 to 2099 in %s", (identifier) => {
+    const { maxValue, minValue } = getDefaultYearBounds(createCalendar(identifier));
+
+    // A date of any system writes itself out as its Gregorian projection, which is the whole point:
+    // every calendar's default bounds have to hold the same two centuries of real time.
+    expect(minValue.toString()).toBe("1900-01-01");
+    expect(maxValue.toString()).toBe("2099-12-31");
   });
 
-  it("falls back to no offset for a calendar it does not know", () => {
-    expect(getGregorianYearOffset("something-else")).toBe(0);
+  it("carries the era each end fell in rather than the one in force today", () => {
+    const { maxValue, minValue } = getDefaultYearBounds(new JapaneseCalendar());
+
+    expect([minValue.era, minValue.year]).toEqual(["meiji", 33]);
+    expect([maxValue.era, maxValue.year]).toEqual(["reiwa", 81]);
   });
 
-  it("lands on a real date when used to build the default bounds", () => {
-    // This is the only thing the offset is for: 1900 Gregorian has to be expressible in the
-    // target calendar's own year numbering, or the default bounds throw.
-    for (const identifier of ["buddhist", "hebrew", "indian", "persian", "roc"] as const) {
-      const calendar = createCalendar(identifier);
-      const offset = getGregorianYearOffset(identifier);
+  it("reaches back past the era the calendar counts from", () => {
+    const { minValue } = getDefaultYearBounds(createCalendar("roc"));
 
-      expect(new CalendarDate(calendar, 1900 + offset, 1, 1).era).toBeTruthy();
+    expect([minValue.era, minValue.year]).toEqual(["before_minguo", 12]);
+  });
+
+  it("leaves a date inside the span alone in every system", () => {
+    // The bug this guards: read as an era year, 1900 in the Japanese calendar is the 1900th year of
+    // Reiwa, so both bounds landed two millennia out and every date was clamped up to the minimum.
+    const focused = date(2026, 9, 5);
+
+    for (const identifier of SYSTEMS) {
+      const { maxValue, minValue } = getDefaultYearBounds(createCalendar(identifier));
+
+      expect(isDateInvalid(focused, minValue, maxValue), identifier).toBe(false);
     }
   });
 });

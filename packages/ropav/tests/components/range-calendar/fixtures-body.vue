@@ -67,6 +67,7 @@ const props = withDefaults(defineProps<RangeCalendarFixtureProps>(), {
     :auto-focus="props.autoFocus"
     :class="props.class"
     :commit-behavior="props.commitBehavior"
+    :create-calendar="props.createCalendar"
     :default-focused-value="props.defaultFocusedValue"
     :default-value="props.defaultValue"
     :default-year-picker-open="props.defaultYearPickerOpen"
@@ -127,8 +128,8 @@ const props = withDefaults(defineProps<RangeCalendarFixtureProps>(), {
     </RangeCalendarGrid>
     <CalendarYearPickerGrid v-if="props.withYearPicker">
       <CalendarYearPickerGridBody>
-        <template #default="{ year }">
-          <CalendarYearPickerCell :year="year" />
+        <template #default="{ id }">
+          <CalendarYearPickerCell :id="id" />
         </template>
       </CalendarYearPickerGridBody>
     </CalendarYearPickerGrid>

@@ -13,28 +13,28 @@ defineProps<CalendarYearPickerGridBodyProps>();
 
 defineSlots<{ default?: (props: CalendarYearPickerCellSlotProps) => unknown }>();
 
-const { focusedYear, getFormattedYear, isYearPickerOpen, selectYear, years } =
-  useYearPickerGridContext();
+const { focusedId, isYearPickerOpen, selectYear, years } = useYearPickerGridContext();
 
 /** The current Gregorian year, for marking "this year" whatever calendar is on screen. */
 const currentYear = new Date().getFullYear();
 
 const entries = computed(() =>
-  years.value.map((year) => ({
-    formattedYear: getFormattedYear(year),
+  years.value.map(({ formatted, id, year }) => ({
+    formattedYear: formatted,
+    id,
     isCurrentYear: year === currentYear,
     isOpen: isYearPickerOpen.value,
-    isSelected: year === focusedYear.value,
-    selectYear: () => selectYear(year),
+    isSelected: id === focusedId.value,
+    selectYear: () => selectYear(id),
     year,
   })),
 );
 </script>
 
 <template>
-  <template v-for="entry in entries" :key="entry.year">
+  <template v-for="entry in entries" :key="entry.id">
     <slot v-bind="entry">
-      <CalendarYearPickerCell :year="entry.year" />
+      <CalendarYearPickerCell :id="entry.id" />
     </slot>
   </template>
 </template>
