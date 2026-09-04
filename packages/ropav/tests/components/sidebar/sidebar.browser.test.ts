@@ -78,6 +78,81 @@ const mount = (props: Record<string, unknown>) => {
 
 afterEach(() => {
   mounted.splice(0).forEach((view) => view.unmount());
+  localStorage.clear();
+});
+
+/* What the panel started easing. Chromium names it `width`, though the panel declares
+ * `inline-size`. */
+const watchPanelEasing = () => {
+  const properties: string[] = [];
+
+  const onRun = (event: Event) => {
+    const target = event.target as HTMLElement;
+
+    if (target.dataset["slot"] === "sidebar-panel")
+      properties.push((event as TransitionEvent).propertyName);
+  };
+
+  document.addEventListener("transitionrun", onRun, true);
+
+  return {
+    properties,
+    stop: () => document.removeEventListener("transitionrun", onRun, true),
+  };
+};
+
+const STORED = JSON.stringify({ e: true, v: 1, w: "300px" });
+
+describe("a stored layout", () => {
+  it("arrives at the stored width without easing into it", async () => {
+    localStorage.setItem("ropav:sidebar:app", STORED);
+
+    const easing = watchPanelEasing();
+
+    const { container } = mount({
+      autoSaveId: "app",
+      breakpoint: WIDE,
+      defaultWidth: "200px",
+      isResizable: true,
+    });
+
+    /* Without a layout read here the declared width and the stored one land in one style
+     * recalculation, and the case passes whether or not the panel is told it is restoring. Any app
+     * holding a component that measures itself on mount takes one. */
+    void document.body.offsetHeight;
+
+    await settled(slot(container, "sidebar-panel"));
+    easing.stop();
+
+    expect(widthOf(container)).toBe(300);
+    expect(easing.properties).toEqual([]);
+  });
+
+  it("hands the transition back once it has", async () => {
+    localStorage.setItem("ropav:sidebar:app", STORED);
+
+    const { container } = mount({
+      autoSaveId: "app",
+      breakpoint: WIDE,
+      defaultWidth: "200px",
+      isResizable: true,
+    });
+
+    const panel = slot(container, "sidebar-panel");
+
+    /* Settled first: the flag is written by a render effect, and `waitUntil` runs its predicate
+     * before its first await, so it would pass on an attribute that is not there yet. */
+    await settled(panel);
+    await waitUntil("the restore to let go", () => panel.getAttribute("data-restoring") === null);
+
+    const easing = watchPanelEasing();
+
+    slot(container, "sidebar-trigger").click();
+    await waitUntil("the collapse to ease", () => easing.properties.includes("width"));
+    easing.stop();
+
+    expect(easing.properties).toContain("width");
+  });
 });
 
 describe("resizing", () => {

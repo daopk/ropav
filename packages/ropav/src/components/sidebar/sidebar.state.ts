@@ -57,6 +57,9 @@ export interface SidebarState {
   /** Whether a drag on the rail is in flight, which is what suppresses the width transition. */
   isResizing: ComputedRef<boolean>;
   setResizing: (isResizing: boolean) => void;
+  /** Whether a stored layout is still being put back, which suppresses the same transition. */
+  isRestoring: ComputedRef<boolean>;
+  setRestoring: (isRestoring: boolean) => void;
 }
 
 /**
@@ -82,6 +85,7 @@ export const useSidebarState = (options: UseSidebarStateOptions): SidebarState =
   const collapsible = computed(() => toValue(options.collapsible) ?? "icon");
   const isMobile = computed(() => Boolean(toValue(options.isMobile)));
   const isResizing = shallowRef(false);
+  const isRestoring = shallowRef(false);
 
   const expanded = useControllableState<boolean>({
     defaultValue: options.defaultExpanded ?? true,
@@ -134,11 +138,15 @@ export const useSidebarState = (options: UseSidebarStateOptions): SidebarState =
     isMobileOpen: computed(() => mobileOpen.state.value),
     isOpen,
     isResizing: computed(() => isResizing.value),
+    isRestoring: computed(() => isRestoring.value),
     open: () => setOpen(true),
     resetWidth: () => width.setState(options.defaultWidth),
     setOpen,
     setResizing: (next) => {
       isResizing.value = next;
+    },
+    setRestoring: (next) => {
+      isRestoring.value = next;
     },
     setWidth: (next) => width.setState(next),
     toggle: () => setOpen(!isOpen.value),

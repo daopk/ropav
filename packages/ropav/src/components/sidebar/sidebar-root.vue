@@ -2,7 +2,7 @@
 import type { SidebarRootProps, SidebarSlotProps } from "./sidebar.types";
 
 import { sidebarVariants } from "@ropav/styles";
-import { computed, onMounted, shallowRef } from "vue";
+import { computed, onMounted, onUnmounted, shallowRef } from "vue";
 
 import { useId } from "../../composables/use-id";
 import { useMediaQuery } from "../../composables/use-media-query";
@@ -87,17 +87,38 @@ const state = useSidebarState({
  * and skipping the timer means nothing is left unwritten when the sidebar goes away mid-gesture.
  */
 function persist() {
-  if (!props.autoSaveId || isRestoring) return;
+  if (!props.autoSaveId || isApplying) return;
 
   writeSidebarLayout(props.autoSaveId, state.isExpanded.value, state.width.value);
 }
 
 /*
  * Restored after mount, never during setup, so a server render and the first client render agree
- * and there is nothing to reconcile — the same call `splitter-root.vue` makes, and the same cost:
- * one frame of the declared state.
+ * and there is nothing to reconcile — the same call `splitter-root.vue` makes.
+ *
+ * That costs a frame of the declared layout, and `.sidebar__panel` transitions `inline-size` — so
+ * the panel is told it is restoring and drops the transition until the stored state has painted.
  */
-let isRestoring = false;
+let isApplying = false;
+
+let frame: number | null = null;
+
+/* Two frames: a callback on the first runs before that frame's style is recalculated, so clearing
+ * the flag there arms the transition it exists to prevent. */
+const settle = () => {
+  if (typeof requestAnimationFrame !== "function") {
+    state.setRestoring(false);
+
+    return;
+  }
+
+  frame = requestAnimationFrame(() => {
+    frame = requestAnimationFrame(() => {
+      frame = null;
+      state.setRestoring(false);
+    });
+  });
+};
 
 onMounted(() => {
   if (!props.autoSaveId) return;
@@ -106,10 +127,17 @@ onMounted(() => {
 
   if (!restored) return;
 
-  isRestoring = true;
+  isApplying = true;
+  state.setRestoring(true);
   state.setOpen(restored.isExpanded);
   if (restored.width !== undefined) state.setWidth(restored.width);
-  isRestoring = false;
+  isApplying = false;
+
+  settle();
+});
+
+onUnmounted(() => {
+  if (frame != null && typeof cancelAnimationFrame === "function") cancelAnimationFrame(frame);
 });
 
 const side = computed(() => props.side ?? "left");

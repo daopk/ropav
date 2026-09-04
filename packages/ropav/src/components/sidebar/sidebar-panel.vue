@@ -79,6 +79,7 @@ const panelClass = computed(() =>
     :class="panelClass"
     :data-collapsed="dataAttr(state.isCollapsed.value)"
     :data-resizing="dataAttr(state.isResizing.value)"
+    :data-restoring="dataAttr(state.isRestoring.value)"
     :data-side="side"
     data-slot="sidebar-panel"
     :inert="isHidden || undefined"

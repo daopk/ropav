@@ -76,6 +76,12 @@
   transition: none;
 }
 
+/* And while a stored layout is being put back: that width is where the sidebar starts, not
+ * somewhere it moved to. */
+.sidebar__panel[data-restoring="true"] {
+  transition: none;
+}
+
 /* The separating line is a border rather than a background, so it is one of the few things Forced
  * Colors Mode recolours instead of flattening — no restatement needed here. */
 .sidebar__panel--left {
