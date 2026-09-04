@@ -48,12 +48,13 @@ const copyCssDirectory = (dirName) => {
   }
 };
 
-// Copy root index.css
-const indexPath = path.join(rootDir, "index.css");
+// Copy the root stylesheets: the two entries plus the core they share
+for (const file of ["index.css", "no-preflight.css", "core.css"]) {
+  const rootFile = path.join(rootDir, file);
 
-if (fs.existsSync(indexPath)) {
-  fs.copyFileSync(indexPath, path.join(distDir, "index.css"));
-  console.log("✓ Copied: index.css");
+  if (!fs.existsSync(rootFile)) continue;
+  fs.copyFileSync(rootFile, path.join(distDir, file));
+  console.log(`✓ Copied: ${file}`);
 }
 
 // Copy all CSS files from these directories

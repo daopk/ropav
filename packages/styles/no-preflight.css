@@ -1,0 +1,8 @@
+@layer theme, base, components, utilities;
+
+/* `index.css` without Tailwind's preflight, for an app that already resets - one running
+ * its own Tailwind build, or carrying a reset of its own. Identical in every other way. */
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+@import "./core.css";

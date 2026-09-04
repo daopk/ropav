@@ -2,27 +2,11 @@
 
 /* Ropav Styles - Layered Theme Architecture */
 
-/* Base layer - Tailwind CSS v4 */
-@import "tailwindcss";
-@import "tw-animate-css";
+/* Base layer - Tailwind CSS v4, spelled out part by part rather than as
+ * `@import "tailwindcss"`, so `no-preflight.css` can drop the reset and keep the rest.
+ * The order matches what the bundled entry does, and both entries must keep it. */
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css" layer(utilities);
 
-/* Base styles */
-@import "./base/base.css" layer(base);
-@import "./base/scrollbar.css" layer(base);
-
-/* Base component structures (unstyled) */
-@import "./components/index.css" layer(components);
-
-/* Maps the theme tokens onto Tailwind's namespaces - @see https://tailwindcss.com/docs/theme.
- * Must stay unlayered: Tailwind only picks up `@theme` outside a cascade layer. */
-@import "./themes/shared/theme.css";
-
-/* Default theme. Declares its own `@layer theme`; the bundled alternatives in
- * `themes/*.css` are opt-in and layer themselves the same way. */
-@import "./themes/default.css";
-
-/* Utilities */
-@import "./utilities/index.css";
-
-/* Variants */
-@import "./variants/index.css";
+@import "./core.css";

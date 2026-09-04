@@ -17,6 +17,10 @@
         "style": "./dist/index.css",
         "default": "./dist/index.css"
       },
+      "./no-preflight": {
+        "style": "./dist/no-preflight.css",
+        "default": "./dist/no-preflight.css"
+      },
       "./components/*": {
         "types": "./dist/components/*/index.d.ts",
         "import": "./dist/components/*/index.js",

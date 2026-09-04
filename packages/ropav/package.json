@@ -39,6 +39,10 @@
     "./styles": {
       "style": "./src/styles.css",
       "default": "./src/styles.css"
+    },
+    "./styles/no-preflight": {
+      "style": "./src/styles-no-preflight.css",
+      "default": "./src/styles-no-preflight.css"
     }
   },
   "publishConfig": {

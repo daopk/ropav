@@ -42,6 +42,10 @@
       "style": "./index.css",
       "default": "./index.css"
     },
+    "./no-preflight": {
+      "style": "./no-preflight.css",
+      "default": "./no-preflight.css"
+    },
     "./components/*": {
       "types": "./src/components/*/index.ts",
       "import": "./src/components/*/index.ts",

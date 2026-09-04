@@ -1,0 +1,15 @@
+/**
+ * Rules layered on top of `@ropav/styles` rather than merged into it, so each one stays
+ * separately deletable once `packages/styles` folds it in.
+ */
+@layer components {
+  /**
+   * A vertical group stacks along the block axis, so its cross axis is the one that decides
+   * button width. `.button` is `w-fit`, which would leave each button as wide as its own
+   * label and centred against the widest one - a ragged left and right edge. `min-width`
+   * squares them up without overriding the fixed width an icon-only button relies on.
+   */
+  .button-group--vertical .button {
+    @apply min-w-full;
+  }
+}

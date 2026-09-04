@@ -24,7 +24,12 @@ async function build() {
 
 async function buildStyles() {
   console.log("🎨 Creating styles export...");
-  await cp(path.join(rootDir, "src/styles.css"), path.join(distDir, "styles.css"));
+
+  // Both entries share the override block, so it ships alongside them.
+  for (const file of ["styles.css", "styles-no-preflight.css", "styles-overrides.css"]) {
+    await cp(path.join(rootDir, "src", file), path.join(distDir, file));
+  }
+
   console.log("✅ Styles export created successfully");
 }
 

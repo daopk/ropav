@@ -1,0 +1,26 @@
+/* Everything the stylesheet layers on beyond Tailwind's own three parts. Imported by
+ * `index.css` and by `no-preflight.css`, and not an entry of its own — the two entries
+ * differ only in whether they pull in Tailwind's preflight. */
+
+@import "tw-animate-css";
+
+/* Base styles */
+@import "./base/base.css" layer(base);
+@import "./base/scrollbar.css" layer(base);
+
+/* Base component structures (unstyled) */
+@import "./components/index.css" layer(components);
+
+/* Maps the theme tokens onto Tailwind's namespaces - @see https://tailwindcss.com/docs/theme.
+ * Must stay unlayered: Tailwind only picks up `@theme` outside a cascade layer. */
+@import "./themes/shared/theme.css";
+
+/* Default theme. Declares its own `@layer theme`; the bundled alternatives in
+ * `themes/*.css` are opt-in and layer themselves the same way. */
+@import "./themes/default.css";
+
+/* Utilities */
+@import "./utilities/index.css";
+
+/* Variants */
+@import "./variants/index.css";

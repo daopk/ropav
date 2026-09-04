@@ -50,6 +50,10 @@ async function generateExports() {
       style: "./dist/styles.css",
       default: "./dist/styles.css",
     },
+    "./styles/no-preflight": {
+      style: "./dist/styles-no-preflight.css",
+      default: "./dist/styles-no-preflight.css",
+    },
   };
 
   /* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
