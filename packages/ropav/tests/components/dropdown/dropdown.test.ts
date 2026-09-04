@@ -744,7 +744,7 @@ describe("Dropdown", () => {
 
       // Nothing on screen conveys the gesture, so without this it is undiscoverable.
       expect(describedBy).toBeTruthy();
-      expect(document.getElementById(describedBy)).toHaveTextContent(/long press/i);
+      expect(document.getElementById(describedBy)?.textContent).toMatch(/long press/i);
 
       result.unmount();
     });

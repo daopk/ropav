@@ -369,7 +369,10 @@ describe("ColorArea (browser)", () => {
       ];
 
       for (const corner of corners) {
+        // Each drop lands a pixel into a rounded corner, which a hit test resolves to the ancestor
+        // rather than the area, so the drag never releases unless the check is skipped.
         await userEvent.dragAndDrop(area, area, {
+          force: true,
           sourcePosition: { x: box.width / 2, y: box.height / 2 },
           targetPosition: { x: corner.x, y: corner.y },
         });

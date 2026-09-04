@@ -11,7 +11,7 @@ node_modules
 coverage
 __snapshots__
 **/__screenshots__/
-**/.vitest-attachments/
+**/.vitest/
 coverage.json
 
 # next.js
