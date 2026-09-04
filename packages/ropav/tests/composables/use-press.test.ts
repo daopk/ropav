@@ -3,7 +3,7 @@ import type { PressEvent } from "@/composables/use-press";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick, shallowRef } from "vue";
 
-import { usePress } from "@/composables/use-press";
+import { isVirtualClick, isVirtualPointerEvent, usePress } from "@/composables/use-press";
 
 import { withScope } from "../harness/scope";
 
@@ -70,6 +70,7 @@ const pointer = (type: string, init: PointerEventInit = {}) =>
     isPrimary: true,
     pointerId: 1,
     pointerType: "mouse",
+    pressure: 0.5,
     width: 1,
     ...init,
   });
@@ -523,6 +524,75 @@ describe("usePress", () => {
       expect(events).toEqual(["pressstart", "pressup", "pressend", "press"]);
 
       dispose();
+    });
+  });
+
+  /**
+   * Android reports assistive input differently enough to need its own shape.
+   *
+   * Constructed rather than driven: no runner here speaks to a screen reader, so these pin the
+   * event shapes React Aria documents rather than anything observed in this suite.
+   */
+  describe("Android", () => {
+    const ANDROID_AGENT =
+      "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Mobile";
+
+    /** TalkBack's double tap: a one-by-one pointer with no pressure, claiming to be a mouse. */
+    const talkBackPointer = () =>
+      new PointerEvent("pointerdown", {
+        detail: 0,
+        height: 1,
+        pointerType: "mouse",
+        pressure: 0,
+        width: 1,
+      });
+
+    beforeEach(() => {
+      vi.stubGlobal("navigator", { platform: "Linux armv8l", userAgent: ANDROID_AGENT });
+    });
+
+    afterEach(() => {
+      vi.unstubAllGlobals();
+    });
+
+    it("reads TalkBack's double tap as assistive input", () => {
+      expect(isVirtualPointerEvent(talkBackPointer())).toBe(true);
+    });
+
+    it("leaves a real press alone", () => {
+      // The same size, which is why size alone cannot answer this. A finger reports pressure.
+      expect(
+        isVirtualPointerEvent(
+          new PointerEvent("pointerdown", {
+            height: 1,
+            pointerType: "touch",
+            pressure: 0.5,
+            width: 1,
+          }),
+        ),
+      ).toBe(false);
+    });
+
+    it("stops reading a zero-sized pointer as assistive input", () => {
+      // The test every other platform relies on, deliberately off here: TalkBack does not report
+      // a zero-sized pointer, and something else on Android does.
+      expect(
+        isVirtualPointerEvent(
+          new PointerEvent("pointerdown", { height: 0, pointerType: "mouse", width: 0 }),
+        ),
+      ).toBe(false);
+    });
+
+    it("reads TalkBack's click from the button it claims", () => {
+      // `detail` is 1 here, which anywhere else would mean a real click. The button is the tell.
+      expect(
+        isVirtualClick(new PointerEvent("click", { buttons: 1, detail: 1, pointerType: "mouse" })),
+      ).toBe(true);
+    });
+
+    it("still reads a mousedown by its detail", () => {
+      // No pointer type, so this one is answered the way every other platform answers it.
+      expect(isVirtualClick(new MouseEvent("mousedown", { detail: 0 }))).toBe(true);
     });
   });
 });

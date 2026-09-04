@@ -332,6 +332,81 @@ describe("drag manager", () => {
     });
   });
 
+  /**
+   * A drag can be entered on Android with a screen reader, so it has to be leavable there too.
+   *
+   * TalkBack's double tap arrives as a one-by-one pointer claiming to be a mouse, followed by a
+   * click that looks entirely real — `detail: 1`, a pointer type, a button held. Neither event
+   * says "screen reader" on its own; the pair does, which is why the pointer is remembered.
+   *
+   * Constructed rather than driven: no runner here speaks to a screen reader.
+   */
+  describe("Android TalkBack", () => {
+    const ANDROID_AGENT =
+      "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Mobile";
+
+    const doubleTap = (element: HTMLElement) => {
+      element.dispatchEvent(
+        new PointerEvent("pointerdown", {
+          bubbles: true,
+          cancelable: true,
+          detail: 0,
+          height: 1,
+          pointerType: "mouse",
+          pressure: 0,
+          width: 1,
+        }),
+      );
+      element.dispatchEvent(
+        new PointerEvent("click", {
+          bubbles: true,
+          buttons: 1,
+          cancelable: true,
+          detail: 1,
+          pointerType: "mouse",
+        }),
+      );
+    };
+
+    beforeEach(() => {
+      vi.stubGlobal("navigator", { platform: "Linux armv8l", userAgent: ANDROID_AGENT });
+    });
+
+    afterEach(() => {
+      vi.unstubAllGlobals();
+    });
+
+    it("cancels the session from a double tap on the drag source", async () => {
+      const source = addElement("source");
+      const onDragEnd = vi.fn();
+
+      addDropTarget("target");
+      beginDragging(dragTargetFor(source, { onDragEnd }), stringFormatter);
+      await flushFrame();
+
+      // The only way out for a user with no Escape key. Read as a real click, this does nothing
+      // at all and the session cannot be left.
+      doubleTap(source);
+
+      expect(onDragEnd.mock.calls[0]?.[0]).toMatchObject({ dropOperation: "cancel" });
+      expect(isVirtualDragging()).toBe(false);
+    });
+
+    it("drops on a target from a double tap", async () => {
+      const source = addElement("source");
+      const { element } = addDropTarget("target", { onDrop: vi.fn() });
+      const onDragEnd = vi.fn();
+
+      beginDragging(dragTargetFor(source, { onDragEnd }), stringFormatter);
+      await flushFrame();
+
+      doubleTap(element);
+
+      expect(onDragEnd.mock.calls[0]?.[0]).toMatchObject({ dropOperation: "move" });
+      expect(isVirtualDragging()).toBe(false);
+    });
+  });
+
   describe("cancelling", () => {
     it("ends the session and restores focus to the drag source on Escape", async () => {
       const source = addElement("source");

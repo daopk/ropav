@@ -5,6 +5,7 @@ import type { MaybeRefOrGetter } from "vue";
 import { onScopeDispose, toValue, watch } from "vue";
 
 import { useCalendar } from "./use-calendar";
+import { isVirtualPointerEvent } from "./use-press";
 
 /**
  * What to do with a half-built range when the pointer comes up somewhere else, or focus leaves.
@@ -70,12 +71,13 @@ export const useRangeCalendar = (
    * VoiceOver fires a zero-sized pointer event before the click it stands for, and acting on it
    * would end the range before the cell's own press handler ever runs. `usePress` waits for the
    * click for the same reason, so the two have to agree or range selection stops working under a
-   * screen reader.
+   * screen reader — which is why the question is asked of the same predicate rather than answered
+   * again here.
    */
   let isVirtualClick = false;
 
   const onWindowPointerdown = (event: PointerEvent) => {
-    isVirtualClick = event.width === 0 && event.height === 0;
+    isVirtualClick = isVirtualPointerEvent(event);
   };
 
   const onWindowPointerup = (event: PointerEvent) => {
