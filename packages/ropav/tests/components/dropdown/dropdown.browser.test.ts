@@ -6,6 +6,7 @@ import { nextTick } from "vue";
 
 import { settled } from "../../harness/settle";
 import { finishAnimations, startSlowMotion, stopSlowMotion } from "../../harness/slow-motion";
+import { tap } from "../../harness/tap";
 
 import DropdownFixture from "./fixtures.vue";
 
@@ -314,6 +315,39 @@ describe("Dropdown (browser)", () => {
       expect(trigger).toHaveAttribute("data-pressed", "true");
 
       await dismiss(result);
+      result.unmount();
+    });
+
+    it("opens on a tap and closes on the next one", async () => {
+      const result = render();
+      const trigger = result.getByRole("button", { name: "Menu" });
+
+      await tap(trigger);
+
+      expect(trigger).toHaveAttribute("aria-expanded", "true");
+      expect(result.screen.getByRole("menu")).toBeInTheDocument();
+
+      await tap(trigger);
+      await nextTick();
+
+      expect(trigger).toHaveAttribute("aria-expanded", "false");
+
+      result.unmount();
+    });
+
+    it("fires an item's action from a tap", async () => {
+      const actions: (string | number)[] = [];
+      const result = render({ onAction: (key: string | number) => actions.push(key) });
+
+      await tap(result.getByRole("button", { name: "Menu" }));
+
+      const popover = result.screen.getByRole("dialog") as HTMLElement;
+
+      await settled(popover);
+      await tap(result.screen.getAllByRole("menuitem")[1]!);
+
+      expect(actions).toHaveLength(1);
+
       result.unmount();
     });
 

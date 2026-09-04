@@ -474,6 +474,24 @@ describe("usePress", () => {
       vi.useRealTimers();
     });
 
+    it("survives the leave a browser fires as the finger lifts", () => {
+      const { dispose, element, events, press } = setup();
+      const touch = { pointerType: "touch" } as const;
+
+      element.dispatchEvent(pointer("pointerdown", touch));
+      element.dispatchEvent(pointer("pointerup", touch));
+
+      // A touch pointer is destroyed when the finger lifts, and the browser reports that as a
+      // leave straight after the release. Read as the finger moving off the element, it ends the
+      // press before the click that completes it has arrived, and nothing is ever activated.
+      press.handlers.onPointerleave(pointer("pointerleave", touch));
+      element.dispatchEvent(realClick());
+
+      expect(events).toEqual(["pressstart", "pressup", "pressend", "press"]);
+
+      dispose();
+    });
+
     it("synthesises the click that iOS withholds after a long press", () => {
       const { dispose, element, events } = setup();
 

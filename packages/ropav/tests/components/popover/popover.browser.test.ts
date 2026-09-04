@@ -5,6 +5,7 @@ import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
 import { finishAnimations, startSlowMotion, stopSlowMotion } from "../../harness/slow-motion";
+import { tap } from "../../harness/tap";
 
 import PopoverFixture from "./fixtures.vue";
 
@@ -196,6 +197,23 @@ describe("Popover (browser)", () => {
       expect(result.screen.getByRole("dialog")).toBeTruthy();
 
       await close(popover);
+      result.unmount();
+    });
+  });
+
+  describe("a finger", () => {
+    it("opens on a tap", async () => {
+      const result = render();
+
+      place(result);
+
+      // A dialog trigger has no way in but the press: unlike a menu trigger it does not also open
+      // on the way down, so a press that a finger cannot complete leaves it with nothing at all.
+      await tap(triggerOf(result));
+
+      expect(triggerOf(result)).toHaveAttribute("aria-expanded", "true");
+      expect(document.body.querySelector(".popover")).not.toBeNull();
+
       result.unmount();
     });
   });

@@ -28,6 +28,21 @@ const press = (element: Element) => {
   element.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
 };
 
+/**
+ * A tap, in the order a browser reports one.
+ *
+ * The leave is the part worth spelling out: a touch pointer is destroyed where the finger lifts,
+ * and the browser reports that as a leave between the release and the click.
+ */
+const tap = (element: Element) => {
+  const touch = { ...POINTER, pointerType: "touch" } as const;
+
+  element.dispatchEvent(new PointerEvent("pointerdown", touch));
+  element.dispatchEvent(new PointerEvent("pointerup", touch));
+  element.dispatchEvent(new PointerEvent("pointerleave", touch));
+  element.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
+};
+
 const keydown = (element: Element, key: string, init: KeyboardEventInit = {}) => {
   const event = new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key, ...init });
 
@@ -704,10 +719,31 @@ describe("Dropdown", () => {
       expect(result.screen.queryByRole("menu")).toBeNull();
 
       trigger.dispatchEvent(new PointerEvent("pointerup", touch));
+      trigger.dispatchEvent(new PointerEvent("pointerleave", touch));
       trigger.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
       await settle();
 
       expect(result.screen.getByRole("menu")).toBeInTheDocument();
+
+      result.unmount();
+    });
+
+    it("closes on a second tap of the trigger", async () => {
+      const result = render();
+      const trigger = result.getByRole("button", { name: "Menu" });
+
+      tap(trigger);
+      await settle();
+
+      expect(result.screen.getByRole("menu")).toBeInTheDocument();
+
+      // Dismissal reads the tap on the trigger before the trigger's own press does, so the menu
+      // it closes must not be re-opened by the toggle that follows.
+      tap(trigger);
+      await settle();
+
+      expect(result.screen.queryByRole("menu")).toBeNull();
+      expect(trigger).toHaveAttribute("aria-expanded", "false");
 
       result.unmount();
     });

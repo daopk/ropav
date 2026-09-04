@@ -97,6 +97,19 @@ export const isVirtualClick = (event: MouseEvent): boolean => {
 export const isVirtualPointerEvent = (event: PointerEvent): boolean =>
   event.width === 0 && event.height === 0;
 
+/**
+ * Whether an enter or a leave came from a pointer with no hover to report.
+ *
+ * A touch pointer is created where the finger lands and destroyed where it lifts, and the browser
+ * reports each as an enter and a leave. Neither is the finger crossing the element's edge, and the
+ * leave is the damaging one: it arrives immediately after the release, ahead of the click that
+ * completes a touch press, so a press that acted on it would end itself before it could activate.
+ *
+ * Where the finger actually went is answered by the release instead — a press released outside its
+ * target is abandoned there.
+ */
+const cannotHover = (event: PointerEvent): boolean => event.pointerType === "touch";
+
 const NON_TEXT_INPUT_TYPES = new Set([
   "button",
   "checkbox",
@@ -190,6 +203,11 @@ const contains = (root: EventTarget | null, target: EventTarget | null): boolean
  * Only the pointer-event path is ported. React Aria keeps a mouse/touch fallback for
  * environments without `PointerEvent`; every browser this package targets has it, and so does
  * jsdom, so the fallback would be untested code.
+ *
+ * Whether the pointer is still over the element is read from the element's own enter and leave,
+ * where React Aria hit-tests a global pointer move. The cheaper pair costs one thing: a touch
+ * dragged off its element keeps looking pressed until the release rules on it, rather than
+ * un-pressing under the finger on the way out.
  *
  * @example
  * ```ts
@@ -604,8 +622,9 @@ export const usePress = (options: UsePressOptions = {}): UsePressReturn => {
           state.pointerType,
         );
 
-        // Touch captures the pointer to its first target, which would keep enter and leave
-        // from ever firing again once the finger moves off.
+        // Touch captures the pointer to the element the finger landed on, which would make
+        // every later event report that element however far the finger has since travelled. The
+        // release is what lets the global `pointerup` below read where the finger actually is.
         const target = event.target as Element;
 
         if ("releasePointerCapture" in target && typeof target.hasPointerCapture === "function") {
@@ -623,6 +642,8 @@ export const usePress = (options: UsePressOptions = {}): UsePressReturn => {
       if (shouldStopPropagation) event.stopPropagation();
     },
     onPointerenter: (event) => {
+      if (cannotHover(event)) return;
+
       if (
         event.pointerId === state.activePointerId &&
         state.target &&
@@ -634,6 +655,8 @@ export const usePress = (options: UsePressOptions = {}): UsePressReturn => {
       }
     },
     onPointerleave: (event) => {
+      if (cannotHover(event)) return;
+
       if (
         event.pointerId === state.activePointerId &&
         state.target &&
