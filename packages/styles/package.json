@@ -71,7 +71,7 @@
     "@tailwindcss/cli": "catalog:",
     "@types/node": "catalog:",
     "clean-package": "2.2.0",
-    "rolldown": "1.2.6",
+    "rolldown": "1.2.7",
     "tailwindcss": "catalog:",
     "tsx": "4.23.13",
     "typescript": "catalog:"

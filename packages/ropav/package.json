@@ -58,15 +58,15 @@
     "postpack": "clean-package restore"
   },
   "dependencies": {
-    "@internationalized/date": "3.12.3",
-    "@internationalized/number": "3.6.7",
+    "@internationalized/date": "3.12.4",
+    "@internationalized/number": "3.6.8",
     "@internationalized/string": "3.2.10",
     "@ropav/styles": "workspace:*",
     "tailwind-variants": "3.3.1"
   },
   "devDependencies": {
     "@ropav/testing": "workspace:*",
-    "@storybook/vue3-vite": "10.5.10",
+    "@storybook/vue3-vite": "10.6.0",
     "@tailwindcss/vite": "catalog:",
     "@tanstack/vue-table": "9.2.4",
     "@vitejs/plugin-vue": "catalog:",
