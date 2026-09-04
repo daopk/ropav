@@ -64,6 +64,7 @@ const props = withDefaults(defineProps<CalendarFixtureProps>(), {
     :aria-label="props.ariaLabel ?? 'Event date'"
     :auto-focus="props.autoFocus"
     :class="props.class"
+    :create-calendar="props.createCalendar"
     :default-focused-value="props.defaultFocusedValue"
     :default-value="props.defaultValue"
     :default-year-picker-open="props.defaultYearPickerOpen"

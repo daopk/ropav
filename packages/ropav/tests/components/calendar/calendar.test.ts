@@ -1,6 +1,6 @@
 import type { DateValue } from "@internationalized/date";
 
-import { CalendarDate } from "@internationalized/date";
+import { CalendarDate, createCalendar } from "@internationalized/date";
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
@@ -510,6 +510,43 @@ describe("Calendar", () => {
       await nextTick();
 
       expect(onYearPickerOpenChange).toHaveBeenCalledWith(true);
+      calendar.unmount();
+    });
+  });
+
+  describe("the calendar system", () => {
+    /*
+     * Gregorian whatever the locale asks for. The full factory carries the arithmetic for every
+     * system behind it, and a static default would put all of them in every build.
+     */
+    it.each([
+      ["th-TH-u-ca-buddhist", "2026"],
+      ["ja-JP-u-ca-japanese", "2026"],
+      ["hi-IN-u-ca-indian", "2026"],
+    ])("builds Gregorian for %s until a factory is passed", (locale, year) => {
+      const calendar = renderCalendar({ locale, withYearPicker: true });
+
+      expect(calendar.slot("calendar-year-picker-trigger-heading").textContent).toContain(year);
+      calendar.unmount();
+    });
+
+    it("takes the locale's own system once the factory is passed", () => {
+      const calendar = renderCalendar({
+        createCalendar,
+        locale: "th-TH-u-ca-buddhist",
+        withYearPicker: true,
+      });
+
+      // 2026 Gregorian is 2569 in the Buddhist calendar.
+      expect(calendar.slot("calendar-year-picker-trigger-heading").textContent).toContain("2569");
+      calendar.unmount();
+    });
+
+    it("asks the passed factory for the identifier the locale resolves to", () => {
+      const createSpy = vi.fn(createCalendar);
+      const calendar = renderCalendar({ createCalendar: createSpy, locale: "th-TH-u-ca-buddhist" });
+
+      expect(createSpy).toHaveBeenCalledWith("buddhist");
       calendar.unmount();
     });
   });

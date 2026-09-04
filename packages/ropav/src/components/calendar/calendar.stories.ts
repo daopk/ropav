@@ -14,6 +14,7 @@ import {
 import { computed, shallowRef } from "vue";
 
 import { useLocale } from "../../composables/use-locale";
+import { createCalendar } from "../../utils/calendar-systems";
 import { Button } from "../button";
 import { ButtonGroup } from "../button-group";
 import {
@@ -667,6 +668,23 @@ const WEEK_VIEW_OPTIONS = [
   { id: "8", name: "8 weeks" },
 ];
 
+/**
+ * A locale per calendar system, since the system in force follows the locale rather than being
+ * chosen outright. Each of these needs the full factory passed in; the default builds Gregorian
+ * whatever the locale asks for.
+ */
+const CALENDAR_SYSTEM_OPTIONS = [
+  { id: "en-US", name: "Gregorian" },
+  { id: "th-TH-u-ca-buddhist", name: "Buddhist" },
+  { id: "ja-JP-u-ca-japanese", name: "Japanese" },
+  { id: "zh-TW-u-ca-roc", name: "Minguo" },
+  { id: "fa-IR-u-ca-persian", name: "Persian" },
+  { id: "hi-IN-u-ca-indian", name: "Indian" },
+  { id: "ar-SA-u-ca-islamic-umalqura", name: "Umm al-Qura" },
+  { id: "he-IL-u-ca-hebrew", name: "Hebrew" },
+  { id: "am-ET-u-ca-ethiopic", name: "Ethiopic" },
+];
+
 export const DayView: Story = {
   render: (args) => ({
     components,
@@ -772,15 +790,82 @@ export const WeekView: Story = {
 export const InternationalCalendar: Story = {
   render: (args) => ({
     components,
-    setup: () => ({ NEXT, PREVIOUS, args, defaultValue: today(getLocalTimeZone()) }),
+    setup: () => ({
+      NEXT,
+      PREVIOUS,
+      args,
+      createCalendar,
+      defaultValue: today(getLocalTimeZone()),
+    }),
     template: `
       <I18nProvider locale="hi-IN-u-ca-indian">
-        <Calendar v-bind="args" aria-label="Event date" :default-value="defaultValue">
+        <Calendar
+          v-bind="args"
+          aria-label="Event date"
+          :create-calendar="createCalendar"
+          :default-value="defaultValue"
+        >
           ${yearPickerHeader}
           ${grid}
           ${yearPickerGrid}
         </Calendar>
       </I18nProvider>
+    `,
+  }),
+};
+
+export const CalendarSystems: Story = {
+  render: (args) => ({
+    components,
+    setup: () => {
+      const locale = shallowRef(CALENDAR_SYSTEM_OPTIONS[0]!.id);
+
+      return {
+        NEXT,
+        PREVIOUS,
+        args,
+        byName,
+        createCalendar,
+        defaultValue: today(getLocalTimeZone()),
+        locale,
+        options: CALENDAR_SYSTEM_OPTIONS,
+      };
+    },
+    template: `
+      <div class="flex flex-col items-center gap-6">
+        <Select v-model:value="locale" class="w-64" :item-text-value="byName" :items="options">
+          <Label>Calendar system</Label>
+          <SelectTrigger>
+            <SelectValue />
+            <SelectIndicator />
+          </SelectTrigger>
+          <SelectPopover>
+            <ListBox>
+              <ListBoxItem
+                v-for="option in options"
+                :id="option.id"
+                :key="option.id"
+                :text-value="option.name"
+              >
+                {{ option.name }}
+                <ListBoxItemIndicator />
+              </ListBoxItem>
+            </ListBox>
+          </SelectPopover>
+        </Select>
+        <I18nProvider :locale="locale">
+          <Calendar
+            v-bind="args"
+            aria-label="Event date"
+            :create-calendar="createCalendar"
+            :default-value="defaultValue"
+          >
+            ${yearPickerHeader}
+            ${grid}
+            ${yearPickerGrid}
+          </Calendar>
+        </I18nProvider>
+      </div>
     `,
   }),
 };

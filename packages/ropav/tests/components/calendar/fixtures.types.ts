@@ -5,7 +5,13 @@ import type {
   SelectionAlignment,
 } from "@/composables/use-calendar-state";
 import type { DayOfWeek, WeekdayStyle } from "@/utils/calendar";
-import type { CalendarDate, DateDuration, DateValue } from "@internationalized/date";
+import type {
+  Calendar,
+  CalendarDate,
+  CalendarIdentifier,
+  DateDuration,
+  DateValue,
+} from "@internationalized/date";
 
 export interface CalendarFixtureProps {
   class?: string;
@@ -45,6 +51,7 @@ export interface CalendarFixtureProps {
   isYearPickerOpen?: boolean;
   defaultYearPickerOpen?: boolean;
   locale?: string;
+  createCalendar?: (identifier: CalendarIdentifier) => Calendar;
   /** Renders the year-picker trigger and grid instead of a plain heading. */
   withYearPicker?: boolean;
   /** Renders a second grid, for the multi-month layout. */

@@ -3,7 +3,13 @@ import type { CalendarHeadingFormatOptions } from "../../composables/use-calenda
 import type { PageBehavior, SelectionAlignment } from "../../composables/use-calendar-state";
 import type { RangeCalendarCommitBehavior } from "../../composables/use-range-calendar";
 import type { DayOfWeek, WeekdayStyle } from "../../utils/calendar";
-import type { CalendarDate, DateDuration, DateValue } from "@internationalized/date";
+import type {
+  Calendar,
+  CalendarDate,
+  CalendarIdentifier,
+  DateDuration,
+  DateValue,
+} from "@internationalized/date";
 
 /*
  * Boolean props are declared as plain `boolean` rather than through the variants type. The SFC
@@ -53,6 +59,8 @@ export interface RangeCalendarRootProps {
   /** Whether the year picker is open. */
   isYearPickerOpen?: boolean;
   defaultYearPickerOpen?: boolean;
+  /** Builds the calendar system for an identifier. Injectable so a build can ship fewer of them. */
+  createCalendar?: (identifier: CalendarIdentifier) => Calendar;
 }
 
 /** State the calendar hands its slot, matching React's render props. */

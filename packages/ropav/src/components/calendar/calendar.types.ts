@@ -7,7 +7,13 @@ import type {
   SelectionAlignment,
 } from "../../composables/use-calendar-state";
 import type { DayOfWeek, WeekdayStyle } from "../../utils/calendar";
-import type { CalendarDate, DateDuration, DateValue } from "@internationalized/date";
+import type {
+  Calendar,
+  CalendarDate,
+  CalendarIdentifier,
+  DateDuration,
+  DateValue,
+} from "@internationalized/date";
 
 /*
  * Boolean props are declared as plain `boolean` rather than through the variants type. The SFC
@@ -50,6 +56,8 @@ export interface CalendarRootProps {
   /** Whether the year picker is open. */
   isYearPickerOpen?: boolean;
   defaultYearPickerOpen?: boolean;
+  /** Builds the calendar system for an identifier. Injectable so a build can ship fewer of them. */
+  createCalendar?: (identifier: CalendarIdentifier) => Calendar;
 }
 
 /** State the calendar hands its slot, matching React's render props. */

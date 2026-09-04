@@ -2,9 +2,9 @@
 import type { CalendarValue } from "../../composables/use-calendar-state";
 import type { CalendarDayViewContext } from "./calendar.context";
 import type { CalendarRootProps, CalendarRootSlotProps } from "./calendar.types";
-import type { DateValue } from "@internationalized/date";
+import type { CalendarIdentifier, DateValue } from "@internationalized/date";
 
-import { CalendarDate, DateFormatter, createCalendar } from "@internationalized/date";
+import { CalendarDate, DateFormatter, GregorianCalendar } from "@internationalized/date";
 import { calendarVariants } from "@ropav/styles";
 import { computed, shallowRef } from "vue";
 
@@ -68,6 +68,9 @@ const isDateUnavailable = hasDateUnavailable
   ? (date: DateValue) => Boolean((props.isDateUnavailable ?? owned.value.isDateUnavailable)?.(date))
   : undefined;
 
+const createCalendar = (identifier: CalendarIdentifier) =>
+  props.createCalendar?.(identifier) ?? new GregorianCalendar();
+
 /**
  * Default bounds spanning 1900 to 2099, expressed in the locale's own calendar system.
  *
@@ -77,9 +80,7 @@ const isDateUnavailable = hasDateUnavailable
  */
 const calendarSystem = computed(() =>
   createCalendar(
-    new DateFormatter(locale.value.locale).resolvedOptions().calendar as Parameters<
-      typeof createCalendar
-    >[0],
+    new DateFormatter(locale.value.locale).resolvedOptions().calendar as CalendarIdentifier,
   ),
 );
 

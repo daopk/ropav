@@ -42,6 +42,7 @@ const props = withDefaults(defineProps<DateFieldFixtureProps>(), {
     <DateField
       :aria-label="props.withLabel ? undefined : (props.ariaLabel ?? 'Date')"
       :class="props.class"
+      :create-calendar="props.createCalendar"
       :default-value="props.defaultValue"
       :full-width="props.fullWidth"
       :granularity="props.granularity"

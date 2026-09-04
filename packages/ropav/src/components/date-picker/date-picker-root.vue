@@ -3,7 +3,7 @@ import type { DateFieldControl } from "../date-input-group";
 import type { DatePickerRootProps, DatePickerRootSlotProps } from "./date-picker.types";
 import type { DateValue } from "@internationalized/date";
 
-import { createCalendar as defaultCreateCalendar } from "@internationalized/date";
+import { GregorianCalendar } from "@internationalized/date";
 import { datePickerVariants } from "@ropav/styles";
 import { computed, onScopeDispose, shallowRef, watch } from "vue";
 
@@ -118,7 +118,7 @@ const inputGroupElement = shallowRef<HTMLElement | null>(null);
 const inputElement = shallowRef<HTMLInputElement | null>(null);
 
 const fieldState = useDateFieldState({
-  createCalendar: (identifier) => (props.createCalendar ?? defaultCreateCalendar)(identifier),
+  createCalendar: (identifier) => props.createCalendar?.(identifier) ?? new GregorianCalendar(),
   granularity: () => props.granularity,
   hideTimeZone: () => props.hideTimeZone,
   hourCycle: () => props.hourCycle,

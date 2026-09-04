@@ -1,6 +1,6 @@
 import type { ValidationBehavior } from "@/composables/use-form-validation-state";
 import type { Granularity } from "@/utils/date-format";
-import type { DateValue } from "@internationalized/date";
+import type { Calendar, CalendarIdentifier, DateValue } from "@internationalized/date";
 
 export interface DateFieldFixtureProps {
   class?: string;
@@ -18,6 +18,7 @@ export interface DateFieldFixtureProps {
   validationBehavior?: ValidationBehavior;
   name?: string;
   locale?: string;
+  createCalendar?: (identifier: CalendarIdentifier) => Calendar;
   ariaLabel?: string;
   /** Sets `full-width` as a bare attribute rather than a bound one, as a caller writes it. */
   attributeForm?: boolean;

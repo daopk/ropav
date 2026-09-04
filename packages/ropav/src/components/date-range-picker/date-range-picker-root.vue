@@ -7,7 +7,7 @@ import type {
 } from "./date-range-picker.types";
 import type { DateRangePickerFieldOptions } from "./use-date-range-picker";
 
-import { createCalendar as defaultCreateCalendar } from "@internationalized/date";
+import { GregorianCalendar } from "@internationalized/date";
 import { dateRangePickerVariants } from "@ropav/styles";
 import { computed, onScopeDispose, shallowRef, watch } from "vue";
 
@@ -127,7 +127,7 @@ const buildField = (part: "start" | "end", options: DateRangePickerFieldOptions)
   const inputElement = shallowRef<HTMLInputElement | null>(null);
 
   const fieldState = useDateFieldState({
-    createCalendar: (identifier) => (props.createCalendar ?? defaultCreateCalendar)(identifier),
+    createCalendar: (identifier) => props.createCalendar?.(identifier) ?? new GregorianCalendar(),
     granularity: () => props.granularity,
     hideTimeZone: () => props.hideTimeZone,
     hourCycle: () => props.hourCycle,

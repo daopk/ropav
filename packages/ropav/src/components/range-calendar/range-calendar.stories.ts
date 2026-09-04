@@ -15,6 +15,7 @@ import {
 import { computed, shallowRef } from "vue";
 
 import { useLocale } from "../../composables/use-locale";
+import { createCalendar } from "../../utils/calendar-systems";
 import { Button } from "../button";
 import { ButtonGroup } from "../button-group";
 import {
@@ -845,11 +846,22 @@ export const InternationalCalendar: Story = {
     setup: () => {
       const now = today(getLocalTimeZone());
 
-      return { NEXT, PREVIOUS, args, defaultValue: { end: now.add({ days: 7 }), start: now } };
+      return {
+        NEXT,
+        PREVIOUS,
+        args,
+        createCalendar,
+        defaultValue: { end: now.add({ days: 7 }), start: now },
+      };
     },
     template: `
       <I18nProvider locale="hi-IN-u-ca-indian">
-        <RangeCalendar v-bind="args" aria-label="Trip dates" :default-value="defaultValue">
+        <RangeCalendar
+          v-bind="args"
+          aria-label="Trip dates"
+          :create-calendar="createCalendar"
+          :default-value="defaultValue"
+        >
           ${yearPickerHeader}
           ${grid}
           ${yearPickerGrid}

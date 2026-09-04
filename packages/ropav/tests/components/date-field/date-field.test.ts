@@ -1,4 +1,4 @@
-import { CalendarDate, CalendarDateTime } from "@internationalized/date";
+import { CalendarDate, CalendarDateTime, createCalendar } from "@internationalized/date";
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it } from "vitest";
 import { nextTick } from "vue";
@@ -283,6 +283,34 @@ describe("DateField", () => {
       expect(document.getElementById(ids[0]!)?.textContent).toBe("Selected Date: June 5, 2026");
       expect(ids).toContain(slot("description").id);
       unmount();
+    });
+  });
+
+  describe("the calendar system", () => {
+    /*
+     * Gregorian whatever the locale asks for. The full factory carries the arithmetic for every
+     * system behind it, and a static default would put all of them in every build.
+     */
+    it("builds Gregorian until a factory is passed", () => {
+      const field = renderDateField({
+        defaultValue: new CalendarDate(2026, 6, 15),
+        locale: "th-TH-u-ca-buddhist",
+      });
+
+      expect(field.segment("year").textContent?.trim()).toBe("2026");
+      field.unmount();
+    });
+
+    it("takes the locale's own system once the factory is passed", () => {
+      const field = renderDateField({
+        createCalendar,
+        defaultValue: new CalendarDate(2026, 6, 15),
+        locale: "th-TH-u-ca-buddhist",
+      });
+
+      // 2026 Gregorian is 2569 in the Buddhist calendar.
+      expect(field.segment("year").textContent?.trim()).toBe("2569");
+      field.unmount();
     });
   });
 });
