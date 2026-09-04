@@ -32,6 +32,7 @@ const props = withDefaults(
     withIndicator?: boolean;
     withSection?: boolean;
     withSeparator?: boolean;
+    submenuDelay?: number;
     withSubmenu?: boolean;
     withCustomTrigger?: boolean;
     /** Whether the caller hands over an empty slot at all. */
@@ -103,7 +104,7 @@ const emit = defineEmits<{
             <Description v-if="item.description">{{ item.description }}</Description>
           </MenuItem>
           <Separator v-if="props.withSeparator" />
-          <DropdownSubmenuTrigger v-if="props.withSubmenu">
+          <DropdownSubmenuTrigger v-if="props.withSubmenu" :delay="props.submenuDelay">
             <MenuItem id="share">
               <Label>Share</Label>
               <MenuItemSubmenuIndicator />

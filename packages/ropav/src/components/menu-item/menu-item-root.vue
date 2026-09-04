@@ -183,7 +183,11 @@ const onPointerenter = (event: PointerEvent) => {
 
   if (isDisabled.value) return;
 
-  popup?.onPointerenter();
+  // A finger reports an enter where it lands and a leave where it lifts, and neither is the
+  // pointer crossing the item's edge. A submenu opened from that lands over the menu whenever a
+  // press outlives the delay without completing as a tap — starting a scroll, most plainly. The
+  // tap opens it through the click instead, like every other activation.
+  if (event.pointerType !== "touch") popup?.onPointerenter();
 
   // Hovering a menu item moves focus to it, which is what makes the keyboard pick up from
   // wherever the pointer left off. Never while a submenu is open, or focus would be dragged out

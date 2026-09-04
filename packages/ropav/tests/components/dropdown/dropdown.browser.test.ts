@@ -541,6 +541,25 @@ describe("Dropdown (browser)", () => {
       return { popover: popovers[1]!, trigger };
     };
 
+    it("opens from a tap on its trigger", async () => {
+      const result = render({ withSubmenu: true });
+
+      place(result);
+      await tap(result.getByRole("button", { name: "Menu" }));
+
+      const menu = result.screen.getByRole("dialog") as HTMLElement;
+
+      await settled(menu);
+
+      // A finger never hovers, so the submenu has to come from the tap's own click. The delay the
+      // pointer path waits out is deliberately not waited on here — nothing should be pending.
+      await tap(result.screen.getByRole("menuitem", { name: "Share" }));
+
+      expect(result.baseElement.querySelectorAll('[data-slot="dropdown-popover"]')).toHaveLength(2);
+
+      result.unmount();
+    });
+
     it("opens beside the item that owns it", async () => {
       const result = render({ withSubmenu: true });
 

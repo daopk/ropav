@@ -863,6 +863,61 @@ describe("Dropdown", () => {
       return trigger;
     };
 
+    /**
+     * The hover path had no coverage at all — every other case here opens with ArrowRight.
+     *
+     * Fake timers because the open is deliberately delayed, so that passing over a trigger on the
+     * way somewhere else does not open it.
+     */
+    describe("opening by pointer", () => {
+      /** Asked for explicitly, so the wait below is a stated number rather than a guessed one. */
+      const DELAY = 50;
+
+      const enter = (element: Element, pointerType = "mouse") =>
+        element.dispatchEvent(new PointerEvent("pointerenter", { ...POINTER, pointerType }));
+
+      beforeEach(() => {
+        vi.useFakeTimers();
+      });
+
+      afterEach(() => {
+        vi.useRealTimers();
+      });
+
+      it("opens the submenu once a mouse has rested on its trigger", async () => {
+        const result = render({ submenuDelay: DELAY, withSubmenu: true });
+
+        press(result.getByRole("button", { name: "Menu" }));
+        await vi.advanceTimersByTimeAsync(0);
+
+        enter(result.screen.getByRole("menuitem", { name: "Share" }));
+
+        expect(result.screen.queryAllByRole("menu")).toHaveLength(1);
+
+        await vi.advanceTimersByTimeAsync(DELAY);
+
+        expect(result.screen.queryAllByRole("menu")).toHaveLength(2);
+
+        result.unmount();
+      });
+
+      it("leaves the submenu closed when the enter came from a finger", async () => {
+        const result = render({ submenuDelay: DELAY, withSubmenu: true });
+
+        press(result.getByRole("button", { name: "Menu" }));
+        await vi.advanceTimersByTimeAsync(0);
+
+        // A finger resting on the trigger past the delay is a press on its way to being a scroll,
+        // not a pointer travelling over it.
+        enter(result.screen.getByRole("menuitem", { name: "Share" }), "touch");
+        await vi.advanceTimersByTimeAsync(DELAY);
+
+        expect(result.screen.queryAllByRole("menu")).toHaveLength(1);
+
+        result.unmount();
+      });
+    });
+
     it("marks the item that opens a submenu", async () => {
       const result = render({ withSubmenu: true });
 
