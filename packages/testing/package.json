@@ -33,6 +33,6 @@
   },
   "peerDependencies": {
     "vitest": "^5.0.0",
-    "vue": "^3.6.0-rc.6"
+    "vue": "^3.6.0-rc.7"
   }
 }

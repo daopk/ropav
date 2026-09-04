@@ -9,12 +9,12 @@ catalog:
   "@vitejs/plugin-vue": 6.0.8
   "@vitest/browser": 5.0.0
   "@vitest/browser-playwright": 5.0.0
-  "@vue/compiler-vapor": 3.6.0-rc.6
+  "@vue/compiler-vapor": 3.6.0-rc.7
   tailwindcss: 4.3.3
   typescript: npm:typescript-native-bridge@6.0.3-bridge.16.tsgo.7.0.2
   vite: 8.2.2
   vitest: 5.0.0
-  vue: 3.6.0-rc.6
+  vue: 3.6.0-rc.7
   vue-tsc: 3.3.11
 
 overrides:
