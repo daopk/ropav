@@ -42,7 +42,7 @@ describe("ColorSlider", () => {
       unmount();
     });
 
-    it("lets a caller's class through to tailwind-merge", () => {
+    it("lets a caller's class through to the element", () => {
       const { container, unmount } = renderSlider({ class: "w-64" });
 
       expect(slot(container, "color-slider")).toHaveClass("color-slider", "w-64");

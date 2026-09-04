@@ -1,11 +1,9 @@
 /**
- * Resolve a `tv()` slot function into a class string, merging in a caller `class`.
+ * Resolve a `tv()` slot function into a class string, appending a caller `class`.
  *
- * Feeding the caller class through `tv()` is what lets it *override* conflicting
- * utilities, since `tailwind-variants` runs `tailwind-merge` over the result. Vue's
- * own attribute fallthrough would only concatenate, which does not override anything.
- *
- * `class` rather than `className`: `tv()` accepts either, and `class` is the Vue idiom.
+ * The slot function owns the slot's own classes, so a caller class goes through it rather
+ * than around it. Declaring `class` as a prop is what takes it out of Vue's attribute
+ * fallthrough in the first place, leaving each part to place it.
  *
  * @example
  * ```ts

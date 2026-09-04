@@ -37,7 +37,7 @@ describe("ColorSwatch", () => {
       );
     });
 
-    it("lets a caller's class through to tailwind-merge", () => {
+    it("lets a caller's class through to the element", () => {
       const { swatch } = renderSwatch({ class: "size-5", color: "#0485F7" });
 
       expect(swatch).toHaveClass("color-swatch", "size-5");

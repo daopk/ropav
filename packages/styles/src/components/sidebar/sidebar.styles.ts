@@ -1,6 +1,6 @@
-import type { VariantProps } from "tailwind-variants";
+import type { VariantProps } from "../../tv";
 
-import { tv } from "tailwind-variants";
+import { tv } from "../../tv";
 
 /*
  * Side and collapse mode are carried as modifier classes rather than left to `[data-side]` /

@@ -1,6 +1,6 @@
-import type { VariantProps } from "tailwind-variants";
+import type { VariantProps } from "../../tv";
 
-import { tv } from "tailwind-variants";
+import { tv } from "../../tv";
 
 /*
  * Orientation is carried as a modifier class rather than left to a `[data-orientation]` selector

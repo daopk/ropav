@@ -2,8 +2,8 @@
 
 The style layer behind [`ropav`](https://www.npmjs.com/package/ropav): plain CSS for every component,
 themes, utilities, and custom variants, plus `tv()` variants that do nothing but map props to class names.
-Framework-agnostic — not a line of Vue or React in it. `dependencies` are `tailwind-variants` and
-`tw-animate-css`; the only peer is `tailwindcss`.
+Framework-agnostic — not a line of Vue or React in it. The only `dependency` is `tw-animate-css`;
+the only peer is `tailwindcss`.
 
 ## Provenance
 
@@ -112,10 +112,12 @@ component that publishes it as an attribute.
 
 `components/button.css` is the densest example of both — read it before writing a new component file.
 
-**Every `ropav` component takes a `class` prop**, merged through its `tv()` recipe rather than
-concatenated, so a utility that conflicts with one the recipe already carries replaces it. That is
-the first thing to reach for. It cannot reach a part drawn in `::before`/`::after`, and it flattens
-every state of whatever property it sets — see [State colors](#state-colors) for the way round both.
+**Every `ropav` component takes a `class` prop**, appended to the classes its `tv()` recipe
+carries. A utility passed that way wins on cascade order alone — component rules live in the
+`components` layer, utilities in the later `utilities` one — so nothing has to be stripped for it
+to take effect. That is the first thing to reach for. It cannot reach a part drawn in
+`::before`/`::after`, and it flattens every state of whatever property it sets — see
+[State colors](#state-colors) for the way round both.
 
 ## Theming
 

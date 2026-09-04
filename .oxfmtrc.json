@@ -13,7 +13,7 @@
   "sortPackageJson": true,
   "sortTailwindcss": {
     "stylesheet": "packages/storybook/styles/globals.css",
-    "functions": ["tv", "clsx", "cn"]
+    "functions": ["tv"]
   },
   "sortImports": {
     "groups": [

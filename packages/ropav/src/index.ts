@@ -14,4 +14,4 @@ export * from "./utils";
 //  Version
 //  ===================================
 export { ROPAV_VERSION } from "./version";
-export type { VariantProps } from "tailwind-variants";
+export type { VariantProps } from "@ropav/styles";

@@ -92,7 +92,6 @@ const external = [
   ...Object.keys(packageJson.dependencies ?? {}),
   /^vue($|\/)/,
   /^@ropav\/styles($|\/)/,
-  /^tailwind-variants($|\/)/,
 ];
 
 export default defineConfig({

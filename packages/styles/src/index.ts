@@ -1,5 +1,5 @@
-// Re-export tailwind-variants for convenience
-export { tv, cn, type VariantProps } from "tailwind-variants";
+// The type recipes derive their prop unions from; `tv` itself stays internal.
+export type { VariantProps } from "./tv";
 
 // Export utility classes
 export * from "./utils";

@@ -21,7 +21,7 @@
   "[css]": { "editor.defaultFormatter": "oxc.oxc-vscode" },
   "[json]": { "editor.defaultFormatter": "oxc.oxc-vscode" },
   "[jsonc]": { "editor.defaultFormatter": "oxc.oxc-vscode" },
-  "tailwindCSS.classFunctions": ["tv", "clsx", "cn"],
+  "tailwindCSS.classFunctions": ["tv"],
   "tailwindCSS.experimental.configFile": {
     "packages/storybook/styles/globals.css": [
       "packages/ropav/**",

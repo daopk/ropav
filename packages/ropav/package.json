@@ -65,8 +65,7 @@
     "@internationalized/date": "3.12.4",
     "@internationalized/number": "3.6.8",
     "@internationalized/string": "3.2.10",
-    "@ropav/styles": "workspace:*",
-    "tailwind-variants": "3.3.1"
+    "@ropav/styles": "workspace:*"
   },
   "devDependencies": {
     "@ropav/testing": "workspace:*",

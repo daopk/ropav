@@ -29,7 +29,6 @@ const resolveEntries = () => {
 const external = [
   ...Object.keys(packageJson.peerDependencies ?? {}),
   ...Object.keys(packageJson.dependencies ?? {}),
-  /^tailwind-variants/,
 ];
 
 export default defineConfig({

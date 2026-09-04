@@ -64,7 +64,7 @@ describe("ColorArea", () => {
       expect(props["showDots"]?.type).toBe(Boolean);
     });
 
-    it("lets a caller's class through to tailwind-merge", () => {
+    it("lets a caller's class through to the element", () => {
       const { container, unmount } = renderArea({ class: "w-72" });
 
       expect(slot(container, "color-area")).toHaveClass("color-area", "w-72");

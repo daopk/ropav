@@ -132,7 +132,7 @@ describe("ColorPicker", () => {
       unmount();
     });
 
-    it("lets a caller's class through to tailwind-merge", async () => {
+    it("lets a caller's class through to the element", async () => {
       const { container, unmount } = await renderPicker({ class: "w-40" });
 
       expect(container.querySelector("[data-slot='color-picker']")).toHaveClass("w-40");

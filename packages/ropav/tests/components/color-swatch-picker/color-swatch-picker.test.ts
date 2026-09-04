@@ -148,7 +148,7 @@ describe("ColorSwatchPicker", () => {
       unmount();
     });
 
-    it("lets a caller's class through to tailwind-merge", async () => {
+    it("lets a caller's class through to the element", async () => {
       const { container, unmount } = await renderPicker({ class: "gap-1" });
 
       expect(slot(container, "color-swatch-picker")).toHaveClass("gap-1");

@@ -1,4 +1,4 @@
-import { tv } from "tailwind-variants";
+import { tv } from "../../tv";
 
 /**
  * The parts a windowed collection draws for itself, whichever collection it is.

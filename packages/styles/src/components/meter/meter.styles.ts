@@ -1,6 +1,6 @@
-import type { VariantProps } from "tailwind-variants";
+import type { VariantProps } from "../../tv";
 
-import { tv } from "tailwind-variants";
+import { tv } from "../../tv";
 
 export const meterVariants = tv({
   defaultVariants: {
