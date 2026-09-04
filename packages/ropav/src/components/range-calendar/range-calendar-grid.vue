@@ -5,11 +5,14 @@ import { endOfMonth } from "@internationalized/date";
 import { computed } from "vue";
 
 import { useCalendarGrid } from "../../composables/use-calendar-grid";
+import { DEFAULT_WEEKDAY_STYLE } from "../../utils/calendar";
 import { provideCalendarGridContext, useCalendarStateContext } from "../calendar/calendar.context";
 
 import { provideRangeCalendarContext, useRangeCalendarContext } from "./range-calendar.context";
 
-const props = withDefaults(defineProps<RangeCalendarGridProps>(), { weekdayStyle: "short" });
+const props = withDefaults(defineProps<RangeCalendarGridProps>(), {
+  weekdayStyle: DEFAULT_WEEKDAY_STYLE,
+});
 
 defineSlots<{ default?: () => unknown }>();
 

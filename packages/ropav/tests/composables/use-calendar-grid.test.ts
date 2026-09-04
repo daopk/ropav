@@ -98,8 +98,16 @@ describe("useCalendarGrid", () => {
   });
 
   describe("the weekday names", () => {
-    it("writes them narrow by default", () => {
-      expect(setup().api().weekDays.value).toEqual(["S", "M", "T", "W", "T", "F", "S"]);
+    it("writes them short by default", () => {
+      expect(setup().api().weekDays.value).toEqual([
+        "Sun",
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+      ]);
     });
 
     it("writes them at the requested width", () => {

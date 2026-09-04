@@ -16,6 +16,9 @@ export type DayOfWeek = "sun" | "mon" | "tue" | "wed" | "thu" | "fri" | "sat";
 /** How wide a weekday name is written. */
 export type WeekdayStyle = "narrow" | "short" | "long";
 
+/** How wide a weekday name is written when nothing asks for a width. */
+export const DEFAULT_WEEKDAY_STYLE: WeekdayStyle = "short";
+
 /*
  * Range alignment, ported from react-stately's `packages/react-stately/src/calendar/utils.ts`
  * (react-stately 3.49.0). Pure date arithmetic, so it ports across unchanged.
@@ -245,7 +248,7 @@ export const getDayViewWeekDayLabels = (
   start: DateValue,
   locale: string,
   firstDayOfWeek: DayOfWeek | undefined,
-  weekdayStyle: WeekdayStyle = "short",
+  weekdayStyle: WeekdayStyle = DEFAULT_WEEKDAY_STYLE,
   timeZone = "UTC",
 ): string[] => {
   const formatter = new Intl.DateTimeFormat(locale, { timeZone, weekday: weekdayStyle });

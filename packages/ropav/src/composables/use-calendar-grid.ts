@@ -6,6 +6,8 @@ import type { ComputedRef, MaybeRefOrGetter } from "vue";
 import { startOfWeek, today } from "@internationalized/date";
 import { computed, toValue } from "vue";
 
+import { DEFAULT_WEEKDAY_STYLE } from "../utils/calendar";
+
 import { isRangeCalendarState, useVisibleRangeDescription } from "./use-calendar";
 import { useDateFormatter } from "./use-date-formatter";
 import { useLabels } from "./use-labels";
@@ -149,7 +151,7 @@ export const useCalendarGrid = (
 
   const dayFormatter = useDateFormatter(() => ({
     timeZone: state.timeZone.value,
-    weekday: toValue(options.weekdayStyle) || "narrow",
+    weekday: toValue(options.weekdayStyle) || DEFAULT_WEEKDAY_STYLE,
   }));
 
   const weekDays = computed(() => {
