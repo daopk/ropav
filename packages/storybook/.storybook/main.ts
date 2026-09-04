@@ -35,6 +35,17 @@ const config: StorybookConfig = {
     disableWhatsNewNotifications: true,
     enableCrashReports: false,
   },
+  /**
+   * Docgen out of the builder and into the server, which is what Storybook 11 defaults to.
+   * Both escapes from the deprecated engine land on the same replacement, so the tables are
+   * unchanged bar better types and the loss of `class`, which the replacement calls a global
+   * attribute. The server is the cheaper of the two: metadata is fetched when a docs page
+   * opens rather than appended to every `.vue` module, and it picks the TypeScript project
+   * per component file, so it finds the library's own `tsconfig.json` unaided.
+   */
+  features: {
+    experimentalDocgenServer: true,
+  },
   framework: {
     name: "@storybook/vue3-vite",
     options: {},
