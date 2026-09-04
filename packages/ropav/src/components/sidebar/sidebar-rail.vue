@@ -63,7 +63,11 @@ const declaredWidth = computed(() => {
  */
 const measuredWidth = shallowRef(0);
 
+/* Skipped while a width is declared, where `width` never reads this: `offsetWidth` forces a layout,
+ * and one taken before a stored width is put back arms the panel's transition. */
 const measure = () => {
+  if (declaredWidth.value !== null) return;
+
   measuredWidth.value = panelEl.value?.offsetWidth ?? 0;
 };
 
