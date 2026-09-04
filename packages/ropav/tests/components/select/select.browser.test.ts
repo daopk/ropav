@@ -6,6 +6,7 @@ import { nextTick } from "vue";
 
 import { parkPointer } from "../../harness/park-pointer";
 import { settled } from "../../harness/settle";
+import { tap } from "../../harness/tap";
 
 import Fixture from "./fixtures.vue";
 
@@ -195,6 +196,50 @@ describe("Select (browser)", () => {
       await nextTick();
 
       expect(popoverOf()).toBeNull();
+    });
+  });
+
+  /**
+   * The trigger reads its own hover rather than the press responder's, so it never saw the leave
+   * a finger reports as it lifts. Covered anyway: what spared it was the template, and a template
+   * is one edit away from binding the other pair.
+   */
+  describe("touch", () => {
+    it("opens on a tap and closes on the next one", async () => {
+      const result = mount();
+
+      await nextTick();
+
+      const trigger = triggerOf(result);
+
+      await tap(trigger);
+
+      expect(popoverOf()).not.toBeNull();
+      expect(trigger).toHaveAttribute("aria-expanded", "true");
+
+      await tap(trigger);
+      await nextTick();
+
+      expect(trigger).toHaveAttribute("aria-expanded", "false");
+    });
+
+    it("chooses an option from a tap", async () => {
+      const result = mount();
+
+      await nextTick();
+
+      await tap(triggerOf(result));
+
+      const popover = popoverOf()!;
+
+      await settled(popover);
+
+      const options = [...popover.querySelectorAll<HTMLElement>('[role="option"]')];
+
+      await tap(options[2]!);
+      await nextTick();
+
+      expect(triggerOf(result)).toHaveTextContent(options[2]!.textContent!.trim());
     });
   });
 
