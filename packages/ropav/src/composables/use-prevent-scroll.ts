@@ -51,15 +51,21 @@ export interface UsePreventScrollOptions {
  * Block page scrolling while a modal overlay is open, ported from React Aria's
  * `usePreventScroll`.
  *
- * An overlay is positioned once, against where its trigger was. Scrolling the page behind it
- * moves the trigger and leaves the overlay pointing at nothing, so a modal overlay stops the page
- * moving rather than trying to follow it.
+ * A modal overlay covers the page, and content nobody can reach should not move under the cover.
+ * An overlay is positioned once, in document coordinates, so a page that scrolled would carry the
+ * overlay along with its trigger — still aligned, but travelling out of view. Only a scroll inside
+ * some region between the two actually breaks the alignment, and that one closes the overlay
+ * rather than being blocked here.
  *
  * The count is module-level because the page has one scroll position: two overlays open at once
  * both want it held, and the second closing must not release it while the first is still open.
  *
- * React Aria carries a second implementation for Safari on iOS, which scrolls the page even with
- * `overflow: hidden`. That is not ported.
+ * React Aria carries a second implementation for Safari on iOS, built on holding the body in place
+ * and replaying the scroll position afterwards. It is deliberately not ported. The behaviour it
+ * works around belongs to an older WebKit — `overflow: hidden` on the root holds the page on
+ * current iOS — and the technique would cost more here than it gives: it makes the body the
+ * containing block, and every overlay is placed in document coordinates measured before the lock,
+ * so each one would be displaced by the scroll offset on the way open.
  *
  * @example
  * ```ts
