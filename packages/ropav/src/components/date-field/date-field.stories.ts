@@ -15,28 +15,28 @@ import { Description } from "../description";
 import { FieldError } from "../field-error";
 import { Form } from "../form";
 import { Label } from "../label";
-import { ListBoxRoot } from "../list-box";
-import { ListBoxItemIndicator, ListBoxItemRoot } from "../list-box-item";
-import { SelectIndicator, SelectPopover, SelectRoot, SelectTrigger, SelectValue } from "../select";
+import { ListBox } from "../list-box";
+import { ListBoxItemIndicator, ListBoxItem } from "../list-box-item";
+import { SelectIndicator, SelectPopover, Select, SelectTrigger, SelectValue } from "../select";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../tooltip";
 
 import {
   DateFieldGroup,
   DateFieldInput,
   DateFieldPrefix,
-  DateFieldRoot,
+  DateField,
   DateFieldSegment,
   DateFieldSuffix,
 } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata to
-// resolve `DateField.Group` through, so dot notation cannot be used here.
+// resolve `DateFieldGroup` through, so dot notation cannot be used here.
 const components = {
   Button,
+  DateField,
   DateFieldGroup,
   DateFieldInput,
   DateFieldPrefix,
-  DateFieldRoot,
   DateFieldSegment,
   DateFieldSuffix,
   Description,
@@ -46,10 +46,10 @@ const components = {
   IconChevronDown,
   IconCircleQuestion,
   Label,
-  ListBox: ListBoxRoot,
-  ListBoxItem: ListBoxItemRoot,
+  ListBox: ListBox,
+  ListBoxItem: ListBoxItem,
   ListBoxItemIndicator,
-  Select: SelectRoot,
+  Select: Select,
   SelectIndicator,
   SelectPopover,
   SelectTrigger,
@@ -79,7 +79,7 @@ const GRANULARITY_OPTIONS: { id: DateGranularity; label: string }[] = [
 const byLabel = (option: { label: string }) => option.label;
 
 const meta: StoryMeta = {
-  component: DateFieldRoot,
+  component: DateField,
   parameters: {
     layout: "centered",
   },
@@ -94,10 +94,10 @@ export const Default: Story = {
   render: () => ({
     components,
     template: `
-      <DateFieldRoot class="w-[256px]" name="date">
+      <DateField class="w-[256px]" name="date">
         <Label>Date</Label>
         <DateFieldGroup>${input}</DateFieldGroup>
-      </DateFieldRoot>
+      </DateField>
     `,
   }),
 };
@@ -109,7 +109,7 @@ export const Sizes: Story = {
     setup: () => ({ sizes: ["sm", "md", "lg"] as const }),
     template: `
       <div class="flex flex-col gap-4">
-        <DateFieldRoot
+        <DateField
           v-for="size in sizes"
           :key="size"
           class="w-[256px]"
@@ -117,7 +117,7 @@ export const Sizes: Story = {
         >
           <Label>Size {{ size }}</Label>
           <DateFieldGroup :size="size">${input}</DateFieldGroup>
-        </DateFieldRoot>
+        </DateField>
       </div>
     `,
   }),
@@ -128,14 +128,14 @@ export const Variants: Story = {
     components,
     template: `
       <div class="flex flex-col gap-4">
-        <DateFieldRoot class="w-[256px]" name="primary-date">
+        <DateField class="w-[256px]" name="primary-date">
           <Label>Primary variant</Label>
           <DateFieldGroup variant="primary">${input}</DateFieldGroup>
-        </DateFieldRoot>
-        <DateFieldRoot class="w-[256px]" name="secondary-date">
+        </DateField>
+        <DateField class="w-[256px]" name="secondary-date">
           <Label>Secondary variant</Label>
           <DateFieldGroup variant="secondary">${input}</DateFieldGroup>
-        </DateFieldRoot>
+        </DateField>
       </div>
     `,
   }),
@@ -146,11 +146,11 @@ export const FullWidth: Story = {
     components,
     template: `
       <div class="w-[400px] space-y-4">
-        <DateFieldRoot full-width name="date">
+        <DateField full-width name="date">
           <Label>Date</Label>
           <DateFieldGroup>${input}</DateFieldGroup>
-        </DateFieldRoot>
-        <DateFieldRoot full-width name="date-icons">
+        </DateField>
+        <DateField full-width name="date-icons">
           <Label>Date</Label>
           <DateFieldGroup>
             <DateFieldPrefix>
@@ -161,7 +161,7 @@ export const FullWidth: Story = {
               <IconChevronDown class="size-4 text-muted" />
             </DateFieldSuffix>
           </DateFieldGroup>
-        </DateFieldRoot>
+        </DateField>
       </div>
     `,
   }),
@@ -172,16 +172,16 @@ export const WithDescription: Story = {
     components,
     template: `
       <div class="flex flex-col gap-4">
-        <DateFieldRoot class="w-[256px]" name="date">
+        <DateField class="w-[256px]" name="date">
           <Label>Birth date</Label>
           <DateFieldGroup>${input}</DateFieldGroup>
           <Description>Enter your date of birth</Description>
-        </DateFieldRoot>
-        <DateFieldRoot class="w-[256px]" name="appointment-date">
+        </DateField>
+        <DateField class="w-[256px]" name="appointment-date">
           <Label>Appointment date</Label>
           <DateFieldGroup>${input}</DateFieldGroup>
           <Description>Enter a date for your appointment</Description>
-        </DateFieldRoot>
+        </DateField>
       </div>
     `,
   }),
@@ -192,15 +192,15 @@ export const Required: Story = {
     components,
     template: `
       <div class="flex flex-col gap-4">
-        <DateFieldRoot is-required class="w-[256px]" name="date">
+        <DateField is-required class="w-[256px]" name="date">
           <Label>Date</Label>
           <DateFieldGroup>${input}</DateFieldGroup>
-        </DateFieldRoot>
-        <DateFieldRoot is-required class="w-[256px]" name="start-date">
+        </DateField>
+        <DateField is-required class="w-[256px]" name="start-date">
           <Label>Start date</Label>
           <DateFieldGroup>${input}</DateFieldGroup>
           <Description>Required field</Description>
-        </DateFieldRoot>
+        </DateField>
       </div>
     `,
   }),
@@ -211,16 +211,16 @@ export const Invalid: Story = {
     components,
     template: `
       <div class="flex flex-col gap-4">
-        <DateFieldRoot is-invalid is-required class="w-[256px]" name="date">
+        <DateField is-invalid is-required class="w-[256px]" name="date">
           <Label>Date</Label>
           <DateFieldGroup>${input}</DateFieldGroup>
           <FieldError>Please enter a valid date</FieldError>
-        </DateFieldRoot>
-        <DateFieldRoot is-invalid class="w-[256px]" name="invalid-date">
+        </DateField>
+        <DateField is-invalid class="w-[256px]" name="invalid-date">
           <Label>Date</Label>
           <DateFieldGroup>${input}</DateFieldGroup>
           <FieldError>Date must be in the future</FieldError>
-        </DateFieldRoot>
+        </DateField>
       </div>
     `,
   }),
@@ -232,16 +232,16 @@ export const Disabled: Story = {
     setup: () => ({ todayDate: today(getLocalTimeZone()) }),
     template: `
       <div class="flex flex-col gap-4">
-        <DateFieldRoot is-disabled class="w-[256px]" name="date" :value="todayDate">
+        <DateField is-disabled class="w-[256px]" name="date" :value="todayDate">
           <Label>Date</Label>
           <DateFieldGroup>${input}</DateFieldGroup>
           <Description>This date field is disabled</Description>
-        </DateFieldRoot>
-        <DateFieldRoot is-disabled class="w-[256px]" name="date-empty">
+        </DateField>
+        <DateField is-disabled class="w-[256px]" name="date-empty">
           <Label>Date</Label>
           <DateFieldGroup>${input}</DateFieldGroup>
           <Description>This date field is disabled</Description>
-        </DateFieldRoot>
+        </DateField>
       </div>
     `,
   }),
@@ -261,11 +261,11 @@ export const Controlled: Story = {
     },
     template: `
       <div class="flex flex-col gap-4">
-        <DateFieldRoot class="w-[256px]" name="date" :value="value" @change="value = $event">
+        <DateField class="w-[256px]" name="date" :value="value" @change="value = $event">
           <Label>Date</Label>
           <DateFieldGroup>${input}</DateFieldGroup>
           <Description>Current value: {{ value ? value.toString() : "(empty)" }}</Description>
-        </DateFieldRoot>
+        </DateField>
         <div class="flex gap-2">
           <Button variant="tertiary" @click="setToday">Set today</Button>
           <Button variant="tertiary" @click="clear">Clear</Button>
@@ -287,7 +287,7 @@ export const WithValidation: Story = {
     },
     template: `
       <div class="flex flex-col gap-4">
-        <DateFieldRoot
+        <DateField
           is-required
           class="w-[256px]"
           :is-invalid="isInvalid"
@@ -300,7 +300,7 @@ export const WithValidation: Story = {
           <DateFieldGroup>${input}</DateFieldGroup>
           <FieldError v-if="isInvalid">Date must be today or in the future</FieldError>
           <Description v-else>Enter a date from today onwards</Description>
-        </DateFieldRoot>
+        </DateField>
       </div>
     `,
   }),
@@ -310,7 +310,7 @@ export const WithPrefixIcon: Story = {
   render: () => ({
     components,
     template: `
-      <DateFieldRoot class="w-[256px]" name="date">
+      <DateField class="w-[256px]" name="date">
         <Label>Date</Label>
         <DateFieldGroup>
           <DateFieldPrefix>
@@ -318,7 +318,7 @@ export const WithPrefixIcon: Story = {
           </DateFieldPrefix>
           ${input}
         </DateFieldGroup>
-      </DateFieldRoot>
+      </DateField>
     `,
   }),
 };
@@ -327,7 +327,7 @@ export const WithSuffixIcon: Story = {
   render: () => ({
     components,
     template: `
-      <DateFieldRoot class="w-[256px]" name="date">
+      <DateField class="w-[256px]" name="date">
         <Label>Date</Label>
         <DateFieldGroup>
           ${input}
@@ -335,7 +335,7 @@ export const WithSuffixIcon: Story = {
             <IconCalendar class="size-4 text-muted" />
           </DateFieldSuffix>
         </DateFieldGroup>
-      </DateFieldRoot>
+      </DateField>
     `,
   }),
 };
@@ -344,7 +344,7 @@ export const WithPrefixAndSuffix: Story = {
   render: () => ({
     components,
     template: `
-      <DateFieldRoot class="w-[256px]" name="date">
+      <DateField class="w-[256px]" name="date">
         <Label>Date</Label>
         <DateFieldGroup>
           <DateFieldPrefix>
@@ -356,7 +356,7 @@ export const WithPrefixAndSuffix: Story = {
           </DateFieldSuffix>
         </DateFieldGroup>
         <Description>Enter a date</Description>
-      </DateFieldRoot>
+      </DateField>
     `,
   }),
 };
@@ -388,7 +388,7 @@ export const FormExample: Story = {
     },
     template: `
       <Form class="flex w-[280px] flex-col gap-4" @submit="onSubmit">
-        <DateFieldRoot
+        <DateField
           is-required
           class="w-full"
           :is-invalid="isInvalid"
@@ -406,7 +406,7 @@ export const FormExample: Story = {
           </DateFieldGroup>
           <FieldError v-if="isInvalid">Date must be today or in the future</FieldError>
           <Description v-else>Enter a date from today onwards</Description>
-        </DateFieldRoot>
+        </DateField>
         <Button
           class="w-full"
           :is-disabled="!value || isInvalid"
@@ -447,7 +447,7 @@ export const Granularity: Story = {
     },
     template: `
       <div class="flex gap-4">
-        <DateFieldRoot
+        <DateField
           class="w-[256px]"
           :default-value="defaultValue"
           :granularity="granularity"
@@ -456,7 +456,7 @@ export const Granularity: Story = {
         >
           <Label>Appointment Date</Label>
           <DateFieldGroup>${input}</DateFieldGroup>
-        </DateFieldRoot>
+        </DateField>
         <div class="flex flex-col gap-1">
           <div class="flex items-center gap-2">
             <Label>Granularity</Label>
@@ -511,7 +511,7 @@ export const AllVariations: Story = {
     template: `
       <div class="flex flex-col gap-6">
         <div class="flex flex-col gap-4">
-          <DateFieldRoot is-required class="w-[256px]" name="date1">
+          <DateField is-required class="w-[256px]" name="date1">
             <Label>Date</Label>
             <DateFieldGroup>
               <DateFieldPrefix>
@@ -520,9 +520,9 @@ export const AllVariations: Story = {
               ${input}
             </DateFieldGroup>
             <Description>Enter a date</Description>
-          </DateFieldRoot>
+          </DateField>
 
-          <DateFieldRoot is-required class="w-[256px]" name="date2">
+          <DateField is-required class="w-[256px]" name="date2">
             <Label>Date</Label>
             <DateFieldGroup>
               ${input}
@@ -531,9 +531,9 @@ export const AllVariations: Story = {
               </DateFieldSuffix>
             </DateFieldGroup>
             <Description>Enter a date</Description>
-          </DateFieldRoot>
+          </DateField>
 
-          <DateFieldRoot is-required class="w-[256px]" name="date3">
+          <DateField is-required class="w-[256px]" name="date3">
             <Label>Date</Label>
             <DateFieldGroup>
               <DateFieldPrefix>
@@ -545,7 +545,7 @@ export const AllVariations: Story = {
               </DateFieldSuffix>
             </DateFieldGroup>
             <Description>Enter a date</Description>
-          </DateFieldRoot>
+          </DateField>
         </div>
       </div>
     `,

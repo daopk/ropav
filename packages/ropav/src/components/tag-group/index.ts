@@ -2,23 +2,11 @@ import TagGroupList from "./tag-group-list.vue";
 import TagGroupRoot from "./tag-group-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const TagGroup = Object.assign(TagGroupRoot, {
-  List: TagGroupList,
-  Root: TagGroupRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { TagGroupList, TagGroupRoot };
+export { TagGroupList, TagGroupRoot as TagGroup };
 
-export type {
-  TagGroupListProps,
-  TagGroupRootProps,
-  TagGroupRootProps as TagGroupProps,
-} from "./tag-group.types";
+export type { TagGroupListProps, TagGroupRootProps as TagGroupProps } from "./tag-group.types";
 
 /* -------------------------------------------------------------------------------------------------
  * Context

@@ -1,13 +1,22 @@
 <script setup lang="ts" vapor>
-import type { ColorPickerRootProps } from "@/components/color-picker";
+import type { ColorPickerProps } from "@/components/color-picker";
 import type { Color } from "@/utils/color-types";
 
-import { ColorArea } from "@/components/color-area";
+import { ColorArea, ColorAreaThumb } from "@/components/color-area";
 import { ColorField } from "@/components/color-field";
-import { ColorPicker } from "@/components/color-picker";
-import { ColorSlider } from "@/components/color-slider";
+import {
+  ColorInputGroup,
+  ColorInputGroupInput,
+  ColorInputGroupPrefix,
+} from "@/components/color-input-group";
+import { ColorPicker, ColorPickerPopover, ColorPickerTrigger } from "@/components/color-picker";
+import { ColorSlider, ColorSliderThumb, ColorSliderTrack } from "@/components/color-slider";
 import { ColorSwatch } from "@/components/color-swatch";
-import { ColorSwatchPicker } from "@/components/color-swatch-picker";
+import {
+  ColorSwatchPicker,
+  ColorSwatchPickerItem,
+  ColorSwatchPickerSwatch,
+} from "@/components/color-swatch-picker";
 import { Label } from "@/components/label";
 
 /*
@@ -17,7 +26,7 @@ import { Label } from "@/components/label";
  */
 withDefaults(
   defineProps<
-    ColorPickerRootProps & {
+    ColorPickerProps & {
       /** A colour put on the slider itself, to see which one wins. */
       sliderValue?: Color | string;
       /** A colour put on the swatch itself, to see which one wins. */
@@ -50,18 +59,18 @@ defineEmits<{
     @change="$emit('change', $event)"
     @open-change="$emit('openChange', $event)"
   >
-    <ColorPicker.Trigger>
+    <ColorPickerTrigger>
       <ColorSwatch :color="$props.swatchValue" size="lg" />
       <Label>Pick a color</Label>
-    </ColorPicker.Trigger>
-    <ColorPicker.Popover>
+    </ColorPickerTrigger>
+    <ColorPickerPopover>
       <ColorArea
         aria-label="Color area"
         color-space="hsb"
         x-channel="saturation"
         y-channel="brightness"
       >
-        <ColorArea.Thumb />
+        <ColorAreaThumb />
       </ColorArea>
       <ColorSlider
         v-if="$props.withSliderChange"
@@ -70,34 +79,34 @@ defineEmits<{
         :value="$props.sliderValue"
         @change="$emit('sliderChange', $event)"
       >
-        <ColorSlider.Track>
-          <ColorSlider.Thumb />
-        </ColorSlider.Track>
+        <ColorSliderTrack>
+          <ColorSliderThumb />
+        </ColorSliderTrack>
       </ColorSlider>
       <ColorSlider v-else channel="hue" color-space="hsb" :value="$props.sliderValue">
-        <ColorSlider.Track>
-          <ColorSlider.Thumb />
-        </ColorSlider.Track>
+        <ColorSliderTrack>
+          <ColorSliderThumb />
+        </ColorSliderTrack>
       </ColorSlider>
       <template v-if="$props.withEverything">
         <ColorSwatchPicker size="xs">
-          <ColorSwatchPicker.Item
+          <ColorSwatchPickerItem
             v-for="preset in ['#EF4444', '#22C55E']"
             :key="preset"
             :color="preset"
           >
-            <ColorSwatchPicker.Swatch />
-          </ColorSwatchPicker.Item>
+            <ColorSwatchPickerSwatch />
+          </ColorSwatchPickerItem>
         </ColorSwatchPicker>
         <ColorField aria-label="Color field" :value="$props.withEmptyField ? null : undefined">
-          <ColorField.Group>
-            <ColorField.Prefix>
+          <ColorInputGroup>
+            <ColorInputGroupPrefix>
               <ColorSwatch size="xs" />
-            </ColorField.Prefix>
-            <ColorField.Input />
-          </ColorField.Group>
+            </ColorInputGroupPrefix>
+            <ColorInputGroupInput />
+          </ColorInputGroup>
         </ColorField>
       </template>
-    </ColorPicker.Popover>
+    </ColorPickerPopover>
   </ColorPicker>
 </template>

@@ -1,18 +1,11 @@
 import LabelRoot from "./label-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Label = Object.assign(LabelRoot, {
-  Root: LabelRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export { LabelRoot };
+export { LabelRoot as Label };
 
-export type { LabelRootProps, LabelRootProps as LabelProps } from "./label.types";
+export type { LabelRootProps as LabelProps } from "./label.types";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants

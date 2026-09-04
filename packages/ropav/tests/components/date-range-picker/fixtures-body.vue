@@ -6,7 +6,7 @@ import {
   DateRangePickerInput,
   DateRangePickerPopover,
   DateRangePickerRangeSeparator,
-  DateRangePickerRoot,
+  DateRangePicker,
   DateRangePickerSegment,
   DateRangePickerSuffix,
   DateRangePickerTrigger,
@@ -21,7 +21,7 @@ import {
   RangeCalendarGridBody,
   RangeCalendarGridHeader,
   RangeCalendarHeaderCell,
-  RangeCalendarRoot,
+  RangeCalendar,
 } from "@/components/range-calendar";
 
 /*
@@ -48,7 +48,7 @@ const props = withDefaults(defineProps<DateRangePickerFixtureProps>(), {
 </script>
 
 <template>
-  <DateRangePickerRoot v-if="props.attributeForm" aria-label="Trip" is-disabled is-required>
+  <DateRangePicker v-if="props.attributeForm" aria-label="Trip" is-disabled is-required>
     <DateRangePickerGroup>
       <DateRangePickerInput v-bind="START">
         <template #default="{ segment }">
@@ -62,8 +62,8 @@ const props = withDefaults(defineProps<DateRangePickerFixtureProps>(), {
         </template>
       </DateRangePickerInput>
     </DateRangePickerGroup>
-  </DateRangePickerRoot>
-  <DateRangePickerRoot v-else-if="props.missingSlot">
+  </DateRangePicker>
+  <DateRangePicker v-else-if="props.missingSlot">
     <DateRangePickerGroup>
       <DateRangePickerInput>
         <template #default="{ segment }">
@@ -71,8 +71,8 @@ const props = withDefaults(defineProps<DateRangePickerFixtureProps>(), {
         </template>
       </DateRangePickerInput>
     </DateRangePickerGroup>
-  </DateRangePickerRoot>
-  <DateRangePickerRoot
+  </DateRangePicker>
+  <DateRangePicker
     v-else
     :id="props.id"
     :allows-non-contiguous-ranges="props.allowsNonContiguousRanges"
@@ -132,7 +132,7 @@ const props = withDefaults(defineProps<DateRangePickerFixtureProps>(), {
     <Description v-if="props.description">{{ props.description }}</Description>
     <ErrorMessage v-if="props.errorMessage">{{ props.errorMessage }}</ErrorMessage>
     <DateRangePickerPopover>
-      <RangeCalendarRoot aria-label="Selected range">
+      <RangeCalendar aria-label="Selected range">
         <RangeCalendarGrid>
           <RangeCalendarGridHeader>
             <template #default="{ day }">
@@ -145,7 +145,7 @@ const props = withDefaults(defineProps<DateRangePickerFixtureProps>(), {
             </template>
           </RangeCalendarGridBody>
         </RangeCalendarGrid>
-      </RangeCalendarRoot>
+      </RangeCalendar>
     </DateRangePickerPopover>
-  </DateRangePickerRoot>
+  </DateRangePicker>
 </template>

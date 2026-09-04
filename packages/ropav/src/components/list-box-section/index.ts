@@ -1,21 +1,11 @@
 import ListBoxSectionRoot from "./list-box-section-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const ListBoxSection = Object.assign(ListBoxSectionRoot, {
-  Root: ListBoxSectionRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export { ListBoxSectionRoot };
+export { ListBoxSectionRoot as ListBoxSection };
 
-export type {
-  ListBoxSectionRootProps,
-  ListBoxSectionRootProps as ListBoxSectionProps,
-} from "./list-box-section.types";
+export type { ListBoxSectionRootProps as ListBoxSectionProps } from "./list-box-section.types";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants

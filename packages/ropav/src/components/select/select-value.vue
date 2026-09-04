@@ -13,7 +13,7 @@ const props = defineProps<SelectValueProps>();
  * The slot is what rich content in the trigger goes through.
  *
  * The React build renders the chosen option's own markup here a second time. A slot's content
- * belongs to whoever wrote it in vapor, so `Select.Value` cannot ask an option to render itself
+ * belongs to whoever wrote it in vapor, so `SelectValue` cannot ask an option to render itself
  * again — it shows the option's text by default, and anything more is written here, with the
  * same values React hands its render function.
  */

@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type { ScrollShadowRootProps } from "@/components/scroll-shadow";
+import type { ScrollShadowProps } from "@/components/scroll-shadow";
 
-import { ScrollShadowRoot } from "@/components/scroll-shadow";
+import { ScrollShadow } from "@/components/scroll-shadow";
 
 // Preserve absence through this forwarding fixture. Otherwise Vue casts an omitted Boolean to
 // false here, before ScrollShadow gets a chance to apply its own defaults.
-const props = withDefaults(defineProps<ScrollShadowRootProps & { contentSize?: number }>(), {
+const props = withDefaults(defineProps<ScrollShadowProps & { contentSize?: number }>(), {
   contentSize: undefined,
   hideScrollBar: undefined,
   isEnabled: undefined,
@@ -13,7 +13,7 @@ const props = withDefaults(defineProps<ScrollShadowRootProps & { contentSize?: n
 </script>
 
 <template>
-  <ScrollShadowRoot
+  <ScrollShadow
     :class="props.class"
     data-foo="bar"
     :hide-scroll-bar="props.hideScrollBar"
@@ -31,5 +31,5 @@ const props = withDefaults(defineProps<ScrollShadowRootProps & { contentSize?: n
     >
       Scrollable content
     </div>
-  </ScrollShadowRoot>
+  </ScrollShadow>
 </template>

@@ -132,7 +132,7 @@ export interface ComboBoxRootSlotProps<T = unknown> {
    * The React build has no counterpart because it does not need one: RAC renders its listbox from
    * the filtered *collection*, so the options written as markup are narrowed for the caller. Here
    * the markup is what renders, so the matches have to reach whoever writes it — the same seam
-   * `Autocomplete.Filter` hands its own caller.
+   * `AutocompleteFilter` hands its own caller.
    */
   items: readonly T[];
   /** What has been typed so far. */

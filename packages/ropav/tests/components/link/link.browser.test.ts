@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
-import { LinkRoot } from "@/components/link";
+import { Link } from "@/components/link";
 
 import { parkPointer } from "../../harness/park-pointer";
 import { settled } from "../../harness/settle";
@@ -12,7 +12,7 @@ import { settled } from "../../harness/settle";
 import RouterFixture from "./router-fixtures.vue";
 
 const renderLink = (props: Record<string, unknown> = {}) =>
-  renderVapor(LinkRoot, {
+  renderVapor(Link, {
     props,
     slots: { default: () => document.createTextNode("Call to action") },
   });

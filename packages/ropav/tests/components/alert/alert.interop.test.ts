@@ -6,7 +6,7 @@ import {
   AlertContent,
   AlertDescription,
   AlertIndicator,
-  AlertRoot,
+  Alert,
   AlertTitle,
 } from "@/components/alert";
 import { useSurfaceContext } from "@/components/surface";
@@ -21,7 +21,7 @@ const SurfaceReader = defineComponent({
 });
 
 const render = (indicator?: () => unknown) =>
-  renderInterop(AlertRoot, {
+  renderInterop(Alert, {
     props: { status: "warning" },
     slots: {
       default: () => [

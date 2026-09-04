@@ -7,23 +7,10 @@ import AccordionRoot from "./accordion-root.vue";
 import AccordionTrigger from "./accordion-trigger.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Accordion = Object.assign(AccordionRoot, {
-  Body: AccordionBody,
-  Heading: AccordionHeading,
-  Indicator: AccordionIndicator,
-  Item: AccordionItem,
-  Panel: AccordionPanel,
-  Root: AccordionRoot,
-  Trigger: AccordionTrigger,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
 export {
-  AccordionRoot,
+  AccordionRoot as Accordion,
   AccordionItem,
   AccordionHeading,
   AccordionTrigger,
@@ -33,7 +20,6 @@ export {
 };
 
 export type {
-  AccordionRootProps,
   AccordionRootProps as AccordionProps,
   AccordionItemProps,
   AccordionHeadingProps,

@@ -1,9 +1,17 @@
 <script setup lang="ts" vapor>
-import type { AccordionRootProps } from "@/components/accordion";
+import type { AccordionProps } from "@/components/accordion";
 
-import { Accordion } from "@/components/accordion";
+import {
+  Accordion,
+  AccordionBody,
+  AccordionHeading,
+  AccordionIndicator,
+  AccordionItem,
+  AccordionPanel,
+  AccordionTrigger,
+} from "@/components/accordion";
 
-defineProps<AccordionRootProps & { customIndicator?: boolean; disabledItem?: string }>();
+defineProps<AccordionProps & { customIndicator?: boolean; disabledItem?: string }>();
 
 defineEmits<{ expandedChange: [keys: Set<string | number>] }>();
 
@@ -21,23 +29,23 @@ const items = ["one", "two", "three"];
     :variant="$props.variant"
     @expanded-change="$emit('expandedChange', $event)"
   >
-    <Accordion.Item
+    <AccordionItem
       v-for="item in items"
       :id="item"
       :key="item"
       :is-disabled="item === $props.disabledItem"
     >
-      <Accordion.Heading>
-        <Accordion.Trigger>
+      <AccordionHeading>
+        <AccordionTrigger>
           Trigger {{ item }}
-          <Accordion.Indicator>
+          <AccordionIndicator>
             <svg v-if="$props.customIndicator" data-testid="custom-indicator" />
-          </Accordion.Indicator>
-        </Accordion.Trigger>
-      </Accordion.Heading>
-      <Accordion.Panel>
-        <Accordion.Body>Panel {{ item }}</Accordion.Body>
-      </Accordion.Panel>
-    </Accordion.Item>
+          </AccordionIndicator>
+        </AccordionTrigger>
+      </AccordionHeading>
+      <AccordionPanel>
+        <AccordionBody>Panel {{ item }}</AccordionBody>
+      </AccordionPanel>
+    </AccordionItem>
   </Accordion>
 </template>

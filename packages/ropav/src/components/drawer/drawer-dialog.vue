@@ -43,7 +43,7 @@ const isDismissable = computed(() => overlay?.isDismissable.value ?? true);
  * The panel claims the pointer while it can be dismissed.
  *
  * A drawer that can be dragged away has to stop the browser from scrolling the page under the same
- * gesture; `Drawer.Body` opts vertical scrolling back in for its own content.
+ * gesture; `DrawerBody` opts vertical scrolling back in for its own content.
  */
 const style = computed(() => (isDismissable.value ? { touchAction: "none" } : undefined));
 

@@ -1,7 +1,12 @@
 <script setup lang="ts" vapor>
 import type { CheckboxFixtureProps } from "./fixtures.types";
 
-import { Checkbox } from "@/components/checkbox";
+import {
+  Checkbox,
+  CheckboxContent,
+  CheckboxControl,
+  CheckboxIndicator,
+} from "@/components/checkbox";
 import { Description } from "@/components/description";
 import { FieldError } from "@/components/field-error";
 
@@ -41,14 +46,14 @@ defineEmits<{ change: [isSelected: boolean] }>();
     :variant="$props.variant"
     @change="$emit('change', $event)"
   >
-    <Checkbox.Content>
-      <Checkbox.Control>
-        <Checkbox.Indicator>
+    <CheckboxContent>
+      <CheckboxControl>
+        <CheckboxIndicator>
           <svg v-if="$props.withCustomIndicator" data-testid="custom-indicator" />
-        </Checkbox.Indicator>
-      </Checkbox.Control>
+        </CheckboxIndicator>
+      </CheckboxControl>
       I agree to the terms
-    </Checkbox.Content>
+    </CheckboxContent>
     <Description v-if="$props.withDescription">You can change this later</Description>
     <FieldError v-if="$props.withCustomError">
       <template #default="{ validationErrors }">

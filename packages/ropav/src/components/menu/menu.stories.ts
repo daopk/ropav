@@ -4,34 +4,34 @@ import type { StoryObj } from "@storybook/vue3-vite";
 
 import { shallowRef } from "vue";
 
-import { DescriptionRoot } from "../description";
-import { EmptyStateRoot } from "../empty-state";
-import { HeaderRoot } from "../header";
-import { KbdAbbr, KbdContent, KbdRoot } from "../kbd";
-import { LabelRoot } from "../label";
-import { MenuItemIndicator, MenuItemRoot } from "../menu-item";
-import { MenuSectionRoot } from "../menu-section";
-import { SeparatorRoot } from "../separator";
-import { SurfaceRoot } from "../surface";
+import { Description } from "../description";
+import { EmptyState } from "../empty-state";
+import { Header } from "../header";
+import { KbdAbbr, KbdContent, Kbd } from "../kbd";
+import { Label } from "../label";
+import { MenuItemIndicator, MenuItem } from "../menu-item";
+import { MenuSection } from "../menu-section";
+import { Separator } from "../separator";
+import { Surface } from "../surface";
 
 import MenuRoot from "./menu-root.vue";
 
 // Registered under flat names: a story template is compiled at runtime with no binding
 // metadata, so a dotted tag would be looked up as a component literally named "Menu.Item".
 const components = {
-  Description: DescriptionRoot,
-  EmptyState: EmptyStateRoot,
-  Header: HeaderRoot,
-  Kbd: KbdRoot,
+  Description: Description,
+  EmptyState: EmptyState,
+  Header: Header,
+  Kbd: Kbd,
   KbdAbbr,
   KbdContent,
-  Label: LabelRoot,
+  Label: Label,
   Menu: MenuRoot,
-  MenuItem: MenuItemRoot,
+  MenuItem: MenuItem,
   MenuItemIndicator,
-  MenuSection: MenuSectionRoot,
-  Separator: SeparatorRoot,
-  Surface: SurfaceRoot,
+  MenuSection: MenuSection,
+  Separator: Separator,
+  Surface: Surface,
 };
 
 const meta: StoryMeta = {

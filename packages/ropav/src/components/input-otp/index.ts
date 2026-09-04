@@ -4,22 +4,11 @@ import InputOTPSeparator from "./input-otp-separator.vue";
 import InputOTPSlot from "./input-otp-slot.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const InputOTP = Object.assign(InputOTPRoot, {
-  Group: InputOTPGroup,
-  Root: InputOTPRoot,
-  Separator: InputOTPSeparator,
-  Slot: InputOTPSlot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { InputOTPGroup, InputOTPRoot, InputOTPSeparator, InputOTPSlot };
+export { InputOTPGroup, InputOTPRoot as InputOTP, InputOTPSeparator, InputOTPSlot };
 
 export type {
-  InputOTPRootProps,
   InputOTPRootProps as InputOTPProps,
   InputOTPGroupProps,
   InputOTPSlotProps,

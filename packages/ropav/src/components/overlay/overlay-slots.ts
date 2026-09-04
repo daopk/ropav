@@ -15,7 +15,7 @@ import { provideOverlayArrowContext, provideOverlayScopeContext } from "./overla
  * The split exists because of where the content comes from. An overlay renders its content into a
  * teleport, and a `provide` made by the component that owns that teleport does not reach content
  * handed to it from outside and forwarded through another component's slot — which is exactly the
- * shape of `Popover.Content` wrapping the shared overlay. The wrapper therefore owns these two
+ * shape of `PopoverContent` wrapping the shared overlay. The wrapper therefore owns these two
  * contexts and provides them to its own slot content, where the ancestry is direct, and hands them
  * to the overlay to fill in.
  *

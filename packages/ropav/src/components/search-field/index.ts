@@ -5,31 +5,19 @@ import SearchFieldRoot from "./search-field-root.vue";
 import SearchFieldSearchIcon from "./search-field-search-icon.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const SearchField = Object.assign(SearchFieldRoot, {
-  ClearButton: SearchFieldClearButton,
-  Group: SearchFieldGroup,
-  Input: SearchFieldInput,
-  Root: SearchFieldRoot,
-  SearchIcon: SearchFieldSearchIcon,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
 export {
   SearchFieldClearButton,
   SearchFieldGroup,
   SearchFieldInput,
-  SearchFieldRoot,
+  SearchFieldRoot as SearchField,
   SearchFieldSearchIcon,
 };
 
 export type {
-  SearchFieldRootProps,
   SearchFieldRootProps as SearchFieldProps,
-  SearchFieldRootSlotProps,
+  SearchFieldRootSlotProps as SearchFieldSlotProps,
   SearchFieldGroupProps,
   SearchFieldGroupSlotProps,
   SearchFieldInputProps,

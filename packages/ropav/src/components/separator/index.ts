@@ -1,18 +1,11 @@
 import SeparatorRoot from "./separator-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Separator = Object.assign(SeparatorRoot, {
-  Root: SeparatorRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export { SeparatorRoot };
+export { SeparatorRoot as Separator };
 
-export type { SeparatorRootProps, SeparatorRootProps as SeparatorProps } from "./separator.types";
+export type { SeparatorRootProps as SeparatorProps } from "./separator.types";
 
 /* -------------------------------------------------------------------------------------------------
  * Context

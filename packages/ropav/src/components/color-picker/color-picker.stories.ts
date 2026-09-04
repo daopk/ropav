@@ -6,60 +6,56 @@ import { computed, shallowRef } from "vue";
 import IconShuffle from "~icons/gravity-ui/shuffle";
 
 import { parseColor } from "../../utils/color";
-import { ButtonRoot } from "../button";
-import { ColorAreaRoot, ColorAreaThumb } from "../color-area";
-import { ColorFieldRoot } from "../color-field";
-import {
-  ColorInputGroupInput,
-  ColorInputGroupPrefix,
-  ColorInputGroupRoot,
-} from "../color-input-group";
+import { Button } from "../button";
+import { ColorArea, ColorAreaThumb } from "../color-area";
+import { ColorField } from "../color-field";
+import { ColorInputGroupInput, ColorInputGroupPrefix, ColorInputGroup } from "../color-input-group";
 import {
   ColorSliderOutput,
-  ColorSliderRoot,
+  ColorSlider,
   ColorSliderThumb,
   ColorSliderTrack,
 } from "../color-slider";
-import { ColorSwatchRoot } from "../color-swatch";
+import { ColorSwatch } from "../color-swatch";
 import {
   ColorSwatchPickerItem,
-  ColorSwatchPickerRoot,
+  ColorSwatchPicker,
   ColorSwatchPickerSwatch,
 } from "../color-swatch-picker";
-import { LabelRoot } from "../label";
-import { ListBoxRoot } from "../list-box";
-import { ListBoxItemIndicator, ListBoxItemRoot } from "../list-box-item";
-import { SelectIndicator, SelectPopover, SelectRoot, SelectTrigger, SelectValue } from "../select";
+import { Label } from "../label";
+import { ListBox } from "../list-box";
+import { ListBoxItemIndicator, ListBoxItem } from "../list-box-item";
+import { SelectIndicator, SelectPopover, Select, SelectTrigger, SelectValue } from "../select";
 
-import { ColorPickerPopover, ColorPickerRoot, ColorPickerTrigger } from "./index";
+import { ColorPickerPopover, ColorPicker, ColorPickerTrigger } from "./index";
 
 // Registered under flat names: a story template is compiled at runtime with no binding metadata,
-// so a dotted tag would be looked up as a component literally named "ColorPicker.Trigger".
+// so a dotted tag would be looked up as a component literally named "ColorPickerTrigger".
 const components = {
-  Button: ButtonRoot,
-  ColorArea: ColorAreaRoot,
+  Button: Button,
+  ColorArea: ColorArea,
   ColorAreaThumb,
-  ColorField: ColorFieldRoot,
-  ColorFieldGroup: ColorInputGroupRoot,
+  ColorField: ColorField,
+  ColorFieldGroup: ColorInputGroup,
   ColorFieldInput: ColorInputGroupInput,
   ColorFieldPrefix: ColorInputGroupPrefix,
-  ColorPicker: ColorPickerRoot,
+  ColorPicker: ColorPicker,
   ColorPickerPopover,
   ColorPickerTrigger,
-  ColorSlider: ColorSliderRoot,
+  ColorSlider: ColorSlider,
   ColorSliderOutput,
   ColorSliderThumb,
   ColorSliderTrack,
-  ColorSwatch: ColorSwatchRoot,
-  ColorSwatchPicker: ColorSwatchPickerRoot,
+  ColorSwatch: ColorSwatch,
+  ColorSwatchPicker: ColorSwatchPicker,
   ColorSwatchPickerItem,
   ColorSwatchPickerSwatch,
   IconShuffle,
-  Label: LabelRoot,
-  ListBox: ListBoxRoot,
-  ListBoxItem: ListBoxItemRoot,
+  Label: Label,
+  ListBox: ListBox,
+  ListBoxItem: ListBoxItem,
   ListBoxItemIndicator,
-  Select: SelectRoot,
+  Select: Select,
   SelectIndicator,
   SelectPopover,
   SelectTrigger,
@@ -67,7 +63,7 @@ const components = {
 };
 
 const meta: StoryMeta = {
-  component: ColorPickerRoot,
+  component: ColorPicker,
   parameters: {
     layout: "centered",
   },

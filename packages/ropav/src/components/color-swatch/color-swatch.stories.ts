@@ -1,11 +1,11 @@
 import type { StoryMeta } from "../../utils/story-meta";
 import type { StoryObj } from "@storybook/vue3-vite";
 
-import { ColorSwatchRoot } from "./index";
+import { ColorSwatch } from "./index";
 
 // Registered under a flat name: a story template is compiled at runtime with no binding metadata,
-// so a dotted tag would be looked up as a component literally named "ColorSwatch.Root".
-const components = { ColorSwatch: ColorSwatchRoot };
+// so a dotted tag would be looked up as a component literally named "ColorSwatch".
+const components = { ColorSwatch: ColorSwatch };
 
 const meta: StoryMeta = {
   argTypes: {
@@ -19,7 +19,7 @@ const meta: StoryMeta = {
       options: ["xs", "sm", "md", "lg", "xl"],
     },
   },
-  component: ColorSwatchRoot,
+  component: ColorSwatch,
   parameters: {
     layout: "centered",
   },

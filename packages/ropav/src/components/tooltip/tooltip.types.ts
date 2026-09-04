@@ -62,7 +62,7 @@ export interface TooltipContentProps {
   /**
    * Whether the tooltip leaves room for an arrow.
    *
-   * Only the offset: the arrow itself is rendered by `Tooltip.Arrow`, so setting this without one
+   * Only the offset: the arrow itself is rendered by `TooltipArrow`, so setting this without one
    * simply spaces the tooltip further from its trigger.
    *
    * @default false

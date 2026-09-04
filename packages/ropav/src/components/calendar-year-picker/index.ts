@@ -6,22 +6,6 @@ import CalendarYearPickerTriggerIndicator from "./calendar-year-picker-trigger-i
 import CalendarYearPickerTrigger from "./calendar-year-picker-trigger.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-/*
- * A plain object rather than `Object.assign`, because the year picker has no root of its own — it is
- * a set of parts a calendar hosts.
- */
-export const CalendarYearPicker = {
-  Cell: CalendarYearPickerCell,
-  Grid: CalendarYearPickerGrid,
-  GridBody: CalendarYearPickerGridBody,
-  Trigger: CalendarYearPickerTrigger,
-  TriggerHeading: CalendarYearPickerTriggerHeading,
-  TriggerIndicator: CalendarYearPickerTriggerIndicator,
-};
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
 export {

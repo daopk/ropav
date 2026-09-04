@@ -8,20 +8,20 @@ import IconChevronsExpandVertical from "~icons/gravity-ui/chevrons-expand-vertic
 
 import { avatarSrc } from "../../utils/story-assets";
 import { useClippedLabels } from "../../utils/story-truncation";
-import { AvatarFallback, AvatarImage, AvatarRoot } from "../avatar";
-import { ButtonRoot } from "../button";
-import { ChipLabel, ChipRoot } from "../chip";
-import { DescriptionRoot } from "../description";
-import { FieldErrorRoot } from "../field-error";
-import { FormRoot } from "../form";
-import { HeaderRoot } from "../header";
-import { LabelRoot } from "../label";
-import { ListBoxLoadMoreItem, ListBoxRoot } from "../list-box";
-import { ListBoxItemIndicator, ListBoxItemRoot } from "../list-box-item";
-import { ListBoxSectionRoot } from "../list-box-section";
-import { SeparatorRoot } from "../separator";
-import { SpinnerRoot } from "../spinner";
-import { TooltipContent, TooltipRoot, TooltipTrigger } from "../tooltip";
+import { AvatarFallback, AvatarImage, Avatar } from "../avatar";
+import { Button } from "../button";
+import { ChipLabel, Chip } from "../chip";
+import { Description } from "../description";
+import { FieldError } from "../field-error";
+import { Form } from "../form";
+import { Header } from "../header";
+import { Label } from "../label";
+import { ListBoxLoadMoreItem, ListBox } from "../list-box";
+import { ListBoxItemIndicator, ListBoxItem } from "../list-box-item";
+import { ListBoxSection } from "../list-box-section";
+import { Separator } from "../separator";
+import { Spinner } from "../spinner";
+import { TooltipContent, Tooltip, TooltipTrigger } from "../tooltip";
 
 import SelectIndicator from "./select-indicator.vue";
 import SelectPopover from "./select-popover.vue";
@@ -30,33 +30,33 @@ import SelectTrigger from "./select-trigger.vue";
 import SelectValue from "./select-value.vue";
 
 // Registered under flat names: a story template is compiled at runtime with no binding metadata,
-// so a dotted tag would be looked up as a component literally named "Select.Trigger".
+// so a dotted tag would be looked up as a component literally named "SelectTrigger".
 const components = {
-  Avatar: AvatarRoot,
+  Avatar: Avatar,
   AvatarFallback,
   AvatarImage,
-  Button: ButtonRoot,
-  Chip: ChipRoot,
+  Button: Button,
+  Chip: Chip,
   ChipLabel,
-  Description: DescriptionRoot,
-  FieldError: FieldErrorRoot,
-  Form: FormRoot,
-  Header: HeaderRoot,
+  Description: Description,
+  FieldError: FieldError,
+  Form: Form,
+  Header: Header,
   IconChevronsExpandVertical,
-  Label: LabelRoot,
-  ListBox: ListBoxRoot,
-  ListBoxItem: ListBoxItemRoot,
+  Label: Label,
+  ListBox: ListBox,
+  ListBoxItem: ListBoxItem,
   ListBoxItemIndicator,
   ListBoxLoadMoreItem,
-  ListBoxSection: ListBoxSectionRoot,
+  ListBoxSection: ListBoxSection,
   Select: SelectRoot,
   SelectIndicator,
   SelectPopover,
   SelectTrigger,
   SelectValue,
-  Separator: SeparatorRoot,
-  Spinner: SpinnerRoot,
-  Tooltip: TooltipRoot,
+  Separator: Separator,
+  Spinner: Spinner,
+  Tooltip: Tooltip,
   TooltipContent,
   TooltipTrigger,
 };

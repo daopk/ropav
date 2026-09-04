@@ -13,19 +13,14 @@ import DatePickerTriggerIndicator from "./date-picker-trigger-indicator.vue";
 import DatePickerTrigger from "./date-picker-trigger.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const DatePicker = Object.assign(DatePickerRoot, {
-  Popover: DatePickerPopover,
-  Root: DatePickerRoot,
-  Trigger: DatePickerTrigger,
-  TriggerIndicator: DatePickerTriggerIndicator,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { DatePickerPopover, DatePickerRoot, DatePickerTrigger, DatePickerTriggerIndicator };
+export {
+  DatePickerPopover,
+  DatePickerRoot as DatePicker,
+  DatePickerTrigger,
+  DatePickerTriggerIndicator,
+};
 
 /*
  * The segment parts live in `date-input-group`, which is internal, so they are re-exported here
@@ -43,9 +38,8 @@ export {
 
 export type {
   DatePickerPopoverProps,
-  DatePickerRootProps,
   DatePickerRootProps as DatePickerProps,
-  DatePickerRootSlotProps,
+  DatePickerRootSlotProps as DatePickerSlotProps,
   DatePickerTriggerIndicatorProps,
   DatePickerTriggerProps,
 } from "./date-picker.types";

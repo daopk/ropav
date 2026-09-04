@@ -15,7 +15,7 @@ import {
   CalendarHeader,
   CalendarHeaderCell,
   CalendarNavButton,
-  CalendarRoot,
+  Calendar,
 } from "../calendar";
 import {
   CalendarYearPickerCell,
@@ -34,7 +34,7 @@ import {
   DatePickerGroup,
   DatePickerInput,
   DatePickerPopover,
-  DatePickerRoot,
+  DatePicker,
   DatePickerSegment,
   DatePickerSuffix,
   DatePickerTrigger,
@@ -42,9 +42,10 @@ import {
 } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata to
-// resolve `DatePicker.Trigger` through, so dot notation cannot be used here.
+// resolve `DatePickerTrigger` through, so dot notation cannot be used here.
 const components = {
   Button,
+  Calendar,
   CalendarCell,
   CalendarGrid,
   CalendarGridBody,
@@ -52,17 +53,16 @@ const components = {
   CalendarHeader,
   CalendarHeaderCell,
   CalendarNavButton,
-  CalendarRoot,
   CalendarYearPickerCell,
   CalendarYearPickerGrid,
   CalendarYearPickerGridBody,
   CalendarYearPickerTrigger,
   CalendarYearPickerTriggerHeading,
   CalendarYearPickerTriggerIndicator,
+  DatePicker,
   DatePickerGroup,
   DatePickerInput,
   DatePickerPopover,
-  DatePickerRoot,
   DatePickerSegment,
   DatePickerSuffix,
   DatePickerTrigger,
@@ -84,7 +84,7 @@ const NEXT = { slot: "next" } as const;
 /** The calendar in the popover, which every story below repeats. */
 const calendar = `
   <DatePickerPopover>
-    <CalendarRoot aria-label="Selected date">
+    <Calendar aria-label="Selected date">
       <CalendarHeader>
         <CalendarYearPickerTrigger>
           <CalendarYearPickerTriggerHeading />
@@ -112,7 +112,7 @@ const calendar = `
           </template>
         </CalendarYearPickerGridBody>
       </CalendarYearPickerGrid>
-    </CalendarRoot>
+    </Calendar>
   </DatePickerPopover>
 `;
 
@@ -139,7 +139,7 @@ const sizedField = field.replace(
 );
 
 const meta: StoryMeta = {
-  component: DatePickerRoot,
+  component: DatePicker,
   parameters: {
     layout: "centered",
   },
@@ -157,7 +157,7 @@ export const Sizes: Story = {
     setup: () => ({ next: NEXT, previous: PREVIOUS, sizes: ["sm", "md", "lg"] as const }),
     template: `
       <div class="flex flex-col gap-4">
-        <DatePickerRoot
+        <DatePicker
           v-for="size in sizes"
           :key="size"
           class="w-[320px]"
@@ -166,7 +166,7 @@ export const Sizes: Story = {
           <Label>Size {{ size }}</Label>
           ${sizedField}
           ${calendar}
-        </DatePickerRoot>
+        </DatePicker>
       </div>
     `,
   }),
@@ -177,11 +177,11 @@ export const Default: Story = {
     components,
     setup: () => ({ next: NEXT, previous: PREVIOUS }),
     template: `
-      <DatePickerRoot class="w-[280px]" name="date">
+      <DatePicker class="w-[280px]" name="date">
         <Label>Date</Label>
         ${field}
         ${calendar}
-      </DatePickerRoot>
+      </DatePicker>
     `,
   }),
 };
@@ -196,12 +196,12 @@ export const Controlled: Story = {
     },
     template: `
       <div class="flex w-64 flex-col gap-2">
-        <DatePickerRoot v-model:value="value" name="date">
+        <DatePicker v-model:value="value" name="date">
           <Label>Date</Label>
           ${field}
           <Description>Select a date from the calendar.</Description>
           ${calendar}
-        </DatePickerRoot>
+        </DatePicker>
         <Description>Current value: {{ value ? value.toString() : "(empty)" }}</Description>
       </div>
     `,
@@ -217,11 +217,11 @@ export const Disabled: Story = {
       value: today(getLocalTimeZone()),
     }),
     template: `
-      <DatePickerRoot is-disabled class="w-64" name="date" :value="value">
+      <DatePicker is-disabled class="w-64" name="date" :value="value">
         <Label>Date</Label>
         ${field}
         ${calendar}
-      </DatePickerRoot>
+      </DatePicker>
     `,
   }),
 };
@@ -237,7 +237,7 @@ export const WithValidation: Story = {
       return { currentDate, isInvalid, next: NEXT, previous: PREVIOUS, value };
     },
     template: `
-      <DatePickerRoot
+      <DatePicker
         v-model:value="value"
         is-required
         class="w-64"
@@ -250,7 +250,7 @@ export const WithValidation: Story = {
         <FieldError v-if="isInvalid">Date must be today or in the future.</FieldError>
         <Description v-else>Select a date from today onward.</Description>
         ${calendar}
-      </DatePickerRoot>
+      </DatePicker>
     `,
   }),
 };
@@ -260,7 +260,7 @@ export const WithCustomIndicator: Story = {
     components,
     setup: () => ({ next: NEXT, previous: PREVIOUS }),
     template: `
-      <DatePickerRoot class="w-64" name="date">
+      <DatePicker class="w-64" name="date">
         <Label>Date</Label>
         <DatePickerGroup full-width>
           <DatePickerInput>
@@ -278,7 +278,7 @@ export const WithCustomIndicator: Story = {
         </DatePickerGroup>
         <Description>Use a custom trigger icon while keeping DatePicker behavior.</Description>
         ${calendar}
-      </DatePickerRoot>
+      </DatePicker>
     `,
   }),
 };
@@ -316,7 +316,7 @@ export const FormExample: Story = {
     },
     template: `
       <Form class="flex w-64 flex-col gap-3" @submit="onSubmit">
-        <DatePickerRoot
+        <DatePicker
           v-model:value="value"
           is-required
           :is-invalid="isInvalid"
@@ -328,7 +328,7 @@ export const FormExample: Story = {
           <FieldError v-if="isInvalid">Date must be today or in the future.</FieldError>
           <Description v-else>Choose a valid appointment date.</Description>
           ${calendar}
-        </DatePickerRoot>
+        </DatePicker>
         <Button
           class="w-full"
           :is-disabled="!value || isInvalid"

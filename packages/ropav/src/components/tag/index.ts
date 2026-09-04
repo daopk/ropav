@@ -2,24 +2,11 @@ import TagRemoveButton from "./tag-remove-button.vue";
 import TagRoot from "./tag-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Tag = Object.assign(TagRoot, {
-  RemoveButton: TagRemoveButton,
-  Root: TagRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { TagRemoveButton, TagRoot };
+export { TagRemoveButton, TagRoot as Tag };
 
-export type {
-  TagRemoveButtonProps,
-  TagRootProps,
-  TagRootProps as TagProps,
-  TagSlotProps,
-} from "./tag.types";
+export type { TagRemoveButtonProps, TagRootProps as TagProps, TagSlotProps } from "./tag.types";
 
 /* -------------------------------------------------------------------------------------------------
  * Context

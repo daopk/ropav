@@ -107,7 +107,7 @@ export interface SidebarFooterProps {
 
 export interface SidebarGroupProps {
   class?: string;
-  /** Names the group where no `Sidebar.GroupLabel` does. */
+  /** Names the group where no `SidebarGroupLabel` does. */
   ariaLabel?: string;
 }
 
@@ -239,7 +239,7 @@ export interface SidebarItemTooltipProps {
   /**
    * What the tooltip says — the item's own label, which the rail has taken out of sight.
    *
-   * Restated rather than read off `Sidebar.ItemLabel`, because the label is a slot and its text is
+   * Restated rather than read off `SidebarItemLabel`, because the label is a slot and its text is
    * whatever a caller rendered into it; reaching into the DOM to find out would tie the tooltip to
    * a markup shape neither part promises.
    */

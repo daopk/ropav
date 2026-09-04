@@ -1,19 +1,11 @@
 import RadioGroupRoot from "./radio-group-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const RadioGroup = Object.assign(RadioGroupRoot, {
-  Root: RadioGroupRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export { RadioGroupRoot };
+export { RadioGroupRoot as RadioGroup };
 
 export type {
-  RadioGroupRootProps,
   RadioGroupRootProps as RadioGroupProps,
   RadioGroupSlotProps,
 } from "./radio-group.types";

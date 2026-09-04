@@ -76,7 +76,7 @@ describe("RangeCalendar", () => {
     });
 
     it("wraps every cell's content in a button element of its own", () => {
-      // `Calendar.Cell` has no such wrapper; the range stylesheet keys the rounded ends on it.
+      // `CalendarCell` has no such wrapper; the range stylesheet keys the rounded ends on it.
       const calendar = renderRangeCalendar();
       const button = calendar.cell(15).querySelector("[data-slot='range-calendar-cell-button']");
 

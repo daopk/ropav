@@ -5,27 +5,15 @@ import SelectTrigger from "./select-trigger.vue";
 import SelectValue from "./select-value.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Select = Object.assign(SelectRoot, {
-  Indicator: SelectIndicator,
-  Popover: SelectPopover,
-  Root: SelectRoot,
-  Trigger: SelectTrigger,
-  Value: SelectValue,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export { SelectIndicator, SelectPopover, SelectRoot, SelectTrigger, SelectValue };
+export { SelectIndicator, SelectPopover, SelectRoot as Select, SelectTrigger, SelectValue };
 
 export type {
   SelectIndicatorProps,
   SelectPopoverProps,
-  SelectRootProps,
   SelectRootProps as SelectProps,
-  SelectRootSlotProps,
+  SelectRootSlotProps as SelectSlotProps,
   SelectTriggerProps,
   SelectValueProps,
   SelectValueSlotProps,

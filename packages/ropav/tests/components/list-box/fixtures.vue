@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
 import type { FixtureItem } from "./fixtures.types";
-import type { ListBoxRootProps } from "@/components/list-box";
+import type { ListBoxProps } from "@/components/list-box";
 import type { CollectionSelection } from "@/composables/use-selection-manager";
 
-import { DescriptionRoot } from "@/components/description";
-import { EmptyStateRoot } from "@/components/empty-state";
-import { HeaderRoot } from "@/components/header";
-import { LabelRoot } from "@/components/label";
-import { ListBoxRoot } from "@/components/list-box";
-import { ListBoxItemIndicator, ListBoxItemRoot } from "@/components/list-box-item";
-import { ListBoxSectionRoot } from "@/components/list-box-section";
+import { Description } from "@/components/description";
+import { EmptyState } from "@/components/empty-state";
+import { Header } from "@/components/header";
+import { Label } from "@/components/label";
+import { ListBox } from "@/components/list-box";
+import { ListBoxItemIndicator, ListBoxItem } from "@/components/list-box-item";
+import { ListBoxSection } from "@/components/list-box-section";
 
 /**
  * Booleans stay `default: undefined` so an absent prop reads as absent rather than as an
@@ -20,7 +20,7 @@ import { ListBoxSectionRoot } from "@/components/list-box-section";
  */
 const props = withDefaults(
   defineProps<
-    ListBoxRootProps & {
+    ListBoxProps & {
       items?: FixtureItem[];
       withIndicator?: boolean;
       withSections?: boolean;
@@ -48,7 +48,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <ListBoxRoot
+  <ListBox
     aria-label="Users"
     :class="props.class"
     :default-selected-keys="props.defaultSelectedKeys"
@@ -63,32 +63,32 @@ const emit = defineEmits<{
     @selection-change="emit('selectionChange', $event)"
   >
     <template v-if="props.withEmptyState" #empty>
-      <EmptyStateRoot>Nothing here</EmptyStateRoot>
+      <EmptyState>Nothing here</EmptyState>
     </template>
-    <ListBoxSectionRoot v-if="props.withSections">
-      <HeaderRoot>People</HeaderRoot>
-      <ListBoxItemRoot
+    <ListBoxSection v-if="props.withSections">
+      <Header>People</Header>
+      <ListBoxItem
         v-for="item of props.items"
         :id="item.id"
         :key="item.id"
         :is-disabled="item.isDisabled"
       >
-        <LabelRoot>{{ item.name }}</LabelRoot>
-        <DescriptionRoot v-if="item.email">{{ item.email }}</DescriptionRoot>
+        <Label>{{ item.name }}</Label>
+        <Description v-if="item.email">{{ item.email }}</Description>
         <ListBoxItemIndicator v-if="props.withIndicator" />
-      </ListBoxItemRoot>
-    </ListBoxSectionRoot>
+      </ListBoxItem>
+    </ListBoxSection>
     <template v-else>
-      <ListBoxItemRoot
+      <ListBoxItem
         v-for="item of props.items"
         :id="item.id"
         :key="item.id"
         :is-disabled="item.isDisabled"
       >
-        <LabelRoot>{{ item.name }}</LabelRoot>
-        <DescriptionRoot v-if="item.email">{{ item.email }}</DescriptionRoot>
+        <Label>{{ item.name }}</Label>
+        <Description v-if="item.email">{{ item.email }}</Description>
         <ListBoxItemIndicator v-if="props.withIndicator" />
-      </ListBoxItemRoot>
+      </ListBoxItem>
     </template>
-  </ListBoxRoot>
+  </ListBox>
 </template>

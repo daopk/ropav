@@ -5,8 +5,8 @@ import type { CollectionSelection } from "@/composables/use-selection-manager";
 
 import { computed, watch } from "vue";
 
-import { ListBoxRoot, provideListBoxStateContext } from "@/components/list-box";
-import { ListBoxItemIndicator, ListBoxItemRoot } from "@/components/list-box-item";
+import { ListBox, provideListBoxStateContext } from "@/components/list-box";
+import { ListBoxItemIndicator, ListBoxItem } from "@/components/list-box-item";
 import { useCollection } from "@/composables/use-collection";
 import { useSelectionManager } from "@/composables/use-selection-manager";
 import { createListCollection } from "@/utils/virtualizer-collection";
@@ -106,14 +106,10 @@ defineExpose({ collection, selection });
 <template>
   <span v-if="props.labelledBy" :id="props.labelledBy">Users</span>
   <input v-if="props.shouldUseVirtualFocus" data-testid="outside" type="text" />
-  <ListBoxRoot>
-    <ListBoxItemRoot
-      v-for="item in props.renderItems ? props.items : []"
-      :id="item.id"
-      :key="item.id"
-    >
+  <ListBox>
+    <ListBoxItem v-for="item in props.renderItems ? props.items : []" :id="item.id" :key="item.id">
       {{ item.name }}
       <ListBoxItemIndicator />
-    </ListBoxItemRoot>
-  </ListBoxRoot>
+    </ListBoxItem>
+  </ListBox>
 </template>

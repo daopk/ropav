@@ -23,7 +23,7 @@ const callerSlots = useSlots();
  * The branch is what keeps parity with React's `{children ?? getDefaultIcon()}`: `<slot>` fallback
  * content runs whenever the slot renders nothing, so a caller who declares the slot and returns
  * nothing — `[]`, or a condition that is false — would get the built-in icon here while React
- * renders empty. Same reason as `Select.Indicator`, and it also keeps the icon out of fallback
+ * renders empty. Same reason as `SelectIndicator`, and it also keeps the icon out of fallback
  * content, which drops the slots of components a VDOM host nests inside.
  */
 const hasSlot = computed(() => Boolean(callerSlots["default"]));

@@ -10,8 +10,8 @@ import {
   CheckboxIndicator,
 } from "@/components/checkbox";
 import { CheckboxGroup } from "@/components/checkbox-group";
-import { FieldsetRoot } from "@/components/fieldset";
-import { LinkRoot } from "@/components/link";
+import { Fieldset } from "@/components/fieldset";
+import { Link } from "@/components/link";
 import { Radio, RadioContent, RadioControl, RadioIndicator } from "@/components/radio";
 import { RadioGroup } from "@/components/radio-group";
 import { Slider, SliderThumb, SliderTrack } from "@/components/slider";
@@ -26,14 +26,12 @@ const props = withDefaults(defineProps<FieldsetFieldsFixtureProps>(), {
 </script>
 
 <template>
-  <FieldsetRoot :disabled="props.disabled">
+  <Fieldset :disabled="props.disabled">
     <Button data-testid="button" :is-disabled="props.fieldIsDisabled">Save</Button>
     <ButtonGroup data-testid="button-group">
       <Button data-testid="grouped-button">In a group</Button>
     </ButtonGroup>
-    <LinkRoot data-testid="link" href="#target" :is-disabled="props.fieldIsDisabled">
-      A link
-    </LinkRoot>
+    <Link data-testid="link" href="#target" :is-disabled="props.fieldIsDisabled"> A link </Link>
     <ToggleButton data-testid="toggle-button" :is-disabled="props.fieldIsDisabled">
       Toggle
     </ToggleButton>
@@ -70,5 +68,5 @@ const props = withDefaults(defineProps<FieldsetFieldsFixtureProps>(), {
         <SliderThumb />
       </SliderTrack>
     </Slider>
-  </FieldsetRoot>
+  </Fieldset>
 </template>

@@ -1,12 +1,12 @@
 <script setup lang="ts" vapor>
-import type { ToggleButtonGroupRootProps } from "@/components/toggle-button-group";
+import type { ToggleButtonGroupProps } from "@/components/toggle-button-group";
 
 import { ToggleButton } from "@/components/toggle-button";
-import { ToggleButtonGroup } from "@/components/toggle-button-group";
+import { ToggleButtonGroup, ToggleButtonGroupSeparator } from "@/components/toggle-button-group";
 
 const props = withDefaults(
   defineProps<
-    ToggleButtonGroupRootProps & {
+    ToggleButtonGroupProps & {
       /** Disables the first button only, leaving the group enabled. */
       childIsDisabled?: boolean;
       /** Renders every button as icon-only. */
@@ -45,7 +45,7 @@ defineEmits<{ selectionChange: [keys: Set<string | number>] }>();
       Bold
     </ToggleButton>
     <ToggleButton id="italic" :is-icon-only="props.isIconOnly">
-      <ToggleButtonGroup.Separator v-if="props.withSeparator" />
+      <ToggleButtonGroupSeparator v-if="props.withSeparator" />
       Italic
     </ToggleButton>
     <ToggleButton id="underline" :is-icon-only="props.isIconOnly">Underline</ToggleButton>

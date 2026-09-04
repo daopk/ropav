@@ -1,5 +1,5 @@
 <script setup lang="ts" vapor>
-import type { TabsRootProps } from "@/components/tabs";
+import type { TabsProps } from "@/components/tabs";
 import type { CollectionKey } from "@/composables/use-collection";
 
 import {
@@ -7,7 +7,7 @@ import {
   TabsList,
   TabsListContainer,
   TabsPanel,
-  TabsRoot,
+  Tabs,
   TabsSeparator,
   TabsTab,
 } from "@/components/tabs";
@@ -25,7 +25,7 @@ export interface TabsFixtureItem {
  */
 const props = withDefaults(
   defineProps<
-    TabsRootProps & {
+    TabsProps & {
       items?: TabsFixtureItem[];
       withContainer?: boolean;
       withSeparator?: boolean;
@@ -52,7 +52,7 @@ const props = withDefaults(
 </script>
 
 <template>
-  <TabsRoot
+  <Tabs
     :id="props.id"
     :class="props.class"
     data-testid="tabs"
@@ -102,5 +102,5 @@ const props = withDefaults(
         {{ item.label }} panel
       </TabsPanel>
     </template>
-  </TabsRoot>
+  </Tabs>
 </template>

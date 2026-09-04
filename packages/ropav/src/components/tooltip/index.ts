@@ -4,25 +4,14 @@ import TooltipRoot from "./tooltip-root.vue";
 import TooltipTrigger from "./tooltip-trigger.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Tooltip = Object.assign(TooltipRoot, {
-  Arrow: TooltipArrow,
-  Content: TooltipContent,
-  Root: TooltipRoot,
-  Trigger: TooltipTrigger,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { TooltipArrow, TooltipContent, TooltipRoot, TooltipTrigger };
+export { TooltipArrow, TooltipContent, TooltipRoot as Tooltip, TooltipTrigger };
 
 export type {
   TooltipArrowProps,
   TooltipContentProps,
-  TooltipRootEmits,
-  TooltipRootProps,
+  TooltipRootEmits as TooltipEmits,
   TooltipRootProps as TooltipProps,
   TooltipTriggerProps,
 } from "./tooltip.types";

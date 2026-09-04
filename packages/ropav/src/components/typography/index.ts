@@ -12,17 +12,6 @@ import Paragraph from "./paragraph.vue";
 import Prose from "./prose.vue";
 import TypographyRoot from "./typography-root.vue";
 
-/* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Typography = Object.assign(TypographyRoot, {
-  Code,
-  Heading,
-  Paragraph,
-  Prose,
-  Root: TypographyRoot,
-});
-
 export type Typography = {
   CodeProps: CodeProps;
   HeadingProps: HeadingProps;
@@ -35,7 +24,7 @@ export type Typography = {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { Code, Heading, Paragraph, Prose, TypographyRoot };
+export { Code, Heading, Paragraph, Prose, TypographyRoot as Typography };
 
 export type {
   CodeProps,
@@ -44,7 +33,6 @@ export type {
   ProseProps,
   TypographyAlign,
   TypographyColor,
-  TypographyRootProps,
   TypographyRootProps as TypographyProps,
   TypographyType,
   TypographyWeight,

@@ -1,21 +1,11 @@
 import DescriptionRoot from "./description-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Description = Object.assign(DescriptionRoot, {
-  Root: DescriptionRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export { DescriptionRoot };
+export { DescriptionRoot as Description };
 
-export type {
-  DescriptionRootProps,
-  DescriptionRootProps as DescriptionProps,
-} from "./description.types";
+export type { DescriptionRootProps as DescriptionProps } from "./description.types";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants

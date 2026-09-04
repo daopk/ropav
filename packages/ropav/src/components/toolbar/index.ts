@@ -1,18 +1,11 @@
 import ToolbarRoot from "./toolbar-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Toolbar = Object.assign(ToolbarRoot, {
-  Root: ToolbarRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export { ToolbarRoot };
+export { ToolbarRoot as Toolbar };
 
-export type { ToolbarRootProps, ToolbarRootProps as ToolbarProps } from "./toolbar.types";
+export type { ToolbarRootProps as ToolbarProps } from "./toolbar.types";
 
 /* -------------------------------------------------------------------------------------------------
  * Context

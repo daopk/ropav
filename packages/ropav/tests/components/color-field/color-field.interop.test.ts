@@ -2,11 +2,11 @@ import { renderInterop } from "@ropav/testing/helpers/vue";
 import { describe, expect, it, vi } from "vitest";
 import { h, nextTick } from "vue";
 
-import { ColorFieldRoot } from "@/components/color-field";
+import { ColorField } from "@/components/color-field";
 import {
   ColorInputGroupInput,
   ColorInputGroupPrefix,
-  ColorInputGroupRoot,
+  ColorInputGroup,
 } from "@/components/color-input-group";
 import { Description } from "@/components/description";
 import { Label } from "@/components/label";
@@ -22,12 +22,12 @@ import { Label } from "@/components/label";
  * real application uses has to be checked on its own.
  */
 const render = (props: Record<string, unknown> = {}) => {
-  const result = renderInterop(ColorFieldRoot, {
+  const result = renderInterop(ColorField, {
     props,
     slots: {
       default: () => [
         h(Label, null, { default: () => "Color" }),
-        h(ColorInputGroupRoot, null, {
+        h(ColorInputGroup, null, {
           default: () => [
             h(ColorInputGroupPrefix, null, { default: () => "P" }),
             h(ColorInputGroupInput),

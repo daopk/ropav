@@ -3,12 +3,12 @@ import type { MenuFixtureItem, MenuFixtureProps } from "./fixtures.types";
 import type { CollectionKey } from "@/composables/use-collection";
 import type { CollectionSelection } from "@/composables/use-selection-manager";
 
-import { EmptyStateRoot } from "@/components/empty-state";
-import { HeaderRoot } from "@/components/header";
-import { MenuRoot } from "@/components/menu";
-import { MenuItemRoot } from "@/components/menu-item";
-import { MenuSectionRoot } from "@/components/menu-section";
-import { SeparatorRoot } from "@/components/separator";
+import { EmptyState } from "@/components/empty-state";
+import { Header } from "@/components/header";
+import { Menu } from "@/components/menu";
+import { MenuItem } from "@/components/menu-item";
+import { MenuSection } from "@/components/menu-section";
+import { Separator } from "@/components/separator";
 
 const props = withDefaults(defineProps<MenuFixtureProps>(), {
   defaultSelectedKeys: undefined,
@@ -33,8 +33,8 @@ defineEmits<{
 </script>
 
 <template>
-  <HeaderRoot v-if="props.withExternalLabel" id="menu-external-label">Edit</HeaderRoot>
-  <MenuRoot
+  <Header v-if="props.withExternalLabel" id="menu-external-label">Edit</Header>
+  <Menu
     :aria-label="props.ariaLabel"
     :aria-labelledby="props.ariaLabelledby"
     :auto-focus="props.autoFocus"
@@ -51,10 +51,10 @@ defineEmits<{
     @selection-change="$emit('selectionChange', $event)"
   >
     <template v-if="props.withEmptyState" #empty>
-      <EmptyStateRoot>Nothing here</EmptyStateRoot>
+      <EmptyState>Nothing here</EmptyState>
     </template>
-    <MenuSectionRoot v-if="props.withSection" aria-label="Clipboard">
-      <MenuItemRoot
+    <MenuSection v-if="props.withSection" aria-label="Clipboard">
+      <MenuItem
         v-for="item of props.items"
         :key="item.id"
         :id="item.id"
@@ -62,15 +62,15 @@ defineEmits<{
         :text-value="item.textValue"
       >
         {{ item.label }}
-      </MenuItemRoot>
-    </MenuSectionRoot>
+      </MenuItem>
+    </MenuSection>
     <template v-else>
       <template v-for="(item, index) of props.items" :key="item.id">
-        <SeparatorRoot v-if="props.withSeparator && index > 0" />
-        <MenuItemRoot :id="item.id" :is-disabled="item.isDisabled" :text-value="item.textValue">
+        <Separator v-if="props.withSeparator && index > 0" />
+        <MenuItem :id="item.id" :is-disabled="item.isDisabled" :text-value="item.textValue">
           {{ item.label }}
-        </MenuItemRoot>
+        </MenuItem>
       </template>
     </template>
-  </MenuRoot>
+  </Menu>
 </template>

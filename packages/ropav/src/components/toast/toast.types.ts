@@ -1,4 +1,4 @@
-import type { ButtonRootProps } from "../button";
+import type { ButtonProps } from "../button";
 import type { Timer, ToastQueue } from "./toast-queue";
 import type { ToastVariants } from "@ropav/styles";
 import type { Component } from "vue";
@@ -17,7 +17,7 @@ import type { Component } from "vue";
 export type ToastRenderable = Component | number | string;
 
 /** The action button offered on a toast added through the imperative API. */
-export interface ToastActionValue extends /* @vue-ignore */ ButtonRootProps {
+export interface ToastActionValue extends /* @vue-ignore */ ButtonProps {
   /** What the button says. */
   label?: ToastRenderable;
   /** Called when the button is activated. */
@@ -157,7 +157,7 @@ export interface ToastCloseButtonProps {
   class?: string;
 }
 
-export interface ToastActionButtonProps extends ButtonRootProps {
+export interface ToastActionButtonProps extends ButtonProps {
   class?: string;
 }
 

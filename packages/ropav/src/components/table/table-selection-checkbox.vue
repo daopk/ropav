@@ -4,7 +4,7 @@ import type { TableSelectionCheckboxProps } from "./table.types";
 import { computed } from "vue";
 
 import { useId } from "../../composables/use-id";
-import { CheckboxContent, CheckboxControl, CheckboxIndicator, CheckboxRoot } from "../checkbox";
+import { CheckboxContent, CheckboxControl, CheckboxIndicator, Checkbox } from "../checkbox";
 
 import { useTableGridContext, useTableRowContextOptional } from "./table.context";
 
@@ -62,7 +62,7 @@ const onChange = () => {
 </script>
 
 <template>
-  <CheckboxRoot
+  <Checkbox
     :id="checkboxId"
     :aria-label="ariaLabel"
     :aria-labelledby="ariaLabelledBy"
@@ -79,5 +79,5 @@ const onChange = () => {
         <CheckboxIndicator />
       </CheckboxControl>
     </CheckboxContent>
-  </CheckboxRoot>
+  </Checkbox>
 </template>

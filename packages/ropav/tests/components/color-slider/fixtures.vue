@@ -1,12 +1,17 @@
 <script setup lang="ts" vapor>
-import type { ColorSliderRootProps } from "@/components/color-slider";
+import type { ColorSliderProps } from "@/components/color-slider";
 import type { Color } from "@/utils/color-types";
 
-import { ColorSlider } from "@/components/color-slider";
+import {
+  ColorSlider,
+  ColorSliderOutput,
+  ColorSliderThumb,
+  ColorSliderTrack,
+} from "@/components/color-slider";
 import { Label } from "@/components/label";
 
 defineProps<
-  ColorSliderRootProps & {
+  ColorSliderProps & {
     /** Leaves the visible label out, so the track has to name itself. */
     withoutLabel?: boolean;
     /** Leaves the output out, which the stylesheet detects with `:has()`. */
@@ -39,9 +44,9 @@ defineEmits<{
     @change-end="$emit('changeEnd', $event)"
   >
     <Label v-if="!$props.withoutLabel">Channel</Label>
-    <ColorSlider.Output v-if="!$props.withoutOutput" />
-    <ColorSlider.Track>
-      <ColorSlider.Thumb />
-    </ColorSlider.Track>
+    <ColorSliderOutput v-if="!$props.withoutOutput" />
+    <ColorSliderTrack>
+      <ColorSliderThumb />
+    </ColorSliderTrack>
   </ColorSlider>
 </template>

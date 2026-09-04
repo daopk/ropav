@@ -5,29 +5,23 @@ import ComboBoxTrigger from "./combo-box-trigger.vue";
 import ComboBoxValue from "./combo-box-value.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const ComboBox = Object.assign(ComboBoxRoot, {
-  InputGroup: ComboBoxInputGroup,
-  Popover: ComboBoxPopover,
-  Root: ComboBoxRoot,
-  Trigger: ComboBoxTrigger,
-  Value: ComboBoxValue,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export { ComboBoxInputGroup, ComboBoxPopover, ComboBoxRoot, ComboBoxTrigger, ComboBoxValue };
+export {
+  ComboBoxInputGroup,
+  ComboBoxPopover,
+  ComboBoxRoot as ComboBox,
+  ComboBoxTrigger,
+  ComboBoxValue,
+};
 
 export type {
   ComboBoxInputGroupProps,
   ComboBoxInputGroupSlotProps,
   ComboBoxPopoverProps,
-  ComboBoxRootEmits,
-  ComboBoxRootProps,
+  ComboBoxRootEmits as ComboBoxEmits,
   ComboBoxRootProps as ComboBoxProps,
-  ComboBoxRootSlotProps,
+  ComboBoxRootSlotProps as ComboBoxSlotProps,
   ComboBoxTriggerProps,
   ComboBoxValueProps,
   ComboBoxValueSlotProps,

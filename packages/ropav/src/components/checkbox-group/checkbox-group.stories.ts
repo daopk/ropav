@@ -13,7 +13,7 @@ import { Label } from "../label";
 import { CheckboxGroup } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata
-// to resolve `Checkbox.Content` through, so dot notation cannot be used here.
+// to resolve `CheckboxContent` through, so dot notation cannot be used here.
 const components = {
   Button,
   Checkbox,

@@ -2,21 +2,21 @@ import { renderInterop } from "@ropav/testing/helpers/vue";
 import { describe, expect, it } from "vitest";
 import { h, nextTick } from "vue";
 
-import { LabelRoot } from "@/components/label";
+import { Label } from "@/components/label";
 import {
   ProgressCircleFillCircle,
-  ProgressCircleRoot,
+  ProgressCircle,
   ProgressCircleTrack,
   ProgressCircleTrackCircle,
 } from "@/components/progress-circle";
 import { CIRCUMFERENCE } from "@/components/progress-circle/progress-circle.constants";
 
 const render = (isIndeterminate = false) =>
-  renderInterop(ProgressCircleRoot, {
+  renderInterop(ProgressCircle, {
     props: { color: "danger", isIndeterminate, value: 25 },
     slots: {
       default: () => [
-        h(LabelRoot, null, { default: () => "Loading" }),
+        h(Label, null, { default: () => "Loading" }),
         h(ProgressCircleTrack, null, {
           default: () => [h(ProgressCircleTrackCircle), h(ProgressCircleFillCircle)],
         }),

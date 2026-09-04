@@ -41,7 +41,7 @@ const trigger = useDialogTrigger({ isDisabled: () => props.isDisabled }, state);
 
 // The trigger is whatever pressable sits inside, which is why the behaviour is handed down rather
 // than built into a trigger component: `<AlertDialog><Button/></AlertDialog>` is the common case,
-// and `AlertDialog.Trigger` exists for markup that is not pressable on its own.
+// and `AlertDialogTrigger` exists for markup that is not pressable on its own.
 providePressResponder(trigger.responder);
 
 provideAlertDialogContext({

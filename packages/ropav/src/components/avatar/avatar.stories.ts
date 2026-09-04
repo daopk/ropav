@@ -5,12 +5,12 @@ import IconPerson from "~icons/gravity-ui/person";
 import IconPersonGear from "~icons/gravity-ui/person-gear";
 
 import { avatarSrc } from "../../utils/story-assets";
-import { SeparatorRoot } from "../separator";
+import { Separator } from "../separator";
 
 import { Avatar, AvatarFallback, AvatarImage } from "./index";
 
 /**
- * Runtime-compiled story templates cannot resolve `Avatar.Image` — dot notation is an SFC
+ * Runtime-compiled story templates cannot resolve `AvatarImage` — dot notation is an SFC
  * compiler feature. The parts are registered individually instead.
  */
 const components = {
@@ -19,7 +19,7 @@ const components = {
   AvatarImage,
   IconPerson,
   IconPersonGear,
-  Separator: SeparatorRoot,
+  Separator: Separator,
 };
 
 const users = [

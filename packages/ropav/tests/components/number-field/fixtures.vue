@@ -9,7 +9,7 @@ import {
   NumberFieldGroup,
   NumberFieldIncrementButton,
   NumberFieldInput,
-  NumberFieldRoot,
+  NumberField,
 } from "@/components/number-field";
 
 // The three-state booleans need explicit `undefined` here too: forwarding a cast `false` would
@@ -29,7 +29,7 @@ const props = withDefaults(defineProps<NumberFieldFixtureProps>(), {
 </script>
 
 <template>
-  <NumberFieldRoot
+  <NumberField
     v-if="props.attributeForm"
     aria-label="Quantity"
     :default-value="props.defaultValue"
@@ -41,8 +41,8 @@ const props = withDefaults(defineProps<NumberFieldFixtureProps>(), {
       <NumberFieldInput />
       <NumberFieldIncrementButton v-if="props.withIncrement" />
     </NumberFieldGroup>
-  </NumberFieldRoot>
-  <NumberFieldRoot
+  </NumberField>
+  <NumberField
     v-else
     :aria-label="props.withLabel ? undefined : 'Quantity'"
     :class="props.class"
@@ -82,5 +82,5 @@ const props = withDefaults(defineProps<NumberFieldFixtureProps>(), {
     </NumberFieldGroup>
     <Description v-if="props.withDescription">How many you want</Description>
     <FieldError v-if="props.withFieldError" />
-  </NumberFieldRoot>
+  </NumberField>
 </template>

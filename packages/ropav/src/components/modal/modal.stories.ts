@@ -10,12 +10,12 @@ import IconRocket from "~icons/gravity-ui/rocket";
 import IconSparkles from "~icons/gravity-ui/sparkles";
 
 import { useOverlayTriggerState } from "../../composables/use-overlay-trigger-state";
-import { ButtonRoot } from "../button";
-import { InputRoot } from "../input";
-import { LabelRoot } from "../label";
-import { Radio } from "../radio";
+import { Button } from "../button";
+import { Input } from "../input";
+import { Label } from "../label";
+import { Radio, RadioContent, RadioControl, RadioIndicator } from "../radio";
 import { RadioGroup } from "../radio-group";
-import { SurfaceRoot } from "../surface";
+import { Surface } from "../surface";
 import { TextField } from "../textfield";
 
 import ModalBackdrop from "./modal-backdrop.vue";
@@ -32,9 +32,9 @@ import ModalRoot from "./modal-root.vue";
 import ModalTrigger from "./modal-trigger.vue";
 
 // Registered under flat names: a story template is compiled at runtime with no binding metadata,
-// so a dotted tag would be looked up as a component literally named "Modal.Dialog".
+// so a dotted tag would be looked up as a component literally named "ModalDialog".
 const components = {
-  Button: ButtonRoot,
+  Button: Button,
   IconArrowUpFromLine,
   IconCircleCheck,
   IconCircleInfo,
@@ -42,8 +42,8 @@ const components = {
   IconGear,
   IconRocket,
   IconSparkles,
-  Input: InputRoot,
-  Label: LabelRoot,
+  Input: Input,
+  Label: Label,
   Modal: ModalRoot,
   ModalBackdrop,
   ModalBody,
@@ -57,11 +57,11 @@ const components = {
   ModalIcon,
   ModalTrigger,
   Radio,
-  RadioContent: Radio.Content,
-  RadioControl: Radio.Control,
+  RadioContent: RadioContent,
+  RadioControl: RadioControl,
   RadioGroup,
-  RadioIndicator: Radio.Indicator,
-  Surface: SurfaceRoot,
+  RadioIndicator: RadioIndicator,
+  Surface: Surface,
   TextField,
 };
 
@@ -357,9 +357,9 @@ export const CloseMethods: Story = {
     template: `
       <div class="flex max-w-2xl flex-col gap-8">
         <div class="flex flex-col gap-2">
-          <h3 class="text-lg font-semibold">Using Modal.Close</h3>
+          <h3 class="text-lg font-semibold">Using ModalClose</h3>
           <p class="text-sm text-muted">
-            The simplest way to close a modal. Wrap any Button in <code>Modal.Close</code> and it
+            The simplest way to close a modal. Wrap any Button in <code>ModalClose</code> and it
             closes the modal when pressed, keeping its own handler as well.
           </p>
           <Modal>
@@ -371,11 +371,11 @@ export const CloseMethods: Story = {
                     <ModalIcon class="bg-accent-soft text-accent-soft-foreground">
                       <IconCircleInfo class="size-5" />
                     </ModalIcon>
-                    <ModalHeading>Using Modal.Close</ModalHeading>
+                    <ModalHeading>Using ModalClose</ModalHeading>
                   </ModalHeader>
                   <ModalBody>
                     <p>
-                      Click either button below - both are wrapped in <code>Modal.Close</code> and
+                      Click either button below - both are wrapped in <code>ModalClose</code> and
                       will close the modal automatically.
                     </p>
                   </ModalBody>
@@ -686,7 +686,7 @@ export const CustomTrigger: Story = {
               </ModalHeader>
               <ModalBody>
                 <p>
-                  Use <code>Modal.Trigger</code> to create custom trigger elements beyond standard
+                  Use <code>ModalTrigger</code> to create custom trigger elements beyond standard
                   buttons. This example shows a card-style trigger with icons and descriptive text.
                 </p>
               </ModalBody>

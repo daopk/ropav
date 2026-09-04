@@ -3,23 +3,13 @@ import BadgeLabel from "./badge-label.vue";
 import BadgeRoot from "./badge-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Badge = Object.assign(BadgeRoot, {
-  Anchor: BadgeAnchor,
-  Label: BadgeLabel,
-  Root: BadgeRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { BadgeAnchor, BadgeLabel, BadgeRoot };
+export { BadgeAnchor, BadgeLabel, BadgeRoot as Badge };
 
 export type {
   BadgeAnchorProps,
   BadgeLabelProps,
-  BadgeRootProps,
   BadgeRootProps as BadgeProps,
 } from "./badge.types";
 

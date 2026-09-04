@@ -2,21 +2,11 @@ import ColorAreaRoot from "./color-area-root.vue";
 import ColorAreaThumb from "./color-area-thumb.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-
-export const ColorArea = Object.assign(ColorAreaRoot, {
-  Root: ColorAreaRoot,
-  Thumb: ColorAreaThumb,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { ColorAreaRoot, ColorAreaThumb };
+export { ColorAreaRoot as ColorArea, ColorAreaThumb };
 
 export type {
-  ColorAreaRootProps,
   ColorAreaRootProps as ColorAreaProps,
   ColorAreaThumbProps,
   ColorAreaSlotProps,

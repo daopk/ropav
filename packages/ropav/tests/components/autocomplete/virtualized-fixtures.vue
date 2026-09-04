@@ -5,17 +5,17 @@ import {
   AutocompleteFilter,
   AutocompleteIndicator,
   AutocompletePopover,
-  AutocompleteRoot,
+  Autocomplete,
   AutocompleteTrigger,
   AutocompleteValue,
 } from "@/components/autocomplete";
-import { LabelRoot } from "@/components/label";
-import { ListBoxRoot } from "@/components/list-box";
-import { ListBoxItemIndicator, ListBoxItemRoot } from "@/components/list-box-item";
+import { Label } from "@/components/label";
+import { ListBox } from "@/components/list-box";
+import { ListBoxItemIndicator, ListBoxItem } from "@/components/list-box-item";
 import {
   SearchFieldGroup,
   SearchFieldInput,
-  SearchFieldRoot,
+  SearchField,
   SearchFieldSearchIcon,
 } from "@/components/search-field";
 import { VirtualizerRoot } from "@/components/virtualizer";
@@ -49,14 +49,14 @@ const byName = (item: { name: string }) => item.name;
 </script>
 
 <template>
-  <AutocompleteRoot
+  <Autocomplete
     allows-empty-collection
     class="w-[300px]"
     :item-text-value="byName"
     :items="allItems"
     placeholder="Select a user"
   >
-    <LabelRoot>User</LabelRoot>
+    <Label>User</Label>
     <AutocompleteTrigger>
       <AutocompleteValue />
       <AutocompleteIndicator />
@@ -64,27 +64,27 @@ const byName = (item: { name: string }) => item.name;
     <AutocompletePopover>
       <AutocompleteFilter :input-value="search" :items="filtered" @input-change="search = $event">
         <template #default="{ items }">
-          <SearchFieldRoot aria-label="Search users" auto-focus variant="secondary">
+          <SearchField aria-label="Search users" auto-focus variant="secondary">
             <SearchFieldGroup>
               <SearchFieldSearchIcon />
               <SearchFieldInput placeholder="Search users..." />
             </SearchFieldGroup>
-          </SearchFieldRoot>
+          </SearchField>
           <VirtualizerRoot :layout="ListLayout" :layout-options="{ rowSize: props.rowSize }">
-            <ListBoxRoot class="h-[300px] overflow-y-auto" :item-text-value="byName" :items="items">
+            <ListBox class="h-[300px] overflow-y-auto" :item-text-value="byName" :items="items">
               <template #default="{ item }">
-                <ListBoxItemRoot
+                <ListBoxItem
                   :id="(item as { id: number }).id"
                   :text-value="byName(item as { name: string })"
                 >
                   {{ byName(item as { name: string }) }}
                   <ListBoxItemIndicator />
-                </ListBoxItemRoot>
+                </ListBoxItem>
               </template>
-            </ListBoxRoot>
+            </ListBox>
           </VirtualizerRoot>
         </template>
       </AutocompleteFilter>
     </AutocompletePopover>
-  </AutocompleteRoot>
+  </Autocomplete>
 </template>

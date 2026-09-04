@@ -4,7 +4,7 @@ import type { InputGroupFixtureProps } from "./fixtures.types";
 import {
   InputGroupInput,
   InputGroupPrefix,
-  InputGroupRoot,
+  InputGroup,
   InputGroupSuffix,
   InputGroupTextArea,
 } from "@/components/input-group";
@@ -35,7 +35,7 @@ const props = withDefaults(defineProps<InputGroupFixtureProps>(), {
     :variant="props.fieldVariant"
   >
     <Label>Website</Label>
-    <InputGroupRoot
+    <InputGroup
       v-if="props.attributeForm"
       :class="props.class"
       full-width
@@ -48,8 +48,8 @@ const props = withDefaults(defineProps<InputGroupFixtureProps>(), {
       <InputGroupTextArea v-if="props.withTextArea" :placeholder="props.controlPlaceholder" />
       <InputGroupInput v-else :placeholder="props.controlPlaceholder" />
       <InputGroupSuffix v-if="props.withSuffix">.com</InputGroupSuffix>
-    </InputGroupRoot>
-    <InputGroupRoot
+    </InputGroup>
+    <InputGroup
       v-else
       :class="props.class"
       :full-width="props.fullWidth"
@@ -77,9 +77,9 @@ const props = withDefaults(defineProps<InputGroupFixtureProps>(), {
         </button>
         <template v-else>.com</template>
       </InputGroupSuffix>
-    </InputGroupRoot>
+    </InputGroup>
   </TextField>
-  <InputGroupRoot
+  <InputGroup
     v-else
     :class="props.class"
     :full-width="props.fullWidth"
@@ -104,5 +104,5 @@ const props = withDefaults(defineProps<InputGroupFixtureProps>(), {
       @change="props.onControlChange"
     />
     <InputGroupSuffix v-if="props.withSuffix">.com</InputGroupSuffix>
-  </InputGroupRoot>
+  </InputGroup>
 </template>

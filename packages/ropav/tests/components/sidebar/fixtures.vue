@@ -1,6 +1,6 @@
 <script setup lang="ts" vapor>
 import type { SidebarFixtureItem } from "./fixtures.types";
-import type { SidebarRailProps, SidebarRootProps } from "@/components/sidebar";
+import type { SidebarRailProps, SidebarProps } from "@/components/sidebar";
 
 import {
   Sidebar,
@@ -32,7 +32,7 @@ import {
  */
 const props = withDefaults(
   defineProps<
-    SidebarRootProps &
+    SidebarProps &
       SidebarRailProps & {
         items?: SidebarFixtureItem[];
         /** Renders the group without a label, to show the group naming itself instead. */

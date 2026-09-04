@@ -9,9 +9,9 @@ import IconHouse from "~icons/gravity-ui/house";
 import IconMagnifier from "~icons/gravity-ui/magnifier";
 import IconPerson from "~icons/gravity-ui/person";
 
-import { ButtonRoot } from "../button";
-import { InputRoot } from "../input";
-import { LabelRoot } from "../label";
+import { Button } from "../button";
+import { Input } from "../input";
+import { Label } from "../label";
 import { TextField } from "../textfield";
 
 import DrawerBackdrop from "./drawer-backdrop.vue";
@@ -27,9 +27,9 @@ import DrawerHeading from "./drawer-heading.vue";
 import DrawerRoot from "./drawer-root.vue";
 
 // Registered under flat names: a story template is compiled at runtime with no binding metadata, so
-// a dotted tag would be looked up as a component literally named "Drawer.Dialog".
+// a dotted tag would be looked up as a component literally named "DrawerDialog".
 const components = {
-  Button: ButtonRoot,
+  Button: Button,
   Drawer: DrawerRoot,
   DrawerBackdrop,
   DrawerBody,
@@ -48,8 +48,8 @@ const components = {
   IconHouse,
   IconMagnifier,
   IconPerson,
-  Input: InputRoot,
-  Label: LabelRoot,
+  Input: Input,
+  Label: Label,
   TextField,
 };
 

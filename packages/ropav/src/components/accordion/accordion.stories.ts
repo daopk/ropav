@@ -12,7 +12,7 @@ import {
 } from "./index";
 
 /**
- * Runtime-compiled story templates cannot resolve `Accordion.Item` — dot notation is an SFC
+ * Runtime-compiled story templates cannot resolve `AccordionItem` — dot notation is an SFC
  * compiler feature. The parts are registered individually instead.
  */
 const components = {

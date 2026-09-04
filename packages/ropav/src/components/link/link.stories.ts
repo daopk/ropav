@@ -7,11 +7,11 @@ import { buttonVariants } from "../button";
 import { ExternalLinkIcon } from "../icons";
 import { RouterProvider } from "../router-provider";
 
-import { Link, LinkIcon, LinkRoot } from "./index";
+import { Link, LinkIcon } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata to
-// resolve `Link.Icon` through, so dot notation cannot be used here.
-const components = { ExternalLinkIcon, LinkIcon, LinkRoot, RouterProvider };
+// resolve `LinkIcon` through, so dot notation cannot be used here.
+const components = { ExternalLinkIcon, Link, LinkIcon, RouterProvider };
 
 const meta: StoryMeta = {
   component: Link,
@@ -37,15 +37,15 @@ export const Default: Story = {
     }),
     template: `
       <div class="flex items-center gap-4">
-        <LinkRoot href="#">
+        <Link href="#">
           Call to action
           <LinkIcon />
-        </LinkRoot>
-        <LinkRoot is-disabled href="#">
+        </Link>
+        <Link is-disabled href="#">
           Call to action
           <LinkIcon />
-        </LinkRoot>
-        <LinkRoot
+        </Link>
+        <Link
           :class="buttonClass"
           href="https://github.com/daopk/ropav"
           rel="noopener noreferrer"
@@ -53,7 +53,7 @@ export const Default: Story = {
         >
           Ropav
           <LinkIcon class="h-2 w-2" />
-        </LinkRoot>
+        </Link>
       </div>
     `,
   }),
@@ -64,20 +64,20 @@ export const CustomIcon: Story = {
     components,
     template: `
       <div class="flex items-center gap-4">
-        <LinkRoot href="#">
+        <Link href="#">
           External Link
           <LinkIcon>
             <ExternalLinkIcon class="h-3 w-3" />
           </LinkIcon>
-        </LinkRoot>
-        <LinkRoot href="#">
+        </Link>
+        <Link href="#">
           <LinkIcon>
             <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
               <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
             </svg>
           </LinkIcon>
           Info Link
-        </LinkRoot>
+        </Link>
       </div>
     `,
   }),
@@ -88,14 +88,14 @@ export const IconPlacement: Story = {
     components,
     template: `
       <div class="flex flex-col gap-4">
-        <LinkRoot href="#">
+        <Link href="#">
           Icon at end (default)
           <LinkIcon />
-        </LinkRoot>
-        <LinkRoot href="#">
+        </Link>
+        <Link href="#">
           <LinkIcon />
           Icon at start
-        </LinkRoot>
+        </Link>
       </div>
     `,
   }),
@@ -108,47 +108,47 @@ export const UnderlineVariants: Story = {
       <div class="flex flex-col gap-6">
         <div class="flex flex-col gap-2">
           <p class="text-sm text-muted">Default hover underline</p>
-          <LinkRoot href="#">
+          <Link href="#">
             Hover to see the underline
             <LinkIcon />
-          </LinkRoot>
+          </Link>
         </div>
 
         <div class="flex flex-col gap-2">
           <p class="text-sm text-muted">Always visible underline</p>
-          <LinkRoot class="underline" href="#">
+          <Link class="underline" href="#">
             Underline always visible
             <LinkIcon />
-          </LinkRoot>
+          </Link>
         </div>
 
         <div class="flex flex-col gap-2">
           <p class="text-sm text-muted">No underline</p>
-          <LinkRoot class="no-underline" href="#">
+          <Link class="no-underline" href="#">
             Link without any underline
             <LinkIcon />
-          </LinkRoot>
+          </Link>
         </div>
 
         <div class="flex flex-col gap-2">
           <p class="text-sm text-muted">Changing the underline offset</p>
           <div class="flex flex-col gap-3">
-            <LinkRoot class="underline-offset-1" href="#">
+            <Link class="underline-offset-1" href="#">
               Offset 1 (1px space)
               <LinkIcon />
-            </LinkRoot>
-            <LinkRoot class="underline-offset-2" href="#">
+            </Link>
+            <Link class="underline-offset-2" href="#">
               Offset 2 (2px space)
               <LinkIcon />
-            </LinkRoot>
-            <LinkRoot class="underline-offset-3" href="#">
+            </Link>
+            <Link class="underline-offset-3" href="#">
               Offset 3 (3px space)
               <LinkIcon />
-            </LinkRoot>
-            <LinkRoot class="underline-offset-4" href="#">
+            </Link>
+            <Link class="underline-offset-4" href="#">
               Offset 4 (4px space)
               <LinkIcon />
-            </LinkRoot>
+            </Link>
           </div>
         </div>
       </div>
@@ -180,7 +180,7 @@ export const Routing: Story = {
       <RouterProvider :is-current="isCurrent" :navigate="navigate">
         <div class="flex flex-col gap-6">
           <nav class="flex items-center gap-4">
-            <LinkRoot
+            <Link
               v-for="href in ['/inbox', '/drafts', '/sent']"
               :key="href"
               aria-current="auto"
@@ -188,7 +188,7 @@ export const Routing: Story = {
               :href="href"
             >
               {{ href.slice(1) }}
-            </LinkRoot>
+            </Link>
           </nav>
 
           <p class="text-sm text-muted">
@@ -198,15 +198,15 @@ export const Routing: Story = {
           <div class="flex flex-col gap-2">
             <p class="text-sm text-muted">The browser keeps these:</p>
             <div class="flex items-center gap-4">
-              <LinkRoot
+              <Link
                 href="https://github.com/daopk/ropav"
                 rel="noopener noreferrer"
                 target="_blank"
               >
                 Another origin
                 <LinkIcon />
-              </LinkRoot>
-              <LinkRoot download="notes.txt" href="/notes.txt">A download</LinkRoot>
+              </Link>
+              <Link download="notes.txt" href="/notes.txt">A download</Link>
             </div>
           </div>
         </div>

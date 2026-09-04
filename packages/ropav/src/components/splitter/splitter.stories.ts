@@ -1,12 +1,12 @@
 import type { StoryMeta } from "../../utils/story-meta";
 import type { StoryObj } from "@storybook/vue3-vite";
 
-import { SplitterHandle, SplitterPanel, SplitterRoot } from "./index";
+import { SplitterHandle, SplitterPanel, Splitter } from "./index";
 
 // Registered under flat names: a story template is compiled at runtime with no binding metadata,
-// so a dotted tag would be looked up as a component literally named "Splitter.Panel".
+// so a dotted tag would be looked up as a component literally named "SplitterPanel".
 const components = {
-  Splitter: SplitterRoot,
+  Splitter: Splitter,
   SplitterHandle,
   SplitterPanel,
 };
@@ -22,7 +22,7 @@ const meta: StoryMeta = {
       options: ["horizontal", "vertical"],
     },
   },
-  component: SplitterRoot,
+  component: Splitter,
   // A splitter fills whatever contains it, so without a sized box there is nothing to divide. The
   // box clips, because a panel dragged shut leaves its divider flush against the edge and a straight
   // line at the edge runs on past a rounded corner.

@@ -4,24 +4,18 @@ import ColorInputGroupRoot from "./color-input-group-root.vue";
 import ColorInputGroupSuffix from "./color-input-group-suffix.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const ColorInputGroup = Object.assign(ColorInputGroupRoot, {
-  Input: ColorInputGroupInput,
-  Prefix: ColorInputGroupPrefix,
-  Root: ColorInputGroupRoot,
-  Suffix: ColorInputGroupSuffix,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { ColorInputGroupInput, ColorInputGroupPrefix, ColorInputGroupRoot, ColorInputGroupSuffix };
+export {
+  ColorInputGroupInput,
+  ColorInputGroupPrefix,
+  ColorInputGroupRoot as ColorInputGroup,
+  ColorInputGroupSuffix,
+};
 
 export type {
-  ColorInputGroupRootProps,
   ColorInputGroupRootProps as ColorInputGroupProps,
-  ColorInputGroupRootSlotProps,
+  ColorInputGroupRootSlotProps as ColorInputGroupSlotProps,
   ColorInputGroupInputProps,
   ColorInputGroupPrefixProps,
   ColorInputGroupSuffixProps,

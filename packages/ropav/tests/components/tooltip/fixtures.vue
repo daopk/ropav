@@ -1,8 +1,8 @@
 <script setup lang="ts" vapor>
 import type { TooltipFixtureProps } from "./fixtures.types";
 
-import { ButtonRoot } from "@/components/button";
-import { Tooltip } from "@/components/tooltip";
+import { Button } from "@/components/button";
+import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@/components/tooltip";
 
 // Every three-state boolean declares an explicit `undefined` default: forwarding a `false` that
 // Vue had cast would turn the tooltip controlled, or read as a deliberate opt-out of closing on
@@ -41,18 +41,18 @@ const emit = defineEmits<{ openChange: [isOpen: boolean] }>();
       :trigger="props.trigger"
       @open-change="emit('openChange', $event)"
     >
-      <Tooltip.Trigger v-if="props.withCustomTrigger">Actions</Tooltip.Trigger>
-      <ButtonRoot v-else>Open tooltip</ButtonRoot>
-      <Tooltip.Content
+      <TooltipTrigger v-if="props.withCustomTrigger">Actions</TooltipTrigger>
+      <Button v-else>Open tooltip</Button>
+      <TooltipContent
         :placement="props.placement"
         :should-flip="props.shouldFlip"
         :show-arrow="props.showArrow"
       >
-        <Tooltip.Arrow v-if="props.withArrow">
+        <TooltipArrow v-if="props.withArrow">
           <svg v-if="props.withCustomArrow" data-testid="custom-arrow" />
-        </Tooltip.Arrow>
+        </TooltipArrow>
         Tooltip content
-      </Tooltip.Content>
+      </TooltipContent>
     </Tooltip>
   </div>
 </template>

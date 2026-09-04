@@ -8,7 +8,7 @@ export interface AvatarContext {
   slots: ComputedRef<ReturnType<typeof avatarVariants>>;
   /** Loading status of the image, so the fallback knows whether to render. */
   imageStatus: Ref<ImageLoadingStatus>;
-  /** Called by `Avatar.Image` to publish its loading status to the root. */
+  /** Called by `AvatarImage` to publish its loading status to the root. */
   setImageStatus: (status: ImageLoadingStatus) => void;
 }
 

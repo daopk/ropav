@@ -6,7 +6,7 @@ import { h, nextTick } from "vue";
 import {
   DateFieldGroup,
   DateFieldInput,
-  DateFieldRoot,
+  DateField,
   DateFieldSegment,
 } from "@/components/date-field";
 import { Label } from "@/components/label";
@@ -22,7 +22,7 @@ import { Label } from "@/components/label";
  * checked on its own.
  */
 const render = (props: Record<string, unknown> = {}, groupProps: Record<string, unknown> = {}) => {
-  const result = renderInterop(DateFieldRoot, {
+  const result = renderInterop(DateField, {
     props: { locale: "en-US", ...props },
     slots: {
       default: () => [

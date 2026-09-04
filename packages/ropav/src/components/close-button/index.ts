@@ -1,19 +1,11 @@
 import CloseButtonRoot from "./close-button-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const CloseButton = Object.assign(CloseButtonRoot, {
-  Root: CloseButtonRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export { CloseButtonRoot };
+export { CloseButtonRoot as CloseButton };
 
 export type {
-  CloseButtonRootProps,
   CloseButtonRootProps as CloseButtonProps,
   CloseButtonSlotProps,
 } from "./close-button.types";

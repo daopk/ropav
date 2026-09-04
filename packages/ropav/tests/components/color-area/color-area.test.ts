@@ -4,7 +4,7 @@ import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it, vi } from "vitest";
 import { nextTick, reactive } from "vue";
 
-import { ColorAreaRoot } from "@/components/color-area";
+import { ColorArea } from "@/components/color-area";
 import { parseColor } from "@/utils/color";
 
 import Fixture from "./fixtures.vue";
@@ -59,8 +59,7 @@ describe("ColorArea", () => {
       // cannot see this. Written `<ColorArea show-dots>` in markup, the attribute arrives as `""`
       // unless the compiler knows the prop is Boolean — and `""` matches no variant, so the dots
       // silently never appear. Found by sweeping the stories, not by either suite.
-      const props = (ColorAreaRoot as unknown as { props: Record<string, { type: unknown }> })
-        .props;
+      const props = (ColorArea as unknown as { props: Record<string, { type: unknown }> }).props;
 
       expect(props["showDots"]?.type).toBe(Boolean);
     });

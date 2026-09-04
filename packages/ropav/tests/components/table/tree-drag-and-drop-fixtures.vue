@@ -9,7 +9,17 @@ import type {
 import { computed, shallowRef } from "vue";
 
 import { Button } from "@/components/button";
-import { Table } from "@/components/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableContent,
+  TableDragHandle,
+  TableExpandTrigger,
+  TableHeader,
+  TableRow,
+} from "@/components/table";
 import { useDragAndDrop } from "@/composables/use-drag-and-drop";
 
 interface TreeNode {
@@ -68,8 +78,8 @@ defineExpose({ expanded });
 </script>
 
 <template>
-  <Table.Root>
-    <Table.Content
+  <Table>
+    <TableContent
       aria-label="Files"
       :drag-and-drop-hooks="dragAndDropHooks"
       :expanded-keys="[...expanded]"
@@ -77,12 +87,12 @@ defineExpose({ expanded });
       tree-column="name"
       @expanded-change="expanded = $event"
     >
-      <Table.Header>
-        <Table.Column id="drag" />
-        <Table.Column id="name" is-row-header>Name</Table.Column>
-      </Table.Header>
-      <Table.Body>
-        <Table.Row
+      <TableHeader>
+        <TableColumn id="drag" />
+        <TableColumn id="name" is-row-header>Name</TableColumn>
+      </TableHeader>
+      <TableBody>
+        <TableRow
           v-for="row of rows"
           :id="row.node.id"
           :key="row.node.id"
@@ -91,19 +101,19 @@ defineExpose({ expanded });
           :parent-key="row.parentKey"
           :text-value="row.node.title"
         >
-          <Table.Cell>
-            <Table.DragHandle>
+          <TableCell>
+            <TableDragHandle>
               <Button is-icon-only size="sm" variant="ghost">grip</Button>
-            </Table.DragHandle>
-          </Table.Cell>
-          <Table.Cell v-slot="{ hasChildRows, isTreeColumn }" :text-value="row.node.title">
-            <Table.ExpandTrigger v-if="hasChildRows && isTreeColumn">
+            </TableDragHandle>
+          </TableCell>
+          <TableCell v-slot="{ hasChildRows, isTreeColumn }" :text-value="row.node.title">
+            <TableExpandTrigger v-if="hasChildRows && isTreeColumn">
               <Button is-icon-only size="sm" variant="ghost">chevron</Button>
-            </Table.ExpandTrigger>
+            </TableExpandTrigger>
             <span>{{ row.node.title }}</span>
-          </Table.Cell>
-        </Table.Row>
-      </Table.Body>
-    </Table.Content>
-  </Table.Root>
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    </TableContent>
+  </Table>
 </template>

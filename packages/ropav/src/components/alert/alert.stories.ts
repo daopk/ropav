@@ -2,8 +2,8 @@ import type { StoryMeta } from "../../utils/story-meta";
 import type { StoryObj } from "@storybook/vue3-vite";
 
 import { Button } from "../button";
-import { CloseButtonRoot } from "../close-button";
-import { SpinnerRoot } from "../spinner";
+import { CloseButton } from "../close-button";
+import { Spinner } from "../spinner";
 
 import { Alert, AlertContent, AlertDescription, AlertIndicator, AlertTitle } from "./index";
 
@@ -15,8 +15,8 @@ const components = {
   AlertIndicator,
   AlertTitle,
   Button,
-  CloseButton: CloseButtonRoot,
-  Spinner: SpinnerRoot,
+  CloseButton: CloseButton,
+  Spinner: Spinner,
 };
 
 const meta: StoryMeta = {

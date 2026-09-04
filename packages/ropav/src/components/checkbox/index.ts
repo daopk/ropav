@@ -4,22 +4,11 @@ import CheckboxIndicator from "./checkbox-indicator.vue";
 import CheckboxRoot from "./checkbox-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Checkbox = Object.assign(CheckboxRoot, {
-  Content: CheckboxContent,
-  Control: CheckboxControl,
-  Indicator: CheckboxIndicator,
-  Root: CheckboxRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { CheckboxRoot, CheckboxContent, CheckboxControl, CheckboxIndicator };
+export { CheckboxRoot as Checkbox, CheckboxContent, CheckboxControl, CheckboxIndicator };
 
 export type {
-  CheckboxRootProps,
   CheckboxRootProps as CheckboxProps,
   CheckboxContentProps,
   CheckboxControlProps,

@@ -6,45 +6,45 @@ import { computed, ref } from "vue";
 import { useDragAndDrop } from "../../composables/use-drag-and-drop";
 import { avatarSrc } from "../../utils/story-assets";
 import { ListLayout } from "../../utils/virtualizer-list-layout";
-import { AvatarFallback, AvatarImage, AvatarRoot } from "../avatar";
-import { DescriptionRoot } from "../description";
-import { EmptyStateRoot } from "../empty-state";
-import { HeaderRoot } from "../header";
-import { KbdAbbr, KbdContent, KbdRoot } from "../kbd";
-import { LabelRoot } from "../label";
-import { ListBoxItemIndicator, ListBoxItemRoot } from "../list-box-item";
-import { ListBoxSectionRoot } from "../list-box-section";
-import { SeparatorRoot } from "../separator";
-import { SurfaceRoot } from "../surface";
+import { AvatarFallback, AvatarImage, Avatar } from "../avatar";
+import { Description } from "../description";
+import { EmptyState } from "../empty-state";
+import { Header } from "../header";
+import { KbdAbbr, KbdContent, Kbd } from "../kbd";
+import { Label } from "../label";
+import { ListBoxItemIndicator, ListBoxItem } from "../list-box-item";
+import { ListBoxSection } from "../list-box-section";
+import { Separator } from "../separator";
+import { Surface } from "../surface";
 import { VirtualizerRoot } from "../virtualizer";
 
-import { ListBoxDropIndicator, ListBoxRoot } from "./index";
+import { ListBoxDropIndicator, ListBox } from "./index";
 
 // Registered under flat names: a story template is compiled at runtime with no binding
-// metadata, so a dotted tag would be looked up as a component literally named "ListBox.Item".
+// metadata, so a dotted tag would be looked up as a component literally named "ListBoxItem".
 const components = {
-  Avatar: AvatarRoot,
+  Avatar: Avatar,
   AvatarFallback,
   AvatarImage,
-  Description: DescriptionRoot,
-  EmptyState: EmptyStateRoot,
-  Header: HeaderRoot,
-  Kbd: KbdRoot,
+  Description: Description,
+  EmptyState: EmptyState,
+  Header: Header,
+  Kbd: Kbd,
   KbdAbbr,
   KbdContent,
-  Label: LabelRoot,
-  ListBox: ListBoxRoot,
+  Label: Label,
+  ListBox: ListBox,
   ListBoxDropIndicator,
-  ListBoxItem: ListBoxItemRoot,
+  ListBoxItem: ListBoxItem,
   ListBoxItemIndicator,
-  ListBoxSection: ListBoxSectionRoot,
-  Separator: SeparatorRoot,
-  Surface: SurfaceRoot,
+  ListBoxSection: ListBoxSection,
+  Separator: Separator,
+  Surface: Surface,
   Virtualizer: VirtualizerRoot,
 };
 
 const meta: StoryMeta = {
-  component: ListBoxRoot,
+  component: ListBox,
   parameters: {
     layout: "centered",
   },

@@ -27,9 +27,9 @@ import {
 import { Description } from "../description";
 import { I18nProvider } from "../i18n-provider";
 import { Label } from "../label";
-import { ListBoxRoot } from "../list-box";
-import { ListBoxItemIndicator, ListBoxItemRoot } from "../list-box-item";
-import { SelectIndicator, SelectPopover, SelectRoot, SelectTrigger, SelectValue } from "../select";
+import { ListBox } from "../list-box";
+import { ListBoxItemIndicator, ListBoxItem } from "../list-box-item";
+import { SelectIndicator, SelectPopover, Select, SelectTrigger, SelectValue } from "../select";
 
 import {
   CalendarCell,
@@ -41,14 +41,15 @@ import {
   CalendarHeaderCell,
   CalendarHeading,
   CalendarNavButton,
-  CalendarRoot,
+  Calendar,
 } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata to
-// resolve `Calendar.Grid` through, so dot notation cannot be used here.
+// resolve `CalendarGrid` through, so dot notation cannot be used here.
 const components = {
   Button,
   ButtonGroup,
+  Calendar,
   CalendarCell,
   CalendarCellIndicator,
   CalendarGrid,
@@ -58,7 +59,6 @@ const components = {
   CalendarHeaderCell,
   CalendarHeading,
   CalendarNavButton,
-  CalendarRoot,
   CalendarYearPickerCell,
   CalendarYearPickerGrid,
   CalendarYearPickerGridBody,
@@ -68,10 +68,10 @@ const components = {
   Description,
   I18nProvider,
   Label,
-  ListBox: ListBoxRoot,
-  ListBoxItem: ListBoxItemRoot,
+  ListBox: ListBox,
+  ListBoxItem: ListBoxItem,
   ListBoxItemIndicator,
-  Select: SelectRoot,
+  Select: Select,
   SelectIndicator,
   SelectPopover,
   SelectTrigger,
@@ -150,7 +150,7 @@ const meta: StoryMeta = {
     selectionMode: { control: "select", options: ["single", "multiple"] },
     weeksInMonth: { control: { max: 6, min: 4, step: 1, type: "number" } },
   },
-  component: CalendarRoot,
+  component: Calendar,
   parameters: {
     layout: "centered",
   },
@@ -166,10 +166,10 @@ export const Default: Story = {
     components,
     setup: () => ({ NEXT, PREVIOUS, args }),
     template: `
-      <CalendarRoot v-bind="args" aria-label="Event date">
+      <Calendar v-bind="args" aria-label="Event date">
         ${header}
         ${grid}
-      </CalendarRoot>
+      </Calendar>
     `,
   }),
 };
@@ -179,11 +179,11 @@ export const WithYearPicker: Story = {
     components,
     setup: () => ({ NEXT, PREVIOUS, args }),
     template: `
-      <CalendarRoot v-bind="args" aria-label="Event date">
+      <Calendar v-bind="args" aria-label="Event date">
         ${yearPickerHeader}
         ${grid}
         ${yearPickerGrid}
-      </CalendarRoot>
+      </Calendar>
     `,
   }),
 };
@@ -193,10 +193,10 @@ export const DefaultValue: Story = {
     components,
     setup: () => ({ NEXT, PREVIOUS, args, defaultValue: parseDate("2025-02-14") }),
     template: `
-      <CalendarRoot v-bind="args" aria-label="Event date" :default-value="defaultValue">
+      <Calendar v-bind="args" aria-label="Event date" :default-value="defaultValue">
         ${header}
         ${grid}
-      </CalendarRoot>
+      </Calendar>
     `,
   }),
 };
@@ -236,7 +236,7 @@ export const Controlled: Story = {
           <Button @click="goToNextWeek">Next week</Button>
           <Button @click="goToNextMonth">Next month</Button>
         </ButtonGroup>
-        <CalendarRoot
+        <Calendar
           v-bind="args"
           aria-label="Event date"
           :focused-value="focusedValue"
@@ -246,7 +246,7 @@ export const Controlled: Story = {
         >
           ${header}
           ${grid}
-        </CalendarRoot>
+        </Calendar>
         <Description class="text-center">Selected date: {{ selected }}</Description>
         <div class="flex gap-2">
           <Button size="sm" variant="secondary" @click="goToToday">Set Today</Button>
@@ -268,7 +268,7 @@ export const MinMaxDates: Story = {
     },
     template: `
       <div class="flex flex-col items-center gap-4">
-        <CalendarRoot
+        <Calendar
           v-bind="args"
           aria-label="Appointment date"
           :max-value="maxValue"
@@ -284,7 +284,7 @@ export const MinMaxDates: Story = {
           </CalendarHeader>
           ${grid}
           ${yearPickerGrid}
-        </CalendarRoot>
+        </Calendar>
         <Description class="text-center">
           Select a date between today and {{ maxValue.toString() }}
         </Description>
@@ -308,14 +308,14 @@ export const UnavailableDates: Story = {
     },
     template: `
       <div class="flex flex-col items-center gap-4">
-        <CalendarRoot
+        <Calendar
           v-bind="args"
           aria-label="Appointment date"
           :is-date-unavailable="isDateUnavailable"
         >
           ${header}
           ${grid}
-        </CalendarRoot>
+        </Calendar>
         <Description class="text-center">Weekends are unavailable</Description>
       </div>
     `,
@@ -328,10 +328,10 @@ export const WeeksInMonth: Story = {
     setup: () => ({ NEXT, PREVIOUS, args }),
     template: `
       <div class="flex flex-col items-center gap-4">
-        <CalendarRoot v-bind="args" aria-label="Event date" :weeks-in-month="6">
+        <Calendar v-bind="args" aria-label="Event date" :weeks-in-month="6">
           ${header}
           ${grid}
-        </CalendarRoot>
+        </Calendar>
         <Description class="text-center">
           Fixed to 6 weeks per month to avoid layout shift
         </Description>
@@ -358,7 +358,7 @@ export const MultipleSelection: Story = {
     },
     template: `
       <div class="flex flex-col items-center gap-4">
-        <CalendarRoot
+        <Calendar
           v-bind="args"
           aria-label="Event dates"
           selection-mode="multiple"
@@ -367,7 +367,7 @@ export const MultipleSelection: Story = {
         >
           ${header}
           ${grid}
-        </CalendarRoot>
+        </Calendar>
         <Description class="text-center">{{ summary }}</Description>
       </div>
     `,
@@ -400,10 +400,10 @@ export const CustomUnavailableDates: Story = {
     },
     template: `
       <div class="flex flex-col items-center gap-4">
-        <CalendarRoot v-bind="args" aria-label="Event date" :is-date-unavailable="isDateUnavailable">
+        <Calendar v-bind="args" aria-label="Event date" :is-date-unavailable="isDateUnavailable">
           ${header}
           ${grid}
-        </CalendarRoot>
+        </Calendar>
         <Description class="text-center">
           Feb 14, Feb 17, and Mar 17 are unavailable
         </Description>
@@ -418,7 +418,7 @@ export const Disabled: Story = {
     setup: () => ({ NEXT, PREVIOUS, args, defaultValue: today(getLocalTimeZone()) }),
     template: `
       <div class="flex flex-col items-center gap-4">
-        <CalendarRoot
+        <Calendar
           v-bind="args"
           aria-label="Event date"
           :default-value="defaultValue"
@@ -426,7 +426,7 @@ export const Disabled: Story = {
         >
           ${header}
           ${grid}
-        </CalendarRoot>
+        </Calendar>
         <Description class="text-center">Calendar is disabled</Description>
       </div>
     `,
@@ -439,7 +439,7 @@ export const ReadOnly: Story = {
     setup: () => ({ NEXT, PREVIOUS, args, defaultValue: today(getLocalTimeZone()) }),
     template: `
       <div class="flex flex-col items-center gap-4">
-        <CalendarRoot
+        <Calendar
           v-bind="args"
           aria-label="Event date"
           :default-value="defaultValue"
@@ -447,7 +447,7 @@ export const ReadOnly: Story = {
         >
           ${header}
           ${grid}
-        </CalendarRoot>
+        </Calendar>
         <Description class="text-center">Calendar is read-only</Description>
       </div>
     `,
@@ -471,7 +471,7 @@ export const Invalid: Story = {
     },
     template: `
       <div class="flex flex-col items-center gap-4">
-        <CalendarRoot
+        <Calendar
           v-bind="args"
           aria-label="Event date"
           :is-invalid="isInvalid"
@@ -480,7 +480,7 @@ export const Invalid: Story = {
         >
           ${header}
           ${grid}
-        </CalendarRoot>
+        </Calendar>
         <p v-if="isInvalid" class="text-sm text-danger">Date must be today or in the future</p>
         <Description v-else class="text-center">Select a future date</Description>
       </div>
@@ -504,7 +504,7 @@ export const FocusedValue: Story = {
     },
     template: `
       <div class="flex flex-col items-center gap-4">
-        <CalendarRoot
+        <Calendar
           v-bind="args"
           aria-label="Event date"
           :focused-value="focusedValue"
@@ -512,7 +512,7 @@ export const FocusedValue: Story = {
         >
           ${header}
           ${grid}
-        </CalendarRoot>
+        </Calendar>
         <Description class="text-center">Focused: {{ focusedValue.toString() }}</Description>
         <div class="flex flex-wrap justify-center gap-2">
           <Button size="sm" variant="secondary" @click="goTo('2025-01-01')">Go to Jan</Button>
@@ -540,7 +540,7 @@ export const WithIndicators: Story = {
         isToday(date, getLocalTimeZone()) || [3, 7, 12, 15, 21, 28].includes(date.day),
     }),
     template: `
-      <CalendarRoot v-bind="args" aria-label="Event date">
+      <Calendar v-bind="args" aria-label="Event date">
         ${headerNavFirst}
         <CalendarGrid>
           <CalendarGridHeader>
@@ -559,7 +559,7 @@ export const WithIndicators: Story = {
             </template>
           </CalendarGridBody>
         </CalendarGrid>
-      </CalendarRoot>
+      </Calendar>
     `,
   }),
 };
@@ -575,7 +575,7 @@ export const TodayIndicator: Story = {
       isCurrentDay: (date: DateValue) => isToday(date, getLocalTimeZone()),
     }),
     template: `
-      <CalendarRoot v-bind="args" aria-label="Event date" :default-value="defaultValue">
+      <Calendar v-bind="args" aria-label="Event date" :default-value="defaultValue">
         ${headerNavFirst}
         <CalendarGrid>
           <CalendarGridHeader>
@@ -594,7 +594,7 @@ export const TodayIndicator: Story = {
             </template>
           </CalendarGridBody>
         </CalendarGrid>
-      </CalendarRoot>
+      </Calendar>
     `,
   }),
 };
@@ -604,7 +604,7 @@ export const MultipleMonths: Story = {
     components,
     setup: () => ({ NEXT, PREVIOUS, args, secondMonth: { months: 1 }, twoMonths: { months: 2 } }),
     template: `
-      <CalendarRoot
+      <Calendar
         v-bind="args"
         aria-label="Trip dates"
         class="@container-normal w-full max-w-none overflow-x-auto"
@@ -639,7 +639,7 @@ export const MultipleMonths: Story = {
             </CalendarGrid>
           </div>
         </div>
-      </CalendarRoot>
+      </Calendar>
     `,
   }),
 };
@@ -705,14 +705,14 @@ export const DayView: Story = {
             </ListBox>
           </SelectPopover>
         </Select>
-        <CalendarRoot v-bind="args" aria-label="Day view" :visible-duration="visibleDuration">
+        <Calendar v-bind="args" aria-label="Day view" :visible-duration="visibleDuration">
           <CalendarHeader>
             <CalendarHeading />
             <CalendarNavButton v-bind="PREVIOUS" />
             <CalendarNavButton v-bind="NEXT" />
           </CalendarHeader>
           ${grid}
-        </CalendarRoot>
+        </Calendar>
       </div>
     `,
   }),
@@ -756,14 +756,14 @@ export const WeekView: Story = {
             </ListBox>
           </SelectPopover>
         </Select>
-        <CalendarRoot v-bind="args" aria-label="Week view" :visible-duration="visibleDuration">
+        <Calendar v-bind="args" aria-label="Week view" :visible-duration="visibleDuration">
           <CalendarHeader>
             <CalendarHeading />
             <CalendarNavButton v-bind="PREVIOUS" />
             <CalendarNavButton v-bind="NEXT" />
           </CalendarHeader>
           ${grid}
-        </CalendarRoot>
+        </Calendar>
       </div>
     `,
   }),
@@ -775,11 +775,11 @@ export const InternationalCalendar: Story = {
     setup: () => ({ NEXT, PREVIOUS, args, defaultValue: today(getLocalTimeZone()) }),
     template: `
       <I18nProvider locale="hi-IN-u-ca-indian">
-        <CalendarRoot v-bind="args" aria-label="Event date" :default-value="defaultValue">
+        <Calendar v-bind="args" aria-label="Event date" :default-value="defaultValue">
           ${yearPickerHeader}
           ${grid}
           ${yearPickerGrid}
-        </CalendarRoot>
+        </Calendar>
       </I18nProvider>
     `,
   }),
@@ -797,7 +797,7 @@ export const ThreeMonths: Story = {
       threeMonths: { months: 3 },
     }),
     template: `
-      <CalendarRoot
+      <Calendar
         v-bind="args"
         aria-label="Vacation planning"
         class="@container-normal w-auto overflow-x-auto"
@@ -851,7 +851,7 @@ export const ThreeMonths: Story = {
             </CalendarGrid>
           </div>
         </div>
-      </CalendarRoot>
+      </Calendar>
     `,
   }),
 };
@@ -879,7 +879,7 @@ export const BookingCalendar: Story = {
     },
     template: `
       <div class="flex flex-col items-center gap-4">
-        <CalendarRoot
+        <Calendar
           v-bind="args"
           aria-label="Booking date"
           :is-date-unavailable="isDateUnavailable"
@@ -907,7 +907,7 @@ export const BookingCalendar: Story = {
               </template>
             </CalendarGridBody>
           </CalendarGrid>
-        </CalendarRoot>
+        </Calendar>
         <div class="flex flex-col gap-2 text-center">
           <div class="flex items-center justify-center gap-4 text-xs text-muted">
             <span class="flex items-center gap-1">
@@ -929,11 +929,11 @@ export const YearPicker: Story = {
     components,
     setup: () => ({ NEXT, PREVIOUS, args }),
     template: `
-      <CalendarRoot v-bind="args" aria-label="Event date">
+      <Calendar v-bind="args" aria-label="Event date">
         ${yearPickerHeader}
         ${grid}
         ${yearPickerGrid}
-      </CalendarRoot>
+      </Calendar>
     `,
   }),
 };
@@ -943,7 +943,7 @@ export const YearPickerStyledCells: Story = {
     components,
     setup: () => ({ NEXT, PREVIOUS, args }),
     template: `
-      <CalendarRoot v-bind="args" aria-label="Event date with styled year cells">
+      <Calendar v-bind="args" aria-label="Event date with styled year cells">
         ${yearPickerHeader}
         ${grid}
         <CalendarYearPickerGrid>
@@ -960,7 +960,7 @@ export const YearPickerStyledCells: Story = {
             </template>
           </CalendarYearPickerGridBody>
         </CalendarYearPickerGrid>
-      </CalendarRoot>
+      </Calendar>
     `,
   }),
 };
@@ -970,7 +970,7 @@ export const YearPickerCustomCells: Story = {
     components,
     setup: () => ({ NEXT, PREVIOUS, args }),
     template: `
-      <CalendarRoot v-bind="args" aria-label="Event date with custom year cells">
+      <Calendar v-bind="args" aria-label="Event date with custom year cells">
         ${yearPickerHeader}
         ${grid}
         <CalendarYearPickerGrid>
@@ -990,7 +990,7 @@ export const YearPickerCustomCells: Story = {
             </template>
           </CalendarYearPickerGridBody>
         </CalendarYearPickerGrid>
-      </CalendarRoot>
+      </Calendar>
     `,
   }),
 };
@@ -1000,7 +1000,7 @@ export const CustomNavIcons: Story = {
     components,
     setup: () => ({ NEXT, PREVIOUS, args }),
     template: `
-      <CalendarRoot v-bind="args" aria-label="Event date">
+      <Calendar v-bind="args" aria-label="Event date">
         <CalendarHeader>
           <CalendarNavButton v-bind="PREVIOUS">
             <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
@@ -1015,7 +1015,7 @@ export const CustomNavIcons: Story = {
           </CalendarNavButton>
         </CalendarHeader>
         ${grid}
-      </CalendarRoot>
+      </Calendar>
     `,
   }),
 };
@@ -1041,7 +1041,7 @@ export const EventCalendar: Story = {
     },
     template: `
       <div class="flex flex-col items-center gap-4">
-        <CalendarRoot v-bind="args" aria-label="Event calendar">
+        <Calendar v-bind="args" aria-label="Event calendar">
           <CalendarHeader>
             <CalendarHeading />
             <CalendarNavButton v-bind="PREVIOUS" />
@@ -1064,7 +1064,7 @@ export const EventCalendar: Story = {
               </template>
             </CalendarGridBody>
           </CalendarGrid>
-        </CalendarRoot>
+        </Calendar>
         <div class="flex flex-col gap-1 text-xs text-muted">
           <p>Dates with indicators have scheduled events</p>
         </div>

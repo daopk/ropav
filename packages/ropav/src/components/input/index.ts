@@ -1,18 +1,11 @@
 import InputRoot from "./input-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Input = Object.assign(InputRoot, {
-  Root: InputRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { InputRoot };
+export { InputRoot as Input };
 
-export type { InputRootProps, InputRootProps as InputProps } from "./input.types";
+export type { InputRootProps as InputProps } from "./input.types";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants

@@ -2,20 +2,11 @@ import DropZoneRoot from "./drop-zone-root.vue";
 import DropZoneTrigger from "./drop-zone-trigger.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const DropZone = Object.assign(DropZoneRoot, {
-  Root: DropZoneRoot,
-  Trigger: DropZoneTrigger,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { DropZoneRoot, DropZoneTrigger };
+export { DropZoneRoot as DropZone, DropZoneTrigger };
 
 export type {
-  DropZoneRootProps,
   DropZoneRootProps as DropZoneProps,
   DropZoneSlotProps,
   DropZoneStatus,

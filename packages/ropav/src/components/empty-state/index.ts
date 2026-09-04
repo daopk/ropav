@@ -1,21 +1,11 @@
 import EmptyStateRoot from "./empty-state-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const EmptyState = Object.assign(EmptyStateRoot, {
-  Root: EmptyStateRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export { EmptyStateRoot };
+export { EmptyStateRoot as EmptyState };
 
-export type {
-  EmptyStateRootProps,
-  EmptyStateRootProps as EmptyStateProps,
-} from "./empty-state.types";
+export type { EmptyStateRootProps as EmptyStateProps } from "./empty-state.types";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants

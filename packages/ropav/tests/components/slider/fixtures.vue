@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type { SliderRootProps } from "@/components/slider";
+import type { SliderProps } from "@/components/slider";
 
 import { Label } from "@/components/label";
-import { Slider } from "@/components/slider";
+import { Slider, SliderFill, SliderOutput, SliderThumb, SliderTrack } from "@/components/slider";
 
 defineProps<
-  SliderRootProps & {
+  SliderProps & {
     /** Leaves the visible label out, so the group has to name itself. */
     withoutLabel?: boolean;
     /** Name submitted with the form, put on the first thumb. */
@@ -37,16 +37,16 @@ defineEmits<{
     @change-end="$emit('changeEnd', $event)"
   >
     <Label v-if="!$props.withoutLabel">Volume</Label>
-    <Slider.Output />
-    <Slider.Track v-slot="{ values }">
-      <Slider.Fill />
-      <Slider.Thumb
+    <SliderOutput />
+    <SliderTrack v-slot="{ values }">
+      <SliderFill />
+      <SliderThumb
         v-for="(_, index) in values"
         :key="index"
         :form="index === 0 ? $props.form : undefined"
         :index="index"
         :name="index === 0 ? $props.name : undefined"
       />
-    </Slider.Track>
+    </SliderTrack>
   </Slider>
 </template>

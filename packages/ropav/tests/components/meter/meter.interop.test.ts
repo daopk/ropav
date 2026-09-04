@@ -2,15 +2,15 @@ import { renderInterop } from "@ropav/testing/helpers/vue";
 import { describe, expect, it } from "vitest";
 import { h, nextTick } from "vue";
 
-import { LabelRoot } from "@/components/label";
-import { MeterFill, MeterOutput, MeterRoot, MeterTrack } from "@/components/meter";
+import { Label } from "@/components/label";
+import { MeterFill, MeterOutput, Meter, MeterTrack } from "@/components/meter";
 
 const render = (output?: () => unknown) =>
-  renderInterop(MeterRoot, {
+  renderInterop(Meter, {
     props: { color: "success", value: 60 },
     slots: {
       default: () => [
-        h(LabelRoot, null, { default: () => "Storage" }),
+        h(Label, null, { default: () => "Storage" }),
         h(MeterOutput, null, output ? { default: output } : undefined),
         h(MeterTrack, null, { default: () => h(MeterFill) }),
       ],

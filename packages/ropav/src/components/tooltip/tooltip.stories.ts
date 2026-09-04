@@ -3,8 +3,8 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import IconCircleInfo from "~icons/gravity-ui/circle-info";
 import IconPaperclip from "~icons/gravity-ui/paperclip";
 
-import { ButtonRoot } from "../button";
-import { CardContent, CardRoot } from "../card";
+import { Button } from "../button";
+import { CardContent, Card } from "../card";
 
 import TooltipArrow from "./tooltip-arrow.vue";
 import TooltipContent from "./tooltip-content.vue";
@@ -12,10 +12,10 @@ import TooltipRoot from "./tooltip-root.vue";
 import TooltipTrigger from "./tooltip-trigger.vue";
 
 // Registered under flat names: a story template is compiled at runtime with no binding
-// metadata, so a dotted tag would be looked up as a component literally named "Tooltip.Content".
+// metadata, so a dotted tag would be looked up as a component literally named "TooltipContent".
 const components = {
-  Button: ButtonRoot,
-  Card: CardRoot,
+  Button: Button,
+  Card: Card,
   CardContent,
   IconCircleInfo,
   IconPaperclip,

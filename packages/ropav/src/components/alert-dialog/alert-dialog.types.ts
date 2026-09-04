@@ -75,7 +75,7 @@ export interface AlertDialogDialogProps {
 }
 
 export interface AlertDialogDialogSlotProps {
-  /** Closes the dialog, for a control inside it that is not an `AlertDialog.Close`. */
+  /** Closes the dialog, for a control inside it that is not an `AlertDialogClose`. */
   close: () => void;
 }
 

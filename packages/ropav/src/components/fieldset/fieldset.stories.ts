@@ -13,18 +13,18 @@ import { Label } from "../label";
 import { TextArea } from "../textarea";
 import { TextField } from "../textfield";
 
-import { FieldGroup, Fieldset, FieldsetActions, FieldsetLegend, FieldsetRoot } from "./index";
+import { FieldGroup, Fieldset, FieldsetActions, FieldsetLegend } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata to
-// resolve `Fieldset.Legend` through, so dot notation cannot be used here.
+// resolve `FieldsetLegend` through, so dot notation cannot be used here.
 const components = {
   Button,
   Description,
   FieldError,
   FieldGroup,
+  Fieldset,
   FieldsetActions,
   FieldsetLegend,
-  FieldsetRoot,
   Form,
   IconFloppyDisk,
   Input,
@@ -63,7 +63,7 @@ export const Default: Story = {
     },
     template: `
       <Form @submit="onSubmit">
-        <FieldsetRoot class="w-96">
+        <Fieldset class="w-96">
           <FieldsetLegend>Profile Settings</FieldsetLegend>
           <Description>Update your profile information.</Description>
           <FieldGroup>
@@ -100,7 +100,7 @@ export const Default: Story = {
             <Button type="reset" variant="tertiary">Cancel</Button>
           </FieldsetActions>
           <p v-if="submitted" class="text-sm text-muted">Form submitted — {{ submitted }}</p>
-        </FieldsetRoot>
+        </Fieldset>
       </Form>
     `,
   }),
@@ -112,7 +112,7 @@ export const Disabled: Story = {
   render: () => ({
     components,
     template: `
-      <FieldsetRoot disabled class="w-96">
+      <Fieldset disabled class="w-96">
         <FieldsetLegend>Profile Settings</FieldsetLegend>
         <Description>Editing is turned off while your account is under review.</Description>
         <FieldGroup>
@@ -132,7 +132,7 @@ export const Disabled: Story = {
           </Button>
           <Button type="reset" variant="tertiary">Cancel</Button>
         </FieldsetActions>
-      </FieldsetRoot>
+      </Fieldset>
     `,
   }),
 };

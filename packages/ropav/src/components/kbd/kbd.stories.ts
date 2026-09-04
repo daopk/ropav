@@ -1,11 +1,11 @@
 import type { StoryMeta } from "../../utils/story-meta";
 import type { StoryObj } from "@storybook/vue3-vite";
 
-import { KbdAbbr, KbdContent, KbdRoot } from "./index";
+import { KbdAbbr, KbdContent, Kbd } from "./index";
 
 // Registered under flat names: a story template is compiled at runtime with no binding
-// metadata, so a dotted tag would be looked up as a component literally named "Kbd.Abbr".
-const components = { Kbd: KbdRoot, KbdAbbr, KbdContent };
+// metadata, so a dotted tag would be looked up as a component literally named "KbdAbbr".
+const components = { Kbd: Kbd, KbdAbbr, KbdContent };
 
 const meta: StoryMeta = {
   argTypes: {
@@ -14,7 +14,7 @@ const meta: StoryMeta = {
       options: ["default", "light"],
     },
   },
-  component: KbdRoot,
+  component: Kbd,
   parameters: {
     layout: "centered",
   },

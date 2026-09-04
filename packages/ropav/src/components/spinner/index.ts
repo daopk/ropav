@@ -1,18 +1,11 @@
 import SpinnerRoot from "./spinner-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Spinner = Object.assign(SpinnerRoot, {
-  Root: SpinnerRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { SpinnerRoot };
+export { SpinnerRoot as Spinner };
 
-export type { SpinnerRootProps, SpinnerRootProps as SpinnerProps } from "./spinner.types";
+export type { SpinnerRootProps as SpinnerProps } from "./spinner.types";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants

@@ -5,9 +5,9 @@ import { flattenBlock, isTextOnlyBlock } from "../../utils/block";
 import ChipLabel from "./chip-label.vue";
 
 /**
- * Renders the chip's children, wrapping them in `Chip.Label` when they are only text.
+ * Renders the chip's children, wrapping them in `ChipLabel` when they are only text.
  *
- * The point is that `<Chip>Label</Chip>` and `<Chip><Chip.Label>Label</Chip.Label></Chip>`
+ * The point is that `<Chip>Label</Chip>` and `<Chip><ChipLabel>Label</ChipLabel></Chip>`
  * produce the same DOM. A template cannot ask whether its children are bare text, but a slot
  * function can be answered: it returns
  * the block it just rendered, and a lone text child resolves to a single text node while

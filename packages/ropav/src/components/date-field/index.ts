@@ -10,19 +10,6 @@ import {
 import DateFieldRoot from "./date-field-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const DateField = Object.assign(DateFieldRoot, {
-  Group: DateInputGroupRoot,
-  Input: DateInputGroupInput,
-  InputContainer: DateInputGroupInputContainer,
-  Prefix: DateInputGroupPrefix,
-  Root: DateFieldRoot,
-  Segment: DateInputGroupSegment,
-  Suffix: DateInputGroupSuffix,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
 /*
@@ -39,12 +26,11 @@ export {
   DateInputGroupSuffix as DateFieldSuffix,
 };
 
-export { DateFieldRoot };
+export { DateFieldRoot as DateField };
 
 export type {
-  DateFieldRootProps,
   DateFieldRootProps as DateFieldProps,
-  DateFieldRootSlotProps,
+  DateFieldRootSlotProps as DateFieldSlotProps,
 } from "./date-field.types";
 
 export type {

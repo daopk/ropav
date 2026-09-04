@@ -1,12 +1,17 @@
 <script setup lang="ts" vapor>
-import type { ProgressCircleRootProps } from "@/components/progress-circle";
+import type { ProgressCircleProps } from "@/components/progress-circle";
 
 import { Label } from "@/components/label";
-import { ProgressCircle } from "@/components/progress-circle";
+import {
+  ProgressCircle,
+  ProgressCircleFillCircle,
+  ProgressCircleTrack,
+  ProgressCircleTrackCircle,
+} from "@/components/progress-circle";
 
 withDefaults(
   defineProps<
-    ProgressCircleRootProps & {
+    ProgressCircleProps & {
       fillCircleClass?: string;
       trackCircleClass?: string;
       trackClass?: string;
@@ -41,10 +46,10 @@ withDefaults(
     :value-label="$props.valueLabel"
   >
     <Label v-if="$props.withLabel">Loading</Label>
-    <ProgressCircle.Track :class="$props.trackClass" data-testid="track">
-      <ProgressCircle.TrackCircle :class="$props.trackCircleClass" data-testid="track-circle" />
-      <ProgressCircle.FillCircle :class="$props.fillCircleClass" data-testid="fill-circle" />
-    </ProgressCircle.Track>
+    <ProgressCircleTrack :class="$props.trackClass" data-testid="track">
+      <ProgressCircleTrackCircle :class="$props.trackCircleClass" data-testid="track-circle" />
+      <ProgressCircleFillCircle :class="$props.fillCircleClass" data-testid="fill-circle" />
+    </ProgressCircleTrack>
     <span data-testid="slot-indeterminate">{{ slotProps.isIndeterminate }}</span>
     <span data-testid="slot-percentage">{{ slotProps.percentage }}</span>
     <span data-testid="slot-value-text">{{ slotProps.valueText }}</span>

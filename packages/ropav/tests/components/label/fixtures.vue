@@ -1,9 +1,9 @@
 <script setup lang="ts" vapor>
-import type { LabelRootProps } from "@/components/label";
+import type { LabelProps } from "@/components/label";
 
 import { computed } from "vue";
 
-import { LabelRoot } from "@/components/label";
+import { Label } from "@/components/label";
 import { provideFieldIdsContext, useFieldIds } from "@/composables/use-field-ids";
 
 /**
@@ -11,7 +11,7 @@ import { provideFieldIdsContext, useFieldIds } from "@/composables/use-field-ids
  * item or a field root — so the id-claiming path is exercised without depending on one.
  */
 const props = defineProps<
-  LabelRootProps & {
+  LabelProps & {
     /** Renders the state props as valueless attributes, the way a caller writes them. */
     attributeForm?: boolean;
     /** Id of the control the container names, standing in for a field root's input. */
@@ -41,7 +41,7 @@ const callerAttrs = computed(() => (props.labelFor ? { for: props.labelFor } : {
 
 <template>
   <div :data-labelled-by="fieldIds.labelId.value">
-    <LabelRoot
+    <Label
       v-if="props.attributeForm"
       v-bind="callerAttrs"
       :class="props.class"
@@ -50,8 +50,8 @@ const callerAttrs = computed(() => (props.labelFor ? { for: props.labelFor } : {
       is-required
     >
       {{ props.text ?? "Email" }}
-    </LabelRoot>
-    <LabelRoot
+    </Label>
+    <Label
       v-else
       v-bind="callerAttrs"
       :class="props.class"
@@ -60,6 +60,6 @@ const callerAttrs = computed(() => (props.labelFor ? { for: props.labelFor } : {
       :is-required="props.isRequired"
     >
       {{ props.text ?? "Email" }}
-    </LabelRoot>
+    </Label>
   </div>
 </template>

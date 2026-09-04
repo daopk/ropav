@@ -4,15 +4,15 @@ import type { StoryObj } from "@storybook/vue3-vite";
 import IconCircleDashed from "~icons/gravity-ui/circle-dashed";
 import IconCircleFill from "~icons/gravity-ui/circle-fill";
 
-import { SeparatorRoot } from "../separator";
+import { Separator } from "../separator";
 
 import { Chip, ChipLabel } from "./index";
 
 /**
- * Runtime-compiled story templates cannot resolve `Chip.Label` — dot notation is an SFC
+ * Runtime-compiled story templates cannot resolve `ChipLabel` — dot notation is an SFC
  * compiler feature. The parts are registered individually instead.
  *
- * They also write `Chip.Label` out explicitly rather than passing bare text. A story template is
+ * They also write `ChipLabel` out explicitly rather than passing bare text. A story template is
  * compiled to virtual DOM, and a virtual-DOM slot only fills its nodes in once it is inserted,
  * so the chip has nothing to look at when it decides whether to wrap. In an SFC — which is
  * what application code is — `<Chip>Label</Chip>` wraps on its own.
@@ -22,7 +22,7 @@ const components = {
   ChipLabel,
   IconCircleDashed,
   IconCircleFill,
-  Separator: SeparatorRoot,
+  Separator: Separator,
 };
 
 const meta: StoryMeta = {
@@ -85,7 +85,7 @@ export const Sizes: Story = {
 };
 
 /**
- * A chip mixing icons with its label has to write `Chip.Label` out: automatic wrapping only
+ * A chip mixing icons with its label has to write `ChipLabel` out: automatic wrapping only
  * applies when the children are nothing but text.
  */
 export const WithIcon: Story = {

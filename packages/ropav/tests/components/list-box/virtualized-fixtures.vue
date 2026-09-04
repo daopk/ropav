@@ -3,10 +3,10 @@ import type { FixtureItem } from "./fixtures.types";
 
 import { computed } from "vue";
 
-import { DescriptionRoot } from "@/components/description";
-import { LabelRoot } from "@/components/label";
-import { ListBoxRoot } from "@/components/list-box";
-import { ListBoxItemIndicator, ListBoxItemRoot } from "@/components/list-box-item";
+import { Description } from "@/components/description";
+import { Label } from "@/components/label";
+import { ListBox } from "@/components/list-box";
+import { ListBoxItemIndicator, ListBoxItem } from "@/components/list-box-item";
 import { VirtualizerRoot } from "@/components/virtualizer";
 import { ListLayout } from "@/utils/virtualizer-list-layout";
 
@@ -41,7 +41,7 @@ const layoutOptions = computed(() =>
     :layout="ListLayout"
     :layout-options="layoutOptions"
   >
-    <ListBoxRoot
+    <ListBox
       aria-label="Users"
       class="h-[400px] w-[300px] overflow-y-auto"
       :item-text-value="(item) => item.name"
@@ -49,23 +49,23 @@ const layoutOptions = computed(() =>
       :selection-mode="props.selectionMode"
     >
       <template #default="{ item }">
-        <ListBoxItemRoot :id="item!.id">
+        <ListBoxItem :id="item!.id">
           <div class="flex flex-col">
-            <LabelRoot>{{ item!.name }}</LabelRoot>
-            <DescriptionRoot>{{ item!.email }}</DescriptionRoot>
-            <DescriptionRoot v-for="line in item!.lines ?? 0" :key="line">
+            <Label>{{ item!.name }}</Label>
+            <Description>{{ item!.email }}</Description>
+            <Description v-for="line in item!.lines ?? 0" :key="line">
               Line {{ line }}
-            </DescriptionRoot>
+            </Description>
           </div>
           <ListBoxItemIndicator />
-        </ListBoxItemRoot>
+        </ListBoxItem>
       </template>
-    </ListBoxRoot>
+    </ListBox>
   </VirtualizerRoot>
 
-  <ListBoxRoot v-else aria-label="Users" :selection-mode="props.selectionMode">
-    <ListBoxItemRoot v-for="item in props.items" :id="item.id" :key="item.id">
-      <LabelRoot>{{ item.name }}</LabelRoot>
-    </ListBoxItemRoot>
-  </ListBoxRoot>
+  <ListBox v-else aria-label="Users" :selection-mode="props.selectionMode">
+    <ListBoxItem v-for="item in props.items" :id="item.id" :key="item.id">
+      <Label>{{ item.name }}</Label>
+    </ListBoxItem>
+  </ListBox>
 </template>

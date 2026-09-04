@@ -1,22 +1,11 @@
 import ButtonRoot from "./button-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Button = Object.assign(ButtonRoot, {
-  Root: ButtonRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { ButtonRoot };
+export { ButtonRoot as Button };
 
-export type {
-  ButtonRootProps,
-  ButtonRootProps as ButtonProps,
-  ButtonSlotProps,
-} from "./button.types";
+export type { ButtonRootProps as ButtonProps, ButtonSlotProps } from "./button.types";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants

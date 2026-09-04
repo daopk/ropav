@@ -17,13 +17,13 @@ import {
   TimeFieldGroup,
   TimeFieldInput,
   TimeFieldPrefix,
-  TimeFieldRoot,
+  TimeField,
   TimeFieldSegment,
   TimeFieldSuffix,
 } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata to
-// resolve `TimeField.Group` through, so dot notation cannot be used here.
+// resolve `TimeFieldGroup` through, so dot notation cannot be used here.
 const components = {
   Button,
   Description,
@@ -32,10 +32,10 @@ const components = {
   IconChevronDown,
   IconClock,
   Label,
+  TimeField,
   TimeFieldGroup,
   TimeFieldInput,
   TimeFieldPrefix,
-  TimeFieldRoot,
   TimeFieldSegment,
   TimeFieldSuffix,
 };
@@ -50,7 +50,7 @@ const input = `
 `;
 
 const meta: StoryMeta = {
-  component: TimeFieldRoot,
+  component: TimeField,
   parameters: {
     layout: "centered",
   },
@@ -65,10 +65,10 @@ export const Default: Story = {
   render: () => ({
     components,
     template: `
-      <TimeFieldRoot class="w-[256px]" name="time">
+      <TimeField class="w-[256px]" name="time">
         <Label>Time</Label>
         <TimeFieldGroup>${input}</TimeFieldGroup>
-      </TimeFieldRoot>
+      </TimeField>
     `,
   }),
 };
@@ -80,7 +80,7 @@ export const Sizes: Story = {
     setup: () => ({ sizes: ["sm", "md", "lg"] as const }),
     template: `
       <div class="flex flex-col gap-4">
-        <TimeFieldRoot
+        <TimeField
           v-for="size in sizes"
           :key="size"
           class="w-[256px]"
@@ -88,7 +88,7 @@ export const Sizes: Story = {
         >
           <Label>Size {{ size }}</Label>
           <TimeFieldGroup :size="size">${input}</TimeFieldGroup>
-        </TimeFieldRoot>
+        </TimeField>
       </div>
     `,
   }),
@@ -99,11 +99,11 @@ export const FullWidth: Story = {
     components,
     template: `
       <div class="w-[400px] space-y-4">
-        <TimeFieldRoot full-width name="time">
+        <TimeField full-width name="time">
           <Label>Time</Label>
           <TimeFieldGroup full-width>${input}</TimeFieldGroup>
-        </TimeFieldRoot>
-        <TimeFieldRoot full-width name="time-icons">
+        </TimeField>
+        <TimeField full-width name="time-icons">
           <Label>Time</Label>
           <TimeFieldGroup full-width>
             <TimeFieldPrefix>
@@ -114,7 +114,7 @@ export const FullWidth: Story = {
               <IconChevronDown class="size-4 text-muted" />
             </TimeFieldSuffix>
           </TimeFieldGroup>
-        </TimeFieldRoot>
+        </TimeField>
       </div>
     `,
   }),
@@ -125,16 +125,16 @@ export const WithDescription: Story = {
     components,
     template: `
       <div class="flex flex-col gap-4">
-        <TimeFieldRoot class="w-[256px]" name="time">
+        <TimeField class="w-[256px]" name="time">
           <Label>Start time</Label>
           <TimeFieldGroup>${input}</TimeFieldGroup>
           <Description>Enter the start time</Description>
-        </TimeFieldRoot>
-        <TimeFieldRoot class="w-[256px]" name="end-time">
+        </TimeField>
+        <TimeField class="w-[256px]" name="end-time">
           <Label>End time</Label>
           <TimeFieldGroup>${input}</TimeFieldGroup>
           <Description>Enter the end time</Description>
-        </TimeFieldRoot>
+        </TimeField>
       </div>
     `,
   }),
@@ -145,15 +145,15 @@ export const Required: Story = {
     components,
     template: `
       <div class="flex flex-col gap-4">
-        <TimeFieldRoot is-required class="w-[256px]" name="time">
+        <TimeField is-required class="w-[256px]" name="time">
           <Label>Time</Label>
           <TimeFieldGroup>${input}</TimeFieldGroup>
-        </TimeFieldRoot>
-        <TimeFieldRoot is-required class="w-[256px]" name="appointment-time">
+        </TimeField>
+        <TimeField is-required class="w-[256px]" name="appointment-time">
           <Label>Appointment time</Label>
           <TimeFieldGroup>${input}</TimeFieldGroup>
           <Description>Required field</Description>
-        </TimeFieldRoot>
+        </TimeField>
       </div>
     `,
   }),
@@ -164,16 +164,16 @@ export const Invalid: Story = {
     components,
     template: `
       <div class="flex flex-col gap-4">
-        <TimeFieldRoot is-invalid is-required class="w-[256px]" name="time">
+        <TimeField is-invalid is-required class="w-[256px]" name="time">
           <Label>Time</Label>
           <TimeFieldGroup>${input}</TimeFieldGroup>
           <FieldError>Please enter a valid time</FieldError>
-        </TimeFieldRoot>
-        <TimeFieldRoot is-invalid class="w-[256px]" name="invalid-time">
+        </TimeField>
+        <TimeField is-invalid class="w-[256px]" name="invalid-time">
           <Label>Time</Label>
           <TimeFieldGroup>${input}</TimeFieldGroup>
           <FieldError>Time must be within business hours</FieldError>
-        </TimeFieldRoot>
+        </TimeField>
       </div>
     `,
   }),
@@ -189,16 +189,16 @@ export const Disabled: Story = {
     },
     template: `
       <div class="flex flex-col gap-4">
-        <TimeFieldRoot is-disabled class="w-[256px]" name="time" :value="timeValue">
+        <TimeField is-disabled class="w-[256px]" name="time" :value="timeValue">
           <Label>Time</Label>
           <TimeFieldGroup>${input}</TimeFieldGroup>
           <Description>This time field is disabled</Description>
-        </TimeFieldRoot>
-        <TimeFieldRoot is-disabled class="w-[256px]" name="time-empty">
+        </TimeField>
+        <TimeField is-disabled class="w-[256px]" name="time-empty">
           <Label>Time</Label>
           <TimeFieldGroup>${input}</TimeFieldGroup>
           <Description>This time field is disabled</Description>
-        </TimeFieldRoot>
+        </TimeField>
       </div>
     `,
   }),
@@ -222,11 +222,11 @@ export const Controlled: Story = {
     },
     template: `
       <div class="flex flex-col gap-4">
-        <TimeFieldRoot class="w-[256px]" name="time" :value="value" @change="value = $event">
+        <TimeField class="w-[256px]" name="time" :value="value" @change="value = $event">
           <Label>Time</Label>
           <TimeFieldGroup>${input}</TimeFieldGroup>
           <Description>Current value: {{ value ? value.toString() : "(empty)" }}</Description>
-        </TimeFieldRoot>
+        </TimeField>
         <div class="flex gap-2">
           <Button variant="tertiary" @click="setNow">Set now</Button>
           <Button variant="tertiary" @click="clear">Clear</Button>
@@ -253,7 +253,7 @@ export const WithValidation: Story = {
     },
     template: `
       <div class="flex flex-col gap-4">
-        <TimeFieldRoot
+        <TimeField
           is-required
           class="w-[256px]"
           :is-invalid="isInvalid"
@@ -267,7 +267,7 @@ export const WithValidation: Story = {
           <TimeFieldGroup>${input}</TimeFieldGroup>
           <FieldError v-if="isInvalid">Time must be between 9:00 AM and 5:00 PM</FieldError>
           <Description v-else>Enter a time between 9:00 AM and 5:00 PM</Description>
-        </TimeFieldRoot>
+        </TimeField>
       </div>
     `,
   }),
@@ -277,7 +277,7 @@ export const WithPrefixIcon: Story = {
   render: () => ({
     components,
     template: `
-      <TimeFieldRoot class="w-[256px]" name="time">
+      <TimeField class="w-[256px]" name="time">
         <Label>Time</Label>
         <TimeFieldGroup>
           <TimeFieldPrefix>
@@ -285,7 +285,7 @@ export const WithPrefixIcon: Story = {
           </TimeFieldPrefix>
           ${input}
         </TimeFieldGroup>
-      </TimeFieldRoot>
+      </TimeField>
     `,
   }),
 };
@@ -294,7 +294,7 @@ export const WithSuffixIcon: Story = {
   render: () => ({
     components,
     template: `
-      <TimeFieldRoot class="w-[256px]" name="time">
+      <TimeField class="w-[256px]" name="time">
         <Label>Time</Label>
         <TimeFieldGroup>
           ${input}
@@ -302,7 +302,7 @@ export const WithSuffixIcon: Story = {
             <IconClock class="size-4 text-muted" />
           </TimeFieldSuffix>
         </TimeFieldGroup>
-      </TimeFieldRoot>
+      </TimeField>
     `,
   }),
 };
@@ -311,7 +311,7 @@ export const WithPrefixAndSuffix: Story = {
   render: () => ({
     components,
     template: `
-      <TimeFieldRoot class="w-[256px]" name="time">
+      <TimeField class="w-[256px]" name="time">
         <Label>Time</Label>
         <TimeFieldGroup>
           <TimeFieldPrefix>
@@ -323,7 +323,7 @@ export const WithPrefixAndSuffix: Story = {
           </TimeFieldSuffix>
         </TimeFieldGroup>
         <Description>Enter a time</Description>
-      </TimeFieldRoot>
+      </TimeField>
     `,
   }),
 };
@@ -360,7 +360,7 @@ export const FormExample: Story = {
     },
     template: `
       <Form class="flex w-[280px] flex-col gap-4" @submit="onSubmit">
-        <TimeFieldRoot
+        <TimeField
           is-required
           class="w-full"
           :is-invalid="isInvalid"
@@ -379,7 +379,7 @@ export const FormExample: Story = {
           </TimeFieldGroup>
           <FieldError v-if="isInvalid">Time must be between 9:00 AM and 5:00 PM</FieldError>
           <Description v-else>Enter a time between 9:00 AM and 5:00 PM</Description>
-        </TimeFieldRoot>
+        </TimeField>
         <Button
           class="w-full"
           :is-disabled="!value || isInvalid"
@@ -400,7 +400,7 @@ export const AllVariations: Story = {
     template: `
       <div class="flex flex-col gap-6">
         <div class="flex flex-col gap-4">
-          <TimeFieldRoot is-required class="w-[256px]" name="time1">
+          <TimeField is-required class="w-[256px]" name="time1">
             <Label>Time</Label>
             <TimeFieldGroup>
               <TimeFieldPrefix>
@@ -409,9 +409,9 @@ export const AllVariations: Story = {
               ${input}
             </TimeFieldGroup>
             <Description>Enter a time</Description>
-          </TimeFieldRoot>
+          </TimeField>
 
-          <TimeFieldRoot is-required class="w-[256px]" name="time2">
+          <TimeField is-required class="w-[256px]" name="time2">
             <Label>Time</Label>
             <TimeFieldGroup>
               ${input}
@@ -420,9 +420,9 @@ export const AllVariations: Story = {
               </TimeFieldSuffix>
             </TimeFieldGroup>
             <Description>Enter a time</Description>
-          </TimeFieldRoot>
+          </TimeField>
 
-          <TimeFieldRoot is-required class="w-[256px]" name="time3">
+          <TimeField is-required class="w-[256px]" name="time3">
             <Label>Time</Label>
             <TimeFieldGroup>
               <TimeFieldPrefix>
@@ -434,7 +434,7 @@ export const AllVariations: Story = {
               </TimeFieldSuffix>
             </TimeFieldGroup>
             <Description>Enter a time</Description>
-          </TimeFieldRoot>
+          </TimeField>
         </div>
       </div>
     `,

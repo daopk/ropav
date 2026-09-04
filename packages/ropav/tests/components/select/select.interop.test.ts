@@ -2,11 +2,17 @@ import { renderInterop } from "@ropav/testing/helpers/vue";
 import { afterEach, describe, expect, it } from "vitest";
 import { h, nextTick } from "vue";
 
-import { ChipRoot } from "@/components/chip";
-import { LabelRoot } from "@/components/label";
-import { ListBoxRoot } from "@/components/list-box";
-import { ListBoxItemIndicator, ListBoxItemRoot } from "@/components/list-box-item";
-import { Select } from "@/components/select";
+import { Chip } from "@/components/chip";
+import { Label } from "@/components/label";
+import { ListBox } from "@/components/list-box";
+import { ListBoxItemIndicator, ListBoxItem } from "@/components/list-box-item";
+import {
+  Select,
+  SelectIndicator,
+  SelectPopover,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/select";
 
 /**
  * The select mounted the way a consumer mounts it: from a VDOM host, with every part written in
@@ -41,15 +47,15 @@ const render = (props: Record<string, unknown> = {}) =>
     },
     slots: {
       default: () => [
-        h(LabelRoot, null, { default: () => "State" }),
-        h(Select.Trigger, null, { default: () => [h(Select.Value), h(Select.Indicator)] }),
-        h(Select.Popover, null, {
+        h(Label, null, { default: () => "State" }),
+        h(SelectTrigger, null, { default: () => [h(SelectValue), h(SelectIndicator)] }),
+        h(SelectPopover, null, {
           default: () =>
-            h(ListBoxRoot, null, {
+            h(ListBox, null, {
               default: () =>
                 ITEMS.map((item) =>
                   h(
-                    ListBoxItemRoot,
+                    ListBoxItem,
                     { id: item.id, key: item.id, textValue: item.name },
                     {
                       default: () => [item.name, h(ListBoxItemIndicator)],
@@ -179,9 +185,9 @@ describe("Select (interop)", () => {
       },
       slots: {
         default: () => [
-          h(Select.Trigger, null, {
+          h(SelectTrigger, null, {
             default: () => [
-              h(Select.Value, null, {
+              h(SelectValue, null, {
                 // One node per chosen option, which is the shape a chip list takes — and the
                 // shape a single node hides: a slot re-run per item is where a stale first
                 // entry shows up.
@@ -219,9 +225,9 @@ describe("Select (interop)", () => {
       },
       slots: {
         default: () => [
-          h(Select.Trigger, null, {
+          h(SelectTrigger, null, {
             default: () => [
-              h(Select.Value, null, {
+              h(SelectValue, null, {
                 // A component of its own inside the value, which is what a chip list is. Declare
                 // the default as `<slot>` fallback content beside this and the nested component
                 // renders with an empty slot on the first pass — an empty chip.
@@ -231,7 +237,7 @@ describe("Select (interop)", () => {
                   selectedItems: Array<{ key: string; value: { name: string } }>;
                 }) =>
                   selectedItems.map((item) =>
-                    h(ChipRoot, { key: item.key }, { default: () => item.value.name }),
+                    h(Chip, { key: item.key }, { default: () => item.value.name }),
                   ),
               }),
             ],

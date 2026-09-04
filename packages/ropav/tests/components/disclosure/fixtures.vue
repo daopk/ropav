@@ -1,15 +1,22 @@
 <script setup lang="ts" vapor>
-import type { DisclosureRootProps } from "@/components/disclosure";
+import type { DisclosureProps } from "@/components/disclosure";
 
 import { Button } from "@/components/button";
-import { Disclosure } from "@/components/disclosure";
+import {
+  Disclosure,
+  DisclosureBody,
+  DisclosureContent,
+  DisclosureHeading,
+  DisclosureIndicator,
+  DisclosureTrigger,
+} from "@/components/disclosure";
 
 /**
- * `bareTrigger` swaps `Disclosure.Trigger` for an ordinary `Button`, which is the form the
+ * `bareTrigger` swaps `DisclosureTrigger` for an ordinary `Button`, which is the form the
  * disclosure hands its press down to.
  */
 const props = withDefaults(
-  defineProps<DisclosureRootProps & { bareTrigger?: boolean; customIndicator?: boolean }>(),
+  defineProps<DisclosureProps & { bareTrigger?: boolean; customIndicator?: boolean }>(),
   { defaultExpanded: undefined, isDisabled: undefined, isExpanded: undefined },
 );
 
@@ -25,24 +32,24 @@ defineEmits<{ expandedChange: [isExpanded: boolean] }>();
     :is-expanded="props.isExpanded"
     @expanded-change="$emit('expandedChange', $event)"
   >
-    <Disclosure.Heading>
+    <DisclosureHeading>
       <Button v-if="props.bareTrigger" data-testid="bare-trigger">
         Toggle content
-        <Disclosure.Indicator />
+        <DisclosureIndicator />
       </Button>
-      <Disclosure.Trigger v-else>
+      <DisclosureTrigger v-else>
         Toggle content
-        <Disclosure.Indicator v-if="props.customIndicator">
+        <DisclosureIndicator v-if="props.customIndicator">
           <svg data-testid="custom-indicator" />
-        </Disclosure.Indicator>
-        <Disclosure.Indicator v-else />
-      </Disclosure.Trigger>
-    </Disclosure.Heading>
-    <Disclosure.Content>
-      <Disclosure.Body>
+        </DisclosureIndicator>
+        <DisclosureIndicator v-else />
+      </DisclosureTrigger>
+    </DisclosureHeading>
+    <DisclosureContent>
+      <DisclosureBody>
         Hidden content revealed on expand.
         <Button data-testid="body-button" variant="secondary">Body action</Button>
-      </Disclosure.Body>
-    </Disclosure.Content>
+      </DisclosureBody>
+    </DisclosureContent>
   </Disclosure>
 </template>

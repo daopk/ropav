@@ -4,22 +4,11 @@ import FieldsetLegend from "./fieldset-legend.vue";
 import FieldsetRoot from "./fieldset-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Fieldset = Object.assign(FieldsetRoot, {
-  Actions: FieldsetActions,
-  Group: FieldGroup,
-  Legend: FieldsetLegend,
-  Root: FieldsetRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { FieldGroup, FieldsetActions, FieldsetLegend, FieldsetRoot };
+export { FieldGroup, FieldsetActions, FieldsetLegend, FieldsetRoot as Fieldset };
 
 export type {
-  FieldsetRootProps,
   FieldsetRootProps as FieldsetProps,
   FieldsetLegendProps,
   FieldGroupProps,

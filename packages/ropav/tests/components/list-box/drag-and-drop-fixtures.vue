@@ -3,7 +3,8 @@ import type { DragKey, DroppableCollectionReorderEvent } from "@/utils/dnd-types
 
 import { shallowRef } from "vue";
 
-import { ListBox } from "@/components/list-box";
+import { ListBox, ListBoxDropIndicator } from "@/components/list-box";
+import { ListBoxItem } from "@/components/list-box-item";
 import { useDragAndDrop } from "@/composables/use-drag-and-drop";
 
 /**
@@ -48,10 +49,10 @@ defineExpose({ order });
     :selection-mode="props.selectionMode"
   >
     <template v-for="label in order" :key="label">
-      <ListBox.DropIndicator :target="{ dropPosition: 'before', key: label, type: 'item' }" />
-      <ListBox.Item :id="label">{{ label }}</ListBox.Item>
+      <ListBoxDropIndicator :target="{ dropPosition: 'before', key: label, type: 'item' }" />
+      <ListBoxItem :id="label">{{ label }}</ListBoxItem>
     </template>
-    <ListBox.DropIndicator
+    <ListBoxDropIndicator
       :target="{ dropPosition: 'after', key: order[order.length - 1]!, type: 'item' }"
     />
   </ListBox>

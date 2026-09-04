@@ -1,12 +1,17 @@
 <script setup lang="ts" vapor>
-import type { ProgressBarRootProps } from "@/components/progress-bar";
+import type { ProgressBarProps } from "@/components/progress-bar";
 
 import { Label } from "@/components/label";
-import { ProgressBar } from "@/components/progress-bar";
+import {
+  ProgressBar,
+  ProgressBarFill,
+  ProgressBarOutput,
+  ProgressBarTrack,
+} from "@/components/progress-bar";
 
 withDefaults(
   defineProps<
-    ProgressBarRootProps & {
+    ProgressBarProps & {
       customOutput?: boolean;
       fillClass?: string;
       outputClass?: string;
@@ -45,17 +50,17 @@ withDefaults(
     :value-label="$props.valueLabel"
   >
     <Label v-if="$props.withLabel">Loading</Label>
-    <ProgressBar.Output v-if="$props.customOutput" :class="$props.outputClass" data-testid="output">
+    <ProgressBarOutput v-if="$props.customOutput" :class="$props.outputClass" data-testid="output">
       Custom
-    </ProgressBar.Output>
-    <ProgressBar.Output v-else :class="$props.outputClass" data-testid="output" />
-    <ProgressBar.Track :class="$props.trackClass" data-testid="track">
-      <ProgressBar.Fill
+    </ProgressBarOutput>
+    <ProgressBarOutput v-else :class="$props.outputClass" data-testid="output" />
+    <ProgressBarTrack :class="$props.trackClass" data-testid="track">
+      <ProgressBarFill
         :class="$props.fillClass"
         data-testid="fill"
         :style="{ backgroundColor: 'red', width: '1%' }"
       />
-    </ProgressBar.Track>
+    </ProgressBarTrack>
     <span data-testid="slot-indeterminate">{{ slotProps.isIndeterminate }}</span>
     <span data-testid="slot-percentage">{{ slotProps.percentage }}</span>
     <span data-testid="slot-value-text">{{ slotProps.valueText }}</span>

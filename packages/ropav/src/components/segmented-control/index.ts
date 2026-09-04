@@ -4,29 +4,18 @@ import SegmentedControlRoot from "./segmented-control-root.vue";
 import SegmentedControlSeparator from "./segmented-control-separator.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const SegmentedControl = Object.assign(SegmentedControlRoot, {
-  Indicator: SegmentedControlIndicator,
-  Item: SegmentedControlItem,
-  Root: SegmentedControlRoot,
-  Separator: SegmentedControlSeparator,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
 export {
-  SegmentedControlRoot,
+  SegmentedControlRoot as SegmentedControl,
   SegmentedControlItem,
   SegmentedControlIndicator,
   SegmentedControlSeparator,
 };
 
 export type {
-  SegmentedControlRootProps,
   SegmentedControlRootProps as SegmentedControlProps,
-  SegmentedControlRootSlotProps,
+  SegmentedControlRootSlotProps as SegmentedControlSlotProps,
   SegmentedControlItemProps,
   SegmentedControlItemSlotProps,
   SegmentedControlIndicatorProps,

@@ -151,7 +151,7 @@ const draggable =
  *
  * Its own hidden button rather than the row itself: the row is already an option in the grid's
  * navigation, and giving it a second identity as a drop target would make it announce twice.
- * The gaps between rows are `Table.DropIndicator`, placed by the caller.
+ * The gaps between rows are `TableDropIndicator`, placed by the caller.
  */
 const dropIndicatorElement = shallowRef<HTMLElement | null>(null);
 

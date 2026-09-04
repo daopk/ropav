@@ -2,16 +2,16 @@
 import type { SelectFixtureItem, SelectFixtureProps } from "./fixtures.types";
 import type { SelectedValue } from "@/composables/use-select-state";
 
-import { DescriptionRoot } from "@/components/description";
-import { FieldErrorRoot } from "@/components/field-error";
+import { Description } from "@/components/description";
+import { FieldError } from "@/components/field-error";
 import { IconChevronDown } from "@/components/icons";
-import { LabelRoot } from "@/components/label";
-import { ListBoxRoot } from "@/components/list-box";
-import { ListBoxItemIndicator, ListBoxItemRoot } from "@/components/list-box-item";
+import { Label } from "@/components/label";
+import { ListBox } from "@/components/list-box";
+import { ListBoxItemIndicator, ListBoxItem } from "@/components/list-box-item";
 import {
   SelectIndicator,
   SelectPopover,
-  SelectRoot,
+  Select,
   SelectTrigger,
   SelectValue,
 } from "@/components/select";
@@ -52,7 +52,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <SelectRoot
+  <Select
     :allows-empty-collection="props.allowsEmptyCollection"
     :class="props.rootClass"
     :default-open="props.defaultOpen"
@@ -74,7 +74,7 @@ const emit = defineEmits<{
     @change="emit('change', $event)"
     @open-change="emit('openChange', $event)"
   >
-    <LabelRoot v-if="props.withLabel">State</LabelRoot>
+    <Label v-if="props.withLabel">State</Label>
     <SelectTrigger :class="props.triggerClass">
       <SelectValue :class="props.valueClass">
         <template v-if="props.withCustomValue" #default="{ isPlaceholder, selectedItems }">
@@ -93,10 +93,10 @@ const emit = defineEmits<{
       </SelectIndicator>
       <SelectIndicator v-else :class="props.indicatorClass" />
     </SelectTrigger>
-    <DescriptionRoot v-if="props.withDescription">Pick a state</DescriptionRoot>
+    <Description v-if="props.withDescription">Pick a state</Description>
     <SelectPopover :class="props.popoverClass">
-      <ListBoxRoot>
-        <ListBoxItemRoot
+      <ListBox>
+        <ListBoxItem
           v-for="item in props.items"
           :id="item.id"
           :key="item.id"
@@ -105,9 +105,9 @@ const emit = defineEmits<{
         >
           {{ item.name }}
           <ListBoxItemIndicator />
-        </ListBoxItemRoot>
-      </ListBoxRoot>
+        </ListBoxItem>
+      </ListBox>
     </SelectPopover>
-    <FieldErrorRoot v-if="props.withFieldError">Please choose a state</FieldErrorRoot>
-  </SelectRoot>
+    <FieldError v-if="props.withFieldError">Please choose a state</FieldError>
+  </Select>
 </template>

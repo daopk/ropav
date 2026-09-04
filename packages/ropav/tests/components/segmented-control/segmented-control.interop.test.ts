@@ -7,7 +7,7 @@ import { h, nextTick } from "vue";
 import {
   SegmentedControlIndicator,
   SegmentedControlItem,
-  SegmentedControlRoot,
+  SegmentedControl,
 } from "@/components/segmented-control";
 
 interface Item {
@@ -34,7 +34,7 @@ const ITEMS: Item[] = [
  * the other suite.
  */
 const renderSegmentedControl = (props: Record<string, unknown> = {}, items: Item[] = ITEMS) =>
-  renderInterop(SegmentedControlRoot, {
+  renderInterop(SegmentedControl, {
     props: { ariaLabel: "Range", ...props },
     slots: {
       default: () =>

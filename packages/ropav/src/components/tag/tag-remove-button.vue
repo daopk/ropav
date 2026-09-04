@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type { TagRemoveButtonProps } from "./tag.types";
 
-import { CloseButtonRoot } from "../close-button";
+import { CloseButton } from "../close-button";
 
 import { useTagContext } from "./tag.context";
 
@@ -23,7 +23,7 @@ const domAttributes = { slot: "remove" };
 </script>
 
 <template>
-  <CloseButtonRoot
+  <CloseButton
     v-bind="domAttributes"
     aria-label="Remove tag"
     :class="slots.removeButton({ class: props.class })"
@@ -31,5 +31,5 @@ const domAttributes = { slot: "remove" };
     @click="remove"
   >
     <slot />
-  </CloseButtonRoot>
+  </CloseButton>
 </template>

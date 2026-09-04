@@ -94,7 +94,7 @@ interface PartEmits {
 /**
  * One published interface, paired with the SFC it belongs to. `DropdownRootEmits` describes
  * `dropdown-root.vue` alone — comparing it against every emit in the whole `dropdown/` directory
- * would report `Dropdown.Menu`'s emits as missing from the root's contract.
+ * would report `DropdownMenu`'s emits as missing from the root's contract.
  */
 interface PublishedEmits {
   keys: Set<string>;

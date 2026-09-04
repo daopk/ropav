@@ -21,19 +21,18 @@ import { Kbd, KbdAbbr, KbdContent } from "../kbd";
 import { Label } from "../label";
 import { Spinner } from "../spinner";
 import { TextField } from "../textfield";
-import { TooltipContent, TooltipRoot } from "../tooltip";
+import { TooltipContent, Tooltip } from "../tooltip";
 
 import {
   InputGroup,
   InputGroupInput,
   InputGroupPrefix,
-  InputGroupRoot,
   InputGroupSuffix,
   InputGroupTextArea,
 } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata
-// to resolve `InputGroup.Prefix` through, so dot notation cannot be used here.
+// to resolve `InputGroupPrefix` through, so dot notation cannot be used here.
 const components = {
   Button,
   Chip,
@@ -50,9 +49,9 @@ const components = {
   IconMicrophone,
   IconPlugConnection,
   IconPlus,
+  InputGroup,
   InputGroupInput,
   InputGroupPrefix,
-  InputGroupRoot,
   InputGroupSuffix,
   InputGroupTextArea,
   Kbd,
@@ -61,7 +60,7 @@ const components = {
   Label,
   Spinner,
   TextField,
-  Tooltip: TooltipRoot,
+  Tooltip: Tooltip,
   TooltipContent,
 };
 
@@ -83,12 +82,12 @@ export const Default: Story = {
     template: `
       <TextField class="w-[280px]" name="email">
         <Label>Email address</Label>
-        <InputGroupRoot>
+        <InputGroup>
           <InputGroupPrefix>
             <IconEnvelope class="size-4 text-muted" />
           </InputGroupPrefix>
           <InputGroupInput class="w-[280px]" placeholder="name@email.com" />
-        </InputGroupRoot>
+        </InputGroup>
       </TextField>
     `,
   }),
@@ -101,21 +100,21 @@ export const Variants: Story = {
       <div class="flex flex-col gap-4">
         <TextField class="w-[280px]" name="primary">
           <Label>Primary variant</Label>
-          <InputGroupRoot variant="primary">
+          <InputGroup variant="primary">
             <InputGroupPrefix>
               <IconEnvelope class="size-4 text-muted" />
             </InputGroupPrefix>
             <InputGroupInput placeholder="name@email.com" />
-          </InputGroupRoot>
+          </InputGroup>
         </TextField>
         <TextField class="w-[280px]" name="secondary">
           <Label>Secondary variant</Label>
-          <InputGroupRoot variant="secondary">
+          <InputGroup variant="secondary">
             <InputGroupPrefix>
               <IconEnvelope class="size-4 text-muted" />
             </InputGroupPrefix>
             <InputGroupInput placeholder="name@email.com" />
-          </InputGroupRoot>
+          </InputGroup>
         </TextField>
       </div>
     `,
@@ -136,12 +135,12 @@ export const Sizes: Story = {
       <div class="flex flex-col gap-4">
         <TextField v-for="size in sizes" :key="size" class="w-[280px]" name="email" :size="size">
           <Label>Size {{ size }}</Label>
-          <InputGroupRoot>
+          <InputGroup>
             <InputGroupPrefix>
               <IconEnvelope class="size-4 text-muted" />
             </InputGroupPrefix>
             <InputGroupInput placeholder="name@email.com" />
-          </InputGroupRoot>
+          </InputGroup>
         </TextField>
       </div>
     `,
@@ -155,21 +154,21 @@ export const FullWidth: Story = {
       <div class="w-[400px] space-y-4">
         <TextField full-width name="email">
           <Label>Email address</Label>
-          <InputGroupRoot full-width>
+          <InputGroup full-width>
             <InputGroupPrefix>
               <IconEnvelope class="size-4 text-muted" />
             </InputGroupPrefix>
             <InputGroupInput placeholder="name@email.com" />
-          </InputGroupRoot>
+          </InputGroup>
         </TextField>
         <TextField full-width name="password">
           <Label>Password</Label>
-          <InputGroupRoot full-width>
+          <InputGroup full-width>
             <InputGroupInput placeholder="Enter password" type="password" />
             <InputGroupSuffix>
               <IconEye class="size-4 text-muted" />
             </InputGroupSuffix>
-          </InputGroupRoot>
+          </InputGroup>
         </TextField>
       </div>
     `,
@@ -182,12 +181,12 @@ export const WithPrefixIcon: Story = {
     template: `
       <TextField class="w-[280px]" name="email">
         <Label>Email address</Label>
-        <InputGroupRoot>
+        <InputGroup>
           <InputGroupPrefix>
             <IconEnvelope class="size-4 text-muted" />
           </InputGroupPrefix>
           <InputGroupInput class="w-[280px]" placeholder="name@email.com" />
-        </InputGroupRoot>
+        </InputGroup>
         <Description>We'll never share this with anyone else</Description>
       </TextField>
     `,
@@ -200,12 +199,12 @@ export const WithSuffixIcon: Story = {
     template: `
       <TextField class="w-[280px]" name="email">
         <Label>Email address</Label>
-        <InputGroupRoot>
+        <InputGroup>
           <InputGroupInput class="w-[280px]" placeholder="name@email.com" />
           <InputGroupSuffix>
             <IconEnvelope class="size-4 text-muted" />
           </InputGroupSuffix>
-        </InputGroupRoot>
+        </InputGroup>
         <Description>We don't send spam</Description>
       </TextField>
     `,
@@ -218,11 +217,11 @@ export const WithPrefixAndSuffix: Story = {
     template: `
       <TextField class="w-[280px]" default-value="10" name="price">
         <Label>Set a price</Label>
-        <InputGroupRoot>
+        <InputGroup>
           <InputGroupPrefix>$</InputGroupPrefix>
           <InputGroupInput class="w-[200px]" type="number" />
           <InputGroupSuffix>USD</InputGroupSuffix>
-        </InputGroupRoot>
+        </InputGroup>
         <Description>What customers would pay</Description>
       </TextField>
     `,
@@ -235,10 +234,10 @@ export const WithTextPrefix: Story = {
     template: `
       <TextField class="w-[280px]" default-value="ropav.com" name="website">
         <Label>Website</Label>
-        <InputGroupRoot>
+        <InputGroup>
           <InputGroupPrefix>https://</InputGroupPrefix>
           <InputGroupInput class="w-[280px]" />
-        </InputGroupRoot>
+        </InputGroup>
       </TextField>
     `,
   }),
@@ -250,10 +249,10 @@ export const WithTextSuffix: Story = {
     template: `
       <TextField class="w-[280px]" default-value="ropav" name="website">
         <Label>Website</Label>
-        <InputGroupRoot>
+        <InputGroup>
           <InputGroupInput class="w-[280px]" />
           <InputGroupSuffix>.com</InputGroupSuffix>
-        </InputGroupRoot>
+        </InputGroup>
       </TextField>
     `,
   }),
@@ -265,13 +264,13 @@ export const WithIconPrefixAndTextSuffix: Story = {
     template: `
       <TextField class="w-[280px]" default-value="ropav" name="website">
         <Label>Website</Label>
-        <InputGroupRoot>
+        <InputGroup>
           <InputGroupPrefix>
             <IconGlobe class="size-4 text-muted" />
           </InputGroupPrefix>
           <InputGroupInput class="w-[280px]" />
           <InputGroupSuffix>.com</InputGroupSuffix>
-        </InputGroupRoot>
+        </InputGroup>
       </TextField>
     `,
   }),
@@ -283,14 +282,14 @@ export const WithCopySuffix: Story = {
     template: `
       <TextField class="w-[280px]" default-value="ropav.com" name="website">
         <Label>Website</Label>
-        <InputGroupRoot>
+        <InputGroup>
           <InputGroupInput class="w-[280px]" />
           <InputGroupSuffix class="pe-0">
             <Button is-icon-only aria-label="Copy" size="sm" variant="ghost">
               <IconCopy class="size-4" />
             </Button>
           </InputGroupSuffix>
-        </InputGroupRoot>
+        </InputGroup>
       </TextField>
     `,
   }),
@@ -302,7 +301,7 @@ export const WithIconPrefixAndCopySuffix: Story = {
     template: `
       <TextField class="w-[280px]" default-value="ropav.com" name="website">
         <Label>Website</Label>
-        <InputGroupRoot>
+        <InputGroup>
           <InputGroupPrefix>
             <IconGlobe class="size-4 text-muted" />
           </InputGroupPrefix>
@@ -312,7 +311,7 @@ export const WithIconPrefixAndCopySuffix: Story = {
               <IconCopy class="size-4" />
             </Button>
           </InputGroupSuffix>
-        </InputGroupRoot>
+        </InputGroup>
       </TextField>
     `,
   }),
@@ -329,7 +328,7 @@ export const PasswordWithToggle: Story = {
     template: `
       <TextField class="w-[280px]" name="password">
         <Label>Password</Label>
-        <InputGroupRoot>
+        <InputGroup>
           <InputGroupInput
             class="w-[280px]"
             :type="isVisible ? 'text' : 'password'"
@@ -347,7 +346,7 @@ export const PasswordWithToggle: Story = {
               <IconEyeSlash v-else class="size-4" />
             </Button>
           </InputGroupSuffix>
-        </InputGroupRoot>
+        </InputGroup>
       </TextField>
     `,
   }),
@@ -358,12 +357,12 @@ export const WithLoadingSuffix: Story = {
     components,
     template: `
       <TextField aria-label="Status" class="w-[280px]" default-value="Sending..." name="status">
-        <InputGroupRoot>
+        <InputGroup>
           <InputGroupInput class="w-[280px]" />
           <InputGroupSuffix>
             <Spinner class="size-4" />
           </InputGroupSuffix>
-        </InputGroupRoot>
+        </InputGroup>
       </TextField>
     `,
   }),
@@ -374,7 +373,7 @@ export const WithKeyboardShortcut: Story = {
     components,
     template: `
       <TextField aria-label="Command" class="w-[280px]" name="command">
-        <InputGroupRoot>
+        <InputGroup>
           <InputGroupInput class="w-[280px]" placeholder="Command" />
           <InputGroupSuffix class="pe-2">
             <Kbd>
@@ -382,7 +381,7 @@ export const WithKeyboardShortcut: Story = {
               <KbdContent>K</KbdContent>
             </Kbd>
           </InputGroupSuffix>
-        </InputGroupRoot>
+        </InputGroup>
       </TextField>
     `,
   }),
@@ -393,12 +392,12 @@ export const WithBadgeSuffix: Story = {
     components,
     template: `
       <TextField aria-label="Email address" class="w-[280px]" name="email">
-        <InputGroupRoot>
+        <InputGroup>
           <InputGroupInput class="w-[280px]" placeholder="Email address" />
           <InputGroupSuffix class="pe-2">
             <Chip color="accent" size="md" variant="soft"><ChipLabel>Pro</ChipLabel></Chip>
           </InputGroupSuffix>
-        </InputGroupRoot>
+        </InputGroup>
       </TextField>
     `,
   }),
@@ -411,20 +410,20 @@ export const Required: Story = {
       <div class="flex flex-col gap-4">
         <TextField is-required class="w-[280px]" name="email">
           <Label>Email address</Label>
-          <InputGroupRoot>
+          <InputGroup>
             <InputGroupPrefix>
               <IconEnvelope class="size-4 text-muted" />
             </InputGroupPrefix>
             <InputGroupInput class="w-[280px]" placeholder="name@email.com" />
-          </InputGroupRoot>
+          </InputGroup>
         </TextField>
         <TextField is-required name="price">
           <Label>Set a price</Label>
-          <InputGroupRoot>
+          <InputGroup>
             <InputGroupPrefix>$</InputGroupPrefix>
             <InputGroupInput class="w-[200px]" placeholder="0" type="number" />
             <InputGroupSuffix>USD</InputGroupSuffix>
-          </InputGroupRoot>
+          </InputGroup>
           <Description>What customers would pay</Description>
         </TextField>
       </div>
@@ -439,21 +438,21 @@ export const Invalid: Story = {
       <div class="flex flex-col gap-4">
         <TextField is-invalid is-required class="w-[280px]" name="email">
           <Label>Email address</Label>
-          <InputGroupRoot>
+          <InputGroup>
             <InputGroupPrefix>
               <IconEnvelope class="size-4 text-muted" />
             </InputGroupPrefix>
             <InputGroupInput class="w-[280px]" placeholder="name@email.com" />
-          </InputGroupRoot>
+          </InputGroup>
           <FieldError>Please enter a valid email address</FieldError>
         </TextField>
         <TextField is-invalid is-required class="w-[280px]" name="price">
           <Label>Set a price</Label>
-          <InputGroupRoot>
+          <InputGroup>
             <InputGroupPrefix>$</InputGroupPrefix>
             <InputGroupInput class="w-[200px]" placeholder="0" type="number" />
             <InputGroupSuffix>USD</InputGroupSuffix>
-          </InputGroupRoot>
+          </InputGroup>
           <FieldError>Price must be greater than 0</FieldError>
         </TextField>
       </div>
@@ -468,20 +467,20 @@ export const Disabled: Story = {
       <div class="flex flex-col gap-4">
         <TextField is-disabled class="w-[280px]" default-value="name@email.com" name="email">
           <Label>Email address</Label>
-          <InputGroupRoot>
+          <InputGroup>
             <InputGroupPrefix>
               <IconEnvelope class="size-4 text-muted" />
             </InputGroupPrefix>
             <InputGroupInput class="w-[280px]" />
-          </InputGroupRoot>
+          </InputGroup>
         </TextField>
         <TextField is-disabled class="w-[280px]" default-value="10" name="price">
           <Label>Set a price</Label>
-          <InputGroupRoot>
+          <InputGroup>
             <InputGroupPrefix>$</InputGroupPrefix>
             <InputGroupInput class="w-[200px]" type="number" />
             <InputGroupSuffix>USD</InputGroupSuffix>
-          </InputGroupRoot>
+          </InputGroup>
         </TextField>
       </div>
     `,
@@ -510,7 +509,7 @@ export const WithTextArea: Story = {
     },
     template: `
       <TextField full-width aria-label="Prompt input" class="flex w-sm flex-col sm:w-lg" name="prompt">
-        <InputGroupRoot full-width class="flex flex-col gap-2 rounded-3xl py-2">
+        <InputGroup full-width class="flex flex-col gap-2 rounded-3xl py-2">
           <InputGroupPrefix class="px-3 py-0">
             <Button aria-label="Add context" size="sm" variant="outline">
               <IconAt />
@@ -570,7 +569,7 @@ export const WithTextArea: Story = {
               </Tooltip>
             </div>
           </InputGroupSuffix>
-        </InputGroupRoot>
+        </InputGroup>
       </TextField>
     `,
   }),
@@ -584,78 +583,78 @@ export const AllVariations: Story = {
         <div class="flex flex-col gap-4">
           <TextField class="w-[280px]" name="email1">
             <Label>Email address *</Label>
-            <InputGroupRoot>
+            <InputGroup>
               <InputGroupPrefix>
                 <IconEnvelope class="size-4 text-muted" />
               </InputGroupPrefix>
               <InputGroupInput class="w-[280px]" placeholder="name@email.com" />
-            </InputGroupRoot>
+            </InputGroup>
             <Description>We'll never share this with anyone else</Description>
           </TextField>
 
           <TextField class="w-[280px]" name="email2">
             <Label>Email address *</Label>
-            <InputGroupRoot>
+            <InputGroup>
               <InputGroupInput class="w-[280px]" placeholder="name@email.com" />
               <InputGroupSuffix>
                 <IconEnvelope class="size-4 text-muted" />
               </InputGroupSuffix>
-            </InputGroupRoot>
+            </InputGroup>
             <Description>We don't send spam</Description>
           </TextField>
 
           <TextField class="w-[280px]" default-value="10" name="price">
             <Label>Set a price</Label>
-            <InputGroupRoot>
+            <InputGroup>
               <InputGroupPrefix>$</InputGroupPrefix>
               <InputGroupInput class="w-[200px]" type="number" />
               <InputGroupSuffix>USD</InputGroupSuffix>
-            </InputGroupRoot>
+            </InputGroup>
             <Description>What customers would pay</Description>
           </TextField>
 
           <TextField class="w-[280px]" default-value="ropav.com" name="website1">
             <Label>Website</Label>
-            <InputGroupRoot>
+            <InputGroup>
               <InputGroupPrefix>https://</InputGroupPrefix>
               <InputGroupInput class="w-[280px]" />
-            </InputGroupRoot>
+            </InputGroup>
           </TextField>
 
           <TextField class="w-[280px]" default-value="ropav" name="website2">
             <Label>Website</Label>
-            <InputGroupRoot>
+            <InputGroup>
               <InputGroupInput class="w-[280px]" />
               <InputGroupSuffix>.com</InputGroupSuffix>
-            </InputGroupRoot>
+            </InputGroup>
           </TextField>
 
           <TextField class="w-[280px]" default-value="ropav" name="website3">
             <Label>Website</Label>
-            <InputGroupRoot>
+            <InputGroup>
               <InputGroupPrefix>
                 <IconGlobe class="size-4 text-muted" />
               </InputGroupPrefix>
               <InputGroupInput class="w-[280px]" />
               <InputGroupSuffix>.com</InputGroupSuffix>
-            </InputGroupRoot>
+            </InputGroup>
           </TextField>
 
           <TextField class="w-[280px]" default-value="ropav.com" name="website4">
             <Label>Website</Label>
-            <InputGroupRoot>
+            <InputGroup>
               <InputGroupInput class="w-[280px]" />
               <InputGroupSuffix class="pe-0">
                 <Button is-icon-only aria-label="Copy" class="h-auto p-0" size="sm" variant="ghost">
                   <IconCopy class="size-4" />
                 </Button>
               </InputGroupSuffix>
-            </InputGroupRoot>
+            </InputGroup>
           </TextField>
 
           <TextField class="w-[280px]" default-value="ropav.com" name="website5">
             <Label>Website</Label>
-            <InputGroupRoot>
+            <InputGroup>
               <InputGroupPrefix>
                 <IconGlobe class="size-4 text-muted" />
               </InputGroupPrefix>
@@ -665,7 +664,7 @@ export const AllVariations: Story = {
                   <IconCopy class="size-4" />
                 </Button>
               </InputGroupSuffix>
-            </InputGroupRoot>
+            </InputGroup>
           </TextField>
         </div>
       </div>

@@ -4,13 +4,13 @@ import { renderInterop } from "@ropav/testing/helpers/vue";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { h, nextTick } from "vue";
 
-import { ColorAreaRoot, ColorAreaThumb } from "@/components/color-area";
-import { ColorPickerPopover, ColorPickerRoot, ColorPickerTrigger } from "@/components/color-picker";
-import { ColorSliderRoot, ColorSliderThumb, ColorSliderTrack } from "@/components/color-slider";
-import { ColorSwatchRoot } from "@/components/color-swatch";
+import { ColorArea, ColorAreaThumb } from "@/components/color-area";
+import { ColorPickerPopover, ColorPicker, ColorPickerTrigger } from "@/components/color-picker";
+import { ColorSlider, ColorSliderThumb, ColorSliderTrack } from "@/components/color-slider";
+import { ColorSwatch } from "@/components/color-swatch";
 import {
   ColorSwatchPickerItem,
-  ColorSwatchPickerRoot,
+  ColorSwatchPicker,
   ColorSwatchPickerSwatch,
 } from "@/components/color-swatch-picker";
 import { Label } from "@/components/label";
@@ -26,20 +26,20 @@ import { Label } from "@/components/label";
  * on its own — and it crosses two boundaries here, the picker's slot and the popover's teleport.
  */
 const render = (props: Record<string, unknown> = {}) =>
-  renderInterop(ColorPickerRoot, {
+  renderInterop(ColorPicker, {
     props,
     slots: {
       default: () => [
         h(ColorPickerTrigger, null, {
           default: () => [
-            h(ColorSwatchRoot, { size: "lg" }),
+            h(ColorSwatch, { size: "lg" }),
             h(Label, null, { default: () => "Pick a color" }),
           ],
         }),
         h(ColorPickerPopover, null, {
           default: () => [
             h(
-              ColorAreaRoot,
+              ColorArea,
               {
                 ariaLabel: "Color area",
                 colorSpace: "hsb",
@@ -49,12 +49,12 @@ const render = (props: Record<string, unknown> = {}) =>
               { default: () => h(ColorAreaThumb) },
             ),
             h(
-              ColorSliderRoot,
+              ColorSlider,
               { channel: "hue", colorSpace: "hsb" },
               { default: () => h(ColorSliderTrack, null, { default: () => h(ColorSliderThumb) }) },
             ),
             h(
-              ColorSwatchPickerRoot,
+              ColorSwatchPicker,
               { size: "xs" },
               {
                 default: () =>

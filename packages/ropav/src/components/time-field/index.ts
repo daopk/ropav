@@ -10,19 +10,6 @@ import {
 import TimeFieldRoot from "./time-field-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const TimeField = Object.assign(TimeFieldRoot, {
-  Group: DateInputGroupRoot,
-  Input: DateInputGroupInput,
-  InputContainer: DateInputGroupInputContainer,
-  Prefix: DateInputGroupPrefix,
-  Root: TimeFieldRoot,
-  Segment: DateInputGroupSegment,
-  Suffix: DateInputGroupSuffix,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
 /*
@@ -39,12 +26,11 @@ export {
   DateInputGroupSuffix as TimeFieldSuffix,
 };
 
-export { TimeFieldRoot };
+export { TimeFieldRoot as TimeField };
 
 export type {
-  TimeFieldRootProps,
   TimeFieldRootProps as TimeFieldProps,
-  TimeFieldRootSlotProps,
+  TimeFieldRootSlotProps as TimeFieldSlotProps,
 } from "./time-field.types";
 
 export type {

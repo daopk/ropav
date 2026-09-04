@@ -12,13 +12,13 @@ import {
   CalendarGridBody,
   CalendarGridHeader,
   CalendarHeaderCell,
-  CalendarRoot,
+  Calendar,
 } from "@/components/calendar";
 import {
   DatePickerGroup,
   DatePickerInput,
   DatePickerPopover,
-  DatePickerRoot,
+  DatePicker,
   DatePickerSegment,
   DatePickerSuffix,
   DatePickerTrigger,
@@ -36,7 +36,7 @@ import { Label } from "@/components/label";
  * arrive through `provide`, so the path every real application uses has to be checked on its own.
  */
 const render = (props: Record<string, unknown> = {}) => {
-  const result = renderInterop(DatePickerRoot, {
+  const result = renderInterop(DatePicker, {
     props: { defaultOpen: true, ...props },
     slots: {
       default: () => [
@@ -55,7 +55,7 @@ const render = (props: Record<string, unknown> = {}) => {
         h(DatePickerPopover, null, {
           default: () =>
             h(
-              CalendarRoot,
+              Calendar,
               { "aria-label": "Selected date" },
               {
                 default: () =>

@@ -10,14 +10,14 @@ import { parseColor } from "../../utils/color";
 import {
   ColorSwatchPickerIndicator,
   ColorSwatchPickerItem,
-  ColorSwatchPickerRoot,
+  ColorSwatchPicker,
   ColorSwatchPickerSwatch,
 } from "./index";
 
 // Registered under flat names: a story template is compiled at runtime with no binding metadata,
-// so a dotted tag would be looked up as a component literally named "ColorSwatchPicker.Item".
+// so a dotted tag would be looked up as a component literally named "ColorSwatchPickerItem".
 const components = {
-  ColorSwatchPicker: ColorSwatchPickerRoot,
+  ColorSwatchPicker: ColorSwatchPicker,
   ColorSwatchPickerIndicator,
   ColorSwatchPickerItem,
   ColorSwatchPickerSwatch,
@@ -38,7 +38,7 @@ const meta: StoryMeta = {
       options: ["circle", "square"],
     },
   },
-  component: ColorSwatchPickerRoot,
+  component: ColorSwatchPicker,
   parameters: {
     layout: "centered",
   },

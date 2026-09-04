@@ -2,22 +2,13 @@ import LinkIcon from "./link-icon.vue";
 import LinkRoot from "./link-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Link = Object.assign(LinkRoot, {
-  Icon: LinkIcon,
-  Root: LinkRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { LinkIcon, LinkRoot };
+export { LinkIcon, LinkRoot as Link };
 
 export type {
-  LinkRootProps,
   LinkRootProps as LinkProps,
-  LinkRootSlotProps,
+  LinkRootSlotProps as LinkSlotProps,
   LinkIconProps,
   LinkCurrent,
   LinkReferrerPolicy,

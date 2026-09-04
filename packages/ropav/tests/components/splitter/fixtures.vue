@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
 import type { SplitterFixturePanel } from "./fixtures.types";
-import type { SplitterRootProps, SplitterSize } from "@/components/splitter";
+import type { SplitterProps, SplitterSize } from "@/components/splitter";
 
 import { Splitter, SplitterHandle, SplitterPanel } from "@/components/splitter";
 
 const props = defineProps<
-  SplitterRootProps & {
+  SplitterProps & {
     /**
      * Turns the double-click gesture off. Phrased as an opt-out because Vue casts an absent
      * boolean prop to `false`: forwarding a `resetOnDoubleClick` nobody set would disable the

@@ -3,7 +3,7 @@ import type { SwitchFixtureProps } from "./fixtures.types";
 
 import { Description } from "@/components/description";
 import { FieldError } from "@/components/field-error";
-import { Switch } from "@/components/switch";
+import { Switch, SwitchContent, SwitchControl, SwitchIcon, SwitchThumb } from "@/components/switch";
 
 // Both booleans have to declare an explicit `undefined` default here too, for the same
 // reason the component does: forwarding a `false` that Vue cast from an absent prop would
@@ -32,16 +32,16 @@ defineEmits<{ change: [isSelected: boolean] }>();
     :value="$props.value"
     @change="$emit('change', $event)"
   >
-    <Switch.Content>
-      <Switch.Control>
-        <Switch.Thumb>
-          <Switch.Icon v-if="$props.withIcon">
+    <SwitchContent>
+      <SwitchControl>
+        <SwitchThumb>
+          <SwitchIcon v-if="$props.withIcon">
             <svg data-testid="thumb-icon" />
-          </Switch.Icon>
-        </Switch.Thumb>
-      </Switch.Control>
+          </SwitchIcon>
+        </SwitchThumb>
+      </SwitchControl>
       Enable notifications
-    </Switch.Content>
+    </SwitchContent>
     <Description v-if="$props.withDescription">Allow others to see your profile</Description>
     <FieldError v-if="$props.withCustomError">
       <template #default="{ validationErrors }">

@@ -14,7 +14,7 @@ import {
   SidebarItemLabel,
   SidebarPanel,
   SidebarRail,
-  SidebarRoot,
+  Sidebar,
   SidebarSubMenu,
   SidebarTrigger,
 } from "@/components/sidebar";
@@ -41,7 +41,7 @@ afterEach(() => {
 });
 
 const mount = (props: Record<string, unknown> = {}) =>
-  renderInterop(SidebarRoot, {
+  renderInterop(Sidebar, {
     props,
     slots: {
       default: () => [
@@ -136,7 +136,7 @@ describe("mounted from a VDOM host", () => {
 
 describe("an item with rows of its own, mounted from a VDOM host", () => {
   const mountNested = () =>
-    renderInterop(SidebarRoot, {
+    renderInterop(Sidebar, {
       slots: {
         default: () => [
           h(SidebarPanel, null, {

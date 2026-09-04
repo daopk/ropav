@@ -3,8 +3,21 @@ import type { AlertDialogFixtureProps } from "./fixtures.types";
 
 import { computed, shallowRef } from "vue";
 
-import { AlertDialog } from "@/components/alert-dialog";
-import { ButtonRoot } from "@/components/button";
+import {
+  AlertDialog,
+  AlertDialogBackdrop,
+  AlertDialogBody,
+  AlertDialogClose,
+  AlertDialogCloseTrigger,
+  AlertDialogContainer,
+  AlertDialogDialog,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogHeading,
+  AlertDialogIcon,
+  AlertDialogTrigger,
+} from "@/components/alert-dialog";
+import { Button } from "@/components/button";
 
 // Every three-state boolean declares an explicit `undefined` default: forwarding a `false` that Vue
 // had cast would turn the dialog controlled, or read as a deliberate dismiss opt-in.
@@ -46,7 +59,7 @@ const closeTriggerAttrs = computed(() =>
   props.closeTriggerLabel === undefined ? {} : { "aria-label": props.closeTriggerLabel },
 );
 
-/** Set by the button inside `AlertDialog.Close`, so a test can prove both handlers ran. */
+/** Set by the button inside `AlertDialogClose`, so a test can prove both handlers ran. */
 const removed = shallowRef(false);
 
 defineExpose({ removed });
@@ -61,9 +74,9 @@ defineExpose({ removed });
       :is-open="props.isOpen"
       @open-change="emit('openChange', $event)"
     >
-      <AlertDialog.Trigger v-if="props.withCustomTrigger">Actions</AlertDialog.Trigger>
-      <ButtonRoot v-else>Delete account</ButtonRoot>
-      <AlertDialog.Backdrop
+      <AlertDialogTrigger v-if="props.withCustomTrigger">Actions</AlertDialogTrigger>
+      <Button v-else>Delete account</Button>
+      <AlertDialogBackdrop
         :is-dismissable="props.isDismissable"
         :is-keyboard-dismiss-disabled="props.isKeyboardDismissDisabled"
         :portal-container="props.portalContainer"
@@ -72,29 +85,29 @@ defineExpose({ removed });
         "
         :variant="props.variant"
       >
-        <AlertDialog.Container :placement="props.placement" :size="props.size">
-          <AlertDialog.Dialog v-slot="{ close }">
-            <AlertDialog.CloseTrigger v-if="props.withCloseTrigger" v-bind="closeTriggerAttrs" />
-            <AlertDialog.Header>
-              <AlertDialog.Icon v-if="props.withIcon" :status="props.iconStatus">
+        <AlertDialogContainer :placement="props.placement" :size="props.size">
+          <AlertDialogDialog v-slot="{ close }">
+            <AlertDialogCloseTrigger v-if="props.withCloseTrigger" v-bind="closeTriggerAttrs" />
+            <AlertDialogHeader>
+              <AlertDialogIcon v-if="props.withIcon" :status="props.iconStatus">
                 <span v-if="props.withCustomIcon" data-testid="custom-icon">!</span>
-              </AlertDialog.Icon>
-              <AlertDialog.Icon v-if="props.withSecondIcon" :status="props.secondIconStatus" />
-              <AlertDialog.Heading v-if="!props.withoutHeading">
+              </AlertDialogIcon>
+              <AlertDialogIcon v-if="props.withSecondIcon" :status="props.secondIconStatus" />
+              <AlertDialogHeading v-if="!props.withoutHeading">
                 Delete account?
-              </AlertDialog.Heading>
-            </AlertDialog.Header>
-            <AlertDialog.Body>This cannot be undone.</AlertDialog.Body>
-            <AlertDialog.Footer>
-              <ButtonRoot v-if="props.withInsideButton">Learn more</ButtonRoot>
-              <AlertDialog.Close v-if="props.withCloseWrapper">
-                <ButtonRoot @click="removed = true">Delete</ButtonRoot>
-              </AlertDialog.Close>
+              </AlertDialogHeading>
+            </AlertDialogHeader>
+            <AlertDialogBody>This cannot be undone.</AlertDialogBody>
+            <AlertDialogFooter>
+              <Button v-if="props.withInsideButton">Learn more</Button>
+              <AlertDialogClose v-if="props.withCloseWrapper">
+                <Button @click="removed = true">Delete</Button>
+              </AlertDialogClose>
               <button data-testid="close-from-slot" type="button" @click="close()">Cancel</button>
-            </AlertDialog.Footer>
-          </AlertDialog.Dialog>
-        </AlertDialog.Container>
-      </AlertDialog.Backdrop>
+            </AlertDialogFooter>
+          </AlertDialogDialog>
+        </AlertDialogContainer>
+      </AlertDialogBackdrop>
     </AlertDialog>
   </div>
 </template>

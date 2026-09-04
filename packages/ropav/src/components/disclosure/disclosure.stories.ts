@@ -22,10 +22,10 @@ import {
 } from "./index";
 
 /**
- * Story templates are compiled at runtime, where Vue resolves a tag like `Disclosure.Trigger`
- * as a component literally named "Disclosure.Trigger" and fails. Dot notation only works in an
+ * Story templates are compiled at runtime, where Vue resolves a tag like `DisclosureTrigger`
+ * as a component literally named "DisclosureTrigger" and fails. Dot notation only works in an
  * SFC, whose compiler resolves it against the setup scope. So the parts are registered
- * individually here — in application code `<Disclosure.Trigger>` inside an SFC is fine.
+ * individually here — in application code `<DisclosureTrigger>` inside an SFC is fine.
  */
 const components = {
   Button,
@@ -66,7 +66,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 /**
- * The trigger is an ordinary `Button`, with no `Disclosure.Trigger` wrapper: the disclosure
+ * The trigger is an ordinary `Button`, with no `DisclosureTrigger` wrapper: the disclosure
  * hands the press and the ARIA wiring down to whatever pressable sits inside it.
  */
 const template = `

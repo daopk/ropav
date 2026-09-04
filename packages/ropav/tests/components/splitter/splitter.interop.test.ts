@@ -2,7 +2,7 @@ import { renderInterop } from "@ropav/testing/helpers/vue";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { h, nextTick } from "vue";
 
-import { SplitterHandle, SplitterPanel, SplitterRoot } from "@/components/splitter";
+import { SplitterHandle, SplitterPanel, Splitter } from "@/components/splitter";
 
 /**
  * The splitter mounted the way a consumer mounts it: from a VDOM host, with the panels and handles
@@ -43,7 +43,7 @@ afterEach(() => restore.splice(0).forEach((undo) => undo()));
 const PANELS = ["start", "middle", "end"];
 
 const renderSplitter = (props: Record<string, unknown> = {}) =>
-  renderInterop(SplitterRoot, {
+  renderInterop(Splitter, {
     props: { "aria-label": "Editor layout", ...props },
     slots: {
       default: () =>

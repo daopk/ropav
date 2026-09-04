@@ -16,12 +16,11 @@ import {
   SearchFieldClearButton,
   SearchFieldGroup,
   SearchFieldInput,
-  SearchFieldRoot,
   SearchFieldSearchIcon,
 } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata to
-// resolve `SearchField.Group` through, so dot notation cannot be used here.
+// resolve `SearchFieldGroup` through, so dot notation cannot be used here.
 const components = {
   Button,
   Description,
@@ -31,10 +30,10 @@ const components = {
   KbdAbbr,
   KbdContent,
   Label,
+  SearchField,
   SearchFieldClearButton,
   SearchFieldGroup,
   SearchFieldInput,
-  SearchFieldRoot,
   SearchFieldSearchIcon,
   Spinner,
 };
@@ -55,14 +54,14 @@ export const Default: Story = {
   render: () => ({
     components,
     template: `
-      <SearchFieldRoot name="search">
+      <SearchField name="search">
         <Label>Search</Label>
         <SearchFieldGroup>
           <SearchFieldSearchIcon />
           <SearchFieldInput class="w-[280px]" placeholder="Search..." />
           <SearchFieldClearButton />
         </SearchFieldGroup>
-      </SearchFieldRoot>
+      </SearchField>
     `,
   }),
 };
@@ -74,7 +73,7 @@ export const Sizes: Story = {
     setup: () => ({ sizes: ["sm", "md", "lg"] as const }),
     template: `
       <div class="flex flex-col gap-4">
-        <SearchFieldRoot
+        <SearchField
           v-for="size in sizes"
           :key="size"
           :name="'size-' + size"
@@ -86,7 +85,7 @@ export const Sizes: Story = {
             <SearchFieldInput class="w-[280px]" placeholder="Search..." />
             <SearchFieldClearButton />
           </SearchFieldGroup>
-        </SearchFieldRoot>
+        </SearchField>
       </div>
     `,
   }),
@@ -97,22 +96,22 @@ export const Variants: Story = {
     components,
     template: `
       <div class="flex flex-col gap-4">
-        <SearchFieldRoot name="primary-search" variant="primary">
+        <SearchField name="primary-search" variant="primary">
           <Label>Primary variant</Label>
           <SearchFieldGroup>
             <SearchFieldSearchIcon />
             <SearchFieldInput class="w-[280px]" placeholder="Search..." />
             <SearchFieldClearButton />
           </SearchFieldGroup>
-        </SearchFieldRoot>
-        <SearchFieldRoot name="secondary-search" variant="secondary">
+        </SearchField>
+        <SearchField name="secondary-search" variant="secondary">
           <Label>Secondary variant</Label>
           <SearchFieldGroup>
             <SearchFieldSearchIcon />
             <SearchFieldInput class="w-[280px]" placeholder="Search..." />
             <SearchFieldClearButton />
           </SearchFieldGroup>
-        </SearchFieldRoot>
+        </SearchField>
       </div>
     `,
   }),
@@ -123,14 +122,14 @@ export const FullWidth: Story = {
     components,
     template: `
       <div class="w-[400px] space-y-4">
-        <SearchFieldRoot full-width name="search">
+        <SearchField full-width name="search">
           <Label>Search</Label>
           <SearchFieldGroup>
             <SearchFieldSearchIcon />
             <SearchFieldInput placeholder="Search..." />
             <SearchFieldClearButton />
           </SearchFieldGroup>
-        </SearchFieldRoot>
+        </SearchField>
       </div>
     `,
   }),
@@ -141,7 +140,7 @@ export const WithDescription: Story = {
     components,
     template: `
       <div class="flex flex-col gap-4">
-        <SearchFieldRoot name="search">
+        <SearchField name="search">
           <Label>Search products</Label>
           <SearchFieldGroup>
             <SearchFieldSearchIcon />
@@ -149,8 +148,8 @@ export const WithDescription: Story = {
             <SearchFieldClearButton />
           </SearchFieldGroup>
           <Description>Enter keywords to search for products</Description>
-        </SearchFieldRoot>
-        <SearchFieldRoot name="search-users">
+        </SearchField>
+        <SearchField name="search-users">
           <Label>Search users</Label>
           <SearchFieldGroup>
             <SearchFieldSearchIcon />
@@ -158,7 +157,7 @@ export const WithDescription: Story = {
             <SearchFieldClearButton />
           </SearchFieldGroup>
           <Description>Search by name, email, or username</Description>
-        </SearchFieldRoot>
+        </SearchField>
       </div>
     `,
   }),
@@ -169,15 +168,15 @@ export const Required: Story = {
     components,
     template: `
       <div class="flex flex-col gap-4">
-        <SearchFieldRoot is-required name="search">
+        <SearchField is-required name="search">
           <Label>Search</Label>
           <SearchFieldGroup>
             <SearchFieldSearchIcon />
             <SearchFieldInput class="w-[280px]" placeholder="Search..." />
             <SearchFieldClearButton />
           </SearchFieldGroup>
-        </SearchFieldRoot>
-        <SearchFieldRoot is-required name="search-query">
+        </SearchField>
+        <SearchField is-required name="search-query">
           <Label>Search query</Label>
           <SearchFieldGroup>
             <SearchFieldSearchIcon />
@@ -185,7 +184,7 @@ export const Required: Story = {
             <SearchFieldClearButton />
           </SearchFieldGroup>
           <Description>Minimum 3 characters required</Description>
-        </SearchFieldRoot>
+        </SearchField>
       </div>
     `,
   }),
@@ -196,7 +195,7 @@ export const Invalid: Story = {
     components,
     template: `
       <div class="flex flex-col gap-4">
-        <SearchFieldRoot is-invalid is-required name="search" value="ab">
+        <SearchField is-invalid is-required name="search" value="ab">
           <Label>Search</Label>
           <SearchFieldGroup>
             <SearchFieldSearchIcon />
@@ -204,8 +203,8 @@ export const Invalid: Story = {
             <SearchFieldClearButton />
           </SearchFieldGroup>
           <FieldError>Search query must be at least 3 characters</FieldError>
-        </SearchFieldRoot>
-        <SearchFieldRoot is-invalid name="search-invalid">
+        </SearchField>
+        <SearchField is-invalid name="search-invalid">
           <Label>Search</Label>
           <SearchFieldGroup>
             <SearchFieldSearchIcon />
@@ -213,7 +212,7 @@ export const Invalid: Story = {
             <SearchFieldClearButton />
           </SearchFieldGroup>
           <FieldError>Invalid characters in search query</FieldError>
-        </SearchFieldRoot>
+        </SearchField>
       </div>
     `,
   }),
@@ -224,7 +223,7 @@ export const Disabled: Story = {
     components,
     template: `
       <div class="flex flex-col gap-4">
-        <SearchFieldRoot is-disabled name="search" value="Disabled search">
+        <SearchField is-disabled name="search" value="Disabled search">
           <Label>Search</Label>
           <SearchFieldGroup>
             <SearchFieldSearchIcon />
@@ -232,8 +231,8 @@ export const Disabled: Story = {
             <SearchFieldClearButton />
           </SearchFieldGroup>
           <Description>This search field is disabled</Description>
-        </SearchFieldRoot>
-        <SearchFieldRoot is-disabled name="search-empty">
+        </SearchField>
+        <SearchField is-disabled name="search-empty">
           <Label>Search</Label>
           <SearchFieldGroup>
             <SearchFieldSearchIcon />
@@ -241,7 +240,7 @@ export const Disabled: Story = {
             <SearchFieldClearButton />
           </SearchFieldGroup>
           <Description>This search field is disabled</Description>
-        </SearchFieldRoot>
+        </SearchField>
       </div>
     `,
   }),
@@ -257,7 +256,7 @@ export const Controlled: Story = {
     },
     template: `
       <div class="flex flex-col gap-4">
-        <SearchFieldRoot v-model:value="value" name="search">
+        <SearchField v-model:value="value" name="search">
           <Label>Search</Label>
           <SearchFieldGroup>
             <SearchFieldSearchIcon />
@@ -265,7 +264,7 @@ export const Controlled: Story = {
             <SearchFieldClearButton />
           </SearchFieldGroup>
           <Description>Current value: {{ value || "(empty)" }}</Description>
-        </SearchFieldRoot>
+        </SearchField>
         <div class="flex gap-2">
           <Button variant="tertiary" @click="value = ''">Clear</Button>
           <Button variant="tertiary" @click="value = 'example query'">Set example</Button>
@@ -286,7 +285,7 @@ export const WithValidation: Story = {
     },
     template: `
       <div class="flex flex-col gap-4">
-        <SearchFieldRoot
+        <SearchField
           v-model:value="value"
           is-required
           :is-invalid="isInvalid"
@@ -300,7 +299,7 @@ export const WithValidation: Story = {
           </SearchFieldGroup>
           <FieldError v-if="isInvalid">Search query must be at least 3 characters</FieldError>
           <Description v-else>Enter at least 3 characters to search</Description>
-        </SearchFieldRoot>
+        </SearchField>
       </div>
     `,
   }),
@@ -314,7 +313,7 @@ export const CustomIcons: Story = {
     components,
     template: `
       <div class="flex flex-col gap-4">
-        <SearchFieldRoot name="search-custom">
+        <SearchField name="search-custom">
           <Label>Search (Custom Icons)</Label>
           <SearchFieldGroup>
             <SearchFieldSearchIcon>
@@ -352,7 +351,7 @@ export const CustomIcons: Story = {
             </SearchFieldClearButton>
           </SearchFieldGroup>
           <Description>Custom icon children</Description>
-        </SearchFieldRoot>
+        </SearchField>
       </div>
     `,
   }),
@@ -386,7 +385,7 @@ export const FormExample: Story = {
     },
     template: `
       <Form class="flex w-[280px] flex-col gap-4" @submit="onSubmit">
-        <SearchFieldRoot
+        <SearchField
           v-model:value="value"
           is-required
           :is-invalid="isInvalid"
@@ -402,7 +401,7 @@ export const FormExample: Story = {
             Search query must be at least {{ MIN_LENGTH }} characters
           </FieldError>
           <Description v-else>Enter at least {{ MIN_LENGTH }} characters to search</Description>
-        </SearchFieldRoot>
+        </SearchField>
         <Button
           class="w-full"
           :is-disabled="value.length < MIN_LENGTH"
@@ -453,7 +452,7 @@ export const WithKeyboardShortcut: Story = {
     template: `
       <div ref="wrapper" class="flex flex-col gap-4">
         <div>
-          <SearchFieldRoot v-model:value="value" name="search">
+          <SearchField v-model:value="value" name="search">
             <Label>Search</Label>
             <SearchFieldGroup>
               <SearchFieldSearchIcon />
@@ -461,7 +460,7 @@ export const WithKeyboardShortcut: Story = {
               <SearchFieldClearButton />
             </SearchFieldGroup>
             <Description>Use keyboard shortcut to quickly focus this field</Description>
-          </SearchFieldRoot>
+          </SearchField>
         </div>
         <div class="text-default-500 flex items-center gap-2 text-sm">
           <span>Press</span>

@@ -388,7 +388,7 @@ export const createToastFunction = (queue: ToastQueue<ToastContentValue>): Toast
  * Default queue
  * -----------------------------------------------------------------------------------------------*/
 /**
- * The queue every `<Toast.Provider>` reads unless handed another one.
+ * The queue every `<ToastProvider>` reads unless handed another one.
  *
  * Module scope on purpose, and the reason the class holds no reactive state: `toast("Saved")` has
  * to work from anywhere, including code that is not inside a component at all.

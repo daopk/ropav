@@ -10,26 +10,10 @@ import PaginationRoot from "./pagination-root.vue";
 import PaginationSummary from "./pagination-summary.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Pagination = Object.assign(PaginationRoot, {
-  Content: PaginationContent,
-  Ellipsis: PaginationEllipsis,
-  Item: PaginationItem,
-  Link: PaginationLink,
-  Next: PaginationNext,
-  NextIcon: PaginationNextIcon,
-  Previous: PaginationPrevious,
-  PreviousIcon: PaginationPreviousIcon,
-  Root: PaginationRoot,
-  Summary: PaginationSummary,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
 export {
-  PaginationRoot,
+  PaginationRoot as Pagination,
   PaginationSummary,
   PaginationContent,
   PaginationItem,
@@ -42,7 +26,6 @@ export {
 };
 
 export type {
-  PaginationRootProps,
   PaginationRootProps as PaginationProps,
   PaginationSummaryProps,
   PaginationContentProps,

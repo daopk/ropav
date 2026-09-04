@@ -9,7 +9,7 @@ import {
   TabsList,
   TabsListContainer,
   TabsPanel,
-  TabsRoot,
+  Tabs,
   TabsSeparator,
   TabsTab,
 } from "@/components/tabs";
@@ -37,7 +37,7 @@ const ITEMS: Item[] = [
  * per-tab context and a shared-element scope, and none of the three can go red in the other suite.
  */
 const renderTabs = (props: Record<string, unknown> = {}, items: Item[] = ITEMS) =>
-  renderInterop(TabsRoot, {
+  renderInterop(Tabs, {
     props,
     slots: {
       default: () => [
@@ -193,7 +193,7 @@ describe("Tabs (interop)", () => {
   });
 
   it("works without a list container written in the host", async () => {
-    const { container, unmount } = renderInterop(TabsRoot, {
+    const { container, unmount } = renderInterop(Tabs, {
       slots: {
         default: () => [
           h(

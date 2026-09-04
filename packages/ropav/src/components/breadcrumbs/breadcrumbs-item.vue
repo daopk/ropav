@@ -7,7 +7,7 @@ import { useId } from "../../composables/use-id";
 import { dataAttr } from "../../utils/assertion";
 import { composeSlotClassName } from "../../utils/compose";
 import { IconChevronRight } from "../icons";
-import { LinkRoot } from "../link";
+import { Link } from "../link";
 
 import { useBreadcrumbsContext } from "./breadcrumbs.context";
 
@@ -84,7 +84,7 @@ const onPress = () => context.onAction(itemKey.value);
     data-slot="breadcrumbs-item"
     v-bind="$attrs"
   >
-    <LinkRoot
+    <Link
       :aria-current="isCurrent ? 'page' : undefined"
       :aria-describedby="$props.ariaDescribedby"
       :aria-label="$props.ariaLabel"
@@ -102,7 +102,7 @@ const onPress = () => context.onAction(itemKey.value);
       @press="onPress"
     >
       <slot :is-current="isCurrent" :is-disabled="isDisabled" />
-    </LinkRoot>
+    </Link>
 
     <template v-if="!isCurrent">
       <IconChevronRight

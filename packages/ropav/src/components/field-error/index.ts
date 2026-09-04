@@ -2,20 +2,11 @@ import FieldErrorContent from "./field-error-content.vue";
 import FieldErrorRoot from "./field-error-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const FieldError = Object.assign(FieldErrorRoot, {
-  Content: FieldErrorContent,
-  Root: FieldErrorRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { FieldErrorRoot, FieldErrorContent };
+export { FieldErrorRoot as FieldError, FieldErrorContent };
 
 export type {
-  FieldErrorRootProps,
   FieldErrorRootProps as FieldErrorProps,
   FieldErrorContentProps,
   FieldErrorSlotProps,

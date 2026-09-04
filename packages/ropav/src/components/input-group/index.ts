@@ -5,25 +5,19 @@ import InputGroupSuffix from "./input-group-suffix.vue";
 import InputGroupTextArea from "./input-group-textarea.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const InputGroup = Object.assign(InputGroupRoot, {
-  Input: InputGroupInput,
-  Prefix: InputGroupPrefix,
-  Root: InputGroupRoot,
-  Suffix: InputGroupSuffix,
-  TextArea: InputGroupTextArea,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { InputGroupInput, InputGroupPrefix, InputGroupRoot, InputGroupSuffix, InputGroupTextArea };
+export {
+  InputGroupInput,
+  InputGroupPrefix,
+  InputGroupRoot as InputGroup,
+  InputGroupSuffix,
+  InputGroupTextArea,
+};
 
 export type {
-  InputGroupRootProps,
   InputGroupRootProps as InputGroupProps,
-  InputGroupRootSlotProps,
+  InputGroupRootSlotProps as InputGroupSlotProps,
   InputGroupInputProps,
   InputGroupTextAreaProps,
   InputGroupPrefixProps,

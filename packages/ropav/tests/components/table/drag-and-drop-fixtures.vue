@@ -4,7 +4,17 @@ import type { DragKey, DroppableCollectionReorderEvent } from "@/utils/dnd-types
 import { shallowRef } from "vue";
 
 import { Button } from "@/components/button";
-import { Table } from "@/components/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableContent,
+  TableDragHandle,
+  TableDropIndicator,
+  TableHeader,
+  TableRow,
+} from "@/components/table";
 import { useDragAndDrop } from "@/composables/use-drag-and-drop";
 
 /**
@@ -47,34 +57,34 @@ defineExpose({ order });
 </script>
 
 <template>
-  <Table.Root>
-    <Table.Content
+  <Table>
+    <TableContent
       aria-label="Reorderable table"
       :drag-and-drop-hooks="dragAndDropHooks"
       :selection-mode="props.selectionMode"
     >
-      <Table.Header v-slot="{ allowsDragging }">
-        <Table.Column v-if="allowsDragging" id="drag" />
-        <Table.Column id="name" is-row-header>Name</Table.Column>
-        <Table.Column id="role">Role</Table.Column>
-      </Table.Header>
-      <Table.Body>
+      <TableHeader v-slot="{ allowsDragging }">
+        <TableColumn v-if="allowsDragging" id="drag" />
+        <TableColumn id="name" is-row-header>Name</TableColumn>
+        <TableColumn id="role">Role</TableColumn>
+      </TableHeader>
+      <TableBody>
         <template v-for="name in order" :key="name">
-          <Table.DropIndicator :target="{ dropPosition: 'before', key: name, type: 'item' }" />
-          <Table.Row :id="name" :text-value="name">
-            <Table.Cell>
-              <Table.DragHandle>
+          <TableDropIndicator :target="{ dropPosition: 'before', key: name, type: 'item' }" />
+          <TableRow :id="name" :text-value="name">
+            <TableCell>
+              <TableDragHandle>
                 <Button is-icon-only size="sm" variant="ghost">grip</Button>
-              </Table.DragHandle>
-            </Table.Cell>
-            <Table.Cell :text-value="name">{{ name }}</Table.Cell>
-            <Table.Cell>Engineer</Table.Cell>
-          </Table.Row>
+              </TableDragHandle>
+            </TableCell>
+            <TableCell :text-value="name">{{ name }}</TableCell>
+            <TableCell>Engineer</TableCell>
+          </TableRow>
         </template>
-        <Table.DropIndicator
+        <TableDropIndicator
           :target="{ dropPosition: 'after', key: order[order.length - 1]!, type: 'item' }"
         />
-      </Table.Body>
-    </Table.Content>
-  </Table.Root>
+      </TableBody>
+    </TableContent>
+  </Table>
 </template>

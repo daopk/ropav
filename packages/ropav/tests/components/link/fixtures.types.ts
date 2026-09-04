@@ -13,7 +13,7 @@ export interface LinkFixtureProps {
   /** Sets no optional prop at all, as a caller writing the bare component does. */
   bare?: boolean;
   ariaLabel?: string;
-  /** Renders a `Link.Icon` at all. */
+  /** Renders a `LinkIcon` at all. */
   withIcon?: boolean;
   /** Puts custom content inside the icon instead of the built-in glyph. */
   customIcon?: boolean;

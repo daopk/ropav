@@ -7,7 +7,7 @@ import {
   TimeFieldGroup,
   TimeFieldInput,
   TimeFieldPrefix,
-  TimeFieldRoot,
+  TimeField,
   TimeFieldSegment,
   TimeFieldSuffix,
 } from "@/components/time-field";
@@ -28,7 +28,7 @@ const props = withDefaults(defineProps<TimeFieldFixtureProps>(), {
 </script>
 
 <template>
-  <TimeFieldRoot v-if="props.attributeForm" aria-label="Time" full-width :locale="props.locale">
+  <TimeField v-if="props.attributeForm" aria-label="Time" full-width :locale="props.locale">
     <TimeFieldGroup full-width>
       <TimeFieldInput>
         <template #default="{ segment }">
@@ -36,8 +36,8 @@ const props = withDefaults(defineProps<TimeFieldFixtureProps>(), {
         </template>
       </TimeFieldInput>
     </TimeFieldGroup>
-  </TimeFieldRoot>
-  <TimeFieldRoot
+  </TimeField>
+  <TimeField
     v-else
     :aria-label="props.withLabel ? undefined : (props.ariaLabel ?? 'Time')"
     :class="props.class"
@@ -67,5 +67,5 @@ const props = withDefaults(defineProps<TimeFieldFixtureProps>(), {
       <TimeFieldSuffix v-if="props.withSuffix">after</TimeFieldSuffix>
     </TimeFieldGroup>
     <Description v-if="props.withDescription">When to meet</Description>
-  </TimeFieldRoot>
+  </TimeField>
 </template>

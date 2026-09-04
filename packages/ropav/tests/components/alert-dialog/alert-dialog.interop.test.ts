@@ -2,8 +2,19 @@ import { renderInterop } from "@ropav/testing/helpers/vue";
 import { afterEach, describe, expect, it } from "vitest";
 import { h, nextTick } from "vue";
 
-import { AlertDialog } from "@/components/alert-dialog";
-import { ButtonRoot } from "@/components/button";
+import {
+  AlertDialog,
+  AlertDialogBackdrop,
+  AlertDialogBody,
+  AlertDialogClose,
+  AlertDialogContainer,
+  AlertDialogDialog,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogHeading,
+  AlertDialogIcon,
+} from "@/components/alert-dialog";
+import { Button } from "@/components/button";
 
 /**
  * The dialog mounted the way a consumer mounts it: from a VDOM host, with every part written in the
@@ -29,31 +40,31 @@ const render = () =>
     props: { defaultOpen: true },
     slots: {
       default: () => [
-        h(ButtonRoot, null, { default: () => "Delete account" }),
+        h(Button, null, { default: () => "Delete account" }),
         h(
-          AlertDialog.Backdrop,
+          AlertDialogBackdrop,
           { variant: "blur" },
           {
             default: () =>
               h(
-                AlertDialog.Container,
+                AlertDialogContainer,
                 { placement: "top", size: "lg" },
                 {
                   default: () =>
-                    h(AlertDialog.Dialog, null, {
+                    h(AlertDialogDialog, null, {
                       default: () => [
-                        h(AlertDialog.Header, null, {
+                        h(AlertDialogHeader, null, {
                           default: () => [
-                            h(AlertDialog.Icon, { status: "warning" }),
-                            h(AlertDialog.Heading, null, { default: () => "Delete account?" }),
+                            h(AlertDialogIcon, { status: "warning" }),
+                            h(AlertDialogHeading, null, { default: () => "Delete account?" }),
                           ],
                         }),
-                        h(AlertDialog.Body, null, { default: () => "This cannot be undone." }),
-                        h(AlertDialog.Footer, null, {
+                        h(AlertDialogBody, null, { default: () => "This cannot be undone." }),
+                        h(AlertDialogFooter, null, {
                           default: () => [
-                            h(ButtonRoot, null, { default: () => "Learn more" }),
-                            h(AlertDialog.Close, null, {
-                              default: () => h(ButtonRoot, null, { default: () => "Delete" }),
+                            h(Button, null, { default: () => "Learn more" }),
+                            h(AlertDialogClose, null, {
+                              default: () => h(Button, null, { default: () => "Delete" }),
                             }),
                           ],
                         }),

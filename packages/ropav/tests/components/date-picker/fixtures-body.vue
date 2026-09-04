@@ -7,13 +7,13 @@ import {
   CalendarGridBody,
   CalendarGridHeader,
   CalendarHeaderCell,
-  CalendarRoot,
+  Calendar,
 } from "@/components/calendar";
 import {
   DatePickerGroup,
   DatePickerInput,
   DatePickerPopover,
-  DatePickerRoot,
+  DatePicker,
   DatePickerSegment,
   DatePickerSuffix,
   DatePickerTrigger,
@@ -39,7 +39,7 @@ const props = withDefaults(defineProps<DatePickerFixtureProps>(), {
 </script>
 
 <template>
-  <DatePickerRoot v-if="props.attributeForm" aria-label="Appointment" is-disabled is-required>
+  <DatePicker v-if="props.attributeForm" aria-label="Appointment" is-disabled is-required>
     <DatePickerGroup>
       <DatePickerInput>
         <template #default="{ segment }">
@@ -52,8 +52,8 @@ const props = withDefaults(defineProps<DatePickerFixtureProps>(), {
         </DatePickerTrigger>
       </DatePickerSuffix>
     </DatePickerGroup>
-  </DatePickerRoot>
-  <DatePickerRoot
+  </DatePicker>
+  <DatePicker
     v-else
     :id="props.id"
     :aria-describedby="props.ariaDescribedby"
@@ -102,7 +102,7 @@ const props = withDefaults(defineProps<DatePickerFixtureProps>(), {
     <Description v-if="props.description">{{ props.description }}</Description>
     <ErrorMessage v-if="props.errorMessage">{{ props.errorMessage }}</ErrorMessage>
     <DatePickerPopover>
-      <CalendarRoot aria-label="Selected date">
+      <Calendar aria-label="Selected date">
         <CalendarGrid>
           <CalendarGridHeader>
             <template #default="{ day }">
@@ -115,7 +115,7 @@ const props = withDefaults(defineProps<DatePickerFixtureProps>(), {
             </template>
           </CalendarGridBody>
         </CalendarGrid>
-      </CalendarRoot>
+      </Calendar>
     </DatePickerPopover>
-  </DatePickerRoot>
+  </DatePicker>
 </template>

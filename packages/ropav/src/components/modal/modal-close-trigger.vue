@@ -3,7 +3,7 @@ import type { ModalCloseTriggerProps } from "./modal.types";
 
 import { computed } from "vue";
 
-import { CloseButtonRoot } from "../close-button";
+import { CloseButton } from "../close-button";
 
 import { useModalContext } from "./modal.context";
 
@@ -20,7 +20,7 @@ const onClick = () => state.close();
 /**
  * `aria-label` is deliberately **not** declared as a prop.
  *
- * `CloseButtonRoot` already names itself, and a declared prop would be bound on every render — as
+ * `CloseButton` already names itself, and a declared prop would be bound on every render — as
  * `undefined` when the caller passed nothing, which fallthrough merges *over* the default and
  * leaves the button with no accessible name at all. Left to fallthrough, a caller's label still
  * wins and silence stays silent, which is the same order React's spread gives.
@@ -28,5 +28,5 @@ const onClick = () => state.close();
 </script>
 
 <template>
-  <CloseButtonRoot :class="styles" data-slot="modal-close-trigger" @click="onClick" />
+  <CloseButton :class="styles" data-slot="modal-close-trigger" @click="onClick" />
 </template>

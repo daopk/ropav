@@ -1,5 +1,5 @@
 <script setup lang="ts" vapor>
-import type { PaginationRootProps } from "@/components/pagination";
+import type { PaginationProps } from "@/components/pagination";
 
 import {
   PaginationContent,
@@ -10,12 +10,12 @@ import {
   PaginationNextIcon,
   PaginationPrevious,
   PaginationPreviousIcon,
-  PaginationRoot,
+  Pagination,
   PaginationSummary,
 } from "@/components/pagination";
 
 const props = defineProps<
-  PaginationRootProps & {
+  PaginationProps & {
     activePage?: number;
     isNextDisabled?: boolean;
     isPreviousDisabled?: boolean;
@@ -27,7 +27,7 @@ const props = defineProps<
 </script>
 
 <template>
-  <PaginationRoot :class="props.class" :size="props.size">
+  <Pagination :class="props.class" :size="props.size">
     <PaginationSummary>1 to 4 of 12 results</PaginationSummary>
     <PaginationContent>
       <PaginationItem>
@@ -57,5 +57,5 @@ const props = defineProps<
         </PaginationNext>
       </PaginationItem>
     </PaginationContent>
-  </PaginationRoot>
+  </Pagination>
 </template>

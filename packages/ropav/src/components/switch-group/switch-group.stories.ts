@@ -9,7 +9,7 @@ import { Switch, SwitchContent, SwitchControl, SwitchThumb } from "../switch";
 import { SwitchGroup } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata
-// to resolve `Switch.Content` through, so dot notation cannot be used here.
+// to resolve `SwitchContent` through, so dot notation cannot be used here.
 const components = { Button, Switch, SwitchContent, SwitchControl, SwitchGroup, SwitchThumb };
 
 const meta: StoryMeta = {

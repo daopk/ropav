@@ -11,16 +11,16 @@ import { CloseButton } from "../close-button";
 import { Form } from "../form";
 import { Input } from "../input";
 import { Label } from "../label";
-import { LinkIcon, LinkRoot } from "../link";
+import { LinkIcon, Link } from "../link";
 import { TextField } from "../textfield";
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./index";
 
 /**
- * Story templates are compiled at runtime, where Vue resolves a tag like `Card.Header`
- * as a component literally named "Card.Header" and fails. Dot notation only works in an
+ * Story templates are compiled at runtime, where Vue resolves a tag like `CardHeader`
+ * as a component literally named "CardHeader" and fails. Dot notation only works in an
  * SFC, whose compiler resolves it against the setup scope. So the parts are registered
- * individually here — in application code `<Card.Header>` inside an SFC is fine.
+ * individually here — in application code `<CardHeader>` inside an SFC is fine.
  */
 const components = {
   Avatar,
@@ -38,7 +38,7 @@ const components = {
   IconCircleDollar,
   Input,
   Label,
-  Link: LinkRoot,
+  Link: Link,
   LinkIcon,
   TextField,
 };

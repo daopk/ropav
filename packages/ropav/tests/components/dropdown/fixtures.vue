@@ -4,13 +4,21 @@ import type { CollectionKey } from "@/composables/use-collection";
 import type { MenuTriggerType } from "@/composables/use-menu-trigger";
 import type { CollectionSelection, SelectionMode } from "@/composables/use-selection-manager";
 
-import { ButtonRoot } from "@/components/button";
-import { DescriptionRoot } from "@/components/description";
-import { Dropdown } from "@/components/dropdown";
-import { EmptyStateRoot } from "@/components/empty-state";
-import { HeaderRoot } from "@/components/header";
-import { LabelRoot } from "@/components/label";
-import { SeparatorRoot } from "@/components/separator";
+import { Button } from "@/components/button";
+import { Description } from "@/components/description";
+import {
+  Dropdown,
+  DropdownMenu,
+  DropdownPopover,
+  DropdownSubmenuTrigger,
+  DropdownTrigger,
+} from "@/components/dropdown";
+import { EmptyState } from "@/components/empty-state";
+import { Header } from "@/components/header";
+import { Label } from "@/components/label";
+import { MenuItem, MenuItemIndicator, MenuItemSubmenuIndicator } from "@/components/menu-item";
+import { MenuSection } from "@/components/menu-section";
+import { Separator } from "@/components/separator";
 
 const props = withDefaults(
   defineProps<{
@@ -57,10 +65,10 @@ const emit = defineEmits<{
     :trigger="props.trigger"
     @open-change="emit('openChange', $event)"
   >
-    <Dropdown.Trigger v-if="props.withCustomTrigger" aria-label="Menu">Actions</Dropdown.Trigger>
-    <ButtonRoot v-else aria-label="Menu" variant="secondary">Actions</ButtonRoot>
-    <Dropdown.Popover>
-      <Dropdown.Menu
+    <DropdownTrigger v-if="props.withCustomTrigger" aria-label="Menu">Actions</DropdownTrigger>
+    <Button v-else aria-label="Menu" variant="secondary">Actions</Button>
+    <DropdownPopover>
+      <DropdownMenu
         :disabled-keys="props.disabledKeys"
         :selected-keys="props.selectedKeys"
         :selection-mode="props.selectionMode"
@@ -68,51 +76,51 @@ const emit = defineEmits<{
         @selection-change="emit('selectionChange', $event)"
       >
         <template v-if="props.withEmptyState" #empty>
-          <EmptyStateRoot>Nothing here</EmptyStateRoot>
+          <EmptyState>Nothing here</EmptyState>
         </template>
-        <Dropdown.Section v-if="props.withSection">
-          <HeaderRoot v-if="props.withHeader">Actions</HeaderRoot>
-          <Dropdown.Item
+        <MenuSection v-if="props.withSection">
+          <Header v-if="props.withHeader">Actions</Header>
+          <MenuItem
             v-for="item of props.items"
             :id="item.id"
             :key="item.id"
             :is-disabled="item.isDisabled"
           >
-            <Dropdown.ItemIndicator v-if="props.withIndicator" />
-            <LabelRoot>{{ item.label }}</LabelRoot>
-            <DescriptionRoot v-if="item.description">{{ item.description }}</DescriptionRoot>
-          </Dropdown.Item>
-        </Dropdown.Section>
+            <MenuItemIndicator v-if="props.withIndicator" />
+            <Label>{{ item.label }}</Label>
+            <Description v-if="item.description">{{ item.description }}</Description>
+          </MenuItem>
+        </MenuSection>
         <template v-else>
-          <Dropdown.Item
+          <MenuItem
             v-for="item of props.items"
             :id="item.id"
             :key="item.id"
             :is-disabled="item.isDisabled"
           >
-            <Dropdown.ItemIndicator v-if="props.withIndicator" />
-            <LabelRoot>{{ item.label }}</LabelRoot>
-            <DescriptionRoot v-if="item.description">{{ item.description }}</DescriptionRoot>
-          </Dropdown.Item>
-          <SeparatorRoot v-if="props.withSeparator" />
-          <Dropdown.SubmenuTrigger v-if="props.withSubmenu">
-            <Dropdown.Item id="share">
-              <LabelRoot>Share</LabelRoot>
-              <Dropdown.SubmenuIndicator />
-            </Dropdown.Item>
-            <Dropdown.Popover>
-              <Dropdown.Menu>
-                <Dropdown.Item id="whatsapp">
-                  <LabelRoot>WhatsApp</LabelRoot>
-                </Dropdown.Item>
-                <Dropdown.Item id="telegram">
-                  <LabelRoot>Telegram</LabelRoot>
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown.Popover>
-          </Dropdown.SubmenuTrigger>
+            <MenuItemIndicator v-if="props.withIndicator" />
+            <Label>{{ item.label }}</Label>
+            <Description v-if="item.description">{{ item.description }}</Description>
+          </MenuItem>
+          <Separator v-if="props.withSeparator" />
+          <DropdownSubmenuTrigger v-if="props.withSubmenu">
+            <MenuItem id="share">
+              <Label>Share</Label>
+              <MenuItemSubmenuIndicator />
+            </MenuItem>
+            <DropdownPopover>
+              <DropdownMenu>
+                <MenuItem id="whatsapp">
+                  <Label>WhatsApp</Label>
+                </MenuItem>
+                <MenuItem id="telegram">
+                  <Label>Telegram</Label>
+                </MenuItem>
+              </DropdownMenu>
+            </DropdownPopover>
+          </DropdownSubmenuTrigger>
         </template>
-      </Dropdown.Menu>
-    </Dropdown.Popover>
+      </DropdownMenu>
+    </DropdownPopover>
   </Dropdown>
 </template>

@@ -12,24 +12,6 @@ import ModalRoot from "./modal-root.vue";
 import ModalTrigger from "./modal-trigger.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Modal = Object.assign(ModalRoot, {
-  Backdrop: ModalBackdrop,
-  Body: ModalBody,
-  Close: ModalClose,
-  CloseTrigger: ModalCloseTrigger,
-  Container: ModalContainer,
-  Dialog: ModalDialog,
-  Footer: ModalFooter,
-  Header: ModalHeader,
-  Heading: ModalHeading,
-  Icon: ModalIcon,
-  Root: ModalRoot,
-  Trigger: ModalTrigger,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
 export {
@@ -43,7 +25,7 @@ export {
   ModalHeader,
   ModalHeading,
   ModalIcon,
-  ModalRoot,
+  ModalRoot as Modal,
   ModalTrigger,
 };
 
@@ -59,8 +41,7 @@ export type {
   ModalHeadingProps,
   ModalIconProps,
   ModalPlacement,
-  ModalRootEmits,
-  ModalRootProps,
+  ModalRootEmits as ModalEmits,
   ModalRootProps as ModalProps,
   ModalTriggerProps,
 } from "./modal.types";

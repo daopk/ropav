@@ -41,7 +41,7 @@ const trigger = useDialogTrigger({ isDisabled: () => props.isDisabled }, state);
 
 // The trigger is whatever pressable sits inside, which is why the behaviour is handed down rather
 // than built into a trigger component: `<Drawer><Button/></Drawer>` is the common case, and
-// `Drawer.Trigger` exists for a button that should carry the drawer's own trigger styling.
+// `DrawerTrigger` exists for a button that should carry the drawer's own trigger styling.
 providePressResponder(trigger.responder);
 
 provideDrawerContext({

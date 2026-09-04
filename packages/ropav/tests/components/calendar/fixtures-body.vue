@@ -11,7 +11,7 @@ import {
   CalendarHeaderCell,
   CalendarHeading,
   CalendarNavButton,
-  CalendarRoot,
+  Calendar,
 } from "@/components/calendar";
 import {
   CalendarYearPickerCell,
@@ -44,7 +44,7 @@ const props = withDefaults(defineProps<CalendarFixtureProps>(), {
 </script>
 
 <template>
-  <CalendarRoot v-if="props.attributeForm" aria-label="Event date" is-disabled>
+  <Calendar v-if="props.attributeForm" aria-label="Event date" is-disabled>
     <CalendarGrid>
       <CalendarGridHeader>
         <template #default="{ day }">
@@ -57,8 +57,8 @@ const props = withDefaults(defineProps<CalendarFixtureProps>(), {
         </template>
       </CalendarGridBody>
     </CalendarGrid>
-  </CalendarRoot>
-  <CalendarRoot
+  </Calendar>
+  <Calendar
     v-else
     :id="props.id"
     :aria-label="props.ariaLabel ?? 'Event date'"
@@ -130,5 +130,5 @@ const props = withDefaults(defineProps<CalendarFixtureProps>(), {
         </template>
       </CalendarYearPickerGridBody>
     </CalendarYearPickerGrid>
-  </CalendarRoot>
+  </Calendar>
 </template>

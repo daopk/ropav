@@ -1,18 +1,11 @@
 import HeaderRoot from "./header-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Header = Object.assign(HeaderRoot, {
-  Root: HeaderRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export { HeaderRoot };
+export { HeaderRoot as Header };
 
-export type { HeaderRootProps, HeaderRootProps as HeaderProps } from "./header.types";
+export type { HeaderRootProps as HeaderProps } from "./header.types";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants

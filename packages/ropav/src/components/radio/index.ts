@@ -4,22 +4,11 @@ import RadioIndicator from "./radio-indicator.vue";
 import RadioRoot from "./radio-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Radio = Object.assign(RadioRoot, {
-  Content: RadioContent,
-  Control: RadioControl,
-  Indicator: RadioIndicator,
-  Root: RadioRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { RadioRoot, RadioContent, RadioControl, RadioIndicator };
+export { RadioRoot as Radio, RadioContent, RadioControl, RadioIndicator };
 
 export type {
-  RadioRootProps,
   RadioRootProps as RadioProps,
   RadioContentProps,
   RadioControlProps,

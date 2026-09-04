@@ -1,19 +1,11 @@
 import ColorSwatchRoot from "./color-swatch-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const ColorSwatch = Object.assign(ColorSwatchRoot, {
-  Root: ColorSwatchRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export { ColorSwatchRoot };
+export { ColorSwatchRoot as ColorSwatch };
 
 export type {
-  ColorSwatchRootProps,
   ColorSwatchRootProps as ColorSwatchProps,
   ColorSwatchSlotProps,
 } from "./color-swatch.types";

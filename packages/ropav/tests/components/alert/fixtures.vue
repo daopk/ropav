@@ -1,10 +1,16 @@
 <script setup lang="ts" vapor>
-import type { AlertRootProps } from "@/components/alert";
+import type { AlertProps } from "@/components/alert";
 
-import { Alert } from "@/components/alert";
+import {
+  Alert,
+  AlertContent,
+  AlertDescription,
+  AlertIndicator,
+  AlertTitle,
+} from "@/components/alert";
 
 defineProps<
-  AlertRootProps & {
+  AlertProps & {
     contentClass?: string;
     customIndicator?: boolean;
     descriptionClass?: string;
@@ -17,27 +23,27 @@ defineProps<
 
 <template>
   <Alert :class="$props.class" data-testid="root" :status="$props.status">
-    <Alert.Indicator
+    <AlertIndicator
       v-if="$props.customIndicator"
       :class="$props.indicatorClass"
       data-testid="indicator"
     >
       <span data-testid="custom-indicator">!</span>
-    </Alert.Indicator>
+    </AlertIndicator>
     <!-- A declared slot that renders nothing, which is the shape React answers with empty. -->
-    <Alert.Indicator
+    <AlertIndicator
       v-else-if="$props.emptyIndicator"
       :class="$props.indicatorClass"
       data-testid="indicator"
     >
       <span v-if="false" data-testid="never-rendered" />
-    </Alert.Indicator>
-    <Alert.Indicator v-else :class="$props.indicatorClass" data-testid="indicator" />
-    <Alert.Content :class="$props.contentClass" data-testid="content">
-      <Alert.Title :class="$props.titleClass" data-testid="title">Update available</Alert.Title>
-      <Alert.Description :class="$props.descriptionClass" data-testid="description">
+    </AlertIndicator>
+    <AlertIndicator v-else :class="$props.indicatorClass" data-testid="indicator" />
+    <AlertContent :class="$props.contentClass" data-testid="content">
+      <AlertTitle :class="$props.titleClass" data-testid="title">Update available</AlertTitle>
+      <AlertDescription :class="$props.descriptionClass" data-testid="description">
         Refresh to get the latest features.
-      </Alert.Description>
-    </Alert.Content>
+      </AlertDescription>
+    </AlertContent>
   </Alert>
 </template>

@@ -5,7 +5,7 @@ import {
   TableColumn,
   TableContent,
   TableHeader,
-  TableRoot,
+  Table,
   TableSortableColumnHeader,
 } from "@/components/table";
 
@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<TableSortableColumnHeaderProps>(), {
 </script>
 
 <template>
-  <TableRoot>
+  <Table>
     <TableContent aria-label="Team">
       <TableHeader>
         <TableColumn id="name">
@@ -31,5 +31,5 @@ const props = withDefaults(defineProps<TableSortableColumnHeaderProps>(), {
         </TableColumn>
       </TableHeader>
     </TableContent>
-  </TableRoot>
+  </Table>
 </template>

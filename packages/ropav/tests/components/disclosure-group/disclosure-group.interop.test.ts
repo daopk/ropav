@@ -2,16 +2,16 @@ import { renderInterop } from "@ropav/testing/helpers/vue";
 import { describe, expect, it, vi } from "vitest";
 import { h, nextTick } from "vue";
 
-import { ButtonRoot } from "@/components/button";
+import { Button } from "@/components/button";
 import {
   DisclosureBody,
   DisclosureContent,
   DisclosureHeading,
   DisclosureIndicator,
-  DisclosureRoot,
+  Disclosure,
   DisclosureTrigger,
 } from "@/components/disclosure";
-import { DisclosureGroupRoot } from "@/components/disclosure-group";
+import { DisclosureGroup } from "@/components/disclosure-group";
 
 /**
  * The group mounted the way a consumer mounts it: from a VDOM host, with the disclosures written
@@ -26,13 +26,13 @@ import { DisclosureGroupRoot } from "@/components/disclosure-group";
 const ITEMS = ["one", "two", "three"];
 
 const renderGroup = (props: Record<string, unknown> = {}, bareTriggers = false) =>
-  renderInterop(DisclosureGroupRoot, {
+  renderInterop(DisclosureGroup, {
     props,
     slots: {
       default: () =>
         ITEMS.map((item) =>
           h(
-            DisclosureRoot,
+            Disclosure,
             { id: item, key: item },
             {
               default: () => [
@@ -40,7 +40,7 @@ const renderGroup = (props: Record<string, unknown> = {}, bareTriggers = false) 
                   default: () =>
                     bareTriggers
                       ? h(
-                          ButtonRoot,
+                          Button,
                           { "data-testid": `bare-${item}` },
                           {
                             default: () => [`Trigger ${item}`, h(DisclosureIndicator)],

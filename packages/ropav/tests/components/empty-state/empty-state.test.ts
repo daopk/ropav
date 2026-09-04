@@ -1,10 +1,10 @@
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it } from "vitest";
 
-import { EmptyStateRoot } from "@/components/empty-state";
+import { EmptyState } from "@/components/empty-state";
 
 const renderEmptyState = (options: Parameters<typeof renderVapor>[1] = {}) => {
-  const result = renderVapor(EmptyStateRoot, options);
+  const result = renderVapor(EmptyState, options);
   const emptyState = result.container.querySelector('[data-slot="empty-state"]');
 
   if (!emptyState) throw new Error("empty state not rendered");

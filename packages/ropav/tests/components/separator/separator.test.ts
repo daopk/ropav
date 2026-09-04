@@ -1,10 +1,10 @@
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it } from "vitest";
 
-import { SeparatorRoot } from "@/components/separator";
+import { Separator } from "@/components/separator";
 
 const renderSeparator = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(SeparatorRoot, { props });
+  const result = renderVapor(Separator, { props });
   const separator = result.container.querySelector('[data-slot="separator"]');
 
   if (!separator) throw new Error("separator not rendered");

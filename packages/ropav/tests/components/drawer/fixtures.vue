@@ -3,8 +3,21 @@ import type { DrawerFixtureProps } from "./fixtures.types";
 
 import { computed, shallowRef } from "vue";
 
-import { ButtonRoot } from "@/components/button";
-import { Drawer } from "@/components/drawer";
+import { Button } from "@/components/button";
+import {
+  Drawer,
+  DrawerBackdrop,
+  DrawerBody,
+  DrawerClose,
+  DrawerCloseTrigger,
+  DrawerContent,
+  DrawerDialog,
+  DrawerFooter,
+  DrawerHandle,
+  DrawerHeader,
+  DrawerHeading,
+  DrawerTrigger,
+} from "@/components/drawer";
 
 // Every three-state boolean declares an explicit `undefined` default: forwarding a `false` that Vue
 // had cast would turn the drawer controlled, or read as a deliberate dismiss opt-out.
@@ -40,7 +53,7 @@ const closeTriggerAttrs = computed(() =>
   props.closeTriggerLabel === undefined ? {} : { "aria-label": props.closeTriggerLabel },
 );
 
-/** Set by the button inside `Drawer.Close`, so a test can prove both handlers ran. */
+/** Set by the button inside `DrawerClose`, so a test can prove both handlers ran. */
 const saved = shallowRef(false);
 
 defineExpose({ saved });
@@ -55,8 +68,8 @@ defineExpose({ saved });
       :is-open="props.isOpen"
       @open-change="emit('openChange', $event)"
     >
-      <Drawer.Trigger>Open drawer</Drawer.Trigger>
-      <Drawer.Backdrop
+      <DrawerTrigger>Open drawer</DrawerTrigger>
+      <DrawerBackdrop
         :is-dismissable="props.isDismissable"
         :is-keyboard-dismiss-disabled="props.isKeyboardDismissDisabled"
         :portal-container="props.portalContainer"
@@ -65,26 +78,26 @@ defineExpose({ saved });
         "
         :variant="props.variant"
       >
-        <Drawer.Content :placement="props.placement">
-          <Drawer.Dialog v-slot="{ close }">
-            <Drawer.Handle v-if="props.withHandle" />
-            <Drawer.CloseTrigger v-if="props.withCloseTrigger" v-bind="closeTriggerAttrs" />
-            <Drawer.Header>
-              <Drawer.Heading v-if="!props.withoutHeading">Drawer heading</Drawer.Heading>
-            </Drawer.Header>
-            <Drawer.Body>
+        <DrawerContent :placement="props.placement">
+          <DrawerDialog v-slot="{ close }">
+            <DrawerHandle v-if="props.withHandle" />
+            <DrawerCloseTrigger v-if="props.withCloseTrigger" v-bind="closeTriggerAttrs" />
+            <DrawerHeader>
+              <DrawerHeading v-if="!props.withoutHeading">Drawer heading</DrawerHeading>
+            </DrawerHeader>
+            <DrawerBody>
               <button data-testid="body-button" type="button">In the body</button>
-            </Drawer.Body>
-            <Drawer.Footer>
-              <ButtonRoot v-if="props.withInsideButton">Inside action</ButtonRoot>
-              <Drawer.Close v-if="props.withCloseWrapper">
-                <ButtonRoot @click="saved = true">Confirm</ButtonRoot>
-              </Drawer.Close>
+            </DrawerBody>
+            <DrawerFooter>
+              <Button v-if="props.withInsideButton">Inside action</Button>
+              <DrawerClose v-if="props.withCloseWrapper">
+                <Button @click="saved = true">Confirm</Button>
+              </DrawerClose>
               <button data-testid="close-from-slot" type="button" @click="close()">Done</button>
-            </Drawer.Footer>
-          </Drawer.Dialog>
-        </Drawer.Content>
-      </Drawer.Backdrop>
+            </DrawerFooter>
+          </DrawerDialog>
+        </DrawerContent>
+      </DrawerBackdrop>
     </Drawer>
   </div>
 </template>

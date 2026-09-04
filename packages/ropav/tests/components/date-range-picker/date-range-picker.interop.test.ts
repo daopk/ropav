@@ -11,7 +11,7 @@ import {
   DateRangePickerInput,
   DateRangePickerPopover,
   DateRangePickerRangeSeparator,
-  DateRangePickerRoot,
+  DateRangePicker,
   DateRangePickerSegment,
   DateRangePickerSuffix,
   DateRangePickerTrigger,
@@ -24,7 +24,7 @@ import {
   RangeCalendarGridBody,
   RangeCalendarGridHeader,
   RangeCalendarHeaderCell,
-  RangeCalendarRoot,
+  RangeCalendar,
 } from "@/components/range-calendar";
 
 /**
@@ -46,7 +46,7 @@ const render = (props: Record<string, unknown> = {}) => {
       },
     );
 
-  const result = renderInterop(DateRangePickerRoot, {
+  const result = renderInterop(DateRangePicker, {
     props: { defaultOpen: true, ...props },
     slots: {
       default: () => [
@@ -67,7 +67,7 @@ const render = (props: Record<string, unknown> = {}) => {
         h(DateRangePickerPopover, null, {
           default: () =>
             h(
-              RangeCalendarRoot,
+              RangeCalendar,
               { "aria-label": "Selected range" },
               {
                 default: () =>

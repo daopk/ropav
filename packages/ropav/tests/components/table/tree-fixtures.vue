@@ -11,7 +11,7 @@ import {
   TableContent,
   TableExpandTrigger,
   TableHeader,
-  TableRoot,
+  Table,
   TableRow,
 } from "@/components/table";
 
@@ -94,7 +94,7 @@ const rows = computed(() => flatten(data));
 </script>
 
 <template>
-  <TableRoot>
+  <Table>
     <TableContent
       aria-label="Files"
       :default-expanded-keys="props.defaultExpandedKeys"
@@ -129,5 +129,5 @@ const rows = computed(() => flatten(data));
         </TableRow>
       </TableBody>
     </TableContent>
-  </TableRoot>
+  </Table>
 </template>

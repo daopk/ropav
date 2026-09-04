@@ -2,8 +2,8 @@ import { renderInterop } from "@ropav/testing/helpers/vue";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { h, nextTick } from "vue";
 
-import { ButtonRoot } from "@/components/button";
-import { Tooltip } from "@/components/tooltip";
+import { Button } from "@/components/button";
+import { Tooltip, TooltipArrow, TooltipContent } from "@/components/tooltip";
 import { setInteractionModality } from "@/composables/use-interaction-states";
 import { resetTooltipWarmup } from "@/composables/use-tooltip-trigger-state";
 
@@ -28,10 +28,10 @@ const render = () =>
     props: { defaultOpen: true },
     slots: {
       default: () => [
-        h(ButtonRoot, null, { default: () => "Open tooltip" }),
+        h(Button, null, { default: () => "Open tooltip" }),
         // Never flipped: a jsdom measurement is all zeroes, so a placement free to flip would
         // report whichever side the fallback lands on rather than the one asked for.
-        h(Tooltip.Content, { shouldFlip: false }, { default: () => [h(Tooltip.Arrow)] }),
+        h(TooltipContent, { shouldFlip: false }, { default: () => [h(TooltipArrow)] }),
       ],
     },
   });

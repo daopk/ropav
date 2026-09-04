@@ -23,10 +23,10 @@ import IconVideo from "~icons/gravity-ui/video";
 
 import { Button } from "../button";
 import { Chip, ChipLabel } from "../chip";
-import { DescriptionRoot } from "../description";
-import { DropdownMenu, DropdownPopover, DropdownRoot } from "../dropdown";
-import { LabelRoot } from "../label";
-import { MenuItemRoot } from "../menu-item";
+import { Description } from "../description";
+import { DropdownMenu, DropdownPopover, Dropdown } from "../dropdown";
+import { Label } from "../label";
+import { MenuItem } from "../menu-item";
 
 import { ButtonGroup, ButtonGroupSeparator } from "./index";
 
@@ -329,9 +329,9 @@ export const Examples: Story = {
       ...components,
       Chip,
       ChipLabel,
-      Description: DescriptionRoot,
-      Dropdown: DropdownRoot,
-      DropdownItem: MenuItemRoot,
+      Description: Description,
+      Dropdown: Dropdown,
+      DropdownItem: MenuItem,
       DropdownMenu,
       DropdownPopover,
       IconChevronDown,
@@ -350,7 +350,7 @@ export const Examples: Story = {
       IconThumbsDown,
       IconThumbsUp,
       IconVideo,
-      Label: LabelRoot,
+      Label: Label,
     },
     setup: () => ({
       mergeStrategies: [

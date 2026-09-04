@@ -1,4 +1,4 @@
-import type { LinkRootProps } from "../link";
+import type { LinkProps } from "../link";
 
 export type BreadcrumbKey = string | number;
 
@@ -13,7 +13,7 @@ export interface BreadcrumbsRootProps {
   separator?: unknown;
 }
 
-export interface BreadcrumbsItemProps extends Omit<LinkRootProps, "class" | "ariaCurrent"> {
+export interface BreadcrumbsItemProps extends Omit<LinkProps, "class" | "ariaCurrent"> {
   class?: string;
   /** Key reported by the root's `action` event. A stable id is generated when omitted. */
   id?: BreadcrumbKey;

@@ -12,24 +12,6 @@ import DrawerRoot from "./drawer-root.vue";
 import DrawerTrigger from "./drawer-trigger.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Drawer = Object.assign(DrawerRoot, {
-  Backdrop: DrawerBackdrop,
-  Body: DrawerBody,
-  Close: DrawerClose,
-  CloseTrigger: DrawerCloseTrigger,
-  Content: DrawerContent,
-  Dialog: DrawerDialog,
-  Footer: DrawerFooter,
-  Handle: DrawerHandle,
-  Header: DrawerHeader,
-  Heading: DrawerHeading,
-  Root: DrawerRoot,
-  Trigger: DrawerTrigger,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
 export {
@@ -43,7 +25,7 @@ export {
   DrawerHandle,
   DrawerHeader,
   DrawerHeading,
-  DrawerRoot,
+  DrawerRoot as Drawer,
   DrawerTrigger,
 };
 
@@ -59,8 +41,7 @@ export type {
   DrawerHeaderProps,
   DrawerHeadingProps,
   DrawerPlacement,
-  DrawerRootEmits,
-  DrawerRootProps,
+  DrawerRootEmits as DrawerEmits,
   DrawerRootProps as DrawerProps,
   DrawerTriggerProps,
 } from "./drawer.types";

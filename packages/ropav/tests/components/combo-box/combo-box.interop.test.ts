@@ -2,12 +2,18 @@ import { renderInterop } from "@ropav/testing/helpers/vue";
 import { afterEach, describe, expect, it } from "vitest";
 import { h, nextTick } from "vue";
 
-import { ComboBox } from "@/components/combo-box";
-import { DescriptionRoot } from "@/components/description";
-import { InputRoot } from "@/components/input";
-import { LabelRoot } from "@/components/label";
-import { ListBoxRoot } from "@/components/list-box";
-import { ListBoxItemIndicator, ListBoxItemRoot } from "@/components/list-box-item";
+import {
+  ComboBox,
+  ComboBoxInputGroup,
+  ComboBoxPopover,
+  ComboBoxTrigger,
+  ComboBoxValue,
+} from "@/components/combo-box";
+import { Description } from "@/components/description";
+import { Input } from "@/components/input";
+import { Label } from "@/components/label";
+import { ListBox } from "@/components/list-box";
+import { ListBoxItemIndicator, ListBoxItem } from "@/components/list-box-item";
 
 /**
  * The combo box mounted the way a consumer mounts it: from a VDOM host, with every part written in
@@ -37,7 +43,7 @@ const settle = async () => {
 const options = (matches: Array<{ id: string; name: string }>) =>
   matches.map((item) =>
     h(
-      ListBoxItemRoot,
+      ListBoxItem,
       { id: item.id, key: item.id, textValue: item.name },
       { default: () => [item.name, h(ListBoxItemIndicator)] },
     ),
@@ -58,13 +64,13 @@ const render = (props: Record<string, unknown> = {}, extra: Array<unknown> = [])
       // The root hands the matches back through its own slot, which is how the host knows what to
       // render — so the slot props are part of the contract this file checks.
       default: (slotProps?: Record<string, unknown>) => [
-        h(LabelRoot, null, { default: () => "Favorite Animal" }),
-        h(ComboBox.InputGroup, null, {
-          default: () => [h(InputRoot, { placeholder: "Search animals..." }), h(ComboBox.Trigger)],
+        h(Label, null, { default: () => "Favorite Animal" }),
+        h(ComboBoxInputGroup, null, {
+          default: () => [h(Input, { placeholder: "Search animals..." }), h(ComboBoxTrigger)],
         }),
         ...(extra as never[]),
-        h(ComboBox.Popover, null, {
-          default: () => h(ListBoxRoot, null, { default: () => options(matchesOf(slotProps)) }),
+        h(ComboBoxPopover, null, {
+          default: () => h(ListBox, null, { default: () => options(matchesOf(slotProps)) }),
         }),
       ],
     },
@@ -165,7 +171,7 @@ describe("ComboBox (interop)", () => {
   });
 
   it("describes the host's field with the host's description", async () => {
-    const result = render({}, [h(DescriptionRoot, null, { default: () => "Pick an animal" })]);
+    const result = render({}, [h(Description, null, { default: () => "Pick an animal" })]);
 
     await settle();
 
@@ -277,10 +283,10 @@ describe("ComboBox (interop)", () => {
       },
       slots: {
         default: (slotProps?: Record<string, unknown>) => [
-          h(ComboBox.InputGroup, null, {
-            default: () => [h(InputRoot), h(ComboBox.Trigger)],
+          h(ComboBoxInputGroup, null, {
+            default: () => [h(Input), h(ComboBoxTrigger)],
           }),
-          h(ComboBox.Value, null, {
+          h(ComboBoxValue, null, {
             // One node per chosen option, which is the shape a chip list takes — and the shape a
             // single node hides: a slot re-run per item is where a stale first entry shows up.
             default: ({
@@ -292,8 +298,8 @@ describe("ComboBox (interop)", () => {
                 h("span", { "data-testid": "value-item", key: item.key }, item.value.name),
               ),
           }),
-          h(ComboBox.Popover, null, {
-            default: () => h(ListBoxRoot, null, { default: () => options(matchesOf(slotProps)) }),
+          h(ComboBoxPopover, null, {
+            default: () => h(ListBox, null, { default: () => options(matchesOf(slotProps)) }),
           }),
         ],
       },

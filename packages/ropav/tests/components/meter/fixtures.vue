@@ -1,12 +1,12 @@
 <script setup lang="ts" vapor>
-import type { MeterRootProps } from "@/components/meter";
+import type { MeterProps } from "@/components/meter";
 
 import { Label } from "@/components/label";
-import { Meter } from "@/components/meter";
+import { Meter, MeterFill, MeterOutput, MeterTrack } from "@/components/meter";
 
 withDefaults(
   defineProps<
-    MeterRootProps & {
+    MeterProps & {
       customOutput?: boolean;
       fillClass?: string;
       outputClass?: string;
@@ -41,17 +41,17 @@ withDefaults(
     :value-label="$props.valueLabel"
   >
     <Label v-if="$props.withLabel">Storage</Label>
-    <Meter.Output v-if="$props.customOutput" :class="$props.outputClass" data-testid="output">
+    <MeterOutput v-if="$props.customOutput" :class="$props.outputClass" data-testid="output">
       Custom
-    </Meter.Output>
-    <Meter.Output v-else :class="$props.outputClass" data-testid="output" />
-    <Meter.Track :class="$props.trackClass" data-testid="track">
-      <Meter.Fill
+    </MeterOutput>
+    <MeterOutput v-else :class="$props.outputClass" data-testid="output" />
+    <MeterTrack :class="$props.trackClass" data-testid="track">
+      <MeterFill
         :class="$props.fillClass"
         data-testid="fill"
         :style="{ backgroundColor: 'red', width: '1%' }"
       />
-    </Meter.Track>
+    </MeterTrack>
     <span data-testid="slot-percentage">{{ slotProps.percentage }}</span>
     <span data-testid="slot-value-text">{{ slotProps.valueText }}</span>
   </Meter>

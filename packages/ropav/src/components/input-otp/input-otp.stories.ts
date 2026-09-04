@@ -13,20 +13,19 @@ import { Spinner } from "../spinner";
 import {
   InputOTP,
   InputOTPGroup,
-  InputOTPRoot,
   InputOTPSeparator,
   InputOTPSlot,
   REGEXP_ONLY_CHARS,
 } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata to
-// resolve `InputOTP.Group` through, so dot notation cannot be used here.
+// resolve `InputOTPGroup` through, so dot notation cannot be used here.
 const components = {
   Button,
   Description,
   Form,
+  InputOTP,
   InputOTPGroup,
-  InputOTPRoot,
   InputOTPSeparator,
   InputOTPSlot,
   Label,
@@ -60,7 +59,7 @@ export const Default: Story = {
           <Label>Verify account</Label>
           <p class="text-sm text-muted">We&apos;ve sent a code to a****@gmail.com</p>
         </div>
-        <InputOTPRoot aria-label="Verification code" :max-length="6">
+        <InputOTP aria-label="Verification code" :max-length="6">
           <InputOTPGroup>
             <InputOTPSlot :index="0" />
             <InputOTPSlot :index="1" />
@@ -72,7 +71,7 @@ export const Default: Story = {
             <InputOTPSlot :index="4" />
             <InputOTPSlot :index="5" />
           </InputOTPGroup>
-        </InputOTPRoot>
+        </InputOTP>
         <div class="flex items-center gap-[5px] px-1 pt-1">
           <p class="text-sm text-muted">Didn&apos;t receive a code?</p>
           <Link class="text-foreground" underline="always">Resend</Link>
@@ -89,7 +88,7 @@ export const Variants: Story = {
       <div class="flex flex-col gap-6">
         <div class="flex flex-col gap-2">
           <Label>Primary variant</Label>
-          <InputOTPRoot aria-label="Verification code" :max-length="6" variant="primary">
+          <InputOTP aria-label="Verification code" :max-length="6" variant="primary">
             <InputOTPGroup>
               <InputOTPSlot :index="0" />
               <InputOTPSlot :index="1" />
@@ -101,11 +100,11 @@ export const Variants: Story = {
               <InputOTPSlot :index="4" />
               <InputOTPSlot :index="5" />
             </InputOTPGroup>
-          </InputOTPRoot>
+          </InputOTP>
         </div>
         <div class="flex flex-col gap-2">
           <Label>Secondary variant</Label>
-          <InputOTPRoot aria-label="Verification code" :max-length="6" variant="secondary">
+          <InputOTP aria-label="Verification code" :max-length="6" variant="secondary">
             <InputOTPGroup>
               <InputOTPSlot :index="0" />
               <InputOTPSlot :index="1" />
@@ -117,7 +116,7 @@ export const Variants: Story = {
               <InputOTPSlot :index="4" />
               <InputOTPSlot :index="5" />
             </InputOTPGroup>
-          </InputOTPRoot>
+          </InputOTP>
         </div>
       </div>
     `,
@@ -130,14 +129,14 @@ export const FourDigits: Story = {
     template: `
       <div class="flex w-[280px] flex-col gap-2">
         <Label>Enter PIN</Label>
-        <InputOTPRoot aria-label="Verification code" :max-length="4">
+        <InputOTP aria-label="Verification code" :max-length="4">
           <InputOTPGroup>
             <InputOTPSlot :index="0" />
             <InputOTPSlot :index="1" />
             <InputOTPSlot :index="2" />
             <InputOTPSlot :index="3" />
           </InputOTPGroup>
-        </InputOTPRoot>
+        </InputOTP>
       </div>
     `,
   }),
@@ -150,7 +149,7 @@ export const Disabled: Story = {
       <div class="flex w-[280px] flex-col gap-2">
         <Label is-disabled>Verify account</Label>
         <Description>Code verification is currently disabled</Description>
-        <InputOTPRoot aria-label="Verification code" is-disabled :max-length="6">
+        <InputOTP aria-label="Verification code" is-disabled :max-length="6">
           <InputOTPGroup>
             <InputOTPSlot :index="0" />
             <InputOTPSlot :index="1" />
@@ -162,7 +161,7 @@ export const Disabled: Story = {
             <InputOTPSlot :index="4" />
             <InputOTPSlot :index="5" />
           </InputOTPGroup>
-        </InputOTPRoot>
+        </InputOTP>
       </div>
     `,
   }),
@@ -176,7 +175,7 @@ export const WithPattern: Story = {
       <div class="flex w-[280px] flex-col gap-2">
         <Label>Enter code (letters only)</Label>
         <Description>Only alphabetic characters are allowed</Description>
-        <InputOTPRoot aria-label="Verification code" :max-length="6" :pattern="pattern">
+        <InputOTP aria-label="Verification code" :max-length="6" :pattern="pattern">
           <InputOTPGroup>
             <InputOTPSlot :index="0" />
             <InputOTPSlot :index="1" />
@@ -188,7 +187,7 @@ export const WithPattern: Story = {
             <InputOTPSlot :index="4" />
             <InputOTPSlot :index="5" />
           </InputOTPGroup>
-        </InputOTPRoot>
+        </InputOTP>
       </div>
     `,
   }),
@@ -205,7 +204,7 @@ export const Controlled: Story = {
     template: `
       <div class="flex w-[280px] flex-col gap-2">
         <Label>Verify account</Label>
-        <InputOTPRoot aria-label="Verification code" v-model:value="value" :max-length="6">
+        <InputOTP aria-label="Verification code" v-model:value="value" :max-length="6">
           <InputOTPGroup>
             <InputOTPSlot :index="0" />
             <InputOTPSlot :index="1" />
@@ -217,7 +216,7 @@ export const Controlled: Story = {
             <InputOTPSlot :index="4" />
             <InputOTPSlot :index="5" />
           </InputOTPGroup>
-        </InputOTPRoot>
+        </InputOTP>
         <Description>
           <template v-if="value.length > 0">
             Value: {{ value }} ({{ value.length }}/6) &bull;
@@ -266,7 +265,7 @@ export const WithValidation: Story = {
         <Form class="flex flex-col gap-2" @submit="onSubmit">
           <Label>Verify account</Label>
           <Description>Hint: The code is 123456</Description>
-          <InputOTPRoot aria-label="Verification code"
+          <InputOTP aria-label="Verification code"
             :aria-describedby="isInvalid ? 'code-error' : undefined"
             :is-invalid="isInvalid"
             :max-length="6"
@@ -285,7 +284,7 @@ export const WithValidation: Story = {
               <InputOTPSlot :index="4" />
               <InputOTPSlot :index="5" />
             </InputOTPGroup>
-          </InputOTPRoot>
+          </InputOTP>
           <span class="field-error" :data-visible="isInvalid" id="code-error">
             Invalid code. Please try again.
           </span>
@@ -332,7 +331,7 @@ export const OnComplete: Story = {
     template: `
       <Form class="flex w-[280px] flex-col gap-2" @submit="onSubmit">
         <Label>Verify account</Label>
-        <InputOTPRoot aria-label="Verification code"
+        <InputOTP aria-label="Verification code"
           :max-length="6"
           :value="value"
           @change="onChange"
@@ -349,7 +348,7 @@ export const OnComplete: Story = {
             <InputOTPSlot :index="4" />
             <InputOTPSlot :index="5" />
           </InputOTPGroup>
-        </InputOTPRoot>
+        </InputOTP>
         <Button
           class="mt-2 w-full"
           :is-disabled="!isComplete"
@@ -414,7 +413,7 @@ export const FormExample: Story = {
         <div class="flex flex-col gap-2">
           <Label>Two-factor authentication</Label>
           <Description>Enter the 6-digit code from your authenticator app</Description>
-          <InputOTPRoot aria-label="Verification code"
+          <InputOTP aria-label="Verification code"
             :is-invalid="isInvalid"
             :max-length="6"
             :value="value"
@@ -431,7 +430,7 @@ export const FormExample: Story = {
               <InputOTPSlot :index="4" />
               <InputOTPSlot :index="5" />
             </InputOTPGroup>
-          </InputOTPRoot>
+          </InputOTP>
           <span class="field-error" :data-visible="isInvalid" id="code-error">{{ error }}</span>
         </div>
         <Button

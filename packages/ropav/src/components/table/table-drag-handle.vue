@@ -23,7 +23,7 @@ let pointerType: PointerType = "mouse";
 /**
  * Turns whatever pressable sits inside into the row's drag control.
  *
- * Handed down rather than rendered here, the same way `Table.ExpandTrigger` does it: the grip
+ * Handed down rather than rendered here, the same way `TableExpandTrigger` does it: the grip
  * stays an ordinary `Button` with its own variants and states, and only the part that makes it a
  * drag control comes from the row.
  *

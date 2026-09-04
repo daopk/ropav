@@ -5,16 +5,16 @@ import type { StoryObj } from "@storybook/vue3-vite";
 import { shallowRef } from "vue";
 
 import { parseColor } from "../../utils/color";
-import { ColorSwatchRoot } from "../color-swatch";
+import { ColorSwatch } from "../color-swatch";
 
-import { ColorAreaRoot, ColorAreaThumb } from "./index";
+import { ColorArea, ColorAreaThumb } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata to
-// resolve `ColorArea.Thumb` through, so dot notation cannot be used here.
+// resolve `ColorAreaThumb` through, so dot notation cannot be used here.
 const components = {
-  ColorArea: ColorAreaRoot,
+  ColorArea: ColorArea,
   ColorAreaThumb,
-  ColorSwatch: ColorSwatchRoot,
+  ColorSwatch: ColorSwatch,
 };
 
 const meta: StoryMeta = {
@@ -23,7 +23,7 @@ const meta: StoryMeta = {
       control: "boolean",
     },
   },
-  component: ColorAreaRoot,
+  component: ColorArea,
   parameters: {
     layout: "centered",
   },

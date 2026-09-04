@@ -8,7 +8,7 @@ import IconChevronDown from "../icons/icon-chevron-down.vue";
 import IconChevronLeft from "../icons/icon-chevron-left.vue";
 import IconChevronRight from "../icons/icon-chevron-right.vue";
 import IconChevronUp from "../icons/icon-chevron-up.vue";
-import { ScrollShadowRoot as Scroller } from "../scroll-shadow";
+import { ScrollShadow as Scroller } from "../scroll-shadow";
 
 import { useTabsContext } from "./tabs.context";
 

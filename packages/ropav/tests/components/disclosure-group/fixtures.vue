@@ -1,17 +1,24 @@
 <script setup lang="ts" vapor>
-import type { DisclosureGroupRootProps } from "@/components/disclosure-group";
+import type { DisclosureGroupProps } from "@/components/disclosure-group";
 
 import { Button } from "@/components/button";
-import { Disclosure } from "@/components/disclosure";
+import {
+  Disclosure,
+  DisclosureBody,
+  DisclosureContent,
+  DisclosureHeading,
+  DisclosureIndicator,
+  DisclosureTrigger,
+} from "@/components/disclosure";
 import { DisclosureGroup } from "@/components/disclosure-group";
 
 /**
- * `bareTriggers` swaps every `Disclosure.Trigger` for an ordinary `Button`, which is the form
+ * `bareTriggers` swaps every `DisclosureTrigger` for an ordinary `Button`, which is the form
  * the disclosure hands its press down to.
  */
 const props = withDefaults(
   defineProps<
-    DisclosureGroupRootProps & { bareTriggers?: boolean; disabledItem?: string; items?: string[] }
+    DisclosureGroupProps & { bareTriggers?: boolean; disabledItem?: string; items?: string[] }
   >(),
   {
     allowsMultipleExpanded: undefined,
@@ -39,19 +46,19 @@ defineEmits<{ expandedChange: [keys: Set<string | number>] }>();
       :key="item"
       :is-disabled="item === props.disabledItem"
     >
-      <Disclosure.Heading>
+      <DisclosureHeading>
         <Button v-if="props.bareTriggers" :data-testid="`bare-${item}`">
           Trigger {{ item }}
-          <Disclosure.Indicator />
+          <DisclosureIndicator />
         </Button>
-        <Disclosure.Trigger v-else>
+        <DisclosureTrigger v-else>
           Trigger {{ item }}
-          <Disclosure.Indicator />
-        </Disclosure.Trigger>
-      </Disclosure.Heading>
-      <Disclosure.Content>
-        <Disclosure.Body>Panel {{ item }}</Disclosure.Body>
-      </Disclosure.Content>
+          <DisclosureIndicator />
+        </DisclosureTrigger>
+      </DisclosureHeading>
+      <DisclosureContent>
+        <DisclosureBody>Panel {{ item }}</DisclosureBody>
+      </DisclosureContent>
     </Disclosure>
   </DisclosureGroup>
 </template>

@@ -6,21 +6,16 @@ import PopoverRoot from "./popover-root.vue";
 import PopoverTrigger from "./popover-trigger.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Popover = Object.assign(PopoverRoot, {
-  Arrow: PopoverArrow,
-  Content: PopoverContent,
-  Dialog: PopoverDialog,
-  Heading: PopoverHeading,
-  Root: PopoverRoot,
-  Trigger: PopoverTrigger,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { PopoverArrow, PopoverContent, PopoverDialog, PopoverHeading, PopoverRoot, PopoverTrigger };
+export {
+  PopoverArrow,
+  PopoverContent,
+  PopoverDialog,
+  PopoverHeading,
+  PopoverRoot as Popover,
+  PopoverTrigger,
+};
 
 export type {
   PopoverArrowProps,
@@ -28,8 +23,7 @@ export type {
   PopoverDialogProps,
   PopoverDialogSlotProps,
   PopoverHeadingProps,
-  PopoverRootEmits,
-  PopoverRootProps,
+  PopoverRootEmits as PopoverEmits,
   PopoverRootProps as PopoverProps,
   PopoverTriggerProps,
 } from "./popover.types";

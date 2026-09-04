@@ -99,7 +99,7 @@ export interface TableRowContext {
    */
   claimCellIndex: () => number;
   /**
-   * What `Table.DragHandle` needs to turn a pressable into this row's drag control, or `null`
+   * What `TableDragHandle` needs to turn a pressable into this row's drag control, or `null`
    * when the table is not draggable.
    *
    * The row itself carries the native drag; this is only the accessible path, for a keyboard or
@@ -190,7 +190,7 @@ export interface TableVirtualizerContext {
   /**
    * The rows' data, handed **up** from the body.
    *
-   * `items` is declared on `Table.Body`, but the collection belongs to the grid:
+   * `items` is declared on `TableBody`, but the collection belongs to the grid:
    * it is the grid that scrolls, that the keyboard walks, and that the selection runs over. So the
    * body registers what it was given rather than owning it.
    */

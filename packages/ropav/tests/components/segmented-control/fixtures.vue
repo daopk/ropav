@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type { SegmentedControlRootProps } from "@/components/segmented-control";
+import type { SegmentedControlProps } from "@/components/segmented-control";
 import type { CollectionKey } from "@/composables/use-collection";
 
 import {
   SegmentedControlIndicator,
   SegmentedControlItem,
-  SegmentedControlRoot,
+  SegmentedControl,
   SegmentedControlSeparator,
 } from "@/components/segmented-control";
 
@@ -22,7 +22,7 @@ export interface SegmentedControlFixtureItem {
  */
 const props = withDefaults(
   defineProps<
-    SegmentedControlRootProps & {
+    SegmentedControlProps & {
       items?: SegmentedControlFixtureItem[];
       withIndicator?: boolean;
       withSeparator?: boolean;
@@ -51,7 +51,7 @@ const props = withDefaults(
 </script>
 
 <template>
-  <SegmentedControlRoot
+  <SegmentedControl
     :aria-describedby="props.ariaDescribedby"
     :aria-label="props.ariaLabel"
     :aria-labelledby="props.ariaLabelledby"
@@ -77,5 +77,5 @@ const props = withDefaults(
       {{ item.label }}
       <SegmentedControlIndicator v-if="props.withIndicator" />
     </SegmentedControlItem>
-  </SegmentedControlRoot>
+  </SegmentedControl>
 </template>

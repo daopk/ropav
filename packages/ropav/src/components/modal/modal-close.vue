@@ -20,7 +20,7 @@ const { state } = useModalContext();
  * React, where the default slot carries nothing.
  *
  * The close runs *before* the button's own handler, which is the order `composePressResponder`
- * chains them in — so `<Modal.Close><Button @click="save"/></Modal.Close>` saves and closes, the
+ * chains them in — so `<ModalClose><Button @click="save"/></ModalClose>` saves and closes, the
  * same as `slot="close"` with an `onPress`.
  */
 providePressResponder({

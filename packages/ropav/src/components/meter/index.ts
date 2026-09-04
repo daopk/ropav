@@ -3,19 +3,11 @@ import MeterOutput from "./meter-output.vue";
 import MeterRoot from "./meter-root.vue";
 import MeterTrack from "./meter-track.vue";
 
-export const Meter = Object.assign(MeterRoot, {
-  Fill: MeterFill,
-  Output: MeterOutput,
-  Root: MeterRoot,
-  Track: MeterTrack,
-});
-
-export { MeterFill, MeterOutput, MeterRoot, MeterTrack };
+export { MeterFill, MeterOutput, MeterRoot as Meter, MeterTrack };
 
 export type {
   MeterFillProps,
   MeterOutputProps,
-  MeterRootProps,
   MeterRootProps as MeterProps,
   MeterSlotProps,
   MeterTrackProps,

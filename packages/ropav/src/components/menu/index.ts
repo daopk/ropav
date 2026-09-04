@@ -1,16 +1,11 @@
 import MenuRoot from "./menu-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Menu = Object.assign(MenuRoot, { Root: MenuRoot });
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { MenuRoot };
+export { MenuRoot as Menu };
 
-export type { MenuRootEmits, MenuRootProps, MenuRootProps as MenuProps } from "./menu.types";
+export type { MenuRootEmits as MenuEmits, MenuRootProps as MenuProps } from "./menu.types";
 
 /* -------------------------------------------------------------------------------------------------
  * Context

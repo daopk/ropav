@@ -1,12 +1,12 @@
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it } from "vitest";
 
-import { SurfaceRoot } from "@/components/surface";
+import { Surface } from "@/components/surface";
 
 import Fixture from "./fixtures.vue";
 
 const renderSurface = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(SurfaceRoot, { props });
+  const result = renderVapor(Surface, { props });
   const surface = result.container.querySelector('[data-slot="surface"]');
 
   if (!surface) throw new Error("surface not rendered");

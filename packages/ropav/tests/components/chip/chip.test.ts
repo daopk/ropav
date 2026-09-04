@@ -11,7 +11,7 @@ const slot = (container: HTMLElement, name: string) =>
 
 describe("Chip", () => {
   describe("label", () => {
-    it("wraps a text-only child in Chip.Label", () => {
+    it("wraps a text-only child in ChipLabel", () => {
       const { container, unmount } = renderVapor(ChipFixture);
       const label = slot(container, "chip-label");
 
@@ -38,7 +38,7 @@ describe("Chip", () => {
       unmount();
     });
 
-    it("leaves an explicit Chip.Label alone", () => {
+    it("leaves an explicit ChipLabel alone", () => {
       const { container, unmount } = renderVapor(ChipFixture, { props: { content: "explicit" } });
 
       expect(slot(container, "chip-label")?.textContent).toBe("Explicit label");

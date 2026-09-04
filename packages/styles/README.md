@@ -226,7 +226,7 @@ So a caller sets the property instead, and the states that read the others are l
 
 ```html
 <!-- No line at rest; it still flares on hover and while dragging. -->
-<SidebarRoot class="[--sidebar-rail-line:transparent]">
+<Sidebar class="[--sidebar-rail-line:transparent]">
 ```
 
 The qualifier is what keeps this from becoming surface for its own sake. Where exactly one state

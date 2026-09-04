@@ -2,11 +2,11 @@ import { renderInterop } from "@ropav/testing/helpers/vue";
 import { describe, expect, it } from "vitest";
 import { h } from "vue";
 
-import { BadgeLabel, BadgeRoot } from "@/components/badge";
+import { BadgeLabel, Badge } from "@/components/badge";
 
 describe("Badge under a vdom host", () => {
   it("leaves bare host text unwrapped because the host fills its slot only on insertion", () => {
-    const { container, unmount } = renderInterop(BadgeRoot, {
+    const { container, unmount } = renderInterop(Badge, {
       slots: { default: () => "5" },
     });
 
@@ -17,7 +17,7 @@ describe("Badge under a vdom host", () => {
   });
 
   it("styles a label written in and forwarded from the host", () => {
-    const { container, unmount } = renderInterop(BadgeRoot, {
+    const { container, unmount } = renderInterop(Badge, {
       props: { color: "danger", size: "lg" },
       slots: {
         default: () => h(BadgeLabel, { class: "tabular-nums" }, { default: () => "99+" }),

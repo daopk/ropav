@@ -19,7 +19,7 @@ const { state } = useDrawerContext();
  * Deliberately opt-in: an unmarked `<Button>` in the footer does **not** close the drawer.
  *
  * The close runs *before* the button's own handler, which is the order `composePressResponder`
- * chains them in — so `<Drawer.Close><Button @click="save"/></Drawer.Close>` saves and closes.
+ * chains them in — so `<DrawerClose><Button @click="save"/></DrawerClose>` saves and closes.
  */
 providePressResponder({
   attrs: computed(() => ({})),

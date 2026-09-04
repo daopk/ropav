@@ -21,7 +21,7 @@ const { state } = useAlertDialogContext();
  * one of them should also be an answer.
  *
  * The close runs *before* the button's own handler, which is the order `composePressResponder`
- * chains them in — so `<AlertDialog.Close><Button @click="remove"/></AlertDialog.Close>` removes and
+ * chains them in — so `<AlertDialogClose><Button @click="remove"/></AlertDialogClose>` removes and
  * closes.
  */
 providePressResponder({

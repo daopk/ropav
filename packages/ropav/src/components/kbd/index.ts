@@ -3,25 +3,11 @@ import KbdContent from "./kbd-content.vue";
 import KbdRoot from "./kbd-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Kbd = Object.assign(KbdRoot, {
-  Abbr: KbdAbbr,
-  Content: KbdContent,
-  Root: KbdRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { KbdAbbr, KbdContent, KbdRoot };
+export { KbdAbbr, KbdContent, KbdRoot as Kbd };
 
-export type {
-  KbdAbbrProps,
-  KbdContentProps,
-  KbdRootProps,
-  KbdRootProps as KbdProps,
-} from "./kbd.types";
+export type { KbdAbbrProps, KbdContentProps, KbdRootProps as KbdProps } from "./kbd.types";
 
 export { kbdKeysLabelMap, kbdKeysMap } from "./kbd.constants";
 

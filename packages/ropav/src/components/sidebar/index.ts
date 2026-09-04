@@ -20,36 +20,10 @@ import SidebarSubMenu from "./sidebar-sub-menu.vue";
 import SidebarTrigger from "./sidebar-trigger.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Sidebar = Object.assign(SidebarRoot, {
-  Collapsible: SidebarCollapsible,
-  CollapsibleTrigger: SidebarCollapsibleTrigger,
-  Content: SidebarContent,
-  Footer: SidebarFooter,
-  Group: SidebarGroup,
-  GroupLabel: SidebarGroupLabel,
-  Header: SidebarHeader,
-  Inset: SidebarInset,
-  Item: SidebarItem,
-  ItemIcon: SidebarItemIcon,
-  ItemIndicator: SidebarItemIndicator,
-  ItemLabel: SidebarItemLabel,
-  ItemTooltip: SidebarItemTooltip,
-  ItemTrailing: SidebarItemTrailing,
-  Panel: SidebarPanel,
-  Rail: SidebarRail,
-  Root: SidebarRoot,
-  Separator: SidebarSeparator,
-  SubMenu: SidebarSubMenu,
-  Trigger: SidebarTrigger,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
 export {
-  SidebarRoot,
+  SidebarRoot as Sidebar,
   SidebarPanel,
   SidebarInset,
   SidebarTrigger,
@@ -72,9 +46,8 @@ export {
 };
 
 export type {
-  SidebarRootProps,
   SidebarRootProps as SidebarProps,
-  SidebarRootEmits,
+  SidebarRootEmits as SidebarEmits,
   SidebarPanelProps,
   SidebarInsetProps,
   SidebarTriggerProps,

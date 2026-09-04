@@ -7,7 +7,7 @@ import { Description } from "@/components/description";
 import { FieldError } from "@/components/field-error";
 import { Form } from "@/components/form";
 import { Label } from "@/components/label";
-import { Radio } from "@/components/radio";
+import { Radio, RadioContent, RadioControl, RadioIndicator } from "@/components/radio";
 import { RadioGroup } from "@/components/radio-group";
 
 const props = withDefaults(defineProps<RadioGroupFixtureProps>(), { isInvalid: undefined });
@@ -44,14 +44,14 @@ const items = computed(() => props.items ?? ["basic", "premium", "team"]);
         :is-disabled="props.disabledItems?.includes(itemValue)"
         :value="itemValue"
       >
-        <Radio.Content>
-          <Radio.Control>
-            <Radio.Indicator>
+        <RadioContent>
+          <RadioControl>
+            <RadioIndicator>
               <svg v-if="props.withCustomIndicator" data-testid="custom-indicator" />
-            </Radio.Indicator>
-          </Radio.Control>
+            </RadioIndicator>
+          </RadioControl>
           {{ itemValue }}
-        </Radio.Content>
+        </RadioContent>
         <Description v-if="index === 0 && props.withItemDescription">Good for one seat</Description>
         <FieldError v-if="index === 0 && props.withItemFieldError" />
       </Radio>

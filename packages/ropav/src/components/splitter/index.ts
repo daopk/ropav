@@ -3,21 +3,11 @@ import SplitterPanel from "./splitter-panel.vue";
 import SplitterRoot from "./splitter-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Splitter = Object.assign(SplitterRoot, {
-  Handle: SplitterHandle,
-  Panel: SplitterPanel,
-  Root: SplitterRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { SplitterRoot, SplitterPanel, SplitterHandle };
+export { SplitterRoot as Splitter, SplitterPanel, SplitterHandle };
 
 export type {
-  SplitterRootProps,
   SplitterRootProps as SplitterProps,
   SplitterPanelProps,
   SplitterHandleProps,

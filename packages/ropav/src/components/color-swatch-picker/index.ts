@@ -4,22 +4,12 @@ import ColorSwatchPickerRoot from "./color-swatch-picker-root.vue";
 import ColorSwatchPickerSwatch from "./color-swatch-picker-swatch.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const ColorSwatchPicker = Object.assign(ColorSwatchPickerRoot, {
-  Indicator: ColorSwatchPickerIndicator,
-  Item: ColorSwatchPickerItem,
-  Root: ColorSwatchPickerRoot,
-  Swatch: ColorSwatchPickerSwatch,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
 export {
   ColorSwatchPickerIndicator,
   ColorSwatchPickerItem,
-  ColorSwatchPickerRoot,
+  ColorSwatchPickerRoot as ColorSwatchPicker,
   ColorSwatchPickerSwatch,
 };
 
@@ -28,9 +18,8 @@ export type {
   ColorSwatchPickerIndicatorSlotProps,
   ColorSwatchPickerItemProps,
   ColorSwatchPickerItemSlotProps,
-  ColorSwatchPickerRootProps,
   ColorSwatchPickerRootProps as ColorSwatchPickerProps,
-  ColorSwatchPickerRootSlotProps,
+  ColorSwatchPickerRootSlotProps as ColorSwatchPickerSlotProps,
   ColorSwatchPickerSwatchProps,
 } from "./color-swatch-picker.types";
 

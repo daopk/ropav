@@ -26,7 +26,7 @@ import { useDragAndDrop } from "../../composables/use-drag-and-drop";
 import { avatarSrc } from "../../utils/story-assets";
 import { generateUsers } from "../../utils/story-users";
 import { TableLayout } from "../../utils/virtualizer-table-layout";
-import { AvatarFallback, AvatarImage, AvatarRoot } from "../avatar";
+import { AvatarFallback, AvatarImage, Avatar } from "../avatar";
 import { Button } from "../button";
 import { Chip, ChipLabel } from "../chip";
 import { EmptyState } from "../empty-state";
@@ -68,7 +68,7 @@ import {
 // Dot notation does not resolve in a runtime-compiled template, so each part is
 // registered on its own.
 const components = {
-  Avatar: AvatarRoot,
+  Avatar: Avatar,
   AvatarFallback,
   AvatarImage,
   Button,
@@ -946,7 +946,7 @@ export const TanStackTable: Story = {
   }),
 };
 
-/** Empty state through the `empty` slot of `Table.Body`. */
+/** Empty state through the `empty` slot of `TableBody`. */
 export const EmptyStateDemo: Story = {
   args: {
     variant: "primary",
@@ -1088,7 +1088,7 @@ export const VirtualizationHundredThousandRows: Story = {
  *   `class` here rather than by adding a rule to the shared stylesheet. `data-drop-target` and
  *   the `table__drop-indicator` class are emitted either way, so a rule added there later would
  *   need no change to this story.
- * - **`Table.DragHandle` is not a hit target.** The row is what the browser drags; the handle
+ * - **`TableDragHandle` is not a hit target.** The row is what the browser drags; the handle
  *   exists so a keyboard or screen reader user has something to press. Tab to it and press Enter.
  */
 export const DragAndDrop: Story = {

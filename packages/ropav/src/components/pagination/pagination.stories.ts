@@ -5,7 +5,7 @@ import { computed, shallowRef } from "vue";
 import IconArrowLeft from "~icons/gravity-ui/arrow-left";
 import IconArrowRight from "~icons/gravity-ui/arrow-right";
 
-import { SeparatorRoot } from "../separator";
+import { Separator } from "../separator";
 
 import {
   Pagination,
@@ -35,7 +35,7 @@ const components = {
   PaginationPrevious,
   PaginationPreviousIcon,
   PaginationSummary,
-  Separator: SeparatorRoot,
+  Separator: Separator,
 };
 
 const meta: StoryMeta = {

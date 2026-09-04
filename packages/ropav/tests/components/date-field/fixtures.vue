@@ -5,7 +5,7 @@ import {
   DateFieldGroup,
   DateFieldInput,
   DateFieldPrefix,
-  DateFieldRoot,
+  DateField,
   DateFieldSegment,
   DateFieldSuffix,
 } from "@/components/date-field";
@@ -29,7 +29,7 @@ const props = withDefaults(defineProps<DateFieldFixtureProps>(), {
 </script>
 
 <template>
-  <DateFieldRoot v-if="props.attributeForm" aria-label="Date" full-width :locale="props.locale">
+  <DateField v-if="props.attributeForm" aria-label="Date" full-width :locale="props.locale">
     <DateFieldGroup full-width>
       <DateFieldInput>
         <template #default="{ segment }">
@@ -37,9 +37,9 @@ const props = withDefaults(defineProps<DateFieldFixtureProps>(), {
         </template>
       </DateFieldInput>
     </DateFieldGroup>
-  </DateFieldRoot>
+  </DateField>
   <component :is="props.withForm ? 'form' : 'div'" v-else>
-    <DateFieldRoot
+    <DateField
       :aria-label="props.withLabel ? undefined : (props.ariaLabel ?? 'Date')"
       :class="props.class"
       :default-value="props.defaultValue"
@@ -68,7 +68,7 @@ const props = withDefaults(defineProps<DateFieldFixtureProps>(), {
       </DateFieldGroup>
       <Description v-if="props.withDescription">When born</Description>
       <FieldError v-if="props.withFieldError" />
-    </DateFieldRoot>
+    </DateField>
     <button v-if="props.withForm" data-testid="reset" type="reset">Reset</button>
     <button v-if="props.withForm" data-testid="submit" type="submit">Submit</button>
   </component>

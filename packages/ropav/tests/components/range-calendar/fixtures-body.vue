@@ -19,7 +19,7 @@ import {
   RangeCalendarHeaderCell,
   RangeCalendarHeading,
   RangeCalendarNavButton,
-  RangeCalendarRoot,
+  RangeCalendar,
 } from "@/components/range-calendar";
 
 /*
@@ -45,7 +45,7 @@ const props = withDefaults(defineProps<RangeCalendarFixtureProps>(), {
 </script>
 
 <template>
-  <RangeCalendarRoot v-if="props.attributeForm" aria-label="Stay" is-disabled>
+  <RangeCalendar v-if="props.attributeForm" aria-label="Stay" is-disabled>
     <RangeCalendarGrid>
       <RangeCalendarGridHeader>
         <template #default="{ day }">
@@ -58,8 +58,8 @@ const props = withDefaults(defineProps<RangeCalendarFixtureProps>(), {
         </template>
       </RangeCalendarGridBody>
     </RangeCalendarGrid>
-  </RangeCalendarRoot>
-  <RangeCalendarRoot
+  </RangeCalendar>
+  <RangeCalendar
     v-else
     :id="props.id"
     :allows-non-contiguous-ranges="props.allowsNonContiguousRanges"
@@ -132,5 +132,5 @@ const props = withDefaults(defineProps<RangeCalendarFixtureProps>(), {
         </template>
       </CalendarYearPickerGridBody>
     </CalendarYearPickerGrid>
-  </RangeCalendarRoot>
+  </RangeCalendar>
 </template>

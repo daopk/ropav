@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type { ColorAreaRootProps } from "@/components/color-area";
+import type { ColorAreaProps } from "@/components/color-area";
 import type { Color } from "@/utils/color-types";
 
-import { ColorArea } from "@/components/color-area";
+import { ColorArea, ColorAreaThumb } from "@/components/color-area";
 
 defineProps<
-  ColorAreaRootProps & {
+  ColorAreaProps & {
     /** Wraps the area in a form, so a reset has something to reset. */
     withForm?: boolean;
   }
@@ -26,7 +26,7 @@ defineEmits<{
       :y-channel="$props.yChannel"
       @change="$emit('change', $event)"
     >
-      <ColorArea.Thumb />
+      <ColorAreaThumb />
     </ColorArea>
     <button data-testid="reset" type="reset">Reset</button>
   </form>
@@ -50,6 +50,6 @@ defineEmits<{
     @change="$emit('change', $event)"
     @change-end="$emit('changeEnd', $event)"
   >
-    <ColorArea.Thumb />
+    <ColorAreaThumb />
   </ColorArea>
 </template>

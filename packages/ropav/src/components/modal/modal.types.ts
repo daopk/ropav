@@ -67,7 +67,7 @@ export interface ModalDialogProps {
 }
 
 export interface ModalDialogSlotProps {
-  /** Closes the modal, for a control inside the dialog that is not a `Modal.Close`. */
+  /** Closes the modal, for a control inside the dialog that is not a `ModalClose`. */
   close: () => void;
 }
 

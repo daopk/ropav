@@ -6,24 +6,11 @@ import CardRoot from "./card-root.vue";
 import CardTitle from "./card-title.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Card = Object.assign(CardRoot, {
-  Content: CardContent,
-  Description: CardDescription,
-  Footer: CardFooter,
-  Header: CardHeader,
-  Root: CardRoot,
-  Title: CardTitle,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { CardRoot, CardHeader, CardTitle, CardDescription, CardContent, CardFooter };
+export { CardRoot as Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter };
 
 export type {
-  CardRootProps,
   CardRootProps as CardProps,
   CardHeaderProps,
   CardTitleProps,

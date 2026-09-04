@@ -14,7 +14,7 @@ import IconUnderline from "~icons/gravity-ui/underline";
 
 import { Button } from "../button";
 import { ButtonGroup, ButtonGroupSeparator } from "../button-group";
-import { SeparatorRoot } from "../separator";
+import { Separator } from "../separator";
 import { ToggleButton } from "../toggle-button";
 import { ToggleButtonGroup, ToggleButtonGroupSeparator } from "../toggle-button-group";
 
@@ -36,7 +36,7 @@ const components = {
   IconTextAlignLeft,
   IconTextAlignRight,
   IconUnderline,
-  Separator: SeparatorRoot,
+  Separator: Separator,
   ToggleButton,
   ToggleButtonGroup,
   ToggleButtonGroupSeparator,

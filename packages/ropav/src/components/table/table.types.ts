@@ -98,7 +98,7 @@ export interface TableColumnProps {
   isRowHeader?: boolean;
   /**
    * Width the caller controls, in pixels, as a percentage of the table, or in `fr` units. A
-   * resize never changes it. Only read inside a `Table.ResizableContainer`.
+   * resize never changes it. Only read inside a `TableResizableContainer`.
    */
   width?: TableColumnSize;
   /** Width the column starts at, when the caller is not controlling it. @default "1fr" */
@@ -250,7 +250,7 @@ export interface TableColumnSlotProps {
   isPressed: boolean;
   /** Whether this column is the one being resized. */
   isResizing: boolean;
-  /** Begin resizing this column. Does nothing outside a `Table.ResizableContainer`. */
+  /** Begin resizing this column. Does nothing outside a `TableResizableContainer`. */
   startResize: () => void;
   /** The direction this column is sorted in, or `undefined` when another column is. */
   sortDirection?: TableSortDirection;
@@ -262,7 +262,7 @@ export interface TableSortableColumnHeaderProps {
   class?: string;
   /**
    * Current sort direction for the column. Pass the `sortDirection` handed to the default slot
-   * of `Table.Column`.
+   * of `TableColumn`.
    */
   sortDirection?: TableSortDirection;
   /**

@@ -6,22 +6,10 @@ import DisclosureRoot from "./disclosure-root.vue";
 import DisclosureTrigger from "./disclosure-trigger.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Disclosure = Object.assign(DisclosureRoot, {
-  Body: DisclosureBody,
-  Content: DisclosureContent,
-  Heading: DisclosureHeading,
-  Indicator: DisclosureIndicator,
-  Root: DisclosureRoot,
-  Trigger: DisclosureTrigger,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
 export {
-  DisclosureRoot,
+  DisclosureRoot as Disclosure,
   DisclosureHeading,
   DisclosureTrigger,
   DisclosureContent,
@@ -30,7 +18,6 @@ export {
 };
 
 export type {
-  DisclosureRootProps,
   DisclosureRootProps as DisclosureProps,
   DisclosureHeadingProps,
   DisclosureTriggerProps,

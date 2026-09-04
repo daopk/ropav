@@ -1,13 +1,13 @@
 <script setup lang="ts" vapor>
-import type { TagGroupRootProps } from "@/components/tag-group";
+import type { TagGroupProps } from "@/components/tag-group";
 import type { CollectionKey } from "@/composables/use-collection";
 import type { CollectionSelection } from "@/composables/use-selection-manager";
 
-import { DescriptionRoot } from "@/components/description";
-import { EmptyStateRoot } from "@/components/empty-state";
-import { LabelRoot } from "@/components/label";
-import { TagRemoveButton, TagRoot } from "@/components/tag";
-import { TagGroupList, TagGroupRoot } from "@/components/tag-group";
+import { Description } from "@/components/description";
+import { EmptyState } from "@/components/empty-state";
+import { Label } from "@/components/label";
+import { TagRemoveButton, Tag } from "@/components/tag";
+import { TagGroupList, TagGroup } from "@/components/tag-group";
 
 /**
  * Booleans stay `default: undefined` so an absent prop reads as absent rather than as an explicit
@@ -16,7 +16,7 @@ import { TagGroupList, TagGroupRoot } from "@/components/tag-group";
  */
 const props = withDefaults(
   defineProps<
-    TagGroupRootProps & {
+    TagGroupProps & {
       customRemoveButton?: boolean;
       disabledTags?: CollectionKey[];
       tags?: string[];
@@ -38,7 +38,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <TagGroupRoot
+  <TagGroup
     :class="props.class"
     :default-selected-keys="props.defaultSelectedKeys"
     :disabled-behavior="props.disabledBehavior"
@@ -52,9 +52,9 @@ const emit = defineEmits<{
     :variant="props.variant"
     @selection-change="emit('selectionChange', $event)"
   >
-    <LabelRoot v-if="props.withLabel">Categories</LabelRoot>
+    <Label v-if="props.withLabel">Categories</Label>
     <TagGroupList aria-label="Tags">
-      <TagRoot
+      <Tag
         v-for="name of props.tags"
         :id="name"
         :key="name"
@@ -64,11 +64,11 @@ const emit = defineEmits<{
         <template v-if="props.customRemoveButton" #remove>
           <TagRemoveButton data-testid="custom-remove" />
         </template>
-      </TagRoot>
+      </Tag>
       <template #empty>
-        <EmptyStateRoot>No categories found</EmptyStateRoot>
+        <EmptyState>No categories found</EmptyState>
       </template>
     </TagGroupList>
-    <DescriptionRoot>Pick a category</DescriptionRoot>
-  </TagGroupRoot>
+    <Description>Pick a category</Description>
+  </TagGroup>
 </template>

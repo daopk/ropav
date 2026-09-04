@@ -36,7 +36,7 @@ export interface YearPickerTriggerContext {
 export const [useYearPickerTriggerContext, provideYearPickerTriggerContext] =
   createContext<YearPickerTriggerContext>({
     errorMessage:
-      "CalendarYearPicker trigger parts must be used inside <CalendarYearPicker.Trigger>.",
+      "CalendarYearPicker trigger parts must be used inside <CalendarYearPickerTrigger>.",
     name: "YearPickerTriggerContext",
   });
 
@@ -56,6 +56,6 @@ export interface YearPickerGridContext {
 /** The list of years, for the body and cells inside it. */
 export const [useYearPickerGridContext, provideYearPickerGridContext] =
   createContext<YearPickerGridContext>({
-    errorMessage: "CalendarYearPicker parts must be used inside <CalendarYearPicker.Grid>.",
+    errorMessage: "CalendarYearPicker parts must be used inside <CalendarYearPickerGrid>.",
     name: "YearPickerGridContext",
   });

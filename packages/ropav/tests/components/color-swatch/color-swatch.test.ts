@@ -4,11 +4,11 @@ import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it } from "vitest";
 import { nextTick, shallowRef } from "vue";
 
-import { ColorSwatchRoot } from "@/components/color-swatch";
+import { ColorSwatch } from "@/components/color-swatch";
 import { parseColor } from "@/utils/color";
 
 const renderSwatch = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(ColorSwatchRoot, { props });
+  const result = renderVapor(ColorSwatch, { props });
   const swatch = result.container.querySelector<HTMLElement>('[data-slot="color-swatch"]');
 
   if (!swatch) throw new Error("swatch not rendered");
@@ -45,7 +45,7 @@ describe("ColorSwatch", () => {
 
     it("renders whatever the slot puts inside it, and hands it the parsed colour", () => {
       let seen: string | undefined;
-      const result = renderVapor(ColorSwatchRoot, {
+      const result = renderVapor(ColorSwatch, {
         props: { color: "#0485F7" },
         slots: {
           default: (slotProps?: Record<string, unknown>) => {
@@ -116,7 +116,7 @@ describe("ColorSwatch", () => {
     /** The name follows too, which is the whole colour model running on every change. */
     it("follows the colour when it changes", async () => {
       const color = shallowRef("#0485F7");
-      const result = renderVapor(ColorSwatchRoot, {
+      const result = renderVapor(ColorSwatch, {
         props: {
           get color() {
             return color.value;

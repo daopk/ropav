@@ -1,15 +1,21 @@
 <script setup lang="ts" vapor>
-import type { ColorFieldRootProps } from "@/components/color-field";
+import type { ColorFieldProps } from "@/components/color-field";
 import type { Color } from "@/utils/color-types";
 
 import { ColorField } from "@/components/color-field";
+import {
+  ColorInputGroup,
+  ColorInputGroupInput,
+  ColorInputGroupPrefix,
+  ColorInputGroupSuffix,
+} from "@/components/color-input-group";
 import { Description } from "@/components/description";
 import { FieldError } from "@/components/field-error";
 import { Label } from "@/components/label";
 
 withDefaults(
   defineProps<
-    ColorFieldRootProps & {
+    ColorFieldProps & {
       variant?: "primary" | "secondary";
       placeholder?: string;
       withLabel?: boolean;
@@ -57,9 +63,9 @@ defineEmits<{
       @change="$emit('change', $event)"
     >
       <Label>Color</Label>
-      <ColorField.Group>
-        <ColorField.Input />
-      </ColorField.Group>
+      <ColorInputGroup>
+        <ColorInputGroupInput />
+      </ColorInputGroup>
     </ColorField>
     <button data-testid="reset" type="reset">Reset</button>
     <button data-testid="submit" type="submit">Submit</button>
@@ -90,11 +96,11 @@ defineEmits<{
     @focus-change="$emit('focusChange', $event)"
   >
     <Label v-if="$props.withLabel">Color</Label>
-    <ColorField.Group :variant="$props.variant">
-      <ColorField.Prefix v-if="$props.withPrefix">P</ColorField.Prefix>
-      <ColorField.Input :placeholder="$props.placeholder" />
-      <ColorField.Suffix v-if="$props.withSuffix">S</ColorField.Suffix>
-    </ColorField.Group>
+    <ColorInputGroup :variant="$props.variant">
+      <ColorInputGroupPrefix v-if="$props.withPrefix">P</ColorInputGroupPrefix>
+      <ColorInputGroupInput :placeholder="$props.placeholder" />
+      <ColorInputGroupSuffix v-if="$props.withSuffix">S</ColorInputGroupSuffix>
+    </ColorInputGroup>
     <Description v-if="$props.withDescription">Pick one</Description>
     <FieldError v-if="$props.withFieldError">Bad</FieldError>
   </ColorField>

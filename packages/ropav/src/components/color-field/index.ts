@@ -1,32 +1,13 @@
-import {
-  ColorInputGroupInput,
-  ColorInputGroupPrefix,
-  ColorInputGroupRoot,
-  ColorInputGroupSuffix,
-} from "../color-input-group";
-
 import ColorFieldRoot from "./color-field-root.vue";
-
-/* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const ColorField = Object.assign(ColorFieldRoot, {
-  Group: ColorInputGroupRoot,
-  Input: ColorInputGroupInput,
-  Prefix: ColorInputGroupPrefix,
-  Root: ColorFieldRoot,
-  Suffix: ColorInputGroupSuffix,
-});
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { ColorFieldRoot };
+export { ColorFieldRoot as ColorField };
 
 export type {
-  ColorFieldRootProps,
   ColorFieldRootProps as ColorFieldProps,
-  ColorFieldRootSlotProps,
+  ColorFieldRootSlotProps as ColorFieldSlotProps,
 } from "./color-field.types";
 
 /* -------------------------------------------------------------------------------------------------

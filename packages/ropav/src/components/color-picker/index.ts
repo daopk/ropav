@@ -3,24 +3,14 @@ import ColorPickerRoot from "./color-picker-root.vue";
 import ColorPickerTrigger from "./color-picker-trigger.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const ColorPicker = Object.assign(ColorPickerRoot, {
-  Popover: ColorPickerPopover,
-  Root: ColorPickerRoot,
-  Trigger: ColorPickerTrigger,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { ColorPickerPopover, ColorPickerRoot, ColorPickerTrigger };
+export { ColorPickerPopover, ColorPickerRoot as ColorPicker, ColorPickerTrigger };
 
 export type {
   ColorPickerPopoverProps,
-  ColorPickerRootProps,
   ColorPickerRootProps as ColorPickerProps,
-  ColorPickerRootSlotProps,
+  ColorPickerRootSlotProps as ColorPickerSlotProps,
   ColorPickerTriggerProps,
 } from "./color-picker.types";
 

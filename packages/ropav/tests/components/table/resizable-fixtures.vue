@@ -11,7 +11,7 @@ import {
   TableContent,
   TableHeader,
   TableResizableContainer,
-  TableRoot,
+  Table,
   TableRow,
 } from "@/components/table";
 
@@ -43,7 +43,7 @@ const users = [
 </script>
 
 <template>
-  <TableRoot>
+  <Table>
     <TableResizableContainer
       @resize="props.onResize?.($event)"
       @resize-end="props.onResizeEnd?.($event)"
@@ -74,5 +74,5 @@ const users = [
         </TableBody>
       </TableContent>
     </TableResizableContainer>
-  </TableRoot>
+  </Table>
 </template>

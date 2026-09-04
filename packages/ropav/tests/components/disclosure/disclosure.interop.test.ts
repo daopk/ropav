@@ -2,13 +2,13 @@ import { renderInterop } from "@ropav/testing/helpers/vue";
 import { describe, expect, it, vi } from "vitest";
 import { h, nextTick } from "vue";
 
-import { ButtonRoot } from "@/components/button";
+import { Button } from "@/components/button";
 import {
   DisclosureBody,
   DisclosureContent,
   DisclosureHeading,
   DisclosureIndicator,
-  DisclosureRoot,
+  Disclosure,
   DisclosureTrigger,
 } from "@/components/disclosure";
 
@@ -22,7 +22,7 @@ import {
  * what the wrapper itself provides is found.
  */
 const renderDisclosure = (props: Record<string, unknown> = {}, bareTrigger = false) =>
-  renderInterop(DisclosureRoot, {
+  renderInterop(Disclosure, {
     props,
     slots: {
       default: () => [
@@ -30,7 +30,7 @@ const renderDisclosure = (props: Record<string, unknown> = {}, bareTrigger = fal
           default: () =>
             bareTrigger
               ? h(
-                  ButtonRoot,
+                  Button,
                   { "data-testid": "bare-trigger" },
                   {
                     default: () => ["Toggle content", h(DisclosureIndicator)],
@@ -45,7 +45,7 @@ const renderDisclosure = (props: Record<string, unknown> = {}, bareTrigger = fal
             h(DisclosureBody, null, {
               default: () => [
                 "Hidden content revealed on expand.",
-                h(ButtonRoot, { "data-testid": "body-button" }, { default: () => "Body action" }),
+                h(Button, { "data-testid": "body-button" }, { default: () => "Body action" }),
               ],
             }),
         }),

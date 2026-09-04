@@ -14,23 +14,12 @@ import DateRangePickerTriggerIndicator from "./date-range-picker-trigger-indicat
 import DateRangePickerTrigger from "./date-range-picker-trigger.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const DateRangePicker = Object.assign(DateRangePickerRoot, {
-  Popover: DateRangePickerPopover,
-  RangeSeparator: DateRangePickerRangeSeparator,
-  Root: DateRangePickerRoot,
-  Trigger: DateRangePickerTrigger,
-  TriggerIndicator: DateRangePickerTriggerIndicator,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
 export {
   DateRangePickerPopover,
   DateRangePickerRangeSeparator,
-  DateRangePickerRoot,
+  DateRangePickerRoot as DateRangePicker,
   DateRangePickerTrigger,
   DateRangePickerTriggerIndicator,
 };
@@ -52,9 +41,8 @@ export {
 export type {
   DateRangePickerPopoverProps,
   DateRangePickerRangeSeparatorProps,
-  DateRangePickerRootProps,
   DateRangePickerRootProps as DateRangePickerProps,
-  DateRangePickerRootSlotProps,
+  DateRangePickerRootSlotProps as DateRangePickerSlotProps,
   DateRangePickerTriggerIndicatorProps,
   DateRangePickerTriggerProps,
 } from "./date-range-picker.types";

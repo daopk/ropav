@@ -1,12 +1,12 @@
 <script setup lang="ts" vapor>
-import type { ButtonGroupRootProps } from "@/components/button-group";
+import type { ButtonGroupProps } from "@/components/button-group";
 
 import { Button } from "@/components/button";
-import { ButtonGroup } from "@/components/button-group";
+import { ButtonGroup, ButtonGroupSeparator } from "@/components/button-group";
 
 const props = withDefaults(
   defineProps<
-    ButtonGroupRootProps & {
+    ButtonGroupProps & {
       /** Renders both buttons as icon-only, whose fixed width the group must not stretch. */
       isIconOnly?: boolean;
       /** Renders the second button one level deeper, outside the direct-child position. */
@@ -15,8 +15,8 @@ const props = withDefaults(
       withSeparator?: boolean;
       /** Overrides applied to the first button only. */
       childIsDisabled?: boolean;
-      childSize?: ButtonGroupRootProps["size"];
-      childVariant?: ButtonGroupRootProps["variant"];
+      childSize?: ButtonGroupProps["size"];
+      childVariant?: ButtonGroupProps["variant"];
     }
   >(),
   // Absent has to stay absent, or the fixture would pass `false` down and override the
@@ -55,7 +55,7 @@ defineEmits<{ click: [event: MouseEvent] }>();
       <Button>Nested</Button>
     </div>
     <Button v-else :is-icon-only="props.isIconOnly">
-      <ButtonGroup.Separator v-if="props.withSeparator" />
+      <ButtonGroupSeparator v-if="props.withSeparator" />
       Cancel
     </Button>
   </ButtonGroup>

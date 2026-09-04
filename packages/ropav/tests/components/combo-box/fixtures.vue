@@ -6,18 +6,18 @@ import type { SelectedValue } from "@/composables/use-select-state";
 import {
   ComboBoxInputGroup,
   ComboBoxPopover,
-  ComboBoxRoot,
+  ComboBox,
   ComboBoxTrigger,
   ComboBoxValue,
 } from "@/components/combo-box";
-import { DescriptionRoot } from "@/components/description";
-import { EmptyStateRoot } from "@/components/empty-state";
-import { FieldErrorRoot } from "@/components/field-error";
+import { Description } from "@/components/description";
+import { EmptyState } from "@/components/empty-state";
+import { FieldError } from "@/components/field-error";
 import { IconChevronDown } from "@/components/icons";
-import { InputRoot } from "@/components/input";
-import { LabelRoot } from "@/components/label";
-import { ListBoxRoot } from "@/components/list-box";
-import { ListBoxItemIndicator, ListBoxItemRoot } from "@/components/list-box-item";
+import { Input } from "@/components/input";
+import { Label } from "@/components/label";
+import { ListBox } from "@/components/list-box";
+import { ListBoxItemIndicator, ListBoxItem } from "@/components/list-box-item";
 
 /**
  * Every three-state boolean declares an explicit `undefined`: a cast `false` reads as the caller
@@ -75,7 +75,7 @@ const emit = defineEmits<{
 
 <template>
   <component :is="props.withForm ? 'form' : 'div'">
-    <ComboBoxRoot
+    <ComboBox
       v-slot="{ items: matches }"
       :allows-custom-value="props.allowsCustomValue"
       :allows-empty-collection="props.allowsEmptyCollection"
@@ -105,9 +105,9 @@ const emit = defineEmits<{
       @input-change="emit('inputChange', $event)"
       @open-change="emit('openChange', $event)"
     >
-      <LabelRoot v-if="props.withLabel">Favorite Animal</LabelRoot>
+      <Label v-if="props.withLabel">Favorite Animal</Label>
       <ComboBoxInputGroup :class="props.inputGroupClass">
-        <InputRoot :placeholder="props.placeholder" />
+        <Input :placeholder="props.placeholder" />
         <ComboBoxTrigger v-if="props.withCustomIndicator" :class="props.triggerClass">
           <IconChevronDown data-testid="custom-icon" />
         </ComboBoxTrigger>
@@ -120,13 +120,13 @@ const emit = defineEmits<{
           </span>
         </template>
       </ComboBoxValue>
-      <DescriptionRoot v-if="props.withDescription">Pick an animal</DescriptionRoot>
+      <Description v-if="props.withDescription">Pick an animal</Description>
       <ComboBoxPopover :class="props.popoverClass">
-        <ListBoxRoot :selection-mode="props.selectionMode">
+        <ListBox :selection-mode="props.selectionMode">
           <template v-if="props.withEmptyState" #empty>
-            <EmptyStateRoot>No results found</EmptyStateRoot>
+            <EmptyState>No results found</EmptyState>
           </template>
-          <ListBoxItemRoot
+          <ListBoxItem
             v-for="item in matches as ComboBoxFixtureItem[]"
             :id="item.id"
             :key="item.id"
@@ -134,11 +134,11 @@ const emit = defineEmits<{
           >
             {{ item.name }}
             <ListBoxItemIndicator />
-          </ListBoxItemRoot>
-        </ListBoxRoot>
+          </ListBoxItem>
+        </ListBox>
       </ComboBoxPopover>
-      <FieldErrorRoot v-if="props.withFieldError">Please choose an animal</FieldErrorRoot>
-    </ComboBoxRoot>
+      <FieldError v-if="props.withFieldError">Please choose an animal</FieldError>
+    </ComboBox>
     <button v-if="props.withForm" data-testid="reset" type="reset">Reset</button>
   </component>
 </template>

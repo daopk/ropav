@@ -2,7 +2,7 @@ import { renderInterop } from "@ropav/testing/helpers/vue";
 import { describe, expect, it, vi } from "vitest";
 import { h } from "vue";
 
-import { LinkRoot } from "@/components/link";
+import { Link } from "@/components/link";
 import { RouterProvider } from "@/components/router-provider";
 
 /**
@@ -18,7 +18,7 @@ const render = (props: Record<string, unknown>, linkProps: Record<string, unknow
   const result = renderInterop(RouterProvider, {
     props,
     slots: {
-      default: () => h(LinkRoot, linkProps, { default: () => "Call to action" }),
+      default: () => h(Link, linkProps, { default: () => "Call to action" }),
     },
   });
   const link = result.container.querySelector('[data-slot="link"]');

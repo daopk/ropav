@@ -7,27 +7,21 @@ import TabsSeparator from "./tabs-separator.vue";
 import TabsTab from "./tabs-tab.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Tabs = Object.assign(TabsRoot, {
-  Indicator: TabsIndicator,
-  List: TabsList,
-  ListContainer: TabsListContainer,
-  Panel: TabsPanel,
-  Root: TabsRoot,
-  Separator: TabsSeparator,
-  Tab: TabsTab,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { TabsRoot, TabsListContainer, TabsList, TabsTab, TabsIndicator, TabsSeparator, TabsPanel };
+export {
+  TabsRoot as Tabs,
+  TabsListContainer,
+  TabsList,
+  TabsTab,
+  TabsIndicator,
+  TabsSeparator,
+  TabsPanel,
+};
 
 export type {
-  TabsRootProps,
   TabsRootProps as TabsProps,
-  TabsRootSlotProps,
+  TabsRootSlotProps as TabsSlotProps,
   TabsListContainerProps,
   TabsListProps,
   TabsTabProps,

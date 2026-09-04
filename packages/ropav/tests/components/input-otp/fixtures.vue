@@ -3,12 +3,7 @@ import type { InputOTPFixtureProps } from "./fixtures.types";
 
 import { Description } from "@/components/description";
 import { FieldError } from "@/components/field-error";
-import {
-  InputOTPGroup,
-  InputOTPRoot,
-  InputOTPSeparator,
-  InputOTPSlot,
-} from "@/components/input-otp";
+import { InputOTPGroup, InputOTP, InputOTPSeparator, InputOTPSlot } from "@/components/input-otp";
 import { Label } from "@/components/label";
 
 // `isDisabled` and `isInvalid` are left to cast, as the component does: nothing sits above the
@@ -27,7 +22,7 @@ const props = withDefaults(defineProps<InputOTPFixtureProps>(), {
 <template>
   <component :is="props.withForm ? 'form' : 'div'">
     <Label v-if="props.withLabel">Verify account</Label>
-    <InputOTPRoot
+    <InputOTP
       :id="props.id"
       :aria-describedby="props.ariaDescribedby"
       :aria-label="props.ariaLabel"
@@ -63,7 +58,7 @@ const props = withDefaults(defineProps<InputOTPFixtureProps>(), {
         <InputOTPSlot v-if="props.withExtraSlot" :index="6" />
       </InputOTPGroup>
       <FieldError v-if="props.withFieldError" />
-    </InputOTPRoot>
+    </InputOTP>
     <Description v-if="props.withDescription">Enter the code we sent you</Description>
     <button v-if="props.withForm" data-testid="reset" type="reset">Reset</button>
     <button v-if="props.withForm" data-testid="submit" type="submit">Submit</button>

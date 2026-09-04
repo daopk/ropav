@@ -14,7 +14,7 @@ import {
   CalendarHeaderCell,
   CalendarHeading,
   CalendarNavButton,
-  CalendarRoot,
+  Calendar,
 } from "@/components/calendar";
 import {
   CalendarYearPickerCell,
@@ -35,7 +35,7 @@ import {
  * application uses has to be checked on its own.
  */
 const render = (props: Record<string, unknown> = {}) => {
-  const result = renderInterop(CalendarRoot, {
+  const result = renderInterop(Calendar, {
     props: {
       "aria-label": "Event date",
       defaultFocusedValue: new CalendarDate(2026, 6, 15),

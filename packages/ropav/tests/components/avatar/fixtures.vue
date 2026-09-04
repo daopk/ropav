@@ -1,13 +1,13 @@
 <script setup lang="ts" vapor>
-import type { AvatarRootProps, ImageLoadingStatus } from "@/components/avatar";
+import type { AvatarProps, ImageLoadingStatus } from "@/components/avatar";
 
-import { Avatar } from "@/components/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/avatar";
 
 defineProps<
-  AvatarRootProps & {
+  AvatarProps & {
     alt?: string;
     delayMs?: number;
-    fallbackColor?: AvatarRootProps["color"];
+    fallbackColor?: AvatarProps["color"];
     sizes?: string;
     src?: string;
     srcSet?: string;
@@ -23,7 +23,7 @@ defineEmits<{
 
 <template>
   <Avatar :class="$props.class" :color="$props.color" :size="$props.size" :variant="$props.variant">
-    <Avatar.Image
+    <AvatarImage
       :alt="$props.alt"
       :sizes="$props.sizes"
       :src="$props.src"
@@ -32,6 +32,6 @@ defineEmits<{
       @load="$emit('load', $event)"
       @loading-status-change="$emit('loadingStatusChange', $event)"
     />
-    <Avatar.Fallback :color="$props.fallbackColor" :delay-ms="$props.delayMs">JD</Avatar.Fallback>
+    <AvatarFallback :color="$props.fallbackColor" :delay-ms="$props.delayMs">JD</AvatarFallback>
   </Avatar>
 </template>

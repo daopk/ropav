@@ -45,7 +45,7 @@ export interface PopoverDialogProps {
 }
 
 export interface PopoverDialogSlotProps {
-  /** Closes the popover, for a control inside the dialog that is not a `Popover.Close`. */
+  /** Closes the popover, for a control inside the dialog that has to close it explicitly. */
   close: () => void;
 }
 

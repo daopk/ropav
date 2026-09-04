@@ -2,20 +2,20 @@ import { renderInterop } from "@ropav/testing/helpers/vue";
 import { describe, expect, it } from "vitest";
 import { h, nextTick } from "vue";
 
-import { LabelRoot } from "@/components/label";
+import { Label } from "@/components/label";
 import {
   ProgressBarFill,
   ProgressBarOutput,
-  ProgressBarRoot,
+  ProgressBar,
   ProgressBarTrack,
 } from "@/components/progress-bar";
 
 const render = (isIndeterminate = false) =>
-  renderInterop(ProgressBarRoot, {
+  renderInterop(ProgressBar, {
     props: { color: "warning", isIndeterminate, value: 40 },
     slots: {
       default: () => [
-        h(LabelRoot, null, { default: () => "Loading" }),
+        h(Label, null, { default: () => "Loading" }),
         h(ProgressBarOutput),
         h(ProgressBarTrack, null, { default: () => h(ProgressBarFill) }),
       ],
@@ -42,7 +42,7 @@ describe("ProgressBar under a vdom host", () => {
   });
 
   it("carries the band's modifier onto host-authored parts", () => {
-    const { container, unmount } = renderInterop(ProgressBarRoot, {
+    const { container, unmount } = renderInterop(ProgressBar, {
       props: { isAnimated: true, value: 40 },
       slots: {
         default: () => [h(ProgressBarTrack, null, { default: () => h(ProgressBarFill) })],

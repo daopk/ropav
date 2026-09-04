@@ -3,23 +3,13 @@ import MenuItemRoot from "./menu-item-root.vue";
 import MenuItemSubmenuIndicator from "./menu-item-submenu-indicator.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const MenuItem = Object.assign(MenuItemRoot, {
-  Indicator: MenuItemIndicator,
-  Root: MenuItemRoot,
-  SubmenuIndicator: MenuItemSubmenuIndicator,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { MenuItemIndicator, MenuItemRoot, MenuItemSubmenuIndicator };
+export { MenuItemIndicator, MenuItemRoot as MenuItem, MenuItemSubmenuIndicator };
 
 export type {
   MenuItemIndicatorProps,
   MenuItemIndicatorSlotProps,
-  MenuItemRootProps,
   MenuItemRootProps as MenuItemProps,
   MenuItemSlotProps,
   MenuItemSubmenuIndicatorProps,

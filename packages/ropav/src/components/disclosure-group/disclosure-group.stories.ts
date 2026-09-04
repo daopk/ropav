@@ -42,10 +42,10 @@ const AppleShowcaseButton = {
 };
 
 /**
- * Story templates are compiled at runtime, where Vue resolves a tag like `Disclosure.Heading`
- * as a component literally named "Disclosure.Heading" and fails. Dot notation only works in an
+ * Story templates are compiled at runtime, where Vue resolves a tag like `DisclosureHeading`
+ * as a component literally named "DisclosureHeading" and fails. Dot notation only works in an
  * SFC, whose compiler resolves it against the setup scope. So the parts are registered
- * individually here — in application code `<Disclosure.Heading>` inside an SFC is fine.
+ * individually here — in application code `<DisclosureHeading>` inside an SFC is fine.
  */
 const components = {
   AppleShowcaseButton,

@@ -27,7 +27,7 @@ import {
   RangeCalendarHeader,
   RangeCalendarHeaderCell,
   RangeCalendarNavButton,
-  RangeCalendarRoot,
+  RangeCalendar,
 } from "../range-calendar";
 
 import {
@@ -35,7 +35,7 @@ import {
   DateRangePickerInput,
   DateRangePickerPopover,
   DateRangePickerRangeSeparator,
-  DateRangePickerRoot,
+  DateRangePicker,
   DateRangePickerSegment,
   DateRangePickerSuffix,
   DateRangePickerTrigger,
@@ -43,7 +43,7 @@ import {
 } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata to
-// resolve `DateRangePicker.Trigger` through, so dot notation cannot be used here.
+// resolve `DateRangePickerTrigger` through, so dot notation cannot be used here.
 const components = {
   Button,
   CalendarYearPickerCell,
@@ -52,11 +52,11 @@ const components = {
   CalendarYearPickerTrigger,
   CalendarYearPickerTriggerHeading,
   CalendarYearPickerTriggerIndicator,
+  DateRangePicker,
   DateRangePickerGroup,
   DateRangePickerInput,
   DateRangePickerPopover,
   DateRangePickerRangeSeparator,
-  DateRangePickerRoot,
   DateRangePickerSegment,
   DateRangePickerSuffix,
   DateRangePickerTrigger,
@@ -66,6 +66,7 @@ const components = {
   Form,
   IconChevronDown,
   Label,
+  RangeCalendar,
   RangeCalendarCell,
   RangeCalendarGrid,
   RangeCalendarGridBody,
@@ -73,7 +74,6 @@ const components = {
   RangeCalendarHeader,
   RangeCalendarHeaderCell,
   RangeCalendarNavButton,
-  RangeCalendarRoot,
 };
 
 /**
@@ -91,7 +91,7 @@ const bindings = { end: END, next: NEXT, previous: PREVIOUS, start: START };
 /** The range calendar in the popover, which every story below repeats. */
 const calendar = `
   <DateRangePickerPopover>
-    <RangeCalendarRoot aria-label="Selected range">
+    <RangeCalendar aria-label="Selected range">
       <RangeCalendarHeader>
         <CalendarYearPickerTrigger>
           <CalendarYearPickerTriggerHeading />
@@ -119,7 +119,7 @@ const calendar = `
           </template>
         </CalendarYearPickerGridBody>
       </CalendarYearPickerGrid>
-    </RangeCalendarRoot>
+    </RangeCalendar>
   </DateRangePickerPopover>
 `;
 
@@ -152,7 +152,7 @@ const sizedField = field.replace(
 );
 
 const meta: StoryMeta = {
-  component: DateRangePickerRoot,
+  component: DateRangePicker,
   parameters: {
     layout: "centered",
   },
@@ -170,7 +170,7 @@ export const Sizes: Story = {
     setup: () => ({ ...bindings, sizes: ["sm", "md", "lg"] as const }),
     template: `
       <div class="flex flex-col gap-4">
-        <DateRangePickerRoot
+        <DateRangePicker
           v-for="size in sizes"
           :key="size"
           class="w-[320px]"
@@ -180,7 +180,7 @@ export const Sizes: Story = {
           <Label>Size {{ size }}</Label>
           ${sizedField}
           ${calendar}
-        </DateRangePickerRoot>
+        </DateRangePicker>
       </div>
     `,
   }),
@@ -191,11 +191,11 @@ export const Default: Story = {
     components,
     setup: () => ({ ...bindings }),
     template: `
-      <DateRangePickerRoot class="w-[320px]" end-name="endDate" start-name="startDate">
+      <DateRangePicker class="w-[320px]" end-name="endDate" start-name="startDate">
         <Label>Trip dates</Label>
         ${field}
         ${calendar}
-      </DateRangePickerRoot>
+      </DateRangePicker>
     `,
   }),
 };
@@ -211,7 +211,7 @@ export const Controlled: Story = {
     },
     template: `
       <div class="flex w-[320px] flex-col gap-2">
-        <DateRangePickerRoot
+        <DateRangePicker
           v-model:value="value"
           end-name="endDate"
           start-name="startDate"
@@ -220,7 +220,7 @@ export const Controlled: Story = {
           ${field}
           <Description>Select your check-in and check-out dates.</Description>
           ${calendar}
-        </DateRangePickerRoot>
+        </DateRangePicker>
         <Description>
           Current value:
           {{ value ? value.start.toString() + " -> " + value.end.toString() : "(empty)" }}
@@ -239,7 +239,7 @@ export const Disabled: Story = {
       return { ...bindings, value: { end: start.add({ days: 4 }), start } };
     },
     template: `
-      <DateRangePickerRoot
+      <DateRangePicker
         is-disabled
         class="w-[320px]"
         end-name="endDate"
@@ -249,7 +249,7 @@ export const Disabled: Story = {
         <Label>Trip dates</Label>
         ${field}
         ${calendar}
-      </DateRangePickerRoot>
+      </DateRangePicker>
     `,
   }),
 };
@@ -270,7 +270,7 @@ export const WithValidation: Story = {
       return { ...bindings, currentDate, isInvalid, value };
     },
     template: `
-      <DateRangePickerRoot
+      <DateRangePicker
         v-model:value="value"
         is-required
         class="w-[320px]"
@@ -284,7 +284,7 @@ export const WithValidation: Story = {
         <FieldError v-if="isInvalid">Select a valid range starting today or later.</FieldError>
         <Description v-else>Choose a check-in and check-out date.</Description>
         ${calendar}
-      </DateRangePickerRoot>
+      </DateRangePicker>
     `,
   }),
 };
@@ -294,7 +294,7 @@ export const WithCustomIndicator: Story = {
     components,
     setup: () => ({ ...bindings }),
     template: `
-      <DateRangePickerRoot class="w-[320px]" end-name="endDate" start-name="startDate">
+      <DateRangePicker class="w-[320px]" end-name="endDate" start-name="startDate">
         <Label>Trip dates</Label>
         <DateRangePickerGroup full-width>
           <DateRangePickerInput v-bind="start">
@@ -320,7 +320,7 @@ export const WithCustomIndicator: Story = {
           Use a custom trigger icon while preserving DateRangePicker behavior.
         </Description>
         ${calendar}
-      </DateRangePickerRoot>
+      </DateRangePicker>
     `,
   }),
 };
@@ -355,7 +355,7 @@ export const FormExample: Story = {
     },
     template: `
       <Form class="flex w-[320px] flex-col gap-3" @submit="onSubmit">
-        <DateRangePickerRoot
+        <DateRangePicker
           v-model:value="value"
           is-required
           end-name="tripEndDate"
@@ -368,7 +368,7 @@ export const FormExample: Story = {
           <FieldError v-if="isInvalid">Please choose a valid range in the future.</FieldError>
           <Description v-else>Select your check-in and check-out dates.</Description>
           ${calendar}
-        </DateRangePickerRoot>
+        </DateRangePicker>
         <Button
           class="w-full"
           :is-disabled="!value || isInvalid"

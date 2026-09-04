@@ -16,15 +16,15 @@ import IconSquarePlus from "~icons/gravity-ui/square-plus";
 import IconTrashBin from "~icons/gravity-ui/trash-bin";
 
 import { avatarSrc } from "../../utils/story-assets";
-import { AvatarFallback, AvatarImage, AvatarRoot } from "../avatar";
-import { ButtonRoot } from "../button";
-import { DescriptionRoot } from "../description";
-import { HeaderRoot } from "../header";
-import { KbdAbbr, KbdContent, KbdRoot } from "../kbd";
-import { LabelRoot } from "../label";
-import { MenuItemIndicator, MenuItemRoot, MenuItemSubmenuIndicator } from "../menu-item";
-import { MenuSectionRoot } from "../menu-section";
-import { SeparatorRoot } from "../separator";
+import { AvatarFallback, AvatarImage, Avatar } from "../avatar";
+import { Button } from "../button";
+import { Description } from "../description";
+import { Header } from "../header";
+import { KbdAbbr, KbdContent, Kbd } from "../kbd";
+import { Label } from "../label";
+import { MenuItemIndicator, MenuItem, MenuItemSubmenuIndicator } from "../menu-item";
+import { MenuSection } from "../menu-section";
+import { Separator } from "../separator";
 
 import DropdownMenu from "./dropdown-menu.vue";
 import DropdownPopover from "./dropdown-popover.vue";
@@ -33,28 +33,28 @@ import DropdownSubmenuTrigger from "./dropdown-submenu-trigger.vue";
 import DropdownTrigger from "./dropdown-trigger.vue";
 
 // Registered under flat names: a story template is compiled at runtime with no binding
-// metadata, so a dotted tag would be looked up as a component literally named "Dropdown.Item".
+// metadata, so a dotted tag would be looked up as a component literally named "MenuItem".
 const components = {
-  Avatar: AvatarRoot,
+  Avatar: Avatar,
   AvatarFallback,
   AvatarImage,
-  Button: ButtonRoot,
-  Description: DescriptionRoot,
+  Button: Button,
+  Description: Description,
   Dropdown: DropdownRoot,
-  DropdownItem: MenuItemRoot,
+  DropdownItem: MenuItem,
   DropdownItemIndicator: MenuItemIndicator,
   DropdownMenu,
   DropdownPopover,
-  DropdownSection: MenuSectionRoot,
+  DropdownSection: MenuSection,
   DropdownSubmenuIndicator: MenuItemSubmenuIndicator,
   DropdownSubmenuTrigger,
   DropdownTrigger,
-  Header: HeaderRoot,
-  Kbd: KbdRoot,
+  Header: Header,
+  Kbd: Kbd,
   KbdAbbr,
   KbdContent,
-  Label: LabelRoot,
-  Separator: SeparatorRoot,
+  Label: Label,
+  Separator: Separator,
 };
 
 const meta: StoryMeta = {

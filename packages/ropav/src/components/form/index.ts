@@ -1,15 +1,8 @@
 import FormRoot from "./form-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Form = Object.assign(FormRoot, {
-  Root: FormRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export { FormRoot };
+export { FormRoot as Form };
 
-export type { FormRootProps, FormRootProps as FormProps } from "./form.types";
+export type { FormRootProps as FormProps } from "./form.types";

@@ -12,24 +12,6 @@ import AlertDialogRoot from "./alert-dialog-root.vue";
 import AlertDialogTrigger from "./alert-dialog-trigger.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const AlertDialog = Object.assign(AlertDialogRoot, {
-  Backdrop: AlertDialogBackdrop,
-  Body: AlertDialogBody,
-  Close: AlertDialogClose,
-  CloseTrigger: AlertDialogCloseTrigger,
-  Container: AlertDialogContainer,
-  Dialog: AlertDialogDialog,
-  Footer: AlertDialogFooter,
-  Header: AlertDialogHeader,
-  Heading: AlertDialogHeading,
-  Icon: AlertDialogIcon,
-  Root: AlertDialogRoot,
-  Trigger: AlertDialogTrigger,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
 export {
@@ -43,7 +25,7 @@ export {
   AlertDialogHeader,
   AlertDialogHeading,
   AlertDialogIcon,
-  AlertDialogRoot,
+  AlertDialogRoot as AlertDialog,
   AlertDialogTrigger,
 };
 
@@ -59,8 +41,7 @@ export type {
   AlertDialogHeadingProps,
   AlertDialogIconProps,
   AlertDialogPlacement,
-  AlertDialogRootEmits,
-  AlertDialogRootProps,
+  AlertDialogRootEmits as AlertDialogEmits,
   AlertDialogRootProps as AlertDialogProps,
   AlertDialogStatus,
   AlertDialogTriggerProps,

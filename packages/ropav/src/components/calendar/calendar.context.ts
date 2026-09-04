@@ -64,7 +64,7 @@ export interface CalendarGridContext {
  */
 export const [useCalendarGridContext, provideCalendarGridContext] =
   createContext<CalendarGridContext>({
-    errorMessage: "Calendar grid parts must be used inside <Calendar.Grid>.",
+    errorMessage: "Calendar grid parts must be used inside <CalendarGrid>.",
     name: "CalendarGridContext",
   });
 

@@ -2,7 +2,7 @@ import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it, vi } from "vitest";
 import { nextTick, reactive } from "vue";
 
-import { ColorFieldRoot } from "@/components/color-field";
+import { ColorField } from "@/components/color-field";
 
 import Fixture from "./fixtures.vue";
 
@@ -495,8 +495,7 @@ describe("ColorField", () => {
       // access into an imported variants type is not something the compiler resolves. Written the
       // other way `<ColorField full-width>` arrives as `""`, no variant matches, and the modifier
       // silently never applies — which neither suite can catch, because both pass a real boolean.
-      const props = (ColorFieldRoot as unknown as { props: Record<string, { type: unknown }> })
-        .props;
+      const props = (ColorField as unknown as { props: Record<string, { type: unknown }> }).props;
 
       expect(props["fullWidth"]?.type).toBe(Boolean);
     });

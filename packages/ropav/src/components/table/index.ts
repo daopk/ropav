@@ -18,34 +18,10 @@ import TableSelectionCheckbox from "./table-selection-checkbox.vue";
 import TableSortableColumnHeader from "./table-sortable-column-header.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Table = Object.assign(TableRoot, {
-  Body: TableBody,
-  Cell: TableCell,
-  Column: TableColumn,
-  ColumnResizer: TableColumnResizer,
-  Content: TableContent,
-  DragHandle: TableDragHandle,
-  DropIndicator: TableDropIndicator,
-  ExpandTrigger: TableExpandTrigger,
-  Footer: TableFooter,
-  Header: TableHeader,
-  LoadMore: TableLoadMore,
-  LoadMoreContent: TableLoadMoreContent,
-  ResizableContainer: TableResizableContainer,
-  Root: TableRoot,
-  Row: TableRow,
-  ScrollContainer: TableScrollContainer,
-  SelectionCheckbox: TableSelectionCheckbox,
-  SortableColumnHeader: TableSortableColumnHeader,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
 export {
-  TableRoot,
+  TableRoot as Table,
   TableScrollContainer,
   TableResizableContainer,
   TableContent,
@@ -66,7 +42,6 @@ export {
 };
 
 export type {
-  TableRootProps,
   TableRootProps as TableProps,
   TableScrollContainerProps,
   TableResizableContainerProps,

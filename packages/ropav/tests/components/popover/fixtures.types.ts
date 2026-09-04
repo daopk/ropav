@@ -7,9 +7,9 @@ export interface PopoverFixtureProps {
   isKeyboardDismissDisabled?: boolean;
   placement?: Placement;
   shouldFlip?: boolean;
-  /** Renders the popover's content without a `Popover.Dialog` around it. */
+  /** Renders the popover's content without a `PopoverDialog` around it. */
   withoutDialog?: boolean;
-  /** Uses `Popover.Trigger` instead of letting a bare `Button` be the trigger. */
+  /** Uses `PopoverTrigger` instead of letting a bare `Button` be the trigger. */
   withCustomTrigger?: boolean;
   withArrow?: boolean;
   /** Supplies the arrow shape through the slot instead of using the default one. */

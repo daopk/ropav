@@ -35,7 +35,7 @@ const trigger = useDialogTrigger({}, state);
 
 // The trigger is whatever pressable sits inside, which is why the behaviour is handed down rather
 // than built into a trigger component: `<Popover><Button/></Popover>` is the common case, and
-// `Popover.Trigger` exists for markup that is not pressable on its own.
+// `PopoverTrigger` exists for markup that is not pressable on its own.
 providePressResponder(trigger.responder);
 
 providePopoverContext({ slots: computed(() => popoverVariants()) });

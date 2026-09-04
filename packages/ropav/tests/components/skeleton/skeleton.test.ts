@@ -2,7 +2,7 @@ import { renderVapor } from "@ropav/testing/helpers/vue";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { nextTick, reactive } from "vue";
 
-import { Skeleton, SkeletonRoot, skeletonVariants } from "@/components/skeleton";
+import { Skeleton, skeletonVariants } from "@/components/skeleton";
 import { clearCssVariableCache } from "@/composables/use-css-variable";
 
 import Fixture from "./fixtures.vue";
@@ -104,7 +104,7 @@ describe("Skeleton", () => {
 
   describe("exports", () => {
     it("exposes the root and shared variants", () => {
-      expect(Skeleton.Root).toBe(SkeletonRoot);
+      expect(Skeleton).toBeDefined();
       expect(skeletonVariants({ animationType: "pulse" }).base()).toContain("skeleton--pulse");
     });
   });

@@ -35,7 +35,7 @@ import SidebarSubMenu from "./sidebar-sub-menu.vue";
 import SidebarTrigger from "./sidebar-trigger.vue";
 
 // Registered under flat names: a story template is compiled at runtime with no binding metadata,
-// so a dotted tag would be looked up as a component literally named "Sidebar.Item".
+// so a dotted tag would be looked up as a component literally named "SidebarItem".
 const components = {
   IconBell,
   IconBookOpen,
@@ -315,7 +315,7 @@ export const Mobile: Story = {
 
 /**
  * A collapsed item keeps its name for a screen reader but shows only an icon, so a pointer user
- * has nothing to read. `Sidebar.ItemTooltip` fills that in, and only there: it sits on the side
+ * has nothing to read. `SidebarItemTooltip` fills that in, and only there: it sits on the side
  * away from the panel, and it goes quiet the moment the label is back on screen — expand this from
  * the trigger and hovering an item says nothing, because the word is already next to the pointer.
  */

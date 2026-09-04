@@ -1,6 +1,6 @@
-import type { SwitchRootProps } from "@/components/switch";
+import type { SwitchProps } from "@/components/switch";
 
-export interface SwitchFixtureProps extends SwitchRootProps {
+export interface SwitchFixtureProps extends SwitchProps {
   /** Renders help text as a sibling of the clickable content. */
   withDescription?: boolean;
   /** Renders a custom icon inside the thumb. */

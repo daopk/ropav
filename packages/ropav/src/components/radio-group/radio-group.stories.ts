@@ -16,7 +16,7 @@ import { Radio, RadioContent, RadioControl, RadioIndicator } from "../radio";
 import { RadioGroup } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata
-// to resolve `Radio.Content` through, so dot notation cannot be used here.
+// to resolve `RadioContent` through, so dot notation cannot be used here.
 const components = {
   Button,
   Description,

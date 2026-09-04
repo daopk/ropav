@@ -1,11 +1,16 @@
 <script setup lang="ts" vapor>
-import type { ColorSwatchPickerRootProps } from "@/components/color-swatch-picker";
+import type { ColorSwatchPickerProps } from "@/components/color-swatch-picker";
 import type { Color } from "@/utils/color-types";
 
-import { ColorSwatchPicker } from "@/components/color-swatch-picker";
+import {
+  ColorSwatchPicker,
+  ColorSwatchPickerIndicator,
+  ColorSwatchPickerItem,
+  ColorSwatchPickerSwatch,
+} from "@/components/color-swatch-picker";
 
 defineProps<
-  ColorSwatchPickerRootProps & {
+  ColorSwatchPickerProps & {
     /** The palette to render. */
     colors?: (Color | string)[];
     /** Colours rendered as disabled items. */
@@ -34,18 +39,18 @@ defineEmits<{ change: [value: Color] }>();
     :variant="$props.variant"
     @change="$emit('change', $event)"
   >
-    <ColorSwatchPicker.Item
+    <ColorSwatchPickerItem
       v-for="color in $props.colors ?? ['#F43F5E', '#D946EF', '#8B5CF6']"
       :key="String(color)"
       :color="color"
       :is-disabled="$props.disabled?.includes(String(color))"
       :style="$props.itemStyle"
     >
-      <ColorSwatchPicker.Swatch />
-      <ColorSwatchPicker.Indicator v-if="$props.withCustomIndicator">
+      <ColorSwatchPickerSwatch />
+      <ColorSwatchPickerIndicator v-if="$props.withCustomIndicator">
         <span data-testid="custom-indicator">picked</span>
-      </ColorSwatchPicker.Indicator>
-      <ColorSwatchPicker.Indicator v-else-if="!$props.withoutIndicator" />
-    </ColorSwatchPicker.Item>
+      </ColorSwatchPickerIndicator>
+      <ColorSwatchPickerIndicator v-else-if="!$props.withoutIndicator" />
+    </ColorSwatchPickerItem>
   </ColorSwatchPicker>
 </template>

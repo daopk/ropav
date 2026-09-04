@@ -13,10 +13,10 @@ import {
 } from "./index";
 
 /**
- * Story templates are compiled at runtime, where Vue resolves a tag like `SegmentedControl.Item`
- * as a component literally named "SegmentedControl.Item" and fails. Dot notation only works in an
+ * Story templates are compiled at runtime, where Vue resolves a tag like `SegmentedControlItem`
+ * as a component literally named "SegmentedControlItem" and fails. Dot notation only works in an
  * SFC, whose compiler resolves it against the setup scope. So the parts are registered
- * individually here — in application code `<SegmentedControl.Item>` inside an SFC is fine.
+ * individually here — in application code `<SegmentedControlItem>` inside an SFC is fine.
  */
 const components = {
   Button,

@@ -7,22 +7,22 @@ import {
   AutocompleteFilter,
   AutocompleteIndicator,
   AutocompletePopover,
-  AutocompleteRoot,
+  Autocomplete,
   AutocompleteTrigger,
   AutocompleteValue,
 } from "@/components/autocomplete";
-import { DescriptionRoot } from "@/components/description";
-import { EmptyStateRoot } from "@/components/empty-state";
-import { FieldErrorRoot } from "@/components/field-error";
+import { Description } from "@/components/description";
+import { EmptyState } from "@/components/empty-state";
+import { FieldError } from "@/components/field-error";
 import { IconChevronDown } from "@/components/icons";
-import { LabelRoot } from "@/components/label";
-import { ListBoxRoot } from "@/components/list-box";
-import { ListBoxItemIndicator, ListBoxItemRoot } from "@/components/list-box-item";
+import { Label } from "@/components/label";
+import { ListBox } from "@/components/list-box";
+import { ListBoxItemIndicator, ListBoxItem } from "@/components/list-box-item";
 import {
   SearchFieldClearButton,
   SearchFieldGroup,
   SearchFieldInput,
-  SearchFieldRoot,
+  SearchField,
   SearchFieldSearchIcon,
 } from "@/components/search-field";
 import { useFilter } from "@/composables/use-filter";
@@ -80,7 +80,7 @@ const filter = useFilter({ sensitivity: "base" });
 
 <template>
   <component :is="props.withForm ? 'form' : 'div'">
-    <AutocompleteRoot
+    <Autocomplete
       :allows-empty-collection="props.allowsEmptyCollection"
       :class="props.rootClass"
       :default-open="props.defaultOpen"
@@ -105,7 +105,7 @@ const filter = useFilter({ sensitivity: "base" });
       @clear="emit('clear')"
       @open-change="emit('openChange', $event)"
     >
-      <LabelRoot v-if="props.withLabel">Favorite Animal</LabelRoot>
+      <Label v-if="props.withLabel">Favorite Animal</Label>
       <AutocompleteTrigger :class="props.triggerClass">
         <AutocompleteValue :class="props.valueClass">
           <template v-if="props.withCustomValue" #default="{ isPlaceholder, selectedItems }">
@@ -120,7 +120,7 @@ const filter = useFilter({ sensitivity: "base" });
         </AutocompleteIndicator>
         <AutocompleteIndicator v-else :class="props.indicatorClass" />
       </AutocompleteTrigger>
-      <DescriptionRoot v-if="props.withDescription">Pick an animal</DescriptionRoot>
+      <Description v-if="props.withDescription">Pick an animal</Description>
       <AutocompletePopover :class="props.popoverClass">
         <AutocompleteFilter
           :filter="props.withFilter ? filter.contains : undefined"
@@ -128,18 +128,18 @@ const filter = useFilter({ sensitivity: "base" });
           @input-change="emit('inputChange', $event)"
         >
           <template #default="{ items }">
-            <SearchFieldRoot aria-label="Search animals" auto-focus variant="secondary">
+            <SearchField aria-label="Search animals" auto-focus variant="secondary">
               <SearchFieldGroup>
                 <SearchFieldSearchIcon />
                 <SearchFieldInput placeholder="Search animals..." />
                 <SearchFieldClearButton />
               </SearchFieldGroup>
-            </SearchFieldRoot>
-            <ListBoxRoot>
+            </SearchField>
+            <ListBox>
               <template v-if="props.withEmptyState" #empty>
-                <EmptyStateRoot>No results found</EmptyStateRoot>
+                <EmptyState>No results found</EmptyState>
               </template>
-              <ListBoxItemRoot
+              <ListBoxItem
                 v-for="item in items as AutocompleteFixtureItem[]"
                 :id="item.id"
                 :key="item.id"
@@ -148,13 +148,13 @@ const filter = useFilter({ sensitivity: "base" });
               >
                 {{ item.name }}
                 <ListBoxItemIndicator />
-              </ListBoxItemRoot>
-            </ListBoxRoot>
+              </ListBoxItem>
+            </ListBox>
           </template>
         </AutocompleteFilter>
       </AutocompletePopover>
-      <FieldErrorRoot v-if="props.withFieldError">Please choose an animal</FieldErrorRoot>
-    </AutocompleteRoot>
+      <FieldError v-if="props.withFieldError">Please choose an animal</FieldError>
+    </Autocomplete>
     <button v-if="props.withForm" data-testid="reset" type="reset">Reset</button>
   </component>
 </template>

@@ -1,12 +1,3 @@
-import {
-  CalendarYearPickerCell,
-  CalendarYearPickerGrid,
-  CalendarYearPickerGridBody,
-  CalendarYearPickerTrigger,
-  CalendarYearPickerTriggerHeading,
-  CalendarYearPickerTriggerIndicator,
-} from "../calendar-year-picker";
-
 import CalendarCellIndicator from "./calendar-cell-indicator.vue";
 import CalendarCell from "./calendar-cell.vue";
 import CalendarGridBody from "./calendar-grid-body.vue";
@@ -17,28 +8,6 @@ import CalendarHeader from "./calendar-header.vue";
 import CalendarHeading from "./calendar-heading.vue";
 import CalendarNavButton from "./calendar-nav-button.vue";
 import CalendarRoot from "./calendar-root.vue";
-
-/* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Calendar = Object.assign(CalendarRoot, {
-  Cell: CalendarCell,
-  CellIndicator: CalendarCellIndicator,
-  Grid: CalendarGrid,
-  GridBody: CalendarGridBody,
-  GridHeader: CalendarGridHeader,
-  Header: CalendarHeader,
-  HeaderCell: CalendarHeaderCell,
-  Heading: CalendarHeading,
-  NavButton: CalendarNavButton,
-  Root: CalendarRoot,
-  YearPickerCell: CalendarYearPickerCell,
-  YearPickerGrid: CalendarYearPickerGrid,
-  YearPickerGridBody: CalendarYearPickerGridBody,
-  YearPickerTrigger: CalendarYearPickerTrigger,
-  YearPickerTriggerHeading: CalendarYearPickerTriggerHeading,
-  YearPickerTriggerIndicator: CalendarYearPickerTriggerIndicator,
-});
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components
@@ -53,7 +22,7 @@ export {
   CalendarHeaderCell,
   CalendarHeading,
   CalendarNavButton,
-  CalendarRoot,
+  CalendarRoot as Calendar,
 };
 
 export type {
@@ -69,9 +38,8 @@ export type {
   CalendarHeaderProps,
   CalendarHeadingProps,
   CalendarNavButtonProps,
-  CalendarRootProps,
   CalendarRootProps as CalendarProps,
-  CalendarRootSlotProps,
+  CalendarRootSlotProps as CalendarSlotProps,
 } from "./calendar.types";
 
 /* -------------------------------------------------------------------------------------------------

@@ -26,7 +26,7 @@ export interface MenuFixtureProps {
   withExternalLabel?: boolean;
   /** Whether the caller hands over an empty slot at all. */
   withEmptyState?: boolean;
-  /** Wraps the items in a `Menu.Section`, which owns a selection of its own. */
+  /** Wraps the items in a `MenuSection`, which owns a selection of its own. */
   withSection?: boolean;
   /** Puts a separator between the items, which the menu re-homes as a `div`. */
   withSeparator?: boolean;

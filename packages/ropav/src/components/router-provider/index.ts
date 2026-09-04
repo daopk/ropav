@@ -3,12 +3,9 @@ import RouterProviderRoot from "./router-provider.vue";
 /* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export { RouterProviderRoot, RouterProviderRoot as RouterProvider };
+export { RouterProviderRoot as RouterProvider };
 
-export type {
-  RouterProviderRootProps,
-  RouterProviderRootProps as RouterProviderProps,
-} from "./router-provider.types";
+export type { RouterProviderRootProps as RouterProviderProps } from "./router-provider.types";
 
 /* -------------------------------------------------------------------------------------------------
  * Context

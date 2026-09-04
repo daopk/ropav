@@ -1,10 +1,10 @@
 <script setup lang="ts" vapor>
-import type { HeadingProps, ParagraphProps, TypographyRootProps } from "@/components/typography";
+import type { HeadingProps, ParagraphProps, TypographyProps } from "@/components/typography";
 
-import { Code, Heading, Paragraph, Prose, TypographyRoot } from "@/components/typography";
+import { Code, Heading, Paragraph, Prose, Typography } from "@/components/typography";
 
 const props = defineProps<
-  TypographyRootProps &
+  TypographyProps &
     HeadingProps &
     ParagraphProps & {
       mode?: "root" | "heading" | "paragraph" | "code" | "prose";
@@ -65,7 +65,7 @@ const nativeAttributes = {
     <h2>Prose heading</h2>
     <p>Prose content</p>
   </Prose>
-  <TypographyRoot
+  <Typography
     v-else
     :align="props.align"
     :class="props.class"
@@ -78,5 +78,5 @@ const nativeAttributes = {
     @click="props.onNativeClick"
   >
     Ropav Typography
-  </TypographyRoot>
+  </Typography>
 </template>

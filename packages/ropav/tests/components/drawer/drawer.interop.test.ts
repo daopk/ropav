@@ -2,8 +2,20 @@ import { renderInterop } from "@ropav/testing/helpers/vue";
 import { afterEach, describe, expect, it } from "vitest";
 import { h, nextTick } from "vue";
 
-import { ButtonRoot } from "@/components/button";
-import { Drawer } from "@/components/drawer";
+import { Button } from "@/components/button";
+import {
+  Drawer,
+  DrawerBackdrop,
+  DrawerBody,
+  DrawerClose,
+  DrawerContent,
+  DrawerDialog,
+  DrawerFooter,
+  DrawerHandle,
+  DrawerHeader,
+  DrawerHeading,
+  DrawerTrigger,
+} from "@/components/drawer";
 
 /**
  * The drawer mounted the way a consumer mounts it: from a VDOM host, with every part written in the
@@ -28,30 +40,30 @@ const render = () =>
     props: { defaultOpen: true },
     slots: {
       default: () => [
-        h(Drawer.Trigger, null, { default: () => "Open drawer" }),
+        h(DrawerTrigger, null, { default: () => "Open drawer" }),
         h(
-          Drawer.Backdrop,
+          DrawerBackdrop,
           { variant: "blur" },
           {
             default: () =>
               h(
-                Drawer.Content,
+                DrawerContent,
                 { placement: "right" },
                 {
                   default: () =>
-                    h(Drawer.Dialog, null, {
+                    h(DrawerDialog, null, {
                       default: () => [
-                        h(Drawer.Handle),
-                        h(Drawer.Header, null, {
+                        h(DrawerHandle),
+                        h(DrawerHeader, null, {
                           default: () =>
-                            h(Drawer.Heading, null, { default: () => "Drawer heading" }),
+                            h(DrawerHeading, null, { default: () => "Drawer heading" }),
                         }),
-                        h(Drawer.Body, null, { default: () => "Drawer body" }),
-                        h(Drawer.Footer, null, {
+                        h(DrawerBody, null, { default: () => "Drawer body" }),
+                        h(DrawerFooter, null, {
                           default: () => [
-                            h(ButtonRoot, null, { default: () => "Inside action" }),
-                            h(Drawer.Close, null, {
-                              default: () => h(ButtonRoot, null, { default: () => "Confirm" }),
+                            h(Button, null, { default: () => "Inside action" }),
+                            h(DrawerClose, null, {
+                              default: () => h(Button, null, { default: () => "Confirm" }),
                             }),
                           ],
                         }),

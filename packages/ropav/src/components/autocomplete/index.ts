@@ -7,19 +7,6 @@ import AutocompleteTrigger from "./autocomplete-trigger.vue";
 import AutocompleteValue from "./autocomplete-value.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Autocomplete = Object.assign(AutocompleteRoot, {
-  ClearButton: AutocompleteClearButton,
-  Filter: AutocompleteFilter,
-  Indicator: AutocompleteIndicator,
-  Popover: AutocompletePopover,
-  Root: AutocompleteRoot,
-  Trigger: AutocompleteTrigger,
-  Value: AutocompleteValue,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
 export {
@@ -27,7 +14,7 @@ export {
   AutocompleteFilter,
   AutocompleteIndicator,
   AutocompletePopover,
-  AutocompleteRoot,
+  AutocompleteRoot as Autocomplete,
   AutocompleteTrigger,
   AutocompleteValue,
 };
@@ -35,14 +22,13 @@ export {
 export type {
   AutocompleteClearButtonProps,
   AutocompleteFilterEmits,
-  AutocompleteRootEmits,
+  AutocompleteRootEmits as AutocompleteEmits,
   AutocompleteFilterProps,
   AutocompleteFilterSlotProps,
   AutocompleteIndicatorProps,
   AutocompletePopoverProps,
-  AutocompleteRootProps,
   AutocompleteRootProps as AutocompleteProps,
-  AutocompleteRootSlotProps,
+  AutocompleteRootSlotProps as AutocompleteSlotProps,
   AutocompleteTriggerProps,
   AutocompleteTriggerSlotProps,
   AutocompleteValueProps,

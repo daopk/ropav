@@ -1,31 +1,15 @@
-import { ListBoxItemIndicator, ListBoxItemRoot } from "../list-box-item";
-import { ListBoxSectionRoot } from "../list-box-section";
-
 import ListBoxDropIndicator from "./list-box-drop-indicator.vue";
 import ListBoxLoadMoreItem from "./list-box-load-more-item.vue";
 import ListBoxRoot from "./list-box-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const ListBox = Object.assign(ListBoxRoot, {
-  DropIndicator: ListBoxDropIndicator,
-  Item: ListBoxItemRoot,
-  ItemIndicator: ListBoxItemIndicator,
-  LoadMoreItem: ListBoxLoadMoreItem,
-  Root: ListBoxRoot,
-  Section: ListBoxSectionRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export { ListBoxDropIndicator, ListBoxLoadMoreItem, ListBoxRoot };
+export { ListBoxDropIndicator, ListBoxLoadMoreItem, ListBoxRoot as ListBox };
 
 export type {
   ListBoxDropIndicatorProps,
   ListBoxLoadMoreItemProps,
-  ListBoxRootProps,
   ListBoxRootProps as ListBoxProps,
 } from "./list-box.types";
 

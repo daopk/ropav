@@ -9,8 +9,8 @@ export interface ModalContext {
   /**
    * The slot set, accumulated down the tree.
    *
-   * Each level merges its own variants over what it was given, which is how `Modal.Backdrop` can
-   * decide the backdrop's variant and `Modal.Container` the dialog's size without either knowing
+   * Each level merges its own variants over what it was given, which is how `ModalBackdrop` can
+   * decide the backdrop's variant and `ModalContainer` the dialog's size without either knowing
    * about the other. Matches React, including the fact that the container's merge overwrites the
    * backdrop slot with a default-variant one that nothing reads afterwards.
    */

@@ -5,17 +5,6 @@ import NumberFieldInput from "./number-field-input.vue";
 import NumberFieldRoot from "./number-field-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const NumberField = Object.assign(NumberFieldRoot, {
-  DecrementButton: NumberFieldDecrementButton,
-  Group: NumberFieldGroup,
-  IncrementButton: NumberFieldIncrementButton,
-  Input: NumberFieldInput,
-  Root: NumberFieldRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
 export {
@@ -23,13 +12,12 @@ export {
   NumberFieldGroup,
   NumberFieldIncrementButton,
   NumberFieldInput,
-  NumberFieldRoot,
+  NumberFieldRoot as NumberField,
 };
 
 export type {
-  NumberFieldRootProps,
   NumberFieldRootProps as NumberFieldProps,
-  NumberFieldRootSlotProps,
+  NumberFieldRootSlotProps as NumberFieldSlotProps,
   NumberFieldGroupProps,
   NumberFieldGroupSlotProps,
   NumberFieldInputProps,

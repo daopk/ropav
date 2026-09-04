@@ -4,25 +4,8 @@ import ToastContent from "./toast-content.vue";
 import ToastDescription from "./toast-description.vue";
 import ToastIndicator from "./toast-indicator.vue";
 import ToastProvider from "./toast-provider.vue";
-import { ToastQueue, toast } from "./toast-queue";
 import ToastRoot from "./toast-root.vue";
 import ToastTitle from "./toast-title.vue";
-
-/* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Toast = Object.assign(ToastRoot, {
-  ActionButton: ToastActionButton,
-  CloseButton: ToastCloseButton,
-  Content: ToastContent,
-  Description: ToastDescription,
-  Indicator: ToastIndicator,
-  Provider: ToastProvider,
-  Queue: ToastQueue,
-  Root: ToastRoot,
-  Title: ToastTitle,
-  toast,
-});
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components
@@ -34,7 +17,7 @@ export {
   ToastDescription,
   ToastIndicator,
   ToastProvider,
-  ToastRoot,
+  ToastRoot as Toast,
   ToastTitle,
 };
 
@@ -53,7 +36,6 @@ export type {
   ToastProviderSlotProps,
   ToastQueueOptions,
   ToastRenderable,
-  ToastRootProps,
   ToastRootProps as ToastProps,
   ToastTitleProps,
   QueuedToast,

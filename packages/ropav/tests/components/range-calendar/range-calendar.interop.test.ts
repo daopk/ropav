@@ -21,7 +21,7 @@ import {
   RangeCalendarHeaderCell,
   RangeCalendarHeading,
   RangeCalendarNavButton,
-  RangeCalendarRoot,
+  RangeCalendar,
 } from "@/components/range-calendar";
 
 /**
@@ -34,7 +34,7 @@ import {
  * through `provide`, so the path every real application uses has to be checked on its own.
  */
 const render = (props: Record<string, unknown> = {}) => {
-  const result = renderInterop(RangeCalendarRoot, {
+  const result = renderInterop(RangeCalendar, {
     props: {
       "aria-label": "Stay",
       defaultFocusedValue: new CalendarDate(2026, 6, 15),

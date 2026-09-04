@@ -1,19 +1,11 @@
 import CheckboxGroupRoot from "./checkbox-group-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const CheckboxGroup = Object.assign(CheckboxGroupRoot, {
-  Root: CheckboxGroupRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export { CheckboxGroupRoot };
+export { CheckboxGroupRoot as CheckboxGroup };
 
 export type {
-  CheckboxGroupRootProps,
   CheckboxGroupRootProps as CheckboxGroupProps,
   CheckboxGroupSlotProps,
 } from "./checkbox-group.types";

@@ -3,11 +3,11 @@ import type { StoryObj } from "@storybook/vue3-vite";
 
 import { iconSrc } from "../../utils/story-assets";
 
-import { SeparatorRoot } from "./index";
+import { Separator } from "./index";
 
 // Registered under a flat name: a story template is compiled at runtime with no binding
-// metadata, so a dotted tag would be looked up as a component literally named "Separator.Root".
-const components = { Separator: SeparatorRoot };
+// metadata, so a dotted tag would be looked up as a component literally named "Separator".
+const components = { Separator: Separator };
 
 const meta: StoryMeta = {
   argTypes: {
@@ -16,7 +16,7 @@ const meta: StoryMeta = {
       options: ["horizontal", "vertical"],
     },
   },
-  component: SeparatorRoot,
+  component: Separator,
   parameters: {
     layout: "centered",
   },

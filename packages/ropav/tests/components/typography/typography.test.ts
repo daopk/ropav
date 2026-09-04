@@ -1,4 +1,4 @@
-import type { ProseProps, Typography, TypographyRootProps } from "@/components/typography";
+import type { ProseProps, Typography, TypographyProps } from "@/components/typography";
 
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it, vi } from "vitest";
@@ -20,7 +20,7 @@ describe("Typography", () => {
       id: "typed-id",
       onClick: (_event: MouseEvent) => undefined,
       style: { maxWidth: "42px" },
-    } satisfies TypographyRootProps;
+    } satisfies TypographyProps;
     const compoundProps: Typography["Props"] = props;
     const proseProps: ProseProps = props;
 

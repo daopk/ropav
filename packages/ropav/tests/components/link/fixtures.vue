@@ -2,14 +2,14 @@
 import type { LinkFixtureProps } from "./fixtures.types";
 
 import { Fieldset } from "@/components/fieldset";
-import { LinkIcon, LinkRoot } from "@/components/link";
+import { LinkIcon, Link } from "@/components/link";
 
 const props = withDefaults(defineProps<LinkFixtureProps>(), { isDisabled: undefined });
 </script>
 
 <template>
   <Fieldset v-if="props.inDisabledFieldset" disabled>
-    <LinkRoot
+    <Link
       :aria-current="props.ariaCurrent"
       :aria-label="props.ariaLabel"
       :class="props.class"
@@ -21,10 +21,10 @@ const props = withDefaults(defineProps<LinkFixtureProps>(), { isDisabled: undefi
     >
       Call to action
       <LinkIcon v-if="props.withIcon" :class="props.iconClass" />
-    </LinkRoot>
+    </Link>
   </Fieldset>
-  <LinkRoot v-else-if="props.bare" href="/next">Call to action</LinkRoot>
-  <LinkRoot
+  <Link v-else-if="props.bare" href="/next">Call to action</Link>
+  <Link
     v-else
     :aria-current="props.ariaCurrent"
     :aria-label="props.ariaLabel"
@@ -46,5 +46,5 @@ const props = withDefaults(defineProps<LinkFixtureProps>(), { isDisabled: undefi
       v-if="props.withIcon && !props.iconFirst && !props.customIcon"
       :class="props.iconClass"
     />
-  </LinkRoot>
+  </Link>
 </template>

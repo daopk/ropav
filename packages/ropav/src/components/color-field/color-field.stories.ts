@@ -5,39 +5,39 @@ import type { StoryObj } from "@storybook/vue3-vite";
 import { shallowRef } from "vue";
 
 import { parseColor } from "../../utils/color";
-import { ButtonRoot } from "../button";
+import { Button } from "../button";
 import {
   ColorInputGroupInput,
   ColorInputGroupPrefix,
-  ColorInputGroupRoot,
+  ColorInputGroup,
   ColorInputGroupSuffix,
 } from "../color-input-group";
-import { ColorSwatchRoot } from "../color-swatch";
-import { DescriptionRoot } from "../description";
-import { FieldErrorRoot } from "../field-error";
-import { FormRoot } from "../form";
-import { LabelRoot } from "../label";
+import { ColorSwatch } from "../color-swatch";
+import { Description } from "../description";
+import { FieldError } from "../field-error";
+import { Form } from "../form";
+import { Label } from "../label";
 
-import { ColorFieldRoot } from "./index";
+import { ColorField } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata to
-// resolve `ColorField.Group` through, so dot notation cannot be used here.
+// resolve a component name through, so each part is named here.
 const components = {
-  Button: ButtonRoot,
-  ColorField: ColorFieldRoot,
-  ColorFieldGroup: ColorInputGroupRoot,
+  Button: Button,
+  ColorField: ColorField,
+  ColorFieldGroup: ColorInputGroup,
   ColorFieldInput: ColorInputGroupInput,
   ColorFieldPrefix: ColorInputGroupPrefix,
   ColorFieldSuffix: ColorInputGroupSuffix,
-  ColorSwatch: ColorSwatchRoot,
-  Description: DescriptionRoot,
-  FieldError: FieldErrorRoot,
-  Form: FormRoot,
-  Label: LabelRoot,
+  ColorSwatch: ColorSwatch,
+  Description: Description,
+  FieldError: FieldError,
+  Form: Form,
+  Label: Label,
 };
 
 const meta: StoryMeta = {
-  component: ColorFieldRoot,
+  component: ColorField,
   parameters: {
     layout: "centered",
   },

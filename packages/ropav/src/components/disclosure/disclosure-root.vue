@@ -84,12 +84,12 @@ const registerTrigger = (element: HTMLElement) =>
 const onTriggerKeydown = (event: KeyboardEvent) => group?.onTriggerKeydown(event);
 
 /**
- * Turns whatever pressable sits inside into the trigger, so `<Disclosure.Heading><Button/>` works
- * without a `Disclosure.Trigger` wrapper.
+ * Turns whatever pressable sits inside into the trigger, so `<DisclosureHeading><Button/>` works
+ * without a `DisclosureTrigger` wrapper.
  *
  * React marks such a button with a named slot, which Vue has no equivalent of — `slot` cannot be
  * a prop name — so the behaviour is handed down instead, the way a dropdown hands its trigger
- * down. `Disclosure.Content` shadows this, so a button inside the panel stays an ordinary button.
+ * down. `DisclosureContent` shadows this, so a button inside the panel stays an ordinary button.
  */
 let unregister: (() => void) | undefined;
 

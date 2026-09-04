@@ -4,7 +4,7 @@ import type { UsePressHandlers } from "@/composables/use-press";
 
 import { computed } from "vue";
 
-import { ButtonRoot } from "@/components/button";
+import { Button } from "@/components/button";
 import { provideFocusResponder } from "@/composables/focus-responder";
 import { providePressResponder } from "@/composables/press-responder";
 
@@ -58,5 +58,5 @@ if (props.withFocus) {
 </script>
 
 <template>
-  <ButtonRoot>Press me</ButtonRoot>
+  <Button>Press me</Button>
 </template>

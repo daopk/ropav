@@ -16,22 +16,21 @@ import {
   NumberFieldGroup,
   NumberFieldIncrementButton,
   NumberFieldInput,
-  NumberFieldRoot,
 } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata to
-// resolve `NumberField.Group` through, so dot notation cannot be used here.
+// resolve `NumberFieldGroup` through, so dot notation cannot be used here.
 const components = {
   Button,
   Description,
   FieldError,
   Form,
   Label,
+  NumberField,
   NumberFieldDecrementButton,
   NumberFieldGroup,
   NumberFieldIncrementButton,
   NumberFieldInput,
-  NumberFieldRoot,
   Spinner,
 };
 
@@ -51,14 +50,14 @@ export const Default: Story = {
   render: () => ({
     components,
     template: `
-      <NumberFieldRoot :default-value="1024" :min-value="0" name="width">
+      <NumberField :default-value="1024" :min-value="0" name="width">
         <Label>Width</Label>
         <NumberFieldGroup>
           <NumberFieldDecrementButton />
           <NumberFieldInput class="w-[120px]" />
           <NumberFieldIncrementButton />
         </NumberFieldGroup>
-      </NumberFieldRoot>
+      </NumberField>
     `,
   }),
 };
@@ -70,7 +69,7 @@ export const Sizes: Story = {
     setup: () => ({ sizes: ["sm", "md", "lg"] as const }),
     template: `
       <div class="flex flex-col gap-4">
-        <NumberFieldRoot
+        <NumberField
           v-for="size in sizes"
           :key="size"
           :default-value="100"
@@ -84,7 +83,7 @@ export const Sizes: Story = {
             <NumberFieldInput class="w-[120px]" />
             <NumberFieldIncrementButton />
           </NumberFieldGroup>
-        </NumberFieldRoot>
+        </NumberField>
       </div>
     `,
   }),
@@ -95,22 +94,22 @@ export const Variants: Story = {
     components,
     template: `
       <div class="flex flex-col gap-4">
-        <NumberFieldRoot :default-value="100" :min-value="0" name="primary-width" variant="primary">
+        <NumberField :default-value="100" :min-value="0" name="primary-width" variant="primary">
           <Label>Primary variant</Label>
           <NumberFieldGroup>
             <NumberFieldDecrementButton />
             <NumberFieldInput class="w-[120px]" />
             <NumberFieldIncrementButton />
           </NumberFieldGroup>
-        </NumberFieldRoot>
-        <NumberFieldRoot :default-value="100" :min-value="0" name="secondary-width" variant="secondary">
+        </NumberField>
+        <NumberField :default-value="100" :min-value="0" name="secondary-width" variant="secondary">
           <Label>Secondary variant</Label>
           <NumberFieldGroup>
             <NumberFieldDecrementButton />
             <NumberFieldInput class="w-[120px]" />
             <NumberFieldIncrementButton />
           </NumberFieldGroup>
-        </NumberFieldRoot>
+        </NumberField>
       </div>
     `,
   }),
@@ -121,14 +120,14 @@ export const FullWidth: Story = {
     components,
     template: `
       <div class="w-[400px] space-y-4">
-        <NumberFieldRoot full-width :default-value="1024" :min-value="0" name="width">
+        <NumberField full-width :default-value="1024" :min-value="0" name="width">
           <Label>Width</Label>
           <NumberFieldGroup>
             <NumberFieldDecrementButton />
             <NumberFieldInput />
             <NumberFieldIncrementButton />
           </NumberFieldGroup>
-        </NumberFieldRoot>
+        </NumberField>
       </div>
     `,
   }),
@@ -140,7 +139,7 @@ export const WithDescription: Story = {
     setup: () => ({ percent: { style: "percent" } as Intl.NumberFormatOptions }),
     template: `
       <div class="flex flex-col gap-4">
-        <NumberFieldRoot :default-value="1024" :min-value="0" name="width">
+        <NumberField :default-value="1024" :min-value="0" name="width">
           <Label>Width</Label>
           <NumberFieldGroup>
             <NumberFieldDecrementButton />
@@ -148,8 +147,8 @@ export const WithDescription: Story = {
             <NumberFieldIncrementButton />
           </NumberFieldGroup>
           <Description>Enter the width in pixels</Description>
-        </NumberFieldRoot>
-        <NumberFieldRoot
+        </NumberField>
+        <NumberField
           :default-value="0.5"
           :format-options="percent"
           :max-value="1"
@@ -164,7 +163,7 @@ export const WithDescription: Story = {
             <NumberFieldIncrementButton />
           </NumberFieldGroup>
           <Description>Value must be between 0 and 100</Description>
-        </NumberFieldRoot>
+        </NumberField>
       </div>
     `,
   }),
@@ -175,15 +174,15 @@ export const Required: Story = {
     components,
     template: `
       <div class="flex flex-col gap-4">
-        <NumberFieldRoot is-required :min-value="0" name="quantity">
+        <NumberField is-required :min-value="0" name="quantity">
           <Label>Quantity</Label>
           <NumberFieldGroup>
             <NumberFieldDecrementButton />
             <NumberFieldInput class="w-[120px]" />
             <NumberFieldIncrementButton />
           </NumberFieldGroup>
-        </NumberFieldRoot>
-        <NumberFieldRoot is-required :default-value="1" :max-value="10" :min-value="1" name="rating">
+        </NumberField>
+        <NumberField is-required :default-value="1" :max-value="10" :min-value="1" name="rating">
           <Label>Rating</Label>
           <NumberFieldGroup>
             <NumberFieldDecrementButton />
@@ -191,7 +190,7 @@ export const Required: Story = {
             <NumberFieldIncrementButton />
           </NumberFieldGroup>
           <Description>Rate from 1 to 10</Description>
-        </NumberFieldRoot>
+        </NumberField>
       </div>
     `,
   }),
@@ -203,7 +202,7 @@ export const Invalid: Story = {
     setup: () => ({ percent: { style: "percent" } as Intl.NumberFormatOptions }),
     template: `
       <div class="flex flex-col gap-4">
-        <NumberFieldRoot is-invalid is-required :min-value="0" name="quantity" :value="-5">
+        <NumberField is-invalid is-required :min-value="0" name="quantity" :value="-5">
           <Label>Quantity</Label>
           <NumberFieldGroup>
             <NumberFieldDecrementButton />
@@ -211,8 +210,8 @@ export const Invalid: Story = {
             <NumberFieldIncrementButton />
           </NumberFieldGroup>
           <FieldError>Quantity must be greater than or equal to 0</FieldError>
-        </NumberFieldRoot>
-        <NumberFieldRoot
+        </NumberField>
+        <NumberField
           is-invalid
           :format-options="percent"
           :max-value="1"
@@ -228,7 +227,7 @@ export const Invalid: Story = {
             <NumberFieldIncrementButton />
           </NumberFieldGroup>
           <FieldError>Percentage must be between 0 and 100</FieldError>
-        </NumberFieldRoot>
+        </NumberField>
       </div>
     `,
   }),
@@ -240,7 +239,7 @@ export const Disabled: Story = {
     setup: () => ({ percent: { style: "percent" } as Intl.NumberFormatOptions }),
     template: `
       <div class="flex flex-col gap-4">
-        <NumberFieldRoot is-disabled :default-value="1024" :min-value="0" name="width">
+        <NumberField is-disabled :default-value="1024" :min-value="0" name="width">
           <Label>Width</Label>
           <NumberFieldGroup>
             <NumberFieldDecrementButton />
@@ -248,8 +247,8 @@ export const Disabled: Story = {
             <NumberFieldIncrementButton />
           </NumberFieldGroup>
           <Description>Enter the width in pixels</Description>
-        </NumberFieldRoot>
-        <NumberFieldRoot
+        </NumberField>
+        <NumberField
           is-disabled
           :default-value="0.5"
           :format-options="percent"
@@ -265,7 +264,7 @@ export const Disabled: Story = {
             <NumberFieldIncrementButton />
           </NumberFieldGroup>
           <Description>Value must be between 0 and 100</Description>
-        </NumberFieldRoot>
+        </NumberField>
       </div>
     `,
   }),
@@ -281,7 +280,7 @@ export const Controlled: Story = {
     },
     template: `
       <div class="flex flex-col gap-4">
-        <NumberFieldRoot v-model:value="value" :min-value="0" name="width">
+        <NumberField v-model:value="value" :min-value="0" name="width">
           <Label>Width</Label>
           <NumberFieldGroup>
             <NumberFieldDecrementButton />
@@ -289,7 +288,7 @@ export const Controlled: Story = {
             <NumberFieldIncrementButton />
           </NumberFieldGroup>
           <Description>Current value: {{ value }}</Description>
-        </NumberFieldRoot>
+        </NumberField>
         <div class="flex gap-2">
           <Button variant="tertiary" @click="value = 0">Reset to 0</Button>
           <Button variant="tertiary" @click="value = 2048">Set to 2048</Button>
@@ -312,7 +311,7 @@ export const WithValidation: Story = {
     },
     template: `
       <div class="flex flex-col gap-4">
-        <NumberFieldRoot
+        <NumberField
           v-model:value="value"
           is-required
           :format-options="percent"
@@ -330,7 +329,7 @@ export const WithValidation: Story = {
           </NumberFieldGroup>
           <FieldError v-if="isInvalid">Percentage must be between 0 and 100</FieldError>
           <Description v-else>Enter a value between 0 and 100</Description>
-        </NumberFieldRoot>
+        </NumberField>
       </div>
     `,
   }),
@@ -341,7 +340,7 @@ export const WithStep: Story = {
     components,
     template: `
       <div class="flex flex-col gap-4">
-        <NumberFieldRoot :default-value="0" :max-value="100" :min-value="0" name="step1" :step="1">
+        <NumberField :default-value="0" :max-value="100" :min-value="0" name="step1" :step="1">
           <Label>Step: 1</Label>
           <NumberFieldGroup>
             <NumberFieldDecrementButton />
@@ -349,8 +348,8 @@ export const WithStep: Story = {
             <NumberFieldIncrementButton />
           </NumberFieldGroup>
           <Description>Increments by 1</Description>
-        </NumberFieldRoot>
-        <NumberFieldRoot :default-value="0" :max-value="100" :min-value="0" name="step5" :step="5">
+        </NumberField>
+        <NumberField :default-value="0" :max-value="100" :min-value="0" name="step5" :step="5">
           <Label>Step: 5</Label>
           <NumberFieldGroup>
             <NumberFieldDecrementButton />
@@ -358,8 +357,8 @@ export const WithStep: Story = {
             <NumberFieldIncrementButton />
           </NumberFieldGroup>
           <Description>Increments by 5</Description>
-        </NumberFieldRoot>
-        <NumberFieldRoot :default-value="0" :max-value="100" :min-value="0" name="step10" :step="10">
+        </NumberField>
+        <NumberField :default-value="0" :max-value="100" :min-value="0" name="step10" :step="10">
           <Label>Step: 10</Label>
           <NumberFieldGroup>
             <NumberFieldDecrementButton />
@@ -367,7 +366,7 @@ export const WithStep: Story = {
             <NumberFieldIncrementButton />
           </NumberFieldGroup>
           <Description>Increments by 10</Description>
-        </NumberFieldRoot>
+        </NumberField>
       </div>
     `,
   }),
@@ -393,7 +392,7 @@ export const WithFormatOptions: Story = {
     }),
     template: `
       <div class="flex flex-col gap-4">
-        <NumberFieldRoot :default-value="99" :format-options="eur" :min-value="0" name="currency-eur">
+        <NumberField :default-value="99" :format-options="eur" :min-value="0" name="currency-eur">
           <Label>Currency (EUR - Accounting)</Label>
           <NumberFieldGroup>
             <NumberFieldDecrementButton />
@@ -401,8 +400,8 @@ export const WithFormatOptions: Story = {
             <NumberFieldIncrementButton />
           </NumberFieldGroup>
           <Description>Accounting format with EUR currency</Description>
-        </NumberFieldRoot>
-        <NumberFieldRoot :default-value="99.99" :format-options="usd" :min-value="0" name="currency-usd">
+        </NumberField>
+        <NumberField :default-value="99.99" :format-options="usd" :min-value="0" name="currency-usd">
           <Label>Currency (USD)</Label>
           <NumberFieldGroup>
             <NumberFieldDecrementButton />
@@ -410,8 +409,8 @@ export const WithFormatOptions: Story = {
             <NumberFieldIncrementButton />
           </NumberFieldGroup>
           <Description>Standard USD currency format</Description>
-        </NumberFieldRoot>
-        <NumberFieldRoot
+        </NumberField>
+        <NumberField
           :default-value="0.5"
           :format-options="percent"
           :max-value="1"
@@ -426,8 +425,8 @@ export const WithFormatOptions: Story = {
             <NumberFieldIncrementButton />
           </NumberFieldGroup>
           <Description>Percentage format (0-1, where 0.5 = 50%)</Description>
-        </NumberFieldRoot>
-        <NumberFieldRoot :default-value="1234.56" :format-options="decimal" :min-value="0" name="decimal">
+        </NumberField>
+        <NumberField :default-value="1234.56" :format-options="decimal" :min-value="0" name="decimal">
           <Label>Decimal (2 decimal places)</Label>
           <NumberFieldGroup>
             <NumberFieldDecrementButton />
@@ -435,8 +434,8 @@ export const WithFormatOptions: Story = {
             <NumberFieldIncrementButton />
           </NumberFieldGroup>
           <Description>Decimal format with 2 decimal places</Description>
-        </NumberFieldRoot>
-        <NumberFieldRoot :default-value="1000" :format-options="unit" :min-value="0" name="unit">
+        </NumberField>
+        <NumberField :default-value="1000" :format-options="unit" :min-value="0" name="unit">
           <Label>Unit (Kilograms)</Label>
           <NumberFieldGroup>
             <NumberFieldDecrementButton />
@@ -444,7 +443,7 @@ export const WithFormatOptions: Story = {
             <NumberFieldIncrementButton />
           </NumberFieldGroup>
           <Description>Unit format with kilograms</Description>
-        </NumberFieldRoot>
+        </NumberField>
       </div>
     `,
   }),
@@ -455,7 +454,7 @@ export const CustomIcons: Story = {
     components,
     template: `
       <div class="flex flex-col gap-4">
-        <NumberFieldRoot :default-value="1024" :min-value="0" name="width">
+        <NumberField :default-value="1024" :min-value="0" name="width">
           <Label>Width (Custom Icons)</Label>
           <NumberFieldGroup>
             <NumberFieldDecrementButton>
@@ -481,7 +480,7 @@ export const CustomIcons: Story = {
             </NumberFieldIncrementButton>
           </NumberFieldGroup>
           <Description>Custom icon children</Description>
-        </NumberFieldRoot>
+        </NumberField>
       </div>
     `,
   }),
@@ -498,7 +497,7 @@ export const WithChevrons: Story = {
       } as Intl.NumberFormatOptions,
     }),
     template: `
-      <NumberFieldRoot :default-value="99" :format-options="eur" :min-value="0" name="amount">
+      <NumberField :default-value="99" :format-options="eur" :min-value="0" name="amount">
         <Label>Number field with chevrons</Label>
         <NumberFieldGroup class="flex">
           <NumberFieldInput class="flex-1" />
@@ -541,7 +540,7 @@ export const WithChevrons: Story = {
             </NumberFieldDecrementButton>
           </div>
         </NumberFieldGroup>
-      </NumberFieldRoot>
+      </NumberField>
     `,
   }),
 };
@@ -579,7 +578,7 @@ export const FormExample: Story = {
     },
     template: `
       <Form class="flex w-[280px] flex-col gap-4" @submit="onSubmit">
-        <NumberFieldRoot
+        <NumberField
           v-model:value="value"
           is-required
           :is-invalid="isOutOfStock"
@@ -597,7 +596,7 @@ export const FormExample: Story = {
             Only {{ STOCK_AVAILABLE }} items left in stock
           </FieldError>
           <Description v-else>Only {{ STOCK_AVAILABLE }} items available</Description>
-        </NumberFieldRoot>
+        </NumberField>
         <Button
           class="w-full"
           :is-disabled="!canSubmit"

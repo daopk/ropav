@@ -2,7 +2,7 @@
 import type { FieldsetFixtureProps } from "./fixtures.types";
 
 import { Description } from "@/components/description";
-import { FieldGroup, FieldsetActions, FieldsetLegend, FieldsetRoot } from "@/components/fieldset";
+import { FieldGroup, FieldsetActions, FieldsetLegend, Fieldset } from "@/components/fieldset";
 
 const props = withDefaults(defineProps<FieldsetFixtureProps>(), {
   withActions: true,
@@ -12,7 +12,7 @@ const props = withDefaults(defineProps<FieldsetFixtureProps>(), {
 </script>
 
 <template>
-  <FieldsetRoot :class="props.class" :disabled="props.disabled">
+  <Fieldset :class="props.class" :disabled="props.disabled">
     <FieldsetLegend v-if="props.withLegend" :class="props.legendClass">Profile</FieldsetLegend>
     <Description>Update your profile information.</Description>
     <FieldGroup v-if="props.withGroup" :class="props.groupClass">
@@ -21,5 +21,5 @@ const props = withDefaults(defineProps<FieldsetFixtureProps>(), {
     <FieldsetActions v-if="props.withActions" :class="props.actionsClass">
       <span data-testid="action">an action</span>
     </FieldsetActions>
-  </FieldsetRoot>
+  </Fieldset>
 </template>

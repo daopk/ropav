@@ -1,19 +1,11 @@
 import MenuSectionRoot from "./menu-section-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const MenuSection = Object.assign(MenuSectionRoot, { Root: MenuSectionRoot });
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { MenuSectionRoot };
+export { MenuSectionRoot as MenuSection };
 
-export type {
-  MenuSectionRootProps,
-  MenuSectionRootProps as MenuSectionProps,
-} from "./menu-section.types";
+export type { MenuSectionRootProps as MenuSectionProps } from "./menu-section.types";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants

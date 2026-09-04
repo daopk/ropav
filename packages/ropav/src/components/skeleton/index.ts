@@ -1,18 +1,11 @@
 import SkeletonRoot from "./skeleton-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Skeleton = Object.assign(SkeletonRoot, {
-  Root: SkeletonRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { SkeletonRoot };
+export { SkeletonRoot as Skeleton };
 
-export type { SkeletonRootProps, SkeletonRootProps as SkeletonProps } from "./skeleton.types";
+export type { SkeletonRootProps as SkeletonProps } from "./skeleton.types";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants

@@ -384,7 +384,7 @@ describe("Popover", () => {
      * is the only pointer path out of it. React Aria passes `shouldCloseOnBlur: true` for every
      * popover, modal or not; only a shape that lets focus out can observe it.
      *
-     * That shape is non-modal *and* without a dialog inside: `Popover.Dialog` asks the popover to
+     * That shape is non-modal *and* without a dialog inside: `PopoverDialog` asks the popover to
      * contain focus, and a modal popover is the dialog itself and contains it too.
      */
     const LEAVABLE = { defaultOpen: true, isNonModal: true, withoutDialog: true } as const;

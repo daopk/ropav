@@ -1,10 +1,10 @@
 <script setup lang="ts" vapor>
-import type { BadgeRootProps } from "@/components/badge";
+import type { BadgeProps } from "@/components/badge";
 
-import { Badge } from "@/components/badge";
+import { Badge, BadgeAnchor, BadgeLabel } from "@/components/badge";
 
 defineProps<
-  BadgeRootProps & {
+  BadgeProps & {
     anchorClass?: string;
     content?: "text" | "number" | "explicit" | "icon" | "none";
     label?: string;
@@ -14,7 +14,7 @@ defineProps<
 </script>
 
 <template>
-  <Badge.Anchor :class="$props.anchorClass" data-testid="anchor">
+  <BadgeAnchor :class="$props.anchorClass" data-testid="anchor">
     <span data-testid="anchor-content">Anchor</span>
     <Badge
       :class="$props.class"
@@ -25,7 +25,7 @@ defineProps<
       :variant="$props.variant"
     >
       <template v-if="$props.content === 'explicit'">
-        <Badge.Label :class="$props.labelClass" data-testid="label">Explicit label</Badge.Label>
+        <BadgeLabel :class="$props.labelClass" data-testid="label">Explicit label</BadgeLabel>
       </template>
       <template v-else-if="$props.content === 'icon'">
         <svg data-testid="icon" />
@@ -33,5 +33,5 @@ defineProps<
       <template v-else-if="$props.content === 'number'">24</template>
       <template v-else-if="$props.content !== 'none'">{{ $props.label ?? "5" }}</template>
     </Badge>
-  </Badge.Anchor>
+  </BadgeAnchor>
 </template>

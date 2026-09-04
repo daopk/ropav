@@ -6,7 +6,7 @@ import { Label } from "../label";
 import { Slider, SliderFill, SliderOutput, SliderThumb, SliderTrack } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata
-// to resolve `Slider.Track` through, so dot notation cannot be used here.
+// to resolve `SliderTrack` through, so dot notation cannot be used here.
 const components = { Label, Slider, SliderFill, SliderOutput, SliderThumb, SliderTrack };
 
 const meta: StoryMeta = {

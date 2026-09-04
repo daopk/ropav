@@ -265,7 +265,7 @@ const scroll =
  * The rows inside the window. The body renders these rather than every row it was given.
  *
  * Rows only: the body's other child is the loading sentinel, which the layout keeps rendered
- * wherever the window is and which `Table.LoadMore` renders itself, from its own slot.
+ * wherever the window is and which `TableLoadMore` renders itself, from its own slot.
  */
 const rowViews = computed(() => {
   if (!virtualizer || !collection.virtualized) return [];

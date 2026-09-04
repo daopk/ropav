@@ -3,7 +3,12 @@ import type { CheckboxGroupFixtureProps } from "./fixtures.types";
 
 import { computed } from "vue";
 
-import { Checkbox } from "@/components/checkbox";
+import {
+  Checkbox,
+  CheckboxContent,
+  CheckboxControl,
+  CheckboxIndicator,
+} from "@/components/checkbox";
 import { CheckboxGroup } from "@/components/checkbox-group";
 import { Description } from "@/components/description";
 import { FieldError } from "@/components/field-error";
@@ -44,12 +49,12 @@ const items = computed(() => props.items ?? ["email", "sms", "push"]);
         :value="itemValue"
         :variant="index === 0 ? props.itemVariant : undefined"
       >
-        <Checkbox.Content>
-          <Checkbox.Control>
-            <Checkbox.Indicator />
-          </Checkbox.Control>
+        <CheckboxContent>
+          <CheckboxControl>
+            <CheckboxIndicator />
+          </CheckboxControl>
           {{ itemValue }}
-        </Checkbox.Content>
+        </CheckboxContent>
         <FieldError v-if="index === 0 && props.withItemFieldError" />
       </Checkbox>
       <FieldError v-if="props.withFieldError" />

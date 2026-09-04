@@ -44,7 +44,7 @@ describe("Badge", () => {
   });
 
   describe("label", () => {
-    it("wraps a text-only child in Badge.Label", () => {
+    it("wraps a text-only child in BadgeLabel", () => {
       const { container, unmount } = renderVapor(Fixture);
       const label = slot(container, "badge-label");
 
@@ -62,7 +62,7 @@ describe("Badge", () => {
       unmount();
     });
 
-    it("leaves an explicit Badge.Label alone", () => {
+    it("leaves an explicit BadgeLabel alone", () => {
       const { container, unmount } = renderVapor(Fixture, { props: { content: "explicit" } });
 
       expect(container.querySelectorAll("[data-slot='badge-label']")).toHaveLength(1);

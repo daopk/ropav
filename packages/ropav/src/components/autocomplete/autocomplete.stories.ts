@@ -11,30 +11,30 @@ import { useFilter } from "../../composables/use-filter";
 import { avatarSrc } from "../../utils/story-assets";
 import { useClippedLabels } from "../../utils/story-truncation";
 import { ListLayout } from "../../utils/virtualizer-list-layout";
-import { AvatarFallback, AvatarImage, AvatarRoot } from "../avatar";
-import { ButtonRoot } from "../button";
-import { DescriptionRoot } from "../description";
-import { EmptyStateRoot } from "../empty-state";
-import { FieldErrorRoot } from "../field-error";
-import { FormRoot } from "../form";
-import { HeaderRoot } from "../header";
-import { LabelRoot } from "../label";
-import { ListBoxRoot } from "../list-box";
-import { ListBoxItemIndicator, ListBoxItemRoot } from "../list-box-item";
-import { ListBoxSectionRoot } from "../list-box-section";
+import { AvatarFallback, AvatarImage, Avatar } from "../avatar";
+import { Button } from "../button";
+import { Description } from "../description";
+import { EmptyState } from "../empty-state";
+import { FieldError } from "../field-error";
+import { Form } from "../form";
+import { Header } from "../header";
+import { Label } from "../label";
+import { ListBox } from "../list-box";
+import { ListBoxItemIndicator, ListBoxItem } from "../list-box-item";
+import { ListBoxSection } from "../list-box-section";
 import {
   SearchFieldClearButton,
   SearchFieldGroup,
   SearchFieldInput,
-  SearchFieldRoot,
+  SearchField,
   SearchFieldSearchIcon,
 } from "../search-field";
-import { SeparatorRoot } from "../separator";
-import { SpinnerRoot } from "../spinner";
-import { SurfaceRoot } from "../surface";
-import { TagRoot } from "../tag";
-import { TagGroupList, TagGroupRoot } from "../tag-group";
-import { TooltipContent, TooltipRoot, TooltipTrigger } from "../tooltip";
+import { Separator } from "../separator";
+import { Spinner } from "../spinner";
+import { Surface } from "../surface";
+import { Tag } from "../tag";
+import { TagGroupList, TagGroup } from "../tag-group";
+import { TooltipContent, Tooltip, TooltipTrigger } from "../tooltip";
 import { VirtualizerRoot } from "../virtualizer";
 
 import AutocompleteClearButton from "./autocomplete-clear-button.vue";
@@ -46,7 +46,7 @@ import AutocompleteTrigger from "./autocomplete-trigger.vue";
 import AutocompleteValue from "./autocomplete-value.vue";
 
 // Registered under flat names: a story template is compiled at runtime with no binding metadata,
-// so a dotted tag would be looked up as a component literally named "Autocomplete.Trigger".
+// so a dotted tag would be looked up as a component literally named "AutocompleteTrigger".
 const components = {
   Autocomplete: AutocompleteRoot,
   AutocompleteClearButton,
@@ -55,34 +55,34 @@ const components = {
   AutocompletePopover,
   AutocompleteTrigger,
   AutocompleteValue,
-  Avatar: AvatarRoot,
+  Avatar: Avatar,
   AvatarFallback,
   AvatarImage,
-  Button: ButtonRoot,
-  Description: DescriptionRoot,
-  EmptyState: EmptyStateRoot,
-  FieldError: FieldErrorRoot,
-  Form: FormRoot,
-  Header: HeaderRoot,
+  Button: Button,
+  Description: Description,
+  EmptyState: EmptyState,
+  FieldError: FieldError,
+  Form: Form,
+  Header: Header,
   IconChevronsExpandVertical,
   IconMapPin,
-  Label: LabelRoot,
-  ListBox: ListBoxRoot,
-  ListBoxItem: ListBoxItemRoot,
+  Label: Label,
+  ListBox: ListBox,
+  ListBoxItem: ListBoxItem,
   ListBoxItemIndicator,
-  ListBoxSection: ListBoxSectionRoot,
-  SearchField: SearchFieldRoot,
+  ListBoxSection: ListBoxSection,
+  SearchField: SearchField,
   SearchFieldClearButton,
   SearchFieldGroup,
   SearchFieldInput,
   SearchFieldSearchIcon,
-  Separator: SeparatorRoot,
-  Spinner: SpinnerRoot,
-  Surface: SurfaceRoot,
-  Tag: TagRoot,
-  TagGroup: TagGroupRoot,
+  Separator: Separator,
+  Spinner: Spinner,
+  Surface: Surface,
+  Tag: Tag,
+  TagGroup: TagGroup,
   TagGroupList,
-  Tooltip: TooltipRoot,
+  Tooltip: Tooltip,
   TooltipContent,
   TooltipTrigger,
   Virtualizer: VirtualizerRoot,

@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type { BreadcrumbsRootProps } from "@/components/breadcrumbs";
+import type { BreadcrumbsProps } from "@/components/breadcrumbs";
 
-import { BreadcrumbsItem, BreadcrumbsRoot } from "@/components/breadcrumbs";
+import { BreadcrumbsItem, Breadcrumbs } from "@/components/breadcrumbs";
 import { I18nProvider } from "@/components/i18n-provider";
 
 const props = defineProps<
-  BreadcrumbsRootProps & {
+  BreadcrumbsProps & {
     itemClass?: string;
     items?: readonly { href?: string; id: string; label: string }[];
     locale?: string;
@@ -17,7 +17,7 @@ const props = defineProps<
 
 <template>
   <I18nProvider :locale="props.locale">
-    <BreadcrumbsRoot
+    <Breadcrumbs
       :aria-label="props.ariaLabel"
       :aria-labelledby="props.ariaLabelledby"
       :class="props.class"
@@ -50,6 +50,6 @@ const props = defineProps<
         <BreadcrumbsItem id="products" href="#products">Products</BreadcrumbsItem>
         <BreadcrumbsItem id="laptop">Laptop</BreadcrumbsItem>
       </template>
-    </BreadcrumbsRoot>
+    </Breadcrumbs>
   </I18nProvider>
 </template>

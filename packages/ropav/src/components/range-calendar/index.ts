@@ -1,12 +1,3 @@
-import {
-  CalendarYearPickerCell,
-  CalendarYearPickerGrid,
-  CalendarYearPickerGridBody,
-  CalendarYearPickerTrigger,
-  CalendarYearPickerTriggerHeading,
-  CalendarYearPickerTriggerIndicator,
-} from "../calendar-year-picker";
-
 import RangeCalendarCellIndicator from "./range-calendar-cell-indicator.vue";
 import RangeCalendarCell from "./range-calendar-cell.vue";
 import RangeCalendarGridBody from "./range-calendar-grid-body.vue";
@@ -17,28 +8,6 @@ import RangeCalendarHeader from "./range-calendar-header.vue";
 import RangeCalendarHeading from "./range-calendar-heading.vue";
 import RangeCalendarNavButton from "./range-calendar-nav-button.vue";
 import RangeCalendarRoot from "./range-calendar-root.vue";
-
-/* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const RangeCalendar = Object.assign(RangeCalendarRoot, {
-  Cell: RangeCalendarCell,
-  CellIndicator: RangeCalendarCellIndicator,
-  Grid: RangeCalendarGrid,
-  GridBody: RangeCalendarGridBody,
-  GridHeader: RangeCalendarGridHeader,
-  Header: RangeCalendarHeader,
-  HeaderCell: RangeCalendarHeaderCell,
-  Heading: RangeCalendarHeading,
-  NavButton: RangeCalendarNavButton,
-  Root: RangeCalendarRoot,
-  YearPickerCell: CalendarYearPickerCell,
-  YearPickerGrid: CalendarYearPickerGrid,
-  YearPickerGridBody: CalendarYearPickerGridBody,
-  YearPickerTrigger: CalendarYearPickerTrigger,
-  YearPickerTriggerHeading: CalendarYearPickerTriggerHeading,
-  YearPickerTriggerIndicator: CalendarYearPickerTriggerIndicator,
-});
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components
@@ -53,7 +22,7 @@ export {
   RangeCalendarHeaderCell,
   RangeCalendarHeading,
   RangeCalendarNavButton,
-  RangeCalendarRoot,
+  RangeCalendarRoot as RangeCalendar,
 };
 
 export type {
@@ -69,9 +38,8 @@ export type {
   RangeCalendarHeaderProps,
   RangeCalendarHeadingProps,
   RangeCalendarNavButtonProps,
-  RangeCalendarRootProps,
   RangeCalendarRootProps as RangeCalendarProps,
-  RangeCalendarRootSlotProps,
+  RangeCalendarRootSlotProps as RangeCalendarSlotProps,
 } from "./range-calendar.types";
 
 /* -------------------------------------------------------------------------------------------------

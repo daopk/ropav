@@ -225,7 +225,7 @@ describe("Popover (browser)", () => {
      * because the guards that decide this — `relatedTarget`, containment, focus scopes — read
      * state jsdom does not produce on its own.
      *
-     * Without a dialog inside, since `Popover.Dialog` asks the popover to contain focus and a
+     * Without a dialog inside, since `PopoverDialog` asks the popover to contain focus and a
      * contained popover is one focus never leaves.
      */
     const LEAVABLE = { isNonModal: true, withoutDialog: true } as const;

@@ -5,19 +5,19 @@ import type { StoryObj } from "@storybook/vue3-vite";
 import { shallowRef } from "vue";
 
 import { parseColor } from "../../utils/color";
-import { ColorSwatchRoot } from "../color-swatch";
+import { ColorSwatch } from "../color-swatch";
 import { Label } from "../label";
 
-import { ColorSliderOutput, ColorSliderRoot, ColorSliderThumb, ColorSliderTrack } from "./index";
+import { ColorSliderOutput, ColorSlider, ColorSliderThumb, ColorSliderTrack } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata to
-// resolve `ColorSlider.Track` through, so dot notation cannot be used here.
+// resolve `ColorSliderTrack` through, so dot notation cannot be used here.
 const components = {
-  ColorSlider: ColorSliderRoot,
+  ColorSlider: ColorSlider,
   ColorSliderOutput,
   ColorSliderThumb,
   ColorSliderTrack,
-  ColorSwatch: ColorSwatchRoot,
+  ColorSwatch: ColorSwatch,
   Label,
 };
 
@@ -39,7 +39,7 @@ const meta: StoryMeta = {
       options: ["horizontal", "vertical"],
     },
   },
-  component: ColorSliderRoot,
+  component: ColorSlider,
   decorators: [() => ({ template: '<div class="w-64 p-8"><story /></div>' })],
   parameters: {
     layout: "centered",

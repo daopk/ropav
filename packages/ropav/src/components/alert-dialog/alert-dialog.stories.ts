@@ -10,7 +10,7 @@ import IconTrashBin from "~icons/gravity-ui/trash-bin";
 import IconTriangleExclamation from "~icons/gravity-ui/triangle-exclamation";
 
 import { useOverlayTriggerState } from "../../composables/use-overlay-trigger-state";
-import { ButtonRoot } from "../button";
+import { Button } from "../button";
 
 import AlertDialogBackdrop from "./alert-dialog-backdrop.vue";
 import AlertDialogBody from "./alert-dialog-body.vue";
@@ -26,7 +26,7 @@ import AlertDialogRoot from "./alert-dialog-root.vue";
 import AlertDialogTrigger from "./alert-dialog-trigger.vue";
 
 // Registered under flat names: a story template is compiled at runtime with no binding metadata, so
-// a dotted tag would be looked up as a component literally named "AlertDialog.Dialog".
+// a dotted tag would be looked up as a component literally named "AlertDialogDialog".
 const components = {
   AlertDialog: AlertDialogRoot,
   AlertDialogBackdrop,
@@ -40,7 +40,7 @@ const components = {
   AlertDialogHeading,
   AlertDialogIcon,
   AlertDialogTrigger,
-  Button: ButtonRoot,
+  Button: Button,
   IconArrowUpFromLine,
   IconCircleInfo,
   IconLockOpen,
@@ -468,10 +468,10 @@ export const CloseMethods: Story = {
     template: `
       <div class="flex max-w-2xl flex-col gap-8">
         <div class="flex flex-col gap-2">
-          <h3 class="text-lg font-semibold">Using AlertDialog.Close</h3>
+          <h3 class="text-lg font-semibold">Using AlertDialogClose</h3>
           <p class="text-sm text-muted">
             The simplest way to close a dialog. Wrap any Button in
-            <code>AlertDialog.Close</code>. When clicked, it will automatically close the dialog.
+            <code>AlertDialogClose</code>. When clicked, it will automatically close the dialog.
           </p>
           <AlertDialog>
             <Button variant="secondary">Open Dialog</Button>
@@ -480,12 +480,12 @@ export const CloseMethods: Story = {
                 <AlertDialogDialog class="sm:max-w-[400px]">
                   <AlertDialogHeader>
                     <AlertDialogIcon status="accent" />
-                    <AlertDialogHeading>Using AlertDialog.Close</AlertDialogHeading>
+                    <AlertDialogHeading>Using AlertDialogClose</AlertDialogHeading>
                   </AlertDialogHeader>
                   <AlertDialogBody>
                     <p>
                       Click either button below - both are wrapped in
-                      <code>AlertDialog.Close</code> and will close the dialog automatically.
+                      <code>AlertDialogClose</code> and will close the dialog automatically.
                     </p>
                   </AlertDialogBody>
                   <AlertDialogFooter>
@@ -683,7 +683,7 @@ export const CustomTrigger: Story = {
               </AlertDialogHeader>
               <AlertDialogBody>
                 <p>
-                  Use <code>AlertDialog.Trigger</code> to create custom trigger elements beyond
+                  Use <code>AlertDialogTrigger</code> to create custom trigger elements beyond
                   standard buttons. This example shows a card-style trigger with icons and
                   descriptive text.
                 </p>

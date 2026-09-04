@@ -1,16 +1,16 @@
 <script setup lang="ts" vapor>
-import type { ToolbarRootProps } from "@/components/toolbar";
+import type { ToolbarProps } from "@/components/toolbar";
 
 import { Button } from "@/components/button";
 import { ButtonGroup } from "@/components/button-group";
-import { SeparatorRoot } from "@/components/separator";
+import { Separator } from "@/components/separator";
 import { ToggleButton } from "@/components/toggle-button";
 import { ToggleButtonGroup } from "@/components/toggle-button-group";
 import { Toolbar } from "@/components/toolbar";
 
 const props = withDefaults(
   defineProps<
-    ToolbarRootProps & {
+    ToolbarProps & {
       /** Orientation handed to the inner groups, overriding what they inherit. */
       groupOrientation?: "horizontal" | "vertical";
       /** Orientation handed to the standalone separator, overriding what it inherits. */
@@ -45,7 +45,7 @@ const props = withDefaults(
       <ToggleButton id="bold">Bold</ToggleButton>
       <ToggleButton id="italic">Italic</ToggleButton>
     </ToggleButtonGroup>
-    <SeparatorRoot :orientation="props.separatorOrientation" />
+    <Separator :orientation="props.separatorOrientation" />
     <ButtonGroup :orientation="props.groupOrientation">
       <Button>Copy</Button>
       <Button>Cut</Button>

@@ -1,8 +1,15 @@
 <script setup lang="ts" vapor>
 import type { PopoverFixtureProps } from "./fixtures.types";
 
-import { ButtonRoot } from "@/components/button";
-import { Popover } from "@/components/popover";
+import { Button } from "@/components/button";
+import {
+  Popover,
+  PopoverArrow,
+  PopoverContent,
+  PopoverDialog,
+  PopoverHeading,
+  PopoverTrigger,
+} from "@/components/popover";
 
 // Every three-state boolean declares an explicit `undefined` default: forwarding a `false` that
 // Vue had cast would turn the popover controlled, or read as a deliberate dismiss opt-out.
@@ -37,9 +44,9 @@ const shouldCloseOnInteractOutside = (element: Element) =>
       :is-open="props.isOpen"
       @open-change="emit('openChange', $event)"
     >
-      <Popover.Trigger v-if="props.withCustomTrigger">Actions</Popover.Trigger>
-      <ButtonRoot v-else>Open popover</ButtonRoot>
-      <Popover.Content
+      <PopoverTrigger v-if="props.withCustomTrigger">Actions</PopoverTrigger>
+      <Button v-else>Open popover</Button>
+      <PopoverContent
         :is-keyboard-dismiss-disabled="props.isKeyboardDismissDisabled"
         :is-non-modal="props.isNonModal"
         :placement="props.placement"
@@ -57,15 +64,15 @@ const shouldCloseOnInteractOutside = (element: Element) =>
           <button data-testid="bare-first" type="button">Bare one</button>
           <button data-testid="bare-second" type="button">Bare two</button>
         </template>
-        <Popover.Dialog v-else v-slot="{ close }">
-          <Popover.Arrow v-if="props.withArrow">
+        <PopoverDialog v-else v-slot="{ close }">
+          <PopoverArrow v-if="props.withArrow">
             <svg v-if="props.withCustomArrow" data-testid="custom-arrow" />
-          </Popover.Arrow>
-          <Popover.Heading v-if="!props.withoutHeading" :level="props.headingLevel">
+          </PopoverArrow>
+          <PopoverHeading v-if="!props.withoutHeading" :level="props.headingLevel">
             Popover heading
-          </Popover.Heading>
+          </PopoverHeading>
           <p>Popover body</p>
-          <ButtonRoot>Inside action</ButtonRoot>
+          <Button>Inside action</Button>
           <button
             v-if="props.withCloseFromSlot"
             data-testid="close-from-slot"
@@ -74,8 +81,8 @@ const shouldCloseOnInteractOutside = (element: Element) =>
           >
             Done
           </button>
-        </Popover.Dialog>
-      </Popover.Content>
+        </PopoverDialog>
+      </PopoverContent>
     </Popover>
   </div>
 </template>

@@ -3,10 +3,10 @@ import type { StoryObj } from "@storybook/vue3-vite";
 
 import { shallowRef } from "vue";
 
-import { DropZone, DropZoneRoot, DropZoneTrigger } from "./index";
+import { DropZone, DropZoneTrigger } from "./index";
 
-// Registered part by part: a runtime-compiled template cannot resolve `DropZone.Trigger`.
-const components = { DropZone, DropZoneRoot, DropZoneTrigger };
+// Registered part by part: a runtime-compiled template cannot resolve `DropZoneTrigger`.
+const components = { DropZone, DropZoneTrigger };
 
 /** Holds what the last drop or pick handed over, so a story can show it. */
 const useTaken = () => {

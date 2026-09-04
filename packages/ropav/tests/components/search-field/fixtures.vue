@@ -8,7 +8,7 @@ import {
   SearchFieldClearButton,
   SearchFieldGroup,
   SearchFieldInput,
-  SearchFieldRoot,
+  SearchField,
   SearchFieldSearchIcon,
 } from "@/components/search-field";
 
@@ -28,7 +28,7 @@ const props = withDefaults(defineProps<SearchFieldFixtureProps>(), {
 </script>
 
 <template>
-  <SearchFieldRoot
+  <SearchField
     v-if="props.attributeForm"
     :aria-label="props.ariaLabel"
     :class="props.class"
@@ -42,8 +42,8 @@ const props = withDefaults(defineProps<SearchFieldFixtureProps>(), {
       <SearchFieldInput />
       <SearchFieldClearButton v-if="props.withClearButton" />
     </SearchFieldGroup>
-  </SearchFieldRoot>
-  <SearchFieldRoot
+  </SearchField>
+  <SearchField
     v-else
     :id="props.id"
     :aria-label="props.ariaLabel"
@@ -83,5 +83,5 @@ const props = withDefaults(defineProps<SearchFieldFixtureProps>(), {
     </SearchFieldGroup>
     <Description v-if="props.withDescription">Type to search</Description>
     <FieldError v-if="props.withFieldError" />
-  </SearchFieldRoot>
+  </SearchField>
 </template>

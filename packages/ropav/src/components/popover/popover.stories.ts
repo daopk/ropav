@@ -4,9 +4,9 @@ import { shallowRef } from "vue";
 import IconCircleInfo from "~icons/gravity-ui/circle-info";
 
 import { avatarSrc } from "../../utils/story-assets";
-import { AvatarFallback, AvatarImage, AvatarRoot } from "../avatar";
-import { ButtonRoot } from "../button";
-import { CardContent, CardDescription, CardHeader, CardRoot, CardTitle } from "../card";
+import { AvatarFallback, AvatarImage, Avatar } from "../avatar";
+import { Button } from "../button";
+import { CardContent, CardDescription, CardHeader, Card, CardTitle } from "../card";
 
 import PopoverArrow from "./popover-arrow.vue";
 import PopoverContent from "./popover-content.vue";
@@ -16,13 +16,13 @@ import PopoverRoot from "./popover-root.vue";
 import PopoverTrigger from "./popover-trigger.vue";
 
 // Registered under flat names: a story template is compiled at runtime with no binding
-// metadata, so a dotted tag would be looked up as a component literally named "Popover.Dialog".
+// metadata, so a dotted tag would be looked up as a component literally named "PopoverDialog".
 const components = {
-  Avatar: AvatarRoot,
+  Avatar: Avatar,
   AvatarFallback,
   AvatarImage,
-  Button: ButtonRoot,
-  Card: CardRoot,
+  Button: Button,
+  Card: Card,
   CardContent,
   CardDescription,
   CardHeader,

@@ -5,13 +5,13 @@ import { flattenBlock, isTextOnlyBlock } from "../../utils/block";
 import BadgeLabel from "./badge-label.vue";
 
 /**
- * Wraps a badge's bare text in `Badge.Label`, matching the React component's string and number
+ * Wraps a badge's bare text in `BadgeLabel`, matching the React component's string and number
  * handling without executing the default slot more than once.
  *
  * The slot has already rendered by the time it returns its block. Inspecting that block therefore
  * preserves its effects and lets the exact same text nodes move into the label component.
  * A slot forwarded from a VDOM host is filled only when inserted, so it cannot be inspected here;
- * those callers (including runtime-compiled stories) must render `Badge.Label` explicitly.
+ * those callers (including runtime-compiled stories) must render `BadgeLabel` explicitly.
  */
 const BadgeAutoLabel = defineVaporComponent(
   (_props, { slots }) => {

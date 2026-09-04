@@ -9,7 +9,7 @@ import {
   PaginationNextIcon,
   PaginationPrevious,
   PaginationPreviousIcon,
-  PaginationRoot,
+  Pagination,
 } from "@/components/pagination";
 
 /**
@@ -37,7 +37,7 @@ const step = (offset: number) => {
 </script>
 
 <template>
-  <PaginationRoot>
+  <Pagination>
     <PaginationContent>
       <PaginationItem>
         <PaginationPrevious :is-disabled="current === pages[0]" @click="step(-1)">
@@ -57,5 +57,5 @@ const step = (offset: number) => {
         </PaginationNext>
       </PaginationItem>
     </PaginationContent>
-  </PaginationRoot>
+  </Pagination>
 </template>

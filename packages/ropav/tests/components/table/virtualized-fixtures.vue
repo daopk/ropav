@@ -1,5 +1,5 @@
 <script setup lang="ts" vapor>
-import { SpinnerRoot } from "@/components/spinner";
+import { Spinner } from "@/components/spinner";
 import {
   TableBody,
   TableCell,
@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableLoadMore,
   TableLoadMoreContent,
-  TableRoot,
+  Table,
   TableRow,
   TableScrollContainer,
 } from "@/components/table";
@@ -53,7 +53,7 @@ const emit = defineEmits<{ loadMore: [] }>();
     :layout="TableLayout"
     :layout-options="{ headingSize: props.rowSize, rowSize: props.rowSize }"
   >
-    <TableRoot>
+    <Table>
       <TableScrollContainer>
         <TableContent
           aria-label="Virtualized users"
@@ -82,7 +82,7 @@ const emit = defineEmits<{ loadMore: [] }>();
                 @load-more="emit('loadMore')"
               >
                 <TableLoadMoreContent>
-                  <SpinnerRoot />
+                  <Spinner />
                 </TableLoadMoreContent>
               </TableLoadMore>
             </template>
@@ -90,10 +90,10 @@ const emit = defineEmits<{ loadMore: [] }>();
           </TableBody>
         </TableContent>
       </TableScrollContainer>
-    </TableRoot>
+    </Table>
   </VirtualizerRoot>
 
-  <TableRoot v-else>
+  <Table v-else>
     <TableScrollContainer>
       <TableContent aria-label="Virtualized users" :selection-mode="props.selectionMode">
         <TableHeader>
@@ -110,5 +110,5 @@ const emit = defineEmits<{ loadMore: [] }>();
         </TableBody>
       </TableContent>
     </TableScrollContainer>
-  </TableRoot>
+  </Table>
 </template>

@@ -2,8 +2,18 @@ import { renderInterop } from "@ropav/testing/helpers/vue";
 import { afterEach, describe, expect, it } from "vitest";
 import { h, nextTick } from "vue";
 
-import { ButtonRoot } from "@/components/button";
-import { Modal } from "@/components/modal";
+import { Button } from "@/components/button";
+import {
+  Modal,
+  ModalBackdrop,
+  ModalBody,
+  ModalClose,
+  ModalContainer,
+  ModalDialog,
+  ModalFooter,
+  ModalHeader,
+  ModalHeading,
+} from "@/components/modal";
 
 /**
  * The modal mounted the way a consumer mounts it: from a VDOM host, with every part written in the
@@ -29,28 +39,28 @@ const render = () =>
     props: { defaultOpen: true },
     slots: {
       default: () => [
-        h(ButtonRoot, null, { default: () => "Open modal" }),
+        h(Button, null, { default: () => "Open modal" }),
         h(
-          Modal.Backdrop,
+          ModalBackdrop,
           { variant: "blur" },
           {
             default: () =>
               h(
-                Modal.Container,
+                ModalContainer,
                 { placement: "top", size: "lg" },
                 {
                   default: () =>
-                    h(Modal.Dialog, null, {
+                    h(ModalDialog, null, {
                       default: () => [
-                        h(Modal.Header, null, {
-                          default: () => h(Modal.Heading, null, { default: () => "Modal heading" }),
+                        h(ModalHeader, null, {
+                          default: () => h(ModalHeading, null, { default: () => "Modal heading" }),
                         }),
-                        h(Modal.Body, null, { default: () => "Modal body" }),
-                        h(Modal.Footer, null, {
+                        h(ModalBody, null, { default: () => "Modal body" }),
+                        h(ModalFooter, null, {
                           default: () => [
-                            h(ButtonRoot, null, { default: () => "Inside action" }),
-                            h(Modal.Close, null, {
-                              default: () => h(ButtonRoot, null, { default: () => "Confirm" }),
+                            h(Button, null, { default: () => "Inside action" }),
+                            h(ModalClose, null, {
+                              default: () => h(Button, null, { default: () => "Confirm" }),
                             }),
                           ],
                         }),

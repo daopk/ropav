@@ -1,17 +1,11 @@
 import ScrollShadowRoot from "./scroll-shadow-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const ScrollShadow = Object.assign(ScrollShadowRoot, { Root: ScrollShadowRoot });
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { ScrollShadowRoot };
+export { ScrollShadowRoot as ScrollShadow };
 
 export type {
-  ScrollShadowRootProps,
   ScrollShadowRootProps as ScrollShadowProps,
   ScrollShadowVisibility,
 } from "./scroll-shadow.types";

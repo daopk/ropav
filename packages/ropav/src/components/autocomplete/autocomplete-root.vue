@@ -169,7 +169,7 @@ provideSelectContext({
 /**
  * The listbox in the popover runs on this autocomplete's state rather than one of its own.
  *
- * `Autocomplete.Filter` provides this again, over the options that matched what was typed. This
+ * `AutocompleteFilter` provides this again, over the options that matched what was typed. This
  * one is what a popover with no filter inside it falls back to, and what answers while the
  * filter's own collection is still empty.
  */

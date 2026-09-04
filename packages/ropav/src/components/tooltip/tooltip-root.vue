@@ -60,7 +60,7 @@ const trigger = useTooltipTrigger(
 /**
  * The trigger is whatever focusable sits inside, which is why the behaviour is handed down.
  *
- * `<Tooltip><Button/></Tooltip>` is the common case, and `Tooltip.Trigger` exists for markup that
+ * `<Tooltip><Button/></Tooltip>` is the common case, and `TooltipTrigger` exists for markup that
  * is not focusable on its own. Deliberately a different channel from the press responder: a button
  * inside a dropdown already takes its press from above, and a tooltip around it has to add to that
  * rather than replace it.

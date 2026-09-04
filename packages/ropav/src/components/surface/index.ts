@@ -1,18 +1,11 @@
 import SurfaceRoot from "./surface-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Surface = Object.assign(SurfaceRoot, {
-  Root: SurfaceRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export { SurfaceRoot };
+export { SurfaceRoot as Surface };
 
-export type { SurfaceRootProps, SurfaceRootProps as SurfaceProps } from "./surface.types";
+export type { SurfaceRootProps as SurfaceProps } from "./surface.types";
 
 /* -------------------------------------------------------------------------------------------------
  * Context

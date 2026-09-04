@@ -1,6 +1,14 @@
 <script setup lang="ts" vapor>
-import { AlertDialog } from "@/components/alert-dialog";
-import { ButtonRoot } from "@/components/button";
+import {
+  AlertDialog,
+  AlertDialogBackdrop,
+  AlertDialogBody,
+  AlertDialogContainer,
+  AlertDialogDialog,
+  AlertDialogHeader,
+  AlertDialogHeading,
+} from "@/components/alert-dialog";
+import { Button } from "@/components/button";
 
 /**
  * Both dismissal routes opened the way a caller actually writes them.
@@ -16,17 +24,17 @@ import { ButtonRoot } from "@/components/button";
   <div>
     <button id="outside" type="button">Outside</button>
     <AlertDialog default-open>
-      <ButtonRoot>Delete account</ButtonRoot>
-      <AlertDialog.Backdrop is-dismissable :is-keyboard-dismiss-disabled="false">
-        <AlertDialog.Container>
-          <AlertDialog.Dialog>
-            <AlertDialog.Header>
-              <AlertDialog.Heading>Delete account?</AlertDialog.Heading>
-            </AlertDialog.Header>
-            <AlertDialog.Body>This cannot be undone.</AlertDialog.Body>
-          </AlertDialog.Dialog>
-        </AlertDialog.Container>
-      </AlertDialog.Backdrop>
+      <Button>Delete account</Button>
+      <AlertDialogBackdrop is-dismissable :is-keyboard-dismiss-disabled="false">
+        <AlertDialogContainer>
+          <AlertDialogDialog>
+            <AlertDialogHeader>
+              <AlertDialogHeading>Delete account?</AlertDialogHeading>
+            </AlertDialogHeader>
+            <AlertDialogBody>This cannot be undone.</AlertDialogBody>
+          </AlertDialogDialog>
+        </AlertDialogContainer>
+      </AlertDialogBackdrop>
     </AlertDialog>
   </div>
 </template>

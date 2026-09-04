@@ -14,10 +14,10 @@ import {
 } from "./index";
 
 /**
- * Story templates are compiled at runtime, where Vue resolves a tag like `Tabs.Tab` as a
- * component literally named "Tabs.Tab" and fails. Dot notation only works in an SFC, whose
+ * Story templates are compiled at runtime, where Vue resolves a tag like `TabsTab` as a
+ * component literally named "TabsTab" and fails. Dot notation only works in an SFC, whose
  * compiler resolves it against the setup scope. So the parts are registered individually here —
- * in application code `<Tabs.Tab>` inside an SFC is fine.
+ * in application code `<TabsTab>` inside an SFC is fine.
  */
 const components = {
   Tabs,

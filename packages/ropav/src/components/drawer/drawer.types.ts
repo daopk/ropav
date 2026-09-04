@@ -64,7 +64,7 @@ export interface DrawerDialogProps {
 }
 
 export interface DrawerDialogSlotProps {
-  /** Closes the drawer, for a control inside it that is not a `Drawer.Close`. */
+  /** Closes the drawer, for a control inside it that is not a `DrawerClose`. */
   close: () => void;
 }
 

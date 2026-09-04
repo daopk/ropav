@@ -2,20 +2,11 @@ import ButtonGroupRoot from "./button-group-root.vue";
 import ButtonGroupSeparator from "./button-group-separator.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const ButtonGroup = Object.assign(ButtonGroupRoot, {
-  Root: ButtonGroupRoot,
-  Separator: ButtonGroupSeparator,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { ButtonGroupRoot, ButtonGroupSeparator };
+export { ButtonGroupRoot as ButtonGroup, ButtonGroupSeparator };
 
 export type {
-  ButtonGroupRootProps,
   ButtonGroupRootProps as ButtonGroupProps,
   ButtonGroupSeparatorProps,
 } from "./button-group.types";

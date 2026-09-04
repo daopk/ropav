@@ -1,6 +1,6 @@
 <script setup lang="ts" vapor>
 import type { TableFixtureUser } from "./fixtures.types";
-import type { TableRootProps, TableSortDescriptor } from "@/components/table";
+import type { TableProps, TableSortDescriptor } from "@/components/table";
 import type { CollectionKey } from "@/composables/use-collection";
 import type {
   CollectionSelection,
@@ -18,7 +18,7 @@ import {
   TableHeader,
   TableLoadMore,
   TableLoadMoreContent,
-  TableRoot,
+  Table,
   TableRow,
   TableScrollContainer,
   TableSelectionCheckbox,
@@ -29,7 +29,7 @@ import {
 // Boolean prop to `false`, and forwarding that would read as a decision the test never made.
 const props = withDefaults(
   defineProps<
-    TableRootProps & {
+    TableProps & {
       columnClass?: string;
       disabledKeys?: CollectionKey[];
       disallowEmptySelection?: boolean;
@@ -95,7 +95,7 @@ const defaultUsers: TableFixtureUser[] = [
 </script>
 
 <template>
-  <TableRoot :class="props.class" :variant="props.variant">
+  <Table :class="props.class" :variant="props.variant">
     <TableScrollContainer :style="props.scrollContainerStyle">
       <TableContent
         aria-label="Team"
@@ -154,5 +154,5 @@ const defaultUsers: TableFixtureUser[] = [
       </TableContent>
     </TableScrollContainer>
     <TableFooter v-if="props.withFooter">1 to 2 of 2 results</TableFooter>
-  </TableRoot>
+  </Table>
 </template>

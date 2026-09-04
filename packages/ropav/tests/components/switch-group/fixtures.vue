@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type { SwitchGroupRootProps } from "@/components/switch-group";
+import type { SwitchGroupProps } from "@/components/switch-group";
 
-import { Switch } from "@/components/switch";
+import { Switch, SwitchContent, SwitchControl, SwitchThumb } from "@/components/switch";
 import { SwitchGroup } from "@/components/switch-group";
 
 defineProps<
-  SwitchGroupRootProps & {
+  SwitchGroupProps & {
     /** `id` of a form the switches submit with, for a group rendered outside it. */
     form?: string;
   }
@@ -27,12 +27,12 @@ const items = [
       :form="$props.form"
       :name="item.name"
     >
-      <Switch.Content>
-        <Switch.Control>
-          <Switch.Thumb />
-        </Switch.Control>
+      <SwitchContent>
+        <SwitchControl>
+          <SwitchThumb />
+        </SwitchControl>
         {{ item.label }}
-      </Switch.Content>
+      </SwitchContent>
     </Switch>
   </SwitchGroup>
 </template>

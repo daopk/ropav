@@ -5,7 +5,7 @@ import IconBell from "~icons/gravity-ui/bell";
 
 import { avatarSrc } from "../../utils/story-assets";
 import { Avatar, AvatarImage } from "../avatar";
-import { SeparatorRoot } from "../separator";
+import { Separator } from "../separator";
 
 import { Badge, BadgeAnchor, BadgeLabel } from "./index";
 
@@ -17,7 +17,7 @@ const components = {
   BadgeAnchor,
   BadgeLabel,
   IconBell,
-  Separator: SeparatorRoot,
+  Separator: Separator,
 };
 
 const AVATAR_URL = avatarSrc("green");

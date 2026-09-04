@@ -7,33 +7,33 @@ import { computed, ref } from "vue";
 
 import { useListData } from "../../composables/use-list-data";
 import { avatarSrc } from "../../utils/story-assets";
-import { AvatarFallback, AvatarImage, AvatarRoot } from "../avatar";
-import { DescriptionRoot } from "../description";
-import { EmptyStateRoot } from "../empty-state";
-import { ErrorMessageRoot } from "../error-message";
-import { LabelRoot } from "../label";
-import { TagRemoveButton, TagRoot } from "../tag";
+import { AvatarFallback, AvatarImage, Avatar } from "../avatar";
+import { Description } from "../description";
+import { EmptyState } from "../empty-state";
+import { ErrorMessage } from "../error-message";
+import { Label } from "../label";
+import { TagRemoveButton, Tag } from "../tag";
 
-import { TagGroupList, TagGroupRoot } from "./index";
+import { TagGroupList, TagGroup } from "./index";
 
 // Registered under flat names: a story template is compiled at runtime with no binding metadata,
-// so a dotted tag would be looked up as a component literally named "TagGroup.List".
+// so a dotted tag would be looked up as a component literally named "TagGroupList".
 const components = {
-  Avatar: AvatarRoot,
+  Avatar: Avatar,
   AvatarFallback,
   AvatarImage,
-  Description: DescriptionRoot,
-  EmptyState: EmptyStateRoot,
-  ErrorMessage: ErrorMessageRoot,
-  Label: LabelRoot,
-  Tag: TagRoot,
-  TagGroup: TagGroupRoot,
+  Description: Description,
+  EmptyState: EmptyState,
+  ErrorMessage: ErrorMessage,
+  Label: Label,
+  Tag: Tag,
+  TagGroup: TagGroup,
   TagGroupList,
   TagRemoveButton,
 };
 
 const meta: StoryMeta = {
-  component: TagGroupRoot,
+  component: TagGroup,
   parameters: {
     layout: "centered",
   },

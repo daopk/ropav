@@ -2,13 +2,27 @@ import { renderInterop } from "@ropav/testing/helpers/vue";
 import { afterEach, describe, expect, it } from "vitest";
 import { h, nextTick } from "vue";
 
-import { Autocomplete } from "@/components/autocomplete";
-import { ChipRoot } from "@/components/chip";
-import { EmptyStateRoot } from "@/components/empty-state";
-import { LabelRoot } from "@/components/label";
-import { ListBoxRoot } from "@/components/list-box";
-import { ListBoxItemIndicator, ListBoxItemRoot } from "@/components/list-box-item";
-import { SearchField } from "@/components/search-field";
+import {
+  Autocomplete,
+  AutocompleteClearButton,
+  AutocompleteFilter,
+  AutocompleteIndicator,
+  AutocompletePopover,
+  AutocompleteTrigger,
+  AutocompleteValue,
+} from "@/components/autocomplete";
+import { Chip } from "@/components/chip";
+import { EmptyState } from "@/components/empty-state";
+import { Label } from "@/components/label";
+import { ListBox } from "@/components/list-box";
+import { ListBoxItemIndicator, ListBoxItem } from "@/components/list-box-item";
+import {
+  SearchField,
+  SearchFieldClearButton,
+  SearchFieldGroup,
+  SearchFieldInput,
+  SearchFieldSearchIcon,
+} from "@/components/search-field";
 
 /**
  * The autocomplete mounted the way a consumer mounts it: from a VDOM host, with every part written
@@ -44,11 +58,11 @@ const searchField = () =>
     { ariaLabel: "Search animals", autoFocus: true },
     {
       default: () =>
-        h(SearchField.Group, null, {
+        h(SearchFieldGroup, null, {
           default: () => [
-            h(SearchField.SearchIcon),
-            h(SearchField.Input, { placeholder: "Search animals..." }),
-            h(SearchField.ClearButton),
+            h(SearchFieldSearchIcon),
+            h(SearchFieldInput, { placeholder: "Search animals..." }),
+            h(SearchFieldClearButton),
           ],
         }),
     },
@@ -64,32 +78,32 @@ const render = (props: Record<string, unknown> = {}) =>
     },
     slots: {
       default: () => [
-        h(LabelRoot, null, { default: () => "Favorite Animal" }),
-        h(Autocomplete.Trigger, null, {
+        h(Label, null, { default: () => "Favorite Animal" }),
+        h(AutocompleteTrigger, null, {
           default: () => [
-            h(Autocomplete.Value),
-            h(Autocomplete.ClearButton),
-            h(Autocomplete.Indicator),
+            h(AutocompleteValue),
+            h(AutocompleteClearButton),
+            h(AutocompleteIndicator),
           ],
         }),
-        h(Autocomplete.Popover, null, {
+        h(AutocompletePopover, null, {
           default: () =>
             h(
-              Autocomplete.Filter,
+              AutocompleteFilter,
               { filter: contains },
               {
                 default: ({ items }: { items: Array<{ id: string; name: string }> }) => [
                   searchField(),
-                  h(ListBoxRoot, null, {
+                  h(ListBox, null, {
                     default: () =>
                       items.map((item) =>
                         h(
-                          ListBoxItemRoot,
+                          ListBoxItem,
                           { id: item.id, key: item.id, textValue: item.name },
                           { default: () => [item.name, h(ListBoxItemIndicator)] },
                         ),
                       ),
-                    empty: () => h(EmptyStateRoot, null, { default: () => "No results found" }),
+                    empty: () => h(EmptyState, null, { default: () => "No results found" }),
                   }),
                 ],
               },
@@ -327,9 +341,9 @@ describe("Autocomplete under a vdom host", () => {
       },
       slots: {
         default: () => [
-          h(Autocomplete.Trigger, null, {
+          h(AutocompleteTrigger, null, {
             default: () => [
-              h(Autocomplete.Value, null, {
+              h(AutocompleteValue, null, {
                 // A component of its own inside the value, which is what a tag list is. Declare
                 // the default as `<slot>` fallback content beside this and the nested component
                 // renders with an empty slot on the first pass — an empty chip.
@@ -339,7 +353,7 @@ describe("Autocomplete under a vdom host", () => {
                   selectedItems: Array<{ key: string; value: { name: string } }>;
                 }) =>
                   selectedItems.map((item) =>
-                    h(ChipRoot, { key: item.key }, { default: () => item.value.name }),
+                    h(Chip, { key: item.key }, { default: () => item.value.name }),
                   ),
               }),
             ],

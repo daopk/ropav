@@ -6,24 +6,11 @@ import SliderThumb from "./slider-thumb.vue";
 import SliderTrack from "./slider-track.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Slider = Object.assign(SliderRoot, {
-  Fill: SliderFill,
-  Marks: SliderMarks,
-  Output: SliderOutput,
-  Root: SliderRoot,
-  Thumb: SliderThumb,
-  Track: SliderTrack,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { SliderRoot, SliderOutput, SliderTrack, SliderFill, SliderThumb, SliderMarks };
+export { SliderRoot as Slider, SliderOutput, SliderTrack, SliderFill, SliderThumb, SliderMarks };
 
 export type {
-  SliderRootProps,
   SliderRootProps as SliderProps,
   SliderOutputProps,
   SliderTrackProps,

@@ -5,26 +5,14 @@ import AlertRoot from "./alert-root.vue";
 import AlertTitle from "./alert-title.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Alert = Object.assign(AlertRoot, {
-  Content: AlertContent,
-  Description: AlertDescription,
-  Indicator: AlertIndicator,
-  Root: AlertRoot,
-  Title: AlertTitle,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { AlertContent, AlertDescription, AlertIndicator, AlertRoot, AlertTitle };
+export { AlertContent, AlertDescription, AlertIndicator, AlertRoot as Alert, AlertTitle };
 
 export type {
   AlertContentProps,
   AlertDescriptionProps,
   AlertIndicatorProps,
-  AlertRootProps,
   AlertRootProps as AlertProps,
   AlertTitleProps,
 } from "./alert.types";

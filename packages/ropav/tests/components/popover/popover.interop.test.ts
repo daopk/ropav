@@ -2,12 +2,18 @@ import { renderInterop } from "@ropav/testing/helpers/vue";
 import { afterEach, describe, expect, it } from "vitest";
 import { h, nextTick } from "vue";
 
-import { ButtonRoot } from "@/components/button";
-import { Popover } from "@/components/popover";
+import { Button } from "@/components/button";
+import {
+  Popover,
+  PopoverArrow,
+  PopoverContent,
+  PopoverDialog,
+  PopoverHeading,
+} from "@/components/popover";
 
 /**
  * The popover mounted the way a consumer mounts it: from a VDOM host, with the content written in
- * the host and forwarded through `Popover.Content`'s slot.
+ * the host and forwarded through `PopoverContent`'s slot.
  *
  * Everything here is already covered by the Vapor suite, and that is the reason the file exists.
  * Content written in Vapor resolves `inject` against the component that renders it, so a `provide`
@@ -26,19 +32,19 @@ const render = () =>
     props: { defaultOpen: true },
     slots: {
       default: () => [
-        h(ButtonRoot, null, { default: () => "Open popover" }),
+        h(Button, null, { default: () => "Open popover" }),
         // Never flipped: a jsdom measurement is all zeroes, so a placement free to flip would
         // report whichever side the fallback lands on rather than the one asked for.
         h(
-          Popover.Content,
+          PopoverContent,
           { shouldFlip: false },
           {
             default: () =>
-              h(Popover.Dialog, null, {
+              h(PopoverDialog, null, {
                 default: () => [
-                  h(Popover.Arrow),
-                  h(Popover.Heading, null, { default: () => "Popover heading" }),
-                  h(ButtonRoot, null, { default: () => "Inside action" }),
+                  h(PopoverArrow),
+                  h(PopoverHeading, null, { default: () => "Popover heading" }),
+                  h(Button, null, { default: () => "Inside action" }),
                 ],
               }),
           },

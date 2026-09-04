@@ -1,8 +1,8 @@
 <script setup lang="ts" vapor>
 import type { FixtureItem } from "./fixtures.types";
 
-import { ListBoxLoadMoreItem, ListBoxRoot } from "@/components/list-box";
-import { ListBoxItemRoot } from "@/components/list-box-item";
+import { ListBoxLoadMoreItem, ListBox } from "@/components/list-box";
+import { ListBoxItem } from "@/components/list-box-item";
 
 const props = withDefaults(
   defineProps<{
@@ -31,15 +31,10 @@ const boxStyle = { height: "60px", overflow: "auto" } as const;
 
 <template>
   <div :style="props.withScrollBox ? boxStyle : undefined">
-    <ListBoxRoot aria-label="Users" selection-mode="single">
-      <ListBoxItemRoot
-        v-for="item in props.items"
-        :id="item.id"
-        :key="item.id"
-        :text-value="item.name"
-      >
+    <ListBox aria-label="Users" selection-mode="single">
+      <ListBoxItem v-for="item in props.items" :id="item.id" :key="item.id" :text-value="item.name">
         {{ item.name }}
-      </ListBoxItemRoot>
+      </ListBoxItem>
       <ListBoxLoadMoreItem
         :is-loading="props.isLoading"
         :scroll-offset="props.scrollOffset"
@@ -47,6 +42,6 @@ const boxStyle = { height: "60px", overflow: "auto" } as const;
       >
         <span data-testid="loading">Loading more…</span>
       </ListBoxLoadMoreItem>
-    </ListBoxRoot>
+    </ListBox>
   </div>
 </template>

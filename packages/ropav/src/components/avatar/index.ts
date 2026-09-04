@@ -3,21 +3,11 @@ import AvatarImage from "./avatar-image.vue";
 import AvatarRoot from "./avatar-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const Avatar = Object.assign(AvatarRoot, {
-  Fallback: AvatarFallback,
-  Image: AvatarImage,
-  Root: AvatarRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { AvatarRoot, AvatarImage, AvatarFallback };
+export { AvatarRoot as Avatar, AvatarImage, AvatarFallback };
 
 export type {
-  AvatarRootProps,
   AvatarRootProps as AvatarProps,
   AvatarImageProps,
   AvatarFallbackProps,

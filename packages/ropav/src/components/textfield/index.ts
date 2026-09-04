@@ -1,22 +1,11 @@
 import TextFieldRoot from "./textfield-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
- * Compound Component
- * -----------------------------------------------------------------------------------------------*/
-export const TextField = Object.assign(TextFieldRoot, {
-  Root: TextFieldRoot,
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export { TextFieldRoot };
+export { TextFieldRoot as TextField };
 
-export type {
-  TextFieldRootProps,
-  TextFieldRootProps as TextFieldProps,
-  TextFieldSlotProps,
-} from "./textfield.types";
+export type { TextFieldRootProps as TextFieldProps, TextFieldSlotProps } from "./textfield.types";
 
 export { useTextFieldContext, provideTextFieldContext } from "./textfield.context";
 
