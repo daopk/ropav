@@ -360,6 +360,24 @@
 }
 
 /* --------------------------------------------------------------------------
+   Drop indicator — the gap between two rows a drop would land in.
+   Styled here rather than left to the caller because a windowed collection
+   renders its own: `TableBody` produces one per row it has laid out, and
+   markup written in the row slot cannot reach them. The height is kept even
+   when the gap is not the target, so rows do not shift as a drag moves.
+   -------------------------------------------------------------------------- */
+.table__drop-indicator {
+  --table-drop-indicator-size: 2px;
+  --table-drop-indicator-bg: var(--accent);
+
+  height: var(--table-drop-indicator-size);
+
+  &[data-drop-target="true"] {
+    background-color: var(--table-drop-indicator-bg);
+  }
+}
+
+/* --------------------------------------------------------------------------
    Tree / expandable rows — indent the tree column by depth (any level).
    React Aria sets `--table-row-level` (1-based) on each body row and
    `data-level` on cells; tree column cells expose `[data-tree-column]`.

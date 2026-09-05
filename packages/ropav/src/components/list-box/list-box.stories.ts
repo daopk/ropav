@@ -451,13 +451,11 @@ export const DragAndDrop: Story = {
       >
         <template v-for="user of items" :key="user.id">
           <ListBoxDropIndicator
-            class="h-0.5 data-[drop-target=true]:bg-accent"
             :target="{type: 'item', key: user.id, dropPosition: 'before'}"
           />
           <ListBoxItem :id="user.id" :text-value="user.name">{{ user.name }}</ListBoxItem>
         </template>
         <ListBoxDropIndicator
-          class="h-0.5 data-[drop-target=true]:bg-accent"
           :target="{type: 'item', key: items[items.length - 1].id, dropPosition: 'after'}"
         />
       </ListBox>

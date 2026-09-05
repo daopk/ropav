@@ -250,6 +250,36 @@ const parts: Part[] = [
     ],
   },
   {
+    // The gap between two rows, which has no resting colour — it is only ever seen lit. A
+    // windowed table renders its own gaps, so this is the only thing that can paint them.
+    html: `<div class="table__drop-indicator"></div>`,
+    knobHost: ".table__drop-indicator",
+    name: "the table's drop indicator",
+    paint: ".table__drop-indicator",
+    stateHost: ".table__drop-indicator",
+    states: [
+      {
+        attr: ["data-drop-target"],
+        knob: "--table-drop-indicator-bg",
+        paints: "var(--accent)",
+      },
+    ],
+  },
+  {
+    html: `<div class="list-box__drop-indicator"></div>`,
+    knobHost: ".list-box__drop-indicator",
+    name: "the list box's drop indicator",
+    paint: ".list-box__drop-indicator",
+    stateHost: ".list-box__drop-indicator",
+    states: [
+      {
+        attr: ["data-drop-target"],
+        knob: "--list-box-drop-indicator-bg",
+        paints: "var(--accent)",
+      },
+    ],
+  },
+  {
     // The most combinatorial box in the library: checked and indeterminate share a colour, and so
     // do the two invalid pairings. The state lives on the block, the paint on the control.
     html: `<div class="checkbox"><span class="checkbox__control"></span></div>`,

@@ -25,6 +25,25 @@
 }
 
 /* ==========================================================================
+   Drop indicator — the gap between two options a drop would land in.
+   Styled here rather than left to the caller because a windowed list box
+   renders its own, one per option it has laid out, which markup in the item
+   slot cannot reach. The height is kept even when the gap is not the target,
+   so options do not shift as a drag moves.
+   ========================================================================== */
+
+.list-box__drop-indicator {
+  --list-box-drop-indicator-size: 2px;
+  --list-box-drop-indicator-bg: var(--accent);
+
+  height: var(--list-box-drop-indicator-size);
+
+  &[data-drop-target="true"] {
+    background-color: var(--list-box-drop-indicator-bg);
+  }
+}
+
+/* ==========================================================================
    Size variants
    ========================================================================== */
 

@@ -1081,13 +1081,13 @@ export const VirtualizationHundredThousandRows: Story = {
  * `onReorder` is what makes the table droppable at all — a table with nothing to do with an
  * arriving row is not a drop target.
  *
- * Two things are the caller's here, deliberately:
+ * Two things worth pointing at:
  *
- * - **The drop indicator has no styling of its own.** `@ropav/styles` has no rule for one, and
- *   React Aria ships its own unstyled too, so the line is styled through the indicator's own
- *   `class` here rather than by adding a rule to the shared stylesheet. `data-drop-target` and
- *   the `table__drop-indicator` class are emitted either way, so a rule added there later would
- *   need no change to this story.
+ * - **The drop indicator is placed, not styled.** Where the gaps go is the caller's — one before
+ *   each row and one after the last — while what the line looks like comes from `@ropav/styles`,
+ *   because a windowed collection renders its own gaps and no markup here could reach them.
+ *   `--table-drop-indicator-bg` and `--table-drop-indicator-size` retune it; a `class` still
+ *   overrides it outright.
  * - **`TableDragHandle` is not a hit target.** The row is what the browser drags; the handle
  *   exists so a keyboard or screen reader user has something to press. Tab to it and press Enter.
  */
@@ -1137,7 +1137,6 @@ export const DragAndDrop: Story = {
               <TableBody>
                 <template v-for="user of rows" :key="user.id">
                   <TableDropIndicator
-                    class="h-0.5 data-[drop-target=true]:bg-accent"
                     :target="{type: 'item', key: String(user.id), dropPosition: 'before'}"
                   />
                   <TableRow :id="String(user.id)" :text-value="user.name">
@@ -1154,7 +1153,6 @@ export const DragAndDrop: Story = {
                   </TableRow>
                 </template>
                 <TableDropIndicator
-                  class="h-0.5 data-[drop-target=true]:bg-accent"
                   :target="{type: 'item', key: rows[rows.length - 1].id + '', dropPosition: 'after'}"
                 />
               </TableBody>
