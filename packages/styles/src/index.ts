@@ -6,3 +6,6 @@ export * from "./utils";
 
 // Export all component variants
 export * from "./components";
+
+// The bundled themes, for a consumer that has to build a picker rather than a stylesheet.
+export * from "./themes";

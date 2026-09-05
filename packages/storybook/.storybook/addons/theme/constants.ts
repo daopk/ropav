@@ -1,3 +1,7 @@
+import type { ThemeId } from "@ropav/styles";
+
+import { themeIds, themeLabels } from "@ropav/styles";
+
 export const THEME_GLOBAL_TYPE_ID = "ropav-theme";
 export const SCHEME_GLOBAL_TYPE_ID = "ropav-scheme";
 
@@ -5,27 +9,15 @@ export const SCHEME_GLOBAL_TYPE_ID = "ropav-scheme";
  * The two axes are orthogonal: `data-theme` picks the palette, the `light`/`dark` class
  * picks the appearance. Every theme ships both, so a single list would have to enumerate every theme twice.
  *
- * This is also the only enumeration of the bundled themes outside `@ropav/styles` itself -
- * keep it in step with `packages/styles/scripts/themes/presets.ts`.
+ * The palette axis comes from `@ropav/styles`, which generates it from the same presets the
+ * stylesheets are built from - this file used to restate it, and a second consumer would have
+ * made a third copy. The appearance axis is Storybook's own and stays here.
  */
-export const THEME_VALUES = [
-  "default",
-  "hero",
-  "sky",
-  "lavender",
-  "mint",
-  "netflix",
-  "uber",
-  "spotify",
-  "coinbase",
-  "airbnb",
-  "discord",
-  "rabbit",
-] as const;
+export const THEME_VALUES = themeIds;
 
 export const SCHEME_VALUES = ["light", "dark"] as const;
 
-export type ThemeKey = (typeof THEME_VALUES)[number];
+export type ThemeKey = ThemeId;
 export type SchemeKey = (typeof SCHEME_VALUES)[number];
 
 export const DEFAULT_THEME: ThemeKey = THEME_VALUES[0];
@@ -36,20 +28,10 @@ export interface ThemeOption {
   title: string;
 }
 
-export const THEME_OPTIONS: ThemeOption[] = [
-  { value: "default", title: "Default" },
-  { value: "hero", title: "Hero" },
-  { value: "sky", title: "Sky" },
-  { value: "lavender", title: "Lavender" },
-  { value: "mint", title: "Mint" },
-  { value: "netflix", title: "Netflix" },
-  { value: "uber", title: "Uber" },
-  { value: "spotify", title: "Spotify" },
-  { value: "coinbase", title: "Coinbase" },
-  { value: "airbnb", title: "Airbnb" },
-  { value: "discord", title: "Discord" },
-  { value: "rabbit", title: "Rabbit" },
-];
+export const THEME_OPTIONS: ThemeOption[] = THEME_VALUES.map((value) => ({
+  value,
+  title: themeLabels[value],
+}));
 
 export interface SchemeOption {
   value: SchemeKey;

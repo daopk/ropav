@@ -1,5 +1,7 @@
 /**
- * Emits `themes/<id>.css` for every preset except the hand-written ones — see `HANDWRITTEN`.
+ * Emits `themes/<id>.css` for every preset except the hand-written ones — see `HANDWRITTEN` —
+ * plus `themes/all.css` and `src/themes.ts`, which carries the same list to anyone building a
+ * theme picker.
  *
  * Pass `--check-default` to emit the default theme to stdout instead, for comparing the
  * generator against the hand-written file.
@@ -266,10 +268,42 @@ ${bundled.map((id) => `@import "./${id}.css";`).join("\n")}
 
   writeFileSync(allFile, all);
 
+  /*
+   * The same list again, for a consumer that has to build a picker rather than a stylesheet.
+   * Without it every such consumer restates the enumeration and it drifts — the Storybook
+   * toolbar carried a copy for exactly this reason.
+   */
+  const themesModule = `/**
+ * Every bundled theme — GENERATED, do not edit by hand.
+ *
+ * Run \`pnpm generate:themes\` after changing \`scripts/themes/presets.ts\`.
+ *
+ * \`themeIds\` is in presentation order, which a picker should follow. \`themeLabels\` is keyed
+ * for the linter, so read the order from \`themeIds\` and the name from here.
+ */
+
+export const themeIds = [
+${themeIds.map((id) => `  "${id}",`).join("\n")}
+] as const;
+
+export type ThemeId = (typeof themeIds)[number];
+
+export const themeLabels: Record<ThemeId, string> = {
+${[...themeIds]
+  .sort()
+  .map((id) => `  ${id}: "${presets[id].label}",`)
+  .join("\n")}
+};
+`;
+
+  const themesFile = join(stylesDir, "src", "themes.ts");
+
+  writeFileSync(themesFile, themesModule);
+
   // Hand the output to the repo formatter rather than trying to match its line wrapping
   // here. Without this `pnpm format` rewrites what was just generated, and the generator
   // would dirty the tree on every run.
-  execFileSync("oxfmt", [...written, allFile], { stdio: "inherit" });
+  execFileSync("oxfmt", [...written, allFile, themesFile], { stdio: "inherit" });
 
   // eslint-disable-next-line no-console
   console.log(`Generated ${generated.length} themes: ${generated.join(", ")}`);
