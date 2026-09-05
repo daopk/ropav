@@ -26,7 +26,7 @@ const mount = (props: Record<string, unknown> = {}) => {
   return mounted;
 };
 
-const popoverOf = () => document.body.querySelector<HTMLElement>(".date-range-picker__popover");
+const popoverOf = () => document.body.querySelector<HTMLElement>(".rp-date-range-picker__popover");
 
 const triggerOf = (result: RenderResult) =>
   result.container.querySelector<HTMLElement>("[data-slot='date-range-picker-trigger']")!;

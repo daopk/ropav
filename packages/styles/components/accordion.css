@@ -1,5 +1,5 @@
 /* Base accordion styles */
-.accordion {
+.rp-accordion {
   @apply w-full;
 
   /* Performance optimization - contain layout changes */
@@ -7,19 +7,19 @@
 }
 
 /* Accordion elements */
-.accordion__body {
+.rp-accordion__body {
   @apply text-sm;
 }
 
-.accordion__body-inner {
+.rp-accordion__body-inner {
   @apply px-4 pt-0 pb-4 text-muted;
 }
 
-.accordion__heading {
+.rp-accordion__heading {
   @apply flex;
 }
 
-.accordion__indicator {
+.rp-accordion__indicator {
   @apply ms-auto size-4 shrink-0 text-muted;
 
   /**
@@ -34,26 +34,26 @@
 }
 
 /* Accordion Item - Separator styles */
-.accordion__item {
+.rp-accordion__item {
   @apply relative border-none;
 }
 
-.accordion__item::after {
+.rp-accordion__item::after {
   content: "";
   @apply absolute start-0 bottom-0 h-px w-full rounded-xs bg-separator;
 }
 
-.accordion__item:last-child::after {
+.rp-accordion__item:last-child::after {
   content: none;
 }
 
 /* Hide separator when hideSeparator prop is set */
-.accordion__item[data-hide-separator="true"]::after {
+.rp-accordion__item[data-hide-separator="true"]::after {
   display: none;
 }
 /* ------------------------------------ */
 
-.accordion__trigger {
+.rp-accordion__trigger {
   cursor: var(--cursor-interactive);
 
   /* Base Styles */
@@ -89,7 +89,7 @@
   }
 }
 
-.accordion__panel {
+.rp-accordion__panel {
   opacity: 0;
   height: var(--disclosure-panel-height);
   overflow: clip;
@@ -106,7 +106,7 @@
 }
 
 /* Surface variant */
-.accordion--surface {
+.rp-accordion--surface {
   @apply bg-surface;
   border-radius: min(32px, var(--component-radius));
 
@@ -117,7 +117,7 @@
     outline-offset: -1px;
   }
 
-  .accordion__trigger {
+  .rp-accordion__trigger {
     @media (hover: hover) {
       &:hover:not([aria-expanded="true"]),
       &[data-hovered="true"]:not([aria-expanded="true"]) {
@@ -126,12 +126,12 @@
     }
   }
 
-  .accordion__item::after {
+  .rp-accordion__item::after {
     @apply bg-surface-foreground/6;
   }
 }
 
-.accordion--surface .accordion__item {
+.rp-accordion--surface .rp-accordion__item {
   /* Surface variant separator styling */
   &::after {
     @apply start-[3%] w-[94%];

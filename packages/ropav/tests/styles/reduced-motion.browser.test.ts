@@ -15,11 +15,11 @@ import { afterEach, describe, expect, it } from "vitest";
 
 /** Every part whose transition lives on a pseudo-element rather than on the element itself. */
 const parts = [
-  { chain: ["sidebar__rail"], name: "the sidebar rail's line", pseudo: "::after" },
-  { chain: ["splitter__handle"], name: "the splitter handle's line", pseudo: "::after" },
-  { chain: ["radio__indicator"], name: "the radio's inner dot", pseudo: "::before" },
-  { chain: ["checkbox__control"], name: "the checkbox control's fill", pseudo: "::before" },
-  { chain: ["slider", "slider__thumb"], name: "the slider thumb's knob", pseudo: "::after" },
+  { chain: ["rp-sidebar__rail"], name: "the sidebar rail's line", pseudo: "::after" },
+  { chain: ["rp-splitter__handle"], name: "the splitter handle's line", pseudo: "::after" },
+  { chain: ["rp-radio__indicator"], name: "the radio's inner dot", pseudo: "::before" },
+  { chain: ["rp-checkbox__control"], name: "the checkbox control's fill", pseudo: "::before" },
+  { chain: ["rp-slider", "rp-slider__thumb"], name: "the slider thumb's knob", pseudo: "::after" },
 ];
 
 const roots: HTMLElement[] = [];

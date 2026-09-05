@@ -1,40 +1,40 @@
-.typography {
+.rp-typography {
   @apply text-foreground;
 }
 
-.typography-prose {
+.rp-typography-prose {
   @apply text-foreground;
 }
 
-.typography-prose h1 {
+.rp-typography-prose h1 {
   @apply text-4xl font-semibold tracking-tight;
 }
 
-.typography-prose h2 {
+.rp-typography-prose h2 {
   @apply text-3xl font-semibold tracking-tight;
 }
 
-.typography-prose h3 {
+.rp-typography-prose h3 {
   @apply text-2xl font-semibold tracking-tight;
 }
 
-.typography-prose h4 {
+.rp-typography-prose h4 {
   @apply text-xl font-semibold tracking-tight;
 }
 
-.typography-prose h5 {
+.rp-typography-prose h5 {
   @apply text-lg font-semibold tracking-tight;
 }
 
-.typography-prose h6 {
+.rp-typography-prose h6 {
   @apply text-base font-semibold tracking-tight;
 }
 
-.typography-prose p {
+.rp-typography-prose p {
   @apply text-base leading-7;
 }
 
-.typography-prose code {
+.rp-typography-prose code {
   @apply bg-default px-1.5 py-0.5 font-mono text-sm text-foreground;
 
   border-radius: min(32px, var(--component-radius));
@@ -47,31 +47,31 @@
   }
 }
 
-.typography-prose a {
+.rp-typography-prose a {
   @apply font-medium text-link underline underline-offset-4;
 }
 
-.typography-prose blockquote {
+.rp-typography-prose blockquote {
   @apply mt-4 border-s-4 border-border ps-4 text-muted italic;
 }
 
-.typography-prose ul {
+.rp-typography-prose ul {
   @apply my-4 list-disc space-y-2 ps-6;
 }
 
-.typography-prose ol {
+.rp-typography-prose ol {
   @apply my-4 list-decimal space-y-2 ps-6;
 }
 
-.typography-prose li {
+.rp-typography-prose li {
   @apply text-base leading-7;
 }
 
-.typography-prose hr {
+.rp-typography-prose hr {
   @apply my-8 border-separator;
 }
 
-.typography-prose pre {
+.rp-typography-prose pre {
   @apply my-4 overflow-x-auto bg-default p-4 font-mono text-sm leading-relaxed;
 
   border-radius: min(32px, var(--component-radius));
@@ -84,57 +84,57 @@
   }
 }
 
-.typography-prose strong {
+.rp-typography-prose strong {
   @apply font-semibold text-foreground;
 }
 
-.typography-prose em {
+.rp-typography-prose em {
   @apply italic;
 }
 
-.typography-prose img {
+.rp-typography-prose img {
   @apply my-4;
 
   border-radius: min(32px, var(--component-radius));
 }
 
-.typography--h1 {
+.rp-typography--h1 {
   @apply text-4xl font-semibold tracking-tight;
 }
 
-.typography--h2 {
+.rp-typography--h2 {
   @apply text-3xl font-semibold tracking-tight;
 }
 
-.typography--h3 {
+.rp-typography--h3 {
   @apply text-2xl font-semibold tracking-tight;
 }
 
-.typography--h4 {
+.rp-typography--h4 {
   @apply text-xl font-semibold tracking-tight;
 }
 
-.typography--h5 {
+.rp-typography--h5 {
   @apply text-lg font-semibold tracking-tight;
 }
 
-.typography--h6 {
+.rp-typography--h6 {
   @apply text-base font-semibold tracking-tight;
 }
 
-.typography--body {
+.rp-typography--body {
   @apply text-base leading-7;
 }
 
-.typography--body-sm {
+.rp-typography--body-sm {
   @apply text-sm leading-6;
 }
 
-.typography--body-xs {
+.rp-typography--body-xs {
   @apply text-xs leading-5;
 }
 
-.typography--code {
+.rp-typography--code {
   @apply bg-default px-1.5 py-0.5 font-mono text-sm text-foreground;
 
   border-radius: min(32px, var(--component-radius));
@@ -147,46 +147,46 @@
   }
 }
 
-.typography--align-start {
+.rp-typography--align-start {
   @apply text-start;
 }
 
-.typography--align-center {
+.rp-typography--align-center {
   @apply text-center;
 }
 
-.typography--align-end {
+.rp-typography--align-end {
   @apply text-end;
 }
 
-.typography--align-justify {
+.rp-typography--align-justify {
   @apply text-justify;
 }
 
-.typography--color-default {
+.rp-typography--color-default {
   @apply text-foreground;
 }
 
-.typography--color-muted {
+.rp-typography--color-muted {
   @apply text-muted;
 }
 
-.typography--truncate {
+.rp-typography--truncate {
   @apply block truncate;
 }
 
-.typography--weight-normal {
+.rp-typography--weight-normal {
   @apply font-normal;
 }
 
-.typography--weight-medium {
+.rp-typography--weight-medium {
   @apply font-medium;
 }
 
-.typography--weight-semibold {
+.rp-typography--weight-semibold {
   @apply font-semibold;
 }
 
-.typography--weight-bold {
+.rp-typography--weight-bold {
   @apply font-bold;
 }

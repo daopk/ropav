@@ -20,18 +20,18 @@ const mount = (options: { withIndicator?: boolean; isDropTarget?: boolean } = {}
   const root = document.createElement("div");
 
   root.innerHTML = `
-    <table class="table__content">
+    <table class="rp-table__content">
       <tbody>
-        <tr class="table__row"><td class="table__cell">one</td></tr>
+        <tr class="rp-table__row"><td class="rp-table__cell">one</td></tr>
         ${
           options.withIndicator
-            ? `<tr class="table__drop-indicator"${
+            ? `<tr class="rp-table__drop-indicator"${
                 options.isDropTarget ? ' data-drop-target="true"' : ""
               }><td></td></tr>`
             : ""
         }
-        <tr class="table__row" data-probe><td class="table__cell">two</td></tr>
-        <tr class="table__row"><td class="table__cell">three</td></tr>
+        <tr class="rp-table__row" data-probe><td class="rp-table__cell">two</td></tr>
+        <tr class="rp-table__row"><td class="rp-table__cell">three</td></tr>
       </tbody>
     </table>
   `;
@@ -47,7 +47,7 @@ const probeTop = (root: HTMLElement) =>
   root.getBoundingClientRect().top;
 
 const indicatorIn = (root: HTMLElement) =>
-  root.querySelector<HTMLElement>(".table__drop-indicator")!;
+  root.querySelector<HTMLElement>(".rp-table__drop-indicator")!;
 
 afterEach(() => {
   for (const root of roots.splice(0)) root.remove();
@@ -89,12 +89,12 @@ describe("the table's drop indicator in flow", () => {
 /** A three-option list, with gaps at the positions named. */
 const mountList = (at: ("after" | "before" | "between")[] = []) => {
   const root = document.createElement("div");
-  const gap = `<div class="list-box__drop-indicator" data-drop-target="true"></div>`;
+  const gap = `<div class="rp-list-box__drop-indicator" data-drop-target="true"></div>`;
   const option = (label: string, probe = false) =>
     `<div data-slot="list-box-item"${probe ? " data-probe" : ""}>${label}</div>`;
 
   root.innerHTML = `
-    <div class="list-box">
+    <div class="rp-list-box">
       ${at.includes("before") ? gap : ""}
       ${option("one")}
       ${at.includes("between") ? gap : ""}
@@ -110,7 +110,7 @@ const mountList = (at: ("after" | "before" | "between")[] = []) => {
   return root;
 };
 
-const listBoxIn = (root: HTMLElement) => root.querySelector<HTMLElement>(".list-box")!;
+const listBoxIn = (root: HTMLElement) => root.querySelector<HTMLElement>(".rp-list-box")!;
 
 describe("the list box's drop indicator in flow", () => {
   it("leaves the options where a list with no gaps puts them", () => {
@@ -134,7 +134,7 @@ describe("the list box's drop indicator in flow", () => {
 
   it("sits on the edge of the option it stands before", () => {
     const line = getComputedStyle(
-      mountList(["between"]).querySelector(".list-box__drop-indicator")!,
+      mountList(["between"]).querySelector(".rp-list-box__drop-indicator")!,
       "::after",
     );
 

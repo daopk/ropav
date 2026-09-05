@@ -144,7 +144,7 @@ describe("ProgressCircle", () => {
         props: { ariaLabel: "Loading", color },
       });
 
-      expect(part(container, "progress-circle")).toHaveClass(`progress-circle--${color}`);
+      expect(part(container, "progress-circle")).toHaveClass(`rp-progress-circle--${color}`);
 
       unmount();
     },
@@ -153,7 +153,7 @@ describe("ProgressCircle", () => {
   it.each(["sm", "md", "lg"] as const)("applies the %s size modifier", (size) => {
     const { container, unmount } = renderVapor(Fixture, { props: { ariaLabel: "Loading", size } });
 
-    expect(part(container, "progress-circle")).toHaveClass(`progress-circle--${size}`);
+    expect(part(container, "progress-circle")).toHaveClass(`rp-progress-circle--${size}`);
 
     unmount();
   });
@@ -169,17 +169,17 @@ describe("ProgressCircle", () => {
       },
     });
 
-    expect(part(container, "progress-circle")).toHaveClass("progress-circle", "opacity-80");
+    expect(part(container, "progress-circle")).toHaveClass("rp-progress-circle", "opacity-80");
     expect(part(container, "progress-circle-track")).toHaveClass(
-      "progress-circle__track",
+      "rp-progress-circle__track",
       "size-10",
     );
     expect(part(container, "progress-circle-track-circle")).toHaveClass(
-      "progress-circle__track-circle",
+      "rp-progress-circle__track-circle",
       "opacity-50",
     );
     expect(part(container, "progress-circle-fill-circle")).toHaveClass(
-      "progress-circle__fill-circle",
+      "rp-progress-circle__fill-circle",
       "stroke-2",
     );
 

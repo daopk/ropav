@@ -8,43 +8,43 @@ export const avatarVariants = tv({
     size: "md",
   },
   slots: {
-    base: "avatar",
-    fallback: "avatar__fallback",
-    image: "avatar__image",
+    base: "rp-avatar",
+    fallback: "rp-avatar__fallback",
+    image: "rp-avatar__image",
   },
   variants: {
     color: {
       accent: {
-        fallback: "avatar__fallback--accent",
+        fallback: "rp-avatar__fallback--accent",
       },
       danger: {
-        fallback: "avatar__fallback--danger",
+        fallback: "rp-avatar__fallback--danger",
       },
       default: {
-        fallback: "avatar__fallback--default",
+        fallback: "rp-avatar__fallback--default",
       },
       success: {
-        fallback: "avatar__fallback--success",
+        fallback: "rp-avatar__fallback--success",
       },
       warning: {
-        fallback: "avatar__fallback--warning",
+        fallback: "rp-avatar__fallback--warning",
       },
     },
     size: {
       lg: {
-        base: "avatar--lg",
+        base: "rp-avatar--lg",
       },
       md: {
-        base: "avatar--md",
+        base: "rp-avatar--md",
       },
       sm: {
-        base: "avatar--sm",
+        base: "rp-avatar--sm",
       },
     },
     variant: {
       default: {},
       soft: {
-        base: "avatar--soft",
+        base: "rp-avatar--soft",
       },
     },
   },

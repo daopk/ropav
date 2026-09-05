@@ -6,7 +6,7 @@
    Table Root — Outer container for table + optional footer.
    Primary variant: gray background with the table body as a white card inside.
    -------------------------------------------------------------------------- */
-.table-root {
+.rp-table-root {
   @apply relative grid w-full overflow-clip;
   grid-template-columns: minmax(0, 1fr);
 }
@@ -17,12 +17,12 @@
    minmax(0, 1fr) creates a hard width boundary that table layout
    cannot push beyond.
    -------------------------------------------------------------------------- */
-.table__scroll-container {
+.rp-table__scroll-container {
   @apply scrollbar overflow-x-auto;
   scrollbar-gutter: auto;
 }
 
-.table-root--primary {
+.rp-table-root--primary {
   @apply bg-surface-secondary px-1 pb-1;
 
   border-radius: min(32px, var(--component-radius));
@@ -35,45 +35,45 @@
   }
 }
 
-.table-root--secondary {
+.rp-table-root--secondary {
   /* No background, padding, or rounding on the root */
 }
 
 /* Secondary: header is a standalone rounded card.
    Background is on cells (not <thead>) because Firefox does not support */
-.table-root--secondary .table__header {
+.rp-table-root--secondary .rp-table__header {
   @apply border-b-0 bg-transparent;
 }
 
-.table-root--secondary .table__column {
+.rp-table-root--secondary .rp-table__column {
   @apply bg-surface-secondary;
 }
 
 /* Round only the truly first/last column header.
    Non-virtualized: column is a <th> child of <tr>.
    Virtualized: column is wrapped in a `VirtualizerItem` (role="presentation") so
-   `:first-child` / `:last-child` on `.table__column` would match every column
+   `:first-child` / `:last-child` on `.rp-table__column` would match every column
    (each is the only child of its wrapper). Walk up to the row instead. */
-.table-root--secondary
+.rp-table-root--secondary
   :is(
-    th.table__column:first-child,
-    [role="row"] > [role="presentation"]:first-of-type > .table__column
+    th.rp-table__column:first-child,
+    [role="row"] > [role="presentation"]:first-of-type > .rp-table__column
   ) {
   border-start-start-radius: min(32px, var(--component-radius));
   border-end-start-radius: min(32px, var(--component-radius));
 }
 
-.table-root--secondary
+.rp-table-root--secondary
   :is(
-    th.table__column:last-child,
-    [role="row"] > [role="presentation"]:last-of-type > .table__column
+    th.rp-table__column:last-child,
+    [role="row"] > [role="presentation"]:last-of-type > .rp-table__column
   ) {
   border-start-end-radius: min(32px, var(--component-radius));
   border-end-end-radius: min(32px, var(--component-radius));
 }
 
 /* Secondary: body has no shadow or rounded corners */
-.table-root--secondary .table__body {
+.rp-table-root--secondary .rp-table__body {
   @apply shadow-none;
 
   /* Non-virtualized */
@@ -84,15 +84,15 @@
     @apply rounded-none;
   }
 
-  /* Virtualized: undo the rounding applied by .table__body:not(tbody) */
+  /* Virtualized: undo the rounding applied by .rp-table__body:not(tbody) */
   &:not(tbody) {
     @apply overflow-visible rounded-none;
   }
 }
 
 /* Secondary: rows are transparent and keep bottom border on every row */
-.table-root--secondary .table__row {
-  .table__cell {
+.rp-table-root--secondary .rp-table__row {
+  .rp-table__cell {
     @apply border-b border-separator-tertiary/50;
 
     --table-cell-bg: transparent;
@@ -103,26 +103,26 @@
 /* --------------------------------------------------------------------------
    Table Content (<table> element) — the white card inside the root
    -------------------------------------------------------------------------- */
-.table__content {
+.rp-table__content {
   @apply w-full border-separate border-spacing-0 text-sm;
 }
 
 /* Primary variant: table gets the white surface card look */
-.table-root--primary .table__content {
+.rp-table-root--primary .rp-table__content {
   @apply overflow-clip;
 }
 
 /* --------------------------------------------------------------------------
    Table Header (<thead>)
    -------------------------------------------------------------------------- */
-.table__header {
+.rp-table__header {
   @apply border-b border-separator/50 bg-surface-secondary;
 }
 
 /* --------------------------------------------------------------------------
    Table Column (<th>)
    -------------------------------------------------------------------------- */
-.table__column {
+.rp-table__column {
   @apply relative px-4 py-2.5 text-start text-xs font-medium;
 
   --table-column-fg: var(--muted);
@@ -143,7 +143,7 @@
   /* A column holding nothing but the select-all box has no heading for the line to divide from
    * the next one, and where the end padding is collapsed it lands on the box's own edge and
    * reads as a border the box grew. */
-  &:has(> .checkbox:only-child)::after {
+  &:has(> .rp-checkbox:only-child)::after {
     content: none;
   }
 
@@ -168,9 +168,9 @@
 }
 
 /* Virtualized: each column is wrapped in a `VirtualizerItem` (role="presentation"),
-   so `.table__column:last-child:not(:only-child)::after` above never matches.
+   so `.rp-table__column:last-child:not(:only-child)::after` above never matches.
    Hide the trailing separator on the rightmost wrapper instead. */
-[role="row"] > [role="presentation"]:last-of-type:not(:only-of-type) > .table__column::after {
+[role="row"] > [role="presentation"]:last-of-type:not(:only-of-type) > .rp-table__column::after {
   content: none;
 }
 
@@ -178,7 +178,7 @@
    Sortable Column Header — wraps the column label and an optional indicator
    icon. Rendered inside a sortable `Table.Column`'s render prop callback.
    -------------------------------------------------------------------------- */
-.table__sortable-column-header {
+.rp-table__sortable-column-header {
   @apply flex items-center justify-between;
 }
 
@@ -186,7 +186,7 @@
    Sortable Column Indicator — chevron that flips based on `data-direction`.
    Defaults to pointing up (ascending) and rotates 180° for descending.
    -------------------------------------------------------------------------- */
-.table__sortable-column-indicator {
+.rp-table__sortable-column-indicator {
   @apply inline-grid size-3 transform place-content-center transition-transform duration-100 ease-out;
 
   &[data-direction="descending"] {
@@ -197,7 +197,7 @@
 /* --------------------------------------------------------------------------
    Table Body (<tbody>)
    -------------------------------------------------------------------------- */
-.table__body {
+.rp-table__body {
   /* Non-virtualized: round corners via first/last cells
      (border-radius on <tbody> itself has no effect).
      Logical properties so corners follow `dir` in RTL. */
@@ -226,7 +226,7 @@
 /* --------------------------------------------------------------------------
    Table Row (<tr>)
    -------------------------------------------------------------------------- */
-.table__row {
+.rp-table__row {
   @apply relative h-full;
 
   /* Bottom separator */
@@ -239,14 +239,14 @@
 
   /* Hover state — applied to cells so Firefox clips bg to border-radius */
   @media (hover: hover) {
-    &:hover .table__cell,
-    &[data-hovered="true"] .table__cell {
+    &:hover .rp-table__cell,
+    &[data-hovered="true"] .rp-table__cell {
       background-color: var(--table-cell-bg-hover);
     }
   }
 
   /* Selected state */
-  &[data-selected="true"] .table__cell {
+  &[data-selected="true"] .rp-table__cell {
     background-color: var(--table-cell-bg-selected);
 
     @apply forced-selected;
@@ -255,8 +255,8 @@
   /* A selected row still answers the pointer. Without this the rule above swallows the hover -
    * it is later and equally specific, so the row that is both reads as merely selected. */
   @media (hover: hover) {
-    &[data-selected="true"]:hover .table__cell,
-    &[data-selected="true"][data-hovered="true"] .table__cell {
+    &[data-selected="true"]:hover .rp-table__cell,
+    &[data-selected="true"][data-hovered="true"] .rp-table__cell {
       background-color: var(--table-cell-bg-selected-hover);
     }
   }
@@ -267,7 +267,7 @@
     @apply status-disabled;
   }
 
-  /* Row focus ring: see “Table row focus ring” block below (after `.table__cell`). */
+  /* Row focus ring: see “Table row focus ring” block below (after `.rp-table__cell`). */
   &:focus-visible,
   &[data-focus-visible="true"] {
     @apply outline-none;
@@ -279,7 +279,7 @@
   }
 
   /* Drop target state */
-  &[data-drop-target="true"] .table__cell {
+  &[data-drop-target="true"] .rp-table__cell {
     background-color: var(--table-cell-bg-drop-target);
   }
 }
@@ -287,11 +287,11 @@
 /* --------------------------------------------------------------------------
    Table Cell (<td>)
    -------------------------------------------------------------------------- */
-.table__cell {
+.rp-table__cell {
   @apply h-full px-4 py-3 align-middle text-sm text-foreground;
 
   /* The row's fill, per state, declared on the cell because that is what paints — Firefox clips a
-   * row's own background outside the border radius. `.table-root--secondary` re-points two. */
+   * row's own background outside the border radius. `.rp-table-root--secondary` re-points two. */
   --table-cell-bg: var(--surface);
   --table-cell-bg-hover: var(--surface-hover);
   --table-cell-bg-selected: var(--accent-soft);
@@ -313,49 +313,50 @@
 /* Virtualized, a cell is a div: `align-middle` above says nothing to one, and block layout pins
  * its content under the top padding, so anything taller than the content box of a row whose
  * height the layout fixed hangs off the bottom. Flex is what centring costs a div. */
-.table__cell:not(td) {
+.rp-table__cell:not(td) {
   @apply flex items-center;
 }
 
 /* --------------------------------------------------------------------------
-   Table row focus ring — must follow `.table__cell` (cascade). One continuous
-   inset ring split across cells; `:is(.table__cell, .table__column)` + direct vs
+   Table row focus ring — must follow `.rp-table__cell` (cascade). One continuous
+   inset ring split across cells; `:is(.rp-table__cell, .rp-table__column)` + direct vs
    `> *:…` covers virtualized wrappers. `:is(:focus-visible, [data-focus-visible])`
    matches row keyboard focus from RAC.
    -------------------------------------------------------------------------- */
-.table__row:is(:focus-visible, [data-focus-visible="true"]) :is(.table__cell, .table__column) {
+.rp-table__row:is(:focus-visible, [data-focus-visible="true"])
+  :is(.rp-table__cell, .rp-table__column) {
   @apply shadow-none;
 }
 
-.table__row:is(:focus-visible, [data-focus-visible="true"])
-  > :is(.table__cell, .table__column):only-child,
-.table__row:is(:focus-visible, [data-focus-visible="true"])
+.rp-table__row:is(:focus-visible, [data-focus-visible="true"])
+  > :is(.rp-table__cell, .rp-table__column):only-child,
+.rp-table__row:is(:focus-visible, [data-focus-visible="true"])
   > *:only-child
-  :is(.table__cell, .table__column) {
+  :is(.rp-table__cell, .rp-table__column) {
   @apply rounded-lg shadow-[inset_0_0_0_2px_var(--focus)] outline-none;
 }
 
-.table__row:is(:focus-visible, [data-focus-visible="true"])
-  > :is(.table__cell, .table__column):first-child:not(:only-child),
-.table__row:is(:focus-visible, [data-focus-visible="true"])
+.rp-table__row:is(:focus-visible, [data-focus-visible="true"])
+  > :is(.rp-table__cell, .rp-table__column):first-child:not(:only-child),
+.rp-table__row:is(:focus-visible, [data-focus-visible="true"])
   > *:first-child:not(:only-child)
-  :is(.table__cell, .table__column) {
+  :is(.rp-table__cell, .rp-table__column) {
   @apply rounded-s-lg shadow-[inset_2px_0_0_0_var(--focus),inset_0_2px_0_0_var(--focus),inset_0_-2px_0_0_var(--focus)] outline-none;
 }
 
-.table__row:is(:focus-visible, [data-focus-visible="true"])
-  > :is(.table__cell, .table__column):last-child:not(:only-child),
-.table__row:is(:focus-visible, [data-focus-visible="true"])
+.rp-table__row:is(:focus-visible, [data-focus-visible="true"])
+  > :is(.rp-table__cell, .rp-table__column):last-child:not(:only-child),
+.rp-table__row:is(:focus-visible, [data-focus-visible="true"])
   > *:last-child:not(:only-child)
-  :is(.table__cell, .table__column) {
+  :is(.rp-table__cell, .rp-table__column) {
   @apply rounded-e-lg shadow-[inset_-2px_0_0_0_var(--focus),inset_0_2px_0_0_var(--focus),inset_0_-2px_0_0_var(--focus)] outline-none;
 }
 
-.table__row:is(:focus-visible, [data-focus-visible="true"])
-  > :is(.table__cell, .table__column):not(:first-child):not(:last-child):not(:only-child),
-.table__row:is(:focus-visible, [data-focus-visible="true"])
+.rp-table__row:is(:focus-visible, [data-focus-visible="true"])
+  > :is(.rp-table__cell, .rp-table__column):not(:first-child):not(:last-child):not(:only-child),
+.rp-table__row:is(:focus-visible, [data-focus-visible="true"])
   > *:not(:first-child):not(:last-child):not(:only-child)
-  :is(.table__cell, .table__column) {
+  :is(.rp-table__cell, .rp-table__column) {
   @apply shadow-[inset_0_2px_0_0_var(--focus),inset_0_-2px_0_0_var(--focus)] outline-none;
 }
 
@@ -365,13 +366,13 @@
    renders its own: `TableBody` produces one per row it has laid out, and
    markup written in the row slot cannot reach them.
    -------------------------------------------------------------------------- */
-.table__drop-indicator {
+.rp-table__drop-indicator {
   --table-drop-indicator-size: 2px;
   --table-drop-indicator-bg: var(--accent);
 }
 
 /* Windowed, the layout has already placed it: a band straddling the boundary, out of flow. */
-.table__drop-indicator:not(tr) {
+.rp-table__drop-indicator:not(tr) {
   height: var(--table-drop-indicator-size);
 
   &[data-drop-target="true"] {
@@ -383,7 +384,7 @@
  * steps every row below it down, and since the gap moves with the pointer the whole table walks
  * about under a drag. So the cell paints the line instead, lifted half a thickness onto the
  * boundary — which is where the windowed one straddles too, so the two read alike. */
-tr.table__drop-indicator {
+tr.rp-table__drop-indicator {
   height: 0;
 
   > td {
@@ -406,21 +407,21 @@ tr.table__drop-indicator {
    `data-level` on cells; tree column cells expose `[data-tree-column]`.
    The row custom property inherits onto cells (1rem per level).
    -------------------------------------------------------------------------- */
-.table__cell[data-tree-column] {
+.rp-table__cell[data-tree-column] {
   padding-inline-start: calc(1rem * var(--table-row-level, 1));
 }
 
 /* --------------------------------------------------------------------------
    Table Footer (div outside <table>, sits on gray bg)
    -------------------------------------------------------------------------- */
-.table__footer {
+.rp-table__footer {
   @apply flex items-center px-4 py-2.5;
 }
 
 /* --------------------------------------------------------------------------
    Resizable Container — wraps table to enable column resizing via React Aria.
    -------------------------------------------------------------------------- */
-.table__resizable-container {
+.rp-table__resizable-container {
   @apply relative scrollbar overflow-auto;
   scrollbar-gutter: auto;
 }
@@ -429,7 +430,7 @@ tr.table__drop-indicator {
    Column Resizer — drag handle between resizable columns.
    Replaces the ::after separator when present.
    -------------------------------------------------------------------------- */
-.table__column-resizer {
+.rp-table__column-resizer {
   /* Match the ::after separator: absolute, right edge, short vertical line */
   @apply absolute end-0 top-1/2 h-4 w-px -translate-y-1/2 rounded-sm;
   /* Make it interactive — wider hit area with transparent padding */
@@ -466,7 +467,7 @@ tr.table__drop-indicator {
 }
 
 /* Hide the ::after separator when a resizer is present in the column */
-.table__column:has(.table__column-resizer)::after {
+.rp-table__column:has(.rp-table__column-resizer)::after {
   content: none;
 }
 
@@ -475,7 +476,7 @@ tr.table__drop-indicator {
    Non-virtualized: <tr> with <td colSpan=N> inside.
    Virtualized: <div> with <div role="rowheader"> inside.
    -------------------------------------------------------------------------- */
-.table__load-more {
+.rp-table__load-more {
   & td,
   & [role="rowheader"] {
     @apply py-3 text-center;
@@ -489,6 +490,6 @@ tr.table__drop-indicator {
    Load More Content — styled container for the loading indicator inside
    the load-more sentinel row.
    -------------------------------------------------------------------------- */
-.table__load-more-content {
+.rp-table__load-more-content {
   @apply flex items-center justify-center gap-2 py-2;
 }

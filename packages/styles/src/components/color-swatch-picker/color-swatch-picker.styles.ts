@@ -9,43 +9,43 @@ export const colorSwatchPickerVariants = tv({
     variant: "circle",
   },
   slots: {
-    base: "color-swatch-picker",
-    indicator: "color-swatch-picker__indicator",
-    item: "color-swatch-picker__item",
-    swatch: "color-swatch-picker__swatch",
+    base: "rp-color-swatch-picker",
+    indicator: "rp-color-swatch-picker__indicator",
+    item: "rp-color-swatch-picker__item",
+    swatch: "rp-color-swatch-picker__swatch",
   },
   variants: {
     layout: {
       grid: {
-        base: "color-swatch-picker--grid",
+        base: "rp-color-swatch-picker--grid",
       },
       stack: {
-        base: "color-swatch-picker--stack",
+        base: "rp-color-swatch-picker--stack",
       },
     },
     size: {
       lg: {
-        base: "color-swatch-picker--lg",
+        base: "rp-color-swatch-picker--lg",
       },
       md: {
-        base: "color-swatch-picker--md",
+        base: "rp-color-swatch-picker--md",
       },
       sm: {
-        base: "color-swatch-picker--sm",
+        base: "rp-color-swatch-picker--sm",
       },
       xl: {
-        base: "color-swatch-picker--xl",
+        base: "rp-color-swatch-picker--xl",
       },
       xs: {
-        base: "color-swatch-picker--xs",
+        base: "rp-color-swatch-picker--xs",
       },
     },
     variant: {
       circle: {
-        base: "color-swatch-picker--circle",
+        base: "rp-color-swatch-picker--circle",
       },
       square: {
-        base: "color-swatch-picker--square",
+        base: "rp-color-swatch-picker--square",
       },
     },
   },

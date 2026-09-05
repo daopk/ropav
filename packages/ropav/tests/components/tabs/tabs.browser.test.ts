@@ -49,10 +49,10 @@ const indicatorIn = (container: HTMLElement) =>
   container.querySelector<HTMLElement>('[data-slot="tabs-indicator"]');
 
 const scrollerIn = (container: HTMLElement) =>
-  container.querySelector<HTMLElement>('[data-slot="tabs-list-container"] .scroll-shadow')!;
+  container.querySelector<HTMLElement>('[data-slot="tabs-list-container"] .rp-scroll-shadow')!;
 
 const chevronIn = (container: HTMLElement, edge: "prev" | "next") =>
-  container.querySelector<HTMLButtonElement>(`.tabs__list-container__scroll-${edge}`)!;
+  container.querySelector<HTMLButtonElement>(`.rp-tabs__list-container__scroll-${edge}`)!;
 
 /** The contrast exclusion is the palette's, not this component's. */
 const SHARED_WITH_REACT = PALETTE_CONTRAST_DEBT;

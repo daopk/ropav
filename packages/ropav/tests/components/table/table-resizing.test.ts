@@ -57,7 +57,7 @@ describe("Table column resizing", () => {
       const { container } = await render();
       const wrapper = container.querySelector('[data-slot="table-resizable-container"]')!;
 
-      expect(wrapper).toHaveClass("table__resizable-container");
+      expect(wrapper).toHaveClass("rp-table__resizable-container");
       expect(wrapper.querySelector('[data-slot="table-content"]')).not.toBeNull();
     });
 
@@ -103,7 +103,7 @@ describe("Table column resizing", () => {
     it("renders a slider the width can be read and set through", async () => {
       const { columns, inputs, resizers } = await render();
 
-      expect(resizers[0]).toHaveClass("table__column-resizer");
+      expect(resizers[0]).toHaveClass("rp-table__column-resizer");
       expect(resizers[0]).toHaveAttribute("role", "presentation");
       expect(inputs[0]).toHaveAttribute("type", "range");
       expect(inputs[0]).toHaveAttribute("aria-orientation", "horizontal");

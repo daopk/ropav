@@ -19,74 +19,74 @@ export const sidebarVariants = tv({
     variant: "sidebar",
   },
   slots: {
-    base: "sidebar",
-    content: "sidebar__content",
-    footer: "sidebar__footer",
-    group: "sidebar__group",
-    groupLabel: "sidebar__group-label",
-    header: "sidebar__header",
-    inset: "sidebar__inset",
-    item: "sidebar__item",
-    itemIcon: "sidebar__item-icon",
-    itemIndicator: "sidebar__item-indicator",
-    itemLabel: "sidebar__item-label",
-    itemTooltip: "sidebar__item-tooltip",
-    itemTrailing: "sidebar__item-trailing",
-    panel: "sidebar__panel",
-    rail: "sidebar__rail",
-    railTarget: "sidebar__rail-target",
-    separator: "sidebar__separator",
-    subMenu: "sidebar__sub-menu",
-    trigger: "sidebar__trigger",
+    base: "rp-sidebar",
+    content: "rp-sidebar__content",
+    footer: "rp-sidebar__footer",
+    group: "rp-sidebar__group",
+    groupLabel: "rp-sidebar__group-label",
+    header: "rp-sidebar__header",
+    inset: "rp-sidebar__inset",
+    item: "rp-sidebar__item",
+    itemIcon: "rp-sidebar__item-icon",
+    itemIndicator: "rp-sidebar__item-indicator",
+    itemLabel: "rp-sidebar__item-label",
+    itemTooltip: "rp-sidebar__item-tooltip",
+    itemTrailing: "rp-sidebar__item-trailing",
+    panel: "rp-sidebar__panel",
+    rail: "rp-sidebar__rail",
+    railTarget: "rp-sidebar__rail-target",
+    separator: "rp-sidebar__separator",
+    subMenu: "rp-sidebar__sub-menu",
+    trigger: "rp-sidebar__trigger",
   },
   variants: {
     collapsible: {
       icon: {
-        panel: "sidebar__panel--icon",
+        panel: "rp-sidebar__panel--icon",
       },
       none: {
-        panel: "sidebar__panel--none",
+        panel: "rp-sidebar__panel--none",
       },
       offcanvas: {
-        panel: "sidebar__panel--offcanvas",
+        panel: "rp-sidebar__panel--offcanvas",
       },
     },
     // Whether the panel is rendering inside a drawer. Resolved by the panel at call time rather
     // than by the root, because it is the one part that changes shape when the viewport narrows.
     inDrawer: {
       true: {
-        panel: "sidebar__panel--drawer",
+        panel: "rp-sidebar__panel--drawer",
       },
     },
     // Whether this submenu folds. Resolved by the submenu at call time rather than by the root,
     // because one sidebar holds items that fold and items that do not.
     isCollapsible: {
       true: {
-        subMenu: "sidebar__sub-menu--collapsible",
+        subMenu: "rp-sidebar__sub-menu--collapsible",
       },
     },
     // Whether the rail resizes rather than only toggling. Not folded into `collapsible`, because
     // the two are independent: a sidebar that cannot collapse at all can still be dragged wider.
     isResizable: {
       true: {
-        rail: "sidebar__rail--resizable",
+        rail: "rp-sidebar__rail--resizable",
       },
     },
     // Whether the row is a child under another item. Resolved by the item at call time, from the
     // submenu it finds itself inside rather than from a prop a caller has to remember on every row.
     isSub: {
       true: {
-        item: "sidebar__item--sub",
+        item: "rp-sidebar__item--sub",
       },
     },
     side: {
       left: {
-        base: "sidebar--left",
-        panel: "sidebar__panel--left",
+        base: "rp-sidebar--left",
+        panel: "rp-sidebar__panel--left",
       },
       right: {
-        base: "sidebar--right",
-        panel: "sidebar__panel--right",
+        base: "rp-sidebar--right",
+        panel: "rp-sidebar__panel--right",
       },
     },
     /*
@@ -101,13 +101,13 @@ export const sidebarVariants = tv({
      */
     variant: {
       floating: {
-        panel: "sidebar__panel--floating",
-        rail: "sidebar__rail--quiet",
+        panel: "rp-sidebar__panel--floating",
+        rail: "rp-sidebar__rail--quiet",
       },
       inset: {
-        inset: "sidebar__inset--card",
-        panel: "sidebar__panel--bare",
-        rail: "sidebar__rail--quiet",
+        inset: "rp-sidebar__inset--card",
+        panel: "rp-sidebar__panel--bare",
+        rail: "rp-sidebar__rail--quiet",
       },
       sidebar: {},
     },

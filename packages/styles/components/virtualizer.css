@@ -12,11 +12,11 @@
 /* A box of no height stuck to the top and inline start of the viewport, so a track placed at its
  * edges sits at the viewport's edges however far the content has been scrolled along either axis.
  * The component gives it the viewport's width. */
-.virtualizer__scrollbar {
+.rp-virtualizer__scrollbar {
   @apply sticky start-0 top-0 z-2 h-0;
 }
 
-.virtualizer__scrollbar-track {
+.rp-virtualizer__scrollbar-track {
   @apply absolute touch-none select-none;
   background-color: var(--scrollbar-track);
 
@@ -33,7 +33,7 @@
   }
 }
 
-.virtualizer__scrollbar-thumb {
+.rp-virtualizer__scrollbar-thumb {
   @apply absolute rounded-full;
 
   /* The thumb's fill, per state. Three states paint it and one declaration cannot tell them

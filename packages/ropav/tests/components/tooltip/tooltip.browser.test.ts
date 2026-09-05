@@ -47,7 +47,7 @@ const place = (result: RenderResult, top = "50%") => {
 const triggerOf = (result: RenderResult, name = "Open tooltip") =>
   result.getByRole("button", { name }) as HTMLElement;
 
-const tooltipElement = () => document.body.querySelector<HTMLElement>(".tooltip")!;
+const tooltipElement = () => document.body.querySelector<HTMLElement>(".rp-tooltip")!;
 
 /**
  * Arrive at the trigger from a neighbouring element.
@@ -137,7 +137,7 @@ describe("Tooltip (browser)", () => {
 
       // Only a real pointer proves this: hover is the one gesture a synthetic event cannot stand
       // in for, because the modality gate asks how the user is actually driving the page.
-      expect(document.body.querySelector(".tooltip")).toBeNull();
+      expect(document.body.querySelector(".rp-tooltip")).toBeNull();
 
       result.unmount();
     });
@@ -153,7 +153,7 @@ describe("Tooltip (browser)", () => {
       await nextTick();
       await nextTick();
 
-      expect(document.body.querySelector(".tooltip")).toBeTruthy();
+      expect(document.body.querySelector(".rp-tooltip")).toBeTruthy();
 
       result.unmount();
     });
@@ -167,13 +167,13 @@ describe("Tooltip (browser)", () => {
       await userEvent.hover(triggerOf(result));
       await nextTick();
 
-      expect(document.body.querySelector(".tooltip")).toBeNull();
+      expect(document.body.querySelector(".rp-tooltip")).toBeNull();
 
       await new Promise((resolve) => setTimeout(resolve, 500));
       await nextTick();
       await nextTick();
 
-      expect(document.body.querySelector(".tooltip")).toBeTruthy();
+      expect(document.body.querySelector(".rp-tooltip")).toBeTruthy();
 
       result.unmount();
     });
@@ -193,7 +193,7 @@ describe("Tooltip (browser)", () => {
 
       // Focus does not wait, even with a long hover delay configured: a user who tabbed here
       // asked for the label deliberately.
-      expect(document.body.querySelector(".tooltip")).toBeTruthy();
+      expect(document.body.querySelector(".rp-tooltip")).toBeTruthy();
 
       result.unmount();
     });
@@ -478,7 +478,7 @@ describe("Tooltip (browser)", () => {
       await nextTick();
       await nextTick();
 
-      expect(document.body.querySelector(".tooltip")).toBeNull();
+      expect(document.body.querySelector(".rp-tooltip")).toBeNull();
 
       result.unmount();
     });

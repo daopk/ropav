@@ -107,13 +107,13 @@ describe("Select (interop)", () => {
     // The slot classes travel by context. A part that could not reach it would render unstyled
     // while still looking correct in the vapor suite.
     expect(result.container.querySelector('[data-slot="select-trigger"]')).toHaveClass(
-      "select__trigger",
+      "rp-select__trigger",
     );
     expect(result.container.querySelector('[data-slot="select-value"]')).toHaveClass(
-      "select__value",
+      "rp-select__value",
     );
     expect(result.container.querySelector('[data-slot="select-default-indicator"]')).toHaveClass(
-      "select__indicator",
+      "rp-select__indicator",
     );
 
     result.unmount();

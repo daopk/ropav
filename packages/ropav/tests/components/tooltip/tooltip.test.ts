@@ -113,7 +113,7 @@ describe("Tooltip", () => {
 
       await settle();
 
-      expect(result.screen.getByRole("tooltip").classList.contains("tooltip")).toBe(true);
+      expect(result.screen.getByRole("tooltip").classList.contains("rp-tooltip")).toBe(true);
 
       result.unmount();
     });
@@ -348,7 +348,7 @@ describe("Tooltip", () => {
 
       expect(trigger.getAttribute("role")).toBe("button");
       expect(trigger.getAttribute("tabindex")).toBe("0");
-      expect(trigger.classList.contains("tooltip__trigger")).toBe(true);
+      expect(trigger.classList.contains("rp-tooltip__trigger")).toBe(true);
 
       await open(trigger);
       expect(result.screen.queryByRole("tooltip")).toBeTruthy();

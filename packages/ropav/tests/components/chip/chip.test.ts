@@ -16,7 +16,7 @@ describe("Chip", () => {
       const label = slot(container, "chip-label");
 
       expect(label?.textContent).toBe("Label");
-      expect(label?.classList.contains("chip__label")).toBe(true);
+      expect(label?.classList.contains("rp-chip__label")).toBe(true);
 
       unmount();
     });
@@ -104,7 +104,7 @@ describe("Chip", () => {
     it("renders the BEM block class", () => {
       const { container, unmount } = renderVapor(ChipFixture);
 
-      expect(slot(container, "chip")?.classList.contains("chip")).toBe(true);
+      expect(slot(container, "chip")?.classList.contains("rp-chip")).toBe(true);
 
       unmount();
     });
@@ -113,16 +113,16 @@ describe("Chip", () => {
       const { container, unmount } = renderVapor(ChipFixture);
       const root = slot(container, "chip");
 
-      expect(root?.classList.contains("chip--default")).toBe(true);
-      expect(root?.classList.contains("chip--secondary")).toBe(true);
+      expect(root?.classList.contains("rp-chip--default")).toBe(true);
+      expect(root?.classList.contains("rp-chip--secondary")).toBe(true);
 
       unmount();
     });
 
     it.each([
-      ["color", "danger", "chip--danger"],
-      ["size", "lg", "chip--lg"],
-      ["variant", "tertiary", "chip--tertiary"],
+      ["color", "danger", "rp-chip--danger"],
+      ["size", "lg", "rp-chip--lg"],
+      ["variant", "tertiary", "rp-chip--tertiary"],
     ])("applies the %s modifier class", (prop, value, expected) => {
       const { container, unmount } = renderVapor(ChipFixture, { props: { [prop]: value } });
 
@@ -135,7 +135,7 @@ describe("Chip", () => {
       const { container, unmount } = renderVapor(ChipFixture, { props: { class: "uppercase" } });
       const root = slot(container, "chip");
 
-      expect(root?.classList.contains("chip")).toBe(true);
+      expect(root?.classList.contains("rp-chip")).toBe(true);
       expect(root?.classList.contains("uppercase")).toBe(true);
 
       unmount();

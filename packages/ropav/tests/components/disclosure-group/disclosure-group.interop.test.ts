@@ -74,7 +74,7 @@ describe("DisclosureGroup (interop)", () => {
     await nextTick();
 
     expect(container.querySelector("[data-slot='disclosure-group']")).toHaveClass(
-      "disclosure-group",
+      "rp-disclosure-group",
     );
     expect(triggersIn(container)).toHaveLength(3);
 

@@ -113,7 +113,7 @@ describe("ColorPicker under a vdom host", () => {
 
     await nextTick();
 
-    expect(slot("color-picker-trigger")).toHaveClass("color-picker__trigger");
+    expect(slot("color-picker-trigger")).toHaveClass("rp-color-picker__trigger");
 
     await open();
 

@@ -8,50 +8,50 @@ export const chipVariants = tv({
     variant: "secondary",
   },
   slots: {
-    base: "chip",
-    label: "chip__label",
+    base: "rp-chip",
+    label: "rp-chip__label",
   },
   variants: {
     color: {
       accent: {
-        base: "chip--accent",
+        base: "rp-chip--accent",
       },
       danger: {
-        base: "chip--danger",
+        base: "rp-chip--danger",
       },
       default: {
-        base: "chip--default",
+        base: "rp-chip--default",
       },
       success: {
-        base: "chip--success",
+        base: "rp-chip--success",
       },
       warning: {
-        base: "chip--warning",
+        base: "rp-chip--warning",
       },
     },
     size: {
       lg: {
-        base: "chip--lg",
+        base: "rp-chip--lg",
       },
       md: {
-        base: "chip--md",
+        base: "rp-chip--md",
       },
       sm: {
-        base: "chip--sm",
+        base: "rp-chip--sm",
       },
     },
     variant: {
       primary: {
-        base: "chip--primary",
+        base: "rp-chip--primary",
       },
       secondary: {
-        base: "chip--secondary",
+        base: "rp-chip--secondary",
       },
       soft: {
-        base: "chip--soft",
+        base: "rp-chip--soft",
       },
       tertiary: {
-        base: "chip--tertiary",
+        base: "rp-chip--tertiary",
       },
     },
   },

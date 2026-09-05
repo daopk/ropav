@@ -23,13 +23,13 @@ describe("EmptyState", () => {
     it("applies the base class", () => {
       const { emptyState } = renderEmptyState();
 
-      expect(emptyState).toHaveClass("empty-state");
+      expect(emptyState).toHaveClass("rp-empty-state");
     });
 
     it("merges a caller class", () => {
       const { emptyState } = renderEmptyState({ props: { class: "p-1" } });
 
-      expect(emptyState).toHaveClass("empty-state", "p-1");
+      expect(emptyState).toHaveClass("rp-empty-state", "p-1");
     });
   });
 

@@ -49,13 +49,15 @@ describe("ColorSwatchPicker", () => {
     it("renders every part with its data-slot and BEM class", async () => {
       const { container, unmount } = await renderPicker();
 
-      expect(slot(container, "color-swatch-picker")).toHaveClass("color-swatch-picker");
-      expect(slot(container, "color-swatch-picker-item")).toHaveClass("color-swatch-picker__item");
+      expect(slot(container, "color-swatch-picker")).toHaveClass("rp-color-swatch-picker");
+      expect(slot(container, "color-swatch-picker-item")).toHaveClass(
+        "rp-color-swatch-picker__item",
+      );
       expect(slot(container, "color-swatch-picker-swatch")).toHaveClass(
-        "color-swatch-picker__swatch",
+        "rp-color-swatch-picker__swatch",
       );
       expect(slot(container, "color-swatch-picker-indicator")).toHaveClass(
-        "color-swatch-picker__indicator",
+        "rp-color-swatch-picker__indicator",
       );
 
       unmount();
@@ -162,8 +164,8 @@ describe("ColorSwatchPicker", () => {
       const { container, unmount } = await renderPicker({ size: "lg", variant: "square" });
       const root = slot(container, "color-swatch-picker");
 
-      expect(root).toHaveClass("color-swatch-picker--lg");
-      expect(root).toHaveClass("color-swatch-picker--square");
+      expect(root).toHaveClass("rp-color-swatch-picker--lg");
+      expect(root).toHaveClass("rp-color-swatch-picker--square");
 
       unmount();
     });
@@ -177,7 +179,7 @@ describe("ColorSwatchPicker", () => {
       const { container, unmount } = await renderPicker({ layout: "stack" });
       const root = slot(container, "color-swatch-picker");
 
-      expect(root).toHaveClass("color-swatch-picker--stack");
+      expect(root).toHaveClass("rp-color-swatch-picker--stack");
       expect(root).toHaveAttribute("data-layout", "grid");
 
       unmount();
@@ -187,9 +189,9 @@ describe("ColorSwatchPicker", () => {
       const { container, unmount } = await renderPicker();
       const root = slot(container, "color-swatch-picker");
 
-      expect(root).toHaveClass("color-swatch-picker--grid");
-      expect(root).toHaveClass("color-swatch-picker--md");
-      expect(root).toHaveClass("color-swatch-picker--circle");
+      expect(root).toHaveClass("rp-color-swatch-picker--grid");
+      expect(root).toHaveClass("rp-color-swatch-picker--md");
+      expect(root).toHaveClass("rp-color-swatch-picker--circle");
 
       unmount();
     });

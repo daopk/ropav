@@ -145,7 +145,7 @@ const slotProps = computed<RangeCalendarCellSlotProps>(() => ({
       @pointerup="cell.handlers.onPointerup"
     >
       <span
-        class="range-calendar__cell-button"
+        class="rp-range-calendar__cell-button"
         :data-disabled="dataAttr(cell.isDisabled.value)"
         :data-hovered="dataAttr(interaction.isHovered.value)"
         :data-pressed="dataAttr(cell.isPressed.value)"

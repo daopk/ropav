@@ -52,7 +52,7 @@ const layoutInfo = computed(() => {
  * on each render, so those are wired statically with `@event` instead. */
 const attrs = computed(() => ({
   ...indicator?.attrs.value,
-  class: ["list-box__drop-indicator", props.class],
+  class: ["rp-list-box__drop-indicator", props.class],
   "data-drop-target": dataAttr(isDropTarget.value),
   "data-slot": "list-box-drop-indicator",
   role: "option",

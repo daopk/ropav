@@ -1,7 +1,7 @@
 /* Tooltip component styles */
 
 /* Base tooltip styles */
-.tooltip {
+.rp-tooltip {
   @apply max-w-xs origin-(--trigger-anchor-point) bg-overlay p-2 text-xs break-all;
   border-radius: min(32px, var(--component-radius));
   box-shadow: var(--shadow-overlay);
@@ -72,7 +72,7 @@
 }
 
 /* Tooltip trigger */
-.tooltip__trigger {
+.rp-tooltip__trigger {
   @apply inline-block;
 
   transition:

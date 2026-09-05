@@ -66,7 +66,7 @@ describe("Button", () => {
     it("renders the BEM block class", () => {
       const { container, unmount } = renderButton();
 
-      expect(buttonIn(container)?.classList.contains("button")).toBe(true);
+      expect(buttonIn(container)?.classList.contains("rp-button")).toBe(true);
 
       unmount();
     });
@@ -75,17 +75,17 @@ describe("Button", () => {
       const { container, unmount } = renderButton();
       const button = buttonIn(container);
 
-      expect(button?.classList.contains("button--md")).toBe(true);
-      expect(button?.classList.contains("button--primary")).toBe(true);
+      expect(button?.classList.contains("rp-button--md")).toBe(true);
+      expect(button?.classList.contains("rp-button--primary")).toBe(true);
 
       unmount();
     });
 
     it.each([
-      ["size", "lg", "button--lg"],
-      ["variant", "danger", "button--danger"],
-      ["isIconOnly", true, "button--icon-only"],
-      ["fullWidth", true, "button--full-width"],
+      ["size", "lg", "rp-button--lg"],
+      ["variant", "danger", "rp-button--danger"],
+      ["isIconOnly", true, "rp-button--icon-only"],
+      ["fullWidth", true, "rp-button--full-width"],
     ])("applies the %s modifier class", (prop, value, expected) => {
       const { container, unmount } = renderButton({ [prop]: value });
 
@@ -98,7 +98,7 @@ describe("Button", () => {
       const { container, unmount } = renderButton({ class: "shadow-lg" });
       const button = buttonIn(container);
 
-      expect(button?.classList.contains("button")).toBe(true);
+      expect(button?.classList.contains("rp-button")).toBe(true);
       expect(button?.classList.contains("shadow-lg")).toBe(true);
 
       unmount();

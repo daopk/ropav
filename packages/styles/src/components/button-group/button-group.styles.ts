@@ -8,22 +8,22 @@ export const buttonGroupVariants = tv({
     orientation: "horizontal",
   },
   slots: {
-    base: "button-group",
-    separator: "button-group__separator",
+    base: "rp-button-group",
+    separator: "rp-button-group__separator",
   },
   variants: {
     fullWidth: {
       false: {},
       true: {
-        base: "button-group--full-width",
+        base: "rp-button-group--full-width",
       },
     },
     orientation: {
       horizontal: {
-        base: "button-group--horizontal",
+        base: "rp-button-group--horizontal",
       },
       vertical: {
-        base: "button-group--vertical",
+        base: "rp-button-group--vertical",
       },
     },
   },

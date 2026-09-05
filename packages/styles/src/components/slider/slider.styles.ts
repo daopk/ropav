@@ -4,12 +4,12 @@ import { tv } from "../../tv";
 
 export const sliderVariants = tv({
   slots: {
-    base: "slider",
-    fill: "slider__fill",
-    marks: "slider__marks",
-    output: "slider__output",
-    thumb: "slider__thumb",
-    track: "slider__track",
+    base: "rp-slider",
+    fill: "rp-slider__fill",
+    marks: "rp-slider__marks",
+    output: "rp-slider__output",
+    thumb: "rp-slider__thumb",
+    track: "rp-slider__track",
   },
 });
 

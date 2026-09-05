@@ -155,10 +155,10 @@ export const WithSingleSelection: Story = {
                 v-for="fruit in fruits"
                 :id="fruit.id"
                 :key="fruit.id"
-                :text-value="fruit.label"
+                :text-value="fruit.rp-label"
               >
                 <DropdownItemIndicator />
-                <Label>{{ fruit.label }}</Label>
+                <Label>{{ fruit.rp-label }}</Label>
               </DropdownItem>
             </DropdownSection>
             <DropdownItem id="orange" text-value="Orange">
@@ -196,7 +196,7 @@ export const SingleWithCustomIndicator: Story = {
                 v-for="fruit in fruits"
                 :id="fruit.id"
                 :key="fruit.id"
-                :text-value="fruit.label"
+                :text-value="fruit.rp-label"
               >
                 <DropdownItemIndicator>
                   <template #default="{isSelected}">
@@ -217,7 +217,7 @@ export const SingleWithCustomIndicator: Story = {
                     </svg>
                   </template>
                 </DropdownItemIndicator>
-                <Label>{{ fruit.label }}</Label>
+                <Label>{{ fruit.rp-label }}</Label>
               </DropdownItem>
             </DropdownSection>
           </DropdownMenu>
@@ -245,10 +245,10 @@ export const WithMultipleSelection: Story = {
                 v-for="fruit in fruits"
                 :id="fruit.id"
                 :key="fruit.id"
-                :text-value="fruit.label"
+                :text-value="fruit.rp-label"
               >
                 <DropdownItemIndicator />
-                <Label>{{ fruit.label }}</Label>
+                <Label>{{ fruit.rp-label }}</Label>
               </DropdownItem>
             </DropdownSection>
             <DropdownItem id="orange" text-value="Orange">
@@ -325,10 +325,10 @@ export const WithSectionLevelSelection: Story = {
                 v-for="style in styles"
                 :id="style.id"
                 :key="style.id"
-                :text-value="style.label"
+                :text-value="style.rp-label"
               >
                 <DropdownItemIndicator />
-                <Label>{{ style.label }}</Label>
+                <Label>{{ style.rp-label }}</Label>
                 <Kbd class="ms-auto" variant="light">
                   <KbdAbbr key-value="command" />
                   <KbdContent>{{ style.letter }}</KbdContent>
@@ -342,10 +342,10 @@ export const WithSectionLevelSelection: Story = {
                 v-for="alignment in alignments"
                 :id="alignment.id"
                 :key="alignment.id"
-                :text-value="alignment.label"
+                :text-value="alignment.rp-label"
               >
                 <DropdownItemIndicator type="dot" />
-                <Label>{{ alignment.label }}</Label>
+                <Label>{{ alignment.rp-label }}</Label>
                 <Kbd class="ms-auto" variant="light">
                   <KbdAbbr key-value="alt" />
                   <KbdContent>{{ alignment.letter }}</KbdContent>
@@ -378,9 +378,9 @@ export const WithKeyboardShortcuts: Story = {
               v-for="action in actions"
               :id="action.id"
               :key="action.id"
-              :text-value="action.label"
+              :text-value="action.rp-label"
             >
-              <Label>{{ action.label }}</Label>
+              <Label>{{ action.rp-label }}</Label>
               <Kbd class="ms-auto" variant="light">
                 <KbdAbbr key-value="command" />
                 <KbdContent>{{ action.letter }}</KbdContent>
@@ -464,9 +464,9 @@ export const LongPressTrigger: Story = {
               v-for="action in actions"
               :id="action.id"
               :key="action.id"
-              :text-value="action.label"
+              :text-value="action.rp-label"
             >
-              <Label>{{ action.label }}</Label>
+              <Label>{{ action.rp-label }}</Label>
             </DropdownItem>
             <DropdownItem id="delete-file" text-value="Delete file" variant="danger">
               <Label>Delete file</Label>
@@ -491,14 +491,14 @@ export const WithDescriptions: Story = {
               v-for="action in actions"
               :id="action.id"
               :key="action.id"
-              :text-value="action.label"
+              :text-value="action.rp-label"
             >
               <div class="flex h-8 items-start justify-center pt-px">
                 <component :is="action.icon" class="size-4 shrink-0 text-muted" />
               </div>
               <div class="flex flex-col">
-                <Label>{{ action.label }}</Label>
-                <Description>{{ action.description }}</Description>
+                <Label>{{ action.rp-label }}</Label>
+                <Description>{{ action.rp-description }}</Description>
               </div>
               <Kbd class="ms-auto" variant="light">
                 <KbdAbbr key-value="command" />
@@ -535,7 +535,7 @@ export const WithSections: Story = {
       <Dropdown>
         <DropdownTrigger
           aria-label="Menu"
-          class="button button--md button--secondary button--icon-only data-[focus-visible=true]:status-focused"
+          class="rp-button rp-button--md rp-button--secondary rp-button--icon-only data-[focus-visible=true]:status-focused"
         >
           <IconEllipsisVertical class="outline-none" />
         </DropdownTrigger>
@@ -863,9 +863,9 @@ export const ControlledOpenState: Story = {
                 v-for="action in actions"
                 :id="action.id"
                 :key="action.id"
-                :text-value="action.label"
+                :text-value="action.rp-label"
               >
-                <Label>{{ action.label }}</Label>
+                <Label>{{ action.rp-label }}</Label>
               </DropdownItem>
               <DropdownItem id="delete-file" text-value="Delete file" variant="danger">
                 <Label>Delete file</Label>

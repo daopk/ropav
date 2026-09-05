@@ -4,10 +4,10 @@ import { tv } from "../../tv";
 
 export const colorSliderVariants = tv({
   slots: {
-    base: "color-slider",
-    output: "color-slider__output",
-    thumb: "color-slider__thumb",
-    track: "color-slider__track",
+    base: "rp-color-slider",
+    output: "rp-color-slider__output",
+    thumb: "rp-color-slider__thumb",
+    track: "rp-color-slider__track",
   },
 });
 

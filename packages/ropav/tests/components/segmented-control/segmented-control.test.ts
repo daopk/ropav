@@ -54,27 +54,27 @@ describe("SegmentedControl", () => {
       const { container } = await render();
       const root = container.querySelector('[data-slot="segmented-control"]')!;
 
-      expect(root.className).toContain("segmented-control");
+      expect(root.className).toContain("rp-segmented-control");
       expect(itemsIn(container)).toHaveLength(3);
-      expect(itemsIn(container)[0]!.className).toContain("segmented-control__item");
+      expect(itemsIn(container)[0]!.className).toContain("rp-segmented-control__item");
       expect(
         container.querySelector('[data-slot="segmented-control-indicator"]')!.className,
-      ).toContain("segmented-control__indicator");
+      ).toContain("rp-segmented-control__indicator");
     });
 
     it("renders the size and full-width modifiers on the root", async () => {
       const { container } = await render({ fullWidth: true, size: "lg" });
       const root = container.querySelector('[data-slot="segmented-control"]')!;
 
-      expect(root.className).toContain("segmented-control--lg");
-      expect(root.className).toContain("segmented-control--full-width");
+      expect(root.className).toContain("rp-segmented-control--lg");
+      expect(root.className).toContain("rp-segmented-control--full-width");
     });
 
     it("takes the default size without a caller saying so", async () => {
       const { container } = await render();
 
       expect(container.querySelector('[data-slot="segmented-control"]')!.className).toContain(
-        "segmented-control--md",
+        "rp-segmented-control--md",
       );
     });
 
@@ -82,7 +82,7 @@ describe("SegmentedControl", () => {
       const { container } = await render({ class: "mt-4" });
       const root = container.querySelector('[data-slot="segmented-control"]')!;
 
-      expect(root.className).toContain("segmented-control");
+      expect(root.className).toContain("rp-segmented-control");
       expect(root.className).toContain("mt-4");
     });
 
@@ -371,7 +371,7 @@ describe("SegmentedControl", () => {
       ];
 
       expect(separators).toHaveLength(3);
-      expect(separators[0]!.className).toContain("segmented-control__separator");
+      expect(separators[0]!.className).toContain("rp-segmented-control__separator");
       expect(
         separators.every((separator) => separator.getAttribute("aria-hidden") === "true"),
       ).toBe(true);

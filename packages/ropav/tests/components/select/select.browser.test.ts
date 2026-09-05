@@ -82,7 +82,7 @@ describe("Select (browser)", () => {
 
       await nextTick();
 
-      // `.select__trigger:has(.select__indicator)` — a `:has()` rule jsdom never evaluates.
+      // `.rp-select__trigger:has(.rp-select__indicator)` — a `:has()` rule jsdom never evaluates.
       expect(getComputedStyle(triggerOf(withIndicator)).paddingInlineEnd).toBe("28px");
     });
 

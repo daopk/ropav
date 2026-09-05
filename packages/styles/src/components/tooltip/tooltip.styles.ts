@@ -4,8 +4,8 @@ import { tv } from "../../tv";
 
 export const tooltipVariants = tv({
   slots: {
-    base: "tooltip",
-    trigger: "tooltip__trigger",
+    base: "rp-tooltip",
+    trigger: "rp-tooltip__trigger",
   },
 });
 

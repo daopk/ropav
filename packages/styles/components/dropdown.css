@@ -2,11 +2,11 @@
    Base dropdown styles
    ========================================================================== */
 
-.dropdown {
+.rp-dropdown {
   @apply flex flex-col gap-1;
 }
 
-.dropdown__trigger {
+.rp-dropdown__trigger {
   @apply inline-block;
   /* Only visible when using a custom trigger  - not passing "Button" as a child - hence we use some button styles (custom trigger) */
   @apply outline-none;
@@ -16,7 +16,7 @@
    * forced-colors edge back off. Handed back here rather than on the bare trigger: when a
    * `Button` is passed as a child instead, this element is only a wrapper around it - an inline
    * box is what that wants, and an outline would draw a second ring around the real one. */
-  &.button {
+  &.rp-button {
     @apply inline-flex;
 
     @media (forced-colors: active) {
@@ -58,7 +58,7 @@
 }
 
 /* Similar to select popover styles */
-.dropdown__popover {
+.rp-dropdown__popover {
   @apply max-w-[48svw] origin-(--trigger-anchor-point) scroll-py-1 scrollbar overflow-y-auto overscroll-contain bg-overlay p-0 text-sm will-change-transform md:min-w-55;
   border-radius: min(32px, var(--component-radius));
   box-shadow: var(--shadow-overlay);
@@ -119,8 +119,8 @@
     rotate: 90deg;
   }
 
-  /* Menu styles. The block itself is `.menu`; these are the dropdown's departures from it, and
-   * they sit here rather than on `.dropdown__menu` because `menu.css` is imported after this file
+  /* Menu styles. The block itself is `.rp-menu`; these are the dropdown's departures from it, and
+   * they sit here rather than on `.rp-dropdown__menu` because `menu.css` is imported after this file
    * and would otherwise win at equal specificity. */
   [data-slot="dropdown-menu"] {
     @apply gap-0.5 p-1.5 outline-none;

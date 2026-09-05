@@ -4,8 +4,8 @@ import { tv } from "../../tv";
 
 export const linkVariants = tv({
   slots: {
-    base: "link",
-    icon: "link__icon",
+    base: "rp-link",
+    icon: "rp-link__icon",
   },
 });
 

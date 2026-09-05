@@ -65,10 +65,10 @@ describe("Disclosure (interop)", () => {
     const trigger = slot(container, "disclosure-trigger");
     const content = slot(container, "disclosure-content");
 
-    expect(slot(container, "disclosure-heading")).toHaveClass("disclosure__heading");
-    expect(trigger).toHaveClass("disclosure__trigger");
-    expect(content).toHaveClass("disclosure__content");
-    expect(slot(container, "disclosure-indicator")).toHaveClass("disclosure__indicator");
+    expect(slot(container, "disclosure-heading")).toHaveClass("rp-disclosure__heading");
+    expect(trigger).toHaveClass("rp-disclosure__trigger");
+    expect(content).toHaveClass("rp-disclosure__content");
+    expect(slot(container, "disclosure-indicator")).toHaveClass("rp-disclosure__indicator");
     expect(trigger?.getAttribute("aria-controls")).toBe(content?.id);
     expect(content?.getAttribute("aria-labelledby")).toBe(trigger?.id);
 

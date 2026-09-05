@@ -124,9 +124,9 @@ describe("Modal", () => {
 
       await settle();
 
-      expect(slot("modal-backdrop")!.classList.contains("modal__backdrop")).toBe(true);
-      expect(slot("modal-container")!.classList.contains("modal__container")).toBe(true);
-      expect(slot("modal-dialog")!.classList.contains("modal__dialog")).toBe(true);
+      expect(slot("modal-backdrop")!.classList.contains("rp-modal__backdrop")).toBe(true);
+      expect(slot("modal-container")!.classList.contains("rp-modal__container")).toBe(true);
+      expect(slot("modal-dialog")!.classList.contains("rp-modal__dialog")).toBe(true);
 
       result.unmount();
     });
@@ -199,7 +199,7 @@ describe("Modal", () => {
 
       expect(trigger.getAttribute("role")).toBe("button");
       expect(trigger.getAttribute("tabindex")).toBe("0");
-      expect(trigger.classList.contains("modal__trigger")).toBe(true);
+      expect(trigger.classList.contains("rp-modal__trigger")).toBe(true);
 
       press(trigger);
       await settle();
@@ -453,12 +453,12 @@ describe("Modal", () => {
       await settle();
 
       const expected: [string, string][] = [
-        ["modal-header", "modal__header"],
-        ["modal-icon", "modal__icon"],
-        ["modal-heading", "modal__heading"],
-        ["modal-body", "modal__body"],
-        ["modal-footer", "modal__footer"],
-        ["modal-close-trigger", "modal__close-trigger"],
+        ["modal-header", "rp-modal__header"],
+        ["modal-icon", "rp-modal__icon"],
+        ["modal-heading", "rp-modal__heading"],
+        ["modal-body", "rp-modal__body"],
+        ["modal-footer", "rp-modal__footer"],
+        ["modal-close-trigger", "rp-modal__close-trigger"],
       ];
 
       for (const [name, className] of expected) {
@@ -490,12 +490,12 @@ describe("Modal", () => {
 
       const dialog = slot("modal-dialog")!;
 
-      expect(dialog.classList.contains("modal__dialog--lg")).toBe(true);
-      expect(dialog.classList.contains("modal__dialog--scroll-outside")).toBe(true);
-      expect(slot("modal-container")!.classList.contains("modal__container--scroll-outside")).toBe(
-        true,
-      );
-      expect(slot("modal-body")!.classList.contains("modal__body--scroll-outside")).toBe(true);
+      expect(dialog.classList.contains("rp-modal__dialog--lg")).toBe(true);
+      expect(dialog.classList.contains("rp-modal__dialog--scroll-outside")).toBe(true);
+      expect(
+        slot("modal-container")!.classList.contains("rp-modal__container--scroll-outside"),
+      ).toBe(true);
+      expect(slot("modal-body")!.classList.contains("rp-modal__body--scroll-outside")).toBe(true);
 
       result.unmount();
     });
@@ -505,9 +505,11 @@ describe("Modal", () => {
 
       await settle();
 
-      expect(slot("modal-dialog")!.classList.contains("modal__dialog--md")).toBe(true);
-      expect(slot("modal-dialog")!.classList.contains("modal__dialog--scroll-inside")).toBe(true);
-      expect(slot("modal-body")!.classList.contains("modal__body--scroll-inside")).toBe(true);
+      expect(slot("modal-dialog")!.classList.contains("rp-modal__dialog--md")).toBe(true);
+      expect(slot("modal-dialog")!.classList.contains("rp-modal__dialog--scroll-inside")).toBe(
+        true,
+      );
+      expect(slot("modal-body")!.classList.contains("rp-modal__body--scroll-inside")).toBe(true);
 
       result.unmount();
     });
@@ -517,7 +519,7 @@ describe("Modal", () => {
 
       await settle();
 
-      expect(slot("modal-backdrop")!.classList.contains("modal__backdrop--blur")).toBe(true);
+      expect(slot("modal-backdrop")!.classList.contains("rp-modal__backdrop--blur")).toBe(true);
 
       result.unmount();
     });
@@ -527,7 +529,7 @@ describe("Modal", () => {
 
       await settle();
 
-      expect(slot("modal-backdrop")!.classList.contains("modal__backdrop--opaque")).toBe(true);
+      expect(slot("modal-backdrop")!.classList.contains("rp-modal__backdrop--opaque")).toBe(true);
 
       result.unmount();
     });

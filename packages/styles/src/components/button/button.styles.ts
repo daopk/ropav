@@ -3,7 +3,7 @@ import type { VariantProps } from "../../tv";
 import { tv } from "../../tv";
 
 export const buttonVariants = tv({
-  base: "button",
+  base: "rp-button",
   defaultVariants: {
     fullWidth: false,
     isIconOnly: false,
@@ -13,24 +13,24 @@ export const buttonVariants = tv({
   variants: {
     fullWidth: {
       false: "",
-      true: "button--full-width",
+      true: "rp-button--full-width",
     },
     isIconOnly: {
-      true: "button--icon-only",
+      true: "rp-button--icon-only",
     },
     size: {
-      lg: "button--lg",
-      md: "button--md",
-      sm: "button--sm",
+      lg: "rp-button--lg",
+      md: "rp-button--md",
+      sm: "rp-button--sm",
     },
     variant: {
-      danger: "button--danger",
-      "danger-soft": "button--danger-soft",
-      ghost: "button--ghost",
-      outline: "button--outline",
-      primary: "button--primary",
-      secondary: "button--secondary",
-      tertiary: "button--tertiary",
+      danger: "rp-button--danger",
+      "danger-soft": "rp-button--danger-soft",
+      ghost: "rp-button--ghost",
+      outline: "rp-button--outline",
+      primary: "rp-button--primary",
+      secondary: "rp-button--secondary",
+      tertiary: "rp-button--tertiary",
     },
   },
 });

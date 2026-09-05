@@ -3,7 +3,7 @@ import type { VariantProps } from "../../tv";
 import { tv } from "../../tv";
 
 export const toggleButtonVariants = tv({
-  base: "toggle-button",
+  base: "rp-toggle-button",
   defaultVariants: {
     isIconOnly: false,
     size: "md",
@@ -11,16 +11,16 @@ export const toggleButtonVariants = tv({
   },
   variants: {
     isIconOnly: {
-      true: "toggle-button--icon-only",
+      true: "rp-toggle-button--icon-only",
     },
     size: {
-      lg: "toggle-button--lg",
-      md: "toggle-button--md",
-      sm: "toggle-button--sm",
+      lg: "rp-toggle-button--lg",
+      md: "rp-toggle-button--md",
+      sm: "rp-toggle-button--sm",
     },
     variant: {
-      default: "toggle-button--default",
-      ghost: "toggle-button--ghost",
+      default: "rp-toggle-button--default",
+      ghost: "rp-toggle-button--ghost",
     },
   },
 });

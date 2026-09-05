@@ -29,7 +29,7 @@ describe("Breadcrumbs", () => {
     expect(root.tagName).toBe("OL");
     expect(root).toHaveAttribute("aria-label", "Chemin de navigation");
     expect(root).toHaveAttribute("data-slot", "breadcrumbs");
-    expect(root).toHaveClass("breadcrumbs");
+    expect(root).toHaveClass("rp-breadcrumbs");
 
     unmount();
   });
@@ -47,9 +47,9 @@ describe("Breadcrumbs", () => {
 
     expect(items).toHaveLength(3);
     expect(items.every((item) => item.tagName === "LI")).toBe(true);
-    expect(items[0]).toHaveClass("breadcrumbs__item");
+    expect(items[0]).toHaveClass("rp-breadcrumbs__item");
     expect(links).toHaveLength(3);
-    expect(links[0]).toHaveClass("breadcrumbs__link");
+    expect(links[0]).toHaveClass("rp-breadcrumbs__link");
     expect(links[0]).toHaveAttribute("href", "#home");
 
     unmount();
@@ -102,7 +102,9 @@ describe("Breadcrumbs", () => {
 
     expect(separators).toHaveLength(2);
     expect(
-      [...separators].every((separator) => separator.classList.contains("breadcrumbs__separator")),
+      [...separators].every((separator) =>
+        separator.classList.contains("rp-breadcrumbs__separator"),
+      ),
     ).toBe(true);
     expect(
       [...separators].every(
@@ -192,9 +194,9 @@ describe("Breadcrumbs", () => {
       itemClass: "font-bold",
     });
 
-    expect(root).toHaveClass("breadcrumbs", "mt-4");
+    expect(root).toHaveClass("rp-breadcrumbs", "mt-4");
     expect(root).toHaveAttribute("data-testid", "breadcrumbs");
-    expect(items[0]).toHaveClass("breadcrumbs__item", "font-bold");
+    expect(items[0]).toHaveClass("rp-breadcrumbs__item", "font-bold");
     expect(items[0]).toHaveAttribute("data-testid", "home");
 
     unmount();

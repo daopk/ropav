@@ -1,9 +1,9 @@
 /* Autocomplete styles */
-.autocomplete {
+.rp-autocomplete {
   @apply flex flex-col gap-1;
 }
 
-.autocomplete__trigger {
+.rp-autocomplete__trigger {
   @apply relative isolate inline-flex min-h-9 rounded-field border px-3 field-line-md text-field-foreground shadow-field outline-none select-none no-highlight;
 
   /* The fill, per state. The `--secondary` variant re-points these and declares nothing else. */
@@ -34,14 +34,14 @@
   border-color: var(--field-border);
 
   /* Add inline-end padding when indicator is present */
-  &:has(.autocomplete__indicator) {
+  &:has(.rp-autocomplete__indicator) {
     @apply pe-7;
   }
 
   /* Hover state - exclude when clear button is hovered to prevent double hover effect */
   @media (hover: hover) {
-    &:hover:not(:has(.autocomplete__clear-button:hover)),
-    &[data-hovered="true"]:not(:has(.autocomplete__clear-button:hover)) {
+    &:hover:not(:has(.rp-autocomplete__clear-button:hover)),
+    &[data-hovered="true"]:not(:has(.rp-autocomplete__clear-button:hover)) {
       background-color: var(--autocomplete-trigger-bg-hover);
       border-color: var(--field-border-hover);
     }
@@ -61,8 +61,8 @@
   }
 
   /* Invalid state */
-  .autocomplete[data-invalid="true"] &,
-  .autocomplete[aria-invalid="true"] & {
+  .rp-autocomplete[data-invalid="true"] &,
+  .rp-autocomplete[aria-invalid="true"] & {
     @apply status-invalid-field;
     background-color: var(--autocomplete-trigger-bg-focus);
   }
@@ -76,11 +76,11 @@
 }
 
 /* Variant property definitions */
-.autocomplete--primary {
+.rp-autocomplete--primary {
   /* Default styles */
 }
 
-.autocomplete--secondary .autocomplete__trigger {
+.rp-autocomplete--secondary .rp-autocomplete__trigger {
   @apply shadow-none;
 
   --autocomplete-trigger-bg: var(--default);
@@ -88,7 +88,7 @@
   --autocomplete-trigger-bg-focus: var(--default);
 }
 
-.autocomplete__value {
+.rp-autocomplete__value {
   @apply flex-1 text-start wrap-break-word;
 
   --autocomplete-value-fg: currentcolor;
@@ -106,7 +106,7 @@
   }
 }
 
-.autocomplete__indicator {
+.rp-autocomplete__indicator {
   @apply absolute inset-y-0 end-2 my-auto flex shrink-0 items-center justify-center text-field-placeholder transition duration-150;
 
   /* Cursor */
@@ -122,7 +122,7 @@
 }
 
 /* Similar to popover content styles */
-.autocomplete__popover {
+.rp-autocomplete__popover {
   @apply flex w-(--trigger-width) max-w-(--trigger-width) origin-(--trigger-anchor-point) scroll-py-1 flex-col overflow-hidden overscroll-contain bg-overlay p-0 pt-2 text-sm outline-none;
   border-radius: min(32px, var(--component-radius));
   box-shadow: var(--shadow-overlay);
@@ -226,16 +226,16 @@
 }
 
 /* Full width modifier */
-.autocomplete--full-width {
+.rp-autocomplete--full-width {
   @apply w-full;
 }
 
-.autocomplete__trigger--full-width {
+.rp-autocomplete__trigger--full-width {
   @apply w-full;
 }
 
 /* Clear Button styles */
-.autocomplete__clear-button {
+.rp-autocomplete__clear-button {
   @apply relative isolate inline-flex h-6 w-6 shrink-0 origin-center items-center justify-center rounded-xl p-1 text-muted select-none no-highlight;
   @apply me-0 size-5 shrink-0 self-center;
 
@@ -286,21 +286,21 @@
 
 /* The trigger's own metrics, and the option rows in a popover that is portalled out of this tree -
  * which is why the popover carries its own size class rather than being reached from the base. */
-.autocomplete--sm .autocomplete__trigger {
+.rp-autocomplete--sm .rp-autocomplete__trigger {
   @apply min-h-8 field-line-sm;
 }
 
-.autocomplete--lg .autocomplete__trigger {
+.rp-autocomplete--lg .rp-autocomplete__trigger {
   @apply min-h-10 field-line-lg;
 }
 
-.autocomplete__popover--sm {
+.rp-autocomplete__popover--sm {
   [data-slot="list-box-item"] {
     @apply min-h-8 py-1;
   }
 }
 
-.autocomplete__popover--lg {
+.rp-autocomplete__popover--lg {
   @apply text-base;
 
   [data-slot="list-box-item"] {

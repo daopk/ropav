@@ -4,11 +4,11 @@
 
 /**
  * Worn by both menus — the standalone one and the one inside a dropdown, which carries
- * `dropdown__menu` alongside it. The two used to define the same rules twice, differing only in
+ * `rp-dropdown__menu` alongside it. The two used to define the same rules twice, differing only in
  * `gap`; that difference now lives with the dropdown's other overrides in `dropdown.css`, nested
  * where it has the specificity to win, since this file is imported after that one.
  */
-.menu {
+.rp-menu {
   @apply relative flex w-full flex-col gap-1 overflow-clip p-1;
 
   /* This makes the separator take up 94% of the width and be centered */
@@ -22,13 +22,13 @@
    ========================================================================== */
 
 /* A row is as tall as a field of the same size, so a collection standing beside one lines up. */
-.menu--sm {
+.rp-menu--sm {
   [data-slot="menu-item"] {
     @apply min-h-8 py-1;
   }
 }
 
-.menu--lg {
+.rp-menu--lg {
   @apply text-base;
 
   [data-slot="menu-item"] {

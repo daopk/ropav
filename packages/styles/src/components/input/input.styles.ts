@@ -3,7 +3,7 @@ import type { VariantProps } from "../../tv";
 import { tv } from "../../tv";
 
 export const inputVariants = tv({
-  base: "input",
+  base: "rp-input",
   defaultVariants: {
     fullWidth: false,
     size: "md",
@@ -12,16 +12,16 @@ export const inputVariants = tv({
   variants: {
     fullWidth: {
       false: "",
-      true: "input--full-width",
+      true: "rp-input--full-width",
     },
     size: {
-      lg: "input--lg",
+      lg: "rp-input--lg",
       md: "",
-      sm: "input--sm",
+      sm: "rp-input--sm",
     },
     variant: {
-      primary: "input--primary",
-      secondary: "input--secondary",
+      primary: "rp-input--primary",
+      secondary: "rp-input--secondary",
     },
   },
 });

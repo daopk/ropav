@@ -24,7 +24,7 @@ describe("ToggleButton", () => {
       const button = buttonIn(container);
 
       expect(button.getAttribute("data-slot")).toBe("toggle-button");
-      expect(button.classList.contains("toggle-button")).toBe(true);
+      expect(button.classList.contains("rp-toggle-button")).toBe(true);
 
       unmount();
     });
@@ -56,9 +56,9 @@ describe("ToggleButton", () => {
       });
       const button = buttonIn(container);
 
-      expect(button.classList.contains("toggle-button--lg")).toBe(true);
-      expect(button.classList.contains("toggle-button--ghost")).toBe(true);
-      expect(button.classList.contains("toggle-button--icon-only")).toBe(true);
+      expect(button.classList.contains("rp-toggle-button--lg")).toBe(true);
+      expect(button.classList.contains("rp-toggle-button--ghost")).toBe(true);
+      expect(button.classList.contains("rp-toggle-button--icon-only")).toBe(true);
 
       unmount();
     });

@@ -39,7 +39,11 @@ describe("ScrollShadow", () => {
     expect(root).toHaveAttribute("data-slot", "scroll-shadow");
     expect(root).toHaveAttribute("data-orientation", "vertical");
     expect(root).toHaveAttribute("data-scroll-shadow-size", "40");
-    expect(root).toHaveClass("scroll-shadow", "scroll-shadow--vertical", "scroll-shadow--fade");
+    expect(root).toHaveClass(
+      "rp-scroll-shadow",
+      "rp-scroll-shadow--vertical",
+      "rp-scroll-shadow--fade",
+    );
     expect(root.style.getPropertyValue("--scroll-shadow-size")).toBe("40px");
 
     unmount();
@@ -52,8 +56,8 @@ describe("ScrollShadow", () => {
     });
 
     expect(root).toHaveAttribute("data-orientation", "horizontal");
-    expect(root).toHaveClass("scroll-shadow--horizontal", "scroll-shadow--hide-scrollbar");
-    expect(root).not.toHaveClass("scroll-shadow--vertical");
+    expect(root).toHaveClass("rp-scroll-shadow--horizontal", "rp-scroll-shadow--hide-scrollbar");
+    expect(root).not.toHaveClass("rp-scroll-shadow--vertical");
 
     unmount();
   });
@@ -65,7 +69,7 @@ describe("ScrollShadow", () => {
       style: { maxHeight: "200px" },
     });
 
-    expect(root).toHaveClass("scroll-shadow", "p-4");
+    expect(root).toHaveClass("rp-scroll-shadow", "p-4");
     expect(root).toHaveAttribute("data-foo", "bar");
     expect(root.style.maxHeight).toBe("200px");
     expect(root.style.getPropertyValue("--scroll-shadow-size")).toBe("24px");

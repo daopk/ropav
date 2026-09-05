@@ -6,29 +6,29 @@ export const calendarVariants = tv({
   defaultVariants: {},
   slots: {
     /** Root calendar container */
-    base: "calendar",
+    base: "rp-calendar",
     /** Calendar cell (td) */
-    cell: "calendar__cell",
+    cell: "rp-calendar__cell",
     /** Cell indicator (small dot at bottom of cell) */
-    cellIndicator: "calendar__cell-indicator",
+    cellIndicator: "rp-calendar__cell-indicator",
     /** Calendar grid (table) */
-    grid: "calendar__grid",
+    grid: "rp-calendar__grid",
     /** Grid body (tbody) */
-    gridBody: "calendar__grid-body",
+    gridBody: "rp-calendar__grid-body",
     /** Grid header (thead) */
-    gridHeader: "calendar__grid-header",
+    gridHeader: "rp-calendar__grid-header",
     /** Grid row (tr) */
-    gridRow: "calendar__grid-row",
+    gridRow: "rp-calendar__grid-row",
     /** Calendar header containing heading and navigation */
-    header: "calendar__header",
+    header: "rp-calendar__header",
     /** Header cell (th - day names) */
-    headerCell: "calendar__header-cell",
+    headerCell: "rp-calendar__header-cell",
     /** Month/year heading text */
-    heading: "calendar__heading",
+    heading: "rp-calendar__heading",
     /** Previous/Next navigation button */
-    navButton: "calendar__nav-button",
+    navButton: "rp-calendar__nav-button",
     /** Navigation button icon */
-    navButtonIcon: "calendar__nav-button-icon",
+    navButtonIcon: "rp-calendar__nav-button-icon",
   },
   variants: {},
 });

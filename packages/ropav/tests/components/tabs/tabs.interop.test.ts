@@ -82,12 +82,12 @@ describe("Tabs (interop)", () => {
 
     await settle();
 
-    expect(slot(container, "tabs")).toHaveClass("tabs");
-    expect(slot(container, "tabs-list-container")).toHaveClass("tabs__list-container");
-    expect(slot(container, "tabs-list")).toHaveClass("tabs__list");
-    expect(slot(container, "tabs-tab")).toHaveClass("tabs__tab");
-    expect(slot(container, "tabs-separator")).toHaveClass("tabs__separator");
-    expect(slot(container, "tabs-panel")).toHaveClass("tabs__panel");
+    expect(slot(container, "tabs")).toHaveClass("rp-tabs");
+    expect(slot(container, "tabs-list-container")).toHaveClass("rp-tabs__list-container");
+    expect(slot(container, "tabs-list")).toHaveClass("rp-tabs__list");
+    expect(slot(container, "tabs-tab")).toHaveClass("rp-tabs__tab");
+    expect(slot(container, "tabs-separator")).toHaveClass("rp-tabs__separator");
+    expect(slot(container, "tabs-panel")).toHaveClass("rp-tabs__panel");
 
     unmount();
   });
@@ -119,7 +119,7 @@ describe("Tabs (interop)", () => {
     // The indicator learns whether it is selected from the tab that encloses it, which is the
     // one context a host-written tree resolves differently.
     expect(indicators).toHaveLength(1);
-    expect(indicators[0]).toHaveClass("tabs__indicator");
+    expect(indicators[0]).toHaveClass("rp-tabs__indicator");
     expect(indicators[0]!.closest('[data-slot="tabs-tab"]')).toHaveTextContent("Overview");
 
     unmount();

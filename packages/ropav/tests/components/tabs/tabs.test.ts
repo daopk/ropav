@@ -52,15 +52,19 @@ describe("Tabs", () => {
       const { container } = await render();
       const root = container.querySelector('[data-slot="tabs"]')!;
 
-      expect(root.className).toContain("tabs");
+      expect(root.className).toContain("rp-tabs");
       expect(container.querySelector('[data-slot="tabs-list-container"]')!.className).toContain(
-        "tabs__list-container",
+        "rp-tabs__list-container",
       );
-      expect(container.querySelector('[data-slot="tabs-list"]')!.className).toContain("tabs__list");
+      expect(container.querySelector('[data-slot="tabs-list"]')!.className).toContain(
+        "rp-tabs__list",
+      );
       expect(container.querySelectorAll('[data-slot="tabs-tab"]')).toHaveLength(3);
-      expect(container.querySelector('[data-slot="tabs-tab"]')!.className).toContain("tabs__tab");
+      expect(container.querySelector('[data-slot="tabs-tab"]')!.className).toContain(
+        "rp-tabs__tab",
+      );
       expect(container.querySelector('[data-slot="tabs-panel"]')!.className).toContain(
-        "tabs__panel",
+        "rp-tabs__panel",
       );
     });
 
@@ -69,7 +73,7 @@ describe("Tabs", () => {
       const indicators = container.querySelectorAll('[data-slot="tabs-indicator"]');
 
       expect(indicators).toHaveLength(1);
-      expect(indicators[0]!.className).toContain("tabs__indicator");
+      expect(indicators[0]!.className).toContain("rp-tabs__indicator");
       expect(indicators[0]!.closest('[data-slot="tabs-tab"]')).toHaveTextContent("Overview");
     });
 
@@ -86,14 +90,16 @@ describe("Tabs", () => {
       const separators = container.querySelectorAll('[data-slot="tabs-separator"]');
 
       expect(separators).toHaveLength(3);
-      expect(separators[0]!.className).toContain("tabs__separator");
+      expect(separators[0]!.className).toContain("rp-tabs__separator");
       expect(separators[0]).toHaveAttribute("aria-hidden", "true");
     });
 
     it("exposes the variant modifier", async () => {
       const { container } = await render({ variant: "secondary" });
 
-      expect(container.querySelector('[data-slot="tabs"]')!.className).toContain("tabs--secondary");
+      expect(container.querySelector('[data-slot="tabs"]')!.className).toContain(
+        "rp-tabs--secondary",
+      );
     });
 
     it("lets a caller's class override the slot's own", async () => {

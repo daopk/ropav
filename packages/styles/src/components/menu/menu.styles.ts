@@ -3,15 +3,15 @@ import type { VariantProps } from "../../tv";
 import { tv } from "../../tv";
 
 export const menuVariants = tv({
-  base: "menu",
+  base: "rp-menu",
   defaultVariants: {
     size: "md",
   },
   variants: {
     size: {
-      lg: "menu--lg",
+      lg: "rp-menu--lg",
       md: "",
-      sm: "menu--sm",
+      sm: "rp-menu--sm",
     },
   },
 });

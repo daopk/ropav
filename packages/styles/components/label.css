@@ -1,5 +1,5 @@
 /* Base label styles */
-.label {
+.rp-label {
   /* Base styling */
   @apply text-sm font-medium;
 
@@ -14,20 +14,20 @@
  * to ensure asterisks only appear on atomic form field labels and group labels,
  * not on individual options within those groups
  */
-.label--required,
+.rp-label--required,
 [data-required="true"]:not([role="group"]):not([role="radiogroup"]):not([role="checkboxgroup"])
-  > .label,
-[data-required="true"]:not([data-slot="radio"]):not([data-slot="checkbox"]) > .label {
+  > .rp-label,
+[data-required="true"]:not([data-slot="radio"]):not([data-slot="checkbox"]) > .rp-label {
   @apply after:ms-0.5 after:text-danger after:content-['*'];
 }
 
-.label--disabled,
-[data-disabled="true"] .label {
+.rp-label--disabled,
+[data-disabled="true"] .rp-label {
   @apply status-disabled;
 }
 
-.label--invalid,
-[data-invalid="true"] .label,
-[aria-invalid="true"] .label {
+.rp-label--invalid,
+[data-invalid="true"] .rp-label,
+[aria-invalid="true"] .rp-label {
   color: var(--label-fg-invalid);
 }

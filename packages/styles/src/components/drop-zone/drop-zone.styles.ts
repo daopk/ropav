@@ -4,8 +4,8 @@ import { tv } from "../../tv";
 
 export const dropZoneVariants = tv({
   slots: {
-    base: "drop-zone",
-    trigger: "drop-zone__trigger",
+    base: "rp-drop-zone",
+    trigger: "rp-drop-zone__trigger",
   },
 });
 

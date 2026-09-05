@@ -104,7 +104,7 @@ describe("TextField (browser)", () => {
   });
 
   it("draws the required marker on the label", async () => {
-    // The asterisk is an `::after` on `[data-required="true"] > .label`, which needs the label
+    // The asterisk is an `::after` on `[data-required="true"] > .rp-label`, which needs the label
     // to be a direct child of the field.
     const { container, unmount } = renderField({ isRequired: true });
     const label = slot(container, "label");

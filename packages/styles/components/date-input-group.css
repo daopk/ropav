@@ -1,5 +1,5 @@
 /* Date input group styles */
-.date-input-group {
+.rp-date-input-group {
   @apply inline-flex h-9 items-center overflow-hidden rounded-field border text-sm text-field-foreground shadow-field outline-none;
 
   /* The fill, per state. The `--secondary` variant re-points these and declares nothing else. */
@@ -69,20 +69,20 @@
   }
 }
 
-.date-input-group__input {
+.rp-date-input-group__input {
   @apply flex flex-1 cursor-text items-center gap-px rounded-none border-0 bg-transparent px-3 field-line-md shadow-none outline-none;
 
   /* Remove border radius on left side when prefix is present */
-  .date-input-group:has([data-slot="date-input-group-prefix"]) & {
+  .rp-date-input-group:has([data-slot="date-input-group-prefix"]) & {
     @apply rounded-s-none ps-2;
   }
 
   /* Remove border radius on right side when suffix is present */
-  .date-input-group:has([data-slot="date-input-group-suffix"]) & {
+  .rp-date-input-group:has([data-slot="date-input-group-suffix"]) & {
     @apply rounded-e-none pe-2;
   }
 
-  .date-input-group:has(.date-range-picker__range-separator) & {
+  .rp-date-input-group:has(.rp-date-range-picker__range-separator) & {
     &[slot="start"] {
       @apply flex-none pe-0;
     }
@@ -98,14 +98,14 @@
   }
 }
 
-.date-input-group__input-container {
+.rp-date-input-group__input-container {
   @apply flex flex-1 scrollbar-none items-center;
   width: fit-content;
   overflow-x: auto;
   overflow-y: clip;
 }
 
-.date-input-group__segment {
+.rp-date-input-group__segment {
   @apply inline-block rounded-md px-0.5 text-end text-nowrap outline-none;
 
   /* The fill and the digits, per state. Five states repaint the text here, so a caller retuning
@@ -160,22 +160,22 @@
   }
 }
 
-.date-input-group__prefix {
+.rp-date-input-group__prefix {
   @apply pointer-events-none shrink-0 text-field-placeholder;
   @apply ms-3 me-0 flex items-center;
 }
 
-.date-input-group__suffix {
+.rp-date-input-group__suffix {
   @apply pointer-events-none shrink-0 text-field-placeholder;
   @apply me-3 flex items-center;
 }
 
 /* Variant property definitions */
-.date-input-group--primary {
+.rp-date-input-group--primary {
   /* Default styles */
 }
 
-.date-input-group--secondary {
+.rp-date-input-group--secondary {
   @apply shadow-none;
 
   --date-input-group-bg: var(--default);
@@ -188,7 +188,7 @@
 }
 
 /* Full width modifier */
-.date-input-group--full-width {
+.rp-date-input-group--full-width {
   @apply w-full;
 }
 
@@ -196,18 +196,18 @@
    Size variants
    ========================================================================== */
 
-.date-input-group--sm {
+.rp-date-input-group--sm {
   @apply h-8;
 
-  .date-input-group__input {
+  .rp-date-input-group__input {
     @apply field-line-sm;
   }
 }
 
-.date-input-group--lg {
+.rp-date-input-group--lg {
   @apply h-10;
 
-  .date-input-group__input {
+  .rp-date-input-group__input {
     @apply field-line-lg;
   }
 }

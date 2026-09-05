@@ -72,20 +72,20 @@ describe("Select", () => {
       const { root, trigger, value } = await render();
 
       expect(root).toHaveAttribute("data-slot", "select");
-      expect(root).toHaveClass("select");
-      expect(trigger).toHaveClass("select__trigger");
-      expect(value).toHaveClass("select__value");
+      expect(root).toHaveClass("rp-select");
+      expect(trigger).toHaveClass("rp-select__trigger");
+      expect(value).toHaveClass("rp-select__value");
       expect(root.querySelector('[data-slot="select-default-indicator"]')).toHaveClass(
-        "select__indicator",
+        "rp-select__indicator",
       );
     });
 
     it("carries the variant and full-width modifiers", async () => {
       const { root, trigger } = await render({ fullWidth: true, variant: "secondary" });
 
-      expect(root).toHaveClass("select--secondary");
-      expect(root).toHaveClass("select--full-width");
-      expect(trigger).toHaveClass("select__trigger--full-width");
+      expect(root).toHaveClass("rp-select--secondary");
+      expect(root).toHaveClass("rp-select--full-width");
+      expect(trigger).toHaveClass("rp-select__trigger--full-width");
     });
 
     it("carries the size modifier on the root and on the popover", async () => {
@@ -93,20 +93,20 @@ describe("Select", () => {
       // modifier and has to carry one of its own.
       const { root, trigger } = await render({ size: "sm" });
 
-      expect(root).toHaveClass("select--sm");
+      expect(root).toHaveClass("rp-select--sm");
 
       press(trigger);
       await settle();
 
       expect(document.querySelector('[data-slot="select-popover"]')).toHaveClass(
-        "select__popover--sm",
+        "rp-select__popover--sm",
       );
     });
 
     it("leaves the default size unmarked", async () => {
       const { root } = await render({ size: "md" });
 
-      expect(root.className).not.toMatch(/select--(sm|md|lg)/);
+      expect(root.className).not.toMatch(/rp-select--(sm|md|lg)/);
     });
 
     it("keeps a caller's class on every part, beside the BEM one", async () => {
@@ -120,11 +120,11 @@ describe("Select", () => {
 
       // A class that replaced the BEM one, or was dropped on the way, leaves the part unstyled
       // while every other assertion in this file still passes.
-      expect(root).toHaveClass("select", "my-root");
-      expect(trigger).toHaveClass("select__trigger", "my-trigger");
-      expect(value).toHaveClass("select__value", "my-value");
+      expect(root).toHaveClass("rp-select", "my-root");
+      expect(trigger).toHaveClass("rp-select__trigger", "my-trigger");
+      expect(value).toHaveClass("rp-select__value", "my-value");
       expect(root.querySelector('[data-slot="select-default-indicator"]')).toHaveClass(
-        "select__indicator",
+        "rp-select__indicator",
         "my-indicator",
       );
 
@@ -132,7 +132,7 @@ describe("Select", () => {
       await settle();
 
       expect(document.querySelector('[data-slot="select-popover"]')).toHaveClass(
-        "select__popover",
+        "rp-select__popover",
         "my-popover",
       );
     });

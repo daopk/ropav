@@ -1,22 +1,22 @@
 /* Base scroll-shadow component */
-.scroll-shadow {
+.rp-scroll-shadow {
   @apply relative;
   --scroll-shadow-size: 40px;
   --scroll-shadow-scrollbar-size: 10px;
 }
 
 /* Orientation: Vertical */
-.scroll-shadow--vertical {
+.rp-scroll-shadow--vertical {
   @apply scrollbar overflow-y-auto;
 }
 
 /* Orientation: Horizontal */
-.scroll-shadow--horizontal {
+.rp-scroll-shadow--horizontal {
   @apply scrollbar overflow-x-auto;
 }
 
 /* Variant: Fade - Vertical */
-.scroll-shadow--fade.scroll-shadow--vertical {
+.rp-scroll-shadow--fade.rp-scroll-shadow--vertical {
   &:where([data-top-scroll="true"], [data-bottom-scroll="true"], [data-top-bottom-scroll="true"]) {
     mask-image: linear-gradient(var(--scroll-linear-gradient)), linear-gradient(#000, #000);
     mask-position:
@@ -52,7 +52,7 @@
 }
 
 /* Variant: Fade - Horizontal */
-.scroll-shadow--fade.scroll-shadow--horizontal {
+.rp-scroll-shadow--fade.rp-scroll-shadow--horizontal {
   &:where([data-left-scroll="true"], [data-right-scroll="true"], [data-left-right-scroll="true"]) {
     mask-image: linear-gradient(var(--scroll-linear-gradient)), linear-gradient(#000, #000);
     mask-position:
@@ -97,7 +97,7 @@
   }
 }
 
-.scroll-shadow--hide-scrollbar {
+.rp-scroll-shadow--hide-scrollbar {
   @apply scrollbar-none;
   --scroll-shadow-scrollbar-size: 0px;
 }

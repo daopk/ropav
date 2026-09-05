@@ -135,12 +135,12 @@ describe("Calendar", () => {
     it("puts every part's BEM class on it", () => {
       const calendar = renderCalendar({ withCellIndicator: true });
 
-      expect(calendar.root().className).toContain("calendar");
-      expect(calendar.slot("calendar-header").className).toContain("calendar__header");
-      expect(calendar.slot("calendar-grid").className).toContain("calendar__grid");
-      expect(calendar.slot("calendar-cell").className).toContain("calendar__cell");
+      expect(calendar.root().className).toContain("rp-calendar");
+      expect(calendar.slot("calendar-header").className).toContain("rp-calendar__header");
+      expect(calendar.slot("calendar-grid").className).toContain("rp-calendar__grid");
+      expect(calendar.slot("calendar-cell").className).toContain("rp-calendar__cell");
       expect(calendar.slot("calendar-cell-indicator").className).toContain(
-        "calendar__cell-indicator",
+        "rp-calendar__cell-indicator",
       );
       calendar.unmount();
     });
@@ -149,12 +149,12 @@ describe("Calendar", () => {
       // The stylesheet lays a single row out differently from a month grid, keyed on these.
       const week = renderCalendar({ visibleDuration: { weeks: 1 } });
 
-      expect(week.root().className).toContain("calendar--week-view");
+      expect(week.root().className).toContain("rp-calendar--week-view");
       week.unmount();
 
       const day = renderCalendar({ visibleDuration: { days: 3 } });
 
-      expect(day.root().className).toContain("calendar--day-view");
+      expect(day.root().className).toContain("rp-calendar--day-view");
       day.unmount();
     });
 
@@ -162,7 +162,7 @@ describe("Calendar", () => {
       const calendar = renderCalendar({ class: "mine" });
 
       expect(calendar.root().className).toContain("mine");
-      expect(calendar.root().className).toContain("calendar");
+      expect(calendar.root().className).toContain("rp-calendar");
       calendar.unmount();
     });
   });

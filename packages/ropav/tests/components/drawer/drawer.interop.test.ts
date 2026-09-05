@@ -94,11 +94,11 @@ describe("Drawer (interop)", () => {
 
     // The slot set accumulates: the backdrop decides its own variant, the content the edge
     // everything is pinned to, and each part reads whichever level is nearest above it.
-    expect(slot("drawer-backdrop")!.classList.contains("drawer__backdrop--blur")).toBe(true);
-    expect(slot("drawer-content")!.classList.contains("drawer__content--right")).toBe(true);
-    expect(slot("drawer-dialog")!.classList.contains("drawer__dialog--right")).toBe(true);
-    expect(slot("drawer-heading")!.classList.contains("drawer__heading")).toBe(true);
-    expect(slot("drawer-handle")!.classList.contains("drawer__handle")).toBe(true);
+    expect(slot("drawer-backdrop")!.classList.contains("rp-drawer__backdrop--blur")).toBe(true);
+    expect(slot("drawer-content")!.classList.contains("rp-drawer__content--right")).toBe(true);
+    expect(slot("drawer-dialog")!.classList.contains("rp-drawer__dialog--right")).toBe(true);
+    expect(slot("drawer-heading")!.classList.contains("rp-drawer__heading")).toBe(true);
+    expect(slot("drawer-handle")!.classList.contains("rp-drawer__handle")).toBe(true);
 
     result.unmount();
   });

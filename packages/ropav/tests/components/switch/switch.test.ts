@@ -44,10 +44,10 @@ describe("Switch", () => {
     it("renders the BEM classes of each part", () => {
       const { container, unmount } = renderSwitch();
 
-      expect(slot(container, "switch").classList.contains("switch")).toBe(true);
-      expect(slot(container, "switch-content").classList.contains("switch__content")).toBe(true);
-      expect(slot(container, "switch-control").classList.contains("switch__control")).toBe(true);
-      expect(slot(container, "switch-thumb").classList.contains("switch__thumb")).toBe(true);
+      expect(slot(container, "switch").classList.contains("rp-switch")).toBe(true);
+      expect(slot(container, "switch-content").classList.contains("rp-switch__content")).toBe(true);
+      expect(slot(container, "switch-control").classList.contains("rp-switch__control")).toBe(true);
+      expect(slot(container, "switch-thumb").classList.contains("rp-switch__thumb")).toBe(true);
 
       unmount();
     });
@@ -97,7 +97,7 @@ describe("Switch", () => {
       for (const size of ["sm", "md", "lg"] as const) {
         const { container, unmount } = renderSwitch({ size });
 
-        expect(slot(container, "switch").classList.contains(`switch--${size}`)).toBe(true);
+        expect(slot(container, "switch").classList.contains(`rp-switch--${size}`)).toBe(true);
 
         unmount();
       }
@@ -107,7 +107,7 @@ describe("Switch", () => {
       const { container, unmount } = renderSwitch({ class: "custom-class" });
 
       expect(slot(container, "switch").classList.contains("custom-class")).toBe(true);
-      expect(slot(container, "switch").classList.contains("switch")).toBe(true);
+      expect(slot(container, "switch").classList.contains("rp-switch")).toBe(true);
 
       unmount();
     });

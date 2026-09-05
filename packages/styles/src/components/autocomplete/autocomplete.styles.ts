@@ -9,39 +9,39 @@ export const autocompleteVariants = tv({
     variant: "primary",
   },
   slots: {
-    base: "autocomplete",
-    clearButton: "autocomplete__clear-button",
-    filter: "autocomplete__filter",
-    indicator: "autocomplete__indicator",
-    popover: "autocomplete__popover",
-    trigger: "autocomplete__trigger",
-    value: "autocomplete__value",
+    base: "rp-autocomplete",
+    clearButton: "rp-autocomplete__clear-button",
+    filter: "rp-autocomplete__filter",
+    indicator: "rp-autocomplete__indicator",
+    popover: "rp-autocomplete__popover",
+    trigger: "rp-autocomplete__trigger",
+    value: "rp-autocomplete__value",
   },
   variants: {
     fullWidth: {
       false: {},
       true: {
-        base: "autocomplete--full-width",
-        trigger: "autocomplete__trigger--full-width",
+        base: "rp-autocomplete--full-width",
+        trigger: "rp-autocomplete__trigger--full-width",
       },
     },
     size: {
       lg: {
-        base: "autocomplete--lg",
-        popover: "autocomplete__popover--lg",
+        base: "rp-autocomplete--lg",
+        popover: "rp-autocomplete__popover--lg",
       },
       md: {},
       sm: {
-        base: "autocomplete--sm",
-        popover: "autocomplete__popover--sm",
+        base: "rp-autocomplete--sm",
+        popover: "rp-autocomplete__popover--sm",
       },
     },
     variant: {
       primary: {
-        base: "autocomplete--primary",
+        base: "rp-autocomplete--primary",
       },
       secondary: {
-        base: "autocomplete--secondary",
+        base: "rp-autocomplete--secondary",
       },
     },
   },

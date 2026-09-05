@@ -4,11 +4,11 @@ import { tv } from "../../tv";
 
 export const dateRangePickerVariants = tv({
   slots: {
-    base: "date-range-picker",
-    popover: "date-range-picker__popover",
-    rangeSeparator: "date-range-picker__range-separator",
-    trigger: "date-range-picker__trigger",
-    triggerIndicator: "date-range-picker__trigger-indicator",
+    base: "rp-date-range-picker",
+    popover: "rp-date-range-picker__popover",
+    rangeSeparator: "rp-date-range-picker__range-separator",
+    trigger: "rp-date-range-picker__trigger",
+    triggerIndicator: "rp-date-range-picker__trigger-indicator",
   },
 });
 

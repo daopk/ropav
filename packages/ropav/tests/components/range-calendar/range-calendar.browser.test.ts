@@ -199,7 +199,7 @@ describe("RangeCalendar (browser)", () => {
 
     it("draws a visible focus ring on the focused cell", async () => {
       /*
-       * On the wrapper inside the cell, not on the cell: the extra `range-calendar__cell-button`
+       * On the wrapper inside the cell, not on the cell: the extra `rp-range-calendar__cell-button`
        * span is exactly what the 361-line range stylesheet paints, and reading the cell itself is
        * how a missing ring would pass unnoticed. `status-focused` draws with a box shadow and sets
        * `outline-style: none`, so the outline is the wrong thing to read either way.

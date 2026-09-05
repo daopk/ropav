@@ -3,20 +3,20 @@ import type { VariantProps } from "../../tv";
 import { tv } from "../../tv";
 
 export const listboxVariants = tv({
-  base: "list-box",
+  base: "rp-list-box",
   defaultVariants: {
     size: "md",
     variant: "default",
   },
   variants: {
     size: {
-      lg: "list-box--lg",
+      lg: "rp-list-box--lg",
       md: "",
-      sm: "list-box--sm",
+      sm: "rp-list-box--sm",
     },
     variant: {
-      danger: "list-box--danger",
-      default: "list-box--default",
+      danger: "rp-list-box--danger",
+      default: "rp-list-box--default",
     },
   },
 });

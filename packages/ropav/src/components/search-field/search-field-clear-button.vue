@@ -18,7 +18,7 @@ const styles = computed(() => slots.value.clearButton({ class: props.class }));
 /**
  * `slot="clear"` is a live CSS contract, not a leftover of React Aria's slot system: the
  * stylesheet strips the trailing radius and padding off the control through
- * `.search-field__group:has([slot="clear"])`, so dropping it changes the geometry in silence.
+ * `.rp-search-field__group:has([slot="clear"])`, so dropping it changes the geometry in silence.
  *
  * Bound from here rather than written in the template because Vue 2 read a literal `slot`
  * attribute as slot syntax, and the linter still flags either spelling. The vapor compiler

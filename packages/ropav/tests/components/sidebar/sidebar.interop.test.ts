@@ -105,9 +105,9 @@ describe("mounted from a VDOM host", () => {
   it("dresses every part from the shell's variant", () => {
     const { container } = mount({ variant: "inset" });
 
-    expect(slot(container, "sidebar-panel").className).toContain("sidebar__panel--bare");
-    expect(slot(container, "sidebar-inset").className).toContain("sidebar__inset--card");
-    expect(slot(container, "sidebar-rail").className).toContain("sidebar__rail--quiet");
+    expect(slot(container, "sidebar-panel").className).toContain("rp-sidebar__panel--bare");
+    expect(slot(container, "sidebar-inset").className).toContain("rp-sidebar__inset--card");
+    expect(slot(container, "sidebar-rail").className).toContain("rp-sidebar__rail--quiet");
   });
 
   /* The state has to reach parts the root never rendered itself, which is the whole point. */
@@ -182,7 +182,7 @@ describe("an item with rows of its own, mounted from a VDOM host", () => {
   it("tells a child row it is a child", () => {
     const { container } = mountNested();
 
-    expect(slot(container, "sidebar-item").className).toContain("sidebar__item--sub");
+    expect(slot(container, "sidebar-item").className).toContain("rp-sidebar__item--sub");
   });
 
   it("opens on the trigger", async () => {

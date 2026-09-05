@@ -36,7 +36,7 @@ const tabindex = computed(() => (props.isDisabled ? undefined : 0));
 
 <template>
   <button
-    :class="slots.link({ class: ['pagination__link--nav', props.class] })"
+    :class="slots.link({ class: ['rp-pagination__link--nav', props.class] })"
     :data-focus-visible="dataAttr(isFocusVisible)"
     :data-hovered="dataAttr(isHovered)"
     :data-pressed="dataAttr(isPressed)"

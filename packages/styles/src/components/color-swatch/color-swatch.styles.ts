@@ -3,22 +3,22 @@ import type { VariantProps } from "../../tv";
 import { tv } from "../../tv";
 
 export const colorSwatchVariants = tv({
-  base: "color-swatch",
+  base: "rp-color-swatch",
   defaultVariants: {
     shape: "circle",
     size: "md",
   },
   variants: {
     shape: {
-      circle: "color-swatch--circle",
-      square: "color-swatch--square",
+      circle: "rp-color-swatch--circle",
+      square: "rp-color-swatch--square",
     },
     size: {
-      lg: "color-swatch--lg",
-      md: "color-swatch--md",
-      sm: "color-swatch--sm",
-      xl: "color-swatch--xl",
-      xs: "color-swatch--xs",
+      lg: "rp-color-swatch--lg",
+      md: "rp-color-swatch--md",
+      sm: "rp-color-swatch--sm",
+      xl: "rp-color-swatch--xl",
+      xs: "rp-color-swatch--xs",
     },
   },
 });

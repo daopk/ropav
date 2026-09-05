@@ -2,7 +2,7 @@
    Base checkbox styles
    ========================================================================== */
 
-.checkbox {
+.rp-checkbox {
   @apply flex flex-col items-start gap-1 outline-none no-highlight;
 
   cursor: var(--cursor-interactive);
@@ -17,7 +17,7 @@
     @apply select-none;
   }
 
-  .checkbox__content [data-slot="label"] {
+  .rp-checkbox__content [data-slot="label"] {
     cursor: var(--cursor-interactive);
   }
 
@@ -34,7 +34,7 @@
   /* Indicator styles */
   &[data-selected="true"],
   &[data-indeterminate="true"] {
-    .checkbox__indicator {
+    .rp-checkbox__indicator {
       border-color: var(--accent-foreground);
     }
   }
@@ -83,7 +83,7 @@
    Checkbox control (the square button)
    ========================================================================== */
 
-.checkbox__control {
+.rp-checkbox__control {
   @apply relative inline-flex size-4 shrink-0 items-center justify-center overflow-hidden border [border-width:var(--border-width-field)] shadow-field outline-none no-highlight;
 
   /* The cap is what keeps the box reading square at 16px: the field radius is set for a 36px
@@ -134,16 +134,16 @@
 
   /* Interactive states */
   /* Focus */
-  .checkbox:focus-visible &,
-  .checkbox:has([data-slot="checkbox-content"][data-focus-visible="true"]) &,
-  .checkbox [data-slot="checkbox-content"][data-focus-visible="true"] & {
+  .rp-checkbox:focus-visible &,
+  .rp-checkbox:has([data-slot="checkbox-content"][data-focus-visible="true"]) &,
+  .rp-checkbox [data-slot="checkbox-content"][data-focus-visible="true"] & {
     @apply status-focused;
   }
 
   /* Hover */
-  .checkbox:hover &,
-  .checkbox:has([data-slot="checkbox-content"][data-hovered="true"]) &,
-  .checkbox [data-slot="checkbox-content"][data-hovered="true"] & {
+  .rp-checkbox:hover &,
+  .rp-checkbox:has([data-slot="checkbox-content"][data-hovered="true"]) &,
+  .rp-checkbox [data-slot="checkbox-content"][data-hovered="true"] & {
     border-color: var(--checkbox-control-border-hover);
 
     &::before {
@@ -152,15 +152,15 @@
   }
 
   /* Pressed */
-  .checkbox:active &,
-  .checkbox:has([data-slot="checkbox-content"][data-pressed="true"]) &,
-  .checkbox [data-slot="checkbox-content"][data-pressed="true"] & {
+  .rp-checkbox:active &,
+  .rp-checkbox:has([data-slot="checkbox-content"][data-pressed="true"]) &,
+  .rp-checkbox [data-slot="checkbox-content"][data-pressed="true"] & {
   }
 
   /* Selection states */
   /* Selected */
-  .checkbox[aria-checked="true"] &,
-  .checkbox[data-selected="true"] & {
+  .rp-checkbox[aria-checked="true"] &,
+  .rp-checkbox[data-selected="true"] & {
     border-color: var(--checkbox-control-border-checked);
     color: var(--checkbox-control-fg-checked);
 
@@ -170,25 +170,26 @@
   }
 
   /* Indeterminate */
-  .checkbox[data-indeterminate="true"] & {
+  .rp-checkbox[data-indeterminate="true"] & {
     background-color: var(--checkbox-control-bg-checked);
     color: var(--checkbox-control-fg-checked);
   }
 
   /* Indeterminate + Pressed */
-  .checkbox:active[data-indeterminate="true"] &,
-  .checkbox[data-pressed="true"][data-indeterminate="true"] &,
-  .checkbox:has([data-slot="checkbox-content"][data-pressed="true"])[data-indeterminate="true"] & {
+  .rp-checkbox:active[data-indeterminate="true"] &,
+  .rp-checkbox[data-pressed="true"][data-indeterminate="true"] &,
+  .rp-checkbox:has([data-slot="checkbox-content"][data-pressed="true"])[data-indeterminate="true"]
+    & {
     background-color: var(--checkbox-control-bg-checked-pressed);
   }
 
   /* Validation states */
   /* Invalid (only when not selected/indeterminate) */
-  .checkbox[data-invalid="true"]:not([aria-checked="true"]):not([data-selected="true"]):not(
+  .rp-checkbox[data-invalid="true"]:not([aria-checked="true"]):not([data-selected="true"]):not(
       [data-indeterminate="true"]
     )
     &,
-  .checkbox[aria-invalid="true"]:not([aria-checked="true"]):not([data-selected="true"]):not(
+  .rp-checkbox[aria-invalid="true"]:not([aria-checked="true"]):not([data-selected="true"]):not(
       [data-indeterminate="true"]
     )
     & {
@@ -196,10 +197,10 @@
   }
 
   /* Invalid + Selected */
-  .checkbox[data-invalid="true"][aria-checked="true"] &,
-  .checkbox[data-invalid="true"][data-selected="true"] &,
-  .checkbox[aria-invalid="true"][aria-checked="true"] &,
-  .checkbox[aria-invalid="true"][data-selected="true"] & {
+  .rp-checkbox[data-invalid="true"][aria-checked="true"] &,
+  .rp-checkbox[data-invalid="true"][data-selected="true"] &,
+  .rp-checkbox[aria-invalid="true"][aria-checked="true"] &,
+  .rp-checkbox[aria-invalid="true"][data-selected="true"] & {
     background-color: var(--checkbox-control-bg-invalid);
     border-color: var(--checkbox-control-border-checked);
     color: var(--checkbox-control-fg-invalid);
@@ -212,8 +213,8 @@
   }
 
   /* Invalid + Indeterminate */
-  .checkbox[data-indeterminate="true"][aria-invalid="true"] &,
-  .checkbox[data-indeterminate="true"][data-invalid="true"] & {
+  .rp-checkbox[data-indeterminate="true"][aria-invalid="true"] &,
+  .rp-checkbox[data-indeterminate="true"][data-invalid="true"] & {
     background-color: var(--checkbox-control-bg-invalid);
     color: var(--checkbox-control-fg-invalid);
   }
@@ -223,7 +224,7 @@
    Checkbox indicator
    ========================================================================== */
 
-.checkbox__indicator {
+.rp-checkbox__indicator {
   @apply relative z-10 flex size-3 items-center justify-center;
 
   & svg {
@@ -235,7 +236,7 @@
    Disabled modifier
    ========================================================================== */
 
-.checkbox--disabled {
+.rp-checkbox--disabled {
   @apply status-disabled;
 }
 
@@ -243,11 +244,11 @@
    Variant property definitions
    ========================================================================== */
 
-.checkbox--primary {
+.rp-checkbox--primary {
   /* Default styles */
 }
 
-.checkbox--secondary .checkbox__control {
+.rp-checkbox--secondary .rp-checkbox__control {
   @apply shadow-none;
 
   /* No border and no shadow leave the fill as the only thing drawing this box, so a flat neutral
@@ -257,6 +258,6 @@
 }
 
 /* Checkbox content — the clickable label (control + label text) */
-.checkbox__content {
+.rp-checkbox__content {
   @apply relative inline-flex cursor-[inherit] items-center gap-3 text-sm font-medium text-foreground outline-none select-none no-highlight;
 }

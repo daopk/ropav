@@ -9,59 +9,59 @@ export const modalVariants = tv({
     variant: "opaque",
   },
   slots: {
-    backdrop: "modal__backdrop",
-    body: "modal__body",
-    closeTrigger: "modal__close-trigger",
-    container: "modal__container",
-    dialog: "modal__dialog",
-    footer: "modal__footer",
-    header: "modal__header",
-    heading: "modal__heading",
-    icon: "modal__icon",
-    trigger: "modal__trigger",
+    backdrop: "rp-modal__backdrop",
+    body: "rp-modal__body",
+    closeTrigger: "rp-modal__close-trigger",
+    container: "rp-modal__container",
+    dialog: "rp-modal__dialog",
+    footer: "rp-modal__footer",
+    header: "rp-modal__header",
+    heading: "rp-modal__heading",
+    icon: "rp-modal__icon",
+    trigger: "rp-modal__trigger",
   },
   variants: {
     scroll: {
       inside: {
-        body: "modal__body--scroll-inside",
-        dialog: "modal__dialog--scroll-inside",
+        body: "rp-modal__body--scroll-inside",
+        dialog: "rp-modal__dialog--scroll-inside",
       },
       outside: {
-        body: "modal__body--scroll-outside",
-        container: "modal__container--scroll-outside",
-        dialog: "modal__dialog--scroll-outside",
+        body: "rp-modal__body--scroll-outside",
+        container: "rp-modal__container--scroll-outside",
+        dialog: "rp-modal__dialog--scroll-outside",
       },
     },
     size: {
       cover: {
-        dialog: "modal__dialog--cover",
+        dialog: "rp-modal__dialog--cover",
       },
       full: {
-        container: "modal__container--full",
-        dialog: "modal__dialog--full",
+        container: "rp-modal__container--full",
+        dialog: "rp-modal__dialog--full",
       },
       lg: {
-        dialog: "modal__dialog--lg",
+        dialog: "rp-modal__dialog--lg",
       },
       md: {
-        dialog: "modal__dialog--md",
+        dialog: "rp-modal__dialog--md",
       },
       sm: {
-        dialog: "modal__dialog--sm",
+        dialog: "rp-modal__dialog--sm",
       },
       xs: {
-        dialog: "modal__dialog--xs",
+        dialog: "rp-modal__dialog--xs",
       },
     },
     variant: {
       blur: {
-        backdrop: "modal__backdrop--blur",
+        backdrop: "rp-modal__backdrop--blur",
       },
       opaque: {
-        backdrop: "modal__backdrop--opaque",
+        backdrop: "rp-modal__backdrop--opaque",
       },
       transparent: {
-        backdrop: "modal__backdrop--transparent",
+        backdrop: "rp-modal__backdrop--transparent",
       },
     },
   },

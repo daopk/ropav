@@ -34,7 +34,7 @@ describe("Separator", () => {
       const { separator } = renderSeparator();
 
       expect(separator).toHaveAttribute("data-orientation", "horizontal");
-      expect(separator).toHaveClass("separator", "separator--horizontal");
+      expect(separator).toHaveClass("rp-separator", "rp-separator--horizontal");
     });
   });
 
@@ -51,7 +51,7 @@ describe("Separator", () => {
       expect(separator).toHaveAttribute("role", "separator");
       expect(separator).toHaveAttribute("aria-orientation", "vertical");
       expect(separator).toHaveAttribute("data-orientation", "vertical");
-      expect(separator).toHaveClass("separator", "separator--vertical");
+      expect(separator).toHaveClass("rp-separator", "rp-separator--vertical");
     });
   });
 
@@ -59,13 +59,13 @@ describe("Separator", () => {
     it("defaults to the default variant", () => {
       const { separator } = renderSeparator();
 
-      expect(separator).toHaveClass("separator--default");
+      expect(separator).toHaveClass("rp-separator--default");
     });
 
     it.each(["secondary", "tertiary"] as const)("renders the %s variant", (variant) => {
       const { separator } = renderSeparator({ variant });
 
-      expect(separator).toHaveClass(`separator--${variant}`);
+      expect(separator).toHaveClass(`rp-separator--${variant}`);
     });
   });
 
@@ -73,7 +73,7 @@ describe("Separator", () => {
     it("merges a caller class", () => {
       const { separator } = renderSeparator({ class: "my-4" });
 
-      expect(separator).toHaveClass("separator", "my-4");
+      expect(separator).toHaveClass("rp-separator", "my-4");
     });
   });
 });

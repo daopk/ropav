@@ -48,16 +48,16 @@ describe("Checkbox", () => {
     it("renders the BEM classes of each part", () => {
       const { container, unmount } = renderCheckbox();
 
-      expect(slot(container, "checkbox").classList.contains("checkbox")).toBe(true);
-      expect(slot(container, "checkbox-content").classList.contains("checkbox__content")).toBe(
+      expect(slot(container, "checkbox").classList.contains("rp-checkbox")).toBe(true);
+      expect(slot(container, "checkbox-content").classList.contains("rp-checkbox__content")).toBe(
         true,
       );
-      expect(slot(container, "checkbox-control").classList.contains("checkbox__control")).toBe(
+      expect(slot(container, "checkbox-control").classList.contains("rp-checkbox__control")).toBe(
         true,
       );
-      expect(slot(container, "checkbox-indicator").classList.contains("checkbox__indicator")).toBe(
-        true,
-      );
+      expect(
+        slot(container, "checkbox-indicator").classList.contains("rp-checkbox__indicator"),
+      ).toBe(true);
 
       unmount();
     });
@@ -79,7 +79,7 @@ describe("Checkbox", () => {
     it("defaults to the primary variant", () => {
       const { container, unmount } = renderCheckbox();
 
-      expect(slot(container, "checkbox").classList.contains("checkbox--primary")).toBe(true);
+      expect(slot(container, "checkbox").classList.contains("rp-checkbox--primary")).toBe(true);
 
       unmount();
     });
@@ -87,7 +87,7 @@ describe("Checkbox", () => {
     it("renders the secondary variant when asked", () => {
       const { container, unmount } = renderCheckbox({ variant: "secondary" });
 
-      expect(slot(container, "checkbox").classList.contains("checkbox--secondary")).toBe(true);
+      expect(slot(container, "checkbox").classList.contains("rp-checkbox--secondary")).toBe(true);
 
       unmount();
     });

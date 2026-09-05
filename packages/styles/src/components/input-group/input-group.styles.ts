@@ -9,33 +9,33 @@ export const inputGroupVariants = tv({
     variant: "primary",
   },
   slots: {
-    base: "input-group",
-    input: "input-group__input",
-    prefix: "input-group__prefix",
-    suffix: "input-group__suffix",
+    base: "rp-input-group",
+    input: "rp-input-group__input",
+    prefix: "rp-input-group__prefix",
+    suffix: "rp-input-group__suffix",
   },
   variants: {
     fullWidth: {
       false: {},
       true: {
-        base: "input-group--full-width",
+        base: "rp-input-group--full-width",
       },
     },
     size: {
       lg: {
-        base: "input-group--lg",
+        base: "rp-input-group--lg",
       },
       md: {},
       sm: {
-        base: "input-group--sm",
+        base: "rp-input-group--sm",
       },
     },
     variant: {
       primary: {
-        base: "input-group--primary",
+        base: "rp-input-group--primary",
       },
       secondary: {
-        base: "input-group--secondary",
+        base: "rp-input-group--secondary",
       },
     },
   },

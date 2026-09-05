@@ -42,7 +42,7 @@ const open = async (result: RenderResult, name?: string) => {
   await nextTick();
   await nextTick();
 
-  const popover = document.body.querySelector<HTMLElement>(".popover")!;
+  const popover = document.body.querySelector<HTMLElement>(".rp-popover")!;
 
   await settled(popover);
 
@@ -134,7 +134,7 @@ describe("Popover (browser)", () => {
 
       // The trigger hands its press down through a context that reaches every descendant, so the
       // popover clears it. Without that, this click would toggle the popover shut.
-      expect(document.body.querySelector(".popover")).toBeTruthy();
+      expect(document.body.querySelector(".rp-popover")).toBeTruthy();
 
       await close(popover);
       result.unmount();
@@ -150,7 +150,7 @@ describe("Popover (browser)", () => {
       // container `inert`, so there is nothing on the page left to press. This is also why the
       // underlay React Aria renders is not ported — it would be inert alongside everything else,
       // and the press lands on the document either way.
-      const popover = document.body.querySelector<HTMLElement>(".popover")!;
+      const popover = document.body.querySelector<HTMLElement>(".rp-popover")!;
 
       await userEvent.click(document.documentElement);
       await settled(popover);
@@ -212,7 +212,7 @@ describe("Popover (browser)", () => {
       await tap(triggerOf(result));
 
       expect(triggerOf(result)).toHaveAttribute("aria-expanded", "true");
-      expect(document.body.querySelector(".popover")).not.toBeNull();
+      expect(document.body.querySelector(".rp-popover")).not.toBeNull();
 
       result.unmount();
     });
@@ -252,12 +252,12 @@ describe("Popover (browser)", () => {
       // its exit animation, so it is still there for a moment after it has closed.
       expect(triggerOf(result)).toHaveAttribute("aria-expanded", "false");
 
-      // Awaited before unmounting, or the node left mid-animation is the `.popover` the next test
+      // Awaited before unmounting, or the node left mid-animation is the `.rp-popover` the next test
       // finds.
       await settled(popover);
       await nextTick();
 
-      expect(document.body.querySelector(".popover")).toBeNull();
+      expect(document.body.querySelector(".rp-popover")).toBeNull();
 
       result.unmount();
     });
@@ -277,7 +277,7 @@ describe("Popover (browser)", () => {
       await nextTick();
 
       expect(document.activeElement).toBe(bare(popover, "second"));
-      expect(document.body.querySelector(".popover")).toBeTruthy();
+      expect(document.body.querySelector(".rp-popover")).toBeTruthy();
 
       await close(popover);
       result.unmount();
@@ -494,7 +494,7 @@ describe("Popover (browser)", () => {
       await nextTick();
       await nextTick();
 
-      const popover = document.body.querySelector<HTMLElement>(".popover")!;
+      const popover = document.body.querySelector<HTMLElement>(".rp-popover")!;
 
       // The attribute is what the stylesheet keys the entry animation on, and the animation has
       // to be running for it to mean anything.
@@ -539,7 +539,7 @@ describe("Popover (browser)", () => {
       await nextTick();
       await nextTick();
 
-      expect(document.body.querySelector(".popover")).toBeNull();
+      expect(document.body.querySelector(".rp-popover")).toBeNull();
 
       result.unmount();
     });

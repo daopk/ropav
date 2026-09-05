@@ -3,14 +3,14 @@ import type { VariantProps } from "../../tv";
 import { tv } from "../../tv";
 
 export const textFieldVariants = tv({
-  base: "textfield",
+  base: "rp-textfield",
   defaultVariants: {
     fullWidth: false,
   },
   variants: {
     fullWidth: {
       false: "",
-      true: "textfield--full-width",
+      true: "rp-textfield--full-width",
     },
   },
 });

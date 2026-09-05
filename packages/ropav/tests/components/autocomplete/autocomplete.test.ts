@@ -102,7 +102,7 @@ describe("Autocomplete", () => {
       const result = render();
       const root = result.container.querySelector('[data-slot="autocomplete"]')!;
 
-      expect(root).toHaveClass("autocomplete");
+      expect(root).toHaveClass("rp-autocomplete");
       expect(triggerOf(result)).toHaveAttribute("role", "group");
       expect(root.querySelector('[data-slot="autocomplete-value"]')).toBeInTheDocument();
       expect(
@@ -145,18 +145,18 @@ describe("Autocomplete", () => {
       await open(result);
 
       expect(result.container.querySelector('[data-slot="autocomplete"]')!.className).toContain(
-        "autocomplete--sm",
+        "rp-autocomplete--sm",
       );
       expect(
         result.baseElement.querySelector('[data-slot="autocomplete-popover"]')!.className,
-      ).toContain("autocomplete__popover--sm");
+      ).toContain("rp-autocomplete__popover--sm");
     });
 
     it("leaves the default size unmarked", () => {
       const result = render({ size: "md" });
 
       expect(result.container.querySelector('[data-slot="autocomplete"]')!.className).not.toMatch(
-        /autocomplete--(sm|md|lg)/,
+        /rp-autocomplete--(sm|md|lg)/,
       );
     });
 
@@ -169,17 +169,17 @@ describe("Autocomplete", () => {
       });
 
       expect(result.container.querySelector('[data-slot="autocomplete"]')).toHaveClass(
-        "autocomplete",
+        "rp-autocomplete",
         "my-root",
       );
-      expect(triggerOf(result)).toHaveClass("autocomplete__trigger", "my-trigger");
+      expect(triggerOf(result)).toHaveClass("rp-autocomplete__trigger", "my-trigger");
       expect(result.container.querySelector('[data-slot="autocomplete-value"]')).toHaveClass(
-        "autocomplete__value",
+        "rp-autocomplete__value",
         "my-value",
       );
       expect(
         result.container.querySelector('[data-slot="autocomplete-default-indicator"]'),
-      ).toHaveClass("autocomplete__indicator", "my-indicator");
+      ).toHaveClass("rp-autocomplete__indicator", "my-indicator");
     });
   });
 

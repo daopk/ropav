@@ -6,7 +6,7 @@
 /**
  * Element: trigger - the element that opens the drawer
  */
-.drawer__trigger {
+.rp-drawer__trigger {
   @apply inline-block cursor-(--cursor-interactive);
 
   transition:
@@ -37,7 +37,7 @@
 /**
  * Element: backdrop - the overlay behind the drawer
  */
-.drawer__backdrop {
+.rp-drawer__backdrop {
   @apply fixed inset-0 z-50;
   @apply h-(--visual-viewport-height) w-full;
   opacity: 1;
@@ -66,28 +66,28 @@
 /**
  * Modifier: backdrop--transparent
  */
-.drawer__backdrop--transparent {
+.rp-drawer__backdrop--transparent {
   @apply bg-transparent;
 }
 
 /**
  * Modifier: backdrop--opaque
  */
-.drawer__backdrop--opaque {
+.rp-drawer__backdrop--opaque {
   @apply bg-backdrop;
 }
 
 /**
  * Modifier: backdrop--blur
  */
-.drawer__backdrop--blur {
+.rp-drawer__backdrop--blur {
   @apply bg-backdrop backdrop-blur-md;
 }
 
 /**
  * Element: content - the positioning wrapper for the drawer panel
  */
-.drawer__content {
+.rp-drawer__content {
   @apply pointer-events-none;
   @apply fixed inset-0 z-50 flex;
   @apply h-(--visual-viewport-height) w-full min-w-0;
@@ -97,7 +97,7 @@
  * Modifier: content--bottom (default)
  * Slides up from the bottom edge
  */
-.drawer__content--bottom {
+.rp-drawer__content--bottom {
   @apply items-end;
 }
 
@@ -105,7 +105,7 @@
  * Modifier: content--top
  * Slides down from the top edge
  */
-.drawer__content--top {
+.rp-drawer__content--top {
   @apply items-start;
 }
 
@@ -113,7 +113,7 @@
  * Modifier: content--left
  * Slides in from the left edge
  */
-.drawer__content--left {
+.rp-drawer__content--left {
   @apply justify-start;
 }
 
@@ -121,14 +121,14 @@
  * Modifier: content--right
  * Slides in from the right edge
  */
-.drawer__content--right {
+.rp-drawer__content--right {
   @apply justify-end;
 }
 
 /**
  * Element: dialog - the drawer panel itself
  */
-.drawer__dialog {
+.rp-drawer__dialog {
   @apply relative;
   @apply flex flex-col;
   @apply bg-overlay shadow-overlay outline-none;
@@ -174,41 +174,41 @@
   }
 }
 
-[data-exiting="true"] .drawer__dialog {
+[data-exiting="true"] .rp-drawer__dialog {
   transition-duration: var(--drawer-exit-duration);
   transition-timing-function: var(--drawer-exit-ease);
 }
 
-.drawer__content--left .drawer__dialog,
-.drawer__content--right .drawer__dialog,
-.drawer__content--top .drawer__dialog,
-.drawer__content--bottom .drawer__dialog {
+.rp-drawer__content--left .rp-drawer__dialog,
+.rp-drawer__content--right .rp-drawer__dialog,
+.rp-drawer__content--top .rp-drawer__dialog,
+.rp-drawer__content--bottom .rp-drawer__dialog {
   translate: 0 0;
 }
 
-.drawer__content--left[data-entering="true"] .drawer__dialog,
-.drawer__content--left[data-exiting="true"] .drawer__dialog {
+.rp-drawer__content--left[data-entering="true"] .rp-drawer__dialog,
+.rp-drawer__content--left[data-exiting="true"] .rp-drawer__dialog {
   translate: -100% 0;
 }
 
-.drawer__content--right[data-entering="true"] .drawer__dialog,
-.drawer__content--right[data-exiting="true"] .drawer__dialog {
+.rp-drawer__content--right[data-entering="true"] .rp-drawer__dialog,
+.rp-drawer__content--right[data-exiting="true"] .rp-drawer__dialog {
   translate: 100% 0;
 }
 
-.drawer__content--top[data-entering="true"] .drawer__dialog,
-.drawer__content--top[data-exiting="true"] .drawer__dialog {
+.rp-drawer__content--top[data-entering="true"] .rp-drawer__dialog,
+.rp-drawer__content--top[data-exiting="true"] .rp-drawer__dialog {
   translate: 0 -100%;
 }
 
-.drawer__content--bottom[data-entering="true"] .drawer__dialog,
-.drawer__content--bottom[data-exiting="true"] .drawer__dialog {
+.rp-drawer__content--bottom[data-entering="true"] .rp-drawer__dialog,
+.rp-drawer__content--bottom[data-exiting="true"] .rp-drawer__dialog {
   translate: 0 100%;
 }
 
-.drawer__dialog--top {
+.rp-drawer__dialog--top {
   @apply pb-2;
-  .drawer__handle {
+  .rp-drawer__handle {
     @apply pb-0;
   }
 }
@@ -216,7 +216,7 @@
 /**
  * Element: header - the top section with the title
  */
-.drawer__header {
+.rp-drawer__header {
   @apply flex flex-col gap-3;
   @apply mb-0;
 }
@@ -224,7 +224,7 @@
 /**
  * Element: heading - the main title text
  */
-.drawer__heading {
+.rp-drawer__heading {
   @apply align-middle;
   @apply text-base font-medium text-foreground;
 }
@@ -233,7 +233,7 @@
  * Element: body - the main content area
  * touch-action: pan-y allows vertical scrolling while the dialog captures drag gestures
  */
-.drawer__body {
+.rp-drawer__body {
   @apply min-h-0 flex-1 scrollbar;
   @apply text-sm leading-[1.43] text-muted;
   @apply -m-[3px] my-0 p-[3px];
@@ -244,7 +244,7 @@
 /**
  * Element: footer - the bottom action section
  */
-.drawer__footer {
+.rp-drawer__footer {
   @apply flex flex-row items-center justify-end gap-2;
   @apply mt-0;
 }
@@ -252,7 +252,7 @@
 /**
  * Element: handle - visual drag handle indicator
  */
-.drawer__handle {
+.rp-drawer__handle {
   @apply flex items-center justify-center;
   @apply pb-2;
 
@@ -266,29 +266,29 @@
 /**
  * Element: close-trigger - the close button
  */
-.drawer__close-trigger {
+.rp-drawer__close-trigger {
   @apply absolute end-4 top-4;
 }
 
 /**
  * Elements Spacing
  */
-.drawer__header + .drawer__body {
+.rp-drawer__header + .rp-drawer__body {
   @apply mt-2;
 }
 
-.drawer__header + .drawer__footer {
+.rp-drawer__header + .rp-drawer__footer {
   @apply mt-5;
 }
 
-.drawer__body + .drawer__footer {
+.rp-drawer__body + .rp-drawer__footer {
   @apply mt-5;
 }
 
-.drawer__handle + .drawer__header {
+.rp-drawer__handle + .rp-drawer__header {
   @apply mt-0;
 }
 
-.drawer__handle + .drawer__body {
+.rp-drawer__handle + .rp-drawer__body {
   @apply mt-0;
 }

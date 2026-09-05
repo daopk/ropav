@@ -24,7 +24,7 @@ describe("ProgressBar band", () => {
     const { container, unmount } = renderVapor(Fixture, { props: { isAnimated: true, value: 60 } });
     const fill = part(container, "progress-bar-fill");
 
-    expect(getComputedStyle(fill, "::after").animationName).toBe("progress-bar-stripes");
+    expect(getComputedStyle(fill, "::after").animationName).toBe("rp-progress-bar-stripes");
 
     unmount();
   });
@@ -60,8 +60,8 @@ describe("ProgressBar band", () => {
     const fill = part(container, "progress-bar-fill");
 
     // Different boxes, so the slide does not take the `animation` the band needs.
-    expect(getComputedStyle(fill).animationName).toBe("progress-bar-indeterminate");
-    expect(getComputedStyle(fill, "::after").animationName).toBe("progress-bar-stripes");
+    expect(getComputedStyle(fill).animationName).toBe("rp-progress-bar-indeterminate");
+    expect(getComputedStyle(fill, "::after").animationName).toBe("rp-progress-bar-stripes");
 
     unmount();
   });

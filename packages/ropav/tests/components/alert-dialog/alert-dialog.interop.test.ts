@@ -95,12 +95,14 @@ describe("AlertDialog (interop)", () => {
 
     // The slot set accumulates: the backdrop decides its own variant, the container the dialog's
     // size, and each part reads whichever level is nearest above it.
-    expect(slot("alert-dialog-backdrop")!.classList.contains("alert-dialog__backdrop--blur")).toBe(
+    expect(
+      slot("alert-dialog-backdrop")!.classList.contains("rp-alert-dialog__backdrop--blur"),
+    ).toBe(true);
+    expect(slot("alert-dialog-dialog")!.classList.contains("rp-alert-dialog__dialog--lg")).toBe(
       true,
     );
-    expect(slot("alert-dialog-dialog")!.classList.contains("alert-dialog__dialog--lg")).toBe(true);
-    expect(slot("alert-dialog-heading")!.classList.contains("alert-dialog__heading")).toBe(true);
-    expect(slot("alert-dialog-body")!.classList.contains("alert-dialog__body")).toBe(true);
+    expect(slot("alert-dialog-heading")!.classList.contains("rp-alert-dialog__heading")).toBe(true);
+    expect(slot("alert-dialog-body")!.classList.contains("rp-alert-dialog__body")).toBe(true);
 
     result.unmount();
   });
@@ -112,7 +114,9 @@ describe("AlertDialog (interop)", () => {
 
     // The one part that reads no context at all, so it has to work identically wherever it is
     // written.
-    expect(slot("alert-dialog-icon")!.classList.contains("alert-dialog__icon--warning")).toBe(true);
+    expect(slot("alert-dialog-icon")!.classList.contains("rp-alert-dialog__icon--warning")).toBe(
+      true,
+    );
     expect(slot("alert-dialog-default-icon")).toBeTruthy();
 
     result.unmount();

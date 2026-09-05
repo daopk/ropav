@@ -3,14 +3,14 @@ import type { VariantProps } from "../../tv";
 import { tv } from "../../tv";
 
 export const radioGroupVariants = tv({
-  base: "radio-group",
+  base: "rp-radio-group",
   defaultVariants: {
     variant: "primary",
   },
   variants: {
     variant: {
-      primary: "radio-group--primary",
-      secondary: "radio-group--secondary",
+      primary: "rp-radio-group--primary",
+      secondary: "rp-radio-group--secondary",
     },
   },
 });

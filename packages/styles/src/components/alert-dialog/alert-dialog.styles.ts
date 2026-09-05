@@ -9,61 +9,61 @@ export const alertDialogVariants = tv({
     variant: "opaque",
   },
   slots: {
-    backdrop: "alert-dialog__backdrop",
-    body: "alert-dialog__body",
-    closeTrigger: "alert-dialog__close-trigger",
-    container: "alert-dialog__container",
-    dialog: "alert-dialog__dialog",
-    footer: "alert-dialog__footer",
-    header: "alert-dialog__header",
-    heading: "alert-dialog__heading",
-    icon: "alert-dialog__icon",
-    trigger: "alert-dialog__trigger",
+    backdrop: "rp-alert-dialog__backdrop",
+    body: "rp-alert-dialog__body",
+    closeTrigger: "rp-alert-dialog__close-trigger",
+    container: "rp-alert-dialog__container",
+    dialog: "rp-alert-dialog__dialog",
+    footer: "rp-alert-dialog__footer",
+    header: "rp-alert-dialog__header",
+    heading: "rp-alert-dialog__heading",
+    icon: "rp-alert-dialog__icon",
+    trigger: "rp-alert-dialog__trigger",
   },
   variants: {
     size: {
       cover: {
-        dialog: "alert-dialog__dialog--cover",
+        dialog: "rp-alert-dialog__dialog--cover",
       },
       lg: {
-        dialog: "alert-dialog__dialog--lg",
+        dialog: "rp-alert-dialog__dialog--lg",
       },
       md: {
-        dialog: "alert-dialog__dialog--md",
+        dialog: "rp-alert-dialog__dialog--md",
       },
       sm: {
-        dialog: "alert-dialog__dialog--sm",
+        dialog: "rp-alert-dialog__dialog--sm",
       },
       xs: {
-        dialog: "alert-dialog__dialog--xs",
+        dialog: "rp-alert-dialog__dialog--xs",
       },
     },
     status: {
       accent: {
-        icon: "alert-dialog__icon--accent",
+        icon: "rp-alert-dialog__icon--accent",
       },
       danger: {
-        icon: "alert-dialog__icon--danger",
+        icon: "rp-alert-dialog__icon--danger",
       },
       default: {
-        icon: "alert-dialog__icon--default",
+        icon: "rp-alert-dialog__icon--default",
       },
       success: {
-        icon: "alert-dialog__icon--success",
+        icon: "rp-alert-dialog__icon--success",
       },
       warning: {
-        icon: "alert-dialog__icon--warning",
+        icon: "rp-alert-dialog__icon--warning",
       },
     },
     variant: {
       blur: {
-        backdrop: "alert-dialog__backdrop--blur",
+        backdrop: "rp-alert-dialog__backdrop--blur",
       },
       opaque: {
-        backdrop: "alert-dialog__backdrop--opaque",
+        backdrop: "rp-alert-dialog__backdrop--opaque",
       },
       transparent: {
-        backdrop: "alert-dialog__backdrop--transparent",
+        backdrop: "rp-alert-dialog__backdrop--transparent",
       },
     },
   },

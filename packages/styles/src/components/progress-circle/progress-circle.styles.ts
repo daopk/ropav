@@ -8,38 +8,38 @@ export const progressCircleVariants = tv({
     size: "md",
   },
   slots: {
-    base: "progress-circle",
-    fillCircle: "progress-circle__fill-circle",
-    track: "progress-circle__track",
-    trackCircle: "progress-circle__track-circle",
+    base: "rp-progress-circle",
+    fillCircle: "rp-progress-circle__fill-circle",
+    track: "rp-progress-circle__track",
+    trackCircle: "rp-progress-circle__track-circle",
   },
   variants: {
     color: {
       accent: {
-        base: "progress-circle--accent",
+        base: "rp-progress-circle--accent",
       },
       danger: {
-        base: "progress-circle--danger",
+        base: "rp-progress-circle--danger",
       },
       default: {
-        base: "progress-circle--default",
+        base: "rp-progress-circle--default",
       },
       success: {
-        base: "progress-circle--success",
+        base: "rp-progress-circle--success",
       },
       warning: {
-        base: "progress-circle--warning",
+        base: "rp-progress-circle--warning",
       },
     },
     size: {
       lg: {
-        base: "progress-circle--lg",
+        base: "rp-progress-circle--lg",
       },
       md: {
-        base: "progress-circle--md",
+        base: "rp-progress-circle--md",
       },
       sm: {
-        base: "progress-circle--sm",
+        base: "rp-progress-circle--sm",
       },
     },
   },

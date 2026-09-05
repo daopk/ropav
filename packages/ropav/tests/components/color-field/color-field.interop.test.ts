@@ -61,7 +61,7 @@ describe("ColorField (interop)", () => {
   it("hands the group's styling to a control written in the host", () => {
     const { input, unmount } = render({ defaultValue: "#0485F7" });
 
-    expect(input()).toHaveClass("color-input-group__input");
+    expect(input()).toHaveClass("rp-color-input-group__input");
     unmount();
   });
 

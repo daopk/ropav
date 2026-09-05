@@ -163,7 +163,7 @@ describe("Avatar", () => {
       FakeImage.last?.onload?.();
       await nextTick();
 
-      expect(imageIn(container)?.classList.contains("avatar__image")).toBe(true);
+      expect(imageIn(container)?.classList.contains("rp-avatar__image")).toBe(true);
 
       unmount();
     });
@@ -340,14 +340,14 @@ describe("Avatar", () => {
     it("renders the BEM block class on the root", () => {
       const { container, unmount } = renderVapor(AvatarFixture);
 
-      expect(container.firstElementChild?.classList.contains("avatar")).toBe(true);
+      expect(container.firstElementChild?.classList.contains("rp-avatar")).toBe(true);
 
       unmount();
     });
 
     it.each([
-      ["size", "lg", "avatar--lg"],
-      ["variant", "soft", "avatar--soft"],
+      ["size", "lg", "rp-avatar--lg"],
+      ["variant", "soft", "rp-avatar--soft"],
     ])("applies the %s modifier class", (prop, value, expected) => {
       const { container, unmount } = renderVapor(AvatarFixture, { props: { [prop]: value } });
 
@@ -359,7 +359,7 @@ describe("Avatar", () => {
     it("applies the root color to the fallback", () => {
       const { container, unmount } = renderVapor(AvatarFixture, { props: { color: "danger" } });
 
-      expect(fallbackIn(container)?.classList.contains("avatar__fallback--danger")).toBe(true);
+      expect(fallbackIn(container)?.classList.contains("rp-avatar__fallback--danger")).toBe(true);
 
       unmount();
     });
@@ -370,8 +370,8 @@ describe("Avatar", () => {
       });
       const fallback = fallbackIn(container);
 
-      expect(fallback?.classList.contains("avatar__fallback--success")).toBe(true);
-      expect(fallback?.classList.contains("avatar__fallback--danger")).toBe(false);
+      expect(fallback?.classList.contains("rp-avatar__fallback--success")).toBe(true);
+      expect(fallback?.classList.contains("rp-avatar__fallback--danger")).toBe(false);
 
       unmount();
     });

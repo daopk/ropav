@@ -1,5 +1,5 @@
 /* Select styles */
-.select {
+.rp-select {
   @apply flex flex-col gap-1;
 
   &[data-invalid="true"],
@@ -14,7 +14,7 @@
   }
 }
 
-.select__trigger {
+.rp-select__trigger {
   @apply relative isolate inline-flex min-h-9 rounded-field border px-3 field-line-md text-field-foreground shadow-field outline-none select-none no-highlight;
 
   /* The fill, per state. The `--secondary` variant re-points these and declares nothing else. */
@@ -46,7 +46,7 @@
   border-color: var(--field-border);
 
   /* Add inline-end padding when indicator is present */
-  &:has(.select__indicator) {
+  &:has(.rp-select__indicator) {
     @apply pe-7;
   }
 
@@ -73,8 +73,8 @@
   }
 
   /* Invalid state */
-  .select[data-invalid="true"] &,
-  .select[aria-invalid="true"] & {
+  .rp-select[data-invalid="true"] &,
+  .rp-select[aria-invalid="true"] & {
     @apply status-invalid-field;
     background-color: var(--select-trigger-bg-focus);
   }
@@ -88,11 +88,11 @@
 }
 
 /* Variant property definitions */
-.select--primary {
+.rp-select--primary {
   /* Default styles */
 }
 
-.select--secondary .select__trigger {
+.rp-select--secondary .rp-select__trigger {
   @apply shadow-none;
 
   --select-trigger-bg: var(--default);
@@ -100,7 +100,7 @@
   --select-trigger-bg-focus: var(--default);
 }
 
-.select__value {
+.rp-select__value {
   @apply flex-1 text-start wrap-break-word;
 
   --select-value-fg: currentcolor;
@@ -118,7 +118,7 @@
   }
 }
 
-.select__indicator {
+.rp-select__indicator {
   @apply absolute inset-y-0 end-2 my-auto flex shrink-0 items-center justify-center text-field-placeholder transition duration-150;
 
   &[data-open="true"] {
@@ -131,7 +131,7 @@
 }
 
 /* Similar to popover content styles */
-.select__popover {
+.rp-select__popover {
   @apply min-w-(--trigger-width) origin-(--trigger-anchor-point) scroll-py-1 scrollbar overflow-y-auto overscroll-contain bg-overlay p-0 text-sm;
   border-radius: min(32px, var(--component-radius));
   box-shadow: var(--shadow-overlay);
@@ -216,21 +216,21 @@
 
 /* The trigger's own metrics, and the option rows in a popover that is portalled out of this tree -
  * which is why the popover carries its own size class rather than being reached from the base. */
-.select--sm .select__trigger {
+.rp-select--sm .rp-select__trigger {
   @apply min-h-8 field-line-sm;
 }
 
-.select--lg .select__trigger {
+.rp-select--lg .rp-select__trigger {
   @apply min-h-10 field-line-lg;
 }
 
-.select__popover--sm {
+.rp-select__popover--sm {
   [data-slot="list-box-item"] {
     @apply min-h-8 py-1;
   }
 }
 
-.select__popover--lg {
+.rp-select__popover--lg {
   @apply text-base;
 
   [data-slot="list-box-item"] {
@@ -239,10 +239,10 @@
 }
 
 /* Full width modifier */
-.select--full-width {
+.rp-select--full-width {
   @apply w-full;
 }
 
-.select__trigger--full-width {
+.rp-select__trigger--full-width {
   @apply w-full;
 }

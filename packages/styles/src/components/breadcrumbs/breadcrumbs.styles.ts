@@ -4,10 +4,10 @@ import { tv } from "../../tv";
 
 export const breadcrumbsVariants = tv({
   slots: {
-    base: "breadcrumbs",
-    item: "breadcrumbs__item",
-    link: "breadcrumbs__link",
-    separator: "breadcrumbs__separator",
+    base: "rp-breadcrumbs",
+    item: "rp-breadcrumbs__item",
+    link: "rp-breadcrumbs__link",
+    separator: "rp-breadcrumbs__separator",
   },
 });
 

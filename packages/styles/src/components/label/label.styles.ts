@@ -3,7 +3,7 @@ import type { VariantProps } from "../../tv";
 import { tv } from "../../tv";
 
 export const labelVariants = tv({
-  base: "label",
+  base: "rp-label",
   defaultVariants: {
     isDisabled: false,
     isInvalid: false,
@@ -11,13 +11,13 @@ export const labelVariants = tv({
   },
   variants: {
     isDisabled: {
-      true: "label--disabled",
+      true: "rp-label--disabled",
     },
     isInvalid: {
-      true: "label--invalid",
+      true: "rp-label--invalid",
     },
     isRequired: {
-      true: "label--required",
+      true: "rp-label--required",
     },
   },
 });

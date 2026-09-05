@@ -1,5 +1,5 @@
 /* ComboBox styles */
-.combo-box {
+.rp-combo-box {
   @apply flex flex-col gap-1;
 
   &[data-invalid="true"],
@@ -17,7 +17,7 @@
     @apply min-w-0 flex-1;
 
     /* Add inline-end padding when trigger is present */
-    &:has(+ .combo-box__trigger) {
+    &:has(+ .rp-combo-box__trigger) {
       @apply pe-7;
     }
 
@@ -38,11 +38,11 @@
   }
 }
 
-.combo-box__input-group {
+.rp-combo-box__input-group {
   @apply relative isolate inline-flex items-center;
 }
 
-.combo-box__value {
+.rp-combo-box__value {
   @apply text-sm wrap-break-word empty:hidden;
 
   --combo-box-value-fg: var(--field-foreground, var(--foreground));
@@ -60,7 +60,7 @@
   }
 }
 
-.combo-box__trigger {
+.rp-combo-box__trigger {
   @apply absolute end-0 top-1/2 flex h-full shrink-0 -translate-y-1/2 cursor-pointer items-center justify-center pe-2 text-field-placeholder transition duration-150 no-highlight;
 
   /* Remove default button styles */
@@ -108,7 +108,7 @@
 }
 
 /* Similar to popover content styles */
-.combo-box__popover {
+.rp-combo-box__popover {
   @apply min-w-(--trigger-width) origin-(--trigger-anchor-point) scroll-py-1 scrollbar overflow-y-auto overscroll-contain bg-overlay p-0 text-sm;
   border-radius: min(32px, var(--component-radius));
   box-shadow: var(--shadow-overlay);
@@ -190,13 +190,13 @@
 
 /* The input inside sizes itself from the context the root provides, so only the option rows are
  * left - reached from the popover's own class, since it is teleported out of this tree. */
-.combo-box__popover--sm {
+.rp-combo-box__popover--sm {
   [data-slot="list-box-item"] {
     @apply min-h-8 py-1;
   }
 }
 
-.combo-box__popover--lg {
+.rp-combo-box__popover--lg {
   @apply text-base;
 
   [data-slot="list-box-item"] {
@@ -205,10 +205,10 @@
 }
 
 /* Full width modifier */
-.combo-box--full-width {
+.rp-combo-box--full-width {
   @apply w-full;
 }
 
-.combo-box__input-group--full-width {
+.rp-combo-box__input-group--full-width {
   @apply w-full;
 }

@@ -76,8 +76,8 @@ describe("ColorPicker", () => {
     it("renders the root and the trigger with their data-slot and BEM class", async () => {
       const { container, unmount } = await renderPicker();
 
-      expect(container.querySelector("[data-slot='color-picker']")).toHaveClass("color-picker");
-      expect(slot("color-picker-trigger")).toHaveClass("color-picker__trigger");
+      expect(container.querySelector("[data-slot='color-picker']")).toHaveClass("rp-color-picker");
+      expect(slot("color-picker-trigger")).toHaveClass("rp-color-picker__trigger");
 
       unmount();
     });
@@ -89,7 +89,7 @@ describe("ColorPicker", () => {
 
       await open();
 
-      expect(slot("color-picker-popover")).toHaveClass("color-picker__popover");
+      expect(slot("color-picker-popover")).toHaveClass("rp-color-picker__popover");
 
       unmount();
     });

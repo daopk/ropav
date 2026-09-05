@@ -75,13 +75,13 @@ describe("forced colors mode (browser)", () => {
   it("strips the box-shadow every ring is built from", () => {
     // The premise of the whole file. If a browser ever stops doing this, the fallbacks below
     // become dead weight and this test says so.
-    const button = mount(`<button class="button" data-focus-visible="true">x</button>`);
+    const button = mount(`<button class="rp-button" data-focus-visible="true">x</button>`);
 
     expect(styleOf(button).boxShadow).toBe("none");
   });
 
   it("draws a focus outline where the ring used to be", () => {
-    const button = mount(`<button class="button" data-focus-visible="true">x</button>`);
+    const button = mount(`<button class="rp-button" data-focus-visible="true">x</button>`);
     const style = styleOf(button);
 
     expect(style.outlineStyle).not.toBe("none");
@@ -93,7 +93,7 @@ describe("forced colors mode (browser)", () => {
     // `status-focused-field` is a separate utility with its own ring, and the group only takes
     // it while a real input inside is focused - hence the actual `focus()`.
     const group = mount(`
-      <div class="input-group">
+      <div class="rp-input-group">
         <input data-slot="input-group-input" />
       </div>
     `);
@@ -107,9 +107,9 @@ describe("forced colors mode (browser)", () => {
   it("keeps a focused invalid field distinguishable from an unfocused one", () => {
     // Invalid draws a 1px outline unfocused and swaps to a ring when focused. The ring is a
     // box-shadow, so without the fallback both states render as the same 1px outline.
-    const resting = mount(`<div class="input-group" data-invalid="true"></div>`);
+    const resting = mount(`<div class="rp-input-group" data-invalid="true"></div>`);
     const focused = mount(
-      `<div class="input-group" data-invalid="true" data-focus-within="true"></div>`,
+      `<div class="rp-input-group" data-invalid="true" data-focus-within="true"></div>`,
     );
 
     expect(Number.parseFloat(styleOf(focused).outlineWidth)).toBeGreaterThan(
@@ -119,8 +119,8 @@ describe("forced colors mode (browser)", () => {
   });
 
   it("marks a selected element that only had a background to show it", () => {
-    const resting = mount(`<div class="tag">x</div>`);
-    const selected = mount(`<div class="tag" data-selected="true">x</div>`);
+    const resting = mount(`<div class="rp-tag">x</div>`);
+    const selected = mount(`<div class="rp-tag" data-selected="true">x</div>`);
 
     expect(styleOf(selected).backgroundColor).toBe(systemColor("Highlight"));
     expect(styleOf(selected).color).toBe(systemColor("HighlightText"));
@@ -139,12 +139,12 @@ describe("forced colors mode (browser)", () => {
     // artefact - so the opt-out itself is what gets asserted. Drop it from any of these and the
     // component still reports the right colours while showing a blank block on screen.
     const cases = [
-      mount(`<div class="tag" data-selected="true">t</div>`),
-      mount(`<div class="toggle-button" data-selected="true">t</div>`),
-      mount(`<div class="calendar__cell" data-selected="true">15</div>`),
-      mount(`<table><tbody><tr class="table__row" data-selected="true">
-        <td class="table__cell">c</td></tr></tbody></table>`).querySelector(".table__cell")!,
-      mount(`<div class="tabs__tab" data-selected="true">Overview</div>`),
+      mount(`<div class="rp-tag" data-selected="true">t</div>`),
+      mount(`<div class="rp-toggle-button" data-selected="true">t</div>`),
+      mount(`<div class="rp-calendar__cell" data-selected="true">15</div>`),
+      mount(`<table><tbody><tr class="rp-table__row" data-selected="true">
+        <td class="rp-table__cell">c</td></tr></tbody></table>`).querySelector(".rp-table__cell")!,
+      mount(`<div class="rp-tabs__tab" data-selected="true">Overview</div>`),
     ];
 
     for (const element of cases) {
@@ -156,16 +156,16 @@ describe("forced colors mode (browser)", () => {
     // The worst case for a background-only state: track and thumb are both flattened to Canvas,
     // so the thumb disappears into the track and the position it slid to shows nothing.
     const off = mount(`
-      <div class="switch"><div class="switch__control"><div class="switch__thumb"></div></div></div>
+      <div class="rp-switch"><div class="rp-switch__control"><div class="rp-switch__thumb"></div></div></div>
     `);
     const on = mount(`
-      <div class="switch" data-selected="true">
-        <div class="switch__control"><div class="switch__thumb"></div></div>
+      <div class="rp-switch" data-selected="true">
+        <div class="rp-switch__control"><div class="rp-switch__thumb"></div></div>
       </div>
     `);
 
-    const track = (host: HTMLElement) => styleOf(host.querySelector(".switch__control")!);
-    const thumb = (host: HTMLElement) => styleOf(host.querySelector(".switch__thumb")!);
+    const track = (host: HTMLElement) => styleOf(host.querySelector(".rp-switch__control")!);
+    const thumb = (host: HTMLElement) => styleOf(host.querySelector(".rp-switch__thumb")!);
 
     expect(thumb(off).backgroundColor).not.toBe(track(off).backgroundColor);
     expect(thumb(on).backgroundColor).not.toBe(track(on).backgroundColor);
@@ -174,9 +174,9 @@ describe("forced colors mode (browser)", () => {
 
   it("keeps the checked radio dot visible against its control", () => {
     const radio = mount(
-      `<div class="radio" data-selected="true"><span class="radio__indicator"></span></div>`,
+      `<div class="rp-radio" data-selected="true"><span class="rp-radio__indicator"></span></div>`,
     );
-    const indicator = radio.querySelector(".radio__indicator")!;
+    const indicator = radio.querySelector(".rp-radio__indicator")!;
 
     expect(styleOf(indicator, "::before").backgroundColor).toBe(systemColor("CanvasText"));
   });
@@ -184,8 +184,8 @@ describe("forced colors mode (browser)", () => {
   it("marks the active page", () => {
     // An inactive link is transparent and the active one is a plain background, so forced
     // colors flattens the second onto the page and leaves the pair identical.
-    const active = mount(`<a class="pagination__link" href="#" data-active="true">2</a>`);
-    const plain = mount(`<a class="pagination__link" href="#">3</a>`);
+    const active = mount(`<a class="rp-pagination__link" href="#" data-active="true">2</a>`);
+    const plain = mount(`<a class="rp-pagination__link" href="#">3</a>`);
 
     expect(styleOf(active).backgroundColor).toBe(systemColor("Highlight"));
     expect(styleOf(active).backgroundColor).not.toBe(styleOf(plain).backgroundColor);
@@ -193,8 +193,8 @@ describe("forced colors mode (browser)", () => {
   });
 
   it.each([
-    ["meter", "meter"],
-    ["progress-bar", "progress-bar"],
+    ["meter", "rp-meter"],
+    ["progress-bar", "rp-progress-bar"],
   ])("keeps the %s readable as a proportion", (_name, block) => {
     // Track and fill are both plain backgrounds. Flattened, the whole bar stops rendering -
     // not a weaker indicator, nothing at all.
@@ -215,11 +215,11 @@ describe("forced colors mode (browser)", () => {
     // would go on painting in author colours over the `Highlight` the fill became - handing back
     // exactly the contrast the flattening bought.
     const host = mount(`
-      <div class="progress-bar progress-bar--animated">
-        <div class="progress-bar__track"><div class="progress-bar__fill"></div></div>
+      <div class="rp-progress-bar rp-progress-bar--animated">
+        <div class="rp-progress-bar__track"><div class="rp-progress-bar__fill"></div></div>
       </div>
     `);
-    const fill = host.querySelector<HTMLElement>(".progress-bar__fill")!;
+    const fill = host.querySelector<HTMLElement>(".rp-progress-bar__fill")!;
 
     expect(styleOf(fill).backgroundColor).toBe(systemColor("Highlight"));
     expect(styleOf(fill, "::after").content).toBe("none");
@@ -231,18 +231,18 @@ describe("forced colors mode (browser)", () => {
     // dark enough to read against `Canvas` is close enough to `Highlight` to swallow the arc in
     // one palette or the other.
     const ring = mount(`
-      <div class="progress-circle" aria-valuenow="60">
-        <svg class="progress-circle__track" viewBox="0 0 32 32">
-          <circle class="progress-circle__track-circle" cx="16" cy="16" r="13"></circle>
-          <circle class="progress-circle__fill-circle" cx="16" cy="16" r="13"></circle>
+      <div class="rp-progress-circle" aria-valuenow="60">
+        <svg class="rp-progress-circle__track" viewBox="0 0 32 32">
+          <circle class="rp-progress-circle__track-circle" cx="16" cy="16" r="13"></circle>
+          <circle class="rp-progress-circle__fill-circle" cx="16" cy="16" r="13"></circle>
         </svg>
       </div>
     `);
 
-    expect(styleOf(ring.querySelector(".progress-circle__fill-circle")!).stroke).toBe(
+    expect(styleOf(ring.querySelector(".rp-progress-circle__fill-circle")!).stroke).toBe(
       systemColor("Highlight"),
     );
-    expect(styleOf(ring.querySelector(".progress-circle__track-circle")!).stroke).toBe(
+    expect(styleOf(ring.querySelector(".rp-progress-circle__track-circle")!).stroke).toBe(
       systemColor("Canvas"),
     );
   });
@@ -250,8 +250,8 @@ describe("forced colors mode (browser)", () => {
   it("keeps today apart from a plain day and from the selected one", () => {
     // Today is a tint and nothing else. An edge rather than a fill, so it survives the day also
     // being selected, which paints the whole cell `Highlight`.
-    const today = mount(`<div class="calendar__cell" data-today="true">1</div>`);
-    const plain = mount(`<div class="calendar__cell">3</div>`);
+    const today = mount(`<div class="rp-calendar__cell" data-today="true">1</div>`);
+    const plain = mount(`<div class="rp-calendar__cell">3</div>`);
 
     expect(styleOf(today).outlineStyle).not.toBe("none");
     expect(styleOf(plain).outlineStyle).toBe("none");
@@ -261,19 +261,19 @@ describe("forced colors mode (browser)", () => {
     // Every part of a slider is a background: the bar, the filled portion, the knob. Flattened
     // to `Canvas` the control disappears whole - no track, no value, nothing to grab.
     const slider = mount(`
-      <div class="slider" data-orientation="horizontal">
-        <div class="slider__track" data-fill-start="true">
-          <div class="slider__fill"></div>
-          <div class="slider__thumb"></div>
+      <div class="rp-slider" data-orientation="horizontal">
+        <div class="rp-slider__track" data-fill-start="true">
+          <div class="rp-slider__fill"></div>
+          <div class="rp-slider__thumb"></div>
         </div>
       </div>
     `);
-    const track = slider.querySelector<HTMLElement>(".slider__track")!;
-    const thumb = slider.querySelector<HTMLElement>(".slider__thumb")!;
+    const track = slider.querySelector<HTMLElement>(".rp-slider__track")!;
+    const thumb = slider.querySelector<HTMLElement>(".rp-slider__thumb")!;
     const knob = styleOf(thumb, "::after");
 
     expect(styleOf(track).outlineStyle).not.toBe("none");
-    expect(styleOf(slider.querySelector(".slider__fill")!).backgroundColor).toBe(
+    expect(styleOf(slider.querySelector(".rp-slider__fill")!).backgroundColor).toBe(
       systemColor("Highlight"),
     );
 
@@ -293,23 +293,23 @@ describe("forced colors mode (browser)", () => {
     // without help they render as solid blocks at both ends of the bar. The filled end is the
     // exception: there the border carries the fill past the spacer.
     const track = mount(`
-      <div class="slider" data-orientation="horizontal">
-        <div class="slider__track" data-fill-start="true"></div>
+      <div class="rp-slider" data-orientation="horizontal">
+        <div class="rp-slider__track" data-fill-start="true"></div>
       </div>
-    `).querySelector<HTMLElement>(".slider__track")!;
+    `).querySelector<HTMLElement>(".rp-slider__track")!;
 
     expect(styleOf(track).borderInlineEndColor).toBe(systemColor("Canvas"));
     expect(styleOf(track).borderInlineStartColor).toBe(systemColor("Highlight"));
   });
 
   it.each([
-    ["button", `<button class="button button--secondary">x</button>`],
-    ["toggle-button", `<button class="toggle-button">x</button>`],
-    ["tag", `<div class="tag tag--md">x</div>`],
-    ["input", `<input class="input" value="x" />`],
-    ["textarea", `<textarea class="textarea">x</textarea>`],
-    ["input-group", `<div class="input-group"></div>`],
-    ["select trigger", `<button class="select__trigger">x</button>`],
+    ["button", `<button class="rp-button rp-button--secondary">x</button>`],
+    ["toggle-button", `<button class="rp-toggle-button">x</button>`],
+    ["tag", `<div class="rp-tag rp-tag--md">x</div>`],
+    ["input", `<input class="rp-input" value="x" />`],
+    ["textarea", `<textarea class="rp-textarea">x</textarea>`],
+    ["input-group", `<div class="rp-input-group"></div>`],
+    ["select trigger", `<button class="rp-select__trigger">x</button>`],
   ])("keeps the %s identifiable as a control", (_name, markup) => {
     // Every one of these is a fill and a shadow and nothing else - flattened, they read as bare
     // text with no sign they can be clicked or typed into. The fields make it worse:
@@ -325,8 +325,8 @@ describe("forced colors mode (browser)", () => {
   it("keeps the emphasised buttons apart from the rest", () => {
     // Forced colors has no keyword for "this is the important one", so the emphasis has to come
     // from solid against outlined - the same split the chip keeps.
-    const solid = mount(`<button class="button button--primary">x</button>`);
-    const plain = mount(`<button class="button button--secondary">x</button>`);
+    const solid = mount(`<button class="rp-button rp-button--primary">x</button>`);
+    const plain = mount(`<button class="rp-button rp-button--secondary">x</button>`);
 
     expect(styleOf(solid).backgroundColor).toBe(systemColor("CanvasText"));
     expect(styleOf(solid).forcedColorAdjust).toBe("none");
@@ -334,12 +334,15 @@ describe("forced colors mode (browser)", () => {
   });
 
   it.each([
-    ["card", `<div class="card card--default">x</div>`],
-    ["surface", `<div class="surface surface--default">x</div>`],
-    ["alert", `<div class="alert alert--accent">x</div>`],
-    ["avatar", `<span class="avatar avatar--md"><span class="avatar__fallback">AB</span></span>`],
-    ["inline code", `<code class="typography--code">x</code>`],
-    ["sidebar inset card", `<div class="sidebar__inset sidebar__inset--card">x</div>`],
+    ["card", `<div class="rp-card rp-card--default">x</div>`],
+    ["surface", `<div class="rp-surface rp-surface--default">x</div>`],
+    ["alert", `<div class="rp-alert rp-alert--accent">x</div>`],
+    [
+      "avatar",
+      `<span class="rp-avatar rp-avatar--md"><span class="rp-avatar__fallback">AB</span></span>`,
+    ],
+    ["inline code", `<code class="rp-typography--code">x</code>`],
+    ["sidebar inset card", `<div class="rp-sidebar__inset rp-sidebar__inset--card">x</div>`],
   ])("keeps the %s visible as a container", (_name, markup) => {
     // Each of these is a tinted fill plus a shadow, and the mode takes both - the contents end up
     // sitting loose on the page with nothing around them.
@@ -352,13 +355,13 @@ describe("forced colors mode (browser)", () => {
   it("leaves a transparent surface transparent", () => {
     // The edge goes on the variants that actually paint. A transparent surface shows whatever is
     // behind it, so framing it would invent a box that was never there.
-    const transparent = mount(`<div class="surface surface--transparent">x</div>`);
+    const transparent = mount(`<div class="rp-surface rp-surface--transparent">x</div>`);
 
     expect(styleOf(transparent).outlineStyle).toBe("none");
 
     // And a panel that has handed its fill to the page beside it is the same case one component
     // down: there is no box to frame, only the card it gave up being.
-    const bare = mount(`<nav class="sidebar__panel sidebar__panel--bare">x</nav>`);
+    const bare = mount(`<nav class="rp-sidebar__panel rp-sidebar__panel--bare">x</nav>`);
 
     expect(styleOf(bare).outlineStyle).toBe("none");
   });
@@ -368,7 +371,7 @@ describe("forced colors mode (browser)", () => {
     // weakening it. Each colour variant restates the fallback, since each sets `background-color`
     // after the base rule and would otherwise win.
     for (const variant of ["default", "secondary", "tertiary"]) {
-      const rule = mount(`<hr class="separator separator--${variant}" />`);
+      const rule = mount(`<hr class="rp-separator rp-separator--${variant}" />`);
 
       expect(styleOf(rule).backgroundColor).toBe(systemColor("CanvasText"));
     }
@@ -378,8 +381,8 @@ describe("forced colors mode (browser)", () => {
     // A chip is nothing but its colour, so the mode leaves it as bare label text - not a weaker
     // chip, no chip at all. The status cannot survive (there is no keyword for success or
     // warning), but the shape and the solid/outlined split can.
-    const solid = mount(`<span class="chip chip--primary chip--success">Completed</span>`);
-    const outlined = mount(`<span class="chip chip--soft chip--success">Completed</span>`);
+    const solid = mount(`<span class="rp-chip rp-chip--primary rp-chip--success">Completed</span>`);
+    const outlined = mount(`<span class="rp-chip rp-chip--soft rp-chip--success">Completed</span>`);
 
     expect(styleOf(solid).outlineStyle).not.toBe("none");
     expect(styleOf(outlined).outlineStyle).not.toBe("none");
@@ -393,7 +396,7 @@ describe("forced colors mode (browser)", () => {
   it("keeps a skeleton visible against the page", () => {
     // Its fill flattens to Canvas - the colour of the page behind it - and the shimmer is a
     // gradient, which forced colors removes entirely. Without an outline there is nothing left.
-    const skeleton = mount(`<div class="skeleton"></div>`);
+    const skeleton = mount(`<div class="rp-skeleton"></div>`);
     const style = styleOf(skeleton);
 
     expect(style.backgroundImage).toBe("none");
@@ -404,7 +407,7 @@ describe("forced colors mode (browser)", () => {
   it("greys out a disabled control", () => {
     // `opacity` survives forced colors, so this is the refinement rather than the repair:
     // GrayText is the signal the platform itself uses.
-    const button = mount(`<button class="button" disabled>x</button>`);
+    const button = mount(`<button class="rp-button" disabled>x</button>`);
 
     expect(styleOf(button).color).toBe(systemColor("GrayText"));
   });

@@ -25,19 +25,19 @@ describe("Kbd", () => {
       const { kbd } = renderKbd();
 
       expect(kbd.tagName).toBe("KBD");
-      expect(kbd).toHaveClass("kbd");
+      expect(kbd).toHaveClass("rp-kbd");
     });
 
     it("merges a caller class", () => {
       const { kbd } = renderKbd({ class: "ms-auto" });
 
-      expect(kbd).toHaveClass("kbd", "ms-auto");
+      expect(kbd).toHaveClass("rp-kbd", "ms-auto");
     });
 
     it.each(["default", "light"] as const)("renders the %s variant", (variant) => {
       const { kbd } = renderKbd({ variant });
 
-      expect(kbd).toHaveClass(`kbd--${variant}`);
+      expect(kbd).toHaveClass(`rp-kbd--${variant}`);
     });
   });
 
@@ -49,7 +49,7 @@ describe("Kbd", () => {
 
       expect(abbrs[0]).toHaveTextContent("⌘");
       expect(abbrs[0]).toHaveAttribute("title", "Command");
-      expect(abbrs[0]).toHaveClass("kbd__abbr");
+      expect(abbrs[0]).toHaveClass("rp-kbd__abbr");
     });
 
     it.each([
@@ -76,7 +76,7 @@ describe("Kbd", () => {
       const { content } = renderKbd({ keys: ["command"], text: "N" });
 
       expect(content).toHaveTextContent("N");
-      expect(content).toHaveClass("kbd__content");
+      expect(content).toHaveClass("rp-kbd__content");
     });
   });
 

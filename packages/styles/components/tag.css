@@ -1,5 +1,5 @@
 /* Tag component styles */
-.tag {
+.rp-tag {
   --optical-offset: 0.031em;
 
   @apply relative inline-flex items-center gap-1 font-medium select-none no-highlight;
@@ -51,21 +51,21 @@
 }
 
 /* Disabled state */
-.tag:is([data-disabled="true"], [aria-disabled="true"]) {
+.rp-tag:is([data-disabled="true"], [aria-disabled="true"]) {
   @apply status-disabled;
 }
 
 /* Focus visible state (keyboard focus only) */
-.tag:is(:focus-visible, [data-focus-visible]) {
+.rp-tag:is(:focus-visible, [data-focus-visible]) {
   @apply status-focused;
 }
 
 /* Pressed/Active state */
-.tag:is(:active, [data-pressed="true"]) {
+.rp-tag:is(:active, [data-pressed="true"]) {
 }
 
 /* Selected state */
-.tag:is([data-selected="true"], [aria-selected="true"]) {
+.rp-tag:is([data-selected="true"], [aria-selected="true"]) {
   background-color: var(--tag-bg-selected);
   color: var(--tag-fg-selected);
 
@@ -80,33 +80,33 @@
 }
 
 /* Size */
-.tag--sm {
+.rp-tag--sm {
   @apply px-2 py-0.5 text-xs;
 }
 
-.tag--md {
+.rp-tag--md {
   @apply px-2 py-1 text-xs;
 }
 
-.tag--lg {
+.rp-tag--lg {
   @apply px-2.5 py-1.5 text-sm;
 }
 
 /* Variant */
-.tag--default {
+.rp-tag--default {
   --tag-bg: var(--default);
   --tag-bg-hover: var(--default-hover);
   --tag-fg: var(--default-foreground);
 }
 
-.tag--surface {
+.rp-tag--surface {
   --tag-bg: var(--surface);
   --tag-bg-hover: var(--surface-hover);
   --tag-fg: var(--surface-foreground);
 }
 
 /* Remove Button  */
-.tag__remove-button {
+.rp-tag__remove-button {
   @apply size-3 text-inherit;
 
   /* SVG icon styling */

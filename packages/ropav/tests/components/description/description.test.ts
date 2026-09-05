@@ -25,13 +25,13 @@ describe("Description", () => {
     it("applies the base class", () => {
       const { description } = renderDescription();
 
-      expect(description).toHaveClass("description");
+      expect(description).toHaveClass("rp-description");
     });
 
     it("merges a caller class", () => {
       const { description } = renderDescription({ class: "text-wrap" });
 
-      expect(description).toHaveClass("description", "text-wrap");
+      expect(description).toHaveClass("rp-description", "text-wrap");
     });
   });
 

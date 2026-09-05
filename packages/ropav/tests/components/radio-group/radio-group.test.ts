@@ -56,7 +56,7 @@ describe("RadioGroup", () => {
       const { group, unmount } = renderGroup();
 
       expect(group().getAttribute("role")).toBe("radiogroup");
-      expect(group().classList.contains("radio-group")).toBe(true);
+      expect(group().classList.contains("rp-radio-group")).toBe(true);
 
       unmount();
     });
@@ -83,7 +83,7 @@ describe("RadioGroup", () => {
     it("leaves the indicator empty, since the stylesheet draws the dot", () => {
       const { container, unmount } = renderGroup();
 
-      // `.radio__indicator:empty::before` is what paints it, so anything inside would hide it.
+      // `.rp-radio__indicator:empty::before` is what paints it, so anything inside would hide it.
       expect(container.querySelector("[data-slot='radio-indicator']")!.childElementCount).toBe(0);
 
       unmount();
@@ -100,7 +100,7 @@ describe("RadioGroup", () => {
     it("renders the variant class", () => {
       const { group, unmount } = renderGroup({ variant: "secondary" });
 
-      expect(group().classList.contains("radio-group--secondary")).toBe(true);
+      expect(group().classList.contains("rp-radio-group--secondary")).toBe(true);
 
       unmount();
     });

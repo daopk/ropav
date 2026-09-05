@@ -781,7 +781,7 @@ export const CustomAnimations: Story = {
                   <ModalHeading>{{ animation.name }} Animation</ModalHeading>
                 </ModalHeader>
                 <ModalBody>
-                  <p class="mt-1">{{ animation.description }}</p>
+                  <p class="mt-1">{{ animation.rp-description }}</p>
                 </ModalBody>
                 <ModalFooter>
                   <ModalClose><Button variant="tertiary">Close</Button></ModalClose>

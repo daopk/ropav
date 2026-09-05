@@ -25,7 +25,7 @@ describe("ToggleButtonGroup", () => {
       const group = getByRole("radiogroup");
 
       expect(group.getAttribute("data-slot")).toBe("toggle-button-group");
-      expect(group.classList.contains("toggle-button-group")).toBe(true);
+      expect(group.classList.contains("rp-toggle-button-group")).toBe(true);
 
       unmount();
     });
@@ -36,7 +36,7 @@ describe("ToggleButtonGroup", () => {
 
       expect(group.getAttribute("data-orientation")).toBe("horizontal");
       expect(group.getAttribute("aria-orientation")).toBe("horizontal");
-      expect(group.classList.contains("toggle-button-group--horizontal")).toBe(true);
+      expect(group.classList.contains("rp-toggle-button-group--horizontal")).toBe(true);
 
       unmount();
     });
@@ -47,7 +47,7 @@ describe("ToggleButtonGroup", () => {
 
       expect(group.getAttribute("data-orientation")).toBe("vertical");
       expect(group.getAttribute("aria-orientation")).toBe("vertical");
-      expect(group.classList.contains("toggle-button-group--vertical")).toBe(true);
+      expect(group.classList.contains("rp-toggle-button-group--vertical")).toBe(true);
 
       unmount();
     });
@@ -56,8 +56,8 @@ describe("ToggleButtonGroup", () => {
       const { getByRole, unmount } = renderGroup({ fullWidth: true, isDetached: true });
       const group = getByRole("radiogroup");
 
-      expect(group.classList.contains("toggle-button-group--detached")).toBe(true);
-      expect(group.classList.contains("toggle-button-group--full-width")).toBe(true);
+      expect(group.classList.contains("rp-toggle-button-group--detached")).toBe(true);
+      expect(group.classList.contains("rp-toggle-button-group--full-width")).toBe(true);
 
       unmount();
     });
@@ -68,7 +68,7 @@ describe("ToggleButtonGroup", () => {
 
       expect(separator).not.toBeNull();
       expect(separator?.getAttribute("aria-hidden")).toBe("true");
-      expect(separator?.classList.contains("toggle-button-group__separator")).toBe(true);
+      expect(separator?.classList.contains("rp-toggle-button-group__separator")).toBe(true);
 
       unmount();
     });
@@ -290,7 +290,7 @@ describe("ToggleButtonGroup", () => {
       const { container, unmount } = renderGroup({ size: "lg" });
 
       for (const button of buttonsIn(container)) {
-        expect(button.classList.contains("toggle-button--lg")).toBe(true);
+        expect(button.classList.contains("rp-toggle-button--lg")).toBe(true);
       }
 
       unmount();

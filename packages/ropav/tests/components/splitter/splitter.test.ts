@@ -74,15 +74,15 @@ describe("Splitter", () => {
     it("renders the BEM classes of each part", async () => {
       const { container, unmount } = await render();
 
-      expect(slot(container, "splitter").className).toContain("splitter");
-      expect(slot(container, "splitter").className).toContain("splitter--horizontal");
-      expect(slot(container, "splitter-panel").className).toContain("splitter__panel");
-      expect(slot(container, "splitter-handle").className).toContain("splitter__handle");
+      expect(slot(container, "splitter").className).toContain("rp-splitter");
+      expect(slot(container, "splitter").className).toContain("rp-splitter--horizontal");
+      expect(slot(container, "splitter-panel").className).toContain("rp-splitter__panel");
+      expect(slot(container, "splitter-handle").className).toContain("rp-splitter__handle");
       expect(slot(container, "splitter-handle").className).toContain(
-        "splitter__handle--horizontal",
+        "rp-splitter__handle--horizontal",
       );
       expect(slot(container, "splitter-handle-target").className).toContain(
-        "splitter__handle-target",
+        "rp-splitter__handle-target",
       );
       unmount();
     });
@@ -98,8 +98,8 @@ describe("Splitter", () => {
       const { container, unmount } = await render({ showGrip: true });
       const grip = slot(container, "splitter-handle-grip");
 
-      expect(grip.className).toContain("splitter__handle-grip");
-      expect(grip.className).toContain("splitter__handle-grip--horizontal");
+      expect(grip.className).toContain("rp-splitter__handle-grip");
+      expect(grip.className).toContain("rp-splitter__handle-grip--horizontal");
       expect(grip.getAttribute("aria-hidden")).toBe("true");
       unmount();
     });
@@ -136,8 +136,10 @@ describe("Splitter", () => {
       const { container, unmount } = await render({ orientation: "vertical" });
 
       expect(slot(container, "splitter").dataset["orientation"]).toBe("vertical");
-      expect(slot(container, "splitter").className).toContain("splitter--vertical");
-      expect(slot(container, "splitter-handle").className).toContain("splitter__handle--vertical");
+      expect(slot(container, "splitter").className).toContain("rp-splitter--vertical");
+      expect(slot(container, "splitter-handle").className).toContain(
+        "rp-splitter__handle--vertical",
+      );
       unmount();
     });
 
@@ -145,7 +147,7 @@ describe("Splitter", () => {
       const { container, unmount } = await render({ orientation: "vertical", showGrip: true });
 
       expect(slot(container, "splitter-handle-grip").className).toContain(
-        "splitter__handle-grip--vertical",
+        "rp-splitter__handle-grip--vertical",
       );
       unmount();
     });
@@ -164,10 +166,10 @@ describe("Splitter", () => {
       const [outer, inner] = handles;
 
       expect(handles).toHaveLength(2);
-      expect(outer!.className).toContain("splitter__handle--horizontal");
-      expect(outer!.className).not.toContain("splitter__handle--vertical");
-      expect(inner!.className).toContain("splitter__handle--vertical");
-      expect(inner!.className).not.toContain("splitter__handle--horizontal");
+      expect(outer!.className).toContain("rp-splitter__handle--horizontal");
+      expect(outer!.className).not.toContain("rp-splitter__handle--vertical");
+      expect(inner!.className).toContain("rp-splitter__handle--vertical");
+      expect(inner!.className).not.toContain("rp-splitter__handle--horizontal");
       unmount();
     });
   });

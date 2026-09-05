@@ -8,38 +8,38 @@ export const meterVariants = tv({
     size: "md",
   },
   slots: {
-    base: "meter",
-    fill: "meter__fill",
-    output: "meter__output",
-    track: "meter__track",
+    base: "rp-meter",
+    fill: "rp-meter__fill",
+    output: "rp-meter__output",
+    track: "rp-meter__track",
   },
   variants: {
     color: {
       accent: {
-        base: "meter--accent",
+        base: "rp-meter--accent",
       },
       danger: {
-        base: "meter--danger",
+        base: "rp-meter--danger",
       },
       default: {
-        base: "meter--default",
+        base: "rp-meter--default",
       },
       success: {
-        base: "meter--success",
+        base: "rp-meter--success",
       },
       warning: {
-        base: "meter--warning",
+        base: "rp-meter--warning",
       },
     },
     size: {
       lg: {
-        base: "meter--lg",
+        base: "rp-meter--lg",
       },
       md: {
-        base: "meter--md",
+        base: "rp-meter--md",
       },
       sm: {
-        base: "meter--sm",
+        base: "rp-meter--sm",
       },
     },
   },

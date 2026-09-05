@@ -7,14 +7,14 @@ export const colorAreaVariants = tv({
     showDots: false,
   },
   slots: {
-    base: "color-area",
-    thumb: "color-area__thumb",
+    base: "rp-color-area",
+    thumb: "rp-color-area__thumb",
   },
   variants: {
     showDots: {
       false: {},
       true: {
-        base: "color-area--show-dots",
+        base: "rp-color-area--show-dots",
       },
     },
   },

@@ -267,7 +267,7 @@ describe("ComboBox (browser)", () => {
 
       await nextTick();
 
-      // Comes from `[data-slot="input"]:has(+ .combo-box__trigger)`, so it only holds while the
+      // Comes from `[data-slot="input"]:has(+ .rp-combo-box__trigger)`, so it only holds while the
       // chevron is the field's immediate next sibling.
       expect(getComputedStyle(inputOf(result.container)).paddingInlineEnd).toBe("28px");
     });

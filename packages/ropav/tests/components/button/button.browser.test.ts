@@ -149,7 +149,7 @@ describe("Button (browser)", () => {
     const button = buttonIn(container);
 
     // Proves the compiled `@ropav/styles` CSS is actually loaded in this environment.
-    expect(button.classList.contains("button")).toBe(true);
+    expect(button.classList.contains("rp-button")).toBe(true);
     expect(getComputedStyle(button).display).toBe("inline-flex");
 
     unmount();

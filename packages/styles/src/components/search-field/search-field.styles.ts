@@ -9,35 +9,35 @@ export const searchFieldVariants = tv({
     variant: "primary",
   },
   slots: {
-    base: "search-field",
-    clearButton: "search-field__clear-button",
-    group: "search-field__group",
-    input: "search-field__input",
-    searchIcon: "search-field__search-icon",
+    base: "rp-search-field",
+    clearButton: "rp-search-field__clear-button",
+    group: "rp-search-field__group",
+    input: "rp-search-field__input",
+    searchIcon: "rp-search-field__search-icon",
   },
   variants: {
     fullWidth: {
       false: {},
       true: {
-        base: "search-field--full-width",
-        group: "search-field__group--full-width",
+        base: "rp-search-field--full-width",
+        group: "rp-search-field__group--full-width",
       },
     },
     size: {
       lg: {
-        base: "search-field--lg",
+        base: "rp-search-field--lg",
       },
       md: {},
       sm: {
-        base: "search-field--sm",
+        base: "rp-search-field--sm",
       },
     },
     variant: {
       primary: {
-        base: "search-field--primary",
+        base: "rp-search-field--primary",
       },
       secondary: {
-        base: "search-field--secondary",
+        base: "rp-search-field--secondary",
       },
     },
   },

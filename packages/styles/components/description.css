@@ -1,4 +1,4 @@
 /* Base description styles */
-.description {
+.rp-description {
   @apply text-xs text-wrap wrap-break-word text-muted;
 }

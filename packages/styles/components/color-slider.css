@@ -3,7 +3,7 @@
    ========================================================================== */
 
 /* Base styles */
-.color-slider {
+.rp-color-slider {
   @apply grid w-full gap-1;
 
   grid-template-areas:
@@ -13,7 +13,7 @@
   grid-template-rows: auto auto;
 
   /* When neither label nor output exist, collapse to single row */
-  &:not(:has([data-slot="label"])):not(:has(.color-slider__output)) {
+  &:not(:has([data-slot="label"])):not(:has(.rp-color-slider__output)) {
     grid-template-areas: "track";
     grid-template-columns: 1fr;
     grid-template-rows: auto;
@@ -21,7 +21,7 @@
   }
 
   /* When only label exists (no output) */
-  &:has([data-slot="label"]):not(:has(.color-slider__output)) {
+  &:has([data-slot="label"]):not(:has(.rp-color-slider__output)) {
     grid-template-areas:
       "label"
       "track";
@@ -29,13 +29,13 @@
   }
 
   /* When only output exists (no label) */
-  &:not(:has([data-slot="label"])):has(.color-slider__output) {
+  &:not(:has([data-slot="label"])):has(.rp-color-slider__output) {
     grid-template-areas:
       "output"
       "track";
     grid-template-columns: 1fr;
 
-    .color-slider__output {
+    .rp-color-slider__output {
       justify-self: end;
     }
   }
@@ -46,13 +46,13 @@
     grid-area: label;
   }
 
-  .color-slider__output {
+  .rp-color-slider__output {
     @apply text-sm font-medium tabular-nums;
 
     grid-area: output;
   }
 
-  .color-slider__track {
+  .rp-color-slider__track {
     @apply relative;
 
     border-radius: min(32px, var(--component-radius));
@@ -68,7 +68,7 @@
     }
   }
 
-  .color-slider__thumb {
+  .rp-color-slider__thumb {
     /* Flex container for centering */
     @apply absolute flex cursor-grab items-center justify-center no-highlight;
 
@@ -116,7 +116,7 @@
   &[data-orientation="horizontal"] {
     flex-direction: column;
 
-    .color-slider__track {
+    .rp-color-slider__track {
       @apply h-5 justify-self-center rounded-none;
       width: calc(100% - 1.25rem);
 
@@ -157,7 +157,7 @@
       }
     }
 
-    .color-slider__thumb {
+    .rp-color-slider__thumb {
       @apply top-1/2 size-4;
     }
   }
@@ -177,14 +177,14 @@
     justify-items: center;
 
     /* When neither label nor output exist in vertical, just show track */
-    &:not(:has([data-slot="label"])):not(:has(.color-slider__output)) {
+    &:not(:has([data-slot="label"])):not(:has(.rp-color-slider__output)) {
       grid-template-areas: "track";
       grid-template-rows: 1fr;
       gap: 0;
     }
 
     /* When only label exists in vertical (no output) */
-    &:has([data-slot="label"]):not(:has(.color-slider__output)) {
+    &:has([data-slot="label"]):not(:has(.rp-color-slider__output)) {
       grid-template-areas:
         "track"
         "label";
@@ -192,14 +192,14 @@
     }
 
     /* When only output exists in vertical (no label) */
-    &:not(:has([data-slot="label"])):has(.color-slider__output) {
+    &:not(:has([data-slot="label"])):has(.rp-color-slider__output) {
       grid-template-areas:
         "output"
         "track";
       grid-template-rows: auto 1fr;
     }
 
-    .color-slider__output {
+    .rp-color-slider__output {
       text-align: center;
     }
 
@@ -207,7 +207,7 @@
       text-align: center;
     }
 
-    .color-slider__track {
+    .rp-color-slider__track {
       @apply w-5 justify-self-center rounded-none;
       height: calc(100% - 1.25rem);
 
@@ -250,7 +250,7 @@
       }
     }
 
-    .color-slider__thumb {
+    .rp-color-slider__thumb {
       /* Cross-axis centering; React Aria applies a physical translateX(-50%), so keep left-1/2 for RTL correctness */
       @apply left-1/2 size-4;
     }

@@ -3,20 +3,20 @@ import type { VariantProps } from "../../tv";
 import { tv } from "../../tv";
 
 const separatorVariants = tv({
-  base: "separator",
+  base: "rp-separator",
   defaultVariants: {
     orientation: "horizontal",
     variant: "default",
   },
   variants: {
     orientation: {
-      horizontal: "separator--horizontal",
-      vertical: "separator--vertical",
+      horizontal: "rp-separator--horizontal",
+      vertical: "rp-separator--vertical",
     },
     variant: {
-      default: "separator--default",
-      secondary: "separator--secondary",
-      tertiary: "separator--tertiary",
+      default: "rp-separator--default",
+      secondary: "rp-separator--secondary",
+      tertiary: "rp-separator--tertiary",
     },
   },
 });

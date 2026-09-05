@@ -3,14 +3,14 @@ import type { VariantProps } from "../../tv";
 import { tv } from "../../tv";
 
 export const timeFieldVariants = tv({
-  base: "time-field",
+  base: "rp-time-field",
   defaultVariants: {
     fullWidth: false,
   },
   variants: {
     fullWidth: {
       false: "",
-      true: "time-field--full-width",
+      true: "rp-time-field--full-width",
     },
   },
 });

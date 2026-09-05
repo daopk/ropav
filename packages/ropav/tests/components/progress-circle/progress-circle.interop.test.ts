@@ -32,10 +32,10 @@ describe("ProgressCircle under a vdom host", () => {
 
     await nextTick();
 
-    expect(root).toHaveClass("progress-circle", "progress-circle--danger");
+    expect(root).toHaveClass("rp-progress-circle", "rp-progress-circle--danger");
     expect(root).toHaveAttribute("aria-labelledby", label?.id);
     expect(container.querySelector('[data-slot="progress-circle-track"]')).toHaveClass(
-      "progress-circle__track",
+      "rp-progress-circle__track",
     );
     expect(container.querySelector('[data-slot="progress-circle-fill-circle"]')).toHaveAttribute(
       "stroke-dashoffset",

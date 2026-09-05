@@ -1,5 +1,5 @@
 /* Search field styles */
-.search-field {
+.rp-search-field {
   @apply flex flex-col gap-1;
 
   &[data-invalid="true"],
@@ -20,7 +20,7 @@
   }
 }
 
-.search-field__group {
+.rp-search-field__group {
   @apply relative inline-flex h-9 items-center overflow-hidden rounded-field border text-sm text-field-foreground shadow-field outline-none;
 
   /* The fill, per state. The `--secondary` variant re-points these and declares nothing else. */
@@ -90,7 +90,7 @@
   }
 }
 
-.search-field__input {
+.rp-search-field__input {
   @apply flex-1 rounded-none border-0 bg-transparent px-3 field-line-md shadow-none outline-none;
 
   /* Hide browser default search clear button */
@@ -101,12 +101,12 @@
   }
 
   /* Remove border radius on left side when search icon is present */
-  .search-field__group:has([data-slot="search-field-search-icon"]) & {
+  .rp-search-field__group:has([data-slot="search-field-search-icon"]) & {
     @apply rounded-s-none ps-2;
   }
 
   /* Remove border radius on right side when clear button is present */
-  .search-field__group:has([slot="clear"]) & {
+  .rp-search-field__group:has([slot="clear"]) & {
     @apply rounded-e-none pe-2;
   }
 
@@ -119,7 +119,7 @@
   /**
    * Neutralize the browser's per-input autofill paint so the inner <input>
    * doesn't draw a sharp-cornered yellow rectangle. The unified highlight
-   * is applied to `.search-field__group` above. Preserve the autofilled
+   * is applied to `.rp-search-field__group` above. Preserve the autofilled
    * text and caret colors, and pin the background-color transition so the
    * inset box-shadow trick doesn't flicker on state changes.
    */
@@ -136,12 +136,12 @@
   }
 }
 
-.search-field__search-icon {
+.rp-search-field__search-icon {
   @apply pointer-events-none shrink-0 text-field-placeholder;
   @apply ms-3 me-0 size-4;
 }
 
-.search-field__clear-button {
+.rp-search-field__clear-button {
   @apply me-2 size-5 shrink-0;
 
   /* Overrides close button default icon size from 16px to 12px */
@@ -151,11 +151,11 @@
 }
 
 /* Variant property definitions */
-.search-field--primary {
+.rp-search-field--primary {
   /* Default styles */
 }
 
-.search-field--secondary .search-field__group {
+.rp-search-field--secondary .rp-search-field__group {
   @apply shadow-none;
 
   --search-field-group-bg: var(--default);
@@ -168,11 +168,11 @@
 }
 
 /* Full width modifier */
-.search-field--full-width {
+.rp-search-field--full-width {
   @apply w-full;
 }
 
-.search-field__group--full-width {
+.rp-search-field__group--full-width {
   @apply w-full;
 }
 
@@ -180,22 +180,22 @@
    Size variants
    ========================================================================== */
 
-.search-field--sm {
-  .search-field__group {
+.rp-search-field--sm {
+  .rp-search-field__group {
     @apply h-8;
   }
 
-  .search-field__input {
+  .rp-search-field__input {
     @apply field-line-sm;
   }
 }
 
-.search-field--lg {
-  .search-field__group {
+.rp-search-field--lg {
+  .rp-search-field__group {
     @apply h-10;
   }
 
-  .search-field__input {
+  .rp-search-field__input {
     @apply field-line-lg;
   }
 }

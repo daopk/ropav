@@ -1,13 +1,13 @@
 /* Base disclosure styles */
-.disclosure {
+.rp-disclosure {
   @apply relative;
 }
 
-.accordion__heading {
+.rp-accordion__heading {
   @apply flex;
 }
 
-.disclosure__trigger {
+.rp-disclosure__trigger {
   cursor: var(--cursor-interactive);
   @apply inline-block no-highlight;
 
@@ -24,7 +24,7 @@
   }
 }
 
-.disclosure__indicator {
+.rp-disclosure__indicator {
   @apply ms-auto size-4 shrink-0 text-inherit;
 
   /**
@@ -38,7 +38,7 @@
   }
 }
 
-.disclosure__content {
+.rp-disclosure__content {
   opacity: 0;
   height: var(--disclosure-panel-height);
   overflow: clip;
@@ -54,6 +54,6 @@
   }
 }
 
-.disclosure__body {
+.rp-disclosure__body {
   @apply p-2;
 }

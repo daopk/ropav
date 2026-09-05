@@ -64,16 +64,16 @@ const cellsOf = (row: HTMLElement) => [...row.querySelectorAll<HTMLElement>("td"
 
 describe("Table", () => {
   describe("structure", () => {
-    // Native table elements rather than divs: the stylesheet keys on `th.table__column`,
+    // Native table elements rather than divs: the stylesheet keys on `th.rp-table__column`,
     // `tbody`, and `tr:first-child td:first-child`.
     it("renders native table elements with a grid role", async () => {
       const { body, head, root, table } = await renderTable();
 
       expect(root.tagName).toBe("DIV");
-      expect(root).toHaveClass("table-root", "table-root--primary");
+      expect(root).toHaveClass("rp-table-root", "rp-table-root--primary");
       expect(table.tagName).toBe("TABLE");
       expect(table).toHaveAttribute("role", "grid");
-      expect(table).toHaveClass("table__content");
+      expect(table).toHaveClass("rp-table__content");
       expect(head.tagName).toBe("THEAD");
       expect(head).toHaveAttribute("role", "rowgroup");
       expect(body.tagName).toBe("TBODY");
@@ -96,8 +96,8 @@ describe("Table", () => {
       const scroll = root.querySelector('[data-slot="table-scroll-container"]')!;
       const footer = root.querySelector('[data-slot="table-footer"]')!;
 
-      expect(scroll).toHaveClass("table__scroll-container");
-      expect(footer).toHaveClass("table__footer");
+      expect(scroll).toHaveClass("rp-table__scroll-container");
+      expect(footer).toHaveClass("rp-table__footer");
       expect(scroll.contains(footer)).toBe(false);
       expect(footer.previousElementSibling).toBe(scroll);
     });
@@ -105,14 +105,14 @@ describe("Table", () => {
     it.each(["primary", "secondary"] as const)("renders the %s variant", async (variant) => {
       const { root } = await renderTable({ variant });
 
-      expect(root).toHaveClass(`table-root--${variant}`);
+      expect(root).toHaveClass(`rp-table-root--${variant}`);
     });
 
     it("merges a caller class through the variants", async () => {
       const { columns, root } = await renderTable({ class: "mt-4", columnClass: "text-end" });
 
-      expect(root).toHaveClass("table-root", "mt-4");
-      expect(columns[0]).toHaveClass("table__column", "text-end");
+      expect(root).toHaveClass("rp-table-root", "mt-4");
+      expect(columns[0]).toHaveClass("rp-table__column", "text-end");
     });
   });
 
@@ -563,7 +563,7 @@ describe("Table", () => {
       const row = body.querySelector<HTMLElement>('[data-slot="table-load-more"]')!;
       const cell = row.querySelector<HTMLElement>("td")!;
 
-      expect(row).toHaveClass("table__load-more");
+      expect(row).toHaveClass("rp-table__load-more");
       expect(row).toHaveAttribute("role", "row");
       // A flat table still reports the level a tree grid would use.
       expect(row).toHaveAttribute("aria-level", "1");
@@ -576,7 +576,7 @@ describe("Table", () => {
       const { body } = await renderTable({ isLoading: true, withLoadMore: true });
       const content = body.querySelector('[data-slot="table-load-more-content"]')!;
 
-      expect(content).toHaveClass("table__load-more-content");
+      expect(content).toHaveClass("rp-table__load-more-content");
       expect(content).toHaveTextContent("Loading");
     });
 
@@ -1067,7 +1067,7 @@ describe("Table", () => {
       const { container, unmount } = renderHeader();
       const header = container.querySelector('[data-slot="table-sortable-column-header"]')!;
 
-      expect(header).toHaveClass("table__sortable-column-header");
+      expect(header).toHaveClass("rp-table__sortable-column-header");
       expect(header).not.toHaveAttribute("data-direction");
       expect(header.querySelector('[data-slot="table-sortable-column-indicator"]')).toBeNull();
 
@@ -1084,7 +1084,7 @@ describe("Table", () => {
       expect(header).toHaveAttribute("data-direction", direction);
       expect(indicator.tagName).toBe("svg");
       expect(indicator).toHaveAttribute("data-direction", direction);
-      expect(indicator).toHaveClass("table__sortable-column-indicator");
+      expect(indicator).toHaveClass("rp-table__sortable-column-indicator");
 
       unmount();
     });

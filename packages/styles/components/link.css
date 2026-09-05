@@ -1,5 +1,5 @@
 /* Base link styles */
-.link {
+.rp-link {
   @apply relative inline-flex h-fit w-fit items-center rounded-xl font-medium text-link no-underline decoration-[1.5px] underline-offset-4 no-highlight;
 
   --link-decoration: var(--separator-tertiary);
@@ -26,7 +26,7 @@
 
       text-decoration-color: var(--link-decoration-hover);
 
-      .link__icon {
+      .rp-link__icon {
         @apply opacity-100;
       }
     }
@@ -39,7 +39,7 @@
 
     text-decoration-color: var(--link-decoration-pressed);
 
-    .link__icon {
+    .rp-link__icon {
       @apply opacity-100;
     }
   }
@@ -49,7 +49,7 @@
   &[data-focus-visible="true"] {
     @apply status-focused;
 
-    .link__icon {
+    .rp-link__icon {
       @apply opacity-100;
     }
   }
@@ -59,7 +59,7 @@
     @apply status-disabled;
   }
 
-  .link__icon {
+  .rp-link__icon {
     @apply pointer-events-none inline-flex size-[0.75em] shrink-0 items-center justify-center text-current opacity-60;
 
     transition: opacity 150ms var(--ease-out);
@@ -70,12 +70,12 @@
     }
   }
 
-  .link__icon[data-default-icon="true"] {
+  .rp-link__icon[data-default-icon="true"] {
     @apply ms-1 pb-1.5;
   }
 
   /* Handle Link with Button Variants */
-  &.button {
+  &.rp-button {
     @apply gap-0 no-underline;
   }
 }

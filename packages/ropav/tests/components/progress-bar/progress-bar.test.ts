@@ -107,7 +107,7 @@ describe("ProgressBar", () => {
     (color) => {
       const { container, unmount } = renderVapor(Fixture, { props: { color } });
 
-      expect(part(container, "progress-bar")).toHaveClass(`progress-bar--${color}`);
+      expect(part(container, "progress-bar")).toHaveClass(`rp-progress-bar--${color}`);
 
       unmount();
     },
@@ -116,14 +116,14 @@ describe("ProgressBar", () => {
   it.each(["sm", "md", "lg"] as const)("applies the %s size modifier", (size) => {
     const { container, unmount } = renderVapor(Fixture, { props: { size } });
 
-    expect(part(container, "progress-bar")).toHaveClass(`progress-bar--${size}`);
+    expect(part(container, "progress-bar")).toHaveClass(`rp-progress-bar--${size}`);
 
     unmount();
   });
 
   it.each([
-    ["isAnimated", "progress-bar--animated"],
-    ["isStriped", "progress-bar--striped"],
+    ["isAnimated", "rp-progress-bar--animated"],
+    ["isStriped", "rp-progress-bar--striped"],
   ] as const)("applies the %s modifier", (prop, expected) => {
     const { container, unmount } = renderVapor(Fixture, { props: { [prop]: true } });
 
@@ -136,7 +136,7 @@ describe("ProgressBar", () => {
     const { container, unmount } = renderVapor(Fixture, { props: { value: 60 } });
 
     expect(part(container, "progress-bar")?.className).not.toMatch(
-      /progress-bar--(animated|striped)/,
+      /rp-progress-bar--(animated|striped)/,
     );
 
     unmount();
@@ -152,10 +152,16 @@ describe("ProgressBar", () => {
       },
     });
 
-    expect(part(container, "progress-bar")).toHaveClass("progress-bar", "gap-2");
-    expect(part(container, "progress-bar-output")).toHaveClass("progress-bar__output", "font-bold");
-    expect(part(container, "progress-bar-track")).toHaveClass("progress-bar__track", "h-4");
-    expect(part(container, "progress-bar-fill")).toHaveClass("progress-bar__fill", "rounded-none");
+    expect(part(container, "progress-bar")).toHaveClass("rp-progress-bar", "gap-2");
+    expect(part(container, "progress-bar-output")).toHaveClass(
+      "rp-progress-bar__output",
+      "font-bold",
+    );
+    expect(part(container, "progress-bar-track")).toHaveClass("rp-progress-bar__track", "h-4");
+    expect(part(container, "progress-bar-fill")).toHaveClass(
+      "rp-progress-bar__fill",
+      "rounded-none",
+    );
 
     unmount();
   });

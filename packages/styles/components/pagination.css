@@ -3,27 +3,27 @@
    ========================================================================== */
 
 /* Base styles */
-.pagination {
+.rp-pagination {
   @apply flex w-full flex-col items-center justify-between gap-4 sm:flex-row;
 }
 
 /* Summary - left side info container */
-.pagination__summary {
+.rp-pagination__summary {
   @apply flex items-center gap-2 self-start text-sm text-muted sm:self-center;
 }
 
 /* Content - container for pagination items */
-.pagination__content {
+.rp-pagination__content {
   @apply flex items-center gap-1 self-start sm:self-center;
 }
 
 /* Item - list item wrapper */
-.pagination__item {
+.rp-pagination__item {
   @apply inline-flex;
 }
 
 /* Link - page number button (ghost button style) */
-.pagination__link {
+.rp-pagination__link {
   @apply relative isolate inline-flex size-8 origin-center items-center justify-center rounded-component text-sm font-medium whitespace-nowrap outline-none select-none no-highlight;
 
   cursor: var(--cursor-interactive);
@@ -83,12 +83,12 @@
 }
 
 /* Ellipsis */
-.pagination__ellipsis {
+.rp-pagination__ellipsis {
   @apply inline-flex size-8 items-center justify-center text-sm text-muted select-none;
 }
 
 /* Navigation buttons (Previous / Next) */
-.pagination__link--nav {
+.rp-pagination__link--nav {
   @apply w-auto gap-1.5 px-2.5;
 
   & [data-slot="pagination-previous-icon"],
@@ -101,8 +101,8 @@
    Size variants
    ========================================================================== */
 
-.pagination--sm {
-  .pagination__link {
+.rp-pagination--sm {
+  .rp-pagination__link {
     @apply size-7 text-xs;
 
     &:active,
@@ -111,25 +111,25 @@
     }
   }
 
-  .pagination__link--nav {
+  .rp-pagination__link--nav {
     @apply w-auto px-2;
   }
 
-  .pagination__ellipsis {
+  .rp-pagination__ellipsis {
     @apply size-7 text-xs;
   }
 
-  .pagination__summary {
+  .rp-pagination__summary {
     @apply text-xs;
   }
 }
 
-.pagination--md {
+.rp-pagination--md {
   /* No styles as this is the default size */
 }
 
-.pagination--lg {
-  .pagination__link {
+.rp-pagination--lg {
+  .rp-pagination__link {
     @apply size-9 text-base;
 
     &:active,
@@ -138,15 +138,15 @@
     }
   }
 
-  .pagination__link--nav {
+  .rp-pagination__link--nav {
     @apply w-auto px-3;
   }
 
-  .pagination__ellipsis {
+  .rp-pagination__ellipsis {
     @apply size-9 text-base;
   }
 
-  .pagination__summary {
+  .rp-pagination__summary {
     @apply text-base;
   }
 }

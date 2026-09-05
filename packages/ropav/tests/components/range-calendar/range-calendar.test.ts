@@ -81,7 +81,7 @@ describe("RangeCalendar", () => {
       const button = calendar.cell(15).querySelector("[data-slot='range-calendar-cell-button']");
 
       expect(button).not.toBeNull();
-      expect(button!.className).toContain("range-calendar__cell-button");
+      expect(button!.className).toContain("rp-range-calendar__cell-button");
       expect(button!.textContent?.trim()).toBe("15");
       calendar.unmount();
     });
@@ -118,12 +118,14 @@ describe("RangeCalendar", () => {
     it("puts every part's BEM class on it", () => {
       const calendar = renderRangeCalendar({ withCellIndicator: true });
 
-      expect(calendar.root().className).toContain("range-calendar");
-      expect(calendar.slot("range-calendar-header").className).toContain("range-calendar__header");
-      expect(calendar.slot("range-calendar-grid").className).toContain("range-calendar__grid");
-      expect(calendar.slot("range-calendar-cell").className).toContain("range-calendar__cell");
+      expect(calendar.root().className).toContain("rp-range-calendar");
+      expect(calendar.slot("range-calendar-header").className).toContain(
+        "rp-range-calendar__header",
+      );
+      expect(calendar.slot("range-calendar-grid").className).toContain("rp-range-calendar__grid");
+      expect(calendar.slot("range-calendar-cell").className).toContain("rp-range-calendar__cell");
       expect(calendar.slot("range-calendar-cell-indicator").className).toContain(
-        "range-calendar__cell-indicator",
+        "rp-range-calendar__cell-indicator",
       );
       calendar.unmount();
     });
@@ -131,12 +133,12 @@ describe("RangeCalendar", () => {
     it("marks a week view and a day view on the root", () => {
       const week = renderRangeCalendar({ visibleDuration: { weeks: 1 } });
 
-      expect(week.root().className).toContain("range-calendar--week-view");
+      expect(week.root().className).toContain("rp-range-calendar--week-view");
       week.unmount();
 
       const day = renderRangeCalendar({ visibleDuration: { days: 3 } });
 
-      expect(day.root().className).toContain("range-calendar--day-view");
+      expect(day.root().className).toContain("rp-range-calendar--day-view");
       day.unmount();
     });
 
@@ -144,7 +146,7 @@ describe("RangeCalendar", () => {
       const calendar = renderRangeCalendar({ class: "mine" });
 
       expect(calendar.root().className).toContain("mine");
-      expect(calendar.root().className).toContain("range-calendar");
+      expect(calendar.root().className).toContain("rp-range-calendar");
       calendar.unmount();
     });
   });

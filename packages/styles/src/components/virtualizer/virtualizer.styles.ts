@@ -8,8 +8,8 @@ import { tv } from "../../tv";
  */
 export const virtualizerVariants = tv({
   slots: {
-    scrollbar: "virtualizer__scrollbar",
-    scrollbarThumb: "virtualizer__scrollbar-thumb",
-    scrollbarTrack: "virtualizer__scrollbar-track",
+    scrollbar: "rp-virtualizer__scrollbar",
+    scrollbarThumb: "rp-virtualizer__scrollbar-thumb",
+    scrollbarTrack: "rp-virtualizer__scrollbar-track",
   },
 });

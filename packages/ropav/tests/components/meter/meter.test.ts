@@ -145,7 +145,7 @@ describe("Meter", () => {
     (color) => {
       const { container, unmount } = renderVapor(Fixture, { props: { color } });
 
-      expect(part(container, "meter")).toHaveClass(`meter--${color}`);
+      expect(part(container, "meter")).toHaveClass(`rp-meter--${color}`);
 
       unmount();
     },
@@ -154,7 +154,7 @@ describe("Meter", () => {
   it.each(["sm", "md", "lg"] as const)("applies the %s size modifier", (size) => {
     const { container, unmount } = renderVapor(Fixture, { props: { size } });
 
-    expect(part(container, "meter")).toHaveClass(`meter--${size}`);
+    expect(part(container, "meter")).toHaveClass(`rp-meter--${size}`);
 
     unmount();
   });
@@ -170,10 +170,10 @@ describe("Meter", () => {
       },
     });
 
-    expect(part(container, "meter")).toHaveClass("meter", "gap-2");
-    expect(part(container, "meter-output")).toHaveClass("meter__output", "font-bold");
-    expect(part(container, "meter-track")).toHaveClass("meter__track", "h-4");
-    expect(part(container, "meter-fill")).toHaveClass("meter__fill", "rounded-none");
+    expect(part(container, "meter")).toHaveClass("rp-meter", "gap-2");
+    expect(part(container, "meter-output")).toHaveClass("rp-meter__output", "font-bold");
+    expect(part(container, "meter-track")).toHaveClass("rp-meter__track", "h-4");
+    expect(part(container, "meter-fill")).toHaveClass("rp-meter__fill", "rounded-none");
     expect(part(container, "meter-fill")?.style.backgroundColor).toBe("red");
     expect(part(container, "meter-fill")?.style.width).toBe("60%");
 

@@ -41,11 +41,11 @@ describe("Slider", () => {
     it("renders the BEM classes of each part", () => {
       const { container, unmount } = renderSlider({ defaultValue: 30 });
 
-      expect(slot(container, "slider").classList.contains("slider")).toBe(true);
-      expect(slot(container, "slider-output").classList.contains("slider__output")).toBe(true);
-      expect(slot(container, "slider-track").classList.contains("slider__track")).toBe(true);
-      expect(slot(container, "slider-fill").classList.contains("slider__fill")).toBe(true);
-      expect(slot(container, "slider-thumb").classList.contains("slider__thumb")).toBe(true);
+      expect(slot(container, "slider").classList.contains("rp-slider")).toBe(true);
+      expect(slot(container, "slider-output").classList.contains("rp-slider__output")).toBe(true);
+      expect(slot(container, "slider-track").classList.contains("rp-slider__track")).toBe(true);
+      expect(slot(container, "slider-fill").classList.contains("rp-slider__fill")).toBe(true);
+      expect(slot(container, "slider-thumb").classList.contains("rp-slider__thumb")).toBe(true);
 
       unmount();
     });
@@ -117,7 +117,7 @@ describe("Slider", () => {
       const { container, unmount } = renderSlider({ class: "custom-class", defaultValue: 30 });
 
       expect(slot(container, "slider").classList.contains("custom-class")).toBe(true);
-      expect(slot(container, "slider").classList.contains("slider")).toBe(true);
+      expect(slot(container, "slider").classList.contains("rp-slider")).toBe(true);
 
       unmount();
     });

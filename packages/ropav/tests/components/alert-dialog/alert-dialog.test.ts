@@ -151,9 +151,9 @@ describe("AlertDialog", () => {
       await settle();
 
       const expected: [string, string][] = [
-        ["alert-dialog-backdrop", "alert-dialog__backdrop"],
-        ["alert-dialog-container", "alert-dialog__container"],
-        ["alert-dialog-dialog", "alert-dialog__dialog"],
+        ["alert-dialog-backdrop", "rp-alert-dialog__backdrop"],
+        ["alert-dialog-container", "rp-alert-dialog__container"],
+        ["alert-dialog-dialog", "rp-alert-dialog__dialog"],
       ];
 
       for (const [name, className] of expected) {
@@ -216,7 +216,7 @@ describe("AlertDialog", () => {
 
       expect(trigger.getAttribute("role")).toBe("button");
       expect(trigger.getAttribute("tabindex")).toBe("0");
-      expect(trigger.classList.contains("alert-dialog__trigger")).toBe(true);
+      expect(trigger.classList.contains("rp-alert-dialog__trigger")).toBe(true);
 
       press(trigger);
       await settle();
@@ -473,12 +473,12 @@ describe("AlertDialog", () => {
       await settle();
 
       const expected: [string, string][] = [
-        ["alert-dialog-header", "alert-dialog__header"],
-        ["alert-dialog-icon", "alert-dialog__icon"],
-        ["alert-dialog-heading", "alert-dialog__heading"],
-        ["alert-dialog-body", "alert-dialog__body"],
-        ["alert-dialog-footer", "alert-dialog__footer"],
-        ["alert-dialog-close-trigger", "alert-dialog__close-trigger"],
+        ["alert-dialog-header", "rp-alert-dialog__header"],
+        ["alert-dialog-icon", "rp-alert-dialog__icon"],
+        ["alert-dialog-heading", "rp-alert-dialog__heading"],
+        ["alert-dialog-body", "rp-alert-dialog__body"],
+        ["alert-dialog-footer", "rp-alert-dialog__footer"],
+        ["alert-dialog-close-trigger", "rp-alert-dialog__close-trigger"],
       ];
 
       for (const [name, className] of expected) {
@@ -508,7 +508,7 @@ describe("AlertDialog", () => {
         await settle();
 
         expect(
-          slot("alert-dialog-dialog")!.classList.contains(`alert-dialog__dialog--${size}`),
+          slot("alert-dialog-dialog")!.classList.contains(`rp-alert-dialog__dialog--${size}`),
           size,
         ).toBe(true);
 
@@ -522,7 +522,7 @@ describe("AlertDialog", () => {
 
       await settle();
 
-      expect(slot("alert-dialog-dialog")!.classList.contains("alert-dialog__dialog--md")).toBe(
+      expect(slot("alert-dialog-dialog")!.classList.contains("rp-alert-dialog__dialog--md")).toBe(
         true,
       );
 
@@ -536,7 +536,9 @@ describe("AlertDialog", () => {
         await settle();
 
         expect(
-          slot("alert-dialog-backdrop")!.classList.contains(`alert-dialog__backdrop--${variant}`),
+          slot("alert-dialog-backdrop")!.classList.contains(
+            `rp-alert-dialog__backdrop--${variant}`,
+          ),
           variant,
         ).toBe(true);
 
@@ -551,7 +553,7 @@ describe("AlertDialog", () => {
       await settle();
 
       expect(
-        slot("alert-dialog-backdrop")!.classList.contains("alert-dialog__backdrop--opaque"),
+        slot("alert-dialog-backdrop")!.classList.contains("rp-alert-dialog__backdrop--opaque"),
       ).toBe(true);
 
       result.unmount();
@@ -589,7 +591,7 @@ describe("AlertDialog", () => {
 
       const icon = slot("alert-dialog-icon")!;
 
-      expect(icon.classList.contains("alert-dialog__icon--danger")).toBe(true);
+      expect(icon.classList.contains("rp-alert-dialog__icon--danger")).toBe(true);
       expect(icon.querySelector("[data-slot='alert-dialog-default-icon']")).toBeTruthy();
 
       result.unmount();
@@ -602,7 +604,7 @@ describe("AlertDialog", () => {
         await settle();
 
         expect(
-          slot("alert-dialog-icon")!.classList.contains(`alert-dialog__icon--${status}`),
+          slot("alert-dialog-icon")!.classList.contains(`rp-alert-dialog__icon--${status}`),
           status,
         ).toBe(true);
 
@@ -626,9 +628,9 @@ describe("AlertDialog", () => {
 
       // Two icons in one dialog can say different things, which is only true because the status
       // never reaches the shared context.
-      expect(first!.classList.contains("alert-dialog__icon--warning")).toBe(true);
-      expect(second!.classList.contains("alert-dialog__icon--success")).toBe(true);
-      expect(first!.classList.contains("alert-dialog__icon--success")).toBe(false);
+      expect(first!.classList.contains("rp-alert-dialog__icon--warning")).toBe(true);
+      expect(second!.classList.contains("rp-alert-dialog__icon--success")).toBe(true);
+      expect(first!.classList.contains("rp-alert-dialog__icon--success")).toBe(false);
 
       result.unmount();
     });

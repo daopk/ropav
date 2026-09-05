@@ -3,14 +3,14 @@ import type { VariantProps } from "../../tv";
 import { tv } from "../../tv";
 
 export const checkboxGroupVariants = tv({
-  base: "checkbox-group",
+  base: "rp-checkbox-group",
   defaultVariants: {
     variant: "primary",
   },
   variants: {
     variant: {
-      primary: "checkbox-group--primary",
-      secondary: "checkbox-group--secondary",
+      primary: "rp-checkbox-group--primary",
+      secondary: "rp-checkbox-group--secondary",
     },
   },
 });

@@ -3,7 +3,7 @@
    ========================================================================== */
 
 /* Base styles */
-.color-input-group {
+.rp-color-input-group {
   @apply inline-flex h-9 items-center overflow-hidden rounded-field border text-sm text-field-foreground shadow-field outline-none;
 
   /* The fill, per state. The `--secondary` variant re-points these and declares nothing else. */
@@ -63,7 +63,7 @@
    Elements
    ========================================================================== */
 
-.color-input-group__input {
+.rp-color-input-group__input {
   @apply flex h-full flex-1 cursor-text items-center rounded-none border-0 bg-transparent px-3 field-line-md shadow-none outline-none;
 
   /* Placeholder styling */
@@ -72,12 +72,12 @@
   }
 
   /* Remove border radius on left side when prefix is present */
-  .color-input-group:has([data-slot="color-input-group-prefix"]) & {
+  .rp-color-input-group:has([data-slot="color-input-group-prefix"]) & {
     @apply rounded-s-none ps-2;
   }
 
   /* Remove border radius on right side when suffix is present */
-  .color-input-group:has([data-slot="color-input-group-suffix"]) & {
+  .rp-color-input-group:has([data-slot="color-input-group-suffix"]) & {
     @apply rounded-e-none pe-2;
   }
 
@@ -88,12 +88,12 @@
   }
 }
 
-.color-input-group__prefix {
+.rp-color-input-group__prefix {
   @apply shrink-0 text-field-placeholder;
   @apply ms-3 me-0 flex items-center;
 }
 
-.color-input-group__suffix {
+.rp-color-input-group__suffix {
   @apply shrink-0 text-field-placeholder;
   @apply me-3 flex items-center;
 }
@@ -102,11 +102,11 @@
    Variant modifiers
    ========================================================================== */
 
-.color-input-group--primary {
+.rp-color-input-group--primary {
   /* Default styles - primary variant uses the base field styling */
 }
 
-.color-input-group--secondary {
+.rp-color-input-group--secondary {
   @apply shadow-none;
 
   --color-input-group-bg: var(--default);
@@ -122,7 +122,7 @@
    Full width modifier
    ========================================================================== */
 
-.color-input-group--full-width {
+.rp-color-input-group--full-width {
   @apply w-full;
 }
 
@@ -130,18 +130,18 @@
    Size variants
    ========================================================================== */
 
-.color-input-group--sm {
+.rp-color-input-group--sm {
   @apply h-8;
 
-  .color-input-group__input {
+  .rp-color-input-group__input {
     @apply field-line-sm;
   }
 }
 
-.color-input-group--lg {
+.rp-color-input-group--lg {
   @apply h-10;
 
-  .color-input-group__input {
+  .rp-color-input-group__input {
     @apply field-line-lg;
   }
 }

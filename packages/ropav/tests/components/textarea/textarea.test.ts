@@ -33,7 +33,7 @@ describe("TextArea", () => {
 
       expect(control.tagName).toBe("TEXTAREA");
       expect(control).toHaveAttribute("data-slot", "textarea");
-      expect(control).toHaveClass("textarea", "textarea--primary");
+      expect(control).toHaveClass("rp-textarea", "rp-textarea--primary");
 
       unmount();
     });
@@ -41,7 +41,11 @@ describe("TextArea", () => {
     it("takes its variant from its own props, having no field to inherit from", () => {
       const { control, unmount } = render({ fullWidth: true, variant: "secondary" });
 
-      expect(control).toHaveClass("textarea", "textarea--secondary", "textarea--full-width");
+      expect(control).toHaveClass(
+        "rp-textarea",
+        "rp-textarea--secondary",
+        "rp-textarea--full-width",
+      );
 
       unmount();
     });
@@ -141,7 +145,7 @@ describe("TextArea", () => {
         isFieldInvalid: true,
       });
 
-      expect(control).toHaveClass("textarea--secondary");
+      expect(control).toHaveClass("rp-textarea--secondary");
       expect(control).toHaveAttribute("data-disabled", "true");
       expect(control).toHaveAttribute("data-invalid", "true");
 

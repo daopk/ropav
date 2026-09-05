@@ -275,7 +275,7 @@ export const NavigationDrawer: Story = {
                 <nav class="flex flex-col gap-1">
                   <button
                     v-for="item in navItems"
-                    :key="item.label"
+                    :key="item.rp-label"
                     class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-foreground transition-colors hover:bg-default"
                     type="button"
                   >
@@ -285,7 +285,7 @@ export const NavigationDrawer: Story = {
                     <IconEnvelope v-else-if="item.icon === 'envelope'" class="size-5 text-muted" />
                     <IconPerson v-else-if="item.icon === 'person'" class="size-5 text-muted" />
                     <IconGear v-else class="size-5 text-muted" />
-                    {{ item.label }}
+                    {{ item.rp-label }}
                   </button>
                 </nav>
               </DrawerBody>

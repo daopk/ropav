@@ -120,7 +120,7 @@ describe("ButtonGroup (browser)", () => {
     const firstRect = first.getBoundingClientRect();
     const lastRect = last.getBoundingClientRect();
 
-    // `.button` is `w-fit`, so without a cross-axis rule each button would only be as wide
+    // `.rp-button` is `w-fit`, so without a cross-axis rule each button would only be as wide
     // as its own label and sit centred against the widest one - a ragged stack of edges.
     expect(firstRect.width).toBeCloseTo(lastRect.width, 0);
     expect(firstRect.left).toBeCloseTo(lastRect.left, 0);

@@ -7,7 +7,7 @@ defineSlots<{ default?: () => unknown }>();
 </script>
 
 <template>
-  <span :class="['badge-anchor', props.class]" data-slot="badge-anchor">
+  <span :class="['rp-badge-anchor', props.class]" data-slot="badge-anchor">
     <slot />
   </span>
 </template>

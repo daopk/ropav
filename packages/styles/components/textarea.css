@@ -1,5 +1,5 @@
 /* use textarea instead of text-area to avoid conflict with Tailwind `text-` prefix */
-.textarea {
+.rp-textarea {
   @apply rounded-field border px-3 field-line-md text-field-foreground shadow-field outline-none placeholder:text-field-placeholder;
 
   /* The fill, per state. The `--secondary` variant re-points these and declares nothing else. */
@@ -65,11 +65,11 @@
 }
 
 /* Variant property definitions */
-.textarea--primary {
+.rp-textarea--primary {
   /* Default styles */
 }
 
-.textarea--secondary {
+.rp-textarea--secondary {
   @apply shadow-none;
 
   --textarea-bg: var(--default);
@@ -78,7 +78,7 @@
 }
 
 /* Full width modifier */
-.textarea--full-width {
+.rp-textarea--full-width {
   @apply w-full;
 }
 
@@ -86,10 +86,10 @@
    Size variants
    ========================================================================== */
 
-.textarea--sm {
+.rp-textarea--sm {
   @apply field-line-sm;
 }
 
-.textarea--lg {
+.rp-textarea--lg {
   @apply field-line-lg;
 }

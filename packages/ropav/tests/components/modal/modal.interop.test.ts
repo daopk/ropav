@@ -91,10 +91,10 @@ describe("Modal (interop)", () => {
 
     // The slot set accumulates: the backdrop decides its own variant, the container the dialog's
     // size, and each part reads whichever level is nearest above it.
-    expect(slot("modal-backdrop")!.classList.contains("modal__backdrop--blur")).toBe(true);
-    expect(slot("modal-dialog")!.classList.contains("modal__dialog--lg")).toBe(true);
-    expect(slot("modal-heading")!.classList.contains("modal__heading")).toBe(true);
-    expect(slot("modal-body")!.classList.contains("modal__body")).toBe(true);
+    expect(slot("modal-backdrop")!.classList.contains("rp-modal__backdrop--blur")).toBe(true);
+    expect(slot("modal-dialog")!.classList.contains("rp-modal__dialog--lg")).toBe(true);
+    expect(slot("modal-heading")!.classList.contains("rp-modal__heading")).toBe(true);
+    expect(slot("modal-body")!.classList.contains("rp-modal__body")).toBe(true);
 
     result.unmount();
   });

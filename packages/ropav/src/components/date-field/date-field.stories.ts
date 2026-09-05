@@ -491,9 +491,9 @@ export const Granularity: Story = {
                   v-for="option in options"
                   :id="option.id"
                   :key="option.id"
-                  :text-value="option.label"
+                  :text-value="option.rp-label"
                 >
-                  {{ option.label }}
+                  {{ option.rp-label }}
                   <ListBoxItemIndicator />
                 </ListBoxItem>
               </ListBox>

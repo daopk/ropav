@@ -7,13 +7,13 @@ export const skeletonVariants = tv({
     animationType: "shimmer",
   },
   slots: {
-    base: "skeleton",
+    base: "rp-skeleton",
   },
   variants: {
     animationType: {
-      none: "skeleton--none",
-      pulse: "skeleton--pulse",
-      shimmer: "skeleton--shimmer",
+      none: "rp-skeleton--none",
+      pulse: "rp-skeleton--pulse",
+      shimmer: "rp-skeleton--shimmer",
     },
   },
 });

@@ -40,19 +40,19 @@ type Part = {
   states: State[];
 };
 
-const SIDEBAR = `<div class="sidebar"><div class="sidebar__rail"></div></div>`;
-const QUIET_RAIL = `<div class="sidebar"><div class="sidebar__rail sidebar__rail--quiet"></div></div>`;
-const SPLITTER = `<div class="splitter__handle"><div class="splitter__handle-grip"></div></div>`;
-const ITEM = `<div class="sidebar__item"></div>`;
+const SIDEBAR = `<div class="rp-sidebar"><div class="rp-sidebar__rail"></div></div>`;
+const QUIET_RAIL = `<div class="rp-sidebar"><div class="rp-sidebar__rail rp-sidebar__rail--quiet"></div></div>`;
+const SPLITTER = `<div class="rp-splitter__handle"><div class="rp-splitter__handle-grip"></div></div>`;
+const ITEM = `<div class="rp-sidebar__item"></div>`;
 
 const parts: Part[] = [
   {
     html: SIDEBAR,
-    knobHost: ".sidebar",
+    knobHost: ".rp-sidebar",
     name: "the sidebar rail's line",
-    paint: ".sidebar__rail",
+    paint: ".rp-sidebar__rail",
     pseudo: "::after",
-    stateHost: ".sidebar__rail",
+    stateHost: ".rp-sidebar__rail",
     states: [
       { attr: null, knob: "--sidebar-rail-line", paints: "var(--separator)" },
       { attr: ["data-hovered"], knob: "--sidebar-rail-line-hover", paints: "var(--accent)" },
@@ -76,11 +76,11 @@ const parts: Part[] = [
      * the nearer one.
      */
     html: QUIET_RAIL,
-    knobHost: ".sidebar__rail",
+    knobHost: ".rp-sidebar__rail",
     name: "the quiet sidebar rail's line",
-    paint: ".sidebar__rail",
+    paint: ".rp-sidebar__rail",
     pseudo: "::after",
-    stateHost: ".sidebar__rail",
+    stateHost: ".rp-sidebar__rail",
     states: [
       { attr: null, knob: "--sidebar-rail-line", paints: "transparent" },
       { attr: ["data-hovered"], knob: "--sidebar-rail-line-hover", paints: "transparent" },
@@ -89,10 +89,10 @@ const parts: Part[] = [
   },
   {
     html: ITEM,
-    knobHost: ".sidebar__item",
+    knobHost: ".rp-sidebar__item",
     name: "the sidebar row's fill",
-    paint: ".sidebar__item",
-    stateHost: ".sidebar__item",
+    paint: ".rp-sidebar__item",
+    stateHost: ".rp-sidebar__item",
     states: [
       { attr: null, knob: "--sidebar-item-bg", paints: "transparent" },
       { attr: ["data-hovered"], knob: "--sidebar-item-bg-hover", paints: "var(--state-layer)" },
@@ -107,10 +107,10 @@ const parts: Part[] = [
   },
   {
     html: ITEM,
-    knobHost: ".sidebar__item",
+    knobHost: ".rp-sidebar__item",
     name: "the sidebar row's label",
-    paint: ".sidebar__item",
-    stateHost: ".sidebar__item",
+    paint: ".rp-sidebar__item",
+    stateHost: ".rp-sidebar__item",
     states: [
       { attr: null, knob: "--sidebar-item-fg", paints: "var(--foreground)", prop: "color" },
       {
@@ -122,11 +122,11 @@ const parts: Part[] = [
     ],
   },
   {
-    html: `<input class="input" />`,
-    knobHost: ".input",
+    html: `<input class="rp-input" />`,
+    knobHost: ".rp-input",
     name: "the field's fill",
-    paint: ".input",
-    stateHost: ".input",
+    paint: ".rp-input",
+    stateHost: ".rp-input",
     states: [
       { attr: null, knob: "--input-bg", paints: "var(--field-background, var(--default))" },
       { attr: ["data-hovered"], knob: "--input-bg-hover", paints: "var(--field-hover)" },
@@ -136,11 +136,11 @@ const parts: Part[] = [
   {
     // The variant re-points the properties and declares no state rule of its own, so this is also
     // what proves the base's rules read through to it.
-    html: `<input class="input input--secondary" />`,
-    knobHost: ".input",
+    html: `<input class="rp-input rp-input--secondary" />`,
+    knobHost: ".rp-input",
     name: "the secondary field's fill",
-    paint: ".input",
-    stateHost: ".input",
+    paint: ".rp-input",
+    stateHost: ".rp-input",
     states: [
       { attr: null, knob: "--input-bg", paints: "var(--default)" },
       { attr: ["data-hovered"], knob: "--input-bg-hover", paints: "var(--default-hover)" },
@@ -150,11 +150,11 @@ const parts: Part[] = [
   {
     // The variant here is an ancestor rather than the element itself, so it also covers a knob
     // re-pointed from one selector up.
-    html: `<div class="search-field--secondary"><div class="search-field__group"></div></div>`,
-    knobHost: ".search-field__group",
+    html: `<div class="rp-search-field--secondary"><div class="rp-search-field__group"></div></div>`,
+    knobHost: ".rp-search-field__group",
     name: "the secondary search field's group",
-    paint: ".search-field__group",
-    stateHost: ".search-field__group",
+    paint: ".rp-search-field__group",
+    stateHost: ".rp-search-field__group",
     states: [
       { attr: null, knob: "--search-field-group-bg", paints: "var(--default)" },
       {
@@ -172,11 +172,11 @@ const parts: Part[] = [
   {
     // Not a fill, and the defaults are `color-mix()` rather than a bare token — both of which the
     // property has to carry through unchanged.
-    html: `<a class="link"></a>`,
-    knobHost: ".link",
+    html: `<a class="rp-link"></a>`,
+    knobHost: ".rp-link",
     name: "the link's underline",
-    paint: ".link",
-    stateHost: ".link",
+    paint: ".rp-link",
+    stateHost: ".rp-link",
     states: [
       {
         attr: null,
@@ -201,11 +201,11 @@ const parts: Part[] = [
   {
     // A variant that re-points the whole set and declares nothing else, plus the first state that
     // needs two attributes at once.
-    html: `<span class="tag tag--default"></span>`,
-    knobHost: ".tag",
+    html: `<span class="rp-tag rp-tag--default"></span>`,
+    knobHost: ".rp-tag",
     name: "the tag's fill",
-    paint: ".tag",
-    stateHost: ".tag",
+    paint: ".rp-tag",
+    stateHost: ".rp-tag",
     states: [
       { attr: null, knob: "--tag-bg", paints: "var(--default)" },
       { attr: ["data-hovered"], knob: "--tag-bg-hover", paints: "var(--default-hover)" },
@@ -220,11 +220,11 @@ const parts: Part[] = [
   {
     // The states sit on the row but the cell is what paints, so this also covers a knob read one
     // level below where the state lives.
-    html: `<table><tbody><tr class="table__row"><td class="table__cell"></td></tr></tbody></table>`,
-    knobHost: ".table__cell",
+    html: `<table><tbody><tr class="rp-table__row"><td class="rp-table__cell"></td></tr></tbody></table>`,
+    knobHost: ".rp-table__cell",
     name: "the table row's fill",
-    paint: ".table__cell",
-    stateHost: ".table__row",
+    paint: ".rp-table__cell",
+    stateHost: ".rp-table__row",
     states: [
       { attr: null, knob: "--table-cell-bg", paints: "var(--surface)" },
       {
@@ -252,11 +252,11 @@ const parts: Part[] = [
   {
     // The gap between two rows, which has no resting colour — it is only ever seen lit. A
     // windowed table renders its own gaps, so this is the only thing that can paint them.
-    html: `<div class="table__drop-indicator"></div>`,
-    knobHost: ".table__drop-indicator",
+    html: `<div class="rp-table__drop-indicator"></div>`,
+    knobHost: ".rp-table__drop-indicator",
     name: "the table's drop indicator, windowed",
-    paint: ".table__drop-indicator",
-    stateHost: ".table__drop-indicator",
+    paint: ".rp-table__drop-indicator",
+    stateHost: ".rp-table__drop-indicator",
     states: [
       {
         attr: ["data-drop-target"],
@@ -268,12 +268,12 @@ const parts: Part[] = [
   {
     // The same gap as a real row, which has to take no height — so the cell paints it, on a
     // pseudo-element lifted onto the boundary. Same knob, a different thing wearing it.
-    html: `<table class="table__content"><tbody><tr class="table__drop-indicator"><td></td></tr></tbody></table>`,
-    knobHost: ".table__drop-indicator",
+    html: `<table class="rp-table__content"><tbody><tr class="rp-table__drop-indicator"><td></td></tr></tbody></table>`,
+    knobHost: ".rp-table__drop-indicator",
     name: "the table's drop indicator, in flow",
-    paint: ".table__drop-indicator > td",
+    paint: ".rp-table__drop-indicator > td",
     pseudo: "::after",
-    stateHost: ".table__drop-indicator",
+    stateHost: ".rp-table__drop-indicator",
     states: [
       {
         attr: ["data-drop-target"],
@@ -283,11 +283,11 @@ const parts: Part[] = [
     ],
   },
   {
-    html: `<div class="list-box__drop-indicator"></div>`,
-    knobHost: ".list-box__drop-indicator",
+    html: `<div class="rp-list-box__drop-indicator"></div>`,
+    knobHost: ".rp-list-box__drop-indicator",
     name: "the list box's drop indicator, windowed",
-    paint: ".list-box__drop-indicator",
-    stateHost: ".list-box__drop-indicator",
+    paint: ".rp-list-box__drop-indicator",
+    stateHost: ".rp-list-box__drop-indicator",
     states: [
       {
         attr: ["data-drop-target"],
@@ -298,12 +298,12 @@ const parts: Part[] = [
   },
   {
     // In flow it takes no height, so it paints on a pseudo-element lifted onto the boundary.
-    html: `<div class="list-box"><div class="list-box__drop-indicator"></div></div>`,
-    knobHost: ".list-box__drop-indicator",
+    html: `<div class="rp-list-box"><div class="rp-list-box__drop-indicator"></div></div>`,
+    knobHost: ".rp-list-box__drop-indicator",
     name: "the list box's drop indicator, in flow",
-    paint: ".list-box__drop-indicator",
+    paint: ".rp-list-box__drop-indicator",
     pseudo: "::after",
-    stateHost: ".list-box__drop-indicator",
+    stateHost: ".rp-list-box__drop-indicator",
     states: [
       {
         attr: ["data-drop-target"],
@@ -315,11 +315,11 @@ const parts: Part[] = [
   {
     // The most combinatorial box in the library: checked and indeterminate share a colour, and so
     // do the two invalid pairings. The state lives on the block, the paint on the control.
-    html: `<div class="checkbox"><span class="checkbox__control"></span></div>`,
-    knobHost: ".checkbox__control",
+    html: `<div class="rp-checkbox"><span class="rp-checkbox__control"></span></div>`,
+    knobHost: ".rp-checkbox__control",
     name: "the checkbox control's fill",
-    paint: ".checkbox__control",
-    stateHost: ".checkbox",
+    paint: ".rp-checkbox__control",
+    stateHost: ".rp-checkbox",
     states: [
       {
         attr: null,
@@ -340,11 +340,11 @@ const parts: Part[] = [
   },
   {
     // The knobs are declared on the cell and read by the day button inside it.
-    html: `<div class="range-calendar__cell"><span class="range-calendar__cell-button"></span></div>`,
-    knobHost: ".range-calendar__cell",
+    html: `<div class="rp-range-calendar__cell"><span class="rp-range-calendar__cell-button"></span></div>`,
+    knobHost: ".rp-range-calendar__cell",
     name: "the range calendar's day",
-    paint: ".range-calendar__cell-button",
-    stateHost: ".range-calendar__cell",
+    paint: ".rp-range-calendar__cell-button",
+    stateHost: ".rp-range-calendar__cell",
     states: [
       {
         attr: ["data-today"],
@@ -365,11 +365,11 @@ const parts: Part[] = [
   },
   {
     html: SPLITTER,
-    knobHost: ".splitter__handle",
+    knobHost: ".rp-splitter__handle",
     name: "the splitter handle's line",
-    paint: ".splitter__handle",
+    paint: ".rp-splitter__handle",
     pseudo: "::after",
-    stateHost: ".splitter__handle",
+    stateHost: ".rp-splitter__handle",
     states: [
       { attr: null, knob: "--splitter-line", paints: "var(--separator)" },
       { attr: ["data-hovered"], knob: "--splitter-line-hover", paints: "var(--accent)" },
@@ -383,10 +383,10 @@ const parts: Part[] = [
   },
   {
     html: SPLITTER,
-    knobHost: ".splitter__handle",
+    knobHost: ".rp-splitter__handle",
     name: "the splitter handle's grip",
-    paint: ".splitter__handle-grip",
-    stateHost: ".splitter__handle",
+    paint: ".rp-splitter__handle-grip",
+    stateHost: ".rp-splitter__handle",
     states: [
       { attr: null, knob: "--splitter-grip-bg", paints: "var(--separator)" },
       { attr: ["data-hovered"], knob: "--splitter-grip-bg-hover", paints: "var(--accent)" },

@@ -8,27 +8,27 @@ export const tagVariants = tv({
     variant: "default",
   },
   slots: {
-    base: "tag",
-    removeButton: "tag__remove-button",
+    base: "rp-tag",
+    removeButton: "rp-tag__remove-button",
   },
   variants: {
     size: {
       lg: {
-        base: "tag--lg",
+        base: "rp-tag--lg",
       },
       md: {
-        base: "tag--md",
+        base: "rp-tag--md",
       },
       sm: {
-        base: "tag--sm",
+        base: "rp-tag--sm",
       },
     },
     variant: {
       default: {
-        base: "tag--default",
+        base: "rp-tag--default",
       },
       surface: {
-        base: "tag--surface",
+        base: "rp-tag--surface",
       },
     },
   },

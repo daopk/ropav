@@ -160,17 +160,17 @@ describe("Autocomplete under a vdom host", () => {
     // The slot classes travel by context. A part that could not reach it would render unstyled
     // while still looking correct in the vapor suite.
     expect(result.container.querySelector('[data-slot="autocomplete-trigger"]')).toHaveClass(
-      "autocomplete__trigger",
+      "rp-autocomplete__trigger",
     );
     expect(result.container.querySelector('[data-slot="autocomplete-value"]')).toHaveClass(
-      "autocomplete__value",
+      "rp-autocomplete__value",
     );
     expect(result.container.querySelector('[data-slot="autocomplete-clear-button"]')).toHaveClass(
-      "autocomplete__clear-button",
+      "rp-autocomplete__clear-button",
     );
     expect(
       result.container.querySelector('[data-slot="autocomplete-default-indicator"]'),
-    ).toHaveClass("autocomplete__indicator");
+    ).toHaveClass("rp-autocomplete__indicator");
   });
 
   it("gives the host's indicator the press that opens the listbox", async () => {

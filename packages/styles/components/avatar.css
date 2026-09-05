@@ -1,5 +1,5 @@
 /* Base avatar styles */
-.avatar {
+.rp-avatar {
   @apply relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-3xl bg-default;
 
   /* Forced Colors Mode flattens the fill onto the page, so a fallback avatar is initials sitting
@@ -13,12 +13,12 @@
 }
 
 /* Avatar fallback element */
-.avatar__fallback {
+.rp-avatar__fallback {
   @apply flex size-full items-center justify-center bg-default text-sm font-medium;
 }
 
 /* Avatar image element */
-.avatar__image {
+.rp-avatar__image {
   @apply absolute inset-0 aspect-square size-full;
 
   /**
@@ -28,64 +28,64 @@
 }
 
 /* Size modifiers */
-.avatar--sm {
+.rp-avatar--sm {
   @apply size-8 rounded-2xl;
 }
 
-.avatar--md {
+.rp-avatar--md {
   /* No styles as this is the default size */
 }
 
-.avatar--lg {
+.rp-avatar--lg {
   @apply size-12 rounded-3xl;
 
-  .avatar__fallback {
+  .rp-avatar__fallback {
     @apply text-base;
   }
 }
 
 /* Color modifiers for fallback */
-.avatar__fallback--accent {
+.rp-avatar__fallback--accent {
   @apply text-accent-soft-foreground;
 }
 
-.avatar__fallback--default {
+.rp-avatar__fallback--default {
   @apply text-default-soft-foreground;
 }
 
-.avatar__fallback--success {
+.rp-avatar__fallback--success {
   @apply text-success-soft-foreground;
 }
 
-.avatar__fallback--warning {
+.rp-avatar__fallback--warning {
   @apply text-warning-soft-foreground;
 }
 
-.avatar__fallback--danger {
+.rp-avatar__fallback--danger {
   @apply text-danger-soft-foreground;
 }
 
 /* Variant modifiers */
-.avatar--soft {
+.rp-avatar--soft {
   @apply bg-transparent;
 }
 
-.avatar--soft .avatar__fallback--accent {
+.rp-avatar--soft .rp-avatar__fallback--accent {
   @apply bg-accent-soft text-accent-soft-foreground;
 }
 
-.avatar--soft .avatar__fallback--success {
+.rp-avatar--soft .rp-avatar__fallback--success {
   @apply bg-success-soft text-success-soft-foreground;
 }
 
-.avatar--soft .avatar__fallback--warning {
+.rp-avatar--soft .rp-avatar__fallback--warning {
   @apply bg-warning-soft text-warning-soft-foreground;
 }
 
-.avatar--soft .avatar__fallback--default {
+.rp-avatar--soft .rp-avatar__fallback--default {
   @apply bg-default-soft text-default-soft-foreground;
 }
 
-.avatar--soft .avatar__fallback--danger {
+.rp-avatar--soft .rp-avatar__fallback--danger {
   @apply bg-danger-soft text-danger-soft-foreground;
 }

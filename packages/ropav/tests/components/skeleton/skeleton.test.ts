@@ -26,7 +26,7 @@ describe("Skeleton", () => {
       const skeleton = container.querySelector('[data-slot="skeleton"]');
 
       expect(skeleton?.tagName).toBe("DIV");
-      expect(skeleton).toHaveClass("skeleton");
+      expect(skeleton).toHaveClass("rp-skeleton");
 
       unmount();
     });
@@ -46,7 +46,7 @@ describe("Skeleton", () => {
     it("uses the variant default when the theme property is absent", () => {
       const { container, unmount } = renderSkeleton();
 
-      expect(container.querySelector('[data-slot="skeleton"]')).toHaveClass("skeleton--shimmer");
+      expect(container.querySelector('[data-slot="skeleton"]')).toHaveClass("rp-skeleton--shimmer");
 
       unmount();
     });
@@ -56,7 +56,7 @@ describe("Skeleton", () => {
 
       const { container, unmount } = renderSkeleton();
 
-      expect(container.querySelector('[data-slot="skeleton"]')).toHaveClass("skeleton--pulse");
+      expect(container.querySelector('[data-slot="skeleton"]')).toHaveClass("rp-skeleton--pulse");
 
       unmount();
     });
@@ -66,8 +66,10 @@ describe("Skeleton", () => {
 
       const { container, unmount } = renderSkeleton({ animationType: "none" });
 
-      expect(container.querySelector('[data-slot="skeleton"]')).toHaveClass("skeleton--none");
-      expect(container.querySelector('[data-slot="skeleton"]')).not.toHaveClass("skeleton--pulse");
+      expect(container.querySelector('[data-slot="skeleton"]')).toHaveClass("rp-skeleton--none");
+      expect(container.querySelector('[data-slot="skeleton"]')).not.toHaveClass(
+        "rp-skeleton--pulse",
+      );
 
       unmount();
     });
@@ -77,13 +79,13 @@ describe("Skeleton", () => {
       const { container, unmount } = renderVapor(Fixture, { props });
       const skeleton = container.querySelector('[data-slot="skeleton"]');
 
-      expect(skeleton).toHaveClass("skeleton--pulse");
+      expect(skeleton).toHaveClass("rp-skeleton--pulse");
 
       Object.assign(props, { animationType: "none" });
       await nextTick();
 
-      expect(skeleton).toHaveClass("skeleton--none");
-      expect(skeleton).not.toHaveClass("skeleton--pulse");
+      expect(skeleton).toHaveClass("rp-skeleton--none");
+      expect(skeleton).not.toHaveClass("rp-skeleton--pulse");
 
       unmount();
     });
@@ -94,7 +96,7 @@ describe("Skeleton", () => {
       const { container, unmount } = renderSkeleton({ class: "rounded-full" });
 
       expect(container.querySelector('[data-slot="skeleton"]')).toHaveClass(
-        "skeleton",
+        "rp-skeleton",
         "rounded-full",
       );
 
@@ -105,7 +107,7 @@ describe("Skeleton", () => {
   describe("exports", () => {
     it("exposes the root and shared variants", () => {
       expect(Skeleton).toBeDefined();
-      expect(skeletonVariants({ animationType: "pulse" }).base()).toContain("skeleton--pulse");
+      expect(skeletonVariants({ animationType: "pulse" }).base()).toContain("rp-skeleton--pulse");
     });
   });
 });

@@ -113,10 +113,10 @@ describe("ComboBox (interop)", () => {
     await settle();
 
     expect(result.container.querySelector('[data-slot="combo-box-input-group"]')).toHaveClass(
-      "combo-box__input-group",
+      "rp-combo-box__input-group",
     );
     expect(result.container.querySelector('[data-slot="combo-box-trigger"]')).toHaveClass(
-      "combo-box__trigger",
+      "rp-combo-box__trigger",
     );
 
     result.unmount();
@@ -149,7 +149,9 @@ describe("ComboBox (interop)", () => {
 
     // The variant reaches the input through a context of its own, which is how the React build
     // routes it too — and the only thing a host-written `Input` can read it from.
-    expect(result.container.querySelector('[data-slot="input"]')).toHaveClass("input--secondary");
+    expect(result.container.querySelector('[data-slot="input"]')).toHaveClass(
+      "rp-input--secondary",
+    );
 
     result.unmount();
   });

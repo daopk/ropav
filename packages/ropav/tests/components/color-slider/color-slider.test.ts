@@ -34,10 +34,10 @@ describe("ColorSlider", () => {
     it("renders every part with its data-slot and BEM class", () => {
       const { container, unmount } = renderSlider();
 
-      expect(slot(container, "color-slider")).toHaveClass("color-slider");
-      expect(slot(container, "color-slider-output")).toHaveClass("color-slider__output");
-      expect(slot(container, "color-slider-track")).toHaveClass("color-slider__track");
-      expect(slot(container, "color-slider-thumb")).toHaveClass("color-slider__thumb");
+      expect(slot(container, "color-slider")).toHaveClass("rp-color-slider");
+      expect(slot(container, "color-slider-output")).toHaveClass("rp-color-slider__output");
+      expect(slot(container, "color-slider-track")).toHaveClass("rp-color-slider__track");
+      expect(slot(container, "color-slider-thumb")).toHaveClass("rp-color-slider__thumb");
 
       unmount();
     });
@@ -45,7 +45,7 @@ describe("ColorSlider", () => {
     it("lets a caller's class through to the element", () => {
       const { container, unmount } = renderSlider({ class: "w-64" });
 
-      expect(slot(container, "color-slider")).toHaveClass("color-slider", "w-64");
+      expect(slot(container, "color-slider")).toHaveClass("rp-color-slider", "w-64");
 
       unmount();
     });

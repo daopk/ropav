@@ -384,7 +384,7 @@ export const Showcase1: Story = {
                           <path d="m9 4h-3v-3c0-0.553-0.447-1-1-1s-1 0.447-1 1v3h-3c-0.553 0-1 0.447-1 1s0.447 1 1 1h3v3c0 0.553 0.447 1 1 1s1-0.447 1-1v-3h3c0.553 0 1-0.447 1-1s-0.447-1-1-1" />
                         </g>
                       </svg>
-                      {{ item.label }}
+                      {{ item.rp-label }}
                     </div>
                   </AppleShowcaseButton>
                 </DisclosureHeading>
@@ -401,7 +401,7 @@ export const Showcase1: Story = {
                         willChange: 'opacity, translate',
                       }"
                     >
-                      <strong class="font-medium">{{ item.label }}</strong>.&nbsp;{{ item.content }}
+                      <strong class="font-medium">{{ item.rp-label }}</strong>.&nbsp;{{ item.content }}
                     </p>
                   </DisclosureBody>
                 </DisclosureContent>
@@ -412,7 +412,7 @@ export const Showcase1: Story = {
         <img
           v-for="item in items"
           :key="item.id"
-          :alt="item.label"
+          :alt="item.rp-label"
           class="pointer-events-none absolute end-[10%] top-1/2 z-[0] hidden w-full max-w-6xl -translate-y-1/2 scale-[1.5] opacity-0 lg:block translate-x-[10%] data-[selected=true]:translate-x-0 data-[selected=true]:opacity-100"
           :data-selected="expandedKeys.has(item.id)"
           :src="item.imgSrc"

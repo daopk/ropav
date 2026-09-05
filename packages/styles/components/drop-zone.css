@@ -1,6 +1,6 @@
 /* Drop zone component styles */
 
-.drop-zone {
+.rp-drop-zone {
   @apply relative flex w-full flex-col items-center justify-center gap-2 rounded-component p-6 text-center text-sm outline-none;
 
   /* The dashed edge is this component's whole affordance, so it is painted from `--border`
@@ -71,7 +71,7 @@
   }
 }
 
-.drop-zone__trigger {
+.rp-drop-zone__trigger {
   @apply rounded-field underline underline-offset-2 outline-none;
 
   cursor: var(--cursor-interactive);

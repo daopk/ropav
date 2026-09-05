@@ -1,5 +1,5 @@
 /* Number field styles */
-.number-field {
+.rp-number-field {
   @apply flex flex-col gap-1;
 
   &[data-invalid="true"],
@@ -14,7 +14,7 @@
   }
 }
 
-.number-field__group {
+.rp-number-field__group {
   @apply grid h-9 items-center overflow-hidden rounded-field border text-sm text-field-foreground shadow-field outline-none;
 
   /* The fill, per state. The `--secondary` variant re-points these and declares nothing else. */
@@ -99,16 +99,16 @@
   }
 }
 
-.number-field__input {
+.rp-number-field__input {
   @apply min-w-0 rounded-none border-0 bg-transparent px-3 field-line-md tabular-nums shadow-none outline-none;
 
   /* Remove border radius on left side when decrement button is present */
-  .number-field__group:has([slot="decrement"]) & {
+  .rp-number-field__group:has([slot="decrement"]) & {
     @apply rounded-s-none;
   }
 
   /* Remove border radius on right side when increment button is present */
-  .number-field__group:has([slot="increment"]) & {
+  .rp-number-field__group:has([slot="increment"]) & {
     @apply rounded-e-none;
   }
 
@@ -121,7 +121,7 @@
   /**
    * Neutralize the browser's per-input autofill paint so the inner <input>
    * doesn't draw a sharp-cornered yellow rectangle. The unified highlight
-   * is applied to `.number-field__group` above. Preserve the autofilled
+   * is applied to `.rp-number-field__group` above. Preserve the autofilled
    * text and caret colors, and pin the background-color transition so the
    * inset box-shadow trick doesn't flicker on state changes.
    */
@@ -138,8 +138,8 @@
   }
 }
 
-.number-field__increment-button,
-.number-field__decrement-button {
+.rp-number-field__increment-button,
+.rp-number-field__decrement-button {
   @apply flex h-full w-10 items-center justify-center rounded-none text-field-foreground outline-none;
 
   --number-field-button-bg: transparent;
@@ -193,20 +193,20 @@
   }
 }
 
-.number-field__increment-button {
+.rp-number-field__increment-button {
   @apply rounded-s-none rounded-e-field border-s border-field-placeholder/15;
 }
 
-.number-field__decrement-button {
+.rp-number-field__decrement-button {
   @apply rounded-s-field rounded-e-none border-e border-field-placeholder/15;
 }
 
 /* Variant property definitions */
-.number-field--primary {
+.rp-number-field--primary {
   /* Default styles */
 }
 
-.number-field--secondary .number-field__group {
+.rp-number-field--secondary .rp-number-field__group {
   @apply shadow-none;
 
   --number-field-group-bg: var(--default);
@@ -219,11 +219,11 @@
 }
 
 /* Full width modifier */
-.number-field--full-width {
+.rp-number-field--full-width {
   @apply w-full;
 }
 
-.number-field__group--full-width {
+.rp-number-field__group--full-width {
   @apply w-full;
 }
 
@@ -232,8 +232,8 @@
    ========================================================================== */
 
 /* The stepper column stays 4px wider than the field is tall, as it is at `md`. */
-.number-field--sm {
-  .number-field__group {
+.rp-number-field--sm {
+  .rp-number-field__group {
     @apply h-8;
 
     &:has([slot="decrement"]) {
@@ -249,18 +249,18 @@
     }
   }
 
-  .number-field__input {
+  .rp-number-field__input {
     @apply field-line-sm;
   }
 
-  .number-field__increment-button,
-  .number-field__decrement-button {
+  .rp-number-field__increment-button,
+  .rp-number-field__decrement-button {
     @apply w-9;
   }
 }
 
-.number-field--lg {
-  .number-field__group {
+.rp-number-field--lg {
+  .rp-number-field__group {
     @apply h-10;
 
     &:has([slot="decrement"]) {
@@ -276,12 +276,12 @@
     }
   }
 
-  .number-field__input {
+  .rp-number-field__input {
     @apply field-line-lg;
   }
 
-  .number-field__increment-button,
-  .number-field__decrement-button {
+  .rp-number-field__increment-button,
+  .rp-number-field__decrement-button {
     @apply w-11;
   }
 }

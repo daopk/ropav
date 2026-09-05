@@ -2,16 +2,16 @@
    DateRangePicker - Date range selection trigger and popover container
    ========================================================================== */
 
-.date-range-picker {
+.rp-date-range-picker {
   @apply inline-flex flex-col gap-1;
 
-  .date-input-group__suffix,
-  .date-input-group__prefix {
+  .rp-date-input-group__suffix,
+  .rp-date-input-group__prefix {
     @apply pointer-events-auto;
   }
 }
 
-.date-range-picker__trigger {
+.rp-date-range-picker__trigger {
   @apply inline-flex w-full items-center rounded-field p-1 text-sm no-highlight;
 
   cursor: var(--cursor-interactive);
@@ -31,15 +31,15 @@
   }
 }
 
-.date-range-picker__trigger-indicator {
+.rp-date-range-picker__trigger-indicator {
   @apply inline-flex size-4 items-center justify-center text-field-placeholder;
 }
 
-.date-range-picker__range-separator {
+.rp-date-range-picker__range-separator {
   @apply px-1 text-field-placeholder select-none;
 }
 
-.date-range-picker__popover {
+.rp-date-range-picker__popover {
   @apply w-fit origin-(--trigger-anchor-point) scrollbar-none overflow-y-auto overscroll-contain bg-overlay p-3;
   @apply motion-reduce:transition-none;
 
@@ -81,7 +81,7 @@
   }
 }
 
-.date-range-picker__popover .range-calendar__nav-button-icon,
-.date-range-picker__popover .calendar__nav-button-icon {
+.rp-date-range-picker__popover .rp-range-calendar__nav-button-icon,
+.rp-date-range-picker__popover .rp-calendar__nav-button-icon {
   @apply rotate-0;
 }

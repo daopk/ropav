@@ -9,28 +9,28 @@ export const toggleButtonGroupVariants = tv({
     orientation: "horizontal",
   },
   slots: {
-    base: "toggle-button-group",
-    separator: "toggle-button-group__separator",
+    base: "rp-toggle-button-group",
+    separator: "rp-toggle-button-group__separator",
   },
   variants: {
     fullWidth: {
       false: {},
       true: {
-        base: "toggle-button-group--full-width",
+        base: "rp-toggle-button-group--full-width",
       },
     },
     isDetached: {
       false: {},
       true: {
-        base: "toggle-button-group--detached",
+        base: "rp-toggle-button-group--detached",
       },
     },
     orientation: {
       horizontal: {
-        base: "toggle-button-group--horizontal",
+        base: "rp-toggle-button-group--horizontal",
       },
       vertical: {
-        base: "toggle-button-group--vertical",
+        base: "rp-toggle-button-group--vertical",
       },
     },
   },

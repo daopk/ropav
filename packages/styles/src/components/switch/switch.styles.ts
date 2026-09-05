@@ -7,22 +7,22 @@ export const switchVariants = tv({
     size: "md",
   },
   slots: {
-    base: "switch",
-    content: "switch__content",
-    control: "switch__control",
-    icon: "switch__icon",
-    thumb: "switch__thumb",
+    base: "rp-switch",
+    content: "rp-switch__content",
+    control: "rp-switch__control",
+    icon: "rp-switch__icon",
+    thumb: "rp-switch__thumb",
   },
   variants: {
     size: {
       lg: {
-        base: "switch--lg",
+        base: "rp-switch--lg",
       },
       md: {
-        base: "switch--md",
+        base: "rp-switch--md",
       },
       sm: {
-        base: "switch--sm",
+        base: "rp-switch--sm",
       },
     },
   },

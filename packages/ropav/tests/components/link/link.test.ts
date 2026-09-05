@@ -40,7 +40,7 @@ describe("Link", () => {
     it("renders the BEM class", () => {
       const { link, unmount } = renderLink();
 
-      expect(link).toHaveClass("link");
+      expect(link).toHaveClass("rp-link");
 
       unmount();
     });
@@ -48,7 +48,7 @@ describe("Link", () => {
     it("supports a class", () => {
       const { link, unmount } = renderLink({ class: "underline-offset-2" });
 
-      expect(link).toHaveClass("link", "underline-offset-2");
+      expect(link).toHaveClass("rp-link", "underline-offset-2");
 
       unmount();
     });
@@ -262,12 +262,12 @@ describe("Link", () => {
 
   describe("icon", () => {
     it("renders the built-in glyph and marks it as the default", () => {
-      // `.link__icon[data-default-icon="true"]` is what makes room for the built-in glyph, so a
+      // `.rp-link__icon[data-default-icon="true"]` is what makes room for the built-in glyph, so a
       // caller's own icon must not get that spacing.
       const { container, unmount } = renderLink({ withIcon: true });
       const icon = container.querySelector('[data-slot="link-icon"]')!;
 
-      expect(icon).toHaveClass("link__icon");
+      expect(icon).toHaveClass("rp-link__icon");
       expect(icon).toHaveAttribute("data-default-icon", "true");
       expect(icon.querySelector('[data-slot="link-default-icon"]')).not.toBeNull();
 
@@ -289,7 +289,7 @@ describe("Link", () => {
       const { container, unmount } = renderLink({ iconClass: "size-2", withIcon: true });
 
       expect(container.querySelector('[data-slot="link-icon"]')).toHaveClass(
-        "link__icon",
+        "rp-link__icon",
         "size-2",
       );
 

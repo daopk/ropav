@@ -1,5 +1,5 @@
 /* Base tabs component */
-.tabs {
+.rp-tabs {
   @apply flex gap-2;
 
   /* Orientation styles */
@@ -13,20 +13,20 @@
 }
 
 /* Tab list container */
-.tabs__list-container {
+.rp-tabs__list-container {
   @apply relative bg-default;
 
   border-radius: min(32px, var(--component-radius));
 
   /* Vertical scroller fills the container height so overflow detection
      engages when the wrapper height is constrained (e.g. h-[240px]) */
-  > .tabs__list-container__scroller[data-orientation="vertical"] {
+  > .rp-tabs__list-container__scroller[data-orientation="vertical"] {
     @apply h-full;
   }
 
   /* Overflow chevron buttons */
-  > .tabs__list-container__scroll-prev,
-  > .tabs__list-container__scroll-next {
+  > .rp-tabs__list-container__scroll-prev,
+  > .rp-tabs__list-container__scroll-next {
     @apply absolute z-2 hidden size-4 cursor-(--cursor-interactive) items-center justify-center rounded-full border-0 bg-transparent p-0 text-foreground outline-none;
 
     transition: opacity 150ms var(--ease-smooth);
@@ -45,27 +45,27 @@
 
   /* Chevron position - horizontal orientation */
   &:has([data-orientation="horizontal"]) {
-    > .tabs__list-container__scroll-prev {
+    > .rp-tabs__list-container__scroll-prev {
       @apply start-1 top-1/2 -translate-y-1/2;
     }
 
-    > .tabs__list-container__scroll-next {
+    > .rp-tabs__list-container__scroll-next {
       @apply end-1 top-1/2 -translate-y-1/2;
     }
 
-    > .tabs__list-container__scroll-prev,
-    > .tabs__list-container__scroll-next {
+    > .rp-tabs__list-container__scroll-prev,
+    > .rp-tabs__list-container__scroll-next {
       @apply rtl:rotate-180;
     }
   }
 
   /* Chevron position - vertical orientation */
   &:has([data-orientation="vertical"]) {
-    > .tabs__list-container__scroll-prev {
+    > .rp-tabs__list-container__scroll-prev {
       @apply top-1 left-1/2 -translate-x-1/2;
     }
 
-    > .tabs__list-container__scroll-next {
+    > .rp-tabs__list-container__scroll-next {
       @apply bottom-1 left-1/2 -translate-x-1/2;
     }
   }
@@ -79,7 +79,7 @@
         [data-top-bottom-scroll="true"]
       )
     )
-    > .tabs__list-container__scroll-prev {
+    > .rp-tabs__list-container__scroll-prev {
     @apply inline-flex;
   }
 
@@ -91,13 +91,13 @@
         [data-top-bottom-scroll="true"]
       )
     )
-    > .tabs__list-container__scroll-next {
+    > .rp-tabs__list-container__scroll-next {
     @apply inline-flex;
   }
 }
 
 /* Tab list */
-.tabs__list {
+.rp-tabs__list {
   @apply inline-flex p-1;
 
   /* Horizontal orientation - grow with content so ScrollShadow can detect overflow */
@@ -109,14 +109,14 @@
   &[data-orientation="vertical"] {
     @apply flex-col gap-1;
 
-    .tabs__tab {
+    .rp-tabs__tab {
       @apply min-w-20;
     }
   }
 }
 
 /* Individual tab */
-.tabs__tab {
+.rp-tabs__tab {
   @apply relative flex h-8 w-full items-center justify-center rounded-component px-4 text-center text-sm font-medium outline-none no-highlight;
 
   --tabs-tab-fg: var(--muted);
@@ -147,8 +147,8 @@
     }
 
     /* Hide separator on the selected tab and the one following it */
-    .tabs__separator,
-    & + .tabs__tab .tabs__separator {
+    .rp-tabs__separator,
+    & + .rp-tabs__tab .rp-tabs__separator {
       @apply opacity-0;
     }
   }
@@ -176,25 +176,25 @@
 }
 
 /* Tab separator */
-.tabs__separator {
+.rp-tabs__separator {
   @apply pointer-events-none absolute rounded-sm bg-muted/25;
 
   transition: opacity 150ms var(--ease-smooth);
   @apply motion-reduce:transition-none;
 
   /* Horizontal tabs - vertical separator */
-  .tabs__list[data-orientation="horizontal"] & {
+  .rp-tabs__list[data-orientation="horizontal"] & {
     @apply start-0 top-1/4 h-1/2 w-px;
   }
 
   /* Vertical tabs - horizontal separator */
-  .tabs__list[data-orientation="vertical"] & {
+  .rp-tabs__list[data-orientation="vertical"] & {
     @apply start-[5%] top-0 h-px w-[90%];
   }
 }
 
 /* Tab panel */
-.tabs__panel {
+.rp-tabs__panel {
   @apply w-full p-2 outline-none;
 
   /* Exiting animations */
@@ -213,7 +213,7 @@
 }
 
 /* Tab indicator - React Aria's SelectionIndicator */
-.tabs__indicator {
+.rp-tabs__indicator {
   @apply absolute start-0 top-0 size-full rounded-component bg-segment shadow-surface;
 
   z-index: -1;
@@ -235,24 +235,24 @@
    Secondary Variant
    ========================================================================== */
 
-.tabs--secondary {
+.rp-tabs--secondary {
   /* Container - flat, no pill. Underline on container (not list) so it stays
      stable when the inner list scrolls horizontally inside the ScrollShadow. */
-  > .tabs__list-container {
+  > .rp-tabs__list-container {
     @apply rounded-none bg-transparent;
 
     /* Tab list - remove padding */
-    .tabs__list {
+    .rp-tabs__list {
       @apply p-0;
     }
 
     /* Hide separators in secondary variant */
-    .tabs__separator {
+    .rp-tabs__separator {
       @apply hidden;
     }
 
     /* Tab - adjust for secondary variant */
-    .tabs__tab {
+    .rp-tabs__tab {
       @apply rounded-none;
 
       /* Selected state - use text-foreground */
@@ -269,7 +269,7 @@
     }
 
     /* Tab indicator - line style */
-    .tabs__indicator {
+    .rp-tabs__indicator {
       @apply rounded-none bg-accent shadow-none;
 
       /* `bg-accent` outranks the base rule's forced-colors fallback and is itself flattened
@@ -281,19 +281,19 @@
   }
 
   /* Horizontal orientation - bottom border + bottom line indicator */
-  &[data-orientation="horizontal"] > .tabs__list-container {
+  &[data-orientation="horizontal"] > .rp-tabs__list-container {
     @apply border-b border-border;
 
-    .tabs__indicator {
+    .rp-tabs__indicator {
       @apply top-auto bottom-0 h-0.5;
     }
   }
 
   /* Vertical orientation - left border + left line indicator */
-  &[data-orientation="vertical"] > .tabs__list-container {
+  &[data-orientation="vertical"] > .rp-tabs__list-container {
     @apply border-s border-border;
 
-    .tabs__indicator {
+    .rp-tabs__indicator {
       @apply start-0 top-0 h-full w-0.5;
     }
   }

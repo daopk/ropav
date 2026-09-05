@@ -49,7 +49,7 @@ describe("Badge", () => {
       const label = slot(container, "badge-label");
 
       expect(label).toHaveTextContent("5");
-      expect(label).toHaveClass("badge__label");
+      expect(label).toHaveClass("rp-badge__label");
 
       unmount();
     });
@@ -108,21 +108,21 @@ describe("Badge", () => {
       const badge = slot(container, "badge");
 
       expect(badge).toHaveClass(
-        "badge",
-        "badge--default",
-        "badge--top-right",
-        "badge--md",
-        "badge--primary",
+        "rp-badge",
+        "rp-badge--default",
+        "rp-badge--top-right",
+        "rp-badge--md",
+        "rp-badge--primary",
       );
 
       unmount();
     });
 
     it.each([
-      ["color", "danger", "badge--danger"],
-      ["placement", "bottom-left", "badge--bottom-left"],
-      ["size", "lg", "badge--lg"],
-      ["variant", "soft", "badge--soft"],
+      ["color", "danger", "rp-badge--danger"],
+      ["placement", "bottom-left", "rp-badge--bottom-left"],
+      ["size", "lg", "rp-badge--lg"],
+      ["variant", "soft", "rp-badge--soft"],
     ])("applies the %s modifier class", (prop, value, expected) => {
       const { container, unmount } = renderVapor(Fixture, { props: { [prop]: value } });
 
@@ -141,9 +141,9 @@ describe("Badge", () => {
         },
       });
 
-      expect(slot(container, "badge-anchor")).toHaveClass("badge-anchor", "isolate");
-      expect(slot(container, "badge")).toHaveClass("badge", "uppercase");
-      expect(slot(container, "badge-label")).toHaveClass("badge__label", "tabular-nums");
+      expect(slot(container, "badge-anchor")).toHaveClass("rp-badge-anchor", "isolate");
+      expect(slot(container, "badge")).toHaveClass("rp-badge", "uppercase");
+      expect(slot(container, "badge-label")).toHaveClass("rp-badge__label", "tabular-nums");
 
       unmount();
     });
@@ -152,13 +152,13 @@ describe("Badge", () => {
       const props = reactive({ color: "accent" as const, placement: "top-left" as const });
       const { container, unmount } = renderVapor(Fixture, { props });
 
-      expect(slot(container, "badge")).toHaveClass("badge--accent", "badge--top-left");
+      expect(slot(container, "badge")).toHaveClass("rp-badge--accent", "rp-badge--top-left");
 
       Object.assign(props, { color: "success", placement: "bottom-right" });
       await nextTick();
 
-      expect(slot(container, "badge")).toHaveClass("badge--success", "badge--bottom-right");
-      expect(slot(container, "badge")).not.toHaveClass("badge--accent", "badge--top-left");
+      expect(slot(container, "badge")).toHaveClass("rp-badge--success", "rp-badge--bottom-right");
+      expect(slot(container, "badge")).not.toHaveClass("rp-badge--accent", "rp-badge--top-left");
 
       unmount();
     });

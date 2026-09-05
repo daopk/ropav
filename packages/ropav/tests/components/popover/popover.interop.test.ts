@@ -71,7 +71,7 @@ describe("Popover (interop)", () => {
     await settle();
 
     const trigger = result.container.querySelector("[data-slot='button']");
-    const inside = document.body.querySelector(".popover [data-slot='button']");
+    const inside = document.body.querySelector(".rp-popover [data-slot='button']");
 
     expect(trigger).toBeTruthy();
     expect(inside).toBeTruthy();
@@ -96,12 +96,12 @@ describe("Popover (interop)", () => {
     await settle();
 
     const trigger = result.container.querySelector("[data-slot='button']");
-    const inside = document.body.querySelector(".popover [data-slot='button']");
+    const inside = document.body.querySelector(".rp-popover [data-slot='button']");
 
     // The element the overlay measures is the one the trigger registered. A button in the content
     // that inherited the press would have registered itself last and won, which is the same bug
     // seen from the positioning side: the popover would be laid out against a button inside itself.
-    expect(document.body.querySelector(".popover")).toBeTruthy();
+    expect(document.body.querySelector(".rp-popover")).toBeTruthy();
     expect(inside!.hasAttribute("id")).toBe(false);
     expect(trigger!.id).toBeTruthy();
 
@@ -121,7 +121,7 @@ describe("Popover (interop)", () => {
 
     // The overlay steps aside when the content is already a dialog, so it carries neither the role
     // nor the id — two nested dialogs is not something assistive technology can read.
-    const popover = document.body.querySelector(".popover")!;
+    const popover = document.body.querySelector(".rp-popover")!;
 
     expect(popover.getAttribute("role")).toBeNull();
     expect(popover.hasAttribute("id")).toBe(false);

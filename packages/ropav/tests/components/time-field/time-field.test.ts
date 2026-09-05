@@ -103,17 +103,17 @@ describe("TimeField", () => {
 
   describe("variants", () => {
     it("applies the group's visual variant", () => {
-      expect(renderTimeField().group()).toHaveClass("date-input-group--primary");
+      expect(renderTimeField().group()).toHaveClass("rp-date-input-group--primary");
       expect(renderTimeField({ variant: "secondary" }).group()).toHaveClass(
-        "date-input-group--secondary",
+        "rp-date-input-group--secondary",
       );
     });
 
     it("stretches when full width is set as a bare attribute", () => {
       const { group, root, unmount } = renderTimeField({ attributeForm: true });
 
-      expect(root).toHaveClass("time-field--full-width");
-      expect(group()).toHaveClass("date-input-group--full-width");
+      expect(root).toHaveClass("rp-time-field--full-width");
+      expect(group()).toHaveClass("rp-date-input-group--full-width");
       unmount();
     });
   });

@@ -61,9 +61,9 @@ describe("DateField (interop)", () => {
   it("hands the group's styling to those parts", () => {
     const { find, segment, unmount } = render({}, { variant: "secondary" });
 
-    expect(find("date-input-group")).toHaveClass("date-input-group--secondary");
-    expect(find("date-input-group-input")).toHaveClass("date-input-group__input");
-    expect(segment("month")).toHaveClass("date-input-group__segment");
+    expect(find("date-input-group")).toHaveClass("rp-date-input-group--secondary");
+    expect(find("date-input-group-input")).toHaveClass("rp-date-input-group__input");
+    expect(segment("month")).toHaveClass("rp-date-input-group__segment");
     unmount();
   });
 

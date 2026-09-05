@@ -10,50 +10,50 @@ export const progressBarVariants = tv({
     size: "md",
   },
   slots: {
-    base: "progress-bar",
-    fill: "progress-bar__fill",
-    output: "progress-bar__output",
-    track: "progress-bar__track",
+    base: "rp-progress-bar",
+    fill: "rp-progress-bar__fill",
+    output: "rp-progress-bar__output",
+    track: "rp-progress-bar__track",
   },
   variants: {
     color: {
       accent: {
-        base: "progress-bar--accent",
+        base: "rp-progress-bar--accent",
       },
       danger: {
-        base: "progress-bar--danger",
+        base: "rp-progress-bar--danger",
       },
       default: {
-        base: "progress-bar--default",
+        base: "rp-progress-bar--default",
       },
       success: {
-        base: "progress-bar--success",
+        base: "rp-progress-bar--success",
       },
       warning: {
-        base: "progress-bar--warning",
+        base: "rp-progress-bar--warning",
       },
     },
     isAnimated: {
       false: {},
       true: {
-        base: "progress-bar--animated",
+        base: "rp-progress-bar--animated",
       },
     },
     isStriped: {
       false: {},
       true: {
-        base: "progress-bar--striped",
+        base: "rp-progress-bar--striped",
       },
     },
     size: {
       lg: {
-        base: "progress-bar--lg",
+        base: "rp-progress-bar--lg",
       },
       md: {
-        base: "progress-bar--md",
+        base: "rp-progress-bar--md",
       },
       sm: {
-        base: "progress-bar--sm",
+        base: "rp-progress-bar--sm",
       },
     },
   },

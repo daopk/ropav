@@ -9,26 +9,26 @@ export const scrollShadowVariants = tv({
     variant: "fade",
   },
   slots: {
-    base: "scroll-shadow",
+    base: "rp-scroll-shadow",
   },
   variants: {
     hideScrollBar: {
       false: {},
       true: {
-        base: "scroll-shadow--hide-scrollbar",
+        base: "rp-scroll-shadow--hide-scrollbar",
       },
     },
     orientation: {
       horizontal: {
-        base: "scroll-shadow--horizontal",
+        base: "rp-scroll-shadow--horizontal",
       },
       vertical: {
-        base: "scroll-shadow--vertical",
+        base: "rp-scroll-shadow--vertical",
       },
     },
     variant: {
       fade: {
-        base: "scroll-shadow--fade",
+        base: "rp-scroll-shadow--fade",
       },
     },
   },

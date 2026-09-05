@@ -3,7 +3,7 @@
    ========================================================================== */
 
 /* Base styles */
-.toggle-button {
+.rp-toggle-button {
   @apply relative isolate inline-flex h-9 w-fit origin-center items-center justify-center gap-2 rounded-component px-4 text-sm font-medium whitespace-nowrap outline-none select-none no-highlight;
 
   transition:
@@ -95,7 +95,7 @@
    Size variants
    ========================================================================== */
 
-.toggle-button--sm {
+.rp-toggle-button--sm {
   @apply h-8 px-3;
 
   &:active,
@@ -104,11 +104,11 @@
   }
 }
 
-.toggle-button--md {
+.rp-toggle-button--md {
   /* No styles as this is the default size */
 }
 
-.toggle-button--lg {
+.rp-toggle-button--lg {
   @apply h-10 text-base;
 
   &:active,
@@ -121,13 +121,13 @@
    Variant styles
    ========================================================================== */
 
-.toggle-button--default {
+.rp-toggle-button--default {
   --toggle-button-bg: var(--default);
   --toggle-button-bg-hover: var(--default-hover);
   --toggle-button-bg-pressed: var(--default-hover);
 }
 
-.toggle-button--ghost {
+.rp-toggle-button--ghost {
   --toggle-button-bg: transparent;
   --toggle-button-bg-hover: var(--state-layer);
   --toggle-button-bg-pressed: var(--state-layer);
@@ -138,14 +138,14 @@
    Icon-only modifier
    ========================================================================== */
 
-.toggle-button--icon-only {
+.rp-toggle-button--icon-only {
   @apply w-9 p-0;
 }
 
-.toggle-button--icon-only.toggle-button--sm {
+.rp-toggle-button--icon-only.rp-toggle-button--sm {
   @apply w-8;
 }
 
-.toggle-button--icon-only.toggle-button--lg {
+.rp-toggle-button--icon-only.rp-toggle-button--lg {
   @apply w-10;
 }

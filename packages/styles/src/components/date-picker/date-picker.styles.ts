@@ -4,10 +4,10 @@ import { tv } from "../../tv";
 
 export const datePickerVariants = tv({
   slots: {
-    base: "date-picker",
-    popover: "date-picker__popover",
-    trigger: "date-picker__trigger",
-    triggerIndicator: "date-picker__trigger-indicator",
+    base: "rp-date-picker",
+    popover: "rp-date-picker__popover",
+    trigger: "rp-date-picker__trigger",
+    triggerIndicator: "rp-date-picker__trigger-indicator",
   },
 });
 

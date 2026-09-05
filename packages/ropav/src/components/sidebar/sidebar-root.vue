@@ -96,7 +96,7 @@ function persist() {
  * Restored after mount, never during setup, so a server render and the first client render agree
  * and there is nothing to reconcile — the same call `splitter-root.vue` makes.
  *
- * That costs a frame of the declared layout, and `.sidebar__panel` transitions `inline-size` — so
+ * That costs a frame of the declared layout, and `.rp-sidebar__panel` transitions `inline-size` — so
  * the panel is told it is restoring and drops the transition until the stored state has painted.
  */
 let isApplying = false;

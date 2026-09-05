@@ -1,5 +1,5 @@
 /* Base color-swatch styles */
-.color-swatch {
+.rp-color-swatch {
   @apply relative box-border size-8 shrink-0;
 
   /* Checkered background pattern for transparency */
@@ -12,47 +12,47 @@
 }
 
 /* Shape variants */
-.color-swatch--circle {
+.rp-color-swatch--circle {
   @apply rounded-2xl;
 }
 
-.color-swatch--square {
+.rp-color-swatch--square {
   border-radius: min(32px, var(--component-radius));
 }
 
 /* Size variants */
-.color-swatch--xs {
+.rp-color-swatch--xs {
   @apply size-4;
 
-  &.color-swatch--circle {
+  &.rp-color-swatch--circle {
     @apply rounded-lg;
   }
 }
 
-.color-swatch--sm {
+.rp-color-swatch--sm {
   @apply size-6;
 
-  &.color-swatch--circle {
+  &.rp-color-swatch--circle {
     @apply rounded-xl;
   }
 }
 
-.color-swatch--md {
+.rp-color-swatch--md {
   /* No additional styles — default size (32px) uses circle's base rounded-2xl */
 }
 
-.color-swatch--lg {
+.rp-color-swatch--lg {
   @apply size-9;
 
-  &.color-swatch--circle {
+  &.rp-color-swatch--circle {
     @apply rounded-3xl;
   }
 }
 
-.color-swatch--xl {
+.rp-color-swatch--xl {
   @apply size-10;
 
-  &.color-swatch--circle {
+  &.rp-color-swatch--circle {
     @apply rounded-3xl;
   }
 }

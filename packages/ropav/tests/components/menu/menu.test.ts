@@ -50,7 +50,7 @@ describe("Menu", () => {
 
       expect(menu.tagName).toBe("DIV");
       expect(menu).toHaveAttribute("data-slot", "menu");
-      expect(menu).toHaveClass("menu");
+      expect(menu).toHaveClass("rp-menu");
       expect(itemsIn(container)).toHaveLength(3);
 
       unmount();
@@ -77,7 +77,7 @@ describe("Menu", () => {
 
       await settle();
 
-      expect(menuIn(container)).toHaveClass("menu", "w-56");
+      expect(menuIn(container)).toHaveClass("rp-menu", "w-56");
 
       unmount();
     });

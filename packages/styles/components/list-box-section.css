@@ -2,6 +2,6 @@
    Base list-box section styles
    ========================================================================== */
 
-.list-box-section {
+.rp-list-box-section {
   @apply flex flex-col items-start gap-0;
 }

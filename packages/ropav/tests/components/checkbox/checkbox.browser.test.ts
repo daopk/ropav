@@ -158,8 +158,8 @@ describe("Checkbox (browser)", () => {
       const error = slot(container, "field-error");
       const style = getComputedStyle(error);
 
-      // `.field-error` alone is `h-0 opacity-0` with a height transition; the descendant rule
-      // for `.checkbox > .field-error` flattens all of that, which is what keeps the field's
+      // `.rp-field-error` alone is `h-0 opacity-0` with a height transition; the descendant rule
+      // for `.rp-checkbox > .rp-field-error` flattens all of that, which is what keeps the field's
       // column layout from breaking.
       expect(style.opacity).toBe("1");
       expect(style.height).not.toBe("0px");

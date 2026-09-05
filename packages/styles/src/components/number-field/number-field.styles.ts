@@ -9,35 +9,35 @@ export const numberFieldVariants = tv({
     variant: "primary",
   },
   slots: {
-    base: "number-field",
-    decrementButton: "number-field__decrement-button",
-    group: "number-field__group",
-    incrementButton: "number-field__increment-button",
-    input: "number-field__input",
+    base: "rp-number-field",
+    decrementButton: "rp-number-field__decrement-button",
+    group: "rp-number-field__group",
+    incrementButton: "rp-number-field__increment-button",
+    input: "rp-number-field__input",
   },
   variants: {
     fullWidth: {
       false: {},
       true: {
-        base: "number-field--full-width",
-        group: "number-field__group--full-width",
+        base: "rp-number-field--full-width",
+        group: "rp-number-field__group--full-width",
       },
     },
     size: {
       lg: {
-        base: "number-field--lg",
+        base: "rp-number-field--lg",
       },
       md: {},
       sm: {
-        base: "number-field--sm",
+        base: "rp-number-field--sm",
       },
     },
     variant: {
       primary: {
-        base: "number-field--primary",
+        base: "rp-number-field--primary",
       },
       secondary: {
-        base: "number-field--secondary",
+        base: "rp-number-field--secondary",
       },
     },
   },

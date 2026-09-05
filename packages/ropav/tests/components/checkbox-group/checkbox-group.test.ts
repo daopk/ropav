@@ -30,7 +30,7 @@ describe("CheckboxGroup", () => {
       const { group, unmount } = renderGroup();
 
       expect(group().getAttribute("role")).toBe("group");
-      expect(group().classList.contains("checkbox-group")).toBe(true);
+      expect(group().classList.contains("rp-checkbox-group")).toBe(true);
 
       unmount();
     });
@@ -46,7 +46,7 @@ describe("CheckboxGroup", () => {
     it("renders the variant class", () => {
       const { group, unmount } = renderGroup({ variant: "secondary" });
 
-      expect(group().classList.contains("checkbox-group--secondary")).toBe(true);
+      expect(group().classList.contains("rp-checkbox-group--secondary")).toBe(true);
 
       unmount();
     });
@@ -161,7 +161,8 @@ describe("CheckboxGroup", () => {
     it("hands its variant down to the items", () => {
       const { items, unmount } = renderGroup({ variant: "secondary" });
 
-      for (const item of items()) expect(item.classList.contains("checkbox--secondary")).toBe(true);
+      for (const item of items())
+        expect(item.classList.contains("rp-checkbox--secondary")).toBe(true);
 
       unmount();
     });
@@ -169,8 +170,8 @@ describe("CheckboxGroup", () => {
     it("lets an item name a variant of its own", () => {
       const { items, unmount } = renderGroup({ itemVariant: "primary", variant: "secondary" });
 
-      expect(items()[0]!.classList.contains("checkbox--primary")).toBe(true);
-      expect(items()[1]!.classList.contains("checkbox--secondary")).toBe(true);
+      expect(items()[0]!.classList.contains("rp-checkbox--primary")).toBe(true);
+      expect(items()[1]!.classList.contains("rp-checkbox--secondary")).toBe(true);
 
       unmount();
     });

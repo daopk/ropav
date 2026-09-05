@@ -149,9 +149,9 @@ describe("Toast (browser)", () => {
 
       // The animation is the stylesheet's, driven by `view-transition-class`; what this pins is
       // that the toast is named for it, which is the half JS owns.
-      expect(toasts()[0]!.style.viewTransitionName).toMatch(/^toast-/);
+      expect(toasts()[0]!.style.viewTransitionName).toMatch(/^rp-toast-/);
       expect(getComputedStyle(toasts()[0]!).getPropertyValue("view-transition-class").trim()).toBe(
-        "toast-bottom",
+        "rp-toast-bottom",
       );
     });
 
@@ -173,7 +173,8 @@ describe("Toast (browser)", () => {
       // transition takes rather than after all six of the first region's.
       const appeared = await waitUntil(
         "the second region's toast",
-        () => document.body.querySelector('.toast-region--bottom-end [data-slot="toast"]') !== null,
+        () =>
+          document.body.querySelector('.rp-toast-region--bottom-end [data-slot="toast"]') !== null,
         1500,
       );
 

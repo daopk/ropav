@@ -19,7 +19,7 @@ const styles = computed(() => slots.value.decrementButton({ class: props.class }
 
 /**
  * `slot="decrement"` is a live CSS contract, not a leftover of React Aria's slot system:
- * `.number-field__group:has([slot="decrement"])` is what gives the group a column for this
+ * `.rp-number-field__group:has([slot="decrement"])` is what gives the group a column for this
  * button, so dropping it collapses the layout in silence.
  *
  * Bound from here rather than written in the template because Vue 2 read a literal `slot`

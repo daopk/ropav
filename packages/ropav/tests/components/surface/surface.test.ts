@@ -35,7 +35,7 @@ describe("Surface", () => {
     it("merges a caller class", () => {
       const { surface } = renderSurface({ class: "rounded-3xl" });
 
-      expect(surface).toHaveClass("surface", "rounded-3xl");
+      expect(surface).toHaveClass("rp-surface", "rounded-3xl");
     });
   });
 
@@ -43,7 +43,7 @@ describe("Surface", () => {
     it("defaults to the default variant", () => {
       const { surface } = renderSurface();
 
-      expect(surface).toHaveClass("surface", "surface--default");
+      expect(surface).toHaveClass("rp-surface", "rp-surface--default");
     });
 
     it.each(["secondary", "tertiary", "transparent"] as const)(
@@ -51,7 +51,7 @@ describe("Surface", () => {
       (variant) => {
         const { surface } = renderSurface({ variant });
 
-        expect(surface).toHaveClass(`surface--${variant}`);
+        expect(surface).toHaveClass(`rp-surface--${variant}`);
       },
     );
   });

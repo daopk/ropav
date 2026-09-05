@@ -1,9 +1,9 @@
 /* Base breadcrumbs container */
-.breadcrumbs {
+.rp-breadcrumbs {
   @apply flex items-center;
 
   /* Breadcrumb link */
-  .breadcrumbs__link {
+  .rp-breadcrumbs__link {
     @apply relative px-0.5 text-sm leading-5 font-medium no-underline opacity-100;
 
     --breadcrumbs-link-fg: var(--muted);
@@ -24,12 +24,12 @@
   }
 
   /* Breadcrumb item wrapper */
-  .breadcrumbs__item {
+  .rp-breadcrumbs__item {
     @apply flex shrink-0 items-center justify-center gap-0.5 px-0.5;
   }
 
   /* Separator icon */
-  .breadcrumbs__separator {
+  .rp-breadcrumbs__separator {
     @apply size-3 text-muted rtl:rotate-180;
   }
 }

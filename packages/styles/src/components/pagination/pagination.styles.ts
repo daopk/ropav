@@ -7,23 +7,23 @@ export const paginationVariants = tv({
     size: "md",
   },
   slots: {
-    base: "pagination",
-    content: "pagination__content",
-    ellipsis: "pagination__ellipsis",
-    item: "pagination__item",
-    link: "pagination__link",
-    summary: "pagination__summary",
+    base: "rp-pagination",
+    content: "rp-pagination__content",
+    ellipsis: "rp-pagination__ellipsis",
+    item: "rp-pagination__item",
+    link: "rp-pagination__link",
+    summary: "rp-pagination__summary",
   },
   variants: {
     size: {
       lg: {
-        base: "pagination--lg",
+        base: "rp-pagination--lg",
       },
       md: {
-        base: "pagination--md",
+        base: "rp-pagination--md",
       },
       sm: {
-        base: "pagination--sm",
+        base: "rp-pagination--sm",
       },
     },
   },

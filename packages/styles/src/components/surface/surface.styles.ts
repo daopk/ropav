@@ -3,16 +3,16 @@ import type { VariantProps } from "../../tv";
 import { tv } from "../../tv";
 
 export const surfaceVariants = tv({
-  base: "surface",
+  base: "rp-surface",
   defaultVariants: {
     variant: "default",
   },
   variants: {
     variant: {
-      default: "surface--default",
-      secondary: "surface--secondary",
-      tertiary: "surface--tertiary",
-      transparent: "surface--transparent",
+      default: "rp-surface--default",
+      secondary: "rp-surface--secondary",
+      tertiary: "rp-surface--tertiary",
+      transparent: "rp-surface--transparent",
     },
   },
 });

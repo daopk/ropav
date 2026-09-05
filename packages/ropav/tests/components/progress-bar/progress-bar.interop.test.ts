@@ -30,7 +30,7 @@ describe("ProgressBar under a vdom host", () => {
 
     await nextTick();
 
-    expect(root).toHaveClass("progress-bar", "progress-bar--warning");
+    expect(root).toHaveClass("rp-progress-bar", "rp-progress-bar--warning");
     expect(root).toHaveAttribute("aria-labelledby", label?.id);
     expect(root).toHaveAttribute("aria-valuetext", "40%");
     expect(container.querySelector('[data-slot="progress-bar-output"]')).toHaveTextContent("40%");
@@ -50,7 +50,7 @@ describe("ProgressBar under a vdom host", () => {
     });
 
     expect(container.querySelector('[data-slot="progress-bar"]')).toHaveClass(
-      "progress-bar--animated",
+      "rp-progress-bar--animated",
     );
 
     unmount();

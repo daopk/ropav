@@ -137,7 +137,7 @@ describe("Drawer (browser)", () => {
       /*
        * The assertion the whole presence union exists for.
        *
-       * `.drawer__content` has no transition of its own, so asked alone it would report nothing to
+       * `.rp-drawer__content` has no transition of its own, so asked alone it would report nothing to
        * wait for and unmount at once — taking the panel with it before a pixel of the slide had
        * run. What holds it here is the backdrop's opacity transition, the other half of the union.
        */

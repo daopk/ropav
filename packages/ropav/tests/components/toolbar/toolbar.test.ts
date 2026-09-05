@@ -33,7 +33,7 @@ describe("Toolbar", () => {
       const { toolbar, unmount } = await renderToolbar();
 
       expect(toolbar).toHaveAttribute("data-slot", "toolbar");
-      expect(toolbar).toHaveClass("toolbar");
+      expect(toolbar).toHaveClass("rp-toolbar");
 
       unmount();
     });
@@ -51,7 +51,7 @@ describe("Toolbar", () => {
 
       expect(toolbar).toHaveAttribute("aria-orientation", "horizontal");
       expect(toolbar).toHaveAttribute("data-orientation", "horizontal");
-      expect(toolbar).toHaveClass("toolbar--horizontal");
+      expect(toolbar).toHaveClass("rp-toolbar--horizontal");
 
       unmount();
     });
@@ -61,7 +61,7 @@ describe("Toolbar", () => {
 
       expect(toolbar).toHaveAttribute("aria-orientation", "vertical");
       expect(toolbar).toHaveAttribute("data-orientation", "vertical");
-      expect(toolbar).toHaveClass("toolbar--vertical");
+      expect(toolbar).toHaveClass("rp-toolbar--vertical");
 
       unmount();
     });
@@ -69,7 +69,7 @@ describe("Toolbar", () => {
     it("exposes the attached modifier", async () => {
       const { toolbar, unmount } = await renderToolbar({ isAttached: true });
 
-      expect(toolbar).toHaveClass("toolbar--attached");
+      expect(toolbar).toHaveClass("rp-toolbar--attached");
 
       unmount();
     });
@@ -77,7 +77,7 @@ describe("Toolbar", () => {
     it("merges a caller class", async () => {
       const { toolbar, unmount } = await renderToolbar({ class: "gap-4" });
 
-      expect(toolbar).toHaveClass("toolbar", "gap-4");
+      expect(toolbar).toHaveClass("rp-toolbar", "gap-4");
 
       unmount();
     });
@@ -100,8 +100,8 @@ describe("Toolbar", () => {
       const { buttonGroup, toggleGroup } = groupsIn(container);
 
       expect(toggleGroup).toHaveAttribute("data-orientation", "vertical");
-      expect(toggleGroup).toHaveClass("toggle-button-group--vertical");
-      expect(buttonGroup).toHaveClass("button-group--vertical");
+      expect(toggleGroup).toHaveClass("rp-toggle-button-group--vertical");
+      expect(buttonGroup).toHaveClass("rp-button-group--vertical");
 
       unmount();
     });
@@ -111,7 +111,7 @@ describe("Toolbar", () => {
       const { buttonGroup, toggleGroup } = groupsIn(container);
 
       expect(toggleGroup).toHaveAttribute("data-orientation", "horizontal");
-      expect(buttonGroup).toHaveClass("button-group--horizontal");
+      expect(buttonGroup).toHaveClass("rp-button-group--horizontal");
 
       unmount();
     });
@@ -124,7 +124,7 @@ describe("Toolbar", () => {
       const { buttonGroup, toggleGroup } = groupsIn(container);
 
       expect(toggleGroup).toHaveAttribute("data-orientation", "horizontal");
-      expect(buttonGroup).toHaveClass("button-group--horizontal");
+      expect(buttonGroup).toHaveClass("rp-button-group--horizontal");
 
       unmount();
     });
@@ -136,7 +136,7 @@ describe("Toolbar", () => {
       expect(separator.tagName).toBe("DIV");
       expect(separator).toHaveAttribute("data-orientation", "vertical");
       expect(separator).toHaveAttribute("aria-orientation", "vertical");
-      expect(separator).toHaveClass("separator--vertical");
+      expect(separator).toHaveClass("rp-separator--vertical");
 
       unmount();
     });
@@ -147,7 +147,7 @@ describe("Toolbar", () => {
 
       expect(separator.tagName).toBe("HR");
       expect(separator).toHaveAttribute("data-orientation", "horizontal");
-      expect(separator).toHaveClass("separator--horizontal");
+      expect(separator).toHaveClass("rp-separator--horizontal");
 
       unmount();
     });

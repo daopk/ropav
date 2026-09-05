@@ -128,10 +128,10 @@ describe("ComboBox", () => {
       const root = result.container.querySelector('[data-slot="combo-box"]')!;
       const group = result.container.querySelector('[data-slot="combo-box-input-group"]')!;
 
-      expect(root.className).toContain("combo-box");
-      expect(group.className).toContain("combo-box__input-group");
-      expect(triggerOf(result).className).toContain("combo-box__trigger");
-      expect(popoverOf(result)!.className).toContain("combo-box__popover");
+      expect(root.className).toContain("rp-combo-box");
+      expect(group.className).toContain("rp-combo-box__input-group");
+      expect(triggerOf(result).className).toContain("rp-combo-box__trigger");
+      expect(popoverOf(result)!.className).toContain("rp-combo-box__popover");
     });
 
     it("hands its size to the input and to the popover", async () => {
@@ -142,16 +142,16 @@ describe("ComboBox", () => {
       await open(result);
 
       expect(result.container.querySelector('[data-slot="input"]')!.className).toContain(
-        "input--sm",
+        "rp-input--sm",
       );
-      expect(popoverOf(result)!.className).toContain("combo-box__popover--sm");
+      expect(popoverOf(result)!.className).toContain("rp-combo-box__popover--sm");
     });
 
     it("leaves the default size unmarked", () => {
       const result = render({ size: "md" });
 
       expect(result.container.querySelector('[data-slot="input"]')!.className).not.toMatch(
-        /input--(sm|md|lg)/,
+        /rp-input--(sm|md|lg)/,
       );
     });
 
@@ -165,16 +165,16 @@ describe("ComboBox", () => {
 
       const root = result.container.querySelector('[data-slot="combo-box"]')!;
 
-      expect(root.className).toContain("combo-box");
+      expect(root.className).toContain("rp-combo-box");
       expect(root.className).toContain("my-root");
-      expect(triggerOf(result).className).toContain("combo-box__trigger");
+      expect(triggerOf(result).className).toContain("rp-combo-box__trigger");
       expect(triggerOf(result).className).toContain("my-trigger");
     });
 
     it("keeps the chevron as the field's next sibling", () => {
       const result = render();
 
-      // The stylesheet reserves room for the chevron with `[data-slot="input"]:has(+ .combo-box__trigger)`,
+      // The stylesheet reserves room for the chevron with `[data-slot="input"]:has(+ .rp-combo-box__trigger)`,
       // so anything between the two would leave the text running underneath it.
       expect(inputOf(result).nextElementSibling).toBe(triggerOf(result));
     });

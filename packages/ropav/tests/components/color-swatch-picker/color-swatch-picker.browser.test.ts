@@ -35,7 +35,7 @@ const focusedIndex = (container: HTMLElement) =>
 /**
  * Forces the palette into rows of three by capping its width.
  *
- * Grid navigation reads rects, so the rows have to be real. `.color-swatch-picker` is a wrapping
+ * Grid navigation reads rects, so the rows have to be real. `.rp-color-swatch-picker` is a wrapping
  * flex row, so a width just under four swatches plus their gaps is enough.
  */
 const inRows = (container: HTMLElement, width: string) => {

@@ -57,22 +57,22 @@ describe("NumberField", () => {
     it("renders the BEM classes of each part", () => {
       const { decrement, group, increment, input, root, unmount } = renderNumberField();
 
-      expect(root).toHaveClass("number-field", "number-field--primary");
-      expect(group()).toHaveClass("number-field__group");
-      expect(input()).toHaveClass("number-field__input");
-      expect(increment()).toHaveClass("number-field__increment-button");
-      expect(decrement()).toHaveClass("number-field__decrement-button");
+      expect(root).toHaveClass("rp-number-field", "rp-number-field--primary");
+      expect(group()).toHaveClass("rp-number-field__group");
+      expect(input()).toHaveClass("rp-number-field__input");
+      expect(increment()).toHaveClass("rp-number-field__increment-button");
+      expect(decrement()).toHaveClass("rp-number-field__decrement-button");
 
       unmount();
     });
 
     it("styles the steppers as steppers, not as buttons", () => {
-      // The stylesheet builds these from scratch rather than on top of `.button`, so picking up
+      // The stylesheet builds these from scratch rather than on top of `.rp-button`, so picking up
       // the button class would fight it.
       const { decrement, increment, unmount } = renderNumberField();
 
-      expect(increment()).not.toHaveClass("button");
-      expect(decrement()).not.toHaveClass("button");
+      expect(increment()).not.toHaveClass("rp-button");
+      expect(decrement()).not.toHaveClass("rp-button");
 
       unmount();
     });
@@ -108,7 +108,7 @@ describe("NumberField", () => {
     it("supports a class on the root", () => {
       const { root, unmount } = renderNumberField({ class: "w-40" });
 
-      expect(root).toHaveClass("number-field", "w-40");
+      expect(root).toHaveClass("rp-number-field", "w-40");
 
       unmount();
     });
@@ -116,7 +116,7 @@ describe("NumberField", () => {
 
   describe("the slot attribute the layout depends on", () => {
     it("renders slot=increment and slot=decrement on the steppers", () => {
-      // `.number-field__group:has([slot="decrement"])` is what gives the group its columns, so
+      // `.rp-number-field__group:has([slot="decrement"])` is what gives the group its columns, so
       // losing either attribute collapses the layout without any other symptom.
       const { decrement, increment, unmount } = renderNumberField();
 
@@ -464,7 +464,7 @@ describe("NumberField", () => {
     it("supports the secondary variant", () => {
       const { root, unmount } = renderNumberField({ variant: "secondary" });
 
-      expect(root).toHaveClass("number-field--secondary");
+      expect(root).toHaveClass("rp-number-field--secondary");
 
       unmount();
     });
@@ -472,8 +472,8 @@ describe("NumberField", () => {
     it("supports fullWidth on the root and the group", () => {
       const { group, root, unmount } = renderNumberField({ fullWidth: true });
 
-      expect(root).toHaveClass("number-field--full-width");
-      expect(group()).toHaveClass("number-field__group--full-width");
+      expect(root).toHaveClass("rp-number-field--full-width");
+      expect(group()).toHaveClass("rp-number-field__group--full-width");
 
       unmount();
     });
@@ -484,8 +484,8 @@ describe("NumberField", () => {
       // never lands. The bound form above stays green while that is broken.
       const { group, root, unmount } = renderNumberField({ attributeForm: true });
 
-      expect(root).toHaveClass("number-field--full-width");
-      expect(group()).toHaveClass("number-field__group--full-width");
+      expect(root).toHaveClass("rp-number-field--full-width");
+      expect(group()).toHaveClass("rp-number-field__group--full-width");
 
       unmount();
     });

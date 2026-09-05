@@ -309,8 +309,8 @@ describe("an item with rows of its own", () => {
     const { container } = renderVapor(Fixture, { props: { withNested: true } });
     const rows = slots(container, "sidebar-item");
 
-    expect(rows[0]!.className).not.toContain("sidebar__item--sub");
-    expect(rows.at(-1)!.className).toContain("sidebar__item--sub");
+    expect(rows[0]!.className).not.toContain("rp-sidebar__item--sub");
+    expect(rows.at(-1)!.className).toContain("rp-sidebar__item--sub");
   });
 
   /*
@@ -360,23 +360,23 @@ describe("the variant", () => {
     const { container } = renderVapor(Fixture);
 
     expect(slot(container, "sidebar-panel").className).not.toMatch(/--(bare|floating)\b/);
-    expect(slot(container, "sidebar-inset").className).not.toContain("sidebar__inset--card");
-    expect(slot(container, "sidebar-rail").className).not.toContain("sidebar__rail--quiet");
+    expect(slot(container, "sidebar-inset").className).not.toContain("rp-sidebar__inset--card");
+    expect(slot(container, "sidebar-rail").className).not.toContain("rp-sidebar__rail--quiet");
   });
 
   it("stands the panel off as a card of its own, on floating", () => {
     const { container } = renderVapor(Fixture, { props: { variant: "floating" } });
 
-    expect(slot(container, "sidebar-panel").className).toContain("sidebar__panel--floating");
-    expect(slot(container, "sidebar-rail").className).toContain("sidebar__rail--quiet");
+    expect(slot(container, "sidebar-panel").className).toContain("rp-sidebar__panel--floating");
+    expect(slot(container, "sidebar-rail").className).toContain("rp-sidebar__rail--quiet");
   });
 
   it("bares the panel and makes the page beside it the card, on inset", () => {
     const { container } = renderVapor(Fixture, { props: { variant: "inset" } });
 
-    expect(slot(container, "sidebar-panel").className).toContain("sidebar__panel--bare");
-    expect(slot(container, "sidebar-inset").className).toContain("sidebar__inset--card");
-    expect(slot(container, "sidebar-rail").className).toContain("sidebar__rail--quiet");
+    expect(slot(container, "sidebar-panel").className).toContain("rp-sidebar__panel--bare");
+    expect(slot(container, "sidebar-inset").className).toContain("rp-sidebar__inset--card");
+    expect(slot(container, "sidebar-rail").className).toContain("rp-sidebar__rail--quiet");
   });
 
   /*
@@ -389,8 +389,8 @@ describe("the variant", () => {
     const { container } = renderVapor(Fixture, { props: { isResizable: true, variant: "inset" } });
     const rail = slot(container, "sidebar-rail");
 
-    expect(rail.className).toContain("sidebar__rail--resizable");
-    expect(rail.className).toContain("sidebar__rail--quiet");
-    expect(slot(container, "sidebar-panel").className).toContain("sidebar__panel--bare");
+    expect(rail.className).toContain("rp-sidebar__rail--resizable");
+    expect(rail.className).toContain("rp-sidebar__rail--quiet");
+    expect(slot(container, "sidebar-panel").className).toContain("rp-sidebar__panel--bare");
   });
 });

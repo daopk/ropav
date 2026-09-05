@@ -16,7 +16,7 @@ const { isDisabled, isInvalid, isReadOnly, isRequired, isSelected, slots } = use
 
 <template>
   <!--
-    No default content: the stylesheet draws the dot with `.radio__indicator:empty::before`,
+    No default content: the stylesheet draws the dot with `.rp-radio__indicator:empty::before`,
     so an indicator nobody fills has to stay genuinely empty.
   -->
   <span

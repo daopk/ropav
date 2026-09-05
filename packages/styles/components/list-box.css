@@ -2,7 +2,7 @@
    Base list-box styles
    ========================================================================== */
 
-.list-box {
+.rp-list-box {
   @apply relative w-full overflow-clip p-1;
 
   /**
@@ -31,14 +31,14 @@
    slot cannot reach.
    ========================================================================== */
 
-.list-box__drop-indicator {
+.rp-list-box__drop-indicator {
   --list-box-drop-indicator-size: 2px;
   --list-box-drop-indicator-bg: var(--accent);
 }
 
 /* Windowed: the parent is the layout's own wrapper, which has already placed a band straddling
    the boundary and outside the flow, so the indicator only has to fill it. */
-:not(.list-box) > .list-box__drop-indicator {
+:not(.rp-list-box) > .rp-list-box__drop-indicator {
   height: var(--list-box-drop-indicator-size);
 
   &[data-drop-target="true"] {
@@ -50,7 +50,7 @@
    when the line arrives and back up when it moves on makes the whole list walk under the drag.
    So it takes no height, and it stands *in* the spacing the list already leaves rather than
    adding more — the option after it gives up the margin this one just took. */
-.list-box > .list-box__drop-indicator {
+.rp-list-box > .rp-list-box__drop-indicator {
   position: relative;
   height: 0;
 
@@ -70,7 +70,7 @@
   }
 }
 
-.list-box > .list-box__drop-indicator + * {
+.rp-list-box > .rp-list-box__drop-indicator + * {
   margin-top: 0;
 }
 
@@ -79,13 +79,13 @@
    ========================================================================== */
 
 /* A row is as tall as a field of the same size, so a collection standing beside one lines up. */
-.list-box--sm {
+.rp-list-box--sm {
   [data-slot="list-box-item"] {
     @apply min-h-8 py-1;
   }
 }
 
-.list-box--lg {
+.rp-list-box--lg {
   @apply text-base;
 
   [data-slot="list-box-item"] {

@@ -25,13 +25,13 @@ describe("Header", () => {
     it("applies the base class", () => {
       const { header } = renderHeader();
 
-      expect(header).toHaveClass("header");
+      expect(header).toHaveClass("rp-header");
     });
 
     it("merges a caller class", () => {
       const { header } = renderHeader({ class: "px-2" });
 
-      expect(header).toHaveClass("header", "px-2");
+      expect(header).toHaveClass("rp-header", "px-2");
     });
   });
 

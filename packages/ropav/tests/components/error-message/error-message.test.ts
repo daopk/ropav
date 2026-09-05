@@ -25,13 +25,13 @@ describe("ErrorMessage", () => {
     it("applies the base class", () => {
       const { errorMessage } = renderErrorMessage();
 
-      expect(errorMessage).toHaveClass("error-message");
+      expect(errorMessage).toHaveClass("rp-error-message");
     });
 
     it("merges a caller class", () => {
       const { errorMessage } = renderErrorMessage({ class: "p-1" });
 
-      expect(errorMessage).toHaveClass("error-message", "p-1");
+      expect(errorMessage).toHaveClass("rp-error-message", "p-1");
     });
   });
 

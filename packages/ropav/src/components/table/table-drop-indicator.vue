@@ -92,7 +92,7 @@ const parentLayoutInfo = computed(() =>
     <component
       :is="virtualizer ? 'div' : 'tr'"
       :aria-level="level"
-      class="table__drop-indicator"
+      class="rp-table__drop-indicator"
       :class="props.class"
       :data-drop-target="dataAttr(isDropTarget)"
       data-slot="table-drop-indicator"

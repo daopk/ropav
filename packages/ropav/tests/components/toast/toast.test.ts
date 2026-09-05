@@ -142,7 +142,7 @@ describe("Toast", () => {
 
       expect(toast).toBe(slot("toast"));
       expect(toast).toHaveAttribute("data-frontmost", "true");
-      expect(toast.className).toContain("toast--success");
+      expect(toast.className).toContain("rp-toast--success");
       expect(slot("toast-title")).toHaveTextContent("Saved");
       expect(slot("toast-description")).toHaveTextContent("All done");
       expect(slot("toast-indicator")).not.toBeNull();
@@ -306,7 +306,7 @@ describe("Toast", () => {
 
       // The generated key is not a valid custom-ident on its own.
       expect(toasts()[0]!.style.viewTransitionName).toBe(
-        `toast-${key.replace(/[^a-zA-Z0-9]/g, "-")}`,
+        `rp-toast-${key.replace(/[^a-zA-Z0-9]/g, "-")}`,
       );
     });
 
@@ -363,8 +363,8 @@ describe("Toast", () => {
       queue.add({ title: "Saved" });
       await settle();
 
-      expect(region()!.className).toContain("toast-region--top-end");
-      expect(toasts()[0]!.className).toContain("toast--top-end");
+      expect(region()!.className).toContain("rp-toast-region--top-end");
+      expect(toasts()[0]!.className).toContain("rp-toast--top-end");
     });
   });
 

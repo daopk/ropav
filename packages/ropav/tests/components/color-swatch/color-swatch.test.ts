@@ -23,24 +23,24 @@ describe("ColorSwatch", () => {
 
       expect(swatch).toHaveAttribute("role", "img");
       expect(swatch).toHaveAttribute("data-slot", "color-swatch");
-      expect(swatch).toHaveClass("color-swatch");
+      expect(swatch).toHaveClass("rp-color-swatch");
     });
 
     it("applies the default shape and size, and the modifiers when asked", () => {
       expect(renderSwatch({ color: "#0485F7" }).swatch).toHaveClass(
-        "color-swatch--circle",
-        "color-swatch--md",
+        "rp-color-swatch--circle",
+        "rp-color-swatch--md",
       );
       expect(renderSwatch({ color: "#0485F7", shape: "square", size: "xl" }).swatch).toHaveClass(
-        "color-swatch--square",
-        "color-swatch--xl",
+        "rp-color-swatch--square",
+        "rp-color-swatch--xl",
       );
     });
 
     it("lets a caller's class through to the element", () => {
       const { swatch } = renderSwatch({ class: "size-5", color: "#0485F7" });
 
-      expect(swatch).toHaveClass("color-swatch", "size-5");
+      expect(swatch).toHaveClass("rp-color-swatch", "size-5");
     });
 
     it("renders whatever the slot puts inside it, and hands it the parsed colour", () => {
@@ -63,7 +63,7 @@ describe("ColorSwatch", () => {
 
   /**
    * The colour is written twice: `background-color` paints, and `--color-swatch-current` is what
-   * `.color-swatch` composes into its `background` shorthand over the transparency checkerboard.
+   * `.rp-color-swatch` composes into its `background` shorthand over the transparency checkerboard.
    * React ends up with both too, so dropping either would be a divergence.
    */
   describe("colour", () => {

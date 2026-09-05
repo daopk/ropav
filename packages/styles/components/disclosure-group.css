@@ -1,5 +1,5 @@
 /* Base disclosure-group styles */
-.disclosure-group {
+.rp-disclosure-group {
   @apply w-full;
 
   /* Performance optimization - contain layout changes */

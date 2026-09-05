@@ -28,7 +28,7 @@ describe("Pagination", () => {
       expect(nav).toHaveAttribute("role", "navigation");
       expect(nav).toHaveAttribute("aria-label", "pagination");
       expect(nav).toHaveAttribute("data-slot", "pagination");
-      expect(nav).toHaveClass("pagination");
+      expect(nav).toHaveClass("rp-pagination");
 
       unmount();
     });
@@ -36,7 +36,7 @@ describe("Pagination", () => {
     it("merges a caller class", () => {
       const { nav, unmount } = renderPagination({ class: "mt-4" });
 
-      expect(nav).toHaveClass("pagination", "mt-4");
+      expect(nav).toHaveClass("rp-pagination", "mt-4");
 
       unmount();
     });
@@ -44,7 +44,7 @@ describe("Pagination", () => {
     it.each(["sm", "md", "lg"] as const)("renders the %s size", (size) => {
       const { nav, unmount } = renderPagination({ size });
 
-      expect(nav).toHaveClass(`pagination--${size}`);
+      expect(nav).toHaveClass(`rp-pagination--${size}`);
 
       unmount();
     });
@@ -56,7 +56,7 @@ describe("Pagination", () => {
       const { summary, unmount } = renderPagination();
 
       expect(summary).toHaveAttribute("dir", "auto");
-      expect(summary).toHaveClass("pagination__summary");
+      expect(summary).toHaveClass("rp-pagination__summary");
 
       unmount();
     });
@@ -68,13 +68,13 @@ describe("Pagination", () => {
       const list = nav.querySelector('[data-slot="pagination-content"]')!;
 
       expect(list.tagName).toBe("UL");
-      expect(list).toHaveClass("pagination__content");
+      expect(list).toHaveClass("rp-pagination__content");
 
       const items = [...nav.querySelectorAll('[data-slot="pagination-item"]')];
 
       expect(items).toHaveLength(6);
       expect(items.every((item) => item.tagName === "LI")).toBe(true);
-      expect(items[0]).toHaveClass("pagination__item");
+      expect(items[0]).toHaveClass("rp-pagination__item");
 
       unmount();
     });
@@ -87,7 +87,7 @@ describe("Pagination", () => {
       expect(links).toHaveLength(3);
       expect(links[0]!.tagName).toBe("BUTTON");
       expect(links[0]!.type).toBe("button");
-      expect(links[0]).toHaveClass("pagination__link");
+      expect(links[0]).toHaveClass("rp-pagination__link");
 
       unmount();
     });
@@ -155,8 +155,8 @@ describe("Pagination", () => {
     it("carry the nav modifier on top of the shared link class", () => {
       const { next, previous, unmount } = renderPagination();
 
-      expect(previous).toHaveClass("pagination__link", "pagination__link--nav");
-      expect(next).toHaveClass("pagination__link", "pagination__link--nav");
+      expect(previous).toHaveClass("rp-pagination__link", "rp-pagination__link--nav");
+      expect(next).toHaveClass("rp-pagination__link", "rp-pagination__link--nav");
 
       unmount();
     });
@@ -203,7 +203,7 @@ describe("Pagination", () => {
       const { ellipsis, unmount } = renderPagination();
 
       expect(ellipsis).toHaveAttribute("aria-hidden", "true");
-      expect(ellipsis).toHaveClass("pagination__ellipsis");
+      expect(ellipsis).toHaveClass("rp-pagination__ellipsis");
       expect(ellipsis).toHaveTextContent("…");
 
       unmount();

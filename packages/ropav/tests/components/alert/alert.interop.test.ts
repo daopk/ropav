@@ -42,15 +42,15 @@ describe("Alert under a vdom host", () => {
     const { container, unmount } = render();
 
     expect(container.querySelector('[data-slot="alert-root"]')).toHaveClass(
-      "alert",
-      "alert--warning",
+      "rp-alert",
+      "rp-alert--warning",
     );
     expect(container.querySelector('[data-slot="alert-indicator"]')).toHaveClass(
-      "alert__indicator",
+      "rp-alert__indicator",
     );
-    expect(container.querySelector('[data-slot="alert-title"]')).toHaveClass("alert__title");
+    expect(container.querySelector('[data-slot="alert-title"]')).toHaveClass("rp-alert__title");
     expect(container.querySelector('[data-slot="alert-description"]')).toHaveClass(
-      "alert__description",
+      "rp-alert__description",
     );
     expect(container.querySelector('[data-slot="alert-default-icon"]')).not.toBeNull();
 

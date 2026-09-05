@@ -2,7 +2,7 @@
  * Calendar Year Picker Component Styles
  *
  * Internal component used inside Calendar / RangeCalendar to provide a
- * toggleable year selector. Uses CSS :has() on the parent .calendar to
+ * toggleable year selector. Uses CSS :has() on the parent .rp-calendar to
  * drive crossfade transitions.
  *
  * The year grid is absolutely positioned and sized via JS to match the
@@ -15,8 +15,8 @@
 /* -----------------------------------------------------------------------------
  * Positioning Context
  * -------------------------------------------------------------------------- */
-.calendar:has(.calendar-year-picker__year-grid),
-.range-calendar:has(.calendar-year-picker__year-grid) {
+.rp-calendar:has(.rp-calendar-year-picker__year-grid),
+.rp-range-calendar:has(.rp-calendar-year-picker__year-grid) {
   position: relative;
 }
 
@@ -31,8 +31,8 @@
  * -------------------------------------------------------------------------- */
 
 /* Day grid – default visible */
-.calendar:has(.calendar-year-picker__year-grid) > [data-slot="calendar-grid"],
-.range-calendar:has(.calendar-year-picker__year-grid) > [data-slot="range-calendar-grid"] {
+.rp-calendar:has(.rp-calendar-year-picker__year-grid) > [data-slot="calendar-grid"],
+.rp-range-calendar:has(.rp-calendar-year-picker__year-grid) > [data-slot="range-calendar-grid"] {
   will-change: opacity;
   transition:
     opacity 150ms var(--ease-out),
@@ -41,8 +41,9 @@
 }
 
 /* Day grid – hidden when year picker is open (fade + blur out) */
-.calendar:has(.calendar-year-picker__year-grid[data-open="true"]) > [data-slot="calendar-grid"],
-.range-calendar:has(.calendar-year-picker__year-grid[data-open="true"])
+.rp-calendar:has(.rp-calendar-year-picker__year-grid[data-open="true"])
+  > [data-slot="calendar-grid"],
+.rp-range-calendar:has(.rp-calendar-year-picker__year-grid[data-open="true"])
   > [data-slot="range-calendar-grid"] {
   @apply pointer-events-none opacity-0;
   visibility: hidden;
@@ -55,7 +56,7 @@
 /* -----------------------------------------------------------------------------
  * Trigger Button
  * -------------------------------------------------------------------------- */
-.calendar-year-picker__trigger {
+.rp-calendar-year-picker__trigger {
   @apply flex flex-1 items-center justify-start gap-1 rounded-lg outline-none;
 
   cursor: var(--cursor-interactive);
@@ -67,14 +68,14 @@
   }
 }
 
-.calendar-year-picker__trigger-heading {
+.rp-calendar-year-picker__trigger-heading {
   @apply text-sm font-medium;
 
   transition: color 150ms var(--ease-out);
   @apply motion-reduce:transition-none;
 }
 
-.calendar-year-picker__trigger-indicator {
+.rp-calendar-year-picker__trigger-indicator {
   @apply text-xs text-accent-soft-foreground rtl:[transform:rotate(180deg)];
 
   transition: transform 150ms var(--ease-out);
@@ -82,11 +83,11 @@
 }
 
 /* Rotate chevron when open */
-.calendar-year-picker__trigger[data-open="true"] .calendar-year-picker__trigger-indicator {
+.rp-calendar-year-picker__trigger[data-open="true"] .rp-calendar-year-picker__trigger-indicator {
   transform: rotate(90deg);
 }
 
-.calendar-year-picker__trigger[data-open="true"] .calendar-year-picker__trigger-heading {
+.rp-calendar-year-picker__trigger[data-open="true"] .rp-calendar-year-picker__trigger-heading {
   @apply text-accent-soft-foreground;
 }
 
@@ -96,7 +97,7 @@
  * Absolutely positioned over the day grid area. The exact `top` and `height`
  * are set via JS to match the sibling day grid element.
  * -------------------------------------------------------------------------- */
-.calendar-year-picker__year-grid {
+.rp-calendar-year-picker__year-grid {
   @apply pointer-events-none absolute start-0 end-0 grid scrollbar content-start gap-1 overflow-y-auto p-1 opacity-0;
   grid-template-columns: repeat(3, 1fr);
 
@@ -104,7 +105,7 @@
   will-change: opacity;
 }
 
-.calendar-year-picker__year-grid[data-open="true"] {
+.rp-calendar-year-picker__year-grid[data-open="true"] {
   @apply pointer-events-auto opacity-100;
 
   /* When opening: slight delay so the day grid starts fading out first */
@@ -115,7 +116,7 @@
 /* -----------------------------------------------------------------------------
  * Year Cell
  * -------------------------------------------------------------------------- */
-.calendar-year-picker__year-cell {
+.rp-calendar-year-picker__year-cell {
   @apply relative inline-flex h-8 items-center justify-center rounded-component px-2.5 text-sm font-medium outline-none select-none no-highlight;
   touch-action: manipulation;
 
@@ -131,7 +132,7 @@
   background-color: var(--calendar-year-picker-year-cell-bg);
   color: var(--calendar-year-picker-year-cell-fg);
 
-  /* Same as `.tag`. */
+  /* Same as `.rp-tag`. */
   transition:
     color 100ms var(--ease-smooth),
     scale 100ms var(--ease-smooth),
@@ -150,7 +151,7 @@
     }
   }
 
-  /* Selected state (current year) – same as .tag[data-selected] */
+  /* Selected state (current year) – same as .rp-tag[data-selected] */
   &[data-selected="true"],
   &[aria-selected="true"] {
     background-color: var(--calendar-year-picker-year-cell-bg-selected);

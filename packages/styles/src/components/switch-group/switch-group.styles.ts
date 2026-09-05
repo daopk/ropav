@@ -7,16 +7,16 @@ export const switchGroupVariants = tv({
     orientation: "vertical",
   },
   slots: {
-    base: "switch-group",
-    items: "switch-group__items",
+    base: "rp-switch-group",
+    items: "rp-switch-group__items",
   },
   variants: {
     orientation: {
       horizontal: {
-        base: "switch-group--horizontal",
+        base: "rp-switch-group--horizontal",
       },
       vertical: {
-        base: "switch-group--vertical",
+        base: "rp-switch-group--vertical",
       },
     },
   },

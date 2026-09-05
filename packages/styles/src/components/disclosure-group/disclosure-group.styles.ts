@@ -5,7 +5,7 @@ import { tv } from "../../tv";
 export const disclosureGroupVariants = tv({
   defaultVariants: {},
   slots: {
-    base: "disclosure-group",
+    base: "rp-disclosure-group",
   },
   variants: {},
 });

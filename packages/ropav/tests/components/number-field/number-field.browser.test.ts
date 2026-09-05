@@ -23,7 +23,7 @@ const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
  */
 describe("NumberField (browser)", () => {
   it("lays the group out in three columns around the input", async () => {
-    // `.number-field__group:has([slot="decrement"]):has([slot="increment"])` is the rule. It
+    // `.rp-number-field__group:has([slot="decrement"]):has([slot="increment"])` is the rule. It
     // cannot be checked without a layout engine, and losing it has no other symptom.
     const { container, unmount } = renderNumberField({ defaultValue: 5 });
 

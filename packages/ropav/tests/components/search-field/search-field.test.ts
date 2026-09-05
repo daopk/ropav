@@ -53,24 +53,24 @@ describe("SearchField", () => {
     it("renders the BEM classes of each part", () => {
       const { container, group, root, unmount } = renderSearchField();
 
-      expect(root).toHaveClass("search-field", "search-field--primary");
-      expect(group).toHaveClass("search-field__group");
+      expect(root).toHaveClass("rp-search-field", "rp-search-field--primary");
+      expect(group).toHaveClass("rp-search-field__group");
       expect(container.querySelector('[data-slot="search-field-search-icon"]')).toHaveClass(
-        "search-field__search-icon",
+        "rp-search-field__search-icon",
       );
       expect(container.querySelector('[data-slot="search-field-input"]')).toHaveClass(
-        "search-field__input",
+        "rp-search-field__input",
       );
       expect(container.querySelector('[data-slot="search-field-clear-button"]')).toHaveClass(
-        "close-button",
-        "search-field__clear-button",
+        "rp-close-button",
+        "rp-search-field__clear-button",
       );
 
       unmount();
     });
 
     it("renders the clear button as a close button", () => {
-      // The stylesheet reaches the icon through `.search-field__clear-button
+      // The stylesheet reaches the icon through `.rp-search-field__clear-button
       // [data-slot="close-button-icon"]`, so the markup underneath has to be a close button's.
       const { clearButton, unmount } = renderSearchField();
 
@@ -82,7 +82,7 @@ describe("SearchField", () => {
     });
 
     it("renders slot=clear on the clear button", () => {
-      // A live CSS contract: `.search-field__group:has([slot="clear"])` is what strips the
+      // A live CSS contract: `.rp-search-field__group:has([slot="clear"])` is what strips the
       // trailing radius and padding off the control.
       const { clearButton, group, unmount } = renderSearchField();
 
@@ -105,7 +105,7 @@ describe("SearchField", () => {
     it("supports a class on the root", () => {
       const { root, unmount } = renderSearchField({ class: "custom-field" });
 
-      expect(root).toHaveClass("search-field", "custom-field");
+      expect(root).toHaveClass("rp-search-field", "custom-field");
 
       unmount();
     });
@@ -153,10 +153,10 @@ describe("SearchField", () => {
     it("supports the secondary variant", () => {
       const { group, root, unmount } = renderSearchField({ variant: "secondary" });
 
-      expect(root).toHaveClass("search-field--secondary");
+      expect(root).toHaveClass("rp-search-field--secondary");
       // The variant lives on the root; the stylesheet reaches the group through it.
-      expect(group).toHaveClass("search-field__group");
-      expect(group).not.toHaveClass("search-field--secondary");
+      expect(group).toHaveClass("rp-search-field__group");
+      expect(group).not.toHaveClass("rp-search-field--secondary");
 
       unmount();
     });
@@ -164,8 +164,8 @@ describe("SearchField", () => {
     it("supports fullWidth on the root and on the group", () => {
       const { group, root, unmount } = renderSearchField({ fullWidth: true });
 
-      expect(root).toHaveClass("search-field--full-width");
-      expect(group).toHaveClass("search-field__group--full-width");
+      expect(root).toHaveClass("rp-search-field--full-width");
+      expect(group).toHaveClass("rp-search-field__group--full-width");
 
       unmount();
     });
@@ -176,8 +176,8 @@ describe("SearchField", () => {
       // modifier never lands. The bound form above stays green while that is broken.
       const { group, root, unmount } = renderSearchField({ attributeForm: true });
 
-      expect(root).toHaveClass("search-field--full-width");
-      expect(group).toHaveClass("search-field__group--full-width");
+      expect(root).toHaveClass("rp-search-field--full-width");
+      expect(group).toHaveClass("rp-search-field__group--full-width");
 
       unmount();
     });

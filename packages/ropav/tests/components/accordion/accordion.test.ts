@@ -46,8 +46,8 @@ describe("Accordion", () => {
       const { container, unmount } = renderVapor(AccordionFixture);
       const body = container.querySelector("[data-slot='accordion-body']");
 
-      expect(body?.classList.contains("accordion__body")).toBe(true);
-      expect(body?.firstElementChild?.classList.contains("accordion__body-inner")).toBe(true);
+      expect(body?.classList.contains("rp-accordion__body")).toBe(true);
+      expect(body?.firstElementChild?.classList.contains("rp-accordion__body-inner")).toBe(true);
 
       unmount();
     });
@@ -505,12 +505,14 @@ describe("Accordion", () => {
     it("renders the BEM classes on each part", () => {
       const { container, unmount } = renderVapor(AccordionFixture);
 
-      expect(container.querySelector("[data-slot='accordion']")?.classList).toContain("accordion");
-      expect(container.querySelector("[data-slot='accordion-item']")?.classList).toContain(
-        "accordion__item",
+      expect(container.querySelector("[data-slot='accordion']")?.classList).toContain(
+        "rp-accordion",
       );
-      expect(triggersIn(container)[0]?.classList).toContain("accordion__trigger");
-      expect(panelsIn(container)[0]?.classList).toContain("accordion__panel");
+      expect(container.querySelector("[data-slot='accordion-item']")?.classList).toContain(
+        "rp-accordion__item",
+      );
+      expect(triggersIn(container)[0]?.classList).toContain("rp-accordion__trigger");
+      expect(panelsIn(container)[0]?.classList).toContain("rp-accordion__panel");
 
       unmount();
     });
@@ -521,7 +523,7 @@ describe("Accordion", () => {
       });
 
       expect(container.querySelector("[data-slot='accordion']")?.classList).toContain(
-        "accordion--surface",
+        "rp-accordion--surface",
       );
 
       unmount();

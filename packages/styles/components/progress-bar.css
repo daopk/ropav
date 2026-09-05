@@ -3,7 +3,7 @@
    ========================================================================== */
 
 /* Base styles */
-.progress-bar {
+.rp-progress-bar {
   @apply grid w-full gap-1;
   grid-template-areas:
     "label output"
@@ -25,13 +25,13 @@
     grid-area: label;
   }
 
-  .progress-bar__output {
+  .rp-progress-bar__output {
     @apply text-sm font-medium tabular-nums;
 
     grid-area: output;
   }
 
-  .progress-bar__track {
+  .rp-progress-bar__track {
     @apply relative overflow-hidden bg-default;
 
     border-radius: min(32px, var(--component-radius));
@@ -50,7 +50,7 @@
     }
   }
 
-  .progress-bar__fill {
+  .rp-progress-bar__fill {
     @apply absolute start-0 top-0 h-full;
 
     border-radius: min(32px, var(--component-radius));
@@ -67,10 +67,10 @@
 
   /* Indeterminate state - when no aria-valuenow is set */
   &:not([aria-valuenow]) {
-    .progress-bar__fill {
+    .rp-progress-bar__fill {
       @apply w-2/5;
 
-      animation: progress-bar-indeterminate 1.5s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+      animation: rp-progress-bar-indeterminate 1.5s cubic-bezier(0.65, 0, 0.35, 1) infinite;
 
       @apply motion-reduce:animate-none;
     }
@@ -92,7 +92,7 @@
    Indeterminate animation
    ========================================================================== */
 
-@keyframes progress-bar-indeterminate {
+@keyframes rp-progress-bar-indeterminate {
   0% {
     transform: translateX(-100%);
   }
@@ -105,24 +105,24 @@
    Size variants
    ========================================================================== */
 
-.progress-bar--sm {
+.rp-progress-bar--sm {
   /* One 1rem tile spans more than the track is tall, so a 4px bar would show a single smear
    * rather than a run of stripes. The tile tracks the height instead. */
   --progress-bar-stripe-size: 0.5rem;
 
-  .progress-bar__track {
+  .rp-progress-bar__track {
     @apply h-1;
   }
 }
 
-.progress-bar--md {
+.rp-progress-bar--md {
   /* No styles as this is the default size */
 }
 
-.progress-bar--lg {
+.rp-progress-bar--lg {
   --progress-bar-stripe-size: 1.25rem;
 
-  .progress-bar__track {
+  .rp-progress-bar__track {
     @apply h-3;
   }
 }
@@ -131,23 +131,23 @@
    Color variants
    ========================================================================== */
 
-.progress-bar--default {
+.rp-progress-bar--default {
   --progress-bar-fill: var(--default-foreground);
 }
 
-.progress-bar--accent {
+.rp-progress-bar--accent {
   --progress-bar-fill: var(--accent);
 }
 
-.progress-bar--success {
+.rp-progress-bar--success {
   --progress-bar-fill: var(--success);
 }
 
-.progress-bar--warning {
+.rp-progress-bar--warning {
   --progress-bar-fill: var(--warning);
 }
 
-.progress-bar--danger {
+.rp-progress-bar--danger {
   --progress-bar-fill: var(--danger);
 }
 
@@ -160,9 +160,9 @@
    the slide instead of trading places with it.
    ========================================================================== */
 
-.progress-bar--striped,
-.progress-bar--animated {
-  .progress-bar__fill::after {
+.rp-progress-bar--striped,
+.rp-progress-bar--animated {
+  .rp-progress-bar__fill::after {
     @apply absolute inset-0 content-[''];
 
     border-radius: inherit;
@@ -182,14 +182,14 @@
   /* Forced colors flattens the fill to `Highlight` and leaves this `background-image` painting over
    * it in author colours. */
   @media (forced-colors: active) {
-    .progress-bar__fill::after {
+    .rp-progress-bar__fill::after {
       content: none;
     }
   }
 }
 
-.progress-bar--animated {
-  .progress-bar__fill {
+.rp-progress-bar--animated {
+  .rp-progress-bar__fill {
     /* On the host, not inside the `::after` block: the variant carries its own `::before`/`::after`
      * slot, and written under the pseudo-element instead its ancestor condition would land after
      * the pseudo-element and compile to an empty `:is()`. Stopped this way the band stays put
@@ -197,7 +197,7 @@
     @apply motion-reduce:animate-none;
 
     &::after {
-      animation: progress-bar-stripes 1s linear infinite;
+      animation: rp-progress-bar-stripes 1s linear infinite;
     }
 
     /* Travelling toward the inline end is what reads as progress; in RTL that is the other way. */
@@ -207,7 +207,7 @@
   }
 }
 
-@keyframes progress-bar-stripes {
+@keyframes rp-progress-bar-stripes {
   to {
     background-position-x: var(--progress-bar-stripe-size);
   }

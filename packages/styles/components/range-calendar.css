@@ -8,23 +8,23 @@
 /* -----------------------------------------------------------------------------
  * Base RangeCalendar Styles
  * -------------------------------------------------------------------------- */
-.range-calendar {
+.rp-range-calendar {
   @apply w-63 max-w-63;
 
   container-type: inline-size;
 }
 
 /* Week view – visibleDuration={{ weeks: n }} */
-.range-calendar--week-view {
-  .range-calendar__cell {
+.rp-range-calendar--week-view {
+  .rp-range-calendar__cell {
     /* Keep cells circular on the 7-column grid; only filled cells take space. */
     @apply aspect-square size-auto w-full place-self-center;
   }
 }
 
 /* Day view – visibleDuration={{ days: n }} */
-.range-calendar--day-view {
-  .range-calendar__cell {
+.rp-range-calendar--day-view {
+  .rp-range-calendar__cell {
     @apply aspect-square size-auto w-full place-self-center;
   }
 
@@ -32,12 +32,12 @@
    * Isolate header and body into separate 7-column grids. With display:contents
    * on the root grid, fewer than 7 weekday headers flow into the same row as dates.
    */
-  .range-calendar__grid {
+  .rp-range-calendar__grid {
     display: flex;
     flex-direction: column;
   }
 
-  .range-calendar__grid-header {
+  .rp-range-calendar__grid-header {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     @apply w-full;
@@ -47,7 +47,7 @@
     }
   }
 
-  .range-calendar__grid-body {
+  .rp-range-calendar__grid-body {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     @apply mt-1 w-full;
@@ -65,21 +65,21 @@
 /* -----------------------------------------------------------------------------
  * RangeCalendar Header
  * -------------------------------------------------------------------------- */
-.range-calendar__header {
+.rp-range-calendar__header {
   @apply flex items-center justify-between px-0.5 pb-4;
 
-  &:has(.calendar-year-picker__trigger[data-open="true"]) {
-    .range-calendar__nav-button {
+  &:has(.rp-calendar-year-picker__trigger[data-open="true"]) {
+    .rp-range-calendar__nav-button {
       @apply pointer-events-none opacity-0;
     }
   }
 }
 
-.range-calendar__heading {
+.rp-range-calendar__heading {
   @apply flex-1 text-sm font-medium;
 }
 
-.range-calendar__nav-button {
+.rp-range-calendar__nav-button {
   @apply flex size-6 items-center justify-center text-accent-soft-foreground;
 
   border-radius: min(32px, var(--component-radius));
@@ -122,27 +122,27 @@
   }
 }
 
-.range-calendar__nav-button-icon {
+.rp-range-calendar__nav-button-icon {
   @apply size-4 rtl:rotate-180;
 }
 
 /* -----------------------------------------------------------------------------
  * RangeCalendar Grid
  * -------------------------------------------------------------------------- */
-.range-calendar__grid {
+.rp-range-calendar__grid {
   /* Override table display with CSS Grid for easier customization */
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   @apply w-full;
 
   &[aria-readonly="true"] {
-    .range-calendar__cell {
+    .rp-range-calendar__cell {
       @apply pointer-events-none;
     }
   }
 }
 
-.range-calendar__grid-header {
+.rp-range-calendar__grid-header {
   /* Grid header (thead) styles */
   display: contents;
 
@@ -151,7 +151,7 @@
   }
 }
 
-.range-calendar__grid-body {
+.rp-range-calendar__grid-body {
   /* Grid body (tbody) styles */
   display: contents;
 
@@ -165,13 +165,13 @@
   }
 }
 
-.range-calendar__grid-row {
+.rp-range-calendar__grid-row {
   /* Use 'contents' so cells participate directly in grid */
   /* Note: This class can be used for custom row styling if needed */
   display: contents;
 }
 
-.range-calendar__header-cell {
+.rp-range-calendar__header-cell {
   /* Header cell (th - weekday names) styles */
   @apply flex items-center justify-center pb-2 text-xs font-medium text-muted;
 }
@@ -179,7 +179,7 @@
 /* -----------------------------------------------------------------------------
  * RangeCalendar Cells
  * -------------------------------------------------------------------------- */
-.range-calendar__cell {
+.rp-range-calendar__cell {
   @apply relative z-1 mx-0 my-[2px] p-0 outline-none;
 
   --range-calendar-day-radius: min(32px, var(--component-radius));
@@ -215,7 +215,7 @@
   @apply transform-gpu motion-reduce:transition-none;
 
   /* Inner interactive circle/capsule (equivalent to React Aria "button-base") */
-  .range-calendar__cell-button {
+  .rp-range-calendar__cell-button {
     @apply flex aspect-square w-full items-center justify-center text-sm font-medium text-foreground no-highlight;
 
     border-radius: var(--range-calendar-day-radius);
@@ -230,14 +230,14 @@
   &[data-focus-visible="true"] {
     @apply z-2;
 
-    .range-calendar__cell-button {
+    .rp-range-calendar__cell-button {
       @apply status-focused;
     }
   }
 
   /* Today indicator */
   &[data-today="true"] {
-    .range-calendar__cell-button {
+    .rp-range-calendar__cell-button {
       background-color: var(--range-calendar-day-bg-today);
       color: var(--range-calendar-day-fg-today);
 
@@ -251,7 +251,7 @@
     @media (hover: hover) {
       &:hover:not([data-selected="true"]),
       &[data-hovered="true"]:not([data-selected="true"]) {
-        .range-calendar__cell-button {
+        .rp-range-calendar__cell-button {
           background-color: var(--range-calendar-day-bg-today-hover);
         }
       }
@@ -270,7 +270,7 @@
     @media (forced-colors: active) {
       background-color: Highlight;
 
-      .range-calendar__cell-button {
+      .rp-range-calendar__cell-button {
         /* Suppresses the `Canvas` backplate behind the day number, which would otherwise cover
          * the track and leave the digits invisible against it. */
         forced-color-adjust: none;
@@ -305,7 +305,7 @@
   &[data-selection-end="true"]:not([data-outside-month="true"]) {
     @apply z-2;
 
-    .range-calendar__cell-button {
+    .rp-range-calendar__cell-button {
       background-color: var(--range-calendar-day-bg-cap);
       color: var(--range-calendar-day-fg-cap);
 
@@ -336,13 +336,13 @@
   /* Pressed state */
   &:active,
   &[data-pressed="true"] {
-    .range-calendar__cell-button {
+    .rp-range-calendar__cell-button {
       scale: 0.9;
     }
 
     &[data-selection-start="true"],
     &[data-selection-end="true"] {
-      .range-calendar__cell-button {
+      .rp-range-calendar__cell-button {
         background-color: var(--range-calendar-day-bg-cap-pressed);
       }
     }
@@ -352,7 +352,7 @@
   @media (hover: hover) {
     &:hover:not([data-selected="true"]),
     &[data-hovered="true"]:not([data-selected="true"]) {
-      .range-calendar__cell-button {
+      .rp-range-calendar__cell-button {
         background-color: var(--range-calendar-day-bg-hover);
       }
     }
@@ -385,10 +385,10 @@
 }
 
 /* Outside-month cell followed by selected cell across adjacent table cells */
-.range-calendar__grid-body
-  td:has(> .range-calendar__cell[data-outside-month="true"])
+.rp-range-calendar__grid-body
+  td:has(> .rp-range-calendar__cell[data-outside-month="true"])
   + td
-  > .range-calendar__cell[data-selected="true"] {
+  > .rp-range-calendar__cell[data-selected="true"] {
   border-start-start-radius: var(--range-calendar-wrap-radius);
   border-end-start-radius: var(--range-calendar-wrap-radius);
 
@@ -400,11 +400,11 @@
 }
 
 /* Selected cell followed by outside-month cell across adjacent table cells */
-.range-calendar__grid-body
-  td:has(> .range-calendar__cell[data-selected="true"]):has(
-    + td > .range-calendar__cell[data-outside-month="true"]
+.rp-range-calendar__grid-body
+  td:has(> .rp-range-calendar__cell[data-selected="true"]):has(
+    + td > .rp-range-calendar__cell[data-outside-month="true"]
   )
-  > .range-calendar__cell[data-selected="true"] {
+  > .rp-range-calendar__cell[data-selected="true"] {
   border-start-end-radius: var(--range-calendar-wrap-radius);
   border-end-end-radius: var(--range-calendar-wrap-radius);
 
@@ -416,7 +416,7 @@
 }
 
 /* Cell indicator - small dot at bottom center of cell */
-.range-calendar__cell-indicator {
+.rp-range-calendar__cell-indicator {
   @apply absolute bottom-1 left-1/2 size-[3px] -translate-x-1/2 rounded-xs;
 
   --range-calendar-cell-indicator-bg: var(--muted);

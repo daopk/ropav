@@ -4,8 +4,8 @@ import { tv } from "../../tv";
 
 export const tagGroupVariants = tv({
   slots: {
-    base: "tag-group",
-    list: "tag-group__list",
+    base: "rp-tag-group",
+    list: "rp-tag-group__list",
   },
 });
 

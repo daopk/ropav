@@ -1,7 +1,7 @@
 /* Alert component styles */
 
 /* Base alert styles */
-.alert {
+.rp-alert {
   @apply flex w-full flex-row items-start justify-start gap-4 bg-surface px-4 py-3 shadow-surface;
 
   /* Forced Colors Mode flattens the fill onto the page and strips the shadow, so the container
@@ -15,11 +15,11 @@
 }
 
 /* Alert elements */
-.alert__content {
+.rp-alert__content {
   @apply flex h-full grow flex-col items-start;
 }
 
-.alert__indicator {
+.rp-alert__indicator {
   @apply flex items-center justify-center p-1 select-none;
 
   [data-slot="alert-default-icon"] {
@@ -27,51 +27,51 @@
   }
 }
 
-.alert__title {
+.rp-alert__title {
   @apply text-sm leading-6 font-medium;
 }
 
-.alert__description {
+.rp-alert__description {
   @apply text-sm text-muted;
 }
 
 /* Variant modifiers */
-.alert--default .alert__indicator {
+.rp-alert--default .rp-alert__indicator {
   @apply text-foreground;
 }
 
-.alert--default .alert__title {
+.rp-alert--default .rp-alert__title {
   @apply text-foreground;
 }
 
-.alert--accent .alert__indicator {
+.rp-alert--accent .rp-alert__indicator {
   @apply text-accent-soft-foreground;
 }
 
-.alert--accent .alert__title {
+.rp-alert--accent .rp-alert__title {
   @apply text-accent-soft-foreground;
 }
 
-.alert--success .alert__indicator {
+.rp-alert--success .rp-alert__indicator {
   @apply text-success-soft-foreground;
 }
 
-.alert--success .alert__title {
+.rp-alert--success .rp-alert__title {
   @apply text-success-soft-foreground;
 }
 
-.alert--warning .alert__indicator {
+.rp-alert--warning .rp-alert__indicator {
   @apply text-warning-soft-foreground;
 }
 
-.alert--warning .alert__title {
+.rp-alert--warning .rp-alert__title {
   @apply text-warning-soft-foreground;
 }
 
-.alert--danger .alert__indicator {
+.rp-alert--danger .rp-alert__indicator {
   @apply text-danger-soft-foreground;
 }
 
-.alert--danger .alert__title {
+.rp-alert--danger .rp-alert__title {
   @apply text-danger-soft-foreground;
 }

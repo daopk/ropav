@@ -4,10 +4,10 @@ import { tv } from "../../tv";
 
 export const popoverVariants = tv({
   slots: {
-    base: "popover",
-    dialog: "popover__dialog",
-    heading: "popover__heading",
-    trigger: "popover__trigger",
+    base: "rp-popover",
+    dialog: "rp-popover__dialog",
+    heading: "rp-popover__heading",
+    trigger: "rp-popover__trigger",
   },
 });
 

@@ -70,10 +70,10 @@ describe("SegmentedControl (interop)", () => {
 
     await settle();
 
-    expect(slot(container, "segmented-control")).toHaveClass("segmented-control");
-    expect(slot(container, "segmented-control-item")).toHaveClass("segmented-control__item");
+    expect(slot(container, "segmented-control")).toHaveClass("rp-segmented-control");
+    expect(slot(container, "segmented-control-item")).toHaveClass("rp-segmented-control__item");
     expect(slot(container, "segmented-control-indicator")).toHaveClass(
-      "segmented-control__indicator",
+      "rp-segmented-control__indicator",
     );
 
     unmount();

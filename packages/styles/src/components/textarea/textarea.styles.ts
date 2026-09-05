@@ -3,7 +3,7 @@ import type { VariantProps } from "../../tv";
 import { tv } from "../../tv";
 
 export const textAreaVariants = tv({
-  base: "textarea",
+  base: "rp-textarea",
   defaultVariants: {
     fullWidth: false,
     size: "md",
@@ -12,16 +12,16 @@ export const textAreaVariants = tv({
   variants: {
     fullWidth: {
       false: "",
-      true: "textarea--full-width",
+      true: "rp-textarea--full-width",
     },
     size: {
-      lg: "textarea--lg",
+      lg: "rp-textarea--lg",
       md: "",
-      sm: "textarea--sm",
+      sm: "rp-textarea--sm",
     },
     variant: {
-      primary: "textarea--primary",
-      secondary: "textarea--secondary",
+      primary: "rp-textarea--primary",
+      secondary: "rp-textarea--secondary",
     },
   },
 });

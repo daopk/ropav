@@ -34,7 +34,7 @@ That single line pulls in, in layer order (`theme, base, components, utilities`)
 
 - Tailwind CSS v4 and `tw-animate-css`
 - base styles and the scrollbar system
-- the component layer — 85 files, one per component
+- the component layer — 88 files, one per component
 - the default theme: tokens for light and dark
 - utilities and custom variants
 
@@ -59,7 +59,7 @@ That single line pulls in, in layer order (`theme, base, components, utilities`)
 ```ts
 import {buttonVariants, type ButtonVariants} from "@ropav/styles";
 
-buttonVariants({variant: "primary", size: "sm"}); // "button button--primary button--sm"
+buttonVariants({variant: "primary", size: "sm"}); // "rp-button rp-button--primary rp-button--sm"
 ```
 
 Every component also has its own subpath so bundlers can drop the rest:
@@ -73,7 +73,7 @@ packages/styles/
 ├── base/
 │   ├── base.css           # Layout tokens, typography, resets
 │   └── scrollbar.css      # Scrollbar system
-├── components/            # 85 CSS files, one per component
+├── components/            # 88 CSS files, one per component
 ├── themes/
 │   ├── default.css        # Default theme — hand-written, light and dark token sets
 │   ├── sky.css … rabbit.css  # Ten more themes — generated, do not edit
@@ -88,22 +88,31 @@ packages/styles/
 
 ## Class naming
 
-BEM, so a class can be read without looking it up:
+Prefixed BEM, so a class can be read without looking it up and belongs to nobody else:
 
-- **Block** — the component itself: `.button`, `.card`, `.alert`
-- **Modifier** — a variation, double dash: `.button--primary`, `.button--lg`, `.button--icon-only`
-- **Element** — a part of the component, double underscore: `.card__header`, `.alert__icon`
+- **Prefix** — `rp-`, on every class the component layer defines
+- **Block** — the component itself: `.rp-button`, `.rp-card`, `.rp-alert`
+- **Modifier** — a variation, double dash: `.rp-button--primary`, `.rp-button--lg`, `.rp-button--icon-only`
+- **Element** — a part of the component, double underscore: `.rp-card__header`, `.rp-alert__icon`
 
 ```html
-<button class="button">Click me</button>
-<button class="button button--primary">Save</button>
-<button class="button button--primary button--sm">Small primary</button>
+<button class="rp-button">Click me</button>
+<button class="rp-button rp-button--primary">Save</button>
+<button class="rp-button rp-button--primary rp-button--sm">Small primary</button>
 ```
+
+**The prefix is not decoration.** Component rules live in the `components` layer and a host app's
+CSS is usually unlayered, so the host wins every property it declares — and what leaks onto it is
+every property it never mentioned. A host element wearing a bare `menu` or `card` would inherit
+half a component and no error anywhere. `rp-` is what stops the library from claiming names it does
+not own; keyframes and `view-transition-class` names carry it for the same reason, being
+document-global too. `tests/styles/class-prefix.test.ts` in `ropav` fails on any that does not.
 
 Two conventions the whole layer relies on:
 
-**Default size lives in the base class.** `.button` already renders at the `--md` size, so `.button--md` is an
-empty rule with a comment saying why. A component with no size modifier never looks broken.
+**Default size lives in the base class.** `.rp-button` already renders at the `--md` size, so
+`.rp-button--md` is an empty rule with a comment saying why. A component with no size modifier
+never looks broken.
 
 **State keys on `data-*`, with a pseudo-class fallback.** Interactive rules are written as
 `&:hover, &[data-hovered="true"]`, `&:active, &[data-pressed="true"]`, `&:focus-visible,

@@ -3,8 +3,8 @@
 /*
  * Orientation is a modifier class rather than a `[data-orientation]` descendant selector, and
  * that is not a style preference. A splitter nests — a vertical group inside a panel of a
- * horizontal one is the ordinary case — so `.splitter[data-orientation="horizontal"]
- * .splitter__handle` would reach the inner group's handle as well as its own and lay it out on
+ * horizontal one is the ordinary case — so `.rp-splitter[data-orientation="horizontal"]
+ * .rp-splitter__handle` would reach the inner group's handle as well as its own and lay it out on
  * the wrong axis. Every rule below therefore sits on the part it styles.
  *
  * The modifier also buys the Storybook forced-colors sweep, which collects `[class*='--']` and a
@@ -12,15 +12,15 @@
  * anything — the handle and its grip — would never be audited.
  */
 
-.splitter {
+.rp-splitter {
   @apply isolate flex h-full w-full;
 }
 
-.splitter--horizontal {
+.rp-splitter--horizontal {
   @apply flex-row;
 }
 
-.splitter--vertical {
+.rp-splitter--vertical {
   @apply flex-col;
 }
 
@@ -31,14 +31,14 @@
  * `flex-1` is the unmanaged fallback only. The component writes the whole `flex` shorthand inline;
  * an inline `flex-basis` alone would leave this `flex-grow: 1` in place and the panel would grow
  * straight back past the size it was given. */
-.splitter__panel {
+.rp-splitter__panel {
   @apply relative min-h-0 min-w-0 flex-1 overflow-hidden;
 }
 
 /* The flex item is the gutter and paints nothing itself. The line you see is `::after`, absolutely
  * positioned, which is what lets it thicken on hover without the gutter changing width and
- * reflowing both panels by a pixel. `.slider__thumb::after` carries its knob the same way. */
-.splitter__handle {
+ * reflowing both panels by a pixel. `.rp-slider__thumb::after` carries its knob the same way. */
+.rp-splitter__handle {
   /* The gutter is the line, with nothing either side of it. Dead space inside the gutter shows up
    * as a gap wherever a nested group's divider meets this one — the panel between them clips its own
    * contents, so the inner line cannot reach across to close it. `1px` rather than a spacing step,
@@ -111,8 +111,8 @@
 
   /* The grip answers to the same states as the line, and is reached as a direct child so a nested
    * group's own grip is left alone. */
-  &:hover > .splitter__handle-grip,
-  &[data-hovered="true"] > .splitter__handle-grip {
+  &:hover > .rp-splitter__handle-grip,
+  &[data-hovered="true"] > .rp-splitter__handle-grip {
     background-color: var(--splitter-grip-bg-hover);
     transition-delay: var(--splitter-highlight-delay);
   }
@@ -124,7 +124,7 @@
     transition-delay: 0ms;
   }
 
-  &[data-dragging="true"] > .splitter__handle-grip {
+  &[data-dragging="true"] > .rp-splitter__handle-grip {
     background-color: var(--splitter-grip-bg-dragging);
     transition-delay: 0ms;
   }
@@ -135,9 +135,9 @@
     &:hover::after,
     &[data-hovered="true"]::after,
     &[data-dragging="true"]::after,
-    &:hover > .splitter__handle-grip,
-    &[data-hovered="true"] > .splitter__handle-grip,
-    &[data-dragging="true"] > .splitter__handle-grip {
+    &:hover > .rp-splitter__handle-grip,
+    &[data-hovered="true"] > .rp-splitter__handle-grip,
+    &[data-dragging="true"] > .rp-splitter__handle-grip {
       background-color: Highlight;
     }
   }
@@ -153,7 +153,7 @@
     /* `status-disabled` reaches `color` and `border-color`, and neither the line nor the grip is
      * either of those. */
     &::after,
-    & > .splitter__handle-grip {
+    & > .rp-splitter__handle-grip {
       @media (forced-colors: active) {
         background-color: GrayText;
       }
@@ -166,7 +166,7 @@
  * border: forced colors turns a transparent *border-color* opaque — the trap `slider.css` documents
  * at both ends of its track — and a bordered target would render as two solid blocks flanking every
  * divider. `inset` has no such behaviour, so this needs no forced-colors rule of its own. */
-.splitter__handle-target {
+.rp-splitter__handle-target {
   @apply absolute inset-0 bg-transparent;
 }
 
@@ -177,7 +177,7 @@
  *
  * Sized from custom properties rather than utilities so a theme can retune the pill without
  * restating both axes in both orientations. */
-.splitter__handle-grip {
+.rp-splitter__handle-grip {
   @apply pointer-events-none absolute rounded-full;
 
   background-color: var(--splitter-grip-bg);
@@ -192,18 +192,18 @@
   @apply motion-reduce:transition-none;
 }
 
-.splitter__handle-grip--horizontal {
+.rp-splitter__handle-grip--horizontal {
   inline-size: var(--splitter-grip-thickness);
   block-size: var(--splitter-grip-length);
 }
 
-.splitter__handle-grip--vertical {
+.rp-splitter__handle-grip--vertical {
   inline-size: var(--splitter-grip-length);
   block-size: var(--splitter-grip-thickness);
 }
 
 /* A horizontal group puts its panels side by side, so the divider is a vertical line. */
-.splitter__handle--horizontal {
+.rp-splitter__handle--horizontal {
   @apply cursor-col-resize;
 
   inline-size: var(--splitter-gutter);
@@ -220,13 +220,13 @@
     inline-size: calc(var(--splitter-gutter) * 2);
   }
 
-  & > .splitter__handle-target {
+  & > .rp-splitter__handle-target {
     inset-inline: calc((var(--splitter-target) - var(--splitter-gutter)) / -2);
   }
 }
 
 /* A vertical group stacks its panels, so the divider is a horizontal line. */
-.splitter__handle--vertical {
+.rp-splitter__handle--vertical {
   @apply cursor-row-resize;
 
   block-size: var(--splitter-gutter);
@@ -243,7 +243,7 @@
     block-size: calc(var(--splitter-gutter) * 2);
   }
 
-  & > .splitter__handle-target {
+  & > .rp-splitter__handle-target {
     inset-block: calc((var(--splitter-target) - var(--splitter-gutter)) / -2);
   }
 }

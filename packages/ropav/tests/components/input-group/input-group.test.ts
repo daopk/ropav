@@ -40,27 +40,27 @@ describe("InputGroup", () => {
     it("renders the BEM classes of each part", () => {
       const { container, group, unmount } = renderGroup({ withPrefix: true, withSuffix: true });
 
-      expect(group).toHaveClass("input-group", "input-group--primary");
+      expect(group).toHaveClass("rp-input-group", "rp-input-group--primary");
       expect(container.querySelector('[data-slot="input-group-prefix"]')).toHaveClass(
-        "input-group__prefix",
+        "rp-input-group__prefix",
       );
       expect(container.querySelector('[data-slot="input-group-input"]')).toHaveClass(
-        "input-group__input",
+        "rp-input-group__input",
       );
       expect(container.querySelector('[data-slot="input-group-suffix"]')).toHaveClass(
-        "input-group__suffix",
+        "rp-input-group__suffix",
       );
 
       unmount();
     });
 
     it("renders a textarea on the same class as an input", () => {
-      // The stylesheet reaches the textarea through `.input-group__input[data-slot=…textarea]`,
+      // The stylesheet reaches the textarea through `.rp-input-group__input[data-slot=…textarea]`,
       // so the class has to be the shared one and the slot the specific one.
       const { container, unmount } = renderGroup({ withTextArea: true });
       const control = container.querySelector("textarea");
 
-      expect(control).toHaveClass("input-group__input");
+      expect(control).toHaveClass("rp-input-group__input");
       expect(control).toHaveAttribute("data-slot", "input-group-textarea");
       expect(container.querySelector('[data-slot="input-group-input"]')).toBeNull();
 
@@ -70,7 +70,7 @@ describe("InputGroup", () => {
     it("supports a class on every part", () => {
       const { group, unmount } = renderGroup({ class: "custom-group" });
 
-      expect(group).toHaveClass("input-group", "custom-group");
+      expect(group).toHaveClass("rp-input-group", "custom-group");
 
       unmount();
     });
@@ -100,11 +100,11 @@ describe("InputGroup", () => {
     it("supports the secondary variant", () => {
       const { container, group, unmount } = renderGroup({ variant: "secondary" });
 
-      expect(group).toHaveClass("input-group--secondary");
-      expect(group).not.toHaveClass("input-group--primary");
+      expect(group).toHaveClass("rp-input-group--secondary");
+      expect(group).not.toHaveClass("rp-input-group--primary");
       // The parts keep the shared classes; the variant only reaches them through the group.
       expect(container.querySelector('[data-slot="input-group-input"]')).toHaveClass(
-        "input-group__input",
+        "rp-input-group__input",
       );
 
       unmount();
@@ -113,7 +113,7 @@ describe("InputGroup", () => {
     it("takes the variant from the field it sits in", () => {
       const { group, unmount } = renderGroup({ fieldVariant: "secondary", withField: true });
 
-      expect(group).toHaveClass("input-group--secondary");
+      expect(group).toHaveClass("rp-input-group--secondary");
 
       unmount();
     });
@@ -125,8 +125,8 @@ describe("InputGroup", () => {
         withField: true,
       });
 
-      expect(group).toHaveClass("input-group--primary");
-      expect(group).not.toHaveClass("input-group--secondary");
+      expect(group).toHaveClass("rp-input-group--primary");
+      expect(group).not.toHaveClass("rp-input-group--secondary");
 
       unmount();
     });
@@ -136,7 +136,7 @@ describe("InputGroup", () => {
     it("supports fullWidth", () => {
       const { group, unmount } = renderGroup({ fullWidth: true });
 
-      expect(group).toHaveClass("input-group--full-width");
+      expect(group).toHaveClass("rp-input-group--full-width");
 
       unmount();
     });
@@ -147,7 +147,7 @@ describe("InputGroup", () => {
       // modifier never lands. The bound form above stays green while that is broken.
       const { group, unmount } = renderGroup({ attributeForm: true, withField: true });
 
-      expect(group).toHaveClass("input-group--full-width");
+      expect(group).toHaveClass("rp-input-group--full-width");
 
       unmount();
     });
@@ -155,7 +155,7 @@ describe("InputGroup", () => {
     it("leaves fullWidth off by default", () => {
       const { group, unmount } = renderGroup();
 
-      expect(group).not.toHaveClass("input-group--full-width");
+      expect(group).not.toHaveClass("rp-input-group--full-width");
 
       unmount();
     });

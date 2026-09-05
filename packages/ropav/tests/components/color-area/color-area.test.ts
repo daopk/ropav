@@ -36,8 +36,8 @@ describe("ColorArea", () => {
     it("renders both parts with their data-slot and BEM class", () => {
       const { container, unmount } = renderArea();
 
-      expect(slot(container, "color-area")).toHaveClass("color-area");
-      expect(slot(container, "color-area-thumb")).toHaveClass("color-area__thumb");
+      expect(slot(container, "color-area")).toHaveClass("rp-color-area");
+      expect(slot(container, "color-area-thumb")).toHaveClass("rp-color-area__thumb");
 
       unmount();
     });
@@ -45,12 +45,12 @@ describe("ColorArea", () => {
     it("adds the dots modifier only when asked", () => {
       const plain = renderArea();
 
-      expect(slot(plain.container, "color-area")).not.toHaveClass("color-area--show-dots");
+      expect(slot(plain.container, "color-area")).not.toHaveClass("rp-color-area--show-dots");
       plain.unmount();
 
       const dotted = renderArea({ showDots: true });
 
-      expect(slot(dotted.container, "color-area")).toHaveClass("color-area--show-dots");
+      expect(slot(dotted.container, "color-area")).toHaveClass("rp-color-area--show-dots");
       dotted.unmount();
     });
 
@@ -67,7 +67,7 @@ describe("ColorArea", () => {
     it("lets a caller's class through to the element", () => {
       const { container, unmount } = renderArea({ class: "w-72" });
 
-      expect(slot(container, "color-area")).toHaveClass("color-area", "w-72");
+      expect(slot(container, "color-area")).toHaveClass("rp-color-area", "w-72");
 
       unmount();
     });
@@ -108,7 +108,7 @@ describe("ColorArea", () => {
       const { container, unmount } = renderArea({ defaultValue: "hsl(30, 100%, 50%)" });
       const area = slot(container, "color-area");
 
-      // Both, and neither is redundant: `.color-area` composes the variable into its own
+      // Both, and neither is redundant: `.rp-color-area` composes the variable into its own
       // `background`, while the inline property is what actually wins the cascade.
       expect(area.style.background).toContain("linear-gradient(to top,");
       expect(area.style.getPropertyValue("--color-area-background")).toContain(

@@ -2,12 +2,12 @@
    SegmentedControl - one choice out of a few, drawn as a pill that slides
 
    Structure (explicit composition):
-     .segmented-control                → role="radiogroup", the track the pill slides in
-       .segmented-control__item        → button[role="radio"]
-         .segmented-control__indicator
+     .rp-segmented-control                → role="radiogroup", the track the pill slides in
+       .rp-segmented-control__item        → button[role="radio"]
+         .rp-segmented-control__indicator
    ========================================================================== */
 
-.segmented-control {
+.rp-segmented-control {
   @apply relative inline-flex w-max items-center bg-default p-1;
 
   /* The same corner a button of this size wears, not a larger one stepped out by the padding.
@@ -37,7 +37,7 @@
    Segment
    ========================================================================== */
 
-.segmented-control__item {
+.rp-segmented-control__item {
   @apply relative inline-flex h-7 min-w-0 shrink-0 appearance-none items-center justify-center gap-2 rounded-component border-0 bg-transparent px-3 text-center text-sm font-medium whitespace-nowrap outline-none select-none no-highlight;
 
   --segmented-control-item-fg: var(--muted);
@@ -106,24 +106,24 @@
    one before it rather than being a node between the two.
    ========================================================================== */
 
-.segmented-control__separator {
+.rp-segmented-control__separator {
   @apply pointer-events-none absolute start-0 top-1/4 h-1/2 w-px rounded-sm bg-muted/25;
 
   transition: opacity 150ms var(--ease-smooth);
   @apply motion-reduce:transition-none;
 
   /* Nothing to divide in front of the first segment. */
-  .segmented-control__item:first-child & {
+  .rp-segmented-control__item:first-child & {
     @apply opacity-0;
   }
 }
 
 /* The pill covers its own leading divider, and the divider on the segment that follows would
    otherwise sit hard against the pill's trailing edge. Both step aside as it arrives. */
-.segmented-control__item[data-selected="true"] .segmented-control__separator,
-.segmented-control__item[data-selected="true"]
-  + .segmented-control__item
-  .segmented-control__separator {
+.rp-segmented-control__item[data-selected="true"] .rp-segmented-control__separator,
+.rp-segmented-control__item[data-selected="true"]
+  + .rp-segmented-control__item
+  .rp-segmented-control__separator {
   @apply opacity-0;
 }
 
@@ -133,7 +133,7 @@
    sliding along is one element handing its place to the next.
    ========================================================================== */
 
-.segmented-control__indicator {
+.rp-segmented-control__indicator {
   @apply absolute start-0 top-0 size-full rounded-component bg-segment shadow-surface;
 
   z-index: -1;
@@ -163,15 +163,15 @@
    track's own `p-1` is the 8px difference.
    ========================================================================== */
 
-.segmented-control--sm .segmented-control__item {
+.rp-segmented-control--sm .rp-segmented-control__item {
   @apply h-6 px-2.5 text-xs;
 }
 
-.segmented-control--md {
+.rp-segmented-control--md {
   /* No styles as this is the default size */
 }
 
-.segmented-control--lg .segmented-control__item {
+.rp-segmented-control--lg .rp-segmented-control__item {
   @apply h-8 px-4;
 }
 
@@ -179,10 +179,10 @@
    Full width modifier
    ========================================================================== */
 
-.segmented-control--full-width {
+.rp-segmented-control--full-width {
   @apply flex w-full;
 
-  .segmented-control__item {
+  .rp-segmented-control__item {
     @apply flex-1;
   }
 }

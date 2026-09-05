@@ -51,15 +51,15 @@ describe("Fieldset", () => {
     it("renders the BEM classes of each part", () => {
       const { container, root, unmount } = renderFieldset();
 
-      expect(root).toHaveClass("fieldset");
+      expect(root).toHaveClass("rp-fieldset");
       expect(container.querySelector('[data-slot="fieldset-legend"]')).toHaveClass(
-        "fieldset__legend",
+        "rp-fieldset__legend",
       );
       expect(container.querySelector('[data-slot="fieldset-field-group"]')).toHaveClass(
-        "fieldset__field_group",
+        "rp-fieldset__field_group",
       );
       expect(container.querySelector('[data-slot="fieldset-actions"]')).toHaveClass(
-        "fieldset__actions",
+        "rp-fieldset__actions",
       );
 
       unmount();
@@ -73,7 +73,7 @@ describe("Fieldset", () => {
         legendClass: "text-lg",
       });
 
-      expect(root).toHaveClass("fieldset", "w-96");
+      expect(root).toHaveClass("rp-fieldset", "w-96");
       expect(container.querySelector('[data-slot="fieldset-legend"]')).toHaveClass("text-lg");
       expect(container.querySelector('[data-slot="fieldset-field-group"]')).toHaveClass(
         "space-y-2",

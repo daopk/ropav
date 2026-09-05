@@ -57,7 +57,7 @@ describe("Popover", () => {
 
       expect(result.screen.getByRole("button", { name: "Open popover" })).toBeTruthy();
       expect(result.screen.queryByRole("dialog")).toBeNull();
-      expect(document.body.querySelector(".popover")).toBeNull();
+      expect(document.body.querySelector(".rp-popover")).toBeNull();
 
       result.unmount();
     });
@@ -67,7 +67,7 @@ describe("Popover", () => {
 
       await settle();
 
-      const popover = document.body.querySelector(".popover");
+      const popover = document.body.querySelector(".rp-popover");
 
       expect(popover).toBeTruthy();
       // Teleported, so the app's own subtree cannot see it — which is why every query here goes
@@ -96,9 +96,9 @@ describe("Popover", () => {
 
       await settle();
 
-      expect(document.body.querySelector(".popover")).toBeTruthy();
-      expect(slot("popover-dialog")?.className).toContain("popover__dialog");
-      expect(result.screen.getByRole("heading").className).toContain("popover__heading");
+      expect(document.body.querySelector(".rp-popover")).toBeTruthy();
+      expect(slot("popover-dialog")?.className).toContain("rp-popover__dialog");
+      expect(result.screen.getByRole("heading").className).toContain("rp-popover__heading");
 
       result.unmount();
     });
@@ -133,7 +133,7 @@ describe("Popover", () => {
       key(result.screen.getByRole("dialog"), "Escape");
       await settle();
 
-      expect(document.body.querySelector(".popover")).toBeNull();
+      expect(document.body.querySelector(".rp-popover")).toBeNull();
 
       result.unmount();
     });
@@ -145,7 +145,7 @@ describe("Popover", () => {
 
       await settle();
 
-      const popover = document.body.querySelector(".popover")!;
+      const popover = document.body.querySelector(".rp-popover")!;
       const dialog = result.screen.getByRole("dialog");
 
       // Two elements claiming `role="dialog"`, one inside the other, is not something assistive
@@ -164,7 +164,7 @@ describe("Popover", () => {
 
       await settle();
 
-      const popover = document.body.querySelector(".popover")!;
+      const popover = document.body.querySelector(".rp-popover")!;
 
       expect(popover.getAttribute("role")).toBe("dialog");
       expect(popover.getAttribute("tabindex")).toBe("-1");
@@ -264,7 +264,7 @@ describe("Popover", () => {
 
       expect(trigger.tagName).toBe("DIV");
       expect(trigger.getAttribute("data-slot")).toBe("popover-trigger");
-      expect(trigger.className).toContain("popover__trigger");
+      expect(trigger.className).toContain("rp-popover__trigger");
       // A `div` is not focusable on its own, and the popover has to open by keyboard too.
       expect(trigger.getAttribute("tabindex")).toBe("0");
 
@@ -293,7 +293,7 @@ describe("Popover", () => {
 
       await settle();
 
-      const popover = document.body.querySelector(".popover")!;
+      const popover = document.body.querySelector(".rp-popover")!;
       const inside = popover.querySelector('[data-slot="button"]')!;
 
       // The trigger hands its press down through a context, and a context reaches every
@@ -359,7 +359,7 @@ describe("Popover", () => {
       const result = render({ defaultOpen: true });
 
       await settle();
-      pressOutside(document.body.querySelector(".popover p")!);
+      pressOutside(document.body.querySelector(".rp-popover p")!);
       await settle();
 
       expect(result.screen.getByRole("dialog")).toBeTruthy();
@@ -401,7 +401,7 @@ describe("Popover", () => {
       await settle();
 
       expect(onOpenChange).toHaveBeenCalledWith(false);
-      expect(document.body.querySelector(".popover")).toBeNull();
+      expect(document.body.querySelector(".rp-popover")).toBeNull();
 
       result.unmount();
     });
@@ -413,7 +413,7 @@ describe("Popover", () => {
       blurTo(bare("first"), bare("second"));
       await settle();
 
-      expect(document.body.querySelector(".popover")).toBeTruthy();
+      expect(document.body.querySelector(".rp-popover")).toBeTruthy();
 
       result.unmount();
     });
@@ -428,7 +428,7 @@ describe("Popover", () => {
       blurTo(bare("first"), null);
       await settle();
 
-      expect(document.body.querySelector(".popover")).toBeTruthy();
+      expect(document.body.querySelector(".rp-popover")).toBeTruthy();
 
       result.unmount();
     });
@@ -440,7 +440,7 @@ describe("Popover", () => {
       blurTo(bare("first"), result.container.querySelector("#outside")!);
       await settle();
 
-      expect(document.body.querySelector(".popover")).toBeTruthy();
+      expect(document.body.querySelector(".rp-popover")).toBeTruthy();
 
       result.unmount();
     });
@@ -552,7 +552,9 @@ describe("Popover", () => {
 
       await settle();
 
-      expect(document.body.querySelector(".popover")?.getAttribute("data-placement")).toBe("top");
+      expect(document.body.querySelector(".rp-popover")?.getAttribute("data-placement")).toBe(
+        "top",
+      );
 
       result.unmount();
     });

@@ -1,5 +1,5 @@
 /* Date field styles */
-.date-field {
+.rp-date-field {
   @apply flex flex-col gap-1;
 
   &[data-invalid="true"],
@@ -15,6 +15,6 @@
 }
 
 /* Full width modifier */
-.date-field--full-width {
+.rp-date-field--full-width {
   @apply w-full;
 }

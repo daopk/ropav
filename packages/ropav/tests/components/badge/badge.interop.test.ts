@@ -27,8 +27,8 @@ describe("Badge under a vdom host", () => {
     const badge = container.querySelector('[data-slot="badge"]');
     const label = container.querySelector('[data-slot="badge-label"]');
 
-    expect(badge).toHaveClass("badge--danger", "badge--lg");
-    expect(label).toHaveClass("badge__label", "tabular-nums");
+    expect(badge).toHaveClass("rp-badge--danger", "rp-badge--lg");
+    expect(label).toHaveClass("rp-badge__label", "tabular-nums");
     expect(label).toHaveTextContent("99+");
 
     unmount();

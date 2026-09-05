@@ -107,7 +107,7 @@ describe("Pagination (browser)", () => {
 
     // Proves the compiled stylesheet is loaded here and that `data-active` is what selects the
     // treatment — the attribute exists in jsdom too, but nothing there paints from it.
-    expect(links[0]).toHaveClass("pagination__link");
+    expect(links[0]).toHaveClass("rp-pagination__link");
     expect(getComputedStyle(links[0]!).backgroundColor).not.toBe(
       getComputedStyle(links[1]!).backgroundColor,
     );

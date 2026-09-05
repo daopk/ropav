@@ -20,7 +20,7 @@ const slot = (container: HTMLElement, name: string) =>
  */
 describe("InputGroup (browser)", () => {
   it("strips the leading radius and padding off the control beside a prefix", async () => {
-    // `.input-group:has([data-slot="input-group-prefix"]) &` is the rule, so it only fires
+    // `.rp-input-group:has([data-slot="input-group-prefix"]) &` is the rule, so it only fires
     // when the prefix really is in the DOM as a descendant of the group.
     const bare = renderGroup();
     const bareControl = slot(bare.container, "input-group-input");
@@ -190,7 +190,7 @@ describe("InputGroup (browser)", () => {
   });
 
   it("takes the field's disabled state down to the control", async () => {
-    // `.input-group[data-disabled="true"]` applies `status-disabled`, which puts
+    // `.rp-input-group[data-disabled="true"]` applies `status-disabled`, which puts
     // `pointer-events: none` on the group itself — so a real pointer never reaches it and
     // click-to-focus stops there, rather than at any check in the handler. Asserted as the
     // property rather than by clicking, because a click here is not one the browser delivers:

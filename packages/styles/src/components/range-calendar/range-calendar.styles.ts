@@ -6,29 +6,29 @@ export const rangeCalendarVariants = tv({
   defaultVariants: {},
   slots: {
     /** Root range calendar container */
-    base: "range-calendar",
+    base: "rp-range-calendar",
     /** Calendar cell (td) */
-    cell: "range-calendar__cell",
+    cell: "rp-range-calendar__cell",
     /** Cell indicator (small dot at bottom of cell) */
-    cellIndicator: "range-calendar__cell-indicator",
+    cellIndicator: "rp-range-calendar__cell-indicator",
     /** Calendar grid (table) */
-    grid: "range-calendar__grid",
+    grid: "rp-range-calendar__grid",
     /** Grid body (tbody) */
-    gridBody: "range-calendar__grid-body",
+    gridBody: "rp-range-calendar__grid-body",
     /** Grid header (thead) */
-    gridHeader: "range-calendar__grid-header",
+    gridHeader: "rp-range-calendar__grid-header",
     /** Grid row (tr) */
-    gridRow: "range-calendar__grid-row",
+    gridRow: "rp-range-calendar__grid-row",
     /** Calendar header containing heading and navigation */
-    header: "range-calendar__header",
+    header: "rp-range-calendar__header",
     /** Header cell (th - day names) */
-    headerCell: "range-calendar__header-cell",
+    headerCell: "rp-range-calendar__header-cell",
     /** Month/year heading text */
-    heading: "range-calendar__heading",
+    heading: "rp-range-calendar__heading",
     /** Previous/Next navigation button */
-    navButton: "range-calendar__nav-button",
+    navButton: "rp-range-calendar__nav-button",
     /** Navigation button icon */
-    navButtonIcon: "range-calendar__nav-button-icon",
+    navButtonIcon: "rp-range-calendar__nav-button-icon",
   },
   variants: {},
 });

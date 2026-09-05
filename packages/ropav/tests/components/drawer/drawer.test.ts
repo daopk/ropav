@@ -127,9 +127,9 @@ describe("Drawer", () => {
       await settle();
 
       const expected: [string, string][] = [
-        ["drawer-backdrop", "drawer__backdrop"],
-        ["drawer-content", "drawer__content"],
-        ["drawer-dialog", "drawer__dialog"],
+        ["drawer-backdrop", "rp-drawer__backdrop"],
+        ["drawer-content", "rp-drawer__content"],
+        ["drawer-dialog", "rp-drawer__dialog"],
       ];
 
       for (const [name, className] of expected) {
@@ -177,7 +177,7 @@ describe("Drawer", () => {
       expect(trigger.tagName).toBe("BUTTON");
       expect(trigger.getAttribute("type")).toBe("button");
       expect(trigger.getAttribute("role")).toBeNull();
-      expect(trigger.classList.contains("drawer__trigger")).toBe(true);
+      expect(trigger.classList.contains("rp-drawer__trigger")).toBe(true);
 
       result.unmount();
     });
@@ -442,12 +442,12 @@ describe("Drawer", () => {
       await settle();
 
       const expected: [string, string][] = [
-        ["drawer-handle", "drawer__handle"],
-        ["drawer-header", "drawer__header"],
-        ["drawer-heading", "drawer__heading"],
-        ["drawer-body", "drawer__body"],
-        ["drawer-footer", "drawer__footer"],
-        ["drawer-close-trigger", "drawer__close-trigger"],
+        ["drawer-handle", "rp-drawer__handle"],
+        ["drawer-header", "rp-drawer__header"],
+        ["drawer-heading", "rp-drawer__heading"],
+        ["drawer-body", "rp-drawer__body"],
+        ["drawer-footer", "rp-drawer__footer"],
+        ["drawer-close-trigger", "rp-drawer__close-trigger"],
       ];
 
       for (const [name, className] of expected) {
@@ -479,11 +479,11 @@ describe("Drawer", () => {
         // Both: the content decides which edge everything is pinned to, and the panel takes its
         // rounded corners and its slide direction from the same value.
         expect(
-          slot("drawer-content")!.classList.contains(`drawer__content--${placement}`),
+          slot("drawer-content")!.classList.contains(`rp-drawer__content--${placement}`),
           placement,
         ).toBe(true);
         expect(
-          slot("drawer-dialog")!.classList.contains(`drawer__dialog--${placement}`),
+          slot("drawer-dialog")!.classList.contains(`rp-drawer__dialog--${placement}`),
           placement,
         ).toBe(true);
         expect(slot("drawer-content")!.getAttribute("data-placement"), placement).toBe(placement);
@@ -512,7 +512,7 @@ describe("Drawer", () => {
         await settle();
 
         expect(
-          slot("drawer-backdrop")!.classList.contains(`drawer__backdrop--${variant}`),
+          slot("drawer-backdrop")!.classList.contains(`rp-drawer__backdrop--${variant}`),
           variant,
         ).toBe(true);
 

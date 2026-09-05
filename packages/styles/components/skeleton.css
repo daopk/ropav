@@ -1,4 +1,4 @@
-.skeleton {
+.rp-skeleton {
   @apply pointer-events-none relative overflow-hidden rounded-sm bg-surface-tertiary/70;
 
   /* Forced Colors Mode flattens the fill to `Canvas` - the same colour as the page behind it -
@@ -14,13 +14,13 @@
 /* TODO: Skeleton with parent are not visible */
 
 /* Animation types */
-.skeleton--shimmer {
+.rp-skeleton--shimmer {
   &::after {
     @apply absolute inset-0 -translate-x-full animate-skeleton bg-linear-to-r from-transparent via-surface-tertiary to-transparent content-[''];
   }
 
   /* When applied to a parent container with multiple skeletons */
-  &:has(.skeleton) {
+  &:has(.rp-skeleton) {
     &::after {
       content: none;
     }
@@ -41,7 +41,7 @@
     }
 
     /* Ensure children don't have their own shimmer */
-    & .skeleton {
+    & .rp-skeleton {
       &::after {
         content: none;
       }
@@ -49,9 +49,9 @@
   }
 }
 
-.skeleton--pulse {
+.rp-skeleton--pulse {
   @apply animate-pulse;
 }
 
-.skeleton--none {
+.rp-skeleton--none {
 }

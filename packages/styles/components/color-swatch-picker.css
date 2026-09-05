@@ -3,7 +3,7 @@
    ========================================================================== */
 
 /* Base styles */
-.color-swatch-picker {
+.rp-color-swatch-picker {
   @apply flex flex-wrap items-center gap-2;
 }
 
@@ -11,7 +11,7 @@
    Item - Individual swatch picker item
    ========================================================================== */
 
-.color-swatch-picker__item {
+.rp-color-swatch-picker__item {
   @apply relative flex size-8 items-center justify-center rounded-2xl border-2 border-transparent outline-none no-highlight;
 
   /* The unselected border is transparent purely to hold the ring's width, and forced colors turns
@@ -49,7 +49,7 @@
       border-color: Highlight;
     }
     /* Shrink the swatch to reveal the white gap */
-    .color-swatch-picker__swatch {
+    .rp-color-swatch-picker__swatch {
       transform: scale(0.77);
     }
   }
@@ -59,7 +59,7 @@
    Swatch - The color swatch visual
    ========================================================================== */
 
-.color-swatch-picker__swatch {
+.rp-color-swatch-picker__swatch {
   @apply block size-full;
 
   /* Inherit border-radius from item */
@@ -78,7 +78,7 @@
    Indicator - Checkmark indicator for selected state
    ========================================================================== */
 
-.color-swatch-picker__indicator {
+.rp-color-swatch-picker__indicator {
   @apply pointer-events-none absolute inset-0 z-10 flex items-center justify-center;
 
   /* Checkmark SVG styles - default to white for dark backgrounds */
@@ -101,7 +101,7 @@
   }
 
   /* Scale up when parent item is selected */
-  .color-swatch-picker__item[data-selected="true"] & > * {
+  .rp-color-swatch-picker__item[data-selected="true"] & > * {
     transform: scale(1) translateZ(0);
   }
 }
@@ -110,11 +110,11 @@
    Layout variants
    ========================================================================== */
 
-.color-swatch-picker--grid {
+.rp-color-swatch-picker--grid {
   /* Default is already grid (flex-wrap) - no additional styles needed */
 }
 
-.color-swatch-picker--stack {
+.rp-color-swatch-picker--stack {
   @apply flex-col;
 }
 
@@ -122,32 +122,32 @@
    Size variants
    ========================================================================== */
 
-.color-swatch-picker--xs {
-  .color-swatch-picker__item {
+.rp-color-swatch-picker--xs {
+  .rp-color-swatch-picker__item {
     @apply size-4 rounded-lg border;
   }
 }
 
-.color-swatch-picker--sm {
-  .color-swatch-picker__item {
+.rp-color-swatch-picker--sm {
+  .rp-color-swatch-picker__item {
     @apply size-6 rounded-xl border-2;
   }
 }
 
-.color-swatch-picker--md {
-  .color-swatch-picker__item {
+.rp-color-swatch-picker--md {
+  .rp-color-swatch-picker__item {
     /* No styles as this is the default size */
   }
 }
 
-.color-swatch-picker--lg {
-  .color-swatch-picker__item {
+.rp-color-swatch-picker--lg {
+  .rp-color-swatch-picker__item {
     @apply size-9 rounded-3xl border-3;
   }
 }
 
-.color-swatch-picker--xl {
-  .color-swatch-picker__item {
+.rp-color-swatch-picker--xl {
+  .rp-color-swatch-picker__item {
     @apply size-10 rounded-3xl border-3;
   }
 }
@@ -157,11 +157,11 @@
    ========================================================================== */
 
 /* Circle variant (default) - no additional styles needed */
-.color-swatch-picker--circle .color-swatch-picker__item {
+.rp-color-swatch-picker--circle .rp-color-swatch-picker__item {
   /* Default is already circle - radius set per size */
 }
 
 /* Square variant */
-.color-swatch-picker--square .color-swatch-picker__item {
+.rp-color-swatch-picker--square .rp-color-swatch-picker__item {
   border-radius: min(32px, var(--component-radius));
 }

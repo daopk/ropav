@@ -6,7 +6,7 @@
 /**
  * Element: trigger - the element that opens the modal
  */
-.alert-dialog__trigger {
+.rp-alert-dialog__trigger {
   @apply inline-block;
   @apply cursor-(--cursor-interactive);
 
@@ -38,7 +38,7 @@
 /**
  * Element: backdrop - the overlay behind the dialog
  */
-.alert-dialog__backdrop {
+.rp-alert-dialog__backdrop {
   @apply fixed inset-0 z-50;
   @apply flex flex-row items-center justify-center;
   @apply h-(--visual-viewport-height) w-full;
@@ -63,28 +63,28 @@
 /**
  * Modifier: backdrop--transparent
  */
-.alert-dialog__backdrop--transparent {
+.rp-alert-dialog__backdrop--transparent {
   @apply bg-transparent;
 }
 
 /**
  * Modifier: backdrop--opaque
  */
-.alert-dialog__backdrop--opaque {
+.rp-alert-dialog__backdrop--opaque {
   @apply bg-backdrop;
 }
 
 /**
  * Modifier: backdrop--blur
  */
-.alert-dialog__backdrop--blur {
+.rp-alert-dialog__backdrop--blur {
   @apply bg-backdrop backdrop-blur-md;
 }
 
 /**
  * Element: container - the positioning wrapper for the modal
  */
-.alert-dialog__container {
+.rp-alert-dialog__container {
   @apply flex flex-col items-center;
   @apply h-(--visual-viewport-height) w-full min-w-0 flex-1;
   @apply p-4;
@@ -128,7 +128,7 @@
 /**
  * Element: dialog - the content container for the modal
  */
-.alert-dialog__dialog {
+.rp-alert-dialog__dialog {
   @apply relative;
   @apply flex min-h-0 w-full flex-col;
   @apply max-h-full;
@@ -159,47 +159,47 @@
 /**
  * Modifier: dialog--xs
  */
-.alert-dialog__dialog--xs {
+.rp-alert-dialog__dialog--xs {
   @apply max-w-xs;
 }
 
 /**
  * Modifier: dialog--sm
  */
-.alert-dialog__dialog--sm {
+.rp-alert-dialog__dialog--sm {
   @apply max-w-sm;
 }
 
 /**
  * Modifier: dialog--md
  */
-.alert-dialog__dialog--md {
+.rp-alert-dialog__dialog--md {
   @apply max-w-md;
 }
 
 /**
  * Modifier: dialog--lg
  */
-.alert-dialog__dialog--lg {
+.rp-alert-dialog__dialog--lg {
   @apply max-w-lg;
 }
 
 /**
  * Modifier: dialog--cover
  */
-.alert-dialog__dialog--cover {
+.rp-alert-dialog__dialog--cover {
   @apply h-full min-h-full w-full;
 }
 
 /**
  * Element: header - the top section with the title
  */
-.alert-dialog__header {
+.rp-alert-dialog__header {
   @apply flex flex-col gap-3;
   @apply mb-0;
 
   /* When header contains icon, use flex-col layout with gap */
-  & > .modal__icon {
+  & > .rp-modal__icon {
     @apply mb-0;
   }
 }
@@ -207,7 +207,7 @@
 /**
  * Element: heading - the main title text
  */
-.alert-dialog__heading {
+.rp-alert-dialog__heading {
   @apply align-middle;
   @apply text-base font-medium text-foreground;
 }
@@ -215,7 +215,7 @@
 /**
  * Element: icon - the optional icon indicator
  */
-.alert-dialog__icon {
+.rp-alert-dialog__icon {
   @apply flex items-center justify-center;
   @apply size-10 shrink-0;
   @apply rounded-3xl select-none;
@@ -228,42 +228,42 @@
 /**
  * Modifier: icon--default
  */
-.alert-dialog__icon--default {
+.rp-alert-dialog__icon--default {
   @apply bg-default text-foreground;
 }
 
 /**
  * Modifier: icon--accent
  */
-.alert-dialog__icon--accent {
+.rp-alert-dialog__icon--accent {
   @apply bg-accent-soft text-accent-soft-foreground;
 }
 
 /**
  * Modifier: icon--success
  */
-.alert-dialog__icon--success {
+.rp-alert-dialog__icon--success {
   @apply bg-success-soft text-success-soft-foreground;
 }
 
 /**
  * Modifier: icon--warning
  */
-.alert-dialog__icon--warning {
+.rp-alert-dialog__icon--warning {
   @apply bg-warning-soft text-warning-soft-foreground;
 }
 
 /**
  * Modifier: icon--danger
  */
-.alert-dialog__icon--danger {
+.rp-alert-dialog__icon--danger {
   @apply bg-danger-soft text-danger-soft-foreground;
 }
 
 /**
  * Element: body - the main content area
  */
-.alert-dialog__body {
+.rp-alert-dialog__body {
   @apply min-h-0 flex-1 scrollbar;
   @apply text-sm leading-[1.43] text-muted;
   @apply -m-[3px] my-0 p-[3px];
@@ -274,7 +274,7 @@
 /**
  * Element: footer - the bottom action section
  */
-.alert-dialog__footer {
+.rp-alert-dialog__footer {
   @apply flex flex-row items-center justify-end gap-2;
   @apply mt-0;
 }
@@ -282,21 +282,21 @@
 /**
  * Element: close-trigger - the optional x icon button to close the modal
  */
-.alert-dialog__close-trigger {
+.rp-alert-dialog__close-trigger {
   @apply absolute end-4 top-4;
 }
 
 /**
  * Elements Spacing
  */
-.alert-dialog__header + .alert-dialog__body {
+.rp-alert-dialog__header + .rp-alert-dialog__body {
   @apply mt-2;
 }
 
-.alert-dialog__header + .alert-dialog__footer {
+.rp-alert-dialog__header + .rp-alert-dialog__footer {
   @apply mt-5;
 }
 
-.alert-dialog__body + .alert-dialog__footer {
+.rp-alert-dialog__body + .rp-alert-dialog__footer {
   @apply mt-5;
 }

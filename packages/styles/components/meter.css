@@ -3,7 +3,7 @@
    ========================================================================== */
 
 /* Base styles */
-.meter {
+.rp-meter {
   @apply grid w-full gap-1;
   grid-template-areas:
     "label output"
@@ -19,13 +19,13 @@
     grid-area: label;
   }
 
-  .meter__output {
+  .rp-meter__output {
     @apply text-sm font-medium tabular-nums;
 
     grid-area: output;
   }
 
-  .meter__track {
+  .rp-meter__track {
     @apply relative overflow-hidden bg-default;
 
     border-radius: min(32px, var(--component-radius));
@@ -44,7 +44,7 @@
     }
   }
 
-  .meter__fill {
+  .rp-meter__fill {
     @apply absolute start-0 top-0 h-full;
 
     border-radius: min(32px, var(--component-radius));
@@ -75,18 +75,18 @@
    Size variants
    ========================================================================== */
 
-.meter--sm {
-  .meter__track {
+.rp-meter--sm {
+  .rp-meter__track {
     @apply h-1;
   }
 }
 
-.meter--md {
+.rp-meter--md {
   /* No styles as this is the default size */
 }
 
-.meter--lg {
-  .meter__track {
+.rp-meter--lg {
+  .rp-meter__track {
     @apply h-3;
   }
 }
@@ -95,22 +95,22 @@
    Color variants
    ========================================================================== */
 
-.meter--default {
+.rp-meter--default {
   --meter-fill: var(--default-foreground);
 }
 
-.meter--accent {
+.rp-meter--accent {
   --meter-fill: var(--accent);
 }
 
-.meter--success {
+.rp-meter--success {
   --meter-fill: var(--success);
 }
 
-.meter--warning {
+.rp-meter--warning {
   --meter-fill: var(--warning);
 }
 
-.meter--danger {
+.rp-meter--danger {
   --meter-fill: var(--danger);
 }

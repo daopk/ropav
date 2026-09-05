@@ -1,5 +1,5 @@
 /* Base styles */
-.chip {
+.rp-chip {
   @apply inline-flex w-fit shrink-0 items-center gap-0.5 px-2 py-0.5 text-xs leading-5 font-medium;
 
   border-radius: min(32px, var(--component-radius));
@@ -18,40 +18,40 @@
    * What cannot come back is the status. The mode has no keyword for success or warning, so
    * every colour collapses onto one appearance and the label is what has to carry the
    * meaning - which is the same reason a chip should not lean on colour alone in the first
-   * place. Only the emphasis split survives, on `.chip--primary` below. */
+   * place. Only the emphasis split survives, on `.rp-chip--primary` below. */
   @media (forced-colors: active) {
     outline: 1px solid CanvasText;
     outline-offset: -1px;
   }
 }
 
-.chip__label {
+.rp-chip__label {
   @apply px-0.5;
 }
 
 /* Color variants - set foreground color */
-.chip--accent {
+.rp-chip--accent {
   --chip-fg: var(--accent-soft-foreground);
 }
 
-.chip--danger {
+.rp-chip--danger {
   --chip-fg: var(--danger-soft-foreground);
 }
 
-.chip--default {
+.rp-chip--default {
   --chip-fg: var(--default-foreground);
 }
 
-.chip--success {
+.rp-chip--success {
   --chip-fg: var(--success-soft-foreground);
 }
 
-.chip--warning {
+.rp-chip--warning {
   --chip-fg: var(--warning-soft-foreground);
 }
 
 /* Variant styles */
-.chip--primary {
+.rp-chip--primary {
   /* The one distinction worth keeping: solid against outlined. `forced-color-adjust` is what
    * makes it readable - without it Chromium paints a `Canvas` backplate over this fill and the
    * label goes with it. */
@@ -62,24 +62,24 @@
   }
 }
 
-.chip--secondary {
+.rp-chip--secondary {
   /* No additional styles for secondary variant */
 }
 
-.chip--tertiary {
+.rp-chip--tertiary {
   --chip-bg: transparent;
 }
 
 /* Size variants */
-.chip--sm {
+.rp-chip--sm {
   @apply px-1 py-0 text-xs;
 }
 
-.chip--md {
+.rp-chip--md {
   @apply text-xs;
 }
 
-.chip--lg {
+.rp-chip--lg {
   @apply px-3 py-1 text-sm font-medium;
 }
 
@@ -88,48 +88,48 @@
 /* ====================== */
 
 /* Primary variants - solid backgrounds */
-.chip--primary.chip--accent {
+.rp-chip--primary.rp-chip--accent {
   --chip-bg: var(--accent);
   --chip-fg: var(--accent-foreground);
 }
 
-.chip--primary.chip--success {
+.rp-chip--primary.rp-chip--success {
   --chip-bg: var(--success);
   --chip-fg: var(--success-foreground);
 }
 
-.chip--primary.chip--warning {
+.rp-chip--primary.rp-chip--warning {
   --chip-bg: var(--warning);
   --chip-fg: var(--warning-foreground);
 }
 
-.chip--primary.chip--danger {
+.rp-chip--primary.rp-chip--danger {
   --chip-bg: var(--danger);
   --chip-fg: var(--danger-foreground);
 }
 
 /* Soft variants - muted backgrounds */
-.chip--accent.chip--soft {
+.rp-chip--accent.rp-chip--soft {
   --chip-bg: var(--accent-soft);
   --chip-fg: var(--accent-soft-foreground);
 }
 
-.chip--success.chip--soft {
+.rp-chip--success.rp-chip--soft {
   --chip-bg: var(--success-soft);
   --chip-fg: var(--success-soft-foreground);
 }
 
-.chip--warning.chip--soft {
+.rp-chip--warning.rp-chip--soft {
   --chip-bg: var(--warning-soft);
   --chip-fg: var(--warning-soft-foreground);
 }
 
-.chip--danger.chip--soft {
+.rp-chip--danger.rp-chip--soft {
   --chip-bg: var(--danger-soft);
   --chip-fg: var(--danger-soft-foreground);
 }
 
-.chip--default.chip--soft {
+.rp-chip--default.rp-chip--soft {
   --chip-bg: var(--default-soft);
   --chip-fg: var(--default-soft-foreground);
 }

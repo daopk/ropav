@@ -3,13 +3,13 @@ import type { VariantProps } from "../../tv";
 import { tv } from "../../tv";
 
 export const closeButtonVariants = tv({
-  base: "close-button",
+  base: "rp-close-button",
   defaultVariants: {
     variant: "default",
   },
   variants: {
     variant: {
-      default: "close-button--default",
+      default: "rp-close-button--default",
     },
   },
 });

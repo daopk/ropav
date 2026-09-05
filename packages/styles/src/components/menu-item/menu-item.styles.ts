@@ -7,17 +7,17 @@ export const menuItemVariants = tv({
     variant: "default",
   },
   slots: {
-    indicator: "menu-item__indicator",
-    item: "menu-item",
-    submenuIndicator: "menu-item__indicator menu-item__indicator--submenu",
+    indicator: "rp-menu-item__indicator",
+    item: "rp-menu-item",
+    submenuIndicator: "rp-menu-item__indicator rp-menu-item__indicator--submenu",
   },
   variants: {
     variant: {
       danger: {
-        item: "menu-item--danger",
+        item: "rp-menu-item--danger",
       },
       default: {
-        item: "menu-item--default",
+        item: "rp-menu-item--default",
       },
     },
   },

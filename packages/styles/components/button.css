@@ -1,7 +1,7 @@
 /* Button component styles */
 
 /* Base button styles */
-.button {
+.rp-button {
   @apply relative isolate inline-flex h-9 w-fit origin-center items-center justify-center gap-2 rounded-component px-4 text-sm font-medium whitespace-nowrap outline-none select-none no-highlight;
 
   transition:
@@ -70,7 +70,7 @@
 }
 
 /* Size variants */
-.button--sm {
+.rp-button--sm {
   @apply h-8 px-3;
 
   &:active,
@@ -79,11 +79,11 @@
   }
 }
 
-.button--md {
+.rp-button--md {
   /* No styles as this is the default size */
 }
 
-.button--lg {
+.rp-button--lg {
   @apply h-10 text-base;
 
   &:active,
@@ -93,7 +93,7 @@
 }
 
 /* Color variants - only set custom property values */
-.button--primary {
+.rp-button--primary {
   --button-bg: var(--accent);
   --button-bg-hover: var(--accent-hover);
   --button-bg-pressed: var(--accent-hover);
@@ -110,33 +110,33 @@
   }
 }
 
-.button--secondary {
+.rp-button--secondary {
   --button-bg: var(--default);
   --button-bg-hover: var(--default-hover);
   --button-bg-pressed: var(--default-hover);
   --button-fg: var(--accent-soft-foreground);
 }
 
-.button--tertiary {
+.rp-button--tertiary {
   --button-bg: var(--default);
   --button-bg-hover: var(--default-hover);
   --button-bg-pressed: var(--default-hover);
 }
 
-.button--ghost,
-.button--outline {
+.rp-button--ghost,
+.rp-button--outline {
   --button-bg: transparent;
   --button-bg-hover: var(--state-layer);
   --button-bg-pressed: var(--state-layer);
   --button-fg: var(--default-foreground);
 }
 
-.button--outline {
+.rp-button--outline {
   @apply border border-border;
   --button-bg-hover: color-mix(in oklab, var(--state-layer) 60%, transparent);
 }
 
-.button--danger {
+.rp-button--danger {
   --button-bg: var(--danger);
   --button-bg-hover: var(--danger-hover);
   --button-bg-pressed: var(--danger-hover);
@@ -151,7 +151,7 @@
   }
 }
 
-.button--danger-soft {
+.rp-button--danger-soft {
   --button-bg: var(--danger-soft);
   --button-bg-hover: var(--danger-soft-hover);
   --button-bg-pressed: var(--danger-soft-hover);
@@ -159,19 +159,19 @@
 }
 
 /* Icon-only modifier */
-.button--icon-only {
+.rp-button--icon-only {
   @apply w-9 p-0;
 }
 
-.button--icon-only.button--sm {
+.rp-button--icon-only.rp-button--sm {
   @apply w-8;
 }
 
-.button--icon-only.button--lg {
+.rp-button--icon-only.rp-button--lg {
   @apply w-10;
 }
 
 /* Full width modifier */
-.button--full-width {
+.rp-button--full-width {
   @apply w-full;
 }

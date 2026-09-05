@@ -1,4 +1,4 @@
-.input {
+.rp-input {
   @apply rounded-field border px-3 field-line-md text-field-foreground shadow-field outline-none placeholder:text-field-placeholder;
 
   /* The fill, per state. The `--secondary` variant re-points these and declares nothing else. */
@@ -63,11 +63,11 @@
 }
 
 /* Variant property definitions */
-.input--primary {
+.rp-input--primary {
   /* Default styles */
 }
 
-.input--secondary {
+.rp-input--secondary {
   @apply shadow-none;
 
   --input-bg: var(--default);
@@ -76,7 +76,7 @@
 }
 
 /* Full width modifier */
-.input--full-width {
+.rp-input--full-width {
   @apply w-full;
 }
 
@@ -84,10 +84,10 @@
    Size variants
    ========================================================================== */
 
-.input--sm {
+.rp-input--sm {
   @apply field-line-sm;
 }
 
-.input--lg {
+.rp-input--lg {
   @apply field-line-lg;
 }

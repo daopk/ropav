@@ -7,28 +7,28 @@ export const alertVariants = tv({
     status: "default",
   },
   slots: {
-    base: "alert",
-    content: "alert__content",
-    description: "alert__description",
-    indicator: "alert__indicator",
-    title: "alert__title",
+    base: "rp-alert",
+    content: "rp-alert__content",
+    description: "rp-alert__description",
+    indicator: "rp-alert__indicator",
+    title: "rp-alert__title",
   },
   variants: {
     status: {
       accent: {
-        base: "alert--accent",
+        base: "rp-alert--accent",
       },
       danger: {
-        base: "alert--danger",
+        base: "rp-alert--danger",
       },
       default: {
-        base: "alert--default",
+        base: "rp-alert--default",
       },
       success: {
-        base: "alert--success",
+        base: "rp-alert--success",
       },
       warning: {
-        base: "alert--warning",
+        base: "rp-alert--warning",
       },
     },
   },

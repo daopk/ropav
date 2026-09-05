@@ -1,5 +1,5 @@
 /* Base error message styles */
-.error-message {
+.rp-error-message {
   @apply h-auto text-xs wrap-break-word text-danger;
 
   transition:

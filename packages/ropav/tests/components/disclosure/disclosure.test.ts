@@ -33,13 +33,13 @@ describe("Disclosure", () => {
     it("renders the BEM classes on each part", () => {
       const { container, unmount } = renderVapor(DisclosureFixture);
 
-      expect(container.querySelector("[data-slot='disclosure']")).toHaveClass("disclosure");
+      expect(container.querySelector("[data-slot='disclosure']")).toHaveClass("rp-disclosure");
       expect(container.querySelector("[data-slot='disclosure-heading']")).toHaveClass(
-        "disclosure__heading",
+        "rp-disclosure__heading",
       );
-      expect(triggerIn(container)).toHaveClass("disclosure__trigger");
-      expect(contentIn(container)).toHaveClass("disclosure__content");
-      expect(indicatorIn(container)).toHaveClass("disclosure__indicator");
+      expect(triggerIn(container)).toHaveClass("rp-disclosure__trigger");
+      expect(contentIn(container)).toHaveClass("rp-disclosure__content");
+      expect(indicatorIn(container)).toHaveClass("rp-disclosure__indicator");
 
       unmount();
     });
@@ -66,8 +66,8 @@ describe("Disclosure", () => {
       const { container, unmount } = renderVapor(DisclosureFixture);
       const body = container.querySelector("[data-slot='disclosure-body']");
 
-      expect(body).toHaveClass("disclosure__body");
-      expect(body?.firstElementChild).toHaveClass("disclosure__body-inner");
+      expect(body).toHaveClass("rp-disclosure__body");
+      expect(body?.firstElementChild).toHaveClass("rp-disclosure__body-inner");
 
       unmount();
     });
@@ -301,7 +301,7 @@ describe("Disclosure", () => {
       // The icon carries the class rather than sitting inside a wrapper, so the `svg` selector
       // the button stylesheet reaches icons through still matches it.
       expect(indicatorIn(container)?.tagName).toBe("svg");
-      expect(indicatorIn(container)).toHaveClass("disclosure__indicator");
+      expect(indicatorIn(container)).toHaveClass("rp-disclosure__indicator");
 
       unmount();
     });

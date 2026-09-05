@@ -25,7 +25,7 @@ describe("Meter under a vdom host", () => {
 
     await nextTick();
 
-    expect(root).toHaveClass("meter", "meter--success");
+    expect(root).toHaveClass("rp-meter", "rp-meter--success");
     expect(root).toHaveAttribute("aria-valuetext", "60%");
     expect(root).toHaveAttribute("aria-labelledby", label?.id);
     expect(container.querySelector('[data-slot="meter-output"]')).toHaveTextContent("60%");

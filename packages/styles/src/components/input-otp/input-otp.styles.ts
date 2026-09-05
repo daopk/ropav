@@ -7,21 +7,21 @@ export const inputOTPVariants = tv({
     variant: "primary",
   },
   slots: {
-    base: "input-otp",
-    caret: "input-otp__caret",
-    group: "input-otp__group",
-    input: "input-otp__input",
-    separator: "input-otp__separator",
-    slot: "input-otp__slot",
-    slotValue: "input-otp__slot-value",
+    base: "rp-input-otp",
+    caret: "rp-input-otp__caret",
+    group: "rp-input-otp__group",
+    input: "rp-input-otp__input",
+    separator: "rp-input-otp__separator",
+    slot: "rp-input-otp__slot",
+    slotValue: "rp-input-otp__slot-value",
   },
   variants: {
     variant: {
       primary: {
-        base: "input-otp--primary",
+        base: "rp-input-otp--primary",
       },
       secondary: {
-        base: "input-otp--secondary",
+        base: "rp-input-otp--secondary",
       },
     },
   },

@@ -1,7 +1,7 @@
 /* Popover component styles */
 
 /* Base popover styles */
-.popover {
+.rp-popover {
   @apply origin-(--trigger-anchor-point) bg-overlay p-0 text-sm;
   border-radius: min(32px, var(--component-radius));
   box-shadow: var(--shadow-overlay);
@@ -72,17 +72,17 @@
 }
 
 /* Popover dialog */
-.popover__dialog {
+.rp-popover__dialog {
   @apply p-4 outline-none;
 }
 
 /* Popover heading */
-.popover__heading {
+.rp-popover__heading {
   @apply font-medium;
 }
 
 /* Popover trigger */
-.popover__trigger {
+.rp-popover__trigger {
   @apply inline-block;
 
   transition:

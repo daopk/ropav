@@ -90,7 +90,7 @@ describe("Table tree grid drag and drop", () => {
   });
 
   /**
-   * `table.css` has carried `.table__row[data-drop-target="true"] .table__cell` since before
+   * `table.css` has carried `.rp-table__row[data-drop-target="true"] .rp-table__cell` since before
    * there was any drag and drop to light it — this is what finally does.
    */
   it("marks the row a drop would land on", async () => {

@@ -1,42 +1,42 @@
 /* Base spinner styles */
-.spinner {
+.rp-spinner {
   @apply pointer-events-none inline-flex size-6 shrink-0 animate-spin-fast motion-reduce:animate-none;
 }
 
 /* Size variants */
-.spinner--sm {
+.rp-spinner--sm {
   @apply size-4;
 }
 
-.spinner--md {
+.rp-spinner--md {
   /* No styles as this is the default size */
 }
 
-.spinner--lg {
+.rp-spinner--lg {
   @apply size-8;
 }
 
-.spinner--xl {
+.rp-spinner--xl {
   @apply size-10;
 }
 
 /* Color variants */
-.spinner--current {
+.rp-spinner--current {
   color: inherit;
 }
 
-.spinner--accent {
+.rp-spinner--accent {
   color: var(--accent);
 }
 
-.spinner--danger {
+.rp-spinner--danger {
   color: var(--danger);
 }
 
-.spinner--success {
+.rp-spinner--success {
   color: var(--success);
 }
 
-.spinner--warning {
+.rp-spinner--warning {
   color: var(--warning);
 }

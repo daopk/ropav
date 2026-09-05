@@ -408,7 +408,7 @@ export const DeliveryAndPaymentExample: Story = {
                   </RadioControl>
                   <div class="flex flex-col gap-1">
                     <span>{{ option.title }}</span>
-                    <Description>{{ option.description }}</Description>
+                    <Description>{{ option.rp-description }}</Description>
                   </div>
                   <span class="text-sm font-semibold">{{ option.price }}</span>
                 </RadioContent>
@@ -432,7 +432,7 @@ export const DeliveryAndPaymentExample: Story = {
                   <component :is="option.icon" class="size-6 text-accent" />
                   <div class="flex flex-col gap-1">
                     <span>{{ option.title }}</span>
-                    <Description>{{ option.description }}</Description>
+                    <Description>{{ option.rp-description }}</Description>
                   </div>
                 </RadioContent>
               </Radio>

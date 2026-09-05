@@ -65,7 +65,7 @@ describe("FieldError", () => {
     it("renders the BEM class and its data-slot", () => {
       const { error, unmount } = renderFieldError({ isInvalid: true, validationErrors: ["boom"] });
 
-      expect(error()!.classList.contains("field-error")).toBe(true);
+      expect(error()!.classList.contains("rp-field-error")).toBe(true);
       expect(error()!.getAttribute("data-slot")).toBe("field-error");
 
       unmount();
@@ -87,7 +87,7 @@ describe("FieldError", () => {
       });
 
       expect(error()!.classList.contains("mt-2")).toBe(true);
-      expect(error()!.classList.contains("field-error")).toBe(true);
+      expect(error()!.classList.contains("rp-field-error")).toBe(true);
 
       unmount();
     });

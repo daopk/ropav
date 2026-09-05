@@ -4,11 +4,11 @@ import { tv } from "../../tv";
 
 export const calendarYearPickerVariants = tv({
   slots: {
-    trigger: "calendar-year-picker__trigger",
-    triggerHeading: "calendar-year-picker__trigger-heading",
-    triggerIndicator: "calendar-year-picker__trigger-indicator",
-    yearCell: "calendar-year-picker__year-cell",
-    yearGrid: "calendar-year-picker__year-grid",
+    trigger: "rp-calendar-year-picker__trigger",
+    triggerHeading: "rp-calendar-year-picker__trigger-heading",
+    triggerIndicator: "rp-calendar-year-picker__trigger-indicator",
+    yearCell: "rp-calendar-year-picker__year-cell",
+    yearGrid: "rp-calendar-year-picker__year-grid",
   },
 });
 

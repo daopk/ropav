@@ -392,7 +392,7 @@ describe("tooltips", () => {
     );
     await new Promise((resolve) => setTimeout(resolve, 2200));
 
-    return document.body.querySelector<HTMLElement>(".tooltip");
+    return document.body.querySelector<HTMLElement>(".rp-tooltip");
   };
 
   it("says the label on the rail, on the side away from the panel", async () => {
@@ -556,10 +556,10 @@ describe("the scroll region", () => {
 
     // The fade has to be on the element that scrolls; a wrapper around it would fade a box that
     // never moves.
-    expect(content.className).toContain("scroll-shadow");
-    expect(content.className).toContain("sidebar__content");
+    expect(content.className).toContain("rp-scroll-shadow");
+    expect(content.className).toContain("rp-sidebar__content");
     // `scroll-shadow.css` is imported long after `sidebar.css`, so this is the two-class rule
-    // winning `scrollbar-thin` back from `.scroll-shadow--vertical`.
+    // winning `scrollbar-thin` back from `.rp-scroll-shadow--vertical`.
     expect(style.scrollbarWidth).toBe("thin");
   });
 

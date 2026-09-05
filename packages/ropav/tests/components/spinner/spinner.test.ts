@@ -22,8 +22,8 @@ describe("Spinner", () => {
       const spinner = getByRole("status", { name: "Loading" });
 
       expect(spinner.getAttribute("data-slot")).toBe("spinner");
-      expect(spinner.classList.contains("spinner")).toBe(true);
-      // `.button` excludes this sub-part from its icon sizing, so the slot has to be here.
+      expect(spinner.classList.contains("rp-spinner")).toBe(true);
+      // `.rp-button` excludes this sub-part from its icon sizing, so the slot has to be here.
       expect(spinner.querySelector('[data-slot="spinner-icon"]')).not.toBeNull();
 
       unmount();
@@ -51,8 +51,8 @@ describe("Spinner", () => {
       const { getByRole, unmount } = renderSpinner();
       const spinner = getByRole("status");
 
-      expect(spinner.classList.contains("spinner--accent")).toBe(true);
-      expect(spinner.classList.contains("spinner--md")).toBe(true);
+      expect(spinner.classList.contains("rp-spinner--accent")).toBe(true);
+      expect(spinner.classList.contains("rp-spinner--md")).toBe(true);
 
       unmount();
     });
@@ -61,8 +61,8 @@ describe("Spinner", () => {
       const { getByRole, unmount } = renderSpinner({ color: "danger", size: "lg" });
       const spinner = getByRole("status");
 
-      expect(spinner.classList.contains("spinner--danger")).toBe(true);
-      expect(spinner.classList.contains("spinner--lg")).toBe(true);
+      expect(spinner.classList.contains("rp-spinner--danger")).toBe(true);
+      expect(spinner.classList.contains("rp-spinner--lg")).toBe(true);
 
       unmount();
     });
@@ -71,7 +71,7 @@ describe("Spinner", () => {
       const { getByRole, unmount } = renderSpinner({ class: "opacity-50" });
       const spinner = getByRole("status");
 
-      expect(spinner.classList.contains("spinner")).toBe(true);
+      expect(spinner.classList.contains("rp-spinner")).toBe(true);
       expect(spinner.classList.contains("opacity-50")).toBe(true);
 
       unmount();

@@ -3,19 +3,19 @@
    ========================================================================== */
 
 /* Base styles */
-.progress-circle {
+.rp-progress-circle {
   @apply inline-flex items-center justify-center;
 
   /* Default color token (accent) */
   --progress-circle-stroke: var(--accent);
   --progress-circle-track-stroke: var(--default);
 
-  .progress-circle__track {
+  .rp-progress-circle__track {
     /* Default size (matches --md) */
     @apply size-7;
   }
 
-  .progress-circle__track-circle {
+  .rp-progress-circle__track-circle {
     stroke: var(--progress-circle-track-stroke);
 
     /* Forced colors leaves SVG strokes alone, so the ring renders but in the library's own
@@ -27,7 +27,7 @@
     }
   }
 
-  .progress-circle__fill-circle {
+  .rp-progress-circle__fill-circle {
     stroke: var(--progress-circle-stroke);
 
     @media (forced-colors: active) {
@@ -40,8 +40,8 @@
 
   /* Indeterminate state - when no aria-valuenow is set */
   &:not([aria-valuenow]) {
-    .progress-circle__track {
-      animation: progress-circle-spin 1s linear infinite;
+    .rp-progress-circle__track {
+      animation: rp-progress-circle-spin 1s linear infinite;
 
       @apply motion-reduce:animate-none;
     }
@@ -59,7 +59,7 @@
    Indeterminate animation
    ========================================================================== */
 
-@keyframes progress-circle-spin {
+@keyframes rp-progress-circle-spin {
   from {
     transform: rotate(0deg);
   }
@@ -72,18 +72,18 @@
    Size variants
    ========================================================================== */
 
-.progress-circle--sm {
-  .progress-circle__track {
+.rp-progress-circle--sm {
+  .rp-progress-circle__track {
     @apply size-5;
   }
 }
 
-.progress-circle--md {
+.rp-progress-circle--md {
   /* No styles as this is the default size */
 }
 
-.progress-circle--lg {
-  .progress-circle__track {
+.rp-progress-circle--lg {
+  .rp-progress-circle__track {
     @apply size-9;
   }
 }
@@ -92,22 +92,22 @@
    Color variants
    ========================================================================== */
 
-.progress-circle--default {
+.rp-progress-circle--default {
   --progress-circle-stroke: var(--default-foreground);
 }
 
-.progress-circle--accent {
+.rp-progress-circle--accent {
   --progress-circle-stroke: var(--accent);
 }
 
-.progress-circle--success {
+.rp-progress-circle--success {
   --progress-circle-stroke: var(--success);
 }
 
-.progress-circle--warning {
+.rp-progress-circle--warning {
   --progress-circle-stroke: var(--warning);
 }
 
-.progress-circle--danger {
+.rp-progress-circle--danger {
   --progress-circle-stroke: var(--danger);
 }

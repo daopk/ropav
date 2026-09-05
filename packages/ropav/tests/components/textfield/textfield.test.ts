@@ -64,8 +64,11 @@ describe("TextField", () => {
     it("renders the BEM classes of each part", () => {
       const { container, root, unmount } = renderField();
 
-      expect(root).toHaveClass("textfield");
-      expect(container.querySelector('[data-slot="input"]')).toHaveClass("input", "input--primary");
+      expect(root).toHaveClass("rp-textfield");
+      expect(container.querySelector('[data-slot="input"]')).toHaveClass(
+        "rp-input",
+        "rp-input--primary",
+      );
 
       unmount();
     });
@@ -74,8 +77,8 @@ describe("TextField", () => {
       const { container, unmount } = renderField({ withTextArea: true });
 
       expect(container.querySelector('[data-slot="textarea"]')).toHaveClass(
-        "textarea",
-        "textarea--primary",
+        "rp-textarea",
+        "rp-textarea--primary",
       );
       expect(container.querySelector('[data-slot="input"]')).toBeNull();
 
@@ -85,7 +88,7 @@ describe("TextField", () => {
     it("merges a caller class into the root", () => {
       const { root, unmount } = renderField({ class: "mt-2" });
 
-      expect(root).toHaveClass("textfield", "mt-2");
+      expect(root).toHaveClass("rp-textfield", "mt-2");
 
       unmount();
     });
@@ -95,7 +98,7 @@ describe("TextField", () => {
       // carries a runtime `Boolean` type — the form every story uses.
       const { container, unmount } = renderField({ attributeForm: true });
 
-      expect(container.querySelector('[data-slot="input"]')).toHaveClass("input--full-width");
+      expect(container.querySelector('[data-slot="input"]')).toHaveClass("rp-input--full-width");
 
       unmount();
     });
@@ -103,7 +106,9 @@ describe("TextField", () => {
     it("stretches a textarea when full-width is written as a bare attribute", () => {
       const { container, unmount } = renderField({ attributeForm: true, withTextArea: true });
 
-      expect(container.querySelector('[data-slot="textarea"]')).toHaveClass("textarea--full-width");
+      expect(container.querySelector('[data-slot="textarea"]')).toHaveClass(
+        "rp-textarea--full-width",
+      );
 
       unmount();
     });
@@ -111,10 +116,12 @@ describe("TextField", () => {
     it("stretches the field and its control when full width", () => {
       const { container, root, unmount } = renderField({ fullWidth: true });
 
-      expect(root).toHaveClass("textfield--full-width");
+      expect(root).toHaveClass("rp-textfield--full-width");
       // The field's own modifier is what widens the control, through a descendant selector,
       // so the control does not carry a modifier of its own here.
-      expect(container.querySelector('[data-slot="input"]')).not.toHaveClass("input--full-width");
+      expect(container.querySelector('[data-slot="input"]')).not.toHaveClass(
+        "rp-input--full-width",
+      );
 
       unmount();
     });
@@ -124,7 +131,7 @@ describe("TextField", () => {
     it("hands the field's variant down to the control", () => {
       const { container, unmount } = renderField({ variant: "secondary" });
 
-      expect(container.querySelector('[data-slot="input"]')).toHaveClass("input--secondary");
+      expect(container.querySelector('[data-slot="input"]')).toHaveClass("rp-input--secondary");
 
       unmount();
     });
@@ -132,7 +139,9 @@ describe("TextField", () => {
     it("hands the field's variant down to a textarea too", () => {
       const { container, unmount } = renderField({ variant: "secondary", withTextArea: true });
 
-      expect(container.querySelector('[data-slot="textarea"]')).toHaveClass("textarea--secondary");
+      expect(container.querySelector('[data-slot="textarea"]')).toHaveClass(
+        "rp-textarea--secondary",
+      );
 
       unmount();
     });
@@ -143,7 +152,7 @@ describe("TextField", () => {
         variant: "primary",
       });
 
-      expect(container.querySelector('[data-slot="input"]')).toHaveClass("input--secondary");
+      expect(container.querySelector('[data-slot="input"]')).toHaveClass("rp-input--secondary");
 
       unmount();
     });
@@ -192,7 +201,7 @@ describe("TextField", () => {
     });
 
     it("keeps the label a direct child of the root", () => {
-      // The asterisk comes from `[data-required="true"] > .label`, so a label any deeper
+      // The asterisk comes from `[data-required="true"] > .rp-label`, so a label any deeper
       // would silently stop being marked.
       const { root, unmount } = renderField({ isRequired: true });
 

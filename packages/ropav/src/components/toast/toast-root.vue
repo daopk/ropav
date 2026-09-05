@@ -103,7 +103,7 @@ const style = computed<CSSProperties>(() => {
     translate: `0 ${direction * offset}px 0`,
     // Names this toast for the view transition that animates it in and out. The key is not a valid
     // custom-ident on its own.
-    viewTransitionName: `toast-${props.toast.key.replace(/[^a-zA-Z0-9]/g, "-")}`,
+    viewTransitionName: `rp-toast-${props.toast.key.replace(/[^a-zA-Z0-9]/g, "-")}`,
     zIndex: visible.length - index.value,
     ...(frontHeight ? { "--front-height": `${frontHeight}px` } : null),
   };

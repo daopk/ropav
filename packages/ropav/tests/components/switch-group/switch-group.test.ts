@@ -17,8 +17,8 @@ describe("SwitchGroup", () => {
       const group = slot(container, "switch-group");
       const items = slot(container, "switch-group-items");
 
-      expect(group.classList.contains("switch-group")).toBe(true);
-      expect(items.classList.contains("switch-group__items")).toBe(true);
+      expect(group.classList.contains("rp-switch-group")).toBe(true);
+      expect(items.classList.contains("rp-switch-group__items")).toBe(true);
       // The wrapper is what lays the switches out, so it has to be the one holding them.
       expect(group.contains(items)).toBe(true);
       expect(items.querySelectorAll("[data-slot='switch']").length).toBe(3);
@@ -40,7 +40,7 @@ describe("SwitchGroup", () => {
     it("lays the switches out vertically by default", () => {
       const { container, unmount } = renderGroup();
 
-      expect(slot(container, "switch-group").classList.contains("switch-group--vertical")).toBe(
+      expect(slot(container, "switch-group").classList.contains("rp-switch-group--vertical")).toBe(
         true,
       );
 
@@ -51,8 +51,8 @@ describe("SwitchGroup", () => {
       const { container, unmount } = renderGroup({ orientation: "horizontal" });
       const group = slot(container, "switch-group");
 
-      expect(group.classList.contains("switch-group--horizontal")).toBe(true);
-      expect(group.classList.contains("switch-group--vertical")).toBe(false);
+      expect(group.classList.contains("rp-switch-group--horizontal")).toBe(true);
+      expect(group.classList.contains("rp-switch-group--vertical")).toBe(false);
 
       unmount();
     });

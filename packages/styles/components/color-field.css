@@ -3,7 +3,7 @@
    ========================================================================== */
 
 /* Base styles */
-.color-field {
+.rp-color-field {
   @apply flex flex-col gap-1;
 
   &[data-invalid="true"],
@@ -19,6 +19,6 @@
 }
 
 /* Full width modifier */
-.color-field--full-width {
+.rp-color-field--full-width {
   @apply w-full;
 }

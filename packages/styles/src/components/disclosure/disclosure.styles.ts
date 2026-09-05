@@ -5,13 +5,13 @@ import { tv } from "../../tv";
 export const disclosureVariants = tv({
   defaultVariants: {},
   slots: {
-    base: "disclosure",
-    body: "disclosure__body",
-    bodyInner: "disclosure__body-inner",
-    content: "disclosure__content",
-    heading: "disclosure__heading",
-    indicator: "disclosure__indicator",
-    trigger: "disclosure__trigger",
+    base: "rp-disclosure",
+    body: "rp-disclosure__body",
+    bodyInner: "rp-disclosure__body-inner",
+    content: "rp-disclosure__content",
+    heading: "rp-disclosure__heading",
+    indicator: "rp-disclosure__indicator",
+    trigger: "rp-disclosure__trigger",
   },
   variants: {},
 });

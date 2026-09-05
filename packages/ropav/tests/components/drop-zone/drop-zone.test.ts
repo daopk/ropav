@@ -79,9 +79,9 @@ describe("DropZone", () => {
     it("renders the BEM classes of each part", () => {
       const { container } = mount();
 
-      expect(zoneIn(container)).toHaveClass("drop-zone");
+      expect(zoneIn(container)).toHaveClass("rp-drop-zone");
       expect(container.querySelector('[data-slot="drop-zone-trigger"]')).toHaveClass(
-        "drop-zone__trigger",
+        "rp-drop-zone__trigger",
       );
     });
 

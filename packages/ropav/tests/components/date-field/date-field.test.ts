@@ -81,9 +81,9 @@ describe("DateField", () => {
 
   describe("variants", () => {
     it("applies the group's visual variant", () => {
-      expect(renderDateField().group()).toHaveClass("date-input-group--primary");
+      expect(renderDateField().group()).toHaveClass("rp-date-input-group--primary");
       expect(renderDateField({ variant: "secondary" }).group()).toHaveClass(
-        "date-input-group--secondary",
+        "rp-date-input-group--secondary",
       );
     });
 
@@ -94,8 +94,8 @@ describe("DateField", () => {
        */
       const { group, root, unmount } = renderDateField({ attributeForm: true });
 
-      expect(root).toHaveClass("date-field--full-width");
-      expect(group()).toHaveClass("date-input-group--full-width");
+      expect(root).toHaveClass("rp-date-field--full-width");
+      expect(group()).toHaveClass("rp-date-input-group--full-width");
       unmount();
     });
 
@@ -103,7 +103,7 @@ describe("DateField", () => {
       const { root, unmount } = renderDateField({ class: "w-64" });
 
       expect(root).toHaveClass("w-64");
-      expect(root).toHaveClass("date-field");
+      expect(root).toHaveClass("rp-date-field");
       unmount();
     });
   });
@@ -148,7 +148,7 @@ describe("DateField", () => {
     });
 
     it("marks itself required, which is what draws the asterisk", () => {
-      // The stylesheet reaches the asterisk through `[data-required="true"] > .label`, so the
+      // The stylesheet reaches the asterisk through `[data-required="true"] > .rp-label`, so the
       // attribute has to sit on the field rather than on a control inside it.
       const { root, unmount } = renderDateField({ isRequired: true });
 

@@ -3,7 +3,7 @@
    ========================================================================== */
 
 /* Base styles */
-.toggle-button-group {
+.rp-toggle-button-group {
   @apply inline-flex h-auto w-fit items-center justify-center gap-0;
 }
 
@@ -11,11 +11,11 @@
    Orientation variants
    ========================================================================== */
 
-.toggle-button-group--horizontal {
+.rp-toggle-button-group--horizontal {
   @apply flex-row;
 }
 
-.toggle-button-group--vertical {
+.rp-toggle-button-group--vertical {
   @apply flex-col;
 }
 
@@ -23,7 +23,7 @@
    Full width modifier
    ========================================================================== */
 
-.toggle-button-group--full-width {
+.rp-toggle-button-group--full-width {
   @apply w-full;
 }
 
@@ -32,55 +32,55 @@
    ========================================================================== */
 
 /* Remove border radius from all toggle buttons in attached group */
-.toggle-button-group .toggle-button {
+.rp-toggle-button-group .rp-toggle-button {
   @apply rounded-none;
 }
 
 /* Apply border radius to first button (start edge) */
-.toggle-button-group--horizontal .toggle-button:first-child {
+.rp-toggle-button-group--horizontal .rp-toggle-button:first-child {
   @apply rounded-s-component;
 }
 
 /* Apply border radius to last button (end edge) */
-.toggle-button-group--horizontal .toggle-button:last-child {
+.rp-toggle-button-group--horizontal .rp-toggle-button:last-child {
   @apply rounded-e-component;
 }
 
 /* If only one button, apply both rounded edges */
-.toggle-button-group--horizontal .toggle-button:first-child:last-child {
+.rp-toggle-button-group--horizontal .rp-toggle-button:first-child:last-child {
   @apply rounded-component;
 }
 
 /* Apply border radius to first button (top edge) in vertical */
-.toggle-button-group--vertical .toggle-button:first-child {
+.rp-toggle-button-group--vertical .rp-toggle-button:first-child {
   @apply rounded-t-component;
 }
 
 /* Apply border radius to last button (bottom edge) in vertical */
-.toggle-button-group--vertical .toggle-button:last-child {
+.rp-toggle-button-group--vertical .rp-toggle-button:last-child {
   @apply rounded-b-component;
 }
 
 /* If only one button in vertical, apply all rounded edges */
-.toggle-button-group--vertical .toggle-button:first-child:last-child {
+.rp-toggle-button-group--vertical .rp-toggle-button:first-child:last-child {
   @apply rounded-component;
 }
 
 /* Remove scale transform on active/pressed state for buttons in group */
-.toggle-button-group .toggle-button:active,
-.toggle-button-group .toggle-button[data-pressed="true"] {
+.rp-toggle-button-group .rp-toggle-button:active,
+.rp-toggle-button-group .rp-toggle-button[data-pressed="true"] {
   transform: none;
 }
 
 /* Override focus ring to use inset style so it stays within button bounds */
-.toggle-button-group .toggle-button:focus-visible:not(:focus),
-.toggle-button-group .toggle-button[data-focus-visible="true"] {
+.rp-toggle-button-group .rp-toggle-button:focus-visible:not(:focus),
+.rp-toggle-button-group .rp-toggle-button[data-focus-visible="true"] {
   --tw-ring-offset-width: 0px;
   @apply ring-inset;
 }
 
 /* Full width: stretch each toggle button */
-.toggle-button-group--full-width .toggle-button {
+.rp-toggle-button-group--full-width .rp-toggle-button {
   @apply flex-1;
 }
 
@@ -88,7 +88,7 @@
    Separator (compound component)
    ========================================================================== */
 
-.toggle-button-group__separator {
+.rp-toggle-button-group__separator {
   @apply rounded-sm bg-current opacity-15;
   position: absolute;
   pointer-events: none;
@@ -97,7 +97,7 @@
   @apply motion-reduce:transition-none;
 
   /* Horizontal orientation - vertical divider */
-  .toggle-button-group--horizontal & {
+  .rp-toggle-button-group--horizontal & {
     inset-inline-start: -1px;
     top: 25%;
     width: 1px;
@@ -105,7 +105,7 @@
   }
 
   /* Vertical orientation - horizontal divider */
-  .toggle-button-group--vertical & {
+  .rp-toggle-button-group--vertical & {
     inset-inline-start: 25%;
     top: -1px;
     width: 50%;
@@ -117,16 +117,16 @@
    Detached mode - buttons separated with gaps
    ========================================================================== */
 
-.toggle-button-group--detached {
+.rp-toggle-button-group--detached {
   @apply gap-1;
 }
 
 /* Restore border radius in detached mode */
-.toggle-button-group--detached .toggle-button {
+.rp-toggle-button-group--detached .rp-toggle-button {
   @apply rounded-component;
 }
 
 /* Hide separators in detached mode */
-.toggle-button-group--detached .toggle-button-group__separator {
+.rp-toggle-button-group--detached .rp-toggle-button-group__separator {
   display: none;
 }

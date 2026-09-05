@@ -163,8 +163,8 @@ const dayView = computed<CalendarDayViewContext | undefined>(() => {
 const styles = computed(() =>
   slots.value.base({
     class: [
-      props.visibleDuration?.weeks != null && "range-calendar--week-view",
-      props.visibleDuration?.days != null && "range-calendar--day-view",
+      props.visibleDuration?.weeks != null && "rp-range-calendar--week-view",
+      props.visibleDuration?.days != null && "rp-range-calendar--day-view",
       props.class,
     ]
       .filter(Boolean)

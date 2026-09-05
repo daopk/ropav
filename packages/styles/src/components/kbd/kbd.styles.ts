@@ -5,14 +5,14 @@ import { tv } from "../../tv";
 export const kbdVariants = tv({
   defaultVariants: {},
   slots: {
-    abbr: "kbd__abbr",
-    base: "kbd",
-    content: "kbd__content",
+    abbr: "rp-kbd__abbr",
+    base: "rp-kbd",
+    content: "rp-kbd__content",
   },
   variants: {
     variant: {
-      default: "kbd--default",
-      light: "kbd--light",
+      default: "rp-kbd--default",
+      light: "rp-kbd--light",
     },
   },
 });

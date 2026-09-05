@@ -36,14 +36,14 @@ describe("TagGroup", () => {
 
       expect(group).not.toHaveAttribute("role");
       expect(group).not.toHaveAttribute("aria-label");
-      expect(group).toHaveClass("tag-group");
+      expect(group).toHaveClass("rp-tag-group");
     });
 
     it("makes the list a grid", async () => {
       const { list } = await render();
 
       expect(list).toHaveAttribute("role", "grid");
-      expect(list).toHaveClass("tag-group__list");
+      expect(list).toHaveClass("rp-tag-group__list");
       expect(list).toHaveAttribute("aria-atomic", "false");
       expect(list).toHaveAttribute("aria-relevant", "additions");
     });
@@ -115,7 +115,7 @@ describe("TagGroup", () => {
     it("takes both from the group rather than from each tag", async () => {
       const { tags } = await render({ size: "lg", variant: "surface" });
 
-      expect(tags()[0]).toHaveClass("tag", "tag--lg", "tag--surface");
+      expect(tags()[0]).toHaveClass("rp-tag", "rp-tag--lg", "rp-tag--surface");
     });
   });
 

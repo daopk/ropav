@@ -17,7 +17,7 @@ export interface RangeCalendarContext {
  * Carries the styling and the day-view shape down to the parts.
  *
  * Kept apart from the single calendar's context even though the two hold the same shape, because
- * the classes differ: a range cell is styled by `range-calendar__cell`, and a part that read the
+ * the classes differ: a range cell is styled by `rp-range-calendar__cell`, and a part that read the
  * wrong context would render with the wrong stylesheet block rather than fail.
  *
  * Strict: a header cell or a grid body outside a range calendar has nothing to describe.

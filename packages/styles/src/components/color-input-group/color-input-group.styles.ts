@@ -9,33 +9,33 @@ export const colorInputGroupVariants = tv({
     variant: "primary",
   },
   slots: {
-    base: "color-input-group",
-    input: "color-input-group__input",
-    prefix: "color-input-group__prefix",
-    suffix: "color-input-group__suffix",
+    base: "rp-color-input-group",
+    input: "rp-color-input-group__input",
+    prefix: "rp-color-input-group__prefix",
+    suffix: "rp-color-input-group__suffix",
   },
   variants: {
     fullWidth: {
       false: {},
       true: {
-        base: "color-input-group--full-width",
+        base: "rp-color-input-group--full-width",
       },
     },
     size: {
       lg: {
-        base: "color-input-group--lg",
+        base: "rp-color-input-group--lg",
       },
       md: {},
       sm: {
-        base: "color-input-group--sm",
+        base: "rp-color-input-group--sm",
       },
     },
     variant: {
       primary: {
-        base: "color-input-group--primary",
+        base: "rp-color-input-group--primary",
       },
       secondary: {
-        base: "color-input-group--secondary",
+        base: "rp-color-input-group--secondary",
       },
     },
   },

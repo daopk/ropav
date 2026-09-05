@@ -1,15 +1,15 @@
 /* Base styles */
-.tag-group {
+.rp-tag-group {
   @apply relative flex flex-col gap-1;
 }
 
-.tag-group__list {
+.rp-tag-group__list {
   @apply relative flex flex-wrap gap-1.5;
 }
 
-.tag-group [slot="description"],
-.tag-group [data-slot="description"],
-.tag-group [slot="errorMessage"],
-.tag-group [data-slot="error-message"] {
+.rp-tag-group [slot="description"],
+.rp-tag-group [data-slot="description"],
+.rp-tag-group [slot="errorMessage"],
+.rp-tag-group [data-slot="error-message"] {
   @apply p-1;
 }

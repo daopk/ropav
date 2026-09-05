@@ -37,7 +37,7 @@ describe("ListBox (browser)", () => {
     const withoutIndicator = await render({ defaultSelectedKeys: ["1"], selectionMode: "single" });
     const [selected, unselected] = withIndicator.items();
 
-    // `.list-box-item[aria-selected="true"]:has(.list-box-item__indicator)` is the rule under test;
+    // `.rp-list-box-item[aria-selected="true"]:has(.rp-list-box-item__indicator)` is the rule under test;
     // it cannot resolve without the real stylesheet. The indicator is absolute and holds its
     // checkmark hidden until the option is selected, so an unselected one keeps the full width for
     // its label.
@@ -89,7 +89,7 @@ describe("ListBox (browser)", () => {
     const styles = getComputedStyle(check);
 
     // The stylesheet also carries a `stroke-dashoffset`-specific rule, but it is nested inside
-    // `.list-box-item__indicator` and so asks for a `.list-box-item` *within* the indicator — a
+    // `.rp-list-box-item__indicator` and so asks for a `.rp-list-box-item` *within* the indicator — a
     // selector nothing can satisfy. What actually applies is the blanket transition, in the React
     // build as much as this one, so that is what is pinned here.
     expect(styles.transitionProperty).toBe("all");

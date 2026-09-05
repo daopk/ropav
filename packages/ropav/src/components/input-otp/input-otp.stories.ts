@@ -285,7 +285,7 @@ export const WithValidation: Story = {
               <InputOTPSlot :index="5" />
             </InputOTPGroup>
           </InputOTP>
-          <span class="field-error" :data-visible="isInvalid" id="code-error">
+          <span class="rp-field-error" :data-visible="isInvalid" id="code-error">
             Invalid code. Please try again.
           </span>
           <Button :is-disabled="value.length !== 6" type="submit">Submit</Button>
@@ -431,7 +431,7 @@ export const FormExample: Story = {
               <InputOTPSlot :index="5" />
             </InputOTPGroup>
           </InputOTP>
-          <span class="field-error" :data-visible="isInvalid" id="code-error">{{ error }}</span>
+          <span class="rp-field-error" :data-visible="isInvalid" id="code-error">{{ error }}</span>
         </div>
         <Button
           class="w-full"

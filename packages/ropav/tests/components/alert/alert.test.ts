@@ -116,11 +116,11 @@ describe("Alert", () => {
     it("applies the default status and every BEM element class", () => {
       const { container, unmount } = renderVapor(Fixture);
 
-      expect(slot(container, "alert-root")).toHaveClass("alert", "alert--default");
-      expect(slot(container, "alert-indicator")).toHaveClass("alert__indicator");
-      expect(slot(container, "alert-content")).toHaveClass("alert__content");
-      expect(slot(container, "alert-title")).toHaveClass("alert__title");
-      expect(slot(container, "alert-description")).toHaveClass("alert__description");
+      expect(slot(container, "alert-root")).toHaveClass("rp-alert", "rp-alert--default");
+      expect(slot(container, "alert-indicator")).toHaveClass("rp-alert__indicator");
+      expect(slot(container, "alert-content")).toHaveClass("rp-alert__content");
+      expect(slot(container, "alert-title")).toHaveClass("rp-alert__title");
+      expect(slot(container, "alert-description")).toHaveClass("rp-alert__description");
 
       unmount();
     });
@@ -130,7 +130,7 @@ describe("Alert", () => {
       (status) => {
         const { container, unmount } = renderVapor(Fixture, { props: { status } });
 
-        expect(slot(container, "alert-root")).toHaveClass(`alert--${status}`);
+        expect(slot(container, "alert-root")).toHaveClass(`rp-alert--${status}`);
 
         unmount();
       },
@@ -147,11 +147,11 @@ describe("Alert", () => {
         },
       });
 
-      expect(slot(container, "alert-root")).toHaveClass("alert", "p-2");
-      expect(slot(container, "alert-indicator")).toHaveClass("alert__indicator", "shrink-0");
-      expect(slot(container, "alert-content")).toHaveClass("alert__content", "gap-1");
-      expect(slot(container, "alert-title")).toHaveClass("alert__title", "font-bold");
-      expect(slot(container, "alert-description")).toHaveClass("alert__description", "text-sm");
+      expect(slot(container, "alert-root")).toHaveClass("rp-alert", "p-2");
+      expect(slot(container, "alert-indicator")).toHaveClass("rp-alert__indicator", "shrink-0");
+      expect(slot(container, "alert-content")).toHaveClass("rp-alert__content", "gap-1");
+      expect(slot(container, "alert-title")).toHaveClass("rp-alert__title", "font-bold");
+      expect(slot(container, "alert-description")).toHaveClass("rp-alert__description", "text-sm");
 
       unmount();
     });
@@ -160,7 +160,7 @@ describe("Alert", () => {
       const props = reactive({ status: "accent" as const });
       const { container, unmount } = renderVapor(Fixture, { props });
 
-      expect(slot(container, "alert-root")).toHaveClass("alert--accent");
+      expect(slot(container, "alert-root")).toHaveClass("rp-alert--accent");
       expect(slot(container, "alert-default-icon")?.querySelector("path")?.getAttribute("d")).toBe(
         glyphPath(InfoIcon),
       );
@@ -168,8 +168,8 @@ describe("Alert", () => {
       Object.assign(props, { status: "success" });
       await nextTick();
 
-      expect(slot(container, "alert-root")).toHaveClass("alert--success");
-      expect(slot(container, "alert-root")).not.toHaveClass("alert--accent");
+      expect(slot(container, "alert-root")).toHaveClass("rp-alert--success");
+      expect(slot(container, "alert-root")).not.toHaveClass("rp-alert--accent");
       expect(slot(container, "alert-default-icon")?.querySelector("path")?.getAttribute("d")).toBe(
         glyphPath(SuccessIcon),
       );

@@ -1,7 +1,7 @@
 /* Separator Component Styles */
 
 /* Base separator with default horizontal orientation */
-.separator {
+.rp-separator {
   @apply shrink-0 rounded-sm border-t-0 border-b-0 bg-separator;
 
   /* Default size - horizontal orientation */
@@ -9,11 +9,11 @@
 }
 
 /* Orientation variants */
-.separator--horizontal {
+.rp-separator--horizontal {
   @apply h-px w-full;
 }
 
-.separator--vertical {
+.rp-separator--vertical {
   @apply h-auto min-h-2 w-px self-stretch;
 }
 
@@ -23,7 +23,7 @@
  * removes the rule entirely rather than weakening it. Each variant restates the fallback because
  * each one sets `background-color` after the base rule and would otherwise win. All three land on
  * the same ink - the mode has no second tier to give them. */
-.separator--default {
+.rp-separator--default {
   @apply bg-separator;
 
   @media (forced-colors: active) {
@@ -31,7 +31,7 @@
   }
 }
 
-.separator--secondary {
+.rp-separator--secondary {
   @apply bg-separator-secondary;
 
   @media (forced-colors: active) {
@@ -39,7 +39,7 @@
   }
 }
 
-.separator--tertiary {
+.rp-separator--tertiary {
   @apply bg-separator-tertiary;
 
   @media (forced-colors: active) {
@@ -47,30 +47,30 @@
   }
 }
 
-.separator__container {
+.rp-separator__container {
   @apply flex items-center gap-3;
 }
 
-.separator__container--horizontal {
+.rp-separator__container--horizontal {
   @apply w-full flex-row;
 }
 
-.separator__container--vertical {
+.rp-separator__container--vertical {
   @apply h-full flex-col justify-center;
 }
 
-.separator__line {
+.rp-separator__line {
   @apply shrink-0 grow;
 }
 
-.separator__content {
+.rp-separator__content {
   @apply inline-flex items-center justify-center text-center whitespace-nowrap text-muted;
 }
 
-.separator__content--horizontal {
+.rp-separator__content--horizontal {
   @apply text-center;
 }
 
-.separator__content--vertical {
+.rp-separator__content--vertical {
   @apply text-center;
 }

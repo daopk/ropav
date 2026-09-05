@@ -1,6 +1,6 @@
 /* Text field styles */
 /* use textfield instead of text-field to avoid conflict with Tailwind `text-` prefix */
-.textfield {
+.rp-textfield {
   @apply flex flex-col gap-1;
 
   &[data-invalid="true"],
@@ -12,7 +12,7 @@
 }
 
 /* Full width modifier */
-.textfield--full-width {
+.rp-textfield--full-width {
   @apply w-full;
 
   /* Automatically make Input full width when TextField is full width */

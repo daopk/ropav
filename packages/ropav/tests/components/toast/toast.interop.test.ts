@@ -76,12 +76,12 @@ describe("Toast interop", () => {
     const toast = slot("toast")!;
 
     // Resolved from the provider: the tv slots, and the placement the region was given.
-    expect(toast.className).toContain("toast");
-    expect(toast.className).toContain("toast--top-end");
-    expect(slot("toast-indicator")!.className).toContain("toast__indicator");
-    expect(slot("toast-content")!.className).toContain("toast__content");
-    expect(slot("toast-title")!.className).toContain("toast__title");
-    expect(slot("toast-description")!.className).toContain("toast__description");
+    expect(toast.className).toContain("rp-toast");
+    expect(toast.className).toContain("rp-toast--top-end");
+    expect(slot("toast-indicator")!.className).toContain("rp-toast__indicator");
+    expect(slot("toast-content")!.className).toContain("rp-toast__content");
+    expect(slot("toast-title")!.className).toContain("rp-toast__title");
+    expect(slot("toast-description")!.className).toContain("rp-toast__description");
   });
 
   it("reaches the parts inside a host-written toast with that toast's own context", async () => {

@@ -3,7 +3,7 @@
    ========================================================================== */
 
 /* Base button group styles */
-.button-group {
+.rp-button-group {
   @apply inline-flex h-auto items-center justify-center gap-0;
 }
 
@@ -11,58 +11,58 @@
    Orientation variants
    ========================================================================== */
 
-.button-group--horizontal {
+.rp-button-group--horizontal {
   @apply flex-row;
 }
 
-.button-group--vertical {
+.rp-button-group--vertical {
   @apply flex-col;
 }
 
 /* Remove border radius from all buttons in group */
-.button-group .button {
+.rp-button-group .rp-button {
   @apply rounded-none;
 }
 
 /* Apply border radius to first button (start edge) */
-.button-group--horizontal .button:first-child {
+.rp-button-group--horizontal .rp-button:first-child {
   @apply rounded-s-component;
 }
 
 /* Apply border radius to last button (end edge) */
-.button-group--horizontal .button:last-child {
+.rp-button-group--horizontal .rp-button:last-child {
   @apply rounded-e-component;
 }
 
 /* If only one button, apply both rounded edges */
-.button-group--horizontal .button:first-child:last-child {
+.rp-button-group--horizontal .rp-button:first-child:last-child {
   @apply rounded-component;
 }
 
 /* Apply border radius to first button (top edge) in vertical */
-.button-group--vertical .button:first-child {
+.rp-button-group--vertical .rp-button:first-child {
   @apply rounded-t-component;
 }
 
 /* Apply border radius to last button (bottom edge) in vertical */
-.button-group--vertical .button:last-child {
+.rp-button-group--vertical .rp-button:last-child {
   @apply rounded-b-component;
 }
 
 /* If only one button in vertical, apply all rounded edges */
-.button-group--vertical .button:first-child:last-child {
+.rp-button-group--vertical .rp-button:first-child:last-child {
   @apply rounded-component;
 }
 
 /* Remove scale transform on active/pressed state for buttons in group */
-.button-group .button:active,
-.button-group .button[data-pressed="true"] {
+.rp-button-group .rp-button:active,
+.rp-button-group .rp-button[data-pressed="true"] {
   transform: none;
 }
 
 /* Raise focused button so its outward focus ring + gap shows above adjacent buttons */
-.button-group .button:focus-visible:not(:focus),
-.button-group .button[data-focus-visible="true"] {
+.rp-button-group .rp-button:focus-visible:not(:focus),
+.rp-button-group .rp-button[data-focus-visible="true"] {
   @apply z-10;
 }
 
@@ -70,7 +70,7 @@
    Separator (compound component)
    ========================================================================== */
 
-.button-group__separator {
+.rp-button-group__separator {
   @apply rounded-sm bg-current opacity-15;
   position: absolute;
   pointer-events: none;
@@ -79,7 +79,7 @@
   @apply motion-reduce:transition-none;
 
   /* Horizontal orientation - vertical divider */
-  .button-group--horizontal & {
+  .rp-button-group--horizontal & {
     inset-inline-start: -1px;
     top: 25%;
     width: 1px;
@@ -87,7 +87,7 @@
   }
 
   /* Vertical orientation - horizontal divider */
-  .button-group--vertical & {
+  .rp-button-group--vertical & {
     inset-inline-start: 25%;
     top: -1px;
     width: 50%;
@@ -101,33 +101,33 @@
 
 /* Remove adjacent borders from outline buttons in horizontal group */
 /* First button: remove end border (right in LTR, left in RTL) */
-.button-group--horizontal .button--outline:first-child {
+.rp-button-group--horizontal .rp-button--outline:first-child {
   @apply border-e-0;
 }
 
 /* Last button: remove start border (left in LTR, right in RTL) */
-.button-group--horizontal .button--outline:last-child {
+.rp-button-group--horizontal .rp-button--outline:last-child {
   @apply border-s-0;
 }
 
 /* Middle buttons: remove both inline borders */
-.button-group--horizontal .button--outline:not(:first-child):not(:last-child) {
+.rp-button-group--horizontal .rp-button--outline:not(:first-child):not(:last-child) {
   @apply border-x-0;
 }
 
 /* Remove adjacent borders from outline buttons in vertical group */
 /* First button: remove bottom border */
-.button-group--vertical .button--outline:first-child {
+.rp-button-group--vertical .rp-button--outline:first-child {
   @apply border-b-0;
 }
 
 /* Last button: remove top border */
-.button-group--vertical .button--outline:last-child {
+.rp-button-group--vertical .rp-button--outline:last-child {
   @apply border-t-0;
 }
 
 /* Middle buttons: remove both block borders */
-.button-group--vertical .button--outline:not(:first-child):not(:last-child) {
+.rp-button-group--vertical .rp-button--outline:not(:first-child):not(:last-child) {
   @apply border-y-0;
 }
 
@@ -135,6 +135,6 @@
    Full width modifier
    ========================================================================== */
 
-.button-group--full-width {
+.rp-button-group--full-width {
   @apply w-full;
 }

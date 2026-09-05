@@ -65,7 +65,7 @@ describe("SearchField (browser)", () => {
   });
 
   it("strips the trailing radius and padding off the control beside the clear button", async () => {
-    // Reached through `.search-field__group:has([slot="clear"])`, so it only fires while the
+    // Reached through `.rp-search-field__group:has([slot="clear"])`, so it only fires while the
     // literal `slot` attribute is on the button.
     const bare = renderSearchField({ withClearButton: false });
     const barePadding = getComputedStyle(
@@ -84,7 +84,7 @@ describe("SearchField (browser)", () => {
   });
 
   it("hides the clear button while there is nothing to clear", async () => {
-    // `.search-field[data-empty="true"]` is what does it, and it takes the button out of
+    // `.rp-search-field[data-empty="true"]` is what does it, and it takes the button out of
     // hit-testing as well as out of sight.
     const { container, unmount } = renderSearchField();
     const clearButton = slot(container, "search-field-clear-button");

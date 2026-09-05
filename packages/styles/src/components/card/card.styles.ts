@@ -7,26 +7,26 @@ const cardVariants = tv({
     variant: "default",
   },
   slots: {
-    base: "card",
-    content: "card__content",
-    description: "card__description",
-    footer: "card__footer",
-    header: "card__header",
-    title: "card__title",
+    base: "rp-card",
+    content: "rp-card__content",
+    description: "rp-card__description",
+    footer: "rp-card__footer",
+    header: "rp-card__header",
+    title: "rp-card__title",
   },
   variants: {
     variant: {
       default: {
-        base: "card--default",
+        base: "rp-card--default",
       },
       secondary: {
-        base: "card--secondary",
+        base: "rp-card--secondary",
       },
       tertiary: {
-        base: "card--tertiary",
+        base: "rp-card--tertiary",
       },
       transparent: {
-        base: "card--transparent",
+        base: "rp-card--transparent",
       },
     },
   },

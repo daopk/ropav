@@ -35,7 +35,7 @@ describe("Input", () => {
 
       expect(control.tagName).toBe("INPUT");
       expect(control).toHaveAttribute("data-slot", "input");
-      expect(control).toHaveClass("input", "input--primary");
+      expect(control).toHaveClass("rp-input", "rp-input--primary");
 
       unmount();
     });
@@ -43,7 +43,7 @@ describe("Input", () => {
     it("takes its variant from its own props, having no field to inherit from", () => {
       const { control, unmount } = render({ fullWidth: true, variant: "secondary" });
 
-      expect(control).toHaveClass("input", "input--secondary", "input--full-width");
+      expect(control).toHaveClass("rp-input", "rp-input--secondary", "rp-input--full-width");
 
       unmount();
     });
@@ -51,7 +51,7 @@ describe("Input", () => {
     it("merges a caller class", () => {
       const { control, unmount } = render({ class: "w-40" });
 
-      expect(control).toHaveClass("input", "w-40");
+      expect(control).toHaveClass("rp-input", "w-40");
 
       unmount();
     });
@@ -199,7 +199,7 @@ describe("Input", () => {
     it("takes the field's variant when it sets none of its own", () => {
       const { control, unmount } = render({ fieldVariant: "secondary", inField: true });
 
-      expect(control).toHaveClass("input--secondary");
+      expect(control).toHaveClass("rp-input--secondary");
 
       unmount();
     });
@@ -207,7 +207,7 @@ describe("Input", () => {
     it("takes the field's size when it sets none of its own", () => {
       const { control, unmount } = render({ fieldSize: "sm", inField: true });
 
-      expect(control).toHaveClass("input--sm");
+      expect(control).toHaveClass("rp-input--sm");
 
       unmount();
     });
@@ -215,8 +215,8 @@ describe("Input", () => {
     it("lets its own size win over the field's", () => {
       const { control, unmount } = render({ fieldSize: "sm", inField: true, size: "lg" });
 
-      expect(control).toHaveClass("input--lg");
-      expect(control).not.toHaveClass("input--sm");
+      expect(control).toHaveClass("rp-input--lg");
+      expect(control).not.toHaveClass("rp-input--sm");
 
       unmount();
     });
@@ -228,7 +228,7 @@ describe("Input", () => {
         variant: "primary",
       });
 
-      expect(control).toHaveClass("input--primary");
+      expect(control).toHaveClass("rp-input--primary");
 
       unmount();
     });

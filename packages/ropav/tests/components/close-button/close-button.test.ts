@@ -19,7 +19,7 @@ describe("CloseButton", () => {
 
       expect(button).not.toBeNull();
       expect(button?.getAttribute("data-slot")).toBe("close-button");
-      expect(button?.classList.contains("close-button")).toBe(true);
+      expect(button?.classList.contains("rp-close-button")).toBe(true);
 
       unmount();
     });
@@ -59,7 +59,7 @@ describe("CloseButton", () => {
     it("exposes the variant BEM modifier", () => {
       const { container, unmount } = renderCloseButton({ variant: "default" });
 
-      expect(buttonIn(container)?.classList.contains("close-button--default")).toBe(true);
+      expect(buttonIn(container)?.classList.contains("rp-close-button--default")).toBe(true);
 
       unmount();
     });

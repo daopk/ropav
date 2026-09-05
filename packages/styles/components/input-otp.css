@@ -1,5 +1,5 @@
 /* Base container */
-.input-otp {
+.rp-input-otp {
   @apply relative flex w-full items-center gap-2;
 
   &[data-disabled="true"] {
@@ -8,12 +8,12 @@
 }
 
 /* Group - slots separated with gap */
-.input-otp__group {
+.rp-input-otp__group {
   @apply flex min-w-0 items-center gap-2;
 }
 
 /* Individual slot box - fully rounded, standalone */
-.input-otp__slot {
+.rp-input-otp__slot {
   @apply relative flex h-10 w-9.5 min-w-0 flex-1 items-center justify-center;
   @apply border text-field-foreground shadow-field;
 
@@ -68,30 +68,30 @@
 }
 
 /* Slot value */
-.input-otp__slot-value {
+.rp-input-otp__slot-value {
   @apply text-lg leading-6 tracking-[-0.27px];
 
-  animation: slot-value-in 250ms var(--ease-smooth) both;
+  animation: rp-slot-value-in 250ms var(--ease-smooth) both;
   transform-origin: bottom center;
   @apply motion-reduce:animate-none;
 }
 
 /* Caret */
-.input-otp__caret {
+.rp-input-otp__caret {
   @apply absolute h-4 w-[2px] animate-caret-blink rounded-sm bg-field-placeholder;
 }
 
 /* Separator */
-.input-otp__separator {
+.rp-input-otp__separator {
   @apply h-[2px] w-[6px] shrink-0 rounded-sm bg-separator;
 }
 
 /* Variant property definitions */
-.input-otp--primary {
+.rp-input-otp--primary {
   /* Default styles */
 }
 
-.input-otp--secondary .input-otp__slot {
+.rp-input-otp--secondary .rp-input-otp__slot {
   @apply shadow-none;
 
   --input-otp-slot-bg: var(--default);
@@ -100,7 +100,7 @@
 }
 
 /* Animations */
-@keyframes slot-value-in {
+@keyframes rp-slot-value-in {
   0% {
     opacity: 0;
     transform: translateY(8px) scale(0.8);

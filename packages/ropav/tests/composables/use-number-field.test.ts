@@ -130,7 +130,7 @@ describe("useNumberField", () => {
 
   describe("the slot attribute the stylesheet reads", () => {
     it("renders slot=increment and slot=decrement on the buttons", () => {
-      // A live CSS contract: `.number-field__group:has([slot="decrement"])` is what decides the
+      // A live CSS contract: `.rp-number-field__group:has([slot="decrement"])` is what decides the
       // grid columns, so dropping either one silently collapses the layout.
       const { decrement, increment, unmount } = mount();
 

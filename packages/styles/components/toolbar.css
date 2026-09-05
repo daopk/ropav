@@ -3,31 +3,31 @@
    ========================================================================== */
 
 /* Base styles */
-.toolbar {
+.rp-toolbar {
   @apply grid w-fit grid-flow-col items-center gap-2;
 
-  .separator--vertical {
+  .rp-separator--vertical {
     @apply h-1/2 self-center;
   }
 
-  .separator--horizontal {
+  .rp-separator--horizontal {
     @apply w-1/2 justify-center justify-self-center;
   }
 }
 
 /* Orientation variants */
-.toolbar--horizontal {
+.rp-toolbar--horizontal {
 }
 
-.toolbar--vertical {
+.rp-toolbar--vertical {
   @apply grid-flow-row items-start justify-start;
-  .button-group {
+  .rp-button-group {
     @apply justify-start;
   }
 }
 
 /* Attached variant */
-.toolbar--attached {
+.rp-toolbar--attached {
   @apply rounded-component bg-surface p-1 shadow-overlay;
 
   /* Forced Colors Mode flattens the fill onto the page and strips the shadow, so the container

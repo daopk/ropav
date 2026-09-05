@@ -40,7 +40,7 @@ describe("ColorField", () => {
     it("renders a prefix and a suffix when asked", () => {
       const { container, unmount } = renderField({ withPrefix: true, withSuffix: true });
 
-      // Live CSS contracts: `.color-input-group:has([data-slot="color-input-group-prefix"])` is
+      // Live CSS contracts: `.rp-color-input-group:has([data-slot="color-input-group-prefix"])` is
       // what removes the control's leading radius, so the attribute is the whole mechanism.
       expect(slot(container, "color-input-group-prefix")).toHaveTextContent("P");
       expect(slot(container, "color-input-group-suffix")).toHaveTextContent("S");
@@ -61,10 +61,13 @@ describe("ColorField", () => {
     it("carries the BEM classes the stylesheet keys on", () => {
       const { container, unmount } = renderField({ fullWidth: true, variant: "secondary" });
 
-      expect(slot(container, "color-field")).toHaveClass("color-field", "color-field--full-width");
+      expect(slot(container, "color-field")).toHaveClass(
+        "rp-color-field",
+        "rp-color-field--full-width",
+      );
       expect(slot(container, "color-input-group")).toHaveClass(
-        "color-input-group",
-        "color-input-group--secondary",
+        "rp-color-input-group",
+        "rp-color-input-group--secondary",
       );
 
       unmount();

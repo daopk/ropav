@@ -26,13 +26,13 @@ describe("Label", () => {
     it("applies the base class", () => {
       const { label } = renderLabel();
 
-      expect(label).toHaveClass("label");
+      expect(label).toHaveClass("rp-label");
     });
 
     it("merges a caller class", () => {
       const { label } = renderLabel({ class: "mt-2" });
 
-      expect(label).toHaveClass("label", "mt-2");
+      expect(label).toHaveClass("rp-label", "mt-2");
     });
   });
 
@@ -40,25 +40,25 @@ describe("Label", () => {
     it("renders no state modifier by default", () => {
       const { label } = renderLabel();
 
-      expect(label.className).toBe("label");
+      expect(label.className).toBe("rp-label");
     });
 
     it("marks a required label", () => {
       const { label } = renderLabel({ isRequired: true });
 
-      expect(label).toHaveClass("label--required");
+      expect(label).toHaveClass("rp-label--required");
     });
 
     it("marks a disabled label", () => {
       const { label } = renderLabel({ isDisabled: true });
 
-      expect(label).toHaveClass("label--disabled");
+      expect(label).toHaveClass("rp-label--disabled");
     });
 
     it("marks an invalid label", () => {
       const { label } = renderLabel({ isInvalid: true });
 
-      expect(label).toHaveClass("label--invalid");
+      expect(label).toHaveClass("rp-label--invalid");
     });
 
     it("applies the modifiers when the props are written as bare attributes", () => {
@@ -67,7 +67,7 @@ describe("Label", () => {
       // type instead leaves it untyped, and the modifier silently never applies.
       const { label } = renderLabel({ attributeForm: true });
 
-      expect(label).toHaveClass("label--disabled", "label--invalid", "label--required");
+      expect(label).toHaveClass("rp-label--disabled", "rp-label--invalid", "rp-label--required");
     });
   });
 

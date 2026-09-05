@@ -121,7 +121,7 @@ provideColorSwatchPickerItemContext({
  * The colour is carried as a custom property rather than as `background-color`.
  *
  * The swatch inside paints itself; what the item needs the colour for is its selected border,
- * which `.color-swatch-picker__item[data-selected="true"]` reads back out of the variable. React
+ * which `.rp-color-swatch-picker__item[data-selected="true"]` reads back out of the variable. React
  * ends up with exactly this one declaration too — its own style function replaces the caller's
  * rather than merging, which is the one place in the colour group where it does.
  */

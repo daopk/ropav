@@ -35,7 +35,7 @@ describe("ListBox", () => {
       expect(listbox).toHaveAttribute("aria-orientation", "vertical");
       expect(listbox).toHaveAttribute("data-orientation", "vertical");
       expect(listbox).toHaveAttribute("data-layout", "stack");
-      expect(listbox).toHaveClass("list-box");
+      expect(listbox).toHaveClass("rp-list-box");
     });
 
     it("renders an option per item", async () => {
@@ -43,7 +43,7 @@ describe("ListBox", () => {
 
       expect(items()).toHaveLength(3);
       expect(items()[0]).toHaveAttribute("data-slot", "list-box-item");
-      expect(items()[0]).toHaveClass("list-box-item");
+      expect(items()[0]).toHaveClass("rp-list-box-item");
     });
 
     it("derives an option id from the listbox id and the key", async () => {

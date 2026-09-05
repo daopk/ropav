@@ -36,10 +36,10 @@ describe("Typography", () => {
     expect(element).toHaveAttribute("data-slot", "typography");
     expect(element).toHaveAttribute("data-type", "body");
     expect(element).toHaveClass(
-      "typography",
-      "typography--body",
-      "typography--align-start",
-      "typography--color-default",
+      "rp-typography",
+      "rp-typography--body",
+      "rp-typography--align-start",
+      "rp-typography--color-default",
     );
 
     unmount();
@@ -55,7 +55,7 @@ describe("Typography", () => {
     const { element, unmount } = renderTypography({ type });
 
     expect(element.tagName).toBe(tagName);
-    expect(element).toHaveClass(`typography--${type}`);
+    expect(element).toHaveClass(`rp-typography--${type}`);
 
     unmount();
   });
@@ -69,10 +69,10 @@ describe("Typography", () => {
     });
 
     expect(element).toHaveClass(
-      "typography--align-center",
-      "typography--color-muted",
-      "typography--weight-bold",
-      "typography--truncate",
+      "rp-typography--align-center",
+      "rp-typography--color-muted",
+      "rp-typography--weight-bold",
+      "rp-typography--truncate",
     );
 
     unmount();
@@ -81,7 +81,7 @@ describe("Typography", () => {
   it("merges a caller class and forwards attributes", () => {
     const { element, unmount } = renderTypography({ class: "max-w-prose" });
 
-    expect(element).toHaveClass("typography", "max-w-prose");
+    expect(element).toHaveClass("rp-typography", "max-w-prose");
     expect(element).toHaveAttribute("data-foo", "bar");
 
     unmount();
@@ -121,7 +121,7 @@ describe("Typography", () => {
     const element = container.firstElementChild as HTMLElement;
 
     expect(element.tagName).toBe("H2");
-    expect(element).toHaveClass("typography--h2", "typography--align-end");
+    expect(element).toHaveClass("rp-typography--h2", "rp-typography--align-end");
 
     unmount();
   });
@@ -138,10 +138,10 @@ describe("Typography", () => {
 
       expect(element.tagName).toBe("H3");
       expect(element).toHaveClass(
-        "typography--h3",
-        "typography--align-center",
-        "typography--color-muted",
-        "typography--weight-bold",
+        "rp-typography--h3",
+        "rp-typography--align-center",
+        "rp-typography--color-muted",
+        "rp-typography--weight-bold",
       );
       expect(element).toHaveAttribute("data-foo", "bar");
 
@@ -151,9 +151,9 @@ describe("Typography", () => {
 
   describe("Paragraph", () => {
     it.each([
-      [undefined, "typography--body"],
-      ["sm", "typography--body-sm"],
-      ["xs", "typography--body-xs"],
+      [undefined, "rp-typography--body"],
+      ["sm", "rp-typography--body-sm"],
+      ["xs", "rp-typography--body-xs"],
     ] as const)("maps size %s to %s", (size, expected) => {
       const { element, unmount } = renderTypography({ mode: "paragraph", size });
 
@@ -169,7 +169,7 @@ describe("Typography", () => {
       const { element, unmount } = renderTypography({ mode: "code" });
 
       expect(element.tagName).toBe("CODE");
-      expect(element).toHaveClass("typography--code");
+      expect(element).toHaveClass("rp-typography--code");
       expect(element).toHaveTextContent("const x = 1;");
 
       unmount();
@@ -182,7 +182,7 @@ describe("Typography", () => {
 
       expect(element.tagName).toBe("DIV");
       expect(element).toHaveAttribute("data-slot", "prose");
-      expect(element).toHaveClass("typography-prose", "max-w-2xl");
+      expect(element).toHaveClass("rp-typography-prose", "max-w-2xl");
       expect(element.querySelector("h2")).toHaveTextContent("Prose heading");
       expect(element).toHaveAttribute("data-foo", "bar");
 

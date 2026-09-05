@@ -9,37 +9,37 @@ export const selectVariants = tv({
     variant: "primary",
   },
   slots: {
-    base: "select",
-    indicator: "select__indicator",
-    popover: "select__popover",
-    trigger: "select__trigger",
-    value: "select__value",
+    base: "rp-select",
+    indicator: "rp-select__indicator",
+    popover: "rp-select__popover",
+    trigger: "rp-select__trigger",
+    value: "rp-select__value",
   },
   variants: {
     fullWidth: {
       false: {},
       true: {
-        base: "select--full-width",
-        trigger: "select__trigger--full-width",
+        base: "rp-select--full-width",
+        trigger: "rp-select__trigger--full-width",
       },
     },
     size: {
       lg: {
-        base: "select--lg",
-        popover: "select__popover--lg",
+        base: "rp-select--lg",
+        popover: "rp-select__popover--lg",
       },
       md: {},
       sm: {
-        base: "select--sm",
-        popover: "select__popover--sm",
+        base: "rp-select--sm",
+        popover: "rp-select__popover--sm",
       },
     },
     variant: {
       primary: {
-        base: "select--primary",
+        base: "rp-select--primary",
       },
       secondary: {
-        base: "select--secondary",
+        base: "rp-select--secondary",
       },
     },
   },

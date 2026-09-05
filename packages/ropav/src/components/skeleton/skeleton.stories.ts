@@ -63,7 +63,7 @@ export const SingleShimmer: Story = {
     setup: () => ({ args }),
     template: `
       <div
-        class="skeleton--shimmer relative grid w-[450px] grid-cols-3 gap-4 overflow-hidden rounded-xl"
+        class="rp-skeleton--shimmer relative grid w-[450px] grid-cols-3 gap-4 overflow-hidden rounded-xl"
       >
         <Skeleton class="h-24 rounded-xl" v-bind="args" />
         <Skeleton class="h-24 rounded-xl" v-bind="args" />

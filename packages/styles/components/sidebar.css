@@ -13,7 +13,7 @@
  * so it belongs where a state key belongs and not in the class list.
  */
 
-.sidebar {
+.rp-sidebar {
   /* The two widths the panel resolves between. Held on the shell rather than the panel so a caller
    * retunes both from one place, and so a drag can write the expanded one to the same property the
    * stylesheet reads. */
@@ -45,11 +45,11 @@
 /* Reversing the row rather than reordering the parts: the shell's children are written panel,
  * rail, inset in that order whichever side the sidebar is on, so the rail stays between the two
  * either way and a caller's markup does not change with the prop. */
-.sidebar--left {
+.rp-sidebar--left {
   @apply flex-row;
 }
 
-.sidebar--right {
+.rp-sidebar--right {
   @apply flex-row-reverse;
 }
 
@@ -57,10 +57,10 @@
    Panel — the nav landmark
    ========================================================================== */
 
-/* `min-h-0` for the same reason `.splitter__panel` has it: a flex item's automatic minimum is its
+/* `min-h-0` for the same reason `.rp-splitter__panel` has it: a flex item's automatic minimum is its
  * content, so a long nav list would push the panel past the viewport instead of scrolling inside
- * `.sidebar__content`. */
-.sidebar__panel {
+ * `.rp-sidebar__content`. */
+.rp-sidebar__panel {
   @apply relative flex min-h-0 shrink-0 grow-0 flex-col overflow-hidden bg-surface text-surface-foreground;
 
   inline-size: var(--sidebar-width);
@@ -72,30 +72,30 @@
 /* Under the pointer the panel follows it exactly. Easing towards each frame's width instead makes
  * the edge lag the cursor by the whole duration, which reads as the panel chasing the drag rather
  * than being dragged. */
-.sidebar__panel[data-resizing="true"] {
+.rp-sidebar__panel[data-resizing="true"] {
   transition: none;
 }
 
 /* And while a stored layout is being put back: that width is where the sidebar starts, not
  * somewhere it moved to. */
-.sidebar__panel[data-restoring="true"] {
+.rp-sidebar__panel[data-restoring="true"] {
   transition: none;
 }
 
 /* The separating line is a border rather than a background, so it is one of the few things Forced
  * Colors Mode recolours instead of flattening — no restatement needed here. */
-.sidebar__panel--left {
+.rp-sidebar__panel--left {
   @apply border-e border-separator/50;
 }
 
-.sidebar__panel--right {
+.rp-sidebar__panel--right {
   @apply border-s border-separator/50;
 }
 
 /* Neither fill nor line: the panel has stopped being a surface, and the inset beside it is the one
  * that paints. After the side modifiers, whose border this has to beat at equal specificity, and
  * before `--drawer`, which stays last for the reason given there. */
-.sidebar__panel--bare {
+.rp-sidebar__panel--bare {
   @apply border-0 bg-transparent;
 }
 
@@ -106,7 +106,7 @@
  * The margin is what the rail then sits in, and that gap is already dividing the two, which is why
  * this variant quiets the line: a hairline inside it would be a second answer to the same question.
  */
-.sidebar__panel--floating {
+.rp-sidebar__panel--floating {
   @apply border border-separator/50 shadow-surface;
 
   margin: var(--sidebar-card-gap);
@@ -115,7 +115,7 @@
 
 /* Collapsing to icons is the default, so the width it collapses to lives on the mode that has one
  * and `--none` is the empty rule. */
-.sidebar__panel--icon[data-collapsed="true"] {
+.rp-sidebar__panel--icon[data-collapsed="true"] {
   inline-size: var(--sidebar-width-icon);
 }
 
@@ -126,7 +126,7 @@
  * border paints no background either way. Saying so is what keeps the Storybook forced-colors
  * sweep honest — it reads this panel as one that painted a surface and then lost it to the mode,
  * where in truth there was never anything on screen to lose. */
-.sidebar__panel--offcanvas[data-collapsed="true"] {
+.rp-sidebar__panel--offcanvas[data-collapsed="true"] {
   @apply border-0 bg-transparent;
 
   inline-size: 0;
@@ -135,7 +135,7 @@
   margin: 0;
 }
 
-.sidebar__panel--none {
+.rp-sidebar__panel--none {
 }
 
 /* Inside a drawer the panel is no longer the surface — the dialog is, and it paints, sizes and
@@ -144,7 +144,7 @@
  * shape, and a card inset within it would be a second one drawn inside the first.
  * Last of the panel's modifiers, so it beats the widths and the card geometry above at equal
  * specificity. */
-.sidebar__panel--drawer {
+.rp-sidebar__panel--drawer {
   @apply size-full border-0 bg-transparent;
 
   inline-size: auto;
@@ -157,7 +157,7 @@
    Header, content, footer
    ========================================================================== */
 
-.sidebar__header {
+.rp-sidebar__header {
   @apply flex shrink-0 flex-col gap-2 p-2;
 }
 
@@ -168,16 +168,16 @@
  * the nearest edge, which is exactly where the fade is, so a keyboard user tabbing down the nav
  * would land on item after item with its focus ring faded out. The padding moves that landing
  * point clear of the fade. Sized from the same property the fade is, so retuning one moves both. */
-.sidebar__content {
+.rp-sidebar__content {
   @apply flex min-h-0 flex-1 flex-col gap-1 overflow-x-hidden overflow-y-auto p-2;
 
   scroll-padding-block: var(--scroll-shadow-size, 0px);
 }
 
 /* Two classes to beat one: `scroll-shadow.css` is imported under Layout, long after this file under
- * Navigation, so `.scroll-shadow--vertical`'s `scrollbar` wins at equal specificity and the nav
+ * Navigation, so `.rp-scroll-shadow--vertical`'s `scrollbar` wins at equal specificity and the nav
  * would grow a full-width scrollbar the moment it became a shadow container. */
-.sidebar__content.scroll-shadow {
+.rp-sidebar__content.rp-scroll-shadow {
   @apply scrollbar-thin;
 
   /* The fade is a `mask-image` over the rows, which in Forced Colors Mode means system-coloured
@@ -190,7 +190,7 @@
   }
 }
 
-.sidebar__footer {
+.rp-sidebar__footer {
   @apply flex shrink-0 flex-col gap-2 p-2;
 }
 
@@ -198,19 +198,19 @@
    Groups
    ========================================================================== */
 
-.sidebar__group {
+.rp-sidebar__group {
   @apply flex w-full min-w-0 flex-col gap-0.5;
 }
 
-/* Matches `.header`, which is the same muted label above the same kind of list. */
-.sidebar__group-label {
+/* Matches `.rp-header`, which is the same muted label above the same kind of list. */
+.rp-sidebar__group-label {
   @apply w-full truncate px-2 pt-1.5 pb-1 text-start text-xs font-medium text-muted;
 }
 
 /* `sr-only` rather than `hidden`: the label is what tells a screen reader which group an item
  * belongs to, and a collapsed sidebar is still being read. Taking it out of flow also takes it out
  * of the group's `gap`, so the icons close up rather than leaving a hole where the label was. */
-.sidebar__group-label[data-collapsed="true"] {
+.rp-sidebar__group-label[data-collapsed="true"] {
   @apply sr-only;
 }
 
@@ -219,7 +219,7 @@
  * tailwind-merge cannot help either, because the width lives inside a BEM rule rather than in the
  * class string. It needs no taking back: the rule runs the width of the content's padding box,
  * which is exactly the box every item beside it already fills. */
-.sidebar__separator {
+.rp-sidebar__separator {
   @apply my-1;
 }
 
@@ -227,7 +227,7 @@
    Nav item
    ========================================================================== */
 
-.sidebar__item {
+.rp-sidebar__item {
   @apply relative flex min-h-9 w-full min-w-0 items-center justify-start gap-2 rounded-component px-2 text-sm font-medium no-underline outline-none no-highlight;
 
   /* The row's fill and label, per state. A caller retuning the resting pair used to flatten the
@@ -292,7 +292,7 @@
   }
 }
 
-.sidebar__item-icon {
+.rp-sidebar__item-icon {
   @apply flex size-4 shrink-0 items-center justify-center;
 
   svg {
@@ -300,28 +300,28 @@
   }
 }
 
-.sidebar__item-label {
+.rp-sidebar__item-label {
   @apply min-w-0 flex-1 truncate text-start;
 }
 
 /* Hidden the same way the group label is, and for the same reason — this *is* the item's
  * accessible name. */
-.sidebar__item-label[data-collapsed="true"] {
+.rp-sidebar__item-label[data-collapsed="true"] {
   @apply sr-only;
 }
 
-.sidebar__item-trailing {
+.rp-sidebar__item-trailing {
   @apply flex shrink-0 items-center;
 }
 
-.sidebar__item-trailing[data-collapsed="true"] {
+.rp-sidebar__item-trailing[data-collapsed="true"] {
   @apply hidden;
 }
 
 /* The tooltip's own trigger is `inline-block`, and inside the nav's column that would shrink the
  * item it wraps down to its contents. An item is a full-width row and has to stay one whether or
  * not it has a tooltip hanging off it. */
-.sidebar__item-tooltip {
+.rp-sidebar__item-tooltip {
   @apply block w-full;
 }
 
@@ -336,7 +336,7 @@
  * open or shut; this one sits at the end of a nav row and has a direction to mean, so the shut
  * state points the way the rows will come from. `rtl` turns it the other way for the same reason
  * it is `ms-auto` and not `ml-auto`. */
-.sidebar__item-indicator {
+.rp-sidebar__item-indicator {
   @apply ms-auto size-3.5 shrink-0 -rotate-90 text-muted rtl:rotate-90;
 
   /**
@@ -351,14 +351,14 @@
 
 /* Nothing left to point at once the sidebar is a rail: the children are not rendered there at all,
  * and a chevron promising something that never opens is worse than no chevron. */
-.sidebar__item-indicator[data-collapsed="true"] {
+.rp-sidebar__item-indicator[data-collapsed="true"] {
   @apply hidden;
 }
 
 /* The rows under a nav item, indented and gathered by a line down the gutter they share. One border
  * on the container rather than one per row, so the line runs unbroken from the first child to the
  * last however many there are. */
-.sidebar__sub-menu {
+.rp-sidebar__sub-menu {
   /* The row's own inline padding plus half its icon, which lands the line on the icon's centre.
    * Written from those two rather than as the number they come to, so retuning either moves the
    * line with it instead of leaving it a few pixels off. */
@@ -386,7 +386,7 @@
  * and `height: var(--disclosure-panel-height)` with nothing behind it would leave the rows sitting
  * under an `opacity: 0` that never lifts.
  */
-.sidebar__sub-menu--collapsible {
+.rp-sidebar__sub-menu--collapsible {
   opacity: 0;
   height: var(--disclosure-panel-height);
   overflow: clip;
@@ -404,7 +404,7 @@
 
 /* A child row carries no icon, so it gives up the gap that was holding one and drops to the weight
  * of what it is — a destination under a heading rather than another heading. */
-.sidebar__item--sub {
+.rp-sidebar__item--sub {
   @apply gap-0 font-normal;
 }
 
@@ -412,9 +412,9 @@
    Inset — the content beside the sidebar
    ========================================================================== */
 
-/* `min-w-0` for the reason `.splitter__panel` documents: without it a wide table inside the inset
+/* `min-w-0` for the reason `.rp-splitter__panel` documents: without it a wide table inside the inset
  * sets a floor under the whole shell and the sidebar can never be given its width back. */
-.sidebar__inset {
+.rp-sidebar__inset {
   @apply relative flex min-w-0 flex-1 flex-col overflow-hidden bg-background;
 }
 
@@ -427,7 +427,7 @@
  * flattens onto the page behind it and the shadow goes, leaving the contents sitting loose — so it
  * takes the same inset outline every container that paints takes, offset inwards so nothing moves
  * and the radius above still holds it. */
-.sidebar__inset--card {
+.rp-sidebar__inset--card {
   @apply bg-surface text-surface-foreground shadow-surface;
 
   margin: var(--sidebar-card-gap);
@@ -443,10 +443,10 @@
    Rail — the edge strip
    ========================================================================== */
 
-/* Built like `.splitter__handle`, down to the `::after`: the flex item is the gutter and paints
+/* Built like `.rp-splitter__handle`, down to the `::after`: the flex item is the gutter and paints
  * nothing, so the line can thicken on hover without the gutter changing width and shifting the
  * whole page by a pixel. */
-.sidebar__rail {
+.rp-sidebar__rail {
   @apply relative z-10 flex shrink-0 grow-0 items-center justify-center self-stretch;
   @apply bg-transparent outline-none select-none no-highlight;
 
@@ -528,15 +528,15 @@
 
 /* Only a rail that resizes says so with the cursor. One that merely toggles is a button, and
  * `--cursor-interactive` on the base rule already covers it. */
-.sidebar__rail--resizable {
+.rp-sidebar__rail--resizable {
   @apply cursor-col-resize;
 }
 
 /* Nothing left for the line to divide once something else is drawing that division — a card's own
  * edge, or the gap it stands in — so it goes quiet in every state.
  *
- * Re-pointing the properties rather than restating the state rules, the shape `.input--secondary`
- * takes: a `background-color` here would lose to `.sidebar__rail:hover::after` on specificity, and
+ * Re-pointing the properties rather than restating the state rules, the shape `.rp-input--secondary`
+ * takes: a `background-color` here would lose to `.rp-sidebar__rail:hover::after` on specificity, and
  * restating that set drifts the day a state is added to it.
  *
  * All three, and the third is not redundant. `--sidebar-rail-line-dragging` is declared on the
@@ -546,7 +546,7 @@
  *
  * The line comes back under Forced Colors Mode, on purpose: those blocks paint system keywords,
  * which are not a component's to quiet. */
-.sidebar__rail--quiet {
+.rp-sidebar__rail--quiet {
   --sidebar-rail-line: transparent;
   --sidebar-rail-line-hover: transparent;
   --sidebar-rail-line-dragging: transparent;
@@ -555,7 +555,7 @@
 /* The invisible hit area, overhanging the hairline on both sides. A negative `inset` rather than a
  * transparent border, because Forced Colors Mode turns a transparent border-color opaque and every
  * rail would render as a solid block. */
-.sidebar__rail-target {
+.rp-sidebar__rail-target {
   @apply absolute inset-0 bg-transparent;
 
   inset-inline: calc((var(--sidebar-rail-target) - var(--sidebar-rail-gutter)) / -2);
@@ -565,7 +565,7 @@
    Trigger
    ========================================================================== */
 
-.sidebar__trigger {
+.rp-sidebar__trigger {
   @apply inline-flex size-8 shrink-0 items-center justify-center rounded-component outline-none select-none no-highlight;
 
   --sidebar-trigger-bg: transparent;

@@ -82,16 +82,16 @@ describe("InputOTP", () => {
         defaultValue: "1",
       });
 
-      expect(root).toHaveClass("input-otp", "input-otp--primary");
-      expect(groups[0]).toHaveClass("input-otp__group");
-      expect(slotAt(0)).toHaveClass("input-otp__slot");
+      expect(root).toHaveClass("rp-input-otp", "rp-input-otp--primary");
+      expect(groups[0]).toHaveClass("rp-input-otp__group");
+      expect(slotAt(0)).toHaveClass("rp-input-otp__slot");
       expect(container.querySelector('[data-slot="input-otp-slot-value"]')).toHaveClass(
-        "input-otp__slot-value",
+        "rp-input-otp__slot-value",
       );
       expect(container.querySelector('[data-slot="input-otp-separator"]')).toHaveClass(
-        "input-otp__separator",
+        "rp-input-otp__separator",
       );
-      expect(control).toHaveClass("input-otp__input");
+      expect(control).toHaveClass("rp-input-otp__input");
 
       unmount();
     });
@@ -99,7 +99,7 @@ describe("InputOTP", () => {
     it("renders the secondary variant on the field itself", () => {
       const { root, unmount } = renderInputOTP({ variant: "secondary" });
 
-      expect(root).toHaveClass("input-otp", "input-otp--secondary");
+      expect(root).toHaveClass("rp-input-otp", "rp-input-otp--secondary");
 
       unmount();
     });
@@ -107,8 +107,8 @@ describe("InputOTP", () => {
     it("merges a caller class into the field and into the control", () => {
       const { control, root, unmount } = renderInputOTP({ class: "w-80", inputClass: "sr-only" });
 
-      expect(root).toHaveClass("input-otp", "w-80");
-      expect(control).toHaveClass("input-otp__input", "sr-only");
+      expect(root).toHaveClass("rp-input-otp", "w-80");
+      expect(control).toHaveClass("rp-input-otp__input", "sr-only");
 
       unmount();
     });
@@ -173,7 +173,7 @@ describe("InputOTP", () => {
       const caret = container.querySelector('[data-slot="input-otp-caret"]');
 
       expect(caret).not.toBeNull();
-      expect(caret).toHaveClass("input-otp__caret");
+      expect(caret).toHaveClass("rp-input-otp__caret");
       expect(slotAt(1).contains(caret)).toBe(true);
 
       unmount();

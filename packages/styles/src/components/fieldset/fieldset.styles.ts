@@ -4,11 +4,11 @@ import { tv } from "../../tv";
 
 export const fieldsetVariants = tv({
   slots: {
-    actions: "fieldset__actions",
-    base: "fieldset",
-    description: "fieldset__description",
-    fieldGroup: "fieldset__field_group",
-    legend: "fieldset__legend",
+    actions: "rp-fieldset__actions",
+    base: "rp-fieldset",
+    description: "rp-fieldset__description",
+    fieldGroup: "rp-fieldset__field_group",
+    legend: "rp-fieldset__legend",
   },
 });
 

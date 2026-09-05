@@ -3,14 +3,14 @@ import type { VariantProps } from "../../tv";
 import { tv } from "../../tv";
 
 export const colorFieldVariants = tv({
-  base: "color-field",
+  base: "rp-color-field",
   defaultVariants: {
     fullWidth: false,
   },
   variants: {
     fullWidth: {
       false: "",
-      true: "color-field--full-width",
+      true: "rp-color-field--full-width",
     },
   },
 });

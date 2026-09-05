@@ -1,16 +1,16 @@
 /* Surface component styles */
 
 /* Block */
-.surface {
+.rp-surface {
   @apply relative text-foreground;
 }
 
 /* Modifier - variant */
-.surface--transparent {
+.rp-surface--transparent {
   @apply bg-transparent;
 }
 
-.surface--default {
+.rp-surface--default {
   @apply bg-surface text-surface-foreground;
 
   /* Forced Colors Mode flattens the fill onto the page and strips the shadow, so the container
@@ -22,7 +22,7 @@
   }
 }
 
-.surface--secondary {
+.rp-surface--secondary {
   @apply bg-surface-secondary text-surface-secondary-foreground;
 
   /* Forced Colors Mode flattens the fill onto the page and strips the shadow, so the container
@@ -34,7 +34,7 @@
   }
 }
 
-.surface--tertiary {
+.rp-surface--tertiary {
   @apply bg-surface-tertiary text-surface-tertiary-foreground;
 
   /* Forced Colors Mode flattens the fill onto the page and strips the shadow, so the container

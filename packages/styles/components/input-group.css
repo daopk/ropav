@@ -1,5 +1,5 @@
 /* Input group styles */
-.input-group {
+.rp-input-group {
   @apply inline-flex min-h-9 items-center rounded-field border text-sm text-field-foreground shadow-field outline-none;
 
   /* The fill, per state. The `--secondary` variant re-points these and declares nothing else. */
@@ -78,16 +78,16 @@
   }
 }
 
-.input-group__input {
+.rp-input-group__input {
   @apply flex-1 rounded-none border-0 bg-transparent px-3 field-line-md shadow-none outline-none placeholder:text-field-placeholder;
 
   /* Remove border radius on left side when prefix is present */
-  .input-group:has([data-slot="input-group-prefix"]) & {
+  .rp-input-group:has([data-slot="input-group-prefix"]) & {
     @apply rounded-s-none ps-0;
   }
 
   /* Remove border radius on right side when suffix is present */
-  .input-group:has([data-slot="input-group-suffix"]) & {
+  .rp-input-group:has([data-slot="input-group-suffix"]) & {
     @apply rounded-e-none pe-0;
   }
 
@@ -100,7 +100,7 @@
   /**
    * Neutralize the browser's per-input autofill paint so the inner <input>
    * doesn't draw a sharp-cornered yellow rectangle. The unified highlight
-   * is applied to `.input-group` above. Preserve the autofilled text and
+   * is applied to `.rp-input-group` above. Preserve the autofilled text and
    * caret colors, and pin the background-color transition so the inset
    * box-shadow trick doesn't flicker on state changes.
    */
@@ -118,12 +118,12 @@
 }
 
 /* TextArea within InputGroup - uses same base class as input but with textarea-specific styles */
-.input-group__input[data-slot="input-group-textarea"] {
+.rp-input-group__input[data-slot="input-group-textarea"] {
   min-height: 38px;
   resize: vertical;
 }
 
-.input-group__prefix {
+.rp-input-group__prefix {
   @apply flex h-full items-center justify-center rounded-s-field rounded-e-none bg-transparent px-3 text-field-placeholder;
   border-width: var(--border-width-field);
   border-color: var(--field-border);
@@ -134,7 +134,7 @@
   border-bottom: none;
 
   /* Align to top when textarea is present */
-  .input-group:has([data-slot="input-group-textarea"]) & {
+  .rp-input-group:has([data-slot="input-group-textarea"]) & {
     @apply items-start;
     padding-top: 0.5rem;
   }
@@ -145,7 +145,7 @@
   @apply motion-reduce:transition-none;
 }
 
-.input-group__suffix {
+.rp-input-group__suffix {
   @apply flex h-full items-center justify-center rounded-s-none rounded-e-field bg-transparent px-3 text-field-placeholder;
   border-width: var(--border-width-field);
   border-color: var(--field-border);
@@ -156,7 +156,7 @@
   border-bottom: none;
 
   /* Align to top when textarea is present */
-  .input-group:has([data-slot="input-group-textarea"]) & {
+  .rp-input-group:has([data-slot="input-group-textarea"]) & {
     @apply items-start;
     padding-top: 0.5rem;
   }
@@ -168,11 +168,11 @@
 }
 
 /* Variant property definitions */
-.input-group--primary {
+.rp-input-group--primary {
   /* Default styles */
 }
 
-.input-group--secondary {
+.rp-input-group--secondary {
   @apply shadow-none;
 
   --input-group-bg: var(--default);
@@ -186,7 +186,7 @@
 }
 
 /* Full width modifier */
-.input-group--full-width {
+.rp-input-group--full-width {
   @apply w-full;
 }
 
@@ -196,18 +196,18 @@
 
 /* The shell states the floor and the control inside carries the metrics, which is the same split
  * the base makes - the group may grow around a textarea, so it cannot state a height. */
-.input-group--sm {
+.rp-input-group--sm {
   @apply min-h-8;
 
-  .input-group__input {
+  .rp-input-group__input {
     @apply field-line-sm;
   }
 }
 
-.input-group--lg {
+.rp-input-group--lg {
   @apply min-h-10;
 
-  .input-group__input {
+  .rp-input-group__input {
     @apply field-line-lg;
   }
 }

@@ -75,7 +75,7 @@ export interface UseColorSliderReturn {
  * uses. Three things are particular to a colour and are the reason this exists at all:
  *
  * - **The group is the track.** Upstream merges `groupProps` into `trackProps`, so `role="group"`
- *   and the accessible name sit on `.color-slider__track` rather than on the root the way they do
+ *   and the accessible name sit on `.rp-color-slider__track` rather than on the root the way they do
  *   on a plain slider. Binding them on the root instead gives a slider two mislabelled elements
  *   and no visible sign of it.
  * - **The gradient is computed, not styled.** The track's `background` is generated from the

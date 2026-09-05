@@ -3,18 +3,18 @@ import type { VariantProps } from "../../tv";
 import { tv } from "../../tv";
 
 const toolbarVariants = tv({
-  base: "toolbar",
+  base: "rp-toolbar",
   defaultVariants: {
     isAttached: false,
     orientation: "horizontal",
   },
   variants: {
     isAttached: {
-      true: "toolbar--attached",
+      true: "rp-toolbar--attached",
     },
     orientation: {
-      horizontal: "toolbar--horizontal",
-      vertical: "toolbar--vertical",
+      horizontal: "rp-toolbar--horizontal",
+      vertical: "rp-toolbar--vertical",
     },
   },
 });

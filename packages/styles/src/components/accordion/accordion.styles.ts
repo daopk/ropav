@@ -4,20 +4,20 @@ import { tv } from "../../tv";
 
 export const accordionVariants = tv({
   slots: {
-    base: "accordion",
-    body: "accordion__body",
-    bodyInner: "accordion__body-inner",
-    heading: "accordion__heading",
-    indicator: "accordion__indicator",
-    item: "accordion__item",
-    panel: "accordion__panel",
-    trigger: "accordion__trigger",
+    base: "rp-accordion",
+    body: "rp-accordion__body",
+    bodyInner: "rp-accordion__body-inner",
+    heading: "rp-accordion__heading",
+    indicator: "rp-accordion__indicator",
+    item: "rp-accordion__item",
+    panel: "rp-accordion__panel",
+    trigger: "rp-accordion__trigger",
   },
   variants: {
     variant: {
       default: {},
       surface: {
-        base: "accordion--surface",
+        base: "rp-accordion--surface",
       },
     },
   },

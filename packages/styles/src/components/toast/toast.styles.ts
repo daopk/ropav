@@ -8,57 +8,57 @@ export const toastVariants = tv({
     variant: "default",
   },
   slots: {
-    action: "toast__action",
-    close: "toast__close-button",
-    content: "toast__content",
-    description: "toast__description",
-    indicator: "toast__indicator",
-    region: "toast-region",
-    title: "toast__title",
-    toast: "toast",
+    action: "rp-toast__action",
+    close: "rp-toast__close-button",
+    content: "rp-toast__content",
+    description: "rp-toast__description",
+    indicator: "rp-toast__indicator",
+    region: "rp-toast-region",
+    title: "rp-toast__title",
+    toast: "rp-toast",
   },
   variants: {
     placement: {
       bottom: {
-        region: "toast-region--bottom",
-        toast: "toast--bottom",
+        region: "rp-toast-region--bottom",
+        toast: "rp-toast--bottom",
       },
       "bottom end": {
-        region: "toast-region--bottom-end",
-        toast: "toast--bottom-end",
+        region: "rp-toast-region--bottom-end",
+        toast: "rp-toast--bottom-end",
       },
       "bottom start": {
-        region: "toast-region--bottom-start",
-        toast: "toast--bottom-start",
+        region: "rp-toast-region--bottom-start",
+        toast: "rp-toast--bottom-start",
       },
       top: {
-        region: "toast-region--top",
-        toast: "toast--top",
+        region: "rp-toast-region--top",
+        toast: "rp-toast--top",
       },
       "top end": {
-        region: "toast-region--top-end",
-        toast: "toast--top-end",
+        region: "rp-toast-region--top-end",
+        toast: "rp-toast--top-end",
       },
       "top start": {
-        region: "toast-region--top-start",
-        toast: "toast--top-start",
+        region: "rp-toast-region--top-start",
+        toast: "rp-toast--top-start",
       },
     },
     variant: {
       accent: {
-        toast: "toast--accent",
+        toast: "rp-toast--accent",
       },
       danger: {
-        toast: "toast--danger",
+        toast: "rp-toast--danger",
       },
       default: {
-        toast: "toast--default",
+        toast: "rp-toast--default",
       },
       success: {
-        toast: "toast--success",
+        toast: "rp-toast--success",
       },
       warning: {
-        toast: "toast--warning",
+        toast: "rp-toast--warning",
       },
     },
   },

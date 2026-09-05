@@ -1,5 +1,5 @@
 /* Radio Group base styles */
-.radio-group {
+.rp-radio-group {
   @apply flex flex-col;
 
   /* Default orientation */
@@ -15,11 +15,11 @@
 }
 
 /* Variant property definitions */
-.radio-group--primary {
+.rp-radio-group--primary {
   /* Default styles */
 }
 
-.radio-group--secondary .radio__control {
+.rp-radio-group--secondary .rp-radio__control {
   @apply shadow-none;
   background-color: var(--radio-control-bg);
 
@@ -27,22 +27,22 @@
   --radio-control-bg-hover: var(--default-hover);
 
   /* Hover state */
-  .radio:has([data-slot="radio-content"][data-hovered="true"]) &,
-  .radio [data-slot="radio-content"][data-hovered="true"] & {
+  .rp-radio:has([data-slot="radio-content"][data-hovered="true"]) &,
+  .rp-radio [data-slot="radio-content"][data-hovered="true"] & {
     @apply border-field-border-hover;
   }
 
   /* Default indicator color (unselected) */
-  .radio:not([data-selected]):not(:has(input:checked)) & .radio__indicator:empty::before {
+  .rp-radio:not([data-selected]):not(:has(input:checked)) & .rp-radio__indicator:empty::before {
     background-color: var(--radio-control-bg);
   }
 
   /* Hover indicator color (unselected) */
-  .radio:has([data-slot="radio-content"][data-hovered="true"]):not([data-selected]):not(
+  .rp-radio:has([data-slot="radio-content"][data-hovered="true"]):not([data-selected]):not(
       :has(input:checked)
     )
     & {
-    .radio__indicator:empty::before {
+    .rp-radio__indicator:empty::before {
       background-color: var(--radio-control-bg-hover);
     }
   }

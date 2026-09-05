@@ -3,7 +3,7 @@
    ========================================================================== */
 
 /* Base styles */
-.color-area {
+.rp-color-area {
   @apply relative w-full max-w-56 shrink-0 no-highlight;
 
   border-radius: min(32px, var(--component-radius));
@@ -27,7 +27,7 @@
    Dots overlay variant
    ========================================================================== */
 
-.color-area--show-dots {
+.rp-color-area--show-dots {
   /* Dot pattern overlay using radial gradient */
   &::after {
     content: "";
@@ -42,7 +42,7 @@
    Thumb element
    ========================================================================== */
 
-.color-area__thumb {
+.rp-color-area__thumb {
   @apply size-4 will-change-[width,height];
 
   border-radius: min(32px, var(--component-radius));

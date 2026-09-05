@@ -24,7 +24,7 @@ describe("DisclosureGroup", () => {
       const group = container.querySelector("[data-slot='disclosure-group']");
 
       expect(group).not.toBeNull();
-      expect(group).toHaveClass("disclosure-group");
+      expect(group).toHaveClass("rp-disclosure-group");
 
       unmount();
     });

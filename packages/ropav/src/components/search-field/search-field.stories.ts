@@ -318,7 +318,7 @@ export const CustomIcons: Story = {
           <SearchFieldGroup>
             <SearchFieldSearchIcon>
               <svg
-                class="search-field__search-icon"
+                class="rp-search-field__search-icon"
                 data-slot="search-field-search-icon"
                 height="16"
                 viewBox="0 0 16 16"

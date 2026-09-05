@@ -269,7 +269,7 @@ describe("Autocomplete (browser)", () => {
 
       await nextTick();
 
-      // `.autocomplete__trigger:has(.autocomplete__indicator)` — a `:has()` rule jsdom never
+      // `.rp-autocomplete__trigger:has(.rp-autocomplete__indicator)` — a `:has()` rule jsdom never
       // applies, so the padding it adds can only be shown here.
       expect(getComputedStyle(groupOf(result.container)).paddingInlineEnd).toBe("28px");
     });

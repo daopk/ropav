@@ -13,7 +13,7 @@ describe("ButtonGroup", () => {
       const group = getByRole("group");
 
       expect(group.getAttribute("data-slot")).toBe("button-group");
-      expect(group.classList.contains("button-group")).toBe(true);
+      expect(group.classList.contains("rp-button-group")).toBe(true);
 
       unmount();
     });
@@ -24,7 +24,7 @@ describe("ButtonGroup", () => {
 
       expect(separator).not.toBeNull();
       expect(separator?.getAttribute("aria-hidden")).toBe("true");
-      expect(separator?.classList.contains("button-group__separator")).toBe(true);
+      expect(separator?.classList.contains("rp-button-group__separator")).toBe(true);
 
       unmount();
     });
@@ -33,7 +33,7 @@ describe("ButtonGroup", () => {
       const { getByRole, unmount } = renderGroup({ class: "shadow-lg" });
       const group = getByRole("group");
 
-      expect(group.classList.contains("button-group")).toBe(true);
+      expect(group.classList.contains("rp-button-group")).toBe(true);
       expect(group.classList.contains("shadow-lg")).toBe(true);
 
       unmount();
@@ -44,7 +44,7 @@ describe("ButtonGroup", () => {
     it("defaults to the horizontal orientation", () => {
       const { getByRole, unmount } = renderGroup();
 
-      expect(getByRole("group").classList.contains("button-group--horizontal")).toBe(true);
+      expect(getByRole("group").classList.contains("rp-button-group--horizontal")).toBe(true);
 
       unmount();
     });
@@ -52,7 +52,7 @@ describe("ButtonGroup", () => {
     it("exposes the vertical orientation modifier", () => {
       const { getByRole, unmount } = renderGroup({ orientation: "vertical" });
 
-      expect(getByRole("group").classList.contains("button-group--vertical")).toBe(true);
+      expect(getByRole("group").classList.contains("rp-button-group--vertical")).toBe(true);
 
       unmount();
     });
@@ -60,7 +60,7 @@ describe("ButtonGroup", () => {
     it("exposes the full width modifier", () => {
       const { getByRole, unmount } = renderGroup({ fullWidth: true });
 
-      expect(getByRole("group").classList.contains("button-group--full-width")).toBe(true);
+      expect(getByRole("group").classList.contains("rp-button-group--full-width")).toBe(true);
 
       unmount();
     });
@@ -71,8 +71,8 @@ describe("ButtonGroup", () => {
       const { getByRole, unmount } = renderGroup({ size: "sm", variant: "secondary" });
       const button = getByRole("button", { name: "Save" });
 
-      expect(button.classList.contains("button--sm")).toBe(true);
-      expect(button.classList.contains("button--secondary")).toBe(true);
+      expect(button.classList.contains("rp-button--sm")).toBe(true);
+      expect(button.classList.contains("rp-button--secondary")).toBe(true);
 
       unmount();
     });
@@ -94,9 +94,9 @@ describe("ButtonGroup", () => {
       });
       const button = getByRole("button", { name: "Save" });
 
-      expect(button.classList.contains("button--lg")).toBe(true);
-      expect(button.classList.contains("button--primary")).toBe(true);
-      expect(button.classList.contains("button--sm")).toBe(false);
+      expect(button.classList.contains("rp-button--lg")).toBe(true);
+      expect(button.classList.contains("rp-button--primary")).toBe(true);
+      expect(button.classList.contains("rp-button--sm")).toBe(false);
 
       unmount();
     });
@@ -118,10 +118,10 @@ describe("ButtonGroup", () => {
       });
       const button = getByRole("button", { name: "Nested" });
 
-      // The stylesheet already targets `.button-group .button` as a descendant, so the
+      // The stylesheet already targets `.rp-button-group .rp-button` as a descendant, so the
       // context follows the same reach rather than stopping at the direct children.
-      expect(button.classList.contains("button--sm")).toBe(true);
-      expect(button.classList.contains("button--secondary")).toBe(true);
+      expect(button.classList.contains("rp-button--sm")).toBe(true);
+      expect(button.classList.contains("rp-button--secondary")).toBe(true);
 
       unmount();
     });

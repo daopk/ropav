@@ -30,7 +30,7 @@ const field = useNumberField({
 });
 
 // `slot="increment"` / `slot="decrement"` are live CSS contracts, not leftovers of React Aria's
-// slot system: `.number-field__group:has([slot="decrement"])` is what decides the grid columns.
+// slot system: `.rp-number-field__group:has([slot="decrement"])` is what decides the grid columns.
 // Bound from script because Vue 2 read a literal `slot` attribute as slot syntax and the linter
 // still flags either spelling.
 const incrementSlot = { slot: "increment" };
