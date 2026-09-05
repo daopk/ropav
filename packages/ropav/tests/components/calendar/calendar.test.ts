@@ -2,7 +2,7 @@ import type { DateValue } from "@internationalized/date";
 
 import { CalendarDate, createCalendar } from "@internationalized/date";
 import { renderVapor } from "@ropav/testing/helpers/vue";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 
 import Fixture from "./fixtures.vue";
@@ -42,6 +42,11 @@ const renderCalendar = (props: Record<string, unknown> = {}) => {
 };
 
 describe("Calendar", () => {
+  // The current-year tests pin the clock, and a fake one left running would reach the tests after.
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   describe("structure", () => {
     it("renders every part with its data-slot", () => {
       const calendar = renderCalendar({ withCellIndicator: true, withYearPicker: true });
@@ -411,6 +416,29 @@ describe("Calendar", () => {
       calendar.unmount();
     });
 
+    it("marks the year today falls in", () => {
+      vi.useFakeTimers({ toFake: ["Date"] });
+      vi.setSystemTime(new Date("2026-06-15T12:00:00Z"));
+
+      const calendar = renderCalendar({
+        defaultFocusedValue: new CalendarDate(2024, 6, 15),
+        maxValue: new CalendarDate(2028, 12, 31),
+        minValue: new CalendarDate(2024, 1, 1),
+        withYearPicker: true,
+      });
+      // The body writes its flag onto the cell, the cell writes its own inside.
+      const marked = (selector: string) =>
+        calendar
+          .years()
+          .filter((cell) => cell.matches(selector) || cell.querySelector(selector) !== null)
+          .map((cell) => cell.dataset["year"]);
+
+      // 2024 is focused, so a year marked here is today's rather than the selected one.
+      expect(marked("[data-body-current-year]")).toEqual(["2026"]);
+      expect(marked("[data-cell-current-year]")).toEqual(["2026"]);
+      calendar.unmount();
+    });
+
     it("moves the calendar to a year and closes", async () => {
       const calendar = renderCalendar({
         defaultYearPickerOpen: true,
@@ -594,6 +622,32 @@ describe("Calendar", () => {
 
       // Taishō, Shōwa, Heisei and Reiwa all reach a year 8, and each is its own cell.
       expect(selected.map((cell) => cell.textContent?.trim())).toEqual(["令和8年"]);
+      calendar.unmount();
+    });
+
+    /*
+     * A year number outside the Gregorian calendar counts from somewhere else, so holding it against
+     * the Gregorian one asks whether 8 is 2026 and marks nothing at all. The dates answer it.
+     */
+    it("marks the year today falls in, counted the way the calendar counts", () => {
+      vi.useFakeTimers({ toFake: ["Date"] });
+      vi.setSystemTime(new Date("2026-06-15T12:00:00Z"));
+
+      const calendar = renderCalendar({
+        createCalendar,
+        defaultFocusedValue: new CalendarDate(2000, 6, 15),
+        locale: "ja-JP-u-ca-japanese",
+        withYearPicker: true,
+      });
+      const marked = (selector: string) =>
+        calendar
+          .years()
+          .filter((cell) => cell.matches(selector) || cell.querySelector(selector) !== null)
+          .map((cell) => cell.textContent?.trim());
+
+      // Heisei 12 is focused, so the marked year is today's rather than the selected one.
+      expect(marked("[data-body-current-year]")).toEqual(["令和8年"]);
+      expect(marked("[data-cell-current-year]")).toEqual(["令和8年"]);
       calendar.unmount();
     });
 

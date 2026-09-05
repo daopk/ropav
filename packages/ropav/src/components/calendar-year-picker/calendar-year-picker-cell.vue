@@ -47,7 +47,7 @@ const interaction = useInteractionStates();
 const slotProps = computed<CalendarYearPickerCellSlotProps>(() => ({
   formattedYear: formattedYear.value,
   id: props.id,
-  isCurrentYear: year.value === new Date().getFullYear(),
+  isCurrentYear: entry.value?.isCurrentYear ?? false,
   isOpen: isYearPickerOpen.value,
   isSelected: isSelected.value,
   selectYear: () => selectYear(props.id),

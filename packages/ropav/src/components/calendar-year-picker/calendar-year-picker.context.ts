@@ -51,6 +51,13 @@ export interface YearPickerGridYear {
   id: number;
   year: number;
   formatted: string;
+  /**
+   * Whether today falls in this year.
+   *
+   * Carried here because the number alone cannot answer it: a calendar that counts its years from
+   * somewhere other than the Christian era writes this one as 8, or 2569, or 5786.
+   */
+  isCurrentYear: boolean;
 }
 
 export interface YearPickerGridContext {

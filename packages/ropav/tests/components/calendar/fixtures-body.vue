@@ -126,8 +126,21 @@ const props = withDefaults(defineProps<CalendarFixtureProps>(), {
     </CalendarGrid>
     <CalendarYearPickerGrid v-if="props.withYearPicker">
       <CalendarYearPickerGridBody>
-        <template #default="{ id }">
-          <CalendarYearPickerCell :id="id" />
+        <!--
+          The body and the cell each hand out their own `isCurrentYear`, so both are written into the
+          DOM to be told apart. The marker inside the cell is empty, which keeps the button's text
+          the year label the other tests read.
+        -->
+        <template #default="{ id, isCurrentYear: isCurrentYearFromBody }">
+          <CalendarYearPickerCell
+            :id="id"
+            :data-body-current-year="isCurrentYearFromBody || undefined"
+          >
+            <template #default="{ formattedYear, isCurrentYear: isCurrentYearFromCell }">
+              {{ formattedYear }}
+              <span v-if="isCurrentYearFromCell" data-cell-current-year />
+            </template>
+          </CalendarYearPickerCell>
         </template>
       </CalendarYearPickerGridBody>
     </CalendarYearPickerGrid>

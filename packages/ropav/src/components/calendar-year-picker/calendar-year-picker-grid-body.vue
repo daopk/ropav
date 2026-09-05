@@ -15,14 +15,11 @@ defineSlots<{ default?: (props: CalendarYearPickerCellSlotProps) => unknown }>()
 
 const { focusedId, isYearPickerOpen, selectYear, years } = useYearPickerGridContext();
 
-/** The current Gregorian year, for marking "this year" whatever calendar is on screen. */
-const currentYear = new Date().getFullYear();
-
 const entries = computed(() =>
-  years.value.map(({ formatted, id, year }) => ({
+  years.value.map(({ formatted, id, isCurrentYear, year }) => ({
     formattedYear: formatted,
     id,
-    isCurrentYear: year === currentYear,
+    isCurrentYear,
     isOpen: isYearPickerOpen.value,
     isSelected: id === focusedId.value,
     selectYear: () => selectYear(id),

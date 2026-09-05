@@ -2,6 +2,7 @@
 import type { YearPickerGridYear } from "./calendar-year-picker.context";
 import type { CalendarYearPickerGridProps } from "./calendar-year-picker.types";
 
+import { isSameYear, today } from "@internationalized/date";
 import { calendarYearPickerVariants } from "@ropav/styles";
 import { computed, onScopeDispose, shallowRef, watch, watchEffect } from "vue";
 
@@ -43,13 +44,16 @@ const visibleYears = computed(() => {
 
 const picker = useCalendarYearPicker({ format: () => props.format, visibleYears }, state);
 
-const years = computed<YearPickerGridYear[]>(() =>
-  picker.items.value.map((item) => ({
+const years = computed<YearPickerGridYear[]>(() => {
+  const currentDate = today(state.timeZone.value);
+
+  return picker.items.value.map((item) => ({
     formatted: item.formatted,
     id: item.id,
+    isCurrentYear: isSameYear(item.date, currentDate),
     year: item.date.year,
-  })),
-);
+  }));
+});
 
 const focusedId = computed(() => picker.value.value);
 const activeId = shallowRef(focusedId.value);
