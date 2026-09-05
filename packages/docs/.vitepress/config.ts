@@ -8,6 +8,9 @@ import { colorReplacements } from "./theme/playground/code-theme.ts";
  * Puts the stored palette on `<html>` before the first paint, so a reader who chose one does
  * not watch the default flash past. Mirrors the appearance class VitePress restores itself.
  */
+const SITE = "https://ropav.netlify.app";
+const STORYBOOK = "https://ropav-storybook.netlify.app";
+
 const PALETTE_BOOT = `;(() => {
   try {
     const palette = localStorage.getItem("ropav-palette");
@@ -23,6 +26,8 @@ export default defineConfig({
 
   // One constant drives the build and the browser, so a repainted block matches its neighbours.
   markdown: { colorReplacements, config: playgroundBlock },
+  // Absolute URLs in the generated sitemap, which is the one thing that needs the hostname.
+  sitemap: { hostname: SITE },
   // The page glob excludes only what this names — nothing built-in keeps it out of `.vitepress`.
   srcExclude: ["**/README.md", ".vitepress/generated/**"],
 
@@ -144,12 +149,14 @@ export default defineConfig({
    */
   vite: {
     /*
-     * Absent by default. A public build with no Storybook to point at renders the names it
-     * cannot link as plain text, rather than shipping an address only its builder can open.
+     * The published Storybook, so any build produces links that work — a fork, a preview
+     * deploy or somebody's laptop, none of which should have to know an environment variable.
+     * `ROPAV_STORYBOOK_URL` overrides it, and an empty one turns the links back into plain
+     * text rather than shipping an address the reader cannot open.
      */
     define: {
       __STORYBOOK_URL__: JSON.stringify(
-        process.env["ROPAV_STORYBOOK_URL"]?.replace(/\/$/, "") ?? "",
+        (process.env["ROPAV_STORYBOOK_URL"] ?? STORYBOOK).replace(/\/$/, ""),
       ),
     },
     // `ropav` resolves to workspace source, so it is crawled rather than pre-bundled. Its own
