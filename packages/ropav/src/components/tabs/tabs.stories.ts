@@ -69,7 +69,7 @@ const overviewTemplate = (extraRootProps = "") => `
       <TabsListContainer>
         <TabsList aria-label="Options">
           <TabsTab v-for="item in items" :id="item.id" :key="item.id">
-            {{ item.rp-label }}
+            {{ item.label }}
             <TabsIndicator />
           </TabsTab>
         </TabsList>
@@ -116,13 +116,13 @@ export const Overflow: Story = {
           <TabsListContainer>
             <TabsList aria-label="Overflow options">
               <TabsTab v-for="item in items" :id="item.id" :key="item.id">
-                {{ item.rp-label }}
+                {{ item.label }}
                 <TabsIndicator />
               </TabsTab>
             </TabsList>
           </TabsListContainer>
           <TabsPanel v-for="item in items" :id="item.id" :key="item.id" class="pt-4">
-            <p>{{ item.rp-label }} panel content.</p>
+            <p>{{ item.label }} panel content.</p>
           </TabsPanel>
         </Tabs>
       </div>
@@ -168,7 +168,7 @@ const settingsTemplate = `
       <TabsListContainer>
         <TabsList aria-label="Vertical tabs">
           <TabsTab v-for="item in items" :id="item.id" :key="item.id">
-            {{ item.rp-label }}
+            {{ item.label }}
             <TabsIndicator />
           </TabsTab>
         </TabsList>
@@ -216,7 +216,7 @@ export const WithDisabledTab: Story = {
                 :key="item.id"
                 :is-disabled="item.id === 'disabled'"
               >
-                {{ item.rp-label }}
+                {{ item.label }}
                 <TabsIndicator />
               </TabsTab>
             </TabsList>
@@ -252,7 +252,7 @@ export const WithDefaultSelectedTab: Story = {
           <TabsListContainer>
             <TabsList aria-label="Tabs with default options">
               <TabsTab v-for="item in items" :id="item.id" :key="item.id">
-                {{ item.rp-label }}
+                {{ item.label }}
                 <TabsIndicator />
               </TabsTab>
             </TabsList>
@@ -294,7 +294,7 @@ export const WithControlledSelectionTab: Story = {
           <TabsListContainer>
             <TabsList aria-label="Tabs with controlled options">
               <TabsTab v-for="item in items" :id="item.id" :key="item.id">
-                {{ item.rp-label }}
+                {{ item.label }}
                 <TabsIndicator />
               </TabsTab>
             </TabsList>
@@ -331,13 +331,13 @@ export const WithCustomStyle: Story = {
               class="w-fit *:h-6 *:w-fit *:px-3 *:text-sm *:font-normal *:data-[selected=true]:text-accent-foreground"
             >
               <TabsTab v-for="item in items" :id="item.id" :key="item.id">
-                {{ item.rp-label }}
+                {{ item.label }}
                 <TabsIndicator class="bg-accent" />
               </TabsTab>
             </TabsList>
           </TabsListContainer>
           <TabsPanel v-for="item in items" :id="item.id" :key="item.id" class="pt-4">
-            <p>{{ item.rp-label }} report</p>
+            <p>{{ item.label }} report</p>
           </TabsPanel>
         </Tabs>
       </div>
@@ -361,7 +361,7 @@ export const WithSeparator: Story = {
             <TabsList aria-label="Options">
               <TabsTab v-for="(item, index) in items" :id="item.id" :key="item.id">
                 <TabsSeparator v-if="index > 0" />
-                {{ item.rp-label }}
+                {{ item.label }}
                 <TabsIndicator />
               </TabsTab>
             </TabsList>
@@ -426,7 +426,7 @@ export const SecondaryVertical: Story = {
           <TabsListContainer>
             <TabsList aria-label="Vertical tabs">
               <TabsTab v-for="item in items" :id="item.id" :key="item.id">
-                {{ item.rp-label }}
+                {{ item.label }}
                 <TabsIndicator />
               </TabsTab>
             </TabsList>
@@ -472,7 +472,7 @@ export const Showcase1: Story = {
             <img
               v-for="level in levels"
               :key="level.id"
-              :alt="'Sample photo at ' + level.rp-label + ', ' + level.factor + ' zoom'"
+              :alt="'Sample photo at ' + level.label + ', ' + level.factor + ' zoom'"
               :aria-hidden="selectedZoom !== level.id"
               class="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity delay-200 duration-[800ms] ease-in-out data-[selected=true]:opacity-100 data-[selected=true]:delay-0"
               :data-selected="selectedZoom === level.id"
@@ -494,7 +494,7 @@ export const Showcase1: Story = {
                   :key="level.id"
                   :class="level.id === 'macro' ? 'capitalize' : ''"
                 >
-                  {{ level.rp-label }}
+                  {{ level.label }}
                   <TabsIndicator class="rounded-full bg-white shadow-none duration-[320ms]" />
                 </TabsTab>
               </TabsList>

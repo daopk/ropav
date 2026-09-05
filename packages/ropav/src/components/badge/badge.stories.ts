@@ -93,7 +93,7 @@ export const Sizes: Story = {
             <Avatar :size="size.value"><AvatarImage :src="avatarUrl" /></Avatar>
             <Badge v-bind="args" :size="size.value"><BadgeLabel>99+</BadgeLabel></Badge>
           </BadgeAnchor>
-          <span class="text-xs text-muted">{{ size.rp-label }}</span>
+          <span class="text-xs text-muted">{{ size.label }}</span>
         </div>
       </div>
     `,
@@ -138,12 +138,12 @@ export const WithContent: Story = {
     }),
     template: `
       <div class="flex items-center gap-8">
-        <div v-for="item in items" :key="item.rp-label" class="flex flex-col items-center gap-2">
+        <div v-for="item in items" :key="item.label" class="flex flex-col items-center gap-2">
           <BadgeAnchor>
             <Avatar><AvatarImage :src="avatarUrl" /></Avatar>
             <Badge v-bind="args" :color="item.color"><BadgeLabel>{{ item.content }}</BadgeLabel></Badge>
           </BadgeAnchor>
-          <span class="text-xs text-muted">{{ item.rp-label }}</span>
+          <span class="text-xs text-muted">{{ item.label }}</span>
         </div>
         <div class="flex flex-col items-center gap-2">
           <BadgeAnchor>
@@ -246,7 +246,7 @@ export const DotBadge: Story = {
                 <Avatar :size="size.value"><AvatarImage :src="avatarUrl" /></Avatar>
                 <Badge color="success" placement="bottom-right" :size="size.value" />
               </BadgeAnchor>
-              <span class="text-xs text-muted">{{ size.rp-label }}</span>
+              <span class="text-xs text-muted">{{ size.label }}</span>
             </div>
           </div>
         </div>

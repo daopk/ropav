@@ -70,7 +70,7 @@ export const Default: Story = {
         :size="args.size"
       >
         <SegmentedControlItem v-for="item in items" :id="item.id" :key="item.id">
-          {{ item.rp-label }}
+          {{ item.label }}
           <SegmentedControlIndicator />
         </SegmentedControlItem>
       </SegmentedControl>
@@ -88,7 +88,7 @@ export const Sizes: Story = {
         <div v-for="size in sizes" :key="size" class="flex items-center gap-3">
           <SegmentedControl :aria-label="'Reporting range, ' + size" default-selected-key="weekly" :size="size">
             <SegmentedControlItem v-for="item in items" :id="item.id" :key="item.id">
-              {{ item.rp-label }}
+              {{ item.label }}
               <SegmentedControlIndicator />
             </SegmentedControlItem>
           </SegmentedControl>
@@ -118,7 +118,7 @@ export const WithSeparators: Story = {
       >
         <SegmentedControlItem v-for="item in items" :id="item.id" :key="item.id">
           <SegmentedControlSeparator />
-          {{ item.rp-label }}
+          {{ item.label }}
           <SegmentedControlIndicator />
         </SegmentedControlItem>
       </SegmentedControl>
@@ -141,7 +141,7 @@ export const FullWidth: Story = {
       <div class="w-[420px]">
         <SegmentedControl aria-label="Inbox filter" default-selected-key="all" full-width>
           <SegmentedControlItem v-for="item in items" :id="item.id" :key="item.id">
-            {{ item.rp-label }}
+            {{ item.label }}
             <SegmentedControlIndicator />
           </SegmentedControlItem>
         </SegmentedControl>
@@ -178,7 +178,7 @@ export const WithIcons: Story = {
           <svg aria-hidden="true" class="size-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 20 20">
             <path :d="item.path" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
-          {{ item.rp-label }}
+          {{ item.label }}
           <SegmentedControlIndicator />
         </SegmentedControlItem>
       </SegmentedControl>
@@ -197,7 +197,7 @@ export const IconOnly: Story = {
           v-for="item in items"
           :id="item.id"
           :key="item.id"
-          :aria-label="item.rp-label"
+          :aria-label="item.label"
           class="px-2.5"
         >
           <svg aria-hidden="true" class="size-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 20 20">
@@ -225,7 +225,7 @@ export const Controlled: Story = {
           aria-label="Reporting range"
         >
           <SegmentedControlItem v-for="item in items" :id="item.id" :key="item.id">
-            {{ item.rp-label }}
+            {{ item.label }}
             <SegmentedControlIndicator />
           </SegmentedControlItem>
         </SegmentedControl>
@@ -247,7 +247,7 @@ export const DisabledSegment: Story = {
         :disabled-keys="['weekly']"
       >
         <SegmentedControlItem v-for="item in items" :id="item.id" :key="item.id">
-          {{ item.rp-label }}
+          {{ item.label }}
           <SegmentedControlIndicator />
         </SegmentedControlItem>
       </SegmentedControl>
@@ -262,7 +262,7 @@ export const Disabled: Story = {
     template: `
       <SegmentedControl aria-label="Reporting range" default-selected-key="weekly" is-disabled>
         <SegmentedControlItem v-for="item in items" :id="item.id" :key="item.id">
-          {{ item.rp-label }}
+          {{ item.label }}
           <SegmentedControlIndicator />
         </SegmentedControlItem>
       </SegmentedControl>

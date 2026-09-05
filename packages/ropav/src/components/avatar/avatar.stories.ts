@@ -103,14 +103,14 @@ export const Default: Story = {
         <div class="flex flex-col gap-4">
           <Avatar v-for="item in delayed" :key="item.src" v-bind="args">
             <AvatarImage :alt="item.alt" :src="item.src" />
-            <AvatarFallback :delay-ms="600">{{ item.rp-label }}</AvatarFallback>
+            <AvatarFallback :delay-ms="600">{{ item.label }}</AvatarFallback>
           </Avatar>
         </div>
 
         <div class="flex flex-col gap-4">
           <Avatar v-for="item in solid" :key="item.src" v-bind="args">
             <AvatarImage :alt="item.alt" :src="item.src" />
-            <AvatarFallback>{{ item.rp-label }}</AvatarFallback>
+            <AvatarFallback>{{ item.label }}</AvatarFallback>
           </Avatar>
         </div>
       </div>
@@ -148,7 +148,7 @@ export const WithColors: Story = {
     template: `
       <div class="flex items-center gap-4">
         <Avatar v-for="item in swatches" :key="item.color" :color="item.color">
-          <AvatarFallback>{{ item.rp-label }}</AvatarFallback>
+          <AvatarFallback>{{ item.label }}</AvatarFallback>
         </Avatar>
       </div>
     `,
@@ -227,7 +227,7 @@ export const Sizes: Story = {
       <div class="flex items-center gap-4">
         <Avatar v-for="item in sizes" :key="item.size" :size="item.size">
           <AvatarImage :alt="item.alt" :src="item.src" />
-          <AvatarFallback>{{ item.rp-label }}</AvatarFallback>
+          <AvatarFallback>{{ item.label }}</AvatarFallback>
         </Avatar>
       </div>
     `,
@@ -271,8 +271,8 @@ export const Variants: Story = {
 
         <Separator />
 
-        <div v-for="row in rows" :key="row.rp-label" class="flex items-center gap-3">
-          <div class="w-24 shrink-0 text-sm text-muted">{{ row.rp-label }}</div>
+        <div v-for="row in rows" :key="row.label" class="flex items-center gap-3">
+          <div class="w-24 shrink-0 text-sm text-muted">{{ row.label }}</div>
           <div
             v-for="(color, colorIndex) in colors"
             :key="color"

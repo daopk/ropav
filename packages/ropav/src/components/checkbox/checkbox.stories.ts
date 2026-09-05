@@ -404,7 +404,7 @@ export const FeaturesAndAddOnsExample: Story = {
                   <component :is="addon.icon" class="size-5 text-accent" />
                   <div class="flex flex-col gap-1">
                     <span>{{ addon.title }}</span>
-                    <Description>{{ addon.rp-description }}</Description>
+                    <Description>{{ addon.description }}</Description>
                   </div>
                 </CheckboxContent>
               </Checkbox>

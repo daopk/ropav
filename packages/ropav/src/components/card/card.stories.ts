@@ -144,7 +144,7 @@ export const Variants: Story = {
         >
           <CardHeader>
             <CardTitle>{{ item.title }}</CardTitle>
-            <CardDescription>{{ item.rp-description }}</CardDescription>
+            <CardDescription>{{ item.description }}</CardDescription>
           </CardHeader>
           <CardContent>
             <p>{{ item.body }}</p>
@@ -245,7 +245,7 @@ export const WithAvatar: Story = {
           </CardHeader>
           <CardFooter class="flex gap-2">
             <Avatar :aria-label="community.profileLabel" class="size-5">
-              <AvatarImage :alt="community.avatarAlt" :src="community.rp-avatar" />
+              <AvatarImage :alt="community.avatarAlt" :src="community.avatar" />
               <AvatarFallback class="text-xs">{{ community.avatarLabel }}</AvatarFallback>
             </Avatar>
             <span class="text-xs">By {{ community.author }}</span>

@@ -144,7 +144,7 @@ export const Statuses: Story = {
                 <AlertDialogCloseTrigger />
                 <AlertDialogHeader>
                   <AlertDialogIcon :status="example.status" />
-                  <AlertDialogHeading>{{ example.rp-header }}</AlertDialogHeading>
+                  <AlertDialogHeading>{{ example.header }}</AlertDialogHeading>
                 </AlertDialogHeader>
                 <AlertDialogBody>
                   <p>{{ example.body }}</p>
@@ -771,7 +771,7 @@ export const CustomAnimations: Story = {
                   <AlertDialogHeading>{{ animation.name }} Animation</AlertDialogHeading>
                 </AlertDialogHeader>
                 <AlertDialogBody>
-                  <p class="mt-1">{{ animation.rp-description }}</p>
+                  <p class="mt-1">{{ animation.description }}</p>
                 </AlertDialogBody>
                 <AlertDialogFooter>
                   <AlertDialogClose><Button variant="tertiary">Close</Button></AlertDialogClose>

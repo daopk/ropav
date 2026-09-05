@@ -71,7 +71,7 @@ export const Default: Story = {
           :size="args.size"
           :variant="item.variant"
         >
-          {{ item.rp-label }}
+          {{ item.label }}
         </Button>
       </div>
     `,

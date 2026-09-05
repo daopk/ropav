@@ -126,3 +126,51 @@ describe("variant recipes", () => {
     },
   );
 });
+
+/**
+ * The prefix belongs to a class name and to nothing else.
+ *
+ * A rename that walks the source turning `name` into `rp-name` cannot tell the two apart by shape:
+ * `{{ item.label }}` in a story's template is the same word as `.label` in a stylesheet. Prefixing
+ * the property leaves `item.rp-label`, which the template compiler reads as `item.rp - label` —
+ * valid JavaScript, both halves undefined, so the expression is NaN and the story quietly renders
+ * the string "NaN" where the label belongs.
+ *
+ * Nothing downstream notices. It compiles, it mounts, and the story audit sees a well-formed
+ * accessible name that happens to read NaN, so only a check on the source catches it.
+ */
+const SOURCE = path.resolve(import.meta.dirname, "../../src");
+
+const sourceFiles = readdirSync(SOURCE, { recursive: true, withFileTypes: true })
+  .filter((entry) => entry.isFile() && /\.(?:ts|vue)$/.test(entry.name))
+  .map((entry) => path.join(entry.parentPath, entry.name));
+
+/**
+ * Read the whole token before the dot rather than the character in front of it. A compound
+ * selector puts an identifier-and-dot ahead of the prefix too — `.rp-badge--primary.rp-badge--soft`
+ * ends in exactly the shape being looked for — and those are written out in doc comments, so a
+ * check that stopped at the dot would fail on one.
+ */
+const readsAsSelector = (text: string, start: number) => {
+  let index = start;
+
+  while (index > 0 && /[\w-]/.test(text[index - 1]!)) index--;
+
+  return text[index - 1] === "." && text.slice(index, start).startsWith(PREFIX);
+};
+
+const propertyAccess = new RegExp(String.raw`[A-Za-z_$][\w$]*\.${PREFIX}[\w-]+`, "g");
+
+describe("prefixed property accesses", () => {
+  it("no source file reads a property by a class name", () => {
+    const offenders = sourceFiles.flatMap((file) => {
+      const text = readFileSync(file, "utf8");
+
+      return [...text.matchAll(propertyAccess)]
+        .filter((match) => !readsAsSelector(text, match.index))
+        .map((match) => `${path.relative(SOURCE, file)}: ${match[0]}`);
+    });
+
+    expect(offenders).toEqual([]);
+  });
+});

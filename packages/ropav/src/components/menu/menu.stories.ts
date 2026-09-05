@@ -180,10 +180,10 @@ export const WithSingleSelection: Story = {
             v-for="view in views"
             :id="view.id"
             :key="view.id"
-            :text-value="view.rp-label"
+            :text-value="view.label"
           >
             <MenuItemIndicator />
-            <Label>{{ view.rp-label }}</Label>
+            <Label>{{ view.label }}</Label>
           </MenuItem>
         </Menu>
       </Surface>
@@ -205,10 +205,10 @@ export const WithMultipleSelection: Story = {
             v-for="view in views"
             :id="view.id"
             :key="view.id"
-            :text-value="view.rp-label"
+            :text-value="view.label"
           >
             <MenuItemIndicator />
-            <Label>{{ view.rp-label }}</Label>
+            <Label>{{ view.label }}</Label>
           </MenuItem>
         </Menu>
       </Surface>

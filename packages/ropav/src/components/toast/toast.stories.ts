@@ -445,8 +445,8 @@ export const CustomToast: Story = {
                   <ToastTitle v-if="item.content.title" class="text-accent">
                     {{ item.content.title }}
                   </ToastTitle>
-                  <ToastDescription v-if="item.content.rp-description">
-                    {{ item.content.rp-description }}
+                  <ToastDescription v-if="item.content.description">
+                    {{ item.content.description }}
                   </ToastDescription>
                 </div>
               </div>

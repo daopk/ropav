@@ -107,7 +107,7 @@ export const Sizes: Story = {
     template: `
       <div class="flex flex-col gap-6">
         <div v-for="item in sizes" :key="item.size" class="flex flex-col gap-2">
-          <p class="text-sm text-muted">{{ item.rp-label }}</p>
+          <p class="text-sm text-muted">{{ item.label }}</p>
           <ToggleButtonGroup selection-mode="multiple" :size="item.size">
             <ToggleButton aria-label="Bold" id="bold" is-icon-only>
               <IconBold />

@@ -103,7 +103,7 @@ export const Sizes: Story = {
     template: `
       <div class="flex flex-col gap-6">
         <div v-for="item in sizes" :key="item.size" class="flex flex-col gap-2">
-          <p class="text-sm text-muted">{{ item.rp-label }}</p>
+          <p class="text-sm text-muted">{{ item.label }}</p>
           <ButtonGroup :size="item.size">
             <Button>First</Button>
             <Button>
@@ -176,7 +176,7 @@ export const Variants: Story = {
     template: `
       <div class="flex flex-col gap-6">
         <div v-for="item in variants" :key="item.variant" class="flex flex-col gap-2">
-          <p class="text-sm text-muted">{{ item.rp-label }}</p>
+          <p class="text-sm text-muted">{{ item.label }}</p>
           <ButtonGroup :variant="item.variant">
             <Button>First</Button>
             <Button>
@@ -393,10 +393,10 @@ export const Examples: Story = {
                     :id="strategy.id"
                     :key="strategy.id"
                     class="flex flex-col items-start gap-1"
-                    :text-value="strategy.rp-label"
+                    :text-value="strategy.label"
                   >
-                    <Label>{{ strategy.rp-label }}</Label>
-                    <Description>{{ strategy.rp-description }}</Description>
+                    <Label>{{ strategy.label }}</Label>
+                    <Description>{{ strategy.description }}</Description>
                   </DropdownItem>
                 </DropdownMenu>
               </DropdownPopover>

@@ -889,7 +889,7 @@ export const TanStackTable: Story = {
                   :is-row-header="header.id === 'name'"
                 >
                   <TableSortableColumnHeader :sort-direction="sortDirection">
-                    {{ header.column.columnDef.rp-header }}
+                    {{ header.column.columnDef.header }}
                   </TableSortableColumnHeader>
                 </TableColumn>
               </TableHeader>

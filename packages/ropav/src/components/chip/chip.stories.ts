@@ -130,13 +130,13 @@ export const Statuses: Story = {
         <div v-for="variant in variants" :key="variant" class="flex items-center gap-3">
           <Chip
             v-for="status in statuses"
-            :key="status.rp-label"
+            :key="status.label"
             v-bind="args"
             :color="status.color ?? args.color"
             :variant="variant"
           >
             <IconCircleFill class="size-1.5" />
-            <ChipLabel>{{ status.rp-label }}</ChipLabel>
+            <ChipLabel>{{ status.label }}</ChipLabel>
           </Chip>
         </div>
       </div>

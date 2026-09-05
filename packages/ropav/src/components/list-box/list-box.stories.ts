@@ -176,7 +176,7 @@ export const WithSections: Story = {
               </div>
               <div class="flex flex-col">
                 <Label>{{ action.title }}</Label>
-                <Description>{{ action.rp-description }}</Description>
+                <Description>{{ action.description }}</Description>
               </div>
               <Kbd class="ms-auto" variant="light">
                 <KbdAbbr v-for="key in action.keys" :key="key" :key-value="key" />
@@ -230,7 +230,7 @@ export const WithDisabledItems: Story = {
             >
               <div class="flex flex-col">
                 <Label>{{ action.title }}</Label>
-                <Description>{{ action.rp-description }}</Description>
+                <Description>{{ action.description }}</Description>
               </div>
             </ListBoxItem>
           </ListBoxSection>
