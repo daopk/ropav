@@ -184,9 +184,17 @@ export const useTextField = (options: UseTextFieldOptions = {}): UseTextFieldRet
     element.value = next;
   };
 
-  // React reads the element type from a prop; here the element itself answers the question,
-  // which means `type` and `pattern` only settle once the control has registered.
-  const isTextArea = computed(() => element.value instanceof HTMLTextAreaElement);
+  /*
+   * React reads the element type from a prop; here the element itself answers the question,
+   * which means `type` and `pattern` only settle once the control has registered.
+   *
+   * Guarded because this is read while rendering, and a server has no `HTMLTextAreaElement` to
+   * compare against — an `instanceof` needs the constructor even when the left side is null.
+   */
+  const isTextArea = computed(
+    () =>
+      typeof HTMLTextAreaElement !== "undefined" && element.value instanceof HTMLTextAreaElement,
+  );
 
   const { setState, state: value } = useControllableState<string>({
     defaultValue: toValue(options.defaultValue) ?? "",

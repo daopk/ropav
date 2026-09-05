@@ -204,7 +204,15 @@ watch(
   },
 );
 
-onScopeDispose(() => window.removeEventListener("keydown", onWindowKeydown, true));
+/*
+ * Guarded: a server disposes the render scope once the markup is out, and there is no `window`
+ * there to take a listener off. Nothing was ever added on that side either.
+ */
+onScopeDispose(() => {
+  if (typeof window === "undefined") return;
+
+  window.removeEventListener("keydown", onWindowKeydown, true);
+});
 
 // Read off the root itself, as React does, and separate from the focus tracking on the group: this
 // one is what the stylesheet keys the ring on.
