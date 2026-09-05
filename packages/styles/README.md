@@ -5,10 +5,16 @@ themes, utilities, and custom variants, plus `tv()` variants that do nothing but
 Framework-agnostic — not a line of Vue or React in it. The only `dependency` is `tw-animate-css`;
 the only peer is `tailwindcss`.
 
+**[Theming guide](https://ropav.netlify.app/theming/)** ·
+[Tokens](https://ropav.netlify.app/theming/tokens) ·
+[Class names](https://ropav.netlify.app/theming/class-names) ·
+[State colors](https://ropav.netlify.app/theming/state-colors)
+
 ## Provenance
 
 A derivative work of [`@heroui/styles@3.2.4`](https://github.com/heroui-inc/heroui/tree/v3.2.4/packages/styles),
-vendored into this workspace so the style layer can be fixed in place. See the root [README](../../README.md).
+vendored into this workspace so the style layer can be fixed in place. See
+[`ropav`](https://www.npmjs.com/package/ropav) for the rest.
 
 ## Installation
 
