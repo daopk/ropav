@@ -15,11 +15,14 @@ import { createChecker } from "vue-component-meta";
 import { emitApi } from "./api";
 import { emitControlSpecs } from "./control-specs";
 import { ROPAV } from "./shared";
+import { assertShikiMatchesVitePress } from "./shiki";
 import { emitStories } from "./stories";
 
 const count = (n: number, one: string, many: string): string => `${n} ${n === 1 ? one : many}`;
 
 const main = (): void => {
+  assertShikiMatchesVitePress();
+
   const checker = createChecker(join(ROPAV, "tsconfig.json"), { schema: { ignore: [] } });
 
   const specs = emitControlSpecs(checker);
