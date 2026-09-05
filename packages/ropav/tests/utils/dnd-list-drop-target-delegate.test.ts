@@ -1,6 +1,6 @@
 import type { DropTarget } from "@/utils/dnd-types";
 
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { shallowRef } from "vue";
 
 import { ListDropTargetDelegate } from "@/utils/dnd-list-drop-target-delegate";
@@ -18,8 +18,40 @@ import { createFixtureCollection } from "../composables/dnd-collection-state-fix
 
 const ROW_HEIGHT = 20;
 
+interface ListOptions {
+  width?: number;
+  rowHeight?: number;
+}
+
+/** One row of the stack, occupying the band its index gives it. */
+const appendRow = (
+  container: HTMLElement,
+  key: string,
+  index: number,
+  options: ListOptions = {},
+) => {
+  const rowHeight = options.rowHeight ?? ROW_HEIGHT;
+  const row = document.createElement("div");
+
+  row.dataset["key"] = key;
+  row.getBoundingClientRect = () =>
+    ({
+      bottom: (index + 1) * rowHeight,
+      height: rowHeight,
+      left: 0,
+      right: options.width ?? 100,
+      top: index * rowHeight,
+      width: options.width ?? 100,
+      x: 0,
+      y: index * rowHeight,
+    }) as DOMRect;
+  container.appendChild(row);
+
+  return row;
+};
+
 /** A vertical stack of rows, each 20px tall, starting at y = 0. */
-const renderList = (keys: string[], options: { width?: number; rowHeight?: number } = {}) => {
+const renderList = (keys: string[], options: ListOptions = {}) => {
   const rowHeight = options.rowHeight ?? ROW_HEIGHT;
   const container = document.createElement("div");
 
@@ -35,23 +67,7 @@ const renderList = (keys: string[], options: { width?: number; rowHeight?: numbe
       y: 0,
     }) as DOMRect;
 
-  keys.forEach((key, index) => {
-    const row = document.createElement("div");
-
-    row.dataset["key"] = key;
-    row.getBoundingClientRect = () =>
-      ({
-        bottom: (index + 1) * rowHeight,
-        height: rowHeight,
-        left: 0,
-        right: options.width ?? 100,
-        top: index * rowHeight,
-        width: options.width ?? 100,
-        x: 0,
-        y: index * rowHeight,
-      }) as DOMRect;
-    container.appendChild(row);
-  });
+  keys.forEach((key, index) => appendRow(container, key, index, options));
 
   document.body.appendChild(container);
 
@@ -258,6 +274,69 @@ describe("ListDropTargetDelegate", () => {
       expect(target.getDropTargetFromPoint(22, 10, acceptAll)).toEqual({
         dropPosition: "after",
         key: "b",
+        type: "item",
+      });
+    });
+  });
+
+  /**
+   * A drag asks for a target on every `dragover`, so the map of key to element is kept between
+   * calls rather than rebuilt from a `querySelectorAll` that walks the whole collection.
+   */
+  describe("reusing the elements it has found", () => {
+    it("queries the container once across repeated calls", () => {
+      const container = renderList(["a", "b", "c"]);
+      const target = delegate(["a", "b", "c"], container);
+      const query = vi.spyOn(container, "querySelectorAll");
+
+      target.getDropTargetFromPoint(0, 10, acceptAll);
+      target.getDropTargetFromPoint(0, 30, acceptAll);
+      target.getDropTargetFromPoint(0, 50, acceptAll);
+
+      expect(query).toHaveBeenCalledTimes(1);
+    });
+
+    // A row the collection has but the DOM does not would otherwise re-query at every step.
+    it("queries the container once per call when no row is rendered", () => {
+      const keys = ["a", "b", "c", "d", "e", "f", "g", "h"];
+      const container = renderList([]);
+      const query = vi.spyOn(container, "querySelectorAll");
+      const target = delegate(keys, container);
+
+      target.getDropTargetFromPoint(0, 10, acceptAll);
+
+      expect(query).toHaveBeenCalledTimes(1);
+    });
+
+    it("measures the elements a re-render puts in their place", () => {
+      const keys = ["a", "b", "c"];
+      const container = renderList(keys);
+      const target = delegate(keys, container);
+
+      expect(target.getDropTargetFromPoint(0, 30, acceptAll)).toMatchObject({ key: "b" });
+
+      container.replaceChildren();
+      keys.forEach((key, index) => appendRow(container, key, index, { rowHeight: 40 }));
+
+      expect(target.getDropTargetFromPoint(0, 30, acceptAll)).toEqual({
+        dropPosition: "on",
+        key: "a",
+        type: "item",
+      });
+    });
+
+    it("finds an item first rendered after an earlier call", () => {
+      const keys = ["a", "b", "c"];
+      const container = renderList(["a", "b"]);
+      const target = delegate(keys, container);
+
+      expect(target.getDropTargetFromPoint(0, 10, acceptAll)).toMatchObject({ key: "a" });
+
+      appendRow(container, "c", 2);
+
+      expect(target.getDropTargetFromPoint(0, 50, acceptAll)).toEqual({
+        dropPosition: "on",
+        key: "c",
         type: "item",
       });
     });

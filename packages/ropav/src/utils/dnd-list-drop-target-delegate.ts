@@ -29,6 +29,8 @@ export class ListDropTargetDelegate implements DropTargetDelegate {
   private layout: "grid" | "stack";
   private orientation: "horizontal" | "vertical";
   protected direction: "ltr" | "rtl";
+  /** The element found for each key, kept between calls and rechecked as each one is read. */
+  private elements = new Map<string, HTMLElement>();
 
   constructor(
     collection: DragCollection,
@@ -97,7 +99,7 @@ export class ListDropTargetDelegate implements DropTargetDelegate {
       this.layout === "grid" && this.orientation === "vertical" && this.direction === "rtl";
     const isFlowRTL = this.layout === "stack" ? isPrimaryRTL : isSecondaryRTL;
 
-    const elementMap = this.buildElementMap(container);
+    const findElement = this.createElementLookup(container);
 
     // Items are laid out in order, so the one under the pointer is found by bisection rather
     // than by measuring every row.
@@ -110,7 +112,7 @@ export class ListDropTargetDelegate implements DropTargetDelegate {
 
       if (key == null) break;
 
-      const element = elementMap.get(String(key));
+      const element = findElement(String(key));
 
       if (!element) break;
 
@@ -138,7 +140,7 @@ export class ListDropTargetDelegate implements DropTargetDelegate {
 
     if (key == null) return { type: "root" };
 
-    const rect = elementMap.get(String(key))?.getBoundingClientRect();
+    const rect = findElement(String(key))?.getBoundingClientRect();
     const isBefore =
       rect != null &&
       (primary < this.getPrimaryStart(rect) ||
@@ -201,17 +203,57 @@ export class ListDropTargetDelegate implements DropTargetDelegate {
   }
 
   /**
-   * Map each item key to the element currently rendering it.
+   * Look up the element rendering a key, reusing what an earlier call found.
+   *
+   * The search above reads a handful of keys, but the map behind it is built from *every*
+   * element the container holds — for a table, every cell as well as every row. A drag asks for
+   * a target on each `dragover`, up to the display's refresh rate, so building that map per call
+   * costs more than the search it feeds.
+   *
+   * Keeping it means the DOM can move on without it, so every entry is rechecked as it is read,
+   * against the same conditions that put it there. A stale or missing one rebuilds the map —
+   * once per call, since a key the collection has and the DOM does not would otherwise rebuild
+   * it at every step of the search.
+   */
+  private createElementLookup(container: HTMLElement): (key: string) => HTMLElement | undefined {
+    const selector = this.getElementSelector(container);
+    let isRebuilt = false;
+
+    return (key) => {
+      const element = this.elements.get(key);
+
+      if (
+        element?.dataset["key"] === key &&
+        element.matches(selector) &&
+        container.contains(element)
+      ) {
+        return element;
+      }
+
+      if (!isRebuilt) {
+        isRebuilt = true;
+        this.elements = this.buildElementMap(container, selector);
+      }
+
+      return this.elements.get(key);
+    };
+  }
+
+  /**
+   * Which elements carry a key.
    *
    * Scoped by `data-collection` when the container declares one, so a nested collection's rows
    * are not mistaken for this one's. Both attributes are already emitted by `ListBoxItem` and
    * `TableRow`.
    */
-  private buildElementMap(container: HTMLElement): Map<string, HTMLElement> {
+  private getElementSelector(container: HTMLElement): string {
     const collectionId = container.dataset["collection"];
-    const selector = collectionId
-      ? `[data-collection="${CSS.escape(collectionId)}"]`
-      : "[data-key]";
+
+    return collectionId ? `[data-collection="${CSS.escape(collectionId)}"]` : "[data-key]";
+  }
+
+  /** Map each item key to the element currently rendering it. */
+  private buildElementMap(container: HTMLElement, selector: string): Map<string, HTMLElement> {
     const map = new Map<string, HTMLElement>();
 
     for (const element of container.querySelectorAll(selector)) {
