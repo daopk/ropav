@@ -1,9 +1,22 @@
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vitepress";
 
+/**
+ * Puts the stored palette on `<html>` before the first paint, so a reader who chose one does
+ * not watch the default flash past. Mirrors the appearance class VitePress restores itself.
+ */
+const PALETTE_BOOT = `;(() => {
+  try {
+    const palette = localStorage.getItem("ropav-palette");
+
+    if (palette) document.documentElement.dataset.theme = palette;
+  } catch {}
+})();`;
+
 export default defineConfig({
   cleanUrls: true,
   description: "Beautiful and modern Vue UI library built with Vapor Mode and Tailwind CSS 4.",
+  head: [["script", { id: "check-palette" }, PALETTE_BOOT]],
   srcExclude: ["**/README.md"],
 
   themeConfig: {

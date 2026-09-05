@@ -4,6 +4,7 @@ import type { Component } from "vue";
 import DefaultTheme from "vitepress/theme";
 
 import Demo from "./components/demo.vue";
+import Layout from "./layout.vue";
 import { installVaporInterop } from "./vapor-interop";
 
 import "../../styles/globals.css";
@@ -20,6 +21,8 @@ const demoName = (path: string): string =>
     .replace(/(?:^|-)([a-z0-9])/g, (_, c: string) => c.toUpperCase())}`;
 
 export default {
+  Layout,
+
   enhanceApp({ app }) {
     installVaporInterop(app);
 
