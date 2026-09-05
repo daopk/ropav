@@ -79,11 +79,11 @@ const rectOf = (layout: TableLayout, key: VirtualizerKey) => layout.getLayoutInf
 const keysIn = (layout: TableLayout, rect: Rect) =>
   layout.getVisibleLayoutInfos(rect).map((layoutInfo) => layoutInfo.key);
 
+const rowInfosIn = (layout: TableLayout, rect: Rect) =>
+  layout.getVisibleLayoutInfos(rect).filter((layoutInfo) => layoutInfo.type === "row");
+
 const rowsIn = (layout: TableLayout, rect: Rect) =>
-  layout
-    .getVisibleLayoutInfos(rect)
-    .filter((layoutInfo) => layoutInfo.type === "row")
-    .map((layoutInfo) => layoutInfo.key);
+  rowInfosIn(layout, rect).map((layoutInfo) => layoutInfo.key);
 
 describe("TableLayout", () => {
   describe("laying out the header", () => {
@@ -473,6 +473,27 @@ describe("TableLayout", () => {
       });
 
       expect(layout.getDropTargetFromPoint(10, 20, anything)).toEqual({ type: "root" });
+    });
+
+    /**
+     * Resolving a drop is a question *about* the rendered set, not a new window for it.
+     *
+     * The point arrives as a one-pixel sliver. Laying the table out for that sliver would shrink
+     * the rendered set to it and prune every other row away, so the next pass would rebuild rows
+     * it already had — and a row rebuilt from the index lands on the rectangle it already had,
+     * which is why this asserts identity rather than equality. Only the rows: the header and the
+     * body are placed afresh by every pass whatever happens.
+     */
+    it("leaves the rows already laid out where they are", () => {
+      const { host, layout } = dropSetUp(21_000);
+      const before = rowInfosIn(layout, host.visibleRect);
+
+      layout.getDropTargetFromPoint(10, 20, anything);
+
+      const after = rowInfosIn(layout, host.visibleRect);
+
+      expect(after).toHaveLength(before.length);
+      expect(after.every((layoutInfo, index) => layoutInfo === before[index])).toBe(true);
     });
 
     /**

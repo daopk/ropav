@@ -100,6 +100,10 @@ export class TableLayout<
   override getVisibleLayoutInfos(rect: Rect): LayoutInfo[] {
     this.layoutFor(this.snapVisibleRect(rect));
 
+    return this.getRenderedLayoutInfos();
+  }
+
+  protected override getRenderedLayoutInfos(): LayoutInfo[] {
     const result: LayoutInfo[] = [];
 
     for (const node of this.rootNodes) {

@@ -158,11 +158,22 @@ export class ListLayout<
 
     this.layoutFor(searchRect);
 
+    return this.getRenderedLayoutInfos(searchRect);
+  }
+
+  /**
+   * The same, read off the rendered set as it stands rather than laying one out.
+   *
+   * Asking `getVisibleLayoutInfos` a question moves the window to whatever was asked about, so a
+   * caller with a rectangle narrower than the window — a drop resolving a point — would shrink
+   * the rendered set to the width of its own question and prune everything else away.
+   */
+  protected getRenderedLayoutInfos(rect: Rect): LayoutInfo[] {
     const result: LayoutInfo[] = [];
 
     const addNodes = (nodes: LayoutNode[]) => {
       for (const node of nodes) {
-        if (!this.isVisible(node, searchRect)) continue;
+        if (!this.isVisible(node, rect)) continue;
 
         result.push(node.layoutInfo);
         addNodes(node.children);
@@ -649,7 +660,7 @@ export class ListLayout<
     let key: VirtualizerKey | null = null;
     let minDistance = Infinity;
 
-    for (const candidate of this.getVisibleLayoutInfos(searchRect)) {
+    for (const candidate of this.getRenderedLayoutInfos(searchRect)) {
       // A persisted key is in the rendered set wherever it is, so it can come back from far
       // outside the sliver.
       if (!this.isDropCandidate(candidate) || !candidate.rect.intersects(searchRect)) continue;

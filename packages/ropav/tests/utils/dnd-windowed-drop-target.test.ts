@@ -111,6 +111,26 @@ describe("resolving a drop over a windowed collection", () => {
     expect(keyOf(target)).not.toBe("item-490");
   });
 
+  /**
+   * Resolving a drop is a question *about* the rendered set, not a new window for it.
+   *
+   * The point arrives as a one-pixel sliver. Laying the collection out for that sliver would
+   * shrink the rendered set to it and prune every other row away, so the next pass would rebuild
+   * rows it already had — which is why identity is what this asserts. Equal rectangles would pass
+   * either way.
+   */
+  it("leaves the rows already laid out where they are", () => {
+    const layout = buildLayout();
+    const before = layout.getVisibleLayoutInfos(layout.host!.visibleRect);
+
+    layout.getDropTargetFromPoint(10, POINT_Y, () => true);
+
+    const after = layout.getVisibleLayoutInfos(layout.host!.visibleRect);
+
+    expect(after).toHaveLength(before.length);
+    expect(after.every((info, index) => info === before[index])).toBe(true);
+  });
+
   // Not merely different — off by hundreds of rows, which is what makes it a wrong drop rather
   // than an imprecise one.
   it("and it is off by the whole distance to the window", () => {
