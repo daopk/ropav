@@ -44,15 +44,24 @@ export default defineConfig({
        */
       "/components/": [
         { items: [{ link: "/components/", text: "All components" }], text: "Overview" },
-        { items: [{ link: "/components/button", text: "Button" }], text: "Buttons" },
+        {
+          items: [
+            { link: "/components/button", text: "Button" },
+            { link: "/components/toggle-button", text: "ToggleButton" },
+            { link: "/components/close-button", text: "CloseButton" },
+          ],
+          text: "Buttons",
+        },
         {
           items: [
             { link: "/components/textfield", text: "TextField" },
+            { link: "/components/textarea", text: "TextArea" },
             { link: "/components/input-group", text: "InputGroup" },
             { link: "/components/number-field", text: "NumberField" },
             { link: "/components/checkbox", text: "Checkbox" },
             { link: "/components/switch", text: "Switch" },
             { link: "/components/radio-group", text: "RadioGroup" },
+            { link: "/components/drop-zone", text: "DropZone" },
           ],
           text: "Forms",
         },
@@ -66,7 +75,9 @@ export default defineConfig({
         {
           items: [
             { link: "/components/dropdown", text: "Dropdown" },
+            { link: "/components/tag-group", text: "TagGroup" },
             { link: "/components/slider", text: "Slider" },
+            { link: "/components/switch-group", text: "SwitchGroup" },
           ],
           text: "Collections and controls",
         },
@@ -81,23 +92,45 @@ export default defineConfig({
           items: [
             { link: "/components/tabs", text: "Tabs" },
             { link: "/components/sidebar", text: "Sidebar" },
+            { link: "/components/breadcrumbs", text: "Breadcrumbs" },
+            { link: "/components/link", text: "Link" },
+            { link: "/components/disclosure-group", text: "DisclosureGroup" },
           ],
           text: "Navigation",
         },
         {
           items: [
             { link: "/components/card", text: "Card" },
+            { link: "/components/surface", text: "Surface" },
+            { link: "/components/toolbar", text: "Toolbar" },
+            { link: "/components/splitter", text: "Splitter" },
             { link: "/components/typography", text: "Typography" },
+            { link: "/components/kbd", text: "Kbd" },
             { link: "/components/table", text: "Table" },
           ],
           text: "Layout and content",
         },
         {
           items: [
+            { link: "/components/color-swatch", text: "ColorSwatch" },
+            { link: "/components/color-area", text: "ColorArea" },
+            { link: "/components/color-picker", text: "ColorPicker" },
+          ],
+          text: "Colors",
+        },
+        { items: [{ link: "/components/avatar", text: "Avatar" }], text: "Media" },
+        {
+          items: [
             { link: "/components/alert", text: "Alert" },
             { link: "/components/toast", text: "Toast" },
+            { link: "/components/spinner", text: "Spinner" },
+            { link: "/components/skeleton", text: "Skeleton" },
           ],
           text: "Feedback",
+        },
+        {
+          items: [{ link: "/components/scroll-shadow", text: "ScrollShadow" }],
+          text: "Utilities",
         },
       ],
       "/guide/": [

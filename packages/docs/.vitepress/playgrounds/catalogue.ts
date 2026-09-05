@@ -35,6 +35,16 @@ export const catalogue: Record<string, CatalogueEntry> = {
     },
   },
 
+  avatar: {
+    controls: ["variant", "color", "size"],
+    file: "components/avatar/avatar-root.vue",
+    node: {
+      children: [{ children: ["JD"], tag: "AvatarFallback" }],
+      root: true,
+      tag: "Avatar",
+    },
+  },
+
   button: {
     controls: ["variant", "size", "isDisabled", "isPending", "isIconOnly", "fullWidth"],
     file: "components/button/button-root.vue",
@@ -82,6 +92,29 @@ export const catalogue: Record<string, CatalogueEntry> = {
     },
   },
 
+  "close-button": {
+    controls: ["isDisabled", "isPending"],
+    file: "components/close-button/close-button-root.vue",
+    node: { root: true, tag: "CloseButton" },
+  },
+
+  "color-area": {
+    controls: ["showDots", "isDisabled"],
+    file: "components/color-area/color-area-root.vue",
+    node: {
+      children: [{ tag: "ColorAreaThumb" }],
+      props: { "aria-label": "Brand", class: "w-64", "default-value": "hsl(200, 100%, 50%)" },
+      root: true,
+      tag: "ColorArea",
+    },
+  },
+
+  "color-swatch": {
+    controls: ["shape", "size"],
+    file: "components/color-swatch/color-swatch-root.vue",
+    node: { props: { color: "#0485f7" }, root: true, tag: "ColorSwatch" },
+  },
+
   "input-group": {
     controls: ["variant", "size", "fullWidth", "isDisabled", "isInvalid"],
     file: "components/input-group/input-group-root.vue",
@@ -93,6 +126,19 @@ export const catalogue: Record<string, CatalogueEntry> = {
       props: { class: "w-72" },
       root: true,
       tag: "InputGroup",
+    },
+  },
+
+  kbd: {
+    controls: ["variant"],
+    file: "components/kbd/kbd-root.vue",
+    node: {
+      children: [
+        { props: { "key-value": "command" }, tag: "KbdAbbr" },
+        { children: ["K"], tag: "KbdContent" },
+      ],
+      root: true,
+      tag: "Kbd",
     },
   },
 
@@ -150,6 +196,36 @@ export const catalogue: Record<string, CatalogueEntry> = {
     },
   },
 
+  "scroll-shadow": {
+    controls: ["size", "offset", "hideScrollBar", "visibility"],
+    file: "components/scroll-shadow/scroll-shadow-root.vue",
+    node: {
+      children: [
+        {
+          children: [
+            "A scroll shadow is the edge of the box saying there is more where that came from.",
+          ],
+          tag: "Typography",
+        },
+        {
+          children: [
+            "It fades whichever edge has content past it, and only that edge — so the top stays sharp until something has been scrolled away.",
+          ],
+          tag: "Typography",
+        },
+        {
+          children: [
+            "Nothing here is painted over the content. The fade is a mask, which is why it works over any background the box happens to sit on.",
+          ],
+          tag: "Typography",
+        },
+      ],
+      props: { class: "flex max-h-32 w-72 flex-col gap-3 p-4" },
+      root: true,
+      tag: "ScrollShadow",
+    },
+  },
+
   select: {
     controls: ["variant", "size", "fullWidth", "isDisabled", "isInvalid"],
     file: "components/select/select-root.vue",
@@ -194,6 +270,12 @@ export const catalogue: Record<string, CatalogueEntry> = {
     },
   },
 
+  skeleton: {
+    controls: ["animationType"],
+    file: "components/skeleton/skeleton-root.vue",
+    node: { props: { class: "h-24 w-64 rounded-xl" }, root: true, tag: "Skeleton" },
+  },
+
   slider: {
     controls: ["orientation", "isDisabled"],
     file: "components/slider/slider-root.vue",
@@ -206,6 +288,64 @@ export const catalogue: Record<string, CatalogueEntry> = {
       props: { class: "w-64", "default-value": 30 },
       root: true,
       tag: "Slider",
+    },
+  },
+
+  spinner: {
+    controls: ["color", "size"],
+    file: "components/spinner/spinner-root.vue",
+    node: { root: true, tag: "Spinner" },
+  },
+
+  splitter: {
+    controls: ["orientation", "isDisabled"],
+    file: "components/splitter/splitter-root.vue",
+    node: {
+      children: [
+        {
+          children: ["Sidebar"],
+          props: {
+            class: "grid h-full place-items-center text-sm",
+            "default-size": "1fr",
+            "min-size": "80px",
+          },
+          tag: "SplitterPanel",
+        },
+        { tag: "SplitterHandle" },
+        {
+          children: ["Editor"],
+          props: {
+            class: "grid h-full place-items-center text-sm",
+            "default-size": "2fr",
+            "min-size": "80px",
+          },
+          tag: "SplitterPanel",
+        },
+      ],
+      props: {
+        "aria-label": "Editor layout",
+        class: "h-48 w-full max-w-sm overflow-hidden rounded-xl border border-border",
+      },
+      root: true,
+      tag: "Splitter",
+    },
+  },
+
+  surface: {
+    controls: ["variant"],
+    file: "components/surface/surface-root.vue",
+    node: {
+      children: [
+        { children: ["Weekly report"], props: { type: "h4" }, tag: "Typography" },
+        {
+          children: ["Open rate held steady across the last four sends."],
+          props: { color: "muted", type: "body-sm" },
+          tag: "Typography",
+        },
+      ],
+      props: { class: "flex w-72 flex-col gap-2 rounded-2xl p-6" },
+      root: true,
+      tag: "Surface",
     },
   },
 
@@ -223,6 +363,7 @@ export const catalogue: Record<string, CatalogueEntry> = {
       tag: "Switch",
     },
   },
+
   tabs: {
     controls: ["variant", "orientation", "keyboardActivation", "isDisabled"],
     file: "components/tabs/tabs-root.vue",
@@ -266,6 +407,36 @@ export const catalogue: Record<string, CatalogueEntry> = {
     },
   },
 
+  "tag-group": {
+    controls: ["variant", "size", "selectionMode"],
+    file: "components/tag-group/tag-group-root.vue",
+    node: {
+      children: [
+        { children: ["Categories"], tag: "Label" },
+        {
+          children: [
+            { children: ["News"], props: { id: "news" }, tag: "Tag" },
+            { children: ["Travel"], props: { id: "travel" }, tag: "Tag" },
+            { children: ["Gaming"], props: { id: "gaming" }, tag: "Tag" },
+          ],
+          tag: "TagGroupList",
+        },
+      ],
+      root: true,
+      tag: "TagGroup",
+    },
+  },
+
+  textarea: {
+    controls: ["variant", "size", "fullWidth"],
+    file: "components/textarea/textarea-root.vue",
+    node: {
+      props: { placeholder: "What changed in this release?" },
+      root: true,
+      tag: "TextArea",
+    },
+  },
+
   textfield: {
     controls: ["variant", "size", "fullWidth", "isDisabled", "isReadOnly", "isInvalid"],
     file: "components/textfield/textfield-root.vue",
@@ -277,6 +448,28 @@ export const catalogue: Record<string, CatalogueEntry> = {
       props: { class: "w-72", name: "email" },
       root: true,
       tag: "TextField",
+    },
+  },
+
+  "toggle-button": {
+    controls: ["variant", "size", "isIconOnly", "isDisabled"],
+    file: "components/toggle-button/toggle-button-root.vue",
+    node: { children: ["Follow"], root: true, tag: "ToggleButton" },
+  },
+
+  toolbar: {
+    controls: ["orientation", "isAttached"],
+    file: "components/toolbar/toolbar-root.vue",
+    node: {
+      children: [
+        { children: ["Undo"], props: { variant: "secondary" }, tag: "Button" },
+        { children: ["Redo"], props: { variant: "secondary" }, tag: "Button" },
+        { tag: "Separator" },
+        { children: ["Publish"], tag: "Button" },
+      ],
+      props: { "aria-label": "Document actions" },
+      root: true,
+      tag: "Toolbar",
     },
   },
 
@@ -302,11 +495,19 @@ export const catalogue: Record<string, CatalogueEntry> = {
  */
 export const optionOrder: Record<string, readonly string[]> = {
   align: ["start", "center", "end", "justify"],
+  animationType: ["shimmer", "pulse", "none"],
   "button.type": ["button", "submit", "reset"],
   "card.variant": ["default", "secondary", "tertiary", "transparent"],
+  color: ["default", "accent", "success", "warning", "danger"],
+  "color-swatch.size": ["xs", "sm", "md", "lg", "xl"],
+  selectionMode: ["none", "single", "multiple"],
   size: ["sm", "md", "lg"],
   status: ["default", "accent", "success", "warning", "danger"],
+  "surface.variant": ["default", "secondary", "tertiary", "transparent"],
+  // `ghost` is ranked by the shared list, which would otherwise put it ahead of the default.
+  "toggle-button.variant": ["default", "ghost"],
   "typography.type": ["h1", "h2", "h3", "h4", "h5", "h6", "body", "body-sm", "body-xs", "code"],
   variant: ["primary", "secondary", "tertiary", "outline", "ghost", "danger", "danger-soft"],
+  visibility: ["auto", "both", "top", "bottom", "left", "right", "none"],
   weight: ["normal", "medium", "semibold", "bold"],
 };
