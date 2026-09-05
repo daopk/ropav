@@ -11,12 +11,14 @@
   /* Only visible when using a custom trigger  - not passing "Button" as a child - hence we use some button styles (custom trigger) */
   @apply outline-none;
 
-  /* A custom trigger borrows the button's look by wearing its classes, and the `outline-none`
-   * above lands later in the cascade than the button's own forced-colors edge, stripping it back
-   * off. Handed back here rather than on the bare trigger: when a `Button` is passed as a child
-   * instead, this element is only a wrapper around it and an outline would draw a second ring
-   * around the real one. */
+  /* A custom trigger borrows the button's look by wearing its classes, and the declarations
+   * above land later in the cascade than the button's own, stripping its centring and its
+   * forced-colors edge back off. Handed back here rather than on the bare trigger: when a
+   * `Button` is passed as a child instead, this element is only a wrapper around it - an inline
+   * box is what that wants, and an outline would draw a second ring around the real one. */
   &.button {
+    @apply inline-flex;
+
     @media (forced-colors: active) {
       outline: 1px solid ButtonBorder;
       outline-offset: -1px;

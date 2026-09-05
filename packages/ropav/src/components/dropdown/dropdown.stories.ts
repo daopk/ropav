@@ -535,7 +535,7 @@ export const WithSections: Story = {
       <Dropdown>
         <DropdownTrigger
           aria-label="Menu"
-          class="button button-md button--secondary button--icon-only data-[focus-visible=true]:status-focused"
+          class="button button--md button--secondary button--icon-only data-[focus-visible=true]:status-focused"
         >
           <IconEllipsisVertical class="outline-none" />
         </DropdownTrigger>
