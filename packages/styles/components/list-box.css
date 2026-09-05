@@ -28,19 +28,50 @@
    Drop indicator — the gap between two options a drop would land in.
    Styled here rather than left to the caller because a windowed list box
    renders its own, one per option it has laid out, which markup in the item
-   slot cannot reach. The height is kept even when the gap is not the target,
-   so options do not shift as a drag moves.
+   slot cannot reach.
    ========================================================================== */
 
 .list-box__drop-indicator {
   --list-box-drop-indicator-size: 2px;
   --list-box-drop-indicator-bg: var(--accent);
+}
 
+/* Windowed: the parent is the layout's own wrapper, which has already placed a band straddling
+   the boundary and outside the flow, so the indicator only has to fill it. */
+:not(.list-box) > .list-box__drop-indicator {
   height: var(--list-box-drop-indicator-size);
 
   &[data-drop-target="true"] {
     background-color: var(--list-box-drop-indicator-bg);
   }
+}
+
+/* In flow, as a direct child of the list, the gap has to cost nothing: an option that steps down
+   when the line arrives and back up when it moves on makes the whole list walk under the drag.
+   So it takes no height, and it stands *in* the spacing the list already leaves rather than
+   adding more — the option after it gives up the margin this one just took. */
+.list-box > .list-box__drop-indicator {
+  position: relative;
+  height: 0;
+
+  /* On the edge of the option it stands before, which is where the windowed layout puts it. */
+  &[data-drop-target="true"]::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: calc(var(--list-box-drop-indicator-size) / -2);
+    height: var(--list-box-drop-indicator-size);
+    background-color: var(--list-box-drop-indicator-bg);
+  }
+
+  /* Nothing follows the last one, so there is no spacing for it to stand in. */
+  &:last-child {
+    margin-top: 0;
+  }
+}
+
+.list-box > .list-box__drop-indicator + * {
+  margin-top: 0;
 }
 
 /* ==========================================================================

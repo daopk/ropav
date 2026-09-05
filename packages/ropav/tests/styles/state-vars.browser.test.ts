@@ -285,8 +285,24 @@ const parts: Part[] = [
   {
     html: `<div class="list-box__drop-indicator"></div>`,
     knobHost: ".list-box__drop-indicator",
-    name: "the list box's drop indicator",
+    name: "the list box's drop indicator, windowed",
     paint: ".list-box__drop-indicator",
+    stateHost: ".list-box__drop-indicator",
+    states: [
+      {
+        attr: ["data-drop-target"],
+        knob: "--list-box-drop-indicator-bg",
+        paints: "var(--accent)",
+      },
+    ],
+  },
+  {
+    // In flow it takes no height, so it paints on a pseudo-element lifted onto the boundary.
+    html: `<div class="list-box"><div class="list-box__drop-indicator"></div></div>`,
+    knobHost: ".list-box__drop-indicator",
+    name: "the list box's drop indicator, in flow",
+    paint: ".list-box__drop-indicator",
+    pseudo: "::after",
     stateHost: ".list-box__drop-indicator",
     states: [
       {

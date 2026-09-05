@@ -78,3 +78,67 @@ describe("the table's drop indicator in flow", () => {
     expect(line.top).toBe("-1px");
   });
 });
+
+/**
+ * The list box has the same problem twice over: its options are spaced by a margin between
+ * siblings, so a gap standing between two of them would take its own height *and* a second helping
+ * of that margin. Every arrangement below has to lay the options out exactly where a list with no
+ * gaps at all would.
+ */
+
+/** A three-option list, with gaps at the positions named. */
+const mountList = (at: ("after" | "before" | "between")[] = []) => {
+  const root = document.createElement("div");
+  const gap = `<div class="list-box__drop-indicator" data-drop-target="true"></div>`;
+  const option = (label: string, probe = false) =>
+    `<div data-slot="list-box-item"${probe ? " data-probe" : ""}>${label}</div>`;
+
+  root.innerHTML = `
+    <div class="list-box">
+      ${at.includes("before") ? gap : ""}
+      ${option("one")}
+      ${at.includes("between") ? gap : ""}
+      ${option("two", true)}
+      ${option("three")}
+      ${at.includes("after") ? gap : ""}
+    </div>
+  `;
+
+  document.body.append(root);
+  roots.push(root);
+
+  return root;
+};
+
+const listBoxIn = (root: HTMLElement) => root.querySelector<HTMLElement>(".list-box")!;
+
+describe("the list box's drop indicator in flow", () => {
+  it("leaves the options where a list with no gaps puts them", () => {
+    const bare = probeTop(mountList());
+
+    for (const at of [
+      ["before"],
+      ["between"],
+      ["after"],
+      ["after", "before", "between"],
+    ] as const) {
+      expect(probeTop(mountList([...at]))).toBe(bare);
+    }
+  });
+
+  it("adds nothing to the height of the list", () => {
+    const bare = listBoxIn(mountList()).offsetHeight;
+
+    expect(listBoxIn(mountList(["after", "before", "between"])).offsetHeight).toBe(bare);
+  });
+
+  it("sits on the edge of the option it stands before", () => {
+    const line = getComputedStyle(
+      mountList(["between"]).querySelector(".list-box__drop-indicator")!,
+      "::after",
+    );
+
+    expect(line.height).toBe("2px");
+    expect(line.top).toBe("-1px");
+  });
+});
