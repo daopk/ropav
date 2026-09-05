@@ -6,11 +6,14 @@ const WIDTH = 100;
 const attrName = (name: string): string => name.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
 
 /** `undefined` means the attribute is not written at all. */
-const attribute = (name: string, value: boolean | number | string): string | undefined => {
+const attribute = (name: string, value: unknown): string | undefined => {
+  if (value === undefined) return undefined;
   if (typeof value === "boolean") return value ? attrName(name) : undefined;
   if (typeof value === "number") return `:${attrName(name)}="${value}"`;
+  if (typeof value === "string") return `${attrName(name)}="${value}"`;
 
-  return `${attrName(name)}="${value}"`;
+  // Single-quoted, because the JSON inside carries double quotes of its own.
+  return `:${attrName(name)}='${JSON.stringify(value)}'`;
 };
 
 const isDefault = (spec: PlaygroundSpec, name: string, value: unknown): boolean => {

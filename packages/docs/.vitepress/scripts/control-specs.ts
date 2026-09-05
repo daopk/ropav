@@ -124,7 +124,7 @@ export const emitControlSpecs = (checker: ComponentMetaChecker): number => {
     }
 
     specs.push(
-      `  ${id}: ${JSON.stringify({ controls, id, node: entry.node }, sorted, 2)},`.replaceAll(
+      `  ${JSON.stringify(id)}: ${JSON.stringify({ controls, id, node: entry.node }, sorted, 2)},`.replaceAll(
         "\n",
         "\n  ",
       ),

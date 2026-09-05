@@ -29,12 +29,71 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { link: "/guide/", text: "Guide" },
-      { link: "/components/button", text: "Components" },
+      { link: "/components/", text: "Components" },
       { link: "/theming/", text: "Theming" },
     ],
     sidebar: {
+      /*
+       * Grouped the way Storybook files them, and each page is named after the library's own
+       * directory — so a slug is never a second name to keep in step with the first.
+       */
       "/components/": [
+        { items: [{ link: "/components/", text: "All components" }], text: "Overview" },
         { items: [{ link: "/components/button", text: "Button" }], text: "Buttons" },
+        {
+          items: [
+            { link: "/components/textfield", text: "TextField" },
+            { link: "/components/input-group", text: "InputGroup" },
+            { link: "/components/number-field", text: "NumberField" },
+            { link: "/components/checkbox", text: "Checkbox" },
+            { link: "/components/switch", text: "Switch" },
+            { link: "/components/radio-group", text: "RadioGroup" },
+          ],
+          text: "Forms",
+        },
+        {
+          items: [
+            { link: "/components/select", text: "Select" },
+            { link: "/components/date-picker", text: "DatePicker" },
+          ],
+          text: "Pickers",
+        },
+        {
+          items: [
+            { link: "/components/dropdown", text: "Dropdown" },
+            { link: "/components/slider", text: "Slider" },
+          ],
+          text: "Collections and controls",
+        },
+        {
+          items: [
+            { link: "/components/modal", text: "Modal" },
+            { link: "/components/tooltip", text: "Tooltip" },
+          ],
+          text: "Overlays",
+        },
+        {
+          items: [
+            { link: "/components/tabs", text: "Tabs" },
+            { link: "/components/sidebar", text: "Sidebar" },
+          ],
+          text: "Navigation",
+        },
+        {
+          items: [
+            { link: "/components/card", text: "Card" },
+            { link: "/components/typography", text: "Typography" },
+            { link: "/components/table", text: "Table" },
+          ],
+          text: "Layout and content",
+        },
+        {
+          items: [
+            { link: "/components/alert", text: "Alert" },
+            { link: "/components/toast", text: "Toast" },
+          ],
+          text: "Feedback",
+        },
       ],
       "/guide/": [
         {

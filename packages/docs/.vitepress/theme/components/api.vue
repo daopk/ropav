@@ -25,6 +25,16 @@ const escape = (text: string) =>
  */
 const prose = (text: string) =>
   escape(text.replaceAll(/\s*\n\s*/g, " ")).replaceAll(/`([^`]+)`/g, "<code>$1</code>");
+
+/*
+ * A slot whose payload is generic does not resolve to an object the compiler can list — a select
+ * value's slot props are typed on the item, so they arrive here empty. Naming the slot anyway is
+ * the difference between saying nothing and implying there is nothing.
+ */
+const bare = (part: ApiPart) => part.slots.filter((slot) => slot.props.length === 0);
+
+const nothing = (part: ApiPart) =>
+  part.props.length === 0 && part.slots.length === 0 && part.events.length === 0;
 </script>
 
 <template>
@@ -35,8 +45,8 @@ const prose = (text: string) =>
         <a aria-hidden="true" class="header-anchor" :href="`#${part.name.toLowerCase()}`" />
       </h3>
 
-      <p v-if="part.props.length === 0 && part.slots.length === 0" class="api__empty">
-        <code>{{ part.name }}</code> takes no props of its own.
+      <p v-if="nothing(part)" class="api__empty">
+        <code>{{ part.name }}</code> takes nothing but <code>class</code>.
       </p>
 
       <table v-if="part.props.length > 0">
@@ -91,6 +101,13 @@ const prose = (text: string) =>
           </tbody>
         </table>
       </template>
+
+      <p v-if="bare(part).length > 0" class="api__caption">
+        Slots:
+        <template v-for="(slot, index) in bare(part)" :key="slot.name"
+          ><span v-if="index > 0">, </span><code>{{ slot.name }}</code></template
+        >.
+      </p>
 
       <table v-if="part.events.length > 0">
         <thead>

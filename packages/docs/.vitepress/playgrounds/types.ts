@@ -19,8 +19,11 @@ export interface ControlSpec {
 
 export interface PlaygroundNode {
   children?: readonly (PlaygroundNode | string)[];
-  /** Written as-is, ahead of the controlled props. */
-  props?: Readonly<Record<string, boolean | number | string>>;
+  /**
+   * Written as-is, ahead of the controlled props. A value that is not a primitive is bound as
+   * JSON, which is what lets a node carry the collection a component like `Select` requires.
+   */
+  props?: Readonly<Record<string, unknown>>;
   /** Carries the controlled props. Exactly one node in a tree has it. */
   root?: true;
   tag: string;
