@@ -310,6 +310,13 @@
   }
 }
 
+/* Virtualized, a cell is a div: `align-middle` above says nothing to one, and block layout pins
+ * its content under the top padding, so anything taller than the content box of a row whose
+ * height the layout fixed hangs off the bottom. Flex is what centring costs a div. */
+.table__cell:not(td) {
+  @apply flex items-center;
+}
+
 /* --------------------------------------------------------------------------
    Table row focus ring — must follow `.table__cell` (cascade). One continuous
    inset ring split across cells; `:is(.table__cell, .table__column)` + direct vs

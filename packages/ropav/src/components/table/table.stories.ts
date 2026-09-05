@@ -1224,7 +1224,7 @@ export const VirtualizedDragAndDrop: Story = {
               <TableBody :item-text-value="(user) => user.name" :items="users">
                 <template #default="{item}">
                   <TableRow :id="item.id" :text-value="item.name">
-                    <TableCell>
+                    <TableCell class="justify-center px-0">
                       <TableDragHandle>
                         <Button aria-label="Reorder row" is-icon-only size="sm" variant="ghost">
                           <IconGrip />
