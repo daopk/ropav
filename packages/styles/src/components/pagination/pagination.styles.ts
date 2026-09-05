@@ -15,6 +15,13 @@ export const paginationVariants = tv({
     summary: "rp-pagination__summary",
   },
   variants: {
+    /** A previous/next control rather than a page number, which sizes and spaces differently. */
+    isNav: {
+      false: {},
+      true: {
+        link: "rp-pagination__link--nav",
+      },
+    },
     size: {
       lg: {
         base: "rp-pagination--lg",

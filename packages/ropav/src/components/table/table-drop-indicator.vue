@@ -4,11 +4,12 @@ import type { TableDropIndicatorProps } from "./table.types";
 import { computed, shallowRef } from "vue";
 
 import { dataAttr } from "../../utils/assertion";
+import { composeSlotClassName } from "../../utils/compose";
 import { visuallyHiddenStyle } from "../../utils/visually-hidden";
 import { useVirtualizerStateContext } from "../virtualizer/virtualizer.context";
 
 import TableVirtualizerItem from "./table-virtualizer-item.vue";
-import { useTableGridContext, useTableVirtualizerContext } from "./table.context";
+import { useTableContext, useTableGridContext, useTableVirtualizerContext } from "./table.context";
 
 /**
  * The position a drop would land in, as a row a screen reader can reach.
@@ -21,12 +22,13 @@ import { useTableGridContext, useTableVirtualizerContext } from "./table.context
  * it — a grid will not let a row be a control, and a zero-height row with one full-width cell is
  * how React Aria fits an indicator into a table without disturbing the column layout.
  *
- * **Unstyled on purpose.** `@ropav/styles` has no rule for this, and React Aria ships its own
- * `DropIndicator` unstyled too — the class and `data-drop-target` are emitted so a rule can be
- * added later, or supplied by the caller, without touching this component.
+ * **Unstyled on purpose.** `@ropav/styles` names the class but writes no rule for it, and React
+ * Aria ships its own `DropIndicator` unstyled too — the class and `data-drop-target` are emitted so
+ * a rule can be added later, or supplied by the caller, without touching this component.
  */
 const props = defineProps<TableDropIndicatorProps>();
 
+const { slots } = useTableContext();
 const { columnCount, dragAndDropHooks, dropState } = useTableGridContext();
 const virtualizer = useTableVirtualizerContext();
 const virtualizerState = useVirtualizerStateContext();
@@ -92,8 +94,7 @@ const parentLayoutInfo = computed(() =>
     <component
       :is="virtualizer ? 'div' : 'tr'"
       :aria-level="level"
-      class="rp-table__drop-indicator"
-      :class="props.class"
+      :class="composeSlotClassName(slots.dropIndicator, props.class)"
       :data-drop-target="dataAttr(isDropTarget)"
       data-slot="table-drop-indicator"
       role="row"

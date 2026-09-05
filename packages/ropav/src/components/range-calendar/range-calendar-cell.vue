@@ -72,6 +72,9 @@ const ends = computed(() => {
 
 const styles = computed(() => slots.value.cell({ class: props.class }));
 
+// The caller's `class` lands on the cell, so the box inside it takes none.
+const buttonStyles = computed(() => slots.value.cellButton());
+
 const slotProps = computed<RangeCalendarCellSlotProps>(() => ({
   date: props.date,
   formattedDate: cell.formattedDate.value,
@@ -145,7 +148,7 @@ const slotProps = computed<RangeCalendarCellSlotProps>(() => ({
       @pointerup="cell.handlers.onPointerup"
     >
       <span
-        class="rp-range-calendar__cell-button"
+        :class="buttonStyles"
         :data-disabled="dataAttr(cell.isDisabled.value)"
         :data-hovered="dataAttr(interaction.isHovered.value)"
         :data-pressed="dataAttr(cell.isPressed.value)"

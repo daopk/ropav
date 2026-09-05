@@ -9,6 +9,8 @@ export const rangeCalendarVariants = tv({
     base: "rp-range-calendar",
     /** Calendar cell (td) */
     cell: "rp-range-calendar__cell",
+    /** The pressable box inside the cell, which the range fill paints around */
+    cellButton: "rp-range-calendar__cell-button",
     /** Cell indicator (small dot at bottom of cell) */
     cellIndicator: "rp-range-calendar__cell-indicator",
     /** Calendar grid (table) */
