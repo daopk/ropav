@@ -12,8 +12,8 @@
       "name": "docs",
       "runtimeExecutable": "pnpm",
       "runtimeArgs": ["docs:dev"],
-      "port": 5173,
-      "url": "http://127.0.0.1:5173"
+      "port": 5174,
+      "url": "http://127.0.0.1:5174"
     },
     {
       "name": "docs-preview",

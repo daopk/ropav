@@ -18,3 +18,40 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* The prose styles are unlayered, and they reach bare elements — so inside an article they
+ * rewrite the typography of anything rendered there, including the library's own components.
+ * Reverting drops each property back to the named layers, which is where the component rules
+ * and the utilities live.
+ *
+ * The `.vp-doc` prefix is load-bearing. `:is()` takes the highest specificity among its
+ * arguments, so without it this rule only ties with `.vp-doc p` and wins on source order.
+ *
+ * `all` leaves custom properties alone, so the palette still reaches a reverted subtree. */
+.vp-doc
+  .ropav-demo
+  :is(
+    a,
+    blockquote,
+    code,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    hr,
+    img,
+    li,
+    ol,
+    p,
+    pre,
+    strong,
+    summary,
+    table,
+    td,
+    th,
+    tr
+  ) {
+  all: revert-layer;
+}

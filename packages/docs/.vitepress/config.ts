@@ -7,6 +7,12 @@ export default defineConfig({
   srcExclude: ["**/README.md"],
 
   themeConfig: {
+    nav: [{ link: "/components/button", text: "Components" }],
+    sidebar: {
+      "/components/": [
+        { items: [{ link: "/components/button", text: "Button" }], text: "Buttons" },
+      ],
+    },
     socialLinks: [{ icon: "github", link: "https://github.com/daopk/ropav" }],
   },
   title: "Ropav",

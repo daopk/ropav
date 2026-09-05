@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "vitepress build",
-    "dev": "vitepress dev --host 127.0.0.1 --port 5173",
+    "dev": "vitepress dev --host 127.0.0.1 --port 5174",
     "preview": "vitepress preview --port 4173",
     "typecheck": "vue-tsc --noEmit"
   },

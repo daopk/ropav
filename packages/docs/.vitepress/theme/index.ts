@@ -3,6 +3,7 @@ import type { Component } from "vue";
 
 import DefaultTheme from "vitepress/theme";
 
+import Demo from "./components/demo.vue";
 import { installVaporInterop } from "./vapor-interop";
 
 import "../../styles/globals.css";
@@ -21,6 +22,8 @@ const demoName = (path: string): string =>
 export default {
   enhanceApp({ app }) {
     installVaporInterop(app);
+
+    app.component("Demo", Demo);
 
     for (const [path, module] of Object.entries(demos)) {
       app.component(demoName(path), module.default);
