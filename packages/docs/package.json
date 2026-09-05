@@ -6,21 +6,30 @@
   "scripts": {
     "build": "vitepress build",
     "dev": "vitepress dev --host 127.0.0.1 --port 5174",
+    "generate": "tsx .vitepress/scripts/generate-control-specs.ts",
+    "prebuild": "pnpm generate",
+    "predev": "pnpm generate",
+    "pretypecheck": "pnpm generate",
     "preview": "vitepress preview --port 4173",
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
     "@ropav/styles": "workspace:*",
+    "@shikijs/langs": "4.4.3",
+    "@shikijs/themes": "4.4.3",
     "ropav": "workspace:*",
+    "shiki": "4.4.3",
     "vue": "catalog:"
   },
   "devDependencies": {
     "@tailwindcss/vite": "catalog:",
     "@types/node": "catalog:",
     "tailwindcss": "catalog:",
+    "tsx": "4.23.13",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vitepress": "2.0.0-alpha.20",
+    "vue-component-meta": "catalog:",
     "vue-tsc": "catalog:"
   }
 }

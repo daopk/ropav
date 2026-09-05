@@ -17,7 +17,8 @@ export default defineConfig({
   cleanUrls: true,
   description: "Beautiful and modern Vue UI library built with Vapor Mode and Tailwind CSS 4.",
   head: [["script", { id: "check-palette" }, PALETTE_BOOT]],
-  srcExclude: ["**/README.md"],
+  // The page glob excludes only what this names — nothing built-in keeps it out of `.vitepress`.
+  srcExclude: ["**/README.md", ".vitepress/generated/**"],
 
   themeConfig: {
     nav: [{ link: "/components/button", text: "Components" }],

@@ -42,6 +42,9 @@ catalogs:
     vitest:
       specifier: 5.0.0
       version: 5.0.0
+    vue-component-meta:
+      specifier: 3.3.11
+      version: 3.3.11
     vue-tsc:
       specifier: 3.3.11
       version: 3.3.11
@@ -116,9 +119,18 @@ importers:
       '@ropav/styles':
         specifier: workspace:*
         version: link:../styles
+      '@shikijs/langs':
+        specifier: 4.4.3
+        version: 4.4.3
+      '@shikijs/themes':
+        specifier: 4.4.3
+        version: 4.4.3
       ropav:
         specifier: workspace:*
         version: link:../ropav
+      shiki:
+        specifier: 4.4.3
+        version: 4.4.3
       vue:
         specifier: 3.6.0-rc.7
         version: 3.6.0-rc.7(typescript-native-bridge@6.0.3-bridge.16.tsgo.7.0.2)
@@ -132,6 +144,9 @@ importers:
       tailwindcss:
         specifier: 'catalog:'
         version: 4.3.3
+      tsx:
+        specifier: 4.23.13
+        version: 4.23.13
       typescript:
         specifier: 'catalog:'
         version: typescript-native-bridge@6.0.3-bridge.16.tsgo.7.0.2
@@ -141,6 +156,9 @@ importers:
       vitepress:
         specifier: 2.0.0-alpha.20
         version: 2.0.0-alpha.20(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(postcss@8.5.28)(tsx@4.23.13)(typescript-native-bridge@6.0.3-bridge.16.tsgo.7.0.2)(yaml@2.9.0)
+      vue-component-meta:
+        specifier: 'catalog:'
+        version: 3.3.11(typescript-native-bridge@6.0.3-bridge.16.tsgo.7.0.2)
       vue-tsc:
         specifier: 'catalog:'
         version: 3.3.11(typescript-native-bridge@6.0.3-bridge.16.tsgo.7.0.2)
