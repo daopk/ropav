@@ -6,7 +6,7 @@
   "scripts": {
     "build": "vitepress build",
     "dev": "vitepress dev --host 127.0.0.1 --port 5174",
-    "generate": "tsx .vitepress/scripts/generate-control-specs.ts",
+    "generate": "tsx .vitepress/scripts/generate.ts",
     "prebuild": "pnpm generate",
     "predev": "pnpm generate",
     "pretypecheck": "pnpm generate",

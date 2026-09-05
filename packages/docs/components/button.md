@@ -115,32 +115,4 @@ state can be retuned without flattening the rest.
 
 ## API
 
-Props for `Button`. `class` is accepted by every component and is left out.
-
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `variant` | `"primary" \| "secondary" \| "tertiary" \| "outline" \| "ghost" \| "danger" \| "danger-soft"` | `"primary"` | Button variant. |
-| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Button size. |
-| `type` | `"button" \| "reset" \| "submit"` | `"button"` | Native button type. |
-| `isDisabled` | `boolean` | — | Disables the button. |
-| `isPending` | `boolean` | — | Marks an in-flight action. Blocks activation, keeps focus. |
-| `isIconOnly` | `boolean` | — | Renders the icon-only shape. |
-| `fullWidth` | `boolean` | — | Stretches the button to the full width of its container. |
-
-### Slot props
-
-The default slot receives the button's own state, so content can follow it.
-
-| Prop | Type |
-| --- | --- |
-| `isDisabled` | `boolean` |
-| `isFocusVisible` | `boolean` |
-| `isHovered` | `boolean` |
-| `isPending` | `boolean` |
-| `isPressed` | `boolean` |
-
-### Events
-
-| Event | Payload |
-| --- | --- |
-| `click` | `MouseEvent` |
+<Api family="button" />

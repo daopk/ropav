@@ -3,7 +3,10 @@ import type { Component } from "vue";
 
 import DefaultTheme from "vitepress/theme";
 
+import Api from "./components/api.vue";
+import ComponentIndex from "./components/component-index.vue";
 import Demo from "./components/demo.vue";
+import StorybookLink from "./components/storybook-link.vue";
 import Layout from "./layout.vue";
 import Playground from "./playground/playground.vue";
 import { installVaporInterop } from "./vapor-interop";
@@ -27,8 +30,11 @@ export default {
   enhanceApp({ app }) {
     installVaporInterop(app);
 
+    app.component("Api", Api);
+    app.component("ComponentIndex", ComponentIndex);
     app.component("Demo", Demo);
     app.component("Playground", Playground);
+    app.component("StorybookLink", StorybookLink);
 
     for (const [path, module] of Object.entries(demos)) {
       app.component(demoName(path), module.default);

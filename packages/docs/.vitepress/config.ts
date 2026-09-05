@@ -84,6 +84,15 @@ export default defineConfig({
    * `vapor` attribute itself, which the compiler picks up without any plugin option.
    */
   vite: {
+    /*
+     * Absent by default. A public build with no Storybook to point at renders the names it
+     * cannot link as plain text, rather than shipping an address only its builder can open.
+     */
+    define: {
+      __STORYBOOK_URL__: JSON.stringify(
+        process.env["ROPAV_STORYBOOK_URL"]?.replace(/\/$/, "") ?? "",
+      ),
+    },
     // `ropav` resolves to workspace source, so it is crawled rather than pre-bundled. Its own
     // dependencies are discovered through that crawl; naming them here instead only warns,
     // because they do not resolve from this package's own root.
