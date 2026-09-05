@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // The docs consume `ropav` as workspace source, so this program has to resolve the
+    // library's own internal specifier. It has to arrive by the same route the rest of the
+    // graph does - through the package link rather than the path across the workspace -
+    // or a module reached both ways is two modules, and a type re-exported through both
+    // becomes an ambiguous name on the library's own entry point.
+    "paths": {
+      "@/*": ["./node_modules/ropav/src/*"]
+    },
+    // `types` overrides rather than merges, so `vite/client` from the base config is repeated.
+    "types": ["vite/client", "vitepress/client", "node"]
+  },
+  "include": [".vitepress/**/*.ts", ".vitepress/**/*.vue"],
+  "exclude": ["node_modules", ".vitepress/cache", ".vitepress/dist", ".vitepress/.temp"]
+}

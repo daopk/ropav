@@ -1,0 +1,26 @@
+{
+  "name": "@ropav/docs",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vitepress build",
+    "dev": "vitepress dev --host 127.0.0.1 --port 5173",
+    "preview": "vitepress preview --port 4173",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@ropav/styles": "workspace:*",
+    "ropav": "workspace:*",
+    "vue": "catalog:"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "catalog:",
+    "@types/node": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vitepress": "2.0.0-alpha.20",
+    "vue-tsc": "catalog:"
+  }
+}

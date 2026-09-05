@@ -15,6 +15,9 @@
   "scripts": {
     "dev": "pnpm --filter @ropav/storybook run dev",
     "build": "pnpm -r run build",
+    "docs:dev": "pnpm --filter @ropav/docs run dev",
+    "docs:build": "pnpm --filter @ropav/docs run build",
+    "docs:preview": "pnpm --filter @ropav/docs run preview",
     "lint": "oxlint --max-warnings=0",
     "lint:fix": "oxlint --fix --fix-suggestions",
     "format": "oxfmt --check .",

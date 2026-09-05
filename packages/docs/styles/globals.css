@@ -1,0 +1,20 @@
+/* Without the preflight: VitePress ships its own reset in `@layer __vitepress_base`, and a
+ * second one would fight it. */
+@import "ropav/styles/no-preflight";
+
+/* Every bundled theme, so the palette can be switched. An app imports only the ones it
+ * offers. Relative because the granular subpaths only exist in the published tarball. */
+@import "../../styles/themes/all.css";
+
+/* Tailwind has to scan the Vue sources, or the classes the SFCs name never get emitted. */
+@source "../../ropav/src/**/*.{vue,ts}";
+@source "../.vitepress/theme/**/*.{vue,ts}";
+
+:root {
+  --cursor-interactive: pointer;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
