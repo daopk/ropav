@@ -254,8 +254,25 @@ const parts: Part[] = [
     // windowed table renders its own gaps, so this is the only thing that can paint them.
     html: `<div class="table__drop-indicator"></div>`,
     knobHost: ".table__drop-indicator",
-    name: "the table's drop indicator",
+    name: "the table's drop indicator, windowed",
     paint: ".table__drop-indicator",
+    stateHost: ".table__drop-indicator",
+    states: [
+      {
+        attr: ["data-drop-target"],
+        knob: "--table-drop-indicator-bg",
+        paints: "var(--accent)",
+      },
+    ],
+  },
+  {
+    // The same gap as a real row, which has to take no height — so the cell paints it, on a
+    // pseudo-element lifted onto the boundary. Same knob, a different thing wearing it.
+    html: `<table class="table__content"><tbody><tr class="table__drop-indicator"><td></td></tr></tbody></table>`,
+    knobHost: ".table__drop-indicator",
+    name: "the table's drop indicator, in flow",
+    paint: ".table__drop-indicator > td",
+    pseudo: "::after",
     stateHost: ".table__drop-indicator",
     states: [
       {

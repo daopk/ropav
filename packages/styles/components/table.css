@@ -363,16 +363,39 @@
    Drop indicator — the gap between two rows a drop would land in.
    Styled here rather than left to the caller because a windowed collection
    renders its own: `TableBody` produces one per row it has laid out, and
-   markup written in the row slot cannot reach them. The height is kept even
-   when the gap is not the target, so rows do not shift as a drag moves.
+   markup written in the row slot cannot reach them.
    -------------------------------------------------------------------------- */
 .table__drop-indicator {
   --table-drop-indicator-size: 2px;
   --table-drop-indicator-bg: var(--accent);
+}
 
+/* Windowed, the layout has already placed it: a band straddling the boundary, out of flow. */
+.table__drop-indicator:not(tr) {
   height: var(--table-drop-indicator-size);
 
   &[data-drop-target="true"] {
+    background-color: var(--table-drop-indicator-bg);
+  }
+}
+
+/* In flow, as a real row, it has to take no height at all. A row that occupies the thickness
+ * steps every row below it down, and since the gap moves with the pointer the whole table walks
+ * about under a drag. So the cell paints the line instead, lifted half a thickness onto the
+ * boundary — which is where the windowed one straddles too, so the two read alike. */
+tr.table__drop-indicator {
+  height: 0;
+
+  > td {
+    position: relative;
+  }
+
+  &[data-drop-target="true"] > td::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: calc(var(--table-drop-indicator-size) / -2);
+    height: var(--table-drop-indicator-size);
     background-color: var(--table-drop-indicator-bg);
   }
 }
