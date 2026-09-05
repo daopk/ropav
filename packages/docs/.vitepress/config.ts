@@ -27,10 +27,51 @@ export default defineConfig({
   srcExclude: ["**/README.md", ".vitepress/generated/**"],
 
   themeConfig: {
-    nav: [{ link: "/components/button", text: "Components" }],
+    nav: [
+      { link: "/guide/", text: "Guide" },
+      { link: "/components/button", text: "Components" },
+      { link: "/theming/", text: "Theming" },
+    ],
     sidebar: {
       "/components/": [
         { items: [{ link: "/components/button", text: "Button" }], text: "Buttons" },
+      ],
+      "/guide/": [
+        {
+          items: [
+            { link: "/guide/", text: "Introduction" },
+            { link: "/guide/installation", text: "Installation" },
+            { link: "/guide/vapor", text: "Vapor mode" },
+          ],
+          text: "Getting started",
+        },
+        {
+          items: [
+            { link: "/guide/accessibility", text: "Accessibility" },
+            { link: "/guide/calendar-systems", text: "Calendar systems" },
+            { link: "/guide/storybook", text: "The rest of the components" },
+          ],
+          text: "Going further",
+        },
+      ],
+      "/theming/": [
+        {
+          items: [
+            { link: "/theming/", text: "Overview" },
+            { link: "/theming/tokens", text: "Tokens" },
+            { link: "/theming/state-colors", text: "State colors" },
+            { link: "/theming/custom-theme", text: "Custom themes" },
+          ],
+          text: "Theming",
+        },
+        {
+          items: [
+            { link: "/theming/class-names", text: "Class names" },
+            { link: "/theming/variants", text: "Variants" },
+            { link: "/theming/forced-colors", text: "Forced colors" },
+          ],
+          text: "Authoring",
+        },
       ],
     },
     socialLinks: [{ icon: "github", link: "https://github.com/daopk/ropav" }],
