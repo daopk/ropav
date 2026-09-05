@@ -5,6 +5,7 @@ import DefaultTheme from "vitepress/theme";
 
 import Demo from "./components/demo.vue";
 import Layout from "./layout.vue";
+import Playground from "./playground/playground.vue";
 import { installVaporInterop } from "./vapor-interop";
 
 import "../../styles/globals.css";
@@ -27,6 +28,7 @@ export default {
     installVaporInterop(app);
 
     app.component("Demo", Demo);
+    app.component("Playground", Playground);
 
     for (const [path, module] of Object.entries(demos)) {
       app.component(demoName(path), module.default);

@@ -2,6 +2,8 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    // The config graph is loaded by Node, which resolves relative imports by extension.
+    "allowImportingTsExtensions": true,
     // The docs consume `ropav` as workspace source, so this program has to resolve the
     // library's own internal specifier. It has to arrive by the same route the rest of the
     // graph does - through the package link rather than the path across the workspace -

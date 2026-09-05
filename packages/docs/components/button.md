@@ -13,6 +13,9 @@ library reuses, which is why a dropdown, a modal and a tooltip each wrap one to 
 import { Button } from "ropav";
 ```
 
+::: playground button
+:::
+
 ## Variants
 
 <Demo title="button-variants.vue">

@@ -154,7 +154,7 @@ const main = (): void => {
  * \`predev\` / \`prebuild\` do it.
  */
 
-import type { PlaygroundSpec } from "../playgrounds/types";
+import type { PlaygroundSpec } from "../playgrounds/types.ts";
 
 export const specs: Record<string, PlaygroundSpec> = {
 ${specs.join("\n")}
