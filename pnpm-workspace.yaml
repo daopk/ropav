@@ -17,10 +17,6 @@ catalog:
   vue: 3.6.0-rc.7
   vue-tsc: 3.3.11
 
-overrides:
-  shiki: 3.20.0
-  ts-morph: 27.0.2
-
 onlyBuiltDependencies:
   - "@parcel/watcher"
   - "@swc/core"
