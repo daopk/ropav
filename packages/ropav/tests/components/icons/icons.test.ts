@@ -1,4 +1,4 @@
-import type { Component } from "vue";
+import type { VaporComponent } from "vue";
 
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it } from "vitest";
@@ -10,9 +10,10 @@ import * as barrel from "@/components/icons";
  * is audited too — `IconOverlayArrow` reached the DOM through `overlay-arrow.vue` for a long time
  * as the only one in the set carrying neither attribute, and nothing here noticed.
  */
-const modules = import.meta.glob<{ default: Component }>("../../../src/components/icons/*.vue", {
-  eager: true,
-});
+const modules = import.meta.glob<{ default: VaporComponent }>(
+  "../../../src/components/icons/*.vue",
+  { eager: true },
+);
 
 const icons = Object.entries(modules).map(
   ([path, module]) => [path.slice(path.lastIndexOf("/") + 1), module.default] as const,
