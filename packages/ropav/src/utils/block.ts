@@ -1,6 +1,17 @@
 import type { Block } from "vue";
 
-import { isFragment, isVaporComponent } from "vue";
+import * as Vue from "vue";
+
+/**
+ * The namespace import is load-bearing and must not be rewritten to a named one.
+ *
+ * `isFragment` and `isVaporComponent` come from the Vapor runtime, which only the esm-bundler
+ * build re-exports. A bundler externalising `vue` for SSR resolves the node entry, and a named
+ * import of a binding it does not have is a link-time `SyntaxError` — thrown before any guard
+ * could run. A namespace read simply yields `undefined`, which is all this file needs: every
+ * function below is reached from a Vapor render, and a server has none.
+ */
+const { isFragment, isVaporComponent } = Vue;
 
 /**
  * The DOM nodes a Vapor block resolves to, in document order.

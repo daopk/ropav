@@ -1,27 +1,8 @@
-import { createComponent, defineVaporComponent } from "vue";
-
-import { flattenBlock, isTextOnlyBlock } from "../../utils/block";
+import { createAutoLabel } from "../../utils/auto-label";
 
 import BadgeLabel from "./badge-label.vue";
 
-/**
- * Wraps a badge's bare text in `BadgeLabel`, matching the React component's string and number
- * handling without executing the default slot more than once.
- *
- * The slot has already rendered by the time it returns its block. Inspecting that block therefore
- * preserves its effects and lets the exact same text nodes move into the label component.
- * A slot forwarded from a VDOM host is filled only when inserted, so it cannot be inspected here;
- * those callers (including runtime-compiled stories) must render `BadgeLabel` explicitly.
- */
-const BadgeAutoLabel = defineVaporComponent(
-  (_props, { slots }) => {
-    const block = slots["default"]?.();
-
-    if (block === undefined || !isTextOnlyBlock(flattenBlock(block))) return block ?? [];
-
-    return createComponent(BadgeLabel, null, { default: () => block });
-  },
-  { name: "Ropav.Badge.AutoLabel" },
-);
+/** Wraps a badge's bare text in `BadgeLabel`. */
+const BadgeAutoLabel = createAutoLabel(BadgeLabel, "Ropav.Badge.AutoLabel");
 
 export default BadgeAutoLabel;
