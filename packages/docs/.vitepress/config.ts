@@ -75,6 +75,8 @@ export default defineConfig({
         {
           items: [
             { link: "/components/select", text: "Select" },
+            { link: "/components/combo-box", text: "ComboBox" },
+            { link: "/components/autocomplete", text: "Autocomplete" },
             { link: "/components/date-picker", text: "DatePicker" },
           ],
           text: "Pickers",
