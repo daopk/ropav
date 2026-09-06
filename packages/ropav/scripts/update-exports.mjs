@@ -29,17 +29,16 @@ function scanComponents() {
 }
 
 /**
- * Generate component exports and write them to package.json.
- * Called after clean-package has already backed up and cleaned the file.
+ * The published `exports` map. Pure, so a test can hold it against what the build emits without
+ * rewriting `package.json` to find out.
+ *
+ * @param {string[]} components
+ * @returns {Record<string, string | Record<string, string>>}
  */
-async function generateExports() {
-  const packageJson = JSON.parse(await readFile(PACKAGE_JSON_PATH, "utf8"));
-  const components = scanComponents();
-
-  console.log(`📦 Found ${components.length} components`);
-
+export function buildExports(components) {
   // `default` must stay last — export condition order is significant
   /* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
+  /** @type {Record<string, string | Record<string, string>>} */
   const exports = {
     ".": {
       import: "./dist/index.js",
@@ -54,6 +53,8 @@ async function generateExports() {
       style: "./dist/styles-no-preflight.css",
       default: "./dist/styles-no-preflight.css",
     },
+    // The compiled stylesheet, for a consumer with no build step to resolve the entries above.
+    "./styles/bundled.css": "./dist/ropav.min.css",
   };
 
   /* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
@@ -65,13 +66,30 @@ async function generateExports() {
     };
   }
 
-  packageJson.exports = exports;
+  return exports;
+}
+
+/**
+ * Generate component exports and write them to package.json.
+ * Called after clean-package has already backed up and cleaned the file.
+ */
+async function generateExports() {
+  const packageJson = JSON.parse(await readFile(PACKAGE_JSON_PATH, "utf8"));
+  const components = scanComponents();
+
+  console.log(`📦 Found ${components.length} components`);
+
+  packageJson.exports = buildExports(components);
 
   await writeFile(PACKAGE_JSON_PATH, `${JSON.stringify(packageJson, null, 2)}\n`);
   console.log(`✅ Updated package.json exports (${components.length} components)`);
 }
 
-generateExports().catch((error) => {
-  console.error("❌ Failed:", error);
-  process.exit(1);
-});
+// Only when run as the `prepack` step — importing this for `buildExports` must not rewrite
+// `package.json` as a side effect.
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  generateExports().catch((error) => {
+    console.error("❌ Failed:", error);
+    process.exit(1);
+  });
+}

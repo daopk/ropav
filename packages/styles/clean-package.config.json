@@ -5,6 +5,8 @@
     "types": "./dist/index.d.ts",
     "style": "./dist/index.css",
     "browser": "./dist/ropav.min.css",
+    "unpkg": "./dist/ropav.min.css",
+    "jsdelivr": "./dist/ropav.min.css",
     "sideEffects": ["*.css"],
     "exports": {
       ".": {
@@ -21,6 +23,7 @@
         "style": "./dist/no-preflight.css",
         "default": "./dist/no-preflight.css"
       },
+      "./bundled.css": "./dist/ropav.min.css",
       "./components/*": {
         "types": "./dist/components/*/index.d.ts",
         "import": "./dist/components/*/index.js",
