@@ -161,16 +161,16 @@
 
   /* Animations */
   --animate-spin-fast: spin 0.75s linear infinite;
-  --animate-skeleton: skeleton 2s linear infinite;
-  --animate-caret-blink: caret-blink 1.2s ease-out infinite;
+  --animate-skeleton: rp-skeleton 2s linear infinite;
+  --animate-caret-blink: rp-caret-blink 1.2s ease-out infinite;
 
-  @keyframes skeleton {
+  @keyframes rp-skeleton {
     100% {
       transform: translateX(200%);
     }
   }
 
-  @keyframes caret-blink {
+  @keyframes rp-caret-blink {
     0%,
     70%,
     100% {

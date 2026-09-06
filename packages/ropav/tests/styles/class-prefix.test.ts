@@ -50,6 +50,33 @@ describe("component class names", () => {
 });
 
 /**
+ * A keyframe name is global to the document wherever it is written, and the check above only
+ * reads `components/`. Two lived outside it — `skeleton` and `caret-blink`, declared in the
+ * `@theme` block — and the second was a name `tw-animate-css` also declares, so one of the two
+ * definitions was being thrown away and which one depended on import order.
+ *
+ * Class names are not checked here: `utilities/` and `variants/` claim unprefixed names like
+ * `focus-ring` and `status-disabled` on purpose, and those are the authoring API.
+ */
+const everyStylesheet = readdirSync(STYLES, { recursive: true, withFileTypes: true })
+  .filter((entry) => entry.isFile() && entry.name.endsWith(".css"))
+  .map((entry) => path.join(entry.parentPath, entry.name))
+  .filter((file) => !file.includes(`${path.sep}dist${path.sep}`))
+  .filter((file) => !file.includes("node_modules"));
+
+describe("keyframe names", () => {
+  it("are prefixed wherever in the package they are declared", () => {
+    const offending = everyStylesheet.flatMap((file) => {
+      const names = offenders(readFileSync(file, "utf8"), /@keyframes\s+([a-zA-Z][\w-]*)/g);
+
+      return names.map((name) => `${path.relative(STYLES, file)}: ${name}`);
+    });
+
+    expect(offending).toEqual([]);
+  });
+});
+
+/**
  * The recipes are the other half. A class the CSS spells and a recipe does not is dead styling;
  * one the recipe spells and the CSS does not renders unstyled — so both layers have to move
  * together, and only this side can be read without a browser.

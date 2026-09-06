@@ -307,7 +307,7 @@ describe("InputOTP (browser)", () => {
     const caret = container.querySelector<HTMLElement>('[data-slot="input-otp-caret"]')!;
 
     expect(caret).not.toBeNull();
-    expect(getComputedStyle(caret).animationName).toBe("caret-blink");
+    expect(getComputedStyle(caret).animationName).toBe("rp-caret-blink");
 
     unmount();
   });
