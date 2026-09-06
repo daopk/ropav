@@ -19,9 +19,9 @@ import { Select, SelectPopover, SelectTrigger, SelectValue } from "ropav";
 
 ## The parts
 
-`SelectTrigger` holds `SelectValue` and `SelectIndicator`. The popover holds a `ListBox`, which
-is a component in its own right — a select is a trigger with a list box inside it, not a
-different kind of list.
+`SelectTrigger` holds `SelectValue` and `SelectIndicator`. The popover holds a
+[ListBox](/components/list-box), which is a component in its own right — a select is a trigger
+with a list box inside it, not a different kind of list.
 
 <Demo title="select-basic.vue">
 <DemoSelectBasic />

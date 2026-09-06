@@ -10,9 +10,9 @@ A dropdown is a menu of things to *do*. That is what separates it from a
 [Select](/components/select), which is a value to *choose*: a select has a current value and a
 dropdown does not.
 
-The items are `Menu` parts rather than dropdown-specific ones — `MenuItem`, `MenuSection`,
-`MenuItemIndicator` — because a dropdown is a popover with a menu inside it, and the same menu
-appears in other places.
+The items are [Menu](/components/menu) parts rather than dropdown-specific ones — `MenuItem`,
+`MenuSection`, `MenuItemIndicator` — because a dropdown is a popover with a menu inside it, and
+the same menu appears in other places.
 
 ```ts
 import { Dropdown, DropdownMenu, DropdownPopover, MenuItem } from "ropav";

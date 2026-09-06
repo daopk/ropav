@@ -79,6 +79,8 @@ export default defineConfig({
         {
           items: [
             { link: "/components/dropdown", text: "Dropdown" },
+            { link: "/components/list-box", text: "ListBox" },
+            { link: "/components/menu", text: "Menu" },
             { link: "/components/tag-group", text: "TagGroup" },
             { link: "/components/slider", text: "Slider" },
             { link: "/components/switch-group", text: "SwitchGroup" },
