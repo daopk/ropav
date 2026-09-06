@@ -154,6 +154,7 @@
       var(--field-border, var(--border)) 74%,
       var(--field-foreground, var(--foreground)) 22%
     );
+    --field-border-invalid: var(--danger);
 
     --default-soft: color-mix(in oklab, var(--default) 50%, transparent);
     --default-soft-foreground: var(--default-foreground);
@@ -303,6 +304,7 @@
       var(--field-border, var(--border)) 74%,
       var(--field-foreground, var(--foreground)) 22%
     );
+    --field-border-invalid: var(--danger);
 
     --default-soft: color-mix(in oklab, var(--default) 50%, transparent);
     --default-soft-foreground: var(--default-foreground);

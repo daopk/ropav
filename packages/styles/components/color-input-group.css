@@ -49,7 +49,7 @@
   &[data-invalid="true"] {
     @apply status-invalid-field;
     background-color: var(--color-input-group-bg-focus);
-    border-color: var(--color-field-border-invalid);
+    border-color: var(--field-border-invalid);
   }
 
   /* Disabled state */

@@ -74,6 +74,7 @@
       var(--field-border, var(--border)) 88%,
       var(--field-foreground, var(--foreground)) 10%
     );
+    --field-border-invalid: var(--danger);
     --field-focus: var(--field-background, var(--default));
     --field-foreground: oklch(21.03% 0.002 262.87);
     --field-hover: color-mix(
@@ -181,6 +182,7 @@
       var(--field-border, var(--border)) 88%,
       var(--field-foreground, var(--foreground)) 10%
     );
+    --field-border-invalid: var(--danger);
     --field-focus: var(--field-background, var(--default));
     --field-foreground: oklch(99.11% 0.002 262.87);
     --field-hover: color-mix(

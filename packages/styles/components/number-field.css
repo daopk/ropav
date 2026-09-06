@@ -74,7 +74,7 @@
   &[data-invalid="true"] {
     @apply status-invalid-field;
     background-color: var(--number-field-group-bg-focus);
-    border-color: var(--color-field-border-invalid);
+    border-color: var(--field-border-invalid);
   }
 
   /* Disabled state */

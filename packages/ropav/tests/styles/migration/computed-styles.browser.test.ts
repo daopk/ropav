@@ -35,8 +35,27 @@ describe("computed styles", () => {
     const before = JSON.parse(baseline as string) as Report;
     const lines = differences(before, capture(document, window));
 
-    // Truncated: a step that moves a thousand cases is answered by the first few, and the rest
-    // would push them out of the terminal. The count says how much is behind them.
-    expect({ changed: lines.length, first: lines.slice(0, 30) }).toEqual({ changed: 0, first: [] });
+    /*
+     * Shape first, lines second. A step that moves a thousand values is read by *which properties
+     * moved* and *how many cases* — a truncated list of the alphabetically-first ones says almost
+     * nothing, and the untruncated list does not fit in a terminal.
+     */
+    const properties: Record<string, number> = {};
+    const cases = new Set<string>();
+
+    for (const line of lines) {
+      cases.add(line.split(" | ")[0]!);
+
+      const prop = /\| ([\w-]+):/.exec(line)?.[1];
+
+      if (prop) properties[prop] = (properties[prop] ?? 0) + 1;
+    }
+
+    expect({
+      cases: cases.size,
+      changed: lines.length,
+      first: lines.slice(0, 10),
+      properties,
+    }).toEqual({ cases: 0, changed: 0, first: [], properties: {} });
   });
 });

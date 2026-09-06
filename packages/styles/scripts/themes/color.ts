@@ -767,6 +767,7 @@ export function getDerivedColorFormulas(
       "color-mix(in oklab, var(--field-border, var(--border)) 74%, var(--field-foreground, var(--foreground)) 22%)",
     "--field-border-hover":
       "color-mix(in oklab, var(--field-border, var(--border)) 88%, var(--field-foreground, var(--foreground)) 10%)",
+    "--field-border-invalid": "var(--danger)",
     "--field-focus": "var(--field-background, var(--default))",
     "--field-hover":
       "color-mix(in oklab, var(--field-background, var(--default)) 90%, var(--field-foreground, var(--foreground)) 2%)",
