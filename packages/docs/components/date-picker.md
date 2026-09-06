@@ -17,7 +17,8 @@ import { DatePicker, DatePickerGroup, DatePickerInput } from "ropav";
 ## The field and the calendar
 
 `DatePickerInput` renders one `DatePickerSegment` per part of the date, in the order the reader's
-locale writes them. `DatePickerPopover` holds a `Calendar`, which is a component in its own right.
+locale writes them. `DatePickerPopover` holds a [Calendar](/components/calendar), which is a
+component in its own right.
 
 <Demo title="date-picker-basic.vue">
 <DemoDatePickerBasic />
