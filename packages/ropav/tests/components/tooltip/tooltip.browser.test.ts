@@ -388,8 +388,8 @@ describe("Tooltip (browser)", () => {
 
       const arrow = document.body.querySelector<HTMLElement>("[data-slot='overlay-arrow']")!;
 
-      // The tooltip's text is what is announced. An unnamed shape beside it reads as an image
-      // with no description, which is why every icon in the set carries both of these.
+      // The icons audit covers the shape on its own; this covers it after the arrow wrapper's
+      // own attributes have merged over it, which is where a fallthrough could undo them.
       expect(arrow.getAttribute("aria-hidden")).toBe("true");
       expect(arrow.getAttribute("role")).toBe("presentation");
 
