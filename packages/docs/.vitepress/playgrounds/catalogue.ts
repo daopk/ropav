@@ -191,10 +191,82 @@ export const catalogue: Record<string, CatalogueEntry> = {
     },
   },
 
+  "color-field": {
+    controls: ["fullWidth", "isDisabled", "isReadOnly", "isRequired", "isInvalid"],
+    file: "components/color-field/color-field-root.vue",
+    node: {
+      children: [
+        { children: ["Brand colour"], tag: "Label" },
+        {
+          children: [
+            { children: [{ tag: "ColorSwatch" }], tag: "ColorInputGroupPrefix" },
+            { tag: "ColorInputGroupInput" },
+          ],
+          tag: "ColorInputGroup",
+        },
+      ],
+      props: { class: "w-72", defaultValue: "#0485f7" },
+      root: true,
+      tag: "ColorField",
+    },
+  },
+
+  "color-slider": {
+    controls: ["orientation", "isDisabled"],
+    file: "components/color-slider/color-slider-root.vue",
+    node: {
+      children: [
+        { children: ["Hue"], tag: "Label" },
+        { tag: "ColorSliderOutput" },
+        { children: [{ tag: "ColorSliderThumb" }], tag: "ColorSliderTrack" },
+      ],
+      props: {
+        channel: "hue",
+        class: "w-72",
+        colorSpace: "hsl",
+        defaultValue: "hsl(200, 100%, 50%)",
+      },
+      root: true,
+      tag: "ColorSlider",
+    },
+  },
+
   "color-swatch": {
     controls: ["shape", "size"],
     file: "components/color-swatch/color-swatch-root.vue",
     node: { props: { color: "#0485f7" }, root: true, tag: "ColorSwatch" },
+  },
+
+  "color-swatch-picker": {
+    controls: ["variant", "size", "layout"],
+    file: "components/color-swatch-picker/color-swatch-picker-root.vue",
+    node: {
+      children: [
+        {
+          children: [{ tag: "ColorSwatchPickerSwatch" }, { tag: "ColorSwatchPickerIndicator" }],
+          props: { color: "#f43f5e" },
+          tag: "ColorSwatchPickerItem",
+        },
+        {
+          children: [{ tag: "ColorSwatchPickerSwatch" }, { tag: "ColorSwatchPickerIndicator" }],
+          props: { color: "#8b5cf6" },
+          tag: "ColorSwatchPickerItem",
+        },
+        {
+          children: [{ tag: "ColorSwatchPickerSwatch" }, { tag: "ColorSwatchPickerIndicator" }],
+          props: { color: "#3b82f6" },
+          tag: "ColorSwatchPickerItem",
+        },
+        {
+          children: [{ tag: "ColorSwatchPickerSwatch" }, { tag: "ColorSwatchPickerIndicator" }],
+          props: { color: "#10b981" },
+          tag: "ColorSwatchPickerItem",
+        },
+      ],
+      props: { "aria-label": "Brand colour", defaultValue: "#3b82f6" },
+      root: true,
+      tag: "ColorSwatchPicker",
+    },
   },
 
   "input-group": {
@@ -659,7 +731,10 @@ export const optionOrder: Record<string, readonly string[]> = {
   "button.type": ["button", "submit", "reset"],
   "card.variant": ["default", "secondary", "tertiary", "transparent"],
   color: ["default", "accent", "success", "warning", "danger"],
+  "color-swatch-picker.size": ["xs", "sm", "md", "lg", "xl"],
+  "color-swatch-picker.variant": ["circle", "square"],
   "color-swatch.size": ["xs", "sm", "md", "lg", "xl"],
+  layout: ["grid", "stack"],
   placement: ["top-right", "top-left", "bottom-right", "bottom-left"],
   selectionMode: ["none", "single", "multiple"],
   "separator.variant": ["default", "secondary", "tertiary"],

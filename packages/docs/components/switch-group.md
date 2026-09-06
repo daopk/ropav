@@ -45,9 +45,9 @@ that — `class="overflow-x-auto"`, or shorter labels.
 
 ## When a group is not enough
 
-Switches that need one shared label, or one disabled state across all of them, want a `Fieldset`
-around them instead — it is in [Storybook](/guide/storybook) along with the rest. This component
-is layout, and a screen reader is told nothing by it.
+Switches that need one shared label, or one disabled state across all of them, want a
+[Fieldset](/components/fieldset) around them instead. This component is layout, and a screen
+reader is told nothing by it.
 
 ## API
 

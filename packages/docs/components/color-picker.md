@@ -27,9 +27,9 @@ import { ColorPicker, ColorPickerPopover, ColorPickerTrigger } from "ropav";
 
 The trigger is a button showing a [ColorSwatch](/components/color-swatch) with no `color` of its
 own — it takes the picker's. Inside the popover, [ColorArea](/components/color-area) covers two
-channels and a `ColorSlider` covers the third; `ColorSwatchPicker` for presets and `ColorField`
-for a typed hex value are the other two pieces, and both are in
-[Storybook](/guide/storybook) along with the rest.
+channels and a [ColorSlider](/components/color-slider) covers the third;
+[ColorSwatchPicker](/components/color-swatch-picker) for presets and
+[ColorField](/components/color-field) for a typed hex value are the other two pieces.
 
 ## Holding the colour
 
