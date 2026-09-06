@@ -5,12 +5,12 @@ description: Every component the library ships, and where each one is documented
 
 # Components
 
-Every component below is built, tested and themed. The ones with a page here are the ones a
-project reaches for first — each has a playground, worked examples, and the props read straight
-off the source.
+Every component the library ships has a page here — a playground, worked examples, and the props
+read straight off the source. Nothing on this list sends you somewhere else to find out what it
+is for.
 
-The rest open in [Storybook](/guide/storybook), which is generated from the same files and stays
-in step with them by construction. They are marked with an arrow, and they are not lesser
-components: they are the ones whose pages have not been written yet.
+[Storybook](/guide/storybook) is generated from the same files and stays in step with them by
+construction. Reach for it to see one component under every combination of its props at once,
+which is a different question from the one a page answers.
 
 <ComponentIndex />
