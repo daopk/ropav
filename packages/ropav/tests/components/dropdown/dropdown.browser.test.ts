@@ -1,7 +1,7 @@
 import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { afterEach, describe, expect, it } from "vitest";
-import { userEvent } from "vitest/browser";
+import { cdp, userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
 import { settled } from "../../harness/settle";
@@ -430,6 +430,68 @@ describe("Dropdown (browser)", () => {
       await nextTick();
 
       expect(document.activeElement).toBe(trigger);
+
+      result.unmount();
+    });
+  });
+
+  describe("a trigger wearing a control's classes", () => {
+    /** Gaps between a control's own box and its single child, clockwise from the left. */
+    const insets = (control: Element) => {
+      const box = measure(control);
+      const child = measure(control.firstElementChild!);
+
+      return {
+        bottom: box.bottom - child.bottom,
+        left: child.x - box.x,
+        right: box.right - child.right,
+        top: child.y - box.y,
+      };
+    };
+
+    /**
+     * Forced colors is the browser's, not the page's, so it has to be switched from outside. The
+     * page is shared by the whole run - every caller turns it back off.
+     */
+    const forcedColors = (active: boolean) =>
+      cdp().send("Emulation.setEmulatedMedia", {
+        features: [{ name: "forced-colors", value: active ? "active" : "none" }],
+      });
+
+    it("centres its content the way the control it borrows from does", () => {
+      const result = render({ withBorrowedTrigger: true });
+
+      const trigger = insets(result.getByRole("button", { name: "Menu" }));
+      const reference = insets(result.getByRole("button", { name: "Reference" }));
+
+      // The stylesheet is imported after the control's own and wins at equal specificity, so a
+      // `display` of its own here would flatten the centring the borrowed classes carry and drop
+      // the icon at content-start - far enough left to hang outside the button's own edge.
+      expect(trigger.left).toBeCloseTo(trigger.right, 1);
+      expect(trigger.top).toBeCloseTo(trigger.bottom, 1);
+      expect(trigger).toEqual(reference);
+
+      result.unmount();
+    });
+
+    it("keeps the control's edge under forced colors", async () => {
+      const result = render({ withBorrowedTrigger: true });
+      const trigger = result.getByRole("button", { name: "Menu" });
+      const reference = result.getByRole("button", { name: "Reference" });
+
+      await forcedColors(true);
+
+      try {
+        // The stylesheet's own `outline-none` also lands after the control's, so scoping it out of
+        // this branch is what leaves the borrowed edge standing. Forced colors flattens the fill
+        // and drops the shadow, and without the edge the trigger reads as bare text.
+        expect(getComputedStyle(trigger).outlineStyle).toBe("solid");
+        expect(getComputedStyle(trigger).outlineStyle).toBe(
+          getComputedStyle(reference).outlineStyle,
+        );
+      } finally {
+        await forcedColors(false);
+      }
 
       result.unmount();
     });

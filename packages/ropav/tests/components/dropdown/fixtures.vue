@@ -4,6 +4,8 @@ import type { CollectionKey } from "@/composables/use-collection";
 import type { MenuTriggerType } from "@/composables/use-menu-trigger";
 import type { CollectionSelection, SelectionMode } from "@/composables/use-selection-manager";
 
+import { toggleButtonVariants } from "@ropav/styles";
+
 import { Button } from "@/components/button";
 import { Description } from "@/components/description";
 import {
@@ -19,6 +21,7 @@ import { Label } from "@/components/label";
 import { MenuItem, MenuItemIndicator, MenuItemSubmenuIndicator } from "@/components/menu-item";
 import { MenuSection } from "@/components/menu-section";
 import { Separator } from "@/components/separator";
+import { ToggleButton } from "@/components/toggle-button";
 
 const props = withDefaults(
   defineProps<{
@@ -35,6 +38,8 @@ const props = withDefaults(
     submenuDelay?: number;
     withSubmenu?: boolean;
     withCustomTrigger?: boolean;
+    /** Dresses the custom trigger in a control's classes, next to that control for comparison. */
+    withBorrowedTrigger?: boolean;
     /** Whether the caller hands over an empty slot at all. */
     withEmptyState?: boolean;
   }>(),
@@ -66,7 +71,14 @@ const emit = defineEmits<{
     :trigger="props.trigger"
     @open-change="emit('openChange', $event)"
   >
-    <DropdownTrigger v-if="props.withCustomTrigger" aria-label="Menu">Actions</DropdownTrigger>
+    <DropdownTrigger
+      v-if="props.withBorrowedTrigger"
+      aria-label="Menu"
+      :class="toggleButtonVariants({ isIconOnly: true, size: 'sm', variant: 'ghost' })"
+    >
+      <svg viewBox="0 0 16 16" />
+    </DropdownTrigger>
+    <DropdownTrigger v-else-if="props.withCustomTrigger" aria-label="Menu">Actions</DropdownTrigger>
     <Button v-else aria-label="Menu" variant="secondary">Actions</Button>
     <DropdownPopover>
       <DropdownMenu
@@ -124,4 +136,15 @@ const emit = defineEmits<{
       </DropdownMenu>
     </DropdownPopover>
   </Dropdown>
+
+  <!-- Outside the dropdown, where it cannot pick up the press responder and become a trigger too. -->
+  <ToggleButton
+    v-if="props.withBorrowedTrigger"
+    aria-label="Reference"
+    is-icon-only
+    size="sm"
+    variant="ghost"
+  >
+    <svg viewBox="0 0 16 16" />
+  </ToggleButton>
 </template>

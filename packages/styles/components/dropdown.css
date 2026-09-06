@@ -7,23 +7,17 @@
 }
 
 .rp-dropdown__trigger {
-  @apply inline-block;
-  /* Only visible when using a custom trigger  - not passing "Button" as a child - hence we use some button styles (custom trigger) */
-  @apply outline-none;
-
-  /* A custom trigger borrows the button's look by wearing its classes, and the declarations
-   * above land later in the cascade than the button's own, stripping its centring and its
-   * forced-colors edge back off. Handed back here rather than on the bare trigger: when a
-   * `Button` is passed as a child instead, this element is only a wrapper around it - an inline
-   * box is what that wants, and an outline would draw a second ring around the real one. */
-  &.rp-button {
-    @apply inline-flex;
-
-    @media (forced-colors: active) {
-      outline: 1px solid ButtonBorder;
-      outline-offset: -1px;
-    }
+  /* A custom trigger borrows a control's look by wearing its classes, and this file is imported
+   * after theirs - anything declared here at the same specificity wins and strips what they
+   * brought. So `display` is left undeclared: `inline-block` is the UA default for a `<button>`,
+   * which is what a trigger holding an avatar or a bare icon wants, and a trigger wearing button
+   * or toggle-button classes keeps the centring they carry. `outline-none` steps aside under
+   * forced colors for the same reason - the control's edge there is the borrowed class's to draw,
+   * and a trigger wearing no such class has none to strip. */
+  @media not (forced-colors: active) {
+    @apply outline-none;
   }
+
   transition:
     transform 250ms var(--ease-out-quart),
     background-color 150ms var(--ease-smooth),

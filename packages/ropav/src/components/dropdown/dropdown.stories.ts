@@ -25,6 +25,7 @@ import { Label } from "../label";
 import { MenuItemIndicator, MenuItem, MenuItemSubmenuIndicator } from "../menu-item";
 import { MenuSection } from "../menu-section";
 import { Separator } from "../separator";
+import { ToggleButton, toggleButtonVariants } from "../toggle-button";
 
 import DropdownMenu from "./dropdown-menu.vue";
 import DropdownPopover from "./dropdown-popover.vue";
@@ -55,6 +56,7 @@ const components = {
   KbdContent,
   Label: Label,
   Separator: Separator,
+  ToggleButton: ToggleButton,
 };
 
 const meta: StoryMeta = {
@@ -933,6 +935,41 @@ export const CustomTrigger: Story = {
           </DropdownMenu>
         </DropdownPopover>
       </Dropdown>
+    `,
+  }),
+};
+
+export const BorrowedTrigger: Story = {
+  render: () => ({
+    components: { ...components, IconEllipsisVertical },
+    // The trigger is dressed in a toggle button's classes rather than a button's. Both wear the
+    // same icon at the same size, so any gap between them is the dropdown's stylesheet reaching
+    // past its own concerns.
+    setup: () => ({ triggerClass: toggleButtonVariants({ isIconOnly: true, size: "sm" }) }),
+    template: `
+      <div class="flex items-center gap-3">
+        <Dropdown>
+          <DropdownTrigger aria-label="Menu" :class="triggerClass">
+            <IconEllipsisVertical />
+          </DropdownTrigger>
+          <DropdownPopover>
+            <DropdownMenu>
+              <DropdownItem id="new-file" text-value="New file">
+                <Label>New file</Label>
+              </DropdownItem>
+              <DropdownItem id="copy-link" text-value="Copy link">
+                <Label>Copy link</Label>
+              </DropdownItem>
+              <DropdownItem id="delete-file" text-value="Delete file" variant="danger">
+                <Label>Delete file</Label>
+              </DropdownItem>
+            </DropdownMenu>
+          </DropdownPopover>
+        </Dropdown>
+        <ToggleButton aria-label="Compare" is-icon-only size="sm">
+          <IconEllipsisVertical />
+        </ToggleButton>
+      </div>
     `,
   }),
 };
