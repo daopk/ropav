@@ -89,6 +89,9 @@ export default defineConfig({
           items: [
             { link: "/components/modal", text: "Modal" },
             { link: "/components/tooltip", text: "Tooltip" },
+            { link: "/components/popover", text: "Popover" },
+            { link: "/components/drawer", text: "Drawer" },
+            { link: "/components/alert-dialog", text: "AlertDialog" },
           ],
           text: "Overlays",
         },
