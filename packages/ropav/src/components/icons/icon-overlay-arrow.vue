@@ -17,9 +17,11 @@ defineProps<{ class?: string }>();
 -->
 <template>
   <svg
+    aria-hidden="true"
     :class="$props.class"
     fill="none"
     height="12"
+    role="presentation"
     viewBox="0 0 12 12"
     width="12"
     xmlns="http://www.w3.org/2000/svg"

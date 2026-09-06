@@ -379,6 +379,23 @@ describe("Tooltip (browser)", () => {
       result.unmount();
     });
 
+    it("is hidden from assistive technology", async () => {
+      const result = render({ shouldFlip: false, showArrow: true, withArrow: true });
+
+      place(result);
+
+      await open(result);
+
+      const arrow = document.body.querySelector<HTMLElement>("[data-slot='overlay-arrow']")!;
+
+      // The tooltip's text is what is announced. An unnamed shape beside it reads as an image
+      // with no description, which is why every icon in the set carries both of these.
+      expect(arrow.getAttribute("aria-hidden")).toBe("true");
+      expect(arrow.getAttribute("role")).toBe("presentation");
+
+      result.unmount();
+    });
+
     it("points down when the tooltip sits below its trigger", async () => {
       const result = render({
         placement: "bottom",
