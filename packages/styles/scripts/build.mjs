@@ -5,6 +5,8 @@ import { rm } from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
 
+import { bundleCss } from "./bundle-css.mjs";
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
 const distDir = path.join(rootDir, "dist");
@@ -34,10 +36,10 @@ async function copyCss() {
 }
 
 async function minifyCss() {
-  console.log("🗜️  Minifying CSS...");
-  execSync("npx @tailwindcss/cli -i ./dist/index.css -o dist/ropav.min.css --minify", {
-    cwd: rootDir,
-    stdio: "inherit",
+  console.log("🗜️  Bundling CSS...");
+  await bundleCss({
+    entry: path.join(distDir, "index.css"),
+    out: path.join(distDir, "ropav.min.css"),
   });
 }
 
