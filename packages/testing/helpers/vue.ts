@@ -1,4 +1,4 @@
-import type { Component, VNodeChild } from "vue";
+import type { Component, VaporComponent, VNodeChild } from "vue";
 
 import { getQueriesForElement } from "@testing-library/dom";
 import {
@@ -9,9 +9,6 @@ import {
   h,
   vaporInteropPlugin,
 } from "vue";
-
-/** `VaporComponent` is not part of vue's public types, so it is read off the runtime. */
-type VaporComponent = Parameters<typeof createComponent>[0];
 
 export interface RenderVaporOptions {
   /**
