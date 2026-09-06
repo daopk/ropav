@@ -45,6 +45,25 @@ export const catalogue: Record<string, CatalogueEntry> = {
     },
   },
 
+  badge: {
+    controls: ["variant", "color", "size", "placement"],
+    file: "components/badge/badge-root.vue",
+    node: {
+      children: [
+        {
+          children: [{ children: ["JD"], tag: "AvatarFallback" }],
+          tag: "Avatar",
+        },
+        {
+          children: [{ children: ["5"], tag: "BadgeLabel" }],
+          root: true,
+          tag: "Badge",
+        },
+      ],
+      tag: "BadgeAnchor",
+    },
+  },
+
   button: {
     controls: ["variant", "size", "isDisabled", "isPending", "isIconOnly", "fullWidth"],
     file: "components/button/button-root.vue",
@@ -89,6 +108,16 @@ export const catalogue: Record<string, CatalogueEntry> = {
       ],
       root: true,
       tag: "Checkbox",
+    },
+  },
+
+  chip: {
+    controls: ["variant", "color", "size"],
+    file: "components/chip/chip-root.vue",
+    node: {
+      children: [{ children: ["Label"], tag: "ChipLabel" }],
+      root: true,
+      tag: "Chip",
     },
   },
 
@@ -500,6 +529,7 @@ export const optionOrder: Record<string, readonly string[]> = {
   "card.variant": ["default", "secondary", "tertiary", "transparent"],
   color: ["default", "accent", "success", "warning", "danger"],
   "color-swatch.size": ["xs", "sm", "md", "lg", "xl"],
+  placement: ["top-right", "top-left", "bottom-right", "bottom-left"],
   selectionMode: ["none", "single", "multiple"],
   size: ["sm", "md", "lg"],
   status: ["default", "accent", "success", "warning", "danger"],

@@ -107,6 +107,8 @@ export default defineConfig({
             { link: "/components/typography", text: "Typography" },
             { link: "/components/kbd", text: "Kbd" },
             { link: "/components/table", text: "Table" },
+            { link: "/components/badge", text: "Badge" },
+            { link: "/components/chip", text: "Chip" },
           ],
           text: "Layout and content",
         },
