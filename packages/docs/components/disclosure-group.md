@@ -31,8 +31,8 @@ with an `expanded-change` listener, hands the state to the caller.
 
 `is-disabled` on the group disables every disclosure in it, and a disclosure can still disable
 itself. The parts inside — `DisclosureHeading`, `DisclosureContent`, `DisclosureBody`,
-`DisclosureIndicator` — belong to `Disclosure`, which is in [Storybook](/guide/storybook) along
-with the rest.
+`DisclosureIndicator` — belong to [Disclosure](/components/disclosure), which is where they are
+documented.
 
 ## The trigger is whatever you put there
 

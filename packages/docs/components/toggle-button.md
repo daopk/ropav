@@ -36,10 +36,10 @@ or the icon can follow it.
 
 ## Groups
 
-`ToggleButtonGroup` joins several into one control with shared selection — it is in
-[Storybook](/guide/storybook) along with the rest. Inside one, the group owns selection: each
-button needs an `id` to be keyed by, and `is-selected` and `default-selected` are ignored, so two
-buttons can never both think they are on.
+A [ToggleButtonGroup](/components/toggle-button-group) joins several into one control with
+shared selection. Inside one, the group owns selection: each button needs an `id` to be keyed by,
+and `is-selected` and `default-selected` are ignored, so two buttons can never both think they
+are on.
 
 ## Accessibility
 

@@ -20,9 +20,10 @@ import { Toolbar } from "ropav";
 ## Groups and rules
 
 Whatever sits inside takes its axis from the toolbar, so nothing has to be told twice. A
-`Separator` inside a horizontal toolbar draws a *vertical* rule — a row of controls is broken up
-across the row — and a `ButtonGroup` or `ToggleButtonGroup` lays itself out along the toolbar's
-own direction.
+[Separator](/components/separator) inside a horizontal toolbar draws a *vertical* rule — a row of
+controls is broken up across the row — and a [ButtonGroup](/components/button-group) or
+[ToggleButtonGroup](/components/toggle-button-group) lays itself out along the toolbar's own
+direction.
 
 <Demo title="toolbar-groups.vue">
 <DemoToolbarGroups />

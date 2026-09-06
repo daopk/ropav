@@ -35,8 +35,8 @@ either selected or not underneath, and clicking it resolves the mixed state one 
 
 ## Groups
 
-For several checkboxes that share a name, a validation state and one error message, use
-`CheckboxGroup` — it is in [Storybook](/guide/storybook) along with the rest.
+For several checkboxes that share a name, a validation state and one error message, use a
+[CheckboxGroup](/components/checkbox-group).
 
 ## Accessibility
 

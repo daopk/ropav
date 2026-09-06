@@ -7,8 +7,8 @@ outline: [2, 3]
 # Spinner
 
 A spinner says something is happening and cannot say how far along it is. Where the progress *is*
-known, a progress bar tells the reader more; where a whole region is loading and its shape is
-already known, a [Skeleton](/components/skeleton) tells them more still.
+known, a [ProgressBar](/components/progress-bar) tells the reader more; where a whole region is
+loading and its shape is already known, a [Skeleton](/components/skeleton) tells them more still.
 
 ```ts
 import { Spinner } from "ropav";

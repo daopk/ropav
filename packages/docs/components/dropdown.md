@@ -20,7 +20,8 @@ import { Dropdown, DropdownMenu, DropdownPopover, MenuItem } from "ropav";
 
 ## Sections and separators
 
-`MenuSection` groups items that belong together; a `Separator` between sections draws the line.
+`MenuSection` groups items that belong together; a [Separator](/components/separator) between
+sections draws the line.
 An item that destroys something takes `variant="danger"`, which is the one place colour is doing
 work in a menu.
 

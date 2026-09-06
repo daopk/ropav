@@ -70,6 +70,20 @@ export const catalogue: Record<string, CatalogueEntry> = {
     node: { children: ["Get started"], root: true, tag: "Button" },
   },
 
+  "button-group": {
+    controls: ["variant", "size", "orientation", "fullWidth", "isDisabled"],
+    file: "components/button-group/button-group-root.vue",
+    node: {
+      children: [
+        { children: ["Undo"], tag: "Button" },
+        { children: [{ tag: "ButtonGroupSeparator" }, "Redo"], tag: "Button" },
+      ],
+      props: { "aria-label": "History" },
+      root: true,
+      tag: "ButtonGroup",
+    },
+  },
+
   card: {
     controls: ["variant"],
     file: "components/card/card-root.vue",
@@ -108,6 +122,45 @@ export const catalogue: Record<string, CatalogueEntry> = {
       ],
       root: true,
       tag: "Checkbox",
+    },
+  },
+
+  "checkbox-group": {
+    controls: ["variant", "isDisabled", "isReadOnly", "isRequired", "isInvalid"],
+    file: "components/checkbox-group/checkbox-group-root.vue",
+    node: {
+      children: [
+        { children: ["Interests"], tag: "Label" },
+        {
+          children: [
+            {
+              children: [
+                { children: [{ tag: "CheckboxIndicator" }], tag: "CheckboxControl" },
+                "Coding",
+              ],
+              tag: "CheckboxContent",
+            },
+          ],
+          props: { value: "coding" },
+          tag: "Checkbox",
+        },
+        {
+          children: [
+            {
+              children: [
+                { children: [{ tag: "CheckboxIndicator" }], tag: "CheckboxControl" },
+                "Design",
+              ],
+              tag: "CheckboxContent",
+            },
+          ],
+          props: { value: "design" },
+          tag: "Checkbox",
+        },
+      ],
+      props: { name: "interests" },
+      root: true,
+      tag: "CheckboxGroup",
     },
   },
 
@@ -171,6 +224,21 @@ export const catalogue: Record<string, CatalogueEntry> = {
     },
   },
 
+  meter: {
+    controls: ["color", "size"],
+    file: "components/meter/meter-root.vue",
+    node: {
+      children: [
+        { children: ["Storage"], tag: "Label" },
+        { tag: "MeterOutput" },
+        { children: [{ tag: "MeterFill" }], tag: "MeterTrack" },
+      ],
+      props: { class: "w-80", value: 72 },
+      root: true,
+      tag: "Meter",
+    },
+  },
+
   "number-field": {
     controls: ["variant", "size", "fullWidth", "isDisabled", "isReadOnly"],
     file: "components/number-field/number-field-root.vue",
@@ -189,6 +257,37 @@ export const catalogue: Record<string, CatalogueEntry> = {
       props: { class: "w-48", "default-value": 1024, name: "width" },
       root: true,
       tag: "NumberField",
+    },
+  },
+
+  "progress-bar": {
+    controls: ["color", "size", "isStriped", "isAnimated", "isIndeterminate"],
+    file: "components/progress-bar/progress-bar-root.vue",
+    node: {
+      children: [
+        { children: ["Uploading"], tag: "Label" },
+        { tag: "ProgressBarOutput" },
+        { children: [{ tag: "ProgressBarFill" }], tag: "ProgressBarTrack" },
+      ],
+      props: { class: "w-80", value: 60 },
+      root: true,
+      tag: "ProgressBar",
+    },
+  },
+
+  "progress-circle": {
+    controls: ["color", "size", "isIndeterminate"],
+    file: "components/progress-circle/progress-circle-root.vue",
+    node: {
+      children: [
+        {
+          children: [{ tag: "ProgressCircleTrackCircle" }, { tag: "ProgressCircleFillCircle" }],
+          tag: "ProgressCircleTrack",
+        },
+      ],
+      props: { "aria-label": "Uploading", value: 60 },
+      root: true,
+      tag: "ProgressCircle",
     },
   },
 
@@ -296,6 +395,20 @@ export const catalogue: Record<string, CatalogueEntry> = {
       },
       root: true,
       tag: "Select",
+    },
+  },
+
+  separator: {
+    controls: ["variant", "orientation"],
+    file: "components/separator/separator-root.vue",
+    node: {
+      children: [
+        { children: ["Undo"], props: { variant: "secondary" }, tag: "Button" },
+        { root: true, tag: "Separator" },
+        { children: ["Publish"], tag: "Button" },
+      ],
+      props: { "aria-label": "Document actions" },
+      tag: "Toolbar",
     },
   },
 
@@ -486,6 +599,24 @@ export const catalogue: Record<string, CatalogueEntry> = {
     node: { children: ["Follow"], root: true, tag: "ToggleButton" },
   },
 
+  "toggle-button-group": {
+    controls: ["selectionMode", "size", "orientation", "isDetached", "fullWidth", "isDisabled"],
+    file: "components/toggle-button-group/toggle-button-group-root.vue",
+    node: {
+      children: [
+        { children: ["Bold"], props: { id: "bold" }, tag: "ToggleButton" },
+        {
+          children: [{ tag: "ToggleButtonGroupSeparator" }, "Italic"],
+          props: { id: "italic" },
+          tag: "ToggleButton",
+        },
+      ],
+      props: { "aria-label": "Text style", defaultSelectedKeys: ["bold"] },
+      root: true,
+      tag: "ToggleButtonGroup",
+    },
+  },
+
   toolbar: {
     controls: ["orientation", "isAttached"],
     file: "components/toolbar/toolbar-root.vue",
@@ -531,6 +662,7 @@ export const optionOrder: Record<string, readonly string[]> = {
   "color-swatch.size": ["xs", "sm", "md", "lg", "xl"],
   placement: ["top-right", "top-left", "bottom-right", "bottom-left"],
   selectionMode: ["none", "single", "multiple"],
+  "separator.variant": ["default", "secondary", "tertiary"],
   size: ["sm", "md", "lg"],
   status: ["default", "accent", "success", "warning", "danger"],
   "surface.variant": ["default", "secondary", "tertiary", "transparent"],
