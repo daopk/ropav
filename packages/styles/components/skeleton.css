@@ -88,7 +88,7 @@
 }
 
 .rp-skeleton--pulse {
-  animation: var(--rp-motion) var(--animate-pulse);
+  animation: var(--rp-motion) rp-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .rp-skeleton--none {

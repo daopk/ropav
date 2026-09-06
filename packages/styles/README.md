@@ -2,8 +2,8 @@
 
 The style layer behind [`ropav`](https://www.npmjs.com/package/ropav): a rule set for every component,
 themes, utilities, and custom variants, plus `tv()` variants that do nothing but map props to class names.
-Framework-agnostic — not a line of Vue or React in it. The only `dependency` is `tw-animate-css`;
-the only peer is `tailwindcss`, and `bundled.css` is the entry that does not need it.
+Framework-agnostic — not a line of Vue or React in it, and no `dependency` at all. The only peer
+is `tailwindcss`, and `bundled.css` is the entry that does not need it.
 
 **[Theming guide](https://ropav.netlify.app/theming/)** ·
 [Tokens](https://ropav.netlify.app/theming/tokens) ·
@@ -54,7 +54,8 @@ The compiled file is also what the CDN fields point at, so a page can take it wi
 
 Either way you get, in layer order (`theme, base, components, utilities`):
 
-- Tailwind CSS v4 and `tw-animate-css`
+- Tailwind CSS v4
+- the keyframes the components animate through
 - base styles and the scrollbar system
 - the component layer — 88 files, one per component
 - the default theme: tokens for light and dark

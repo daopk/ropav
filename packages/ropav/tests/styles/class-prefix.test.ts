@@ -51,8 +51,8 @@ describe("component class names", () => {
 /**
  * A keyframe name is global to the document wherever it is written, and the check above only
  * reads `components/`. Two lived outside it — `skeleton` and `caret-blink`, declared in the
- * `@theme` block — and the second was a name `tw-animate-css` also declares, so one of the two
- * definitions was being thrown away and which one depended on import order.
+ * `@theme` block — and an imported stylesheet declared the second under the same name, so one of
+ * the two definitions was being thrown away and which one depended on import order.
  *
  * Class names are not checked here: `utilities/` and `variants/` claim unprefixed names like
  * `focus-ring` and `status-disabled` on purpose, and those are the authoring API.

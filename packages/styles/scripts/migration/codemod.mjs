@@ -17,13 +17,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
-import {
-  animationLibrary,
-  applyStatements,
-  classifySlots,
-  stylesheets,
-  stylesRoot,
-} from "./corpus.mjs";
+import { applyStatements, classifySlots, stylesheets, stylesRoot } from "./corpus.mjs";
 import { normalise, renameSlots } from "./normalise.mjs";
 import { compileCss, expandApplyLists } from "./oracle.mjs";
 import { compare } from "./verify.mjs";
@@ -67,14 +61,11 @@ const main = () => {
   console.log(`Expanding ${new Set(everyList).size} distinct lists…`);
   const expanded = expandApplyLists(everyList);
   const table = classifySlots([...expanded.values()].join("\n"), {
-    foreign: animationLibrary(),
     owned: stylesheets().map((file) => readFileSync(file, "utf8")),
   });
-  const { defer, drop, rename } = table;
+  const { drop, rename } = table;
 
-  console.log(
-    `Slots: dropping ${drop.size} unread, renaming ${rename.size}, leaving ${defer.size} to the animation library.`,
-  );
+  console.log(`Slots: dropping ${drop.size} unread, renaming ${rename.size}.`);
 
   const before = compileCss(entry);
   const original = new Map(files.map((file) => [file, readFileSync(file, "utf8")]));
@@ -90,7 +81,7 @@ const main = () => {
 
         return held ? null : normalise(expanded.get(list), table);
       },
-      (css) => renameSlots(css, table),
+      (css) => renameSlots(css),
     );
 
     writeFileSync(file, result.css);

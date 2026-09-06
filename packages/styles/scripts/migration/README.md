@@ -43,6 +43,11 @@ name, and writing that out leaves a file with one block in it. The set lives in 
 the step the note in `normalise.mjs` defers to: the slots stay as the parameters of a ring, so a
 rule can still re-parameterise a ring another rule composed, and only the composite folds.
 
+**`animations.mjs`** is the other one that note defers to. It points the call sites at the
+package's own keyframes, drops the five slots in each `animation` shorthand that nothing writes,
+and renames the rest. It runs once — `animations.css` is written by hand from here on, like
+`slots.css`.
+
 ## Both checks, because one is not enough
 
 The rule-by-rule diff cannot see the failure above. It compares *declarations*, and the

@@ -395,8 +395,12 @@ export const WithCallbacks: Story = {
               v-for="(item, index) in closedHistory"
               v-else
               :key="item.time + '-' + index"
-              class="flex animate-in items-start justify-between gap-3 rounded-md border border-border bg-default px-3 py-2 text-sm duration-200 fade-in slide-in-from-top-2"
-              :style="{animationDelay: (index * 50) + 'ms'}"
+              class="flex items-start justify-between gap-3 rounded-md border border-border bg-default px-3 py-2 text-sm"
+              :style="{
+                animation: 'var(--rp-motion) rp-enter 200ms ' + (index * 50) + 'ms backwards',
+                '--rp-enter-opacity': 0,
+                '--rp-enter-translate-y': '-0.5rem',
+              }"
             >
               <div class="flex-1">
                 <span class="font-medium">{{ item.message }}</span>

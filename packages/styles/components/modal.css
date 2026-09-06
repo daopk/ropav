@@ -69,28 +69,22 @@
 
   /* Entering animation */
   &[data-entering="true"] {
-    animation: var(--rp-motion) enter var(--tw-animation-duration, var(--tw-duration, 0.15s))
-      var(--tw-ease, ease) var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
-      var(--tw-animation-direction, normal) var(--tw-animation-fill-mode, none);
-    --tw-duration: 150ms;
+    animation: var(--rp-motion) rp-enter var(--rp-duration, 0.15s) var(--rp-ease, ease);
+    --rp-duration: 150ms;
     transition-duration: var(--rp-motion) 150ms;
-    --tw-ease: var(--ease-out);
+    --rp-ease: var(--ease-out);
     transition-timing-function: var(--ease-out);
-    --tw-enter-opacity: calc(0/100);
-    --tw-enter-opacity: 0;
+    --rp-enter-opacity: 0;
   }
 
   /* Exiting animation */
   &[data-exiting="true"] {
-    animation: var(--rp-motion) exit var(--tw-animation-duration, var(--tw-duration, 0.15s))
-      var(--tw-ease, ease) var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
-      var(--tw-animation-direction, normal) var(--tw-animation-fill-mode, none);
-    --tw-duration: 100ms;
+    animation: var(--rp-motion) rp-exit var(--rp-duration, 0.15s) var(--rp-ease, ease);
+    --rp-duration: 100ms;
     transition-duration: var(--rp-motion) 100ms;
-    --tw-ease: var(--ease-out);
+    --rp-ease: var(--ease-out);
     transition-timing-function: var(--ease-out);
-    --tw-exit-opacity: calc(0/100);
-    --tw-exit-opacity: 0;
+    --rp-exit-opacity: 0;
   }
 
   &[data-exiting="true"],
@@ -149,52 +143,43 @@
 
   /* Entering animation */
   &[data-entering="true"] {
-    animation: var(--rp-motion) enter var(--tw-animation-duration, var(--tw-duration, 0.15s))
-      var(--tw-ease, ease) var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
-      var(--tw-animation-direction, normal) var(--tw-animation-fill-mode, none);
-    --tw-duration: 250ms;
+    animation: var(--rp-motion) rp-enter var(--rp-duration, 0.15s) var(--rp-ease, ease);
+    --rp-duration: 250ms;
     transition-duration: var(--rp-motion) 250ms;
-    --tw-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --rp-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
     transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    --tw-enter-opacity: calc(0/100);
-    --tw-enter-opacity: 0;
-    --tw-enter-scale: calc(105*1%);
+    --rp-enter-opacity: 0;
+    --rp-enter-scale: 1.05;
 
     &[data-placement="auto"] {
-      --tw-enter-translate-y: calc(1*var(--spacing));
+      --rp-enter-translate-y: calc(1*var(--spacing));
       @media (width >= 40rem) {
-        --tw-enter-translate-y: calc(0*var(--spacing));
-        --tw-enter-translate-y: calc(0*100%);
+        --rp-enter-translate-y: calc(0*100%);
       }
     }
 
     &[data-placement="top"] {
-      --tw-enter-translate-y: calc(1*var(--spacing)*-1);
+      --rp-enter-translate-y: calc(1*var(--spacing)*-1);
     }
 
     &[data-placement="center"] {
-      --tw-enter-translate-y: calc(0*var(--spacing)*-1);
-      --tw-enter-translate-y: calc(0*-100%);
+      --rp-enter-translate-y: calc(0*-100%);
     }
 
     &[data-placement="bottom"] {
-      --tw-enter-translate-y: calc(1*var(--spacing));
+      --rp-enter-translate-y: calc(1*var(--spacing));
     }
   }
 
   /* Exiting animation */
   &[data-exiting="true"] {
-    animation: var(--rp-motion) exit var(--tw-animation-duration, var(--tw-duration, 0.15s))
-      var(--tw-ease, ease) var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
-      var(--tw-animation-direction, normal) var(--tw-animation-fill-mode, none);
-    --tw-duration: 100ms;
+    animation: var(--rp-motion) rp-exit var(--rp-duration, 0.15s) var(--rp-ease, ease);
+    --rp-duration: 100ms;
     transition-duration: var(--rp-motion) 100ms;
-    --tw-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --rp-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
     transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    --tw-exit-opacity: calc(0/100);
-    --tw-exit-opacity: 0;
-    --tw-exit-scale: calc(95*1%);
-    --tw-exit-scale: 0.95;
+    --rp-exit-opacity: 0;
+    --rp-exit-scale: 0.95;
   }
 
   &[data-exiting="true"],
@@ -236,20 +221,16 @@
 
   /* Entering animation */
   &[data-entering="true"] {
-    --tw-enter-translate-y: calc(0*var(--spacing));
-    --tw-enter-translate-y: calc(0*100%);
-    --tw-enter-scale: calc(100*1%);
-    --tw-enter-scale: 1;
+    --rp-enter-translate-y: calc(0*100%);
+    --rp-enter-scale: 1;
     @media (width >= 40rem) {
-      --tw-enter-translate-y: calc(0*var(--spacing));
-      --tw-enter-translate-y: calc(0*100%);
+      --rp-enter-translate-y: calc(0*100%);
     }
   }
 
   /* Exiting animation */
   &[data-exiting="true"] {
-    --tw-exit-scale: calc(100*1%);
-    --tw-exit-scale: 1;
+    --rp-exit-scale: 1;
   }
 }
 

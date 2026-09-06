@@ -242,11 +242,11 @@
     var(--rp-skew-y,);
   place-content: center;
   transition-property: transform, translate, scale, rotate;
-  transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-  transition-duration: var(--rp-motion) var(--tw-duration, var(--default-transition-duration));
-  --tw-duration: 100ms;
+  transition-timing-function: var(--rp-ease, var(--default-transition-timing-function));
+  transition-duration: var(--rp-motion) var(--rp-duration, var(--default-transition-duration));
+  --rp-duration: 100ms;
   transition-duration: var(--rp-motion) 100ms;
-  --tw-ease: var(--ease-out);
+  --rp-ease: var(--ease-out);
   transition-timing-function: var(--ease-out);
 
   &[data-direction="descending"] {

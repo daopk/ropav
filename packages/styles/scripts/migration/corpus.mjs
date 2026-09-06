@@ -4,7 +4,7 @@
  * Both answers come from reading the whole package rather than from a list kept by hand. A list
  * would be right the day it was written: the corpus is the thing that changes.
  */
-import { readdirSync, readFileSync } from "node:fs";
+import { readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -50,41 +50,24 @@ const readsIn = (css) =>
  * Sorts every slot into what the table should do with it.
  *
  * - **drop** — written by the expansion and read by nothing. Residue, not composition.
- * - **defer** — read by a stylesheet this package does not write. Renaming one half of a pair
- *   breaks it: the components would set `--rp-enter-opacity` while the animation library's
- *   keyframes go on reading `--tw-enter-opacity`, and every entrance animation would start from
- *   full opacity instead of none. These keep Tailwind's spelling until the library is replaced.
  * - **rename** — everything else. Both ends are ours, so both ends move together.
+ *
+ * There used to be a third answer, for a slot read by a stylesheet this package does not write:
+ * renaming one half of such a pair is not a rename but a disconnection, so those kept Tailwind's
+ * spelling. The animation library was the only thing that ever put a slot in that set, and its
+ * keyframes are this package's own now.
  *
  * `owned` must be every stylesheet that ships from this package, or a slot that composes gets
  * read as residue and dropped — the one way this can be quietly wrong.
  */
-export const classifySlots = (expansion, { foreign, owned }) => {
+export const classifySlots = (expansion, { owned }) => {
   const ours = new Set([...readsIn(expansion), ...owned.flatMap((css) => [...readsIn(css)])]);
-  const theirs = new Set(foreign.flatMap((css) => [...readsIn(css)]));
   const written = new Set(
     [...expansion.matchAll(/(?:^|[\s{;])(--tw-[\w-]+)\s*:/gm)].map(([, n]) => n),
   );
 
-  const drop = new Set([...written].filter((name) => !ours.has(name) && !theirs.has(name)));
-  const defer = new Set([...theirs].filter((name) => !drop.has(name)));
-  const rename = new Set(
-    [...ours, ...written].filter((name) => !drop.has(name) && !defer.has(name)),
-  );
+  const drop = new Set([...written].filter((name) => !ours.has(name)));
+  const rename = new Set([...ours, ...written].filter((name) => !drop.has(name)));
 
-  return { defer, drop, rename };
-};
-
-/** The animation library's own stylesheets, which read slots nothing in this package writes. */
-export const animationLibrary = () => {
-  const pnpm = path.join(stylesRoot, "../../node_modules/.pnpm");
-  const dirs = readdirSync(pnpm, { withFileTypes: true })
-    .filter((entry) => entry.name.startsWith("tw-animate-css@"))
-    .map((entry) => path.join(pnpm, entry.name, "node_modules/tw-animate-css"));
-
-  return dirs.flatMap((dir) =>
-    readdirSync(dir, { recursive: true, withFileTypes: true })
-      .filter((entry) => entry.isFile() && entry.name.endsWith(".css"))
-      .map((entry) => readFileSync(path.join(entry.parentPath, entry.name), "utf8")),
-  );
+  return { drop, rename };
 };

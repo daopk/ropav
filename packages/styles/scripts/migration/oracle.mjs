@@ -43,7 +43,6 @@ const preamble = () =>
   [
     `@import "tailwindcss/theme.css" layer(theme);`,
     `@import "tailwindcss/utilities.css" layer(utilities);`,
-    `@import "tw-animate-css";`,
     `@import "${stylesRoot}/themes/shared/theme.css";`,
     `@import "${stylesRoot}/themes/default.css";`,
     `@import "${stylesRoot}/themes/shared/tokens.css";`,

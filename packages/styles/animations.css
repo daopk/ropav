@@ -1,0 +1,87 @@
+/**
+ * The keyframes the components animate through.
+ *
+ * Every overlay enters and leaves the same way, and differs only in how far it travels, how much
+ * it is scaled and how long it takes. So there is one pair of keyframes rather than a pair per
+ * component: the distances are custom properties the calling rule sets, and the timing is the
+ * `animation` shorthand at the call site.
+ *
+ * Each keyframe states one half. `rp-enter` gives a `from` and lets the element's own resting
+ * style be the `to`; `rp-exit` gives a `to` and lets the resting style be the `from`. Neither has
+ * to name what it is animating towards, which is why one pair can serve a tooltip that fades four
+ * pixels and a dialog that scales down from larger than life.
+ *
+ * The registrations below are not only there to give an unset slot something to resolve to.
+ * `inherits: false` is the load-bearing half: an unregistered custom property set on a popover
+ * reaches everything inside it, and a nested overlay would then start its entrance from its
+ * parent's offset.
+ */
+
+@property --rp-enter-opacity {
+  syntax: "*";
+  inherits: false;
+  initial-value: 1;
+}
+@property --rp-enter-scale {
+  syntax: "*";
+  inherits: false;
+  initial-value: 1;
+}
+@property --rp-enter-translate-x {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+@property --rp-enter-translate-y {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+@property --rp-exit-opacity {
+  syntax: "*";
+  inherits: false;
+  initial-value: 1;
+}
+@property --rp-exit-scale {
+  syntax: "*";
+  inherits: false;
+  initial-value: 1;
+}
+@property --rp-exit-translate-x {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+@property --rp-exit-translate-y {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+
+@keyframes rp-enter {
+  from {
+    opacity: var(--rp-enter-opacity);
+    transform: translate3d(var(--rp-enter-translate-x), var(--rp-enter-translate-y), 0)
+      scale3d(var(--rp-enter-scale), var(--rp-enter-scale), var(--rp-enter-scale));
+  }
+}
+
+@keyframes rp-exit {
+  to {
+    opacity: var(--rp-exit-opacity);
+    transform: translate3d(var(--rp-exit-translate-x), var(--rp-exit-translate-y), 0)
+      scale3d(var(--rp-exit-scale), var(--rp-exit-scale), var(--rp-exit-scale));
+  }
+}
+
+@keyframes rp-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rp-pulse {
+  50% {
+    opacity: 0.5;
+  }
+}

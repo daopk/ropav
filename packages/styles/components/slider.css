@@ -106,8 +106,8 @@
 
       transform-origin: center;
       transition-property: all;
-      transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-      transition-duration: var(--rp-motion) var(--tw-duration, var(--default-transition-duration));
+      transition-timing-function: var(--rp-ease, var(--default-transition-timing-function));
+      transition-duration: var(--rp-motion) var(--rp-duration, var(--default-transition-duration));
     }
 
     /* Dragging state - cursor changes and thumb scales down */

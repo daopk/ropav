@@ -12,15 +12,13 @@
  * reads it, and folding either into a literal silently drops the other's contribution. The
  * failure is invisible in the rule being edited and shows up in a state nobody was looking at.
  *
- * So the table has three entries, and all three are mechanical:
+ * So the table has two entries, and both are mechanical:
  *
  * 1. **Drop** a slot nothing reads. Written and never read is not composition, it is residue —
  *    Tailwind emits `--tw-font-weight` beside the `font-weight` it already spelled out.
- * 2. **Rename** every slot both of whose ends are ours. The machinery stays exactly as it is and
- *    stops being Tailwind's. Simplifying a group is a change of behaviour, and belongs to the
- *    step that owns it — the ring to its own, the animations to theirs.
- * 3. **Leave alone** a slot read by a stylesheet this package does not write. Renaming the write
- *    while a third party goes on reading the old name is not a rename, it is a disconnection.
+ * 2. **Rename** everything else. The machinery stays exactly as it is and stops being Tailwind's.
+ *    Simplifying a group is a change of behaviour, and belongs to the step that owns it — the ring
+ *    to its own, the animations to theirs.
  *
  * Which slots fall in which set is not written down here; `corpus.mjs` reads it off the corpus.
  */
@@ -28,10 +26,7 @@
 /** The prefix the slots move to, so nothing in the output still spells a vendor's name. */
 export const PREFIX = "--rp-";
 
-const renamed = (text, defer) =>
-  text.replaceAll(/--tw-[\w-]+/g, (name) =>
-    defer.has(name) ? name : name.replace("--tw-", PREFIX),
-  );
+const renamed = (text) => text.replaceAll(/--tw-[\w-]+/g, (name) => name.replace("--tw-", PREFIX));
 
 /**
  * Applies the table to one expansion.
@@ -40,7 +35,7 @@ const renamed = (text, defer) =>
  * the two operations are a line filter and a rename, and the output is about to be re-indented
  * and spliced into a hand-written file anyway.
  */
-export const normalise = (css, { defer = new Set(), drop }) =>
+export const normalise = (css, { drop }) =>
   renamed(
     css
       .split("\n")
@@ -50,7 +45,6 @@ export const normalise = (css, { defer = new Set(), drop }) =>
         return !declared || !drop.has(declared[1]);
       })
       .join("\n"),
-    defer,
   );
 
 /**
@@ -60,4 +54,4 @@ export const normalise = (css, { defer = new Set(), drop }) =>
  * with nothing beside it — the declaration that reads the slot came from the `@apply` above.
  * Renaming only the generated half leaves the override writing a name nobody reads.
  */
-export const renameSlots = (css, { defer = new Set() } = {}) => renamed(css, defer);
+export const renameSlots = (css) => renamed(css);

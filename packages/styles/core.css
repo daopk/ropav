@@ -2,8 +2,6 @@
  * `index.css` and by `no-preflight.css`, and not an entry of its own — the two entries
  * differ only in whether they pull in Tailwind's preflight. */
 
-@import "tw-animate-css";
-
 /* Base styles */
 @import "./base/base.css" layer(base);
 @import "./base/scrollbar.css" layer(base);
@@ -14,6 +12,10 @@
 /* The `@property` registrations the component rules compose through. Unlayered, and before the
  * rules that read them - an unregistered slot makes the declaration reading it invalid. */
 @import "./slots.css";
+
+/* The keyframes the components animate through, and the slots those read. Same reason to come
+ * first, and keyframe names are document-global, so this is the only place they are declared. */
+@import "./animations.css";
 
 /* Base component structures (unstyled) */
 @import "./components/index.css" layer(components);

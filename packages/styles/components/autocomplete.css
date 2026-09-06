@@ -211,9 +211,9 @@
     content-visibility,
     overlay,
     pointer-events;
-  transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-  transition-duration: var(--rp-motion) var(--tw-duration, var(--default-transition-duration));
-  --tw-duration: 150ms;
+  transition-timing-function: var(--rp-ease, var(--default-transition-timing-function));
+  transition-duration: var(--rp-motion) var(--rp-duration, var(--default-transition-duration));
+  --rp-duration: 150ms;
   transition-duration: var(--rp-motion) 150ms;
 
   /* Cursor */
@@ -259,55 +259,48 @@
 
   /* Entering animations */
   &[data-entering="true"] {
-    animation: var(--rp-motion) enter var(--tw-animation-duration, var(--tw-duration, 0.15s))
-      var(--tw-ease, ease) var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
-      var(--tw-animation-direction, normal) var(--tw-animation-fill-mode, none);
-    --tw-duration: 250ms;
+    animation: var(--rp-motion) rp-enter var(--rp-duration, 0.15s) var(--rp-ease, ease);
+    --rp-duration: 250ms;
     transition-duration: var(--rp-motion) 250ms;
-    --tw-ease: cubic-bezier(0.32, 0.72, 0, 1);
+    --rp-ease: cubic-bezier(0.32, 0.72, 0, 1);
     transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
-    --tw-enter-opacity: calc(0/100);
-    --tw-enter-opacity: 0;
-    --tw-enter-scale: calc(95*1%);
-    --tw-enter-scale: 0.95;
+    --rp-enter-opacity: 0;
+    --rp-enter-scale: 0.95;
 
     /* Placement-specific translations */
     &[data-placement="top"] {
-      --tw-enter-translate-y: calc(1*var(--spacing));
+      --rp-enter-translate-y: calc(1*var(--spacing));
     }
 
     &[data-placement="bottom"] {
-      --tw-enter-translate-y: calc(1*var(--spacing)*-1);
+      --rp-enter-translate-y: calc(1*var(--spacing)*-1);
     }
 
     &[data-placement="left"] {
-      --tw-enter-translate-x: calc(1*var(--spacing));
+      --rp-enter-translate-x: calc(1*var(--spacing));
     }
 
     &[data-placement="right"] {
-      --tw-enter-translate-x: calc(1*var(--spacing)*-1);
+      --rp-enter-translate-x: calc(1*var(--spacing)*-1);
     }
   }
 
   /* Exiting animations */
   &[data-exiting="true"] {
-    animation: var(--rp-motion) exit var(--tw-animation-duration, var(--tw-duration, 0.15s))
-      var(--tw-ease, ease) var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
-      var(--tw-animation-direction, normal) var(--tw-animation-fill-mode, none);
-    --tw-duration: 100ms;
+    animation: var(--rp-motion) rp-exit var(--rp-duration, 0.15s) var(--rp-ease, ease);
+    --rp-duration: 100ms;
     transition-duration: var(--rp-motion) 100ms;
-    --tw-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --rp-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
     transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    --tw-exit-scale: calc(95*1%);
-    --tw-exit-scale: 0.95;
-    --tw-exit-opacity: 0;
+    --rp-exit-scale: 0.95;
+    --rp-exit-opacity: 0;
   }
 
   &[data-exiting="true"],
   &[data-entering="true"] {
     transition-property: opacity, transform;
-    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-    transition-duration: var(--rp-motion) var(--tw-duration, var(--default-transition-duration));
+    transition-timing-function: var(--rp-ease, var(--default-transition-timing-function));
+    transition-duration: var(--rp-motion) var(--rp-duration, var(--default-transition-duration));
     will-change: opacity, transform;
   }
 

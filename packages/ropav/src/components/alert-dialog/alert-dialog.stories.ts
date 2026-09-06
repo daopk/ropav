@@ -700,29 +700,38 @@ export const CustomTrigger: Story = {
   }),
 };
 
+/*
+ * Retuning an overlay from the outside: the component already runs the entrance, and these set
+ * how far it travels and how long it takes. There is no class that starts the animation, which is
+ * the point — starting one from here would be an animation the reduced-motion gate never sees.
+ */
+const KINEMATIC_TIMING = [
+  "data-[entering]:[--rp-duration:400ms]",
+  "data-[entering]:[--rp-ease:cubic-bezier(0.16,1,0.3,1)]",
+  "data-[exiting]:[--rp-duration:200ms]",
+  "data-[exiting]:[--rp-ease:cubic-bezier(0.7,0,0.84,0)]",
+].join(" ");
+
+const FLUID_TIMING = [
+  "data-[entering]:[--rp-duration:500ms]",
+  "data-[entering]:[--rp-ease:cubic-bezier(0.25,1,0.5,1)]",
+  "data-[exiting]:[--rp-duration:200ms]",
+  "data-[exiting]:[--rp-ease:cubic-bezier(0.5,0,0.75,0)]",
+].join(" ");
+
 export const CustomAnimations: Story = {
   render: () => ({
     components,
     setup: () => ({
       animations: [
         {
-          backdrop: [
-            "data-[entering]:duration-400",
-            "data-[entering]:ease-[cubic-bezier(0.16,1,0.3,1)]",
-            "data-[exiting]:duration-200",
-            "data-[exiting]:ease-[cubic-bezier(0.7,0,0.84,0)]",
-          ].join(" "),
+          backdrop: KINEMATIC_TIMING,
           container: [
-            "data-[entering]:animate-in",
-            "data-[entering]:fade-in-0",
-            "data-[entering]:zoom-in-95",
-            "data-[entering]:duration-400",
-            "data-[entering]:ease-[cubic-bezier(0.16,1,0.3,1)]",
-            "data-[exiting]:animate-out",
-            "data-[exiting]:fade-out-0",
-            "data-[exiting]:zoom-out-95",
-            "data-[exiting]:duration-200",
-            "data-[exiting]:ease-[cubic-bezier(0.7,0,0.84,0)]",
+            "data-[entering]:[--rp-enter-opacity:0]",
+            "data-[entering]:[--rp-enter-scale:0.95]",
+            "data-[exiting]:[--rp-exit-opacity:0]",
+            "data-[exiting]:[--rp-exit-scale:0.95]",
+            KINEMATIC_TIMING,
           ].join(" "),
           description:
             "Physics-based elastic scaling. Simulates a high-damping spring system with fast transient response and prolonged settling time. Ideal for Alert Dialogs and Modals.",
@@ -730,23 +739,13 @@ export const CustomAnimations: Story = {
           name: "Kinematic Scale",
         },
         {
-          backdrop: [
-            "data-[entering]:duration-500",
-            "data-[entering]:ease-[cubic-bezier(0.25,1,0.5,1)]",
-            "data-[exiting]:duration-200",
-            "data-[exiting]:ease-[cubic-bezier(0.5,0,0.75,0)]",
-          ].join(" "),
+          backdrop: FLUID_TIMING,
           container: [
-            "data-[entering]:animate-in",
-            "data-[entering]:fade-in-0",
-            "data-[entering]:slide-in-from-bottom-4",
-            "data-[entering]:duration-500",
-            "data-[entering]:ease-[cubic-bezier(0.25,1,0.5,1)]",
-            "data-[exiting]:animate-out",
-            "data-[exiting]:fade-out-0",
-            "data-[exiting]:slide-out-to-bottom-2",
-            "data-[exiting]:duration-200",
-            "data-[exiting]:ease-[cubic-bezier(0.5,0,0.75,0)]",
+            "data-[entering]:[--rp-enter-opacity:0]",
+            "data-[entering]:[--rp-enter-translate-y:1rem]",
+            "data-[exiting]:[--rp-exit-opacity:0]",
+            "data-[exiting]:[--rp-exit-translate-y:0.5rem]",
+            FLUID_TIMING,
           ].join(" "),
           description:
             "Simulates movement through a medium with fluid resistance. Eliminates mechanical linearity for a natural, grounded feel. Perfect for Bottom Sheets or Toasts.",

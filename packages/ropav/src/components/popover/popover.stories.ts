@@ -211,7 +211,7 @@ export const SpringAnimation: Story = {
             <Button>Click for Spring Animation</Button>
             <PopoverContent
               v-bind="args"
-              class="data-[entering]:ease-spring data-[entering]:animate-in data-[entering]:duration-600 data-[entering]:fade-in-0 data-[entering]:zoom-in-90"
+              class="data-[entering]:[--rp-duration:600ms] data-[entering]:[--rp-ease:cubic-bezier(0.36,1.66,0.04,1)] data-[entering]:[--rp-enter-opacity:0] data-[entering]:[--rp-enter-scale:0.9]"
             >
               <PopoverDialog>
                 <PopoverArrow />
@@ -228,8 +228,9 @@ export const SpringAnimation: Story = {
         <div class="space-y-1 text-center text-xs text-muted">
           <p>Animation classes applied:</p>
           <code class="rounded bg-surface px-2 py-1 text-xs">
-            data-[entering]:animate-in data-[entering]:zoom-in-90 data-[entering]:fade-in-0
-            data-[entering]:ease-spring data-[entering]:duration-600
+            data-[entering]:[--rp-enter-scale:0.9] data-[entering]:[--rp-enter-opacity:0]
+            data-[entering]:[--rp-ease:cubic-bezier(0.36,1.66,0.04,1)]
+            data-[entering]:[--rp-duration:600ms]
           </code>
         </div>
       </div>
