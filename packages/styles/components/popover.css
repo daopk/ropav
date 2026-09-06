@@ -12,11 +12,11 @@
 
   /* Entering animations */
   &[data-entering="true"] {
-    animation: enter var(--tw-animation-duration, var(--tw-duration, 0.15s)) var(--tw-ease, ease)
-      var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
+    animation: var(--rp-motion) enter var(--tw-animation-duration, var(--tw-duration, 0.15s))
+      var(--tw-ease, ease) var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
       var(--tw-animation-direction, normal) var(--tw-animation-fill-mode, none);
     --tw-duration: 150ms;
-    transition-duration: 150ms;
+    transition-duration: var(--rp-motion) 150ms;
     --tw-ease: ease;
     transition-timing-function: ease;
     --tw-enter-opacity: calc(0/100);
@@ -44,11 +44,11 @@
 
   /* Exiting animations */
   &[data-exiting="true"] {
-    animation: exit var(--tw-animation-duration, var(--tw-duration, 0.15s)) var(--tw-ease, ease)
-      var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
+    animation: var(--rp-motion) exit var(--tw-animation-duration, var(--tw-duration, 0.15s))
+      var(--tw-ease, ease) var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
       var(--tw-animation-direction, normal) var(--tw-animation-fill-mode, none);
     --tw-duration: 100ms;
-    transition-duration: 100ms;
+    transition-duration: var(--rp-motion) 100ms;
     --tw-ease: ease;
     transition-timing-function: ease;
     --tw-exit-scale: calc(95*1%);
@@ -60,7 +60,7 @@
   &[data-entering="true"] {
     transition-property: opacity, transform;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-    transition-duration: var(--tw-duration, var(--default-transition-duration));
+    transition-duration: var(--rp-motion) var(--tw-duration, var(--default-transition-duration));
     will-change: opacity, transform;
   }
 
@@ -114,25 +114,9 @@
   display: inline-block;
 
   transition:
-    color 150ms var(--ease-smooth),
+    var(--rp-motion) color 150ms var(--ease-smooth),
     background-color 150ms var(--ease-smooth),
     box-shadow 150ms var(--ease-out);
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
 
   cursor: var(--cursor-interactive);
 

@@ -35,24 +35,8 @@
 .rp-range-calendar:has(.rp-calendar-year-picker__year-grid) > [data-slot="range-calendar-grid"] {
   will-change: opacity;
   transition:
-    opacity 150ms var(--ease-out),
+    var(--rp-motion) opacity 150ms var(--ease-out),
     visibility 0ms linear;
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
 }
 
 /* Day grid – hidden when year picker is open (fade + blur out) */
@@ -64,24 +48,8 @@
   opacity: 0%;
   visibility: hidden;
   transition:
-    opacity 150ms var(--ease-out),
+    var(--rp-motion) opacity 150ms var(--ease-out),
     visibility 0ms linear 150ms;
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
 }
 
 /* -----------------------------------------------------------------------------
@@ -127,23 +95,7 @@
   line-height: var(--rp-leading, var(--text-sm--line-height));
   font-weight: var(--font-weight-medium);
 
-  transition: color 150ms var(--ease-out);
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
+  transition: var(--rp-motion) color 150ms var(--ease-out);
 }
 
 .rp-calendar-year-picker__trigger-indicator {
@@ -154,23 +106,7 @@
     transform: rotate(180deg);
   }
 
-  transition: transform 150ms var(--ease-out);
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
+  transition: var(--rp-motion) transform 150ms var(--ease-out);
 }
 
 /* Rotate chevron when open */
@@ -213,23 +149,7 @@
   opacity: 100%;
 
   /* When opening: slight delay so the day grid starts fading out first */
-  transition: opacity 200ms var(--ease-out) 50ms;
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
+  transition: var(--rp-motion) opacity 200ms var(--ease-out) 50ms;
 }
 
 /* -----------------------------------------------------------------------------
@@ -267,7 +187,7 @@
 
   /* Same as `.rp-tag`. */
   transition:
-    color 100ms var(--ease-smooth),
+    var(--rp-motion) color 100ms var(--ease-smooth),
     scale 100ms var(--ease-smooth),
     opacity 100ms var(--ease-smooth),
     background-color 100ms var(--ease-smooth),
@@ -275,22 +195,6 @@
   transform-origin: center;
   transform: translateZ(0) var(--rp-rotate-x,) var(--rp-rotate-y,) var(--rp-rotate-z,)
     var(--rp-skew-x,) var(--rp-skew-y,);
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
 
   cursor: var(--cursor-interactive);
 

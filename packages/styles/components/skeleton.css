@@ -27,7 +27,7 @@
     inset: 0px;
     --rp-translate-x: -100%;
     translate: var(--rp-translate-x) var(--rp-translate-y);
-    animation: rp-skeleton 2s linear infinite;
+    animation: var(--rp-motion) rp-skeleton 2s linear infinite;
     --rp-gradient-position: to right;
     @supports (background-image: linear-gradient(in lab, red, red)) {
       --rp-gradient-position: to right in oklab;
@@ -63,7 +63,7 @@
       inset: 0px;
       --rp-translate-x: -100%;
       translate: var(--rp-translate-x) var(--rp-translate-y);
-      animation: rp-skeleton 2s linear infinite;
+      animation: var(--rp-motion) rp-skeleton 2s linear infinite;
       --rp-content: "";
       content: var(--rp-content);
       background: linear-gradient(
@@ -88,7 +88,7 @@
 }
 
 .rp-skeleton--pulse {
-  animation: var(--animate-pulse);
+  animation: var(--rp-motion) var(--animate-pulse);
 }
 
 .rp-skeleton--none {

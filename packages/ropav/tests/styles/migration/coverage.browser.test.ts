@@ -47,6 +47,11 @@ it("reaches the component layer", () => {
 
   const reached = (cases.length - missed.length) / cases.length;
 
-  expect(cases.length, "the layer is being read at all").toBeGreaterThan(1900);
+  /*
+   * A floor, not a count. The layer shrinks as the migration goes on — moving the reduced-motion
+   * gate onto an inherited property took 425 rules out of it in one step — so this only has to
+   * catch the matrix collapsing, which is what a broken reader looks like.
+   */
+  expect(cases.length, "the layer is being read at all").toBeGreaterThan(1500);
   expect(reached, `residue ${JSON.stringify(byReason)}`).toBeGreaterThanOrEqual(FLOOR);
 });

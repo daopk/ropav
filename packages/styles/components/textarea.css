@@ -48,25 +48,9 @@
   }
 
   transition:
-    background-color 150ms var(--ease-smooth),
+    var(--rp-motion) background-color 150ms var(--ease-smooth),
     border-color 150ms var(--ease-smooth),
     box-shadow 150ms var(--ease-out);
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
 
   @media (hover: hover) {
     &:hover:not(:focus):not(:focus-visible),

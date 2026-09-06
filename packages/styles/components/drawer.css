@@ -11,25 +11,9 @@
   cursor: var(--cursor-interactive);
 
   transition:
-    transform 250ms var(--ease-out-quart),
+    var(--rp-motion) transform 250ms var(--ease-out-quart),
     background-color 150ms var(--ease-smooth),
     box-shadow 150ms var(--ease-out);
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
 
   /* Focus state */
   &:focus-visible:not(:focus),
@@ -82,7 +66,7 @@
   height: var(--visual-viewport-height);
   width: 100%;
   opacity: 1;
-  transition: opacity 250ms cubic-bezier(0.32, 0.72, 0, 1);
+  transition: var(--rp-motion) opacity 250ms cubic-bezier(0.32, 0.72, 0, 1);
 
   &[data-entering="true"] {
     opacity: 0;
@@ -90,7 +74,7 @@
 
   &[data-exiting="true"] {
     opacity: 0;
-    transition-duration: 200ms;
+    transition-duration: var(--rp-motion) 200ms;
     transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
   }
 
@@ -100,7 +84,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    transition: none;
+    transition: var(--rp-motion) none;
   }
 }
 
@@ -203,10 +187,10 @@
   --drawer-exit-ease: cubic-bezier(0.32, 0.72, 0, 1);
 
   will-change: translate;
-  transition: translate var(--drawer-enter-duration) var(--drawer-enter-ease);
+  transition: var(--rp-motion) translate var(--drawer-enter-duration) var(--drawer-enter-ease);
 
   @media (prefers-reduced-motion: reduce) {
-    transition: none;
+    transition: var(--rp-motion) none;
   }
 
   /* Bottom/top placement: full width, auto height */
@@ -247,7 +231,7 @@
 }
 
 [data-exiting="true"] .rp-drawer__dialog {
-  transition-duration: var(--drawer-exit-duration);
+  transition-duration: var(--rp-motion) var(--drawer-exit-duration);
   transition-timing-function: var(--drawer-exit-ease);
 }
 

@@ -76,23 +76,7 @@
       background-color: Highlight;
     }
 
-    transition: width 300ms var(--ease-out);
-    &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-        transition-property: none;
-        &::before,
-        &::after {
-          transition-property: none;
-        }
-      }
-    }
+    transition: var(--rp-motion) width 300ms var(--ease-out);
   }
 
   /* Indeterminate state - when no aria-valuenow is set */
@@ -100,24 +84,8 @@
     .rp-progress-bar__fill {
       width: calc(2 / 5 * 100%);
 
-      animation: rp-progress-bar-indeterminate 1.5s cubic-bezier(0.65, 0, 0.35, 1) infinite;
-
-      &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-        animation: none;
-        &::before,
-        &::after {
-          animation: none;
-        }
-      }
-      @media (prefers-reduced-motion: reduce) {
-        &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-          animation: none;
-          &::before,
-          &::after {
-            animation: none;
-          }
-        }
-      }
+      animation: var(--rp-motion) rp-progress-bar-indeterminate 1.5s cubic-bezier(0.65, 0, 0.35, 1)
+        infinite;
     }
   }
 
@@ -248,25 +216,9 @@
      * slot, and written under the pseudo-element instead its ancestor condition would land after
      * the pseudo-element and compile to an empty `:is()`. Stopped this way the band stays put
      * rather than disappearing, which is `--striped`. */
-    &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-      animation: none;
-      &::before,
-      &::after {
-        animation: none;
-      }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-        animation: none;
-        &::before,
-        &::after {
-          animation: none;
-        }
-      }
-    }
 
     &::after {
-      animation: rp-progress-bar-stripes 1s linear infinite;
+      animation: var(--rp-motion) rp-progress-bar-stripes 1s linear infinite;
     }
 
     /* Travelling toward the inline end is what reads as progress; in RTL that is the other way. */

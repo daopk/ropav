@@ -26,27 +26,11 @@
   -webkit-tap-highlight-color: transparent;
 
   transition:
-    transform 250ms var(--ease-smooth),
+    var(--rp-motion) transform 250ms var(--ease-smooth),
     background-color 100ms var(--ease-out),
     box-shadow 100ms var(--ease-out);
   transform: translateZ(0) var(--rp-rotate-x,) var(--rp-rotate-y,) var(--rp-rotate-z,)
     var(--rp-skew-x,) var(--rp-skew-y,);
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
 
   /* Forced Colors Mode flattens the fill onto the page and strips the shadow, leaving a control
    * that reads as bare text. `ButtonBorder` is the keyword the platform uses for a control's

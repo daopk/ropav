@@ -11,25 +11,9 @@
   cursor: var(--cursor-interactive);
 
   transition:
-    transform 250ms var(--ease-out-quart),
+    var(--rp-motion) transform 250ms var(--ease-out-quart),
     background-color 150ms var(--ease-smooth),
     box-shadow 150ms var(--ease-out);
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
 
   /* Focus state */
   &:focus-visible:not(:focus),
@@ -88,11 +72,11 @@
 
   /* Entering animation */
   &[data-entering="true"] {
-    animation: enter var(--tw-animation-duration, var(--tw-duration, 0.15s)) var(--tw-ease, ease)
-      var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
+    animation: var(--rp-motion) enter var(--tw-animation-duration, var(--tw-duration, 0.15s))
+      var(--tw-ease, ease) var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
       var(--tw-animation-direction, normal) var(--tw-animation-fill-mode, none);
     --tw-duration: 150ms;
-    transition-duration: 150ms;
+    transition-duration: var(--rp-motion) 150ms;
     --tw-ease: var(--ease-out);
     transition-timing-function: var(--ease-out);
     --tw-enter-opacity: calc(0/100);
@@ -101,11 +85,11 @@
 
   /* Exiting animation */
   &[data-exiting="true"] {
-    animation: exit var(--tw-animation-duration, var(--tw-duration, 0.15s)) var(--tw-ease, ease)
-      var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
+    animation: var(--rp-motion) exit var(--tw-animation-duration, var(--tw-duration, 0.15s))
+      var(--tw-ease, ease) var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
       var(--tw-animation-direction, normal) var(--tw-animation-fill-mode, none);
     --tw-duration: 100ms;
-    transition-duration: 100ms;
+    transition-duration: var(--rp-motion) 100ms;
     --tw-ease: var(--ease-out);
     transition-timing-function: var(--ease-out);
     --tw-exit-opacity: calc(0/100);
@@ -115,22 +99,6 @@
   &[data-exiting="true"],
   &[data-entering="true"] {
     will-change: opacity;
-    &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-      animation: none;
-      &::before,
-      &::after {
-        animation: none;
-      }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-        animation: none;
-        &::before,
-        &::after {
-          animation: none;
-        }
-      }
-    }
   }
 }
 
@@ -184,11 +152,11 @@
 
   /* Entering animation */
   &[data-entering="true"] {
-    animation: enter var(--tw-animation-duration, var(--tw-duration, 0.15s)) var(--tw-ease, ease)
-      var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
+    animation: var(--rp-motion) enter var(--tw-animation-duration, var(--tw-duration, 0.15s))
+      var(--tw-ease, ease) var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
       var(--tw-animation-direction, normal) var(--tw-animation-fill-mode, none);
     --tw-duration: 250ms;
-    transition-duration: 250ms;
+    transition-duration: var(--rp-motion) 250ms;
     --tw-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
     transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
     --tw-enter-opacity: calc(0/100);
@@ -219,11 +187,11 @@
 
   /* Exiting animation */
   &[data-exiting="true"] {
-    animation: exit var(--tw-animation-duration, var(--tw-duration, 0.15s)) var(--tw-ease, ease)
-      var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
+    animation: var(--rp-motion) exit var(--tw-animation-duration, var(--tw-duration, 0.15s))
+      var(--tw-ease, ease) var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
       var(--tw-animation-direction, normal) var(--tw-animation-fill-mode, none);
     --tw-duration: 100ms;
-    transition-duration: 100ms;
+    transition-duration: var(--rp-motion) 100ms;
     --tw-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
     transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
     --tw-exit-opacity: calc(0/100);
@@ -235,22 +203,6 @@
   &[data-exiting="true"],
   &[data-entering="true"] {
     will-change: opacity, transform;
-    &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-      animation: none;
-      &::before,
-      &::after {
-        animation: none;
-      }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-        animation: none;
-        &::before,
-        &::after {
-          animation: none;
-        }
-      }
-    }
   }
 }
 

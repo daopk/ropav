@@ -55,25 +55,9 @@
   border-color: var(--field-border);
 
   transition:
-    background-color 150ms var(--ease-smooth),
+    var(--rp-motion) background-color 150ms var(--ease-smooth),
     border-color 150ms var(--ease-smooth),
     box-shadow 150ms var(--ease-out);
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
 
   /* Hover */
   @media (hover: hover) {
@@ -163,24 +147,8 @@
   line-height: calc(var(--spacing) * 6);
   letter-spacing: -0.27px;
 
-  animation: rp-slot-value-in 250ms var(--ease-smooth) both;
+  animation: var(--rp-motion) rp-slot-value-in 250ms var(--ease-smooth) both;
   transform-origin: bottom center;
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    animation: none;
-    &::before,
-    &::after {
-      animation: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      animation: none;
-      &::before,
-      &::after {
-        animation: none;
-      }
-    }
-  }
 }
 
 /* Caret */
@@ -188,7 +156,7 @@
   position: absolute;
   height: calc(var(--spacing) * 4);
   width: 2px;
-  animation: rp-caret-blink 1.2s ease-out infinite;
+  animation: var(--rp-motion) rp-caret-blink 1.2s ease-out infinite;
   border-radius: calc(var(--radius) * 0.5);
   background-color: var(--field-placeholder, var(--muted));
 }

@@ -116,25 +116,9 @@
   -webkit-tap-highlight-color: transparent;
 
   transition:
-    background-color 200ms var(--ease-out),
+    var(--rp-motion) background-color 200ms var(--ease-out),
     border-color 200ms var(--ease-out),
     transform 100ms var(--ease-out);
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
 
   cursor: var(--cursor-interactive);
 
@@ -286,22 +270,6 @@
    * pseudo-element from its originating element, and appending its condition after `::before`
    * matches nothing. `:empty` because without it this ties with that rule and loses on order. */
   &:empty {
-    &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-        transition-property: none;
-        &::before,
-        &::after {
-          transition-property: none;
-        }
-      }
-    }
   }
 }
 
@@ -317,7 +285,7 @@
   scale: 1;
 
   transition:
-    scale 200ms var(--ease-out),
+    var(--rp-motion) scale 200ms var(--ease-out),
     background-color 200ms var(--ease-out);
 }
 

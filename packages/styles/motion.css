@@ -1,0 +1,51 @@
+/**
+ * Whether motion is allowed, as one inherited custom property.
+ *
+ * `--rp-motion` holds nothing when motion is allowed and the guaranteed-invalid value when it is
+ * not. Every declaration that animates leads with `var(--rp-motion)`: substituting nothing leaves
+ * the declaration as written, and substituting the invalid value makes the whole declaration
+ * invalid at computed-value time, so the property falls back to its initial — `animation-name:
+ * none`, `transition-duration: 0s`. There is no motion left to see, and no `!important` anywhere.
+ *
+ * Why a property rather than a selector. The old gate was a pair of rules per animated element:
+ * one matching `[data-reduce-motion="true"]` and its descendants, one matching the media query
+ * with those descendants excluded. Two things were wrong with it and neither could be fixed in
+ * selectors.
+ *
+ * The first is that `data-reduce-motion="false"` did not work. It is documented as an explicit
+ * opt back in, but the media branch only excluded `"true"`, so under an OS that asks for reduced
+ * motion the attribute changed nothing at all.
+ *
+ * The second is that a descendant selector has no notion of *nearest*. Put `"false"` inside
+ * `"true"` inside `"false"` and every branch matches at once; which wins comes down to specificity
+ * between two selectors that were never meant to compete. Inheritance answers that question by
+ * construction — the closest ancestor that set the property is the one whose value arrives.
+ *
+ * It also ends a bug that was easy to write and impossible to see. The variant had to restate
+ * itself for `::before` and `::after`, because a variant written inside a pseudo-element block
+ * compiled to an ancestor condition that landed after the pseudo-element and matched nothing —
+ * the transition kept running, the declaration was still there to read, and nothing on the host
+ * looked wrong. A pseudo-element inherits from the element it originates on, so the property
+ * reaches it with nothing restated and no way to get it wrong.
+ */
+
+@layer theme {
+  :root {
+    --rp-motion: ;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      --rp-motion: initial;
+    }
+  }
+
+  /* After the media query, so an explicit answer outranks the system's one at equal specificity. */
+  [data-reduce-motion="true"] {
+    --rp-motion: initial;
+  }
+
+  [data-reduce-motion="false"] {
+    --rp-motion: ;
+  }
+}

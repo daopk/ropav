@@ -70,23 +70,7 @@
       background-color: Highlight;
     }
 
-    transition: width 300ms var(--ease-out);
-    &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-        transition-property: none;
-        &::before,
-        &::after {
-          transition-property: none;
-        }
-      }
-    }
+    transition: var(--rp-motion) width 300ms var(--ease-out);
   }
 
   /* Disabled state */

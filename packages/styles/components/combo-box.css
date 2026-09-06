@@ -130,9 +130,9 @@
     overlay,
     pointer-events;
   transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-  transition-duration: var(--tw-duration, var(--default-transition-duration));
+  transition-duration: var(--rp-motion) var(--tw-duration, var(--default-transition-duration));
   --tw-duration: 150ms;
-  transition-duration: 150ms;
+  transition-duration: var(--rp-motion) 150ms;
   -webkit-tap-highlight-color: transparent;
 
   /* Remove default button styles */
@@ -191,25 +191,9 @@
     height: calc(var(--spacing) * 4);
     transition-property: transform, translate, scale, rotate;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-    transition-duration: var(--tw-duration, var(--default-transition-duration));
+    transition-duration: var(--rp-motion) var(--tw-duration, var(--default-transition-duration));
     --tw-duration: 150ms;
-    transition-duration: 150ms;
-    &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-        transition-property: none;
-        &::before,
-        &::after {
-          transition-property: none;
-        }
-      }
-    }
+    transition-duration: var(--rp-motion) 150ms;
   }
 
   /* Rotate icon when trigger is open */
@@ -244,11 +228,11 @@
 
   /* Entering animations */
   &[data-entering="true"] {
-    animation: enter var(--tw-animation-duration, var(--tw-duration, 0.15s)) var(--tw-ease, ease)
-      var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
+    animation: var(--rp-motion) enter var(--tw-animation-duration, var(--tw-duration, 0.15s))
+      var(--tw-ease, ease) var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
       var(--tw-animation-direction, normal) var(--tw-animation-fill-mode, none);
     --tw-duration: 150ms;
-    transition-duration: 150ms;
+    transition-duration: var(--rp-motion) 150ms;
     --tw-ease: ease;
     transition-timing-function: ease;
     --tw-enter-opacity: calc(0/100);
@@ -276,11 +260,11 @@
 
   /* Exiting animations */
   &[data-exiting="true"] {
-    animation: exit var(--tw-animation-duration, var(--tw-duration, 0.15s)) var(--tw-ease, ease)
-      var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
+    animation: var(--rp-motion) exit var(--tw-animation-duration, var(--tw-duration, 0.15s))
+      var(--tw-ease, ease) var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
       var(--tw-animation-direction, normal) var(--tw-animation-fill-mode, none);
     --tw-duration: 100ms;
-    transition-duration: 100ms;
+    transition-duration: var(--rp-motion) 100ms;
     --tw-ease: ease;
     transition-timing-function: ease;
     --tw-exit-scale: calc(95*1%);
@@ -292,7 +276,7 @@
   &[data-entering="true"] {
     transition-property: opacity, transform;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-    transition-duration: var(--tw-duration, var(--default-transition-duration));
+    transition-duration: var(--rp-motion) var(--tw-duration, var(--default-transition-duration));
     will-change: opacity, transform;
   }
 

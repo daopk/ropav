@@ -5,23 +5,7 @@
   width: calc(var(--spacing) * 6);
   height: calc(var(--spacing) * 6);
   flex-shrink: 0;
-  animation: spin 0.75s linear infinite;
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    animation: none;
-    &::before,
-    &::after {
-      animation: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      animation: none;
-      &::before,
-      &::after {
-        animation: none;
-      }
-    }
-  }
+  animation: var(--rp-motion) spin 0.75s linear infinite;
 }
 
 /* Size variants */

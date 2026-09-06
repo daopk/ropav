@@ -21,28 +21,12 @@
   cursor: var(--cursor-interactive);
 
   transition:
-    transform 250ms var(--ease-out-quart),
+    var(--rp-motion) transform 250ms var(--ease-out-quart),
     color 150ms var(--ease-out),
     background-color 100ms var(--ease-out),
     box-shadow 150ms var(--ease-out);
   transform: translateZ(0) var(--rp-rotate-x,) var(--rp-rotate-y,) var(--rp-rotate-z,)
     var(--rp-skew-x,) var(--rp-skew-y,);
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
 
   /* Focus visible state */
   &:focus-visible:not(:focus),

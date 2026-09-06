@@ -82,25 +82,9 @@
     overlay,
     pointer-events;
   transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-  transition-duration: var(--tw-duration, var(--default-transition-duration));
+  transition-duration: var(--rp-motion) var(--tw-duration, var(--default-transition-duration));
   --tw-duration: 250ms;
-  transition-duration: 250ms;
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
+  transition-duration: var(--rp-motion) 250ms;
 
   /* Expanded state for indicator rotation */
   &[data-expanded="true"] {
@@ -114,24 +98,8 @@
   overflow: clip;
 
   transition:
-    height 200ms var(--ease-out-quad),
+    var(--rp-motion) height 200ms var(--ease-out-quad),
     opacity 200ms var(--ease-out);
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
 
   &[data-expanded="true"] {
     will-change: height, opacity;

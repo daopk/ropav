@@ -74,24 +74,8 @@
     inset 0 0 0 1px rgba(0, 0, 0, 0.1);
 
   transition:
-    width 150ms var(--ease-out),
+    var(--rp-motion) width 150ms var(--ease-out),
     height 150ms var(--ease-out);
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
 
   /* Focus state */
   &[data-focus-visible="true"] {

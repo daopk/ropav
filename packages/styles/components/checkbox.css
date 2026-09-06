@@ -81,29 +81,13 @@
      */
     transition-property: all;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-    transition-duration: var(--tw-duration, var(--default-transition-duration));
+    transition-duration: var(--rp-motion) var(--tw-duration, var(--default-transition-duration));
     --tw-duration: 200ms;
-    transition-duration: 200ms;
-    &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-        transition-property: none;
-        &::before,
-        &::after {
-          transition-property: none;
-        }
-      }
-    }
+    transition-duration: var(--rp-motion) 200ms;
   }
 
   &[data-selected="true"] [data-slot="checkbox-default-indicator--checkmark"] {
-    transition: stroke-dashoffset 150ms linear 15ms;
+    transition: var(--rp-motion) stroke-dashoffset 150ms linear 15ms;
   }
 
   /* Invalid + Selected: checkmark icon color */
@@ -180,25 +164,9 @@
   border-color: var(--checkbox-control-border);
 
   transition:
-    background-color 200ms var(--ease-out),
+    var(--rp-motion) background-color 200ms var(--ease-out),
     border-color 200ms var(--ease-out),
     transform 100ms var(--ease-out);
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
 
   cursor: var(--cursor-interactive);
 
@@ -221,7 +189,7 @@
     background-color: var(--checkbox-control-fill);
 
     transition:
-      scale 100ms var(--ease-linear),
+      var(--rp-motion) scale 100ms var(--ease-linear),
       opacity 200ms var(--ease-linear),
       background-color 200ms var(--ease-out);
   }

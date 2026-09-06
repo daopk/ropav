@@ -76,36 +76,20 @@
 
   inline-size: var(--sidebar-width);
 
-  transition: inline-size 200ms var(--ease-out);
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
+  transition: var(--rp-motion) inline-size 200ms var(--ease-out);
 }
 
 /* Under the pointer the panel follows it exactly. Easing towards each frame's width instead makes
  * the edge lag the cursor by the whole duration, which reads as the panel chasing the drag rather
  * than being dragged. */
 .rp-sidebar__panel[data-resizing="true"] {
-  transition: none;
+  transition: var(--rp-motion) none;
 }
 
 /* And while a stored layout is being put back: that width is where the sidebar starts, not
  * somewhere it moved to. */
 .rp-sidebar__panel[data-restoring="true"] {
-  transition: none;
+  transition: var(--rp-motion) none;
 }
 
 /* The separating line is a border rather than a background, so it is one of the few things Forced
@@ -203,7 +187,7 @@
   inline-size: auto;
   margin: 0;
   border-radius: 0;
-  transition: none;
+  transition: var(--rp-motion) none;
 }
 
 /* ==========================================================================
@@ -355,24 +339,8 @@
   cursor: var(--cursor-interactive);
 
   transition:
-    background-color 150ms var(--ease-out),
+    var(--rp-motion) background-color 150ms var(--ease-out),
     color 150ms var(--ease-out);
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
 
   /* Hover state */
   @media (hover: hover) {
@@ -549,25 +517,9 @@
     overlay,
     pointer-events;
   transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-  transition-duration: var(--tw-duration, var(--default-transition-duration));
+  transition-duration: var(--rp-motion) var(--tw-duration, var(--default-transition-duration));
   --tw-duration: 250ms;
-  transition-duration: 250ms;
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
+  transition-duration: var(--rp-motion) 250ms;
 
   &[data-expanded="true"] {
     rotate: 0deg;
@@ -623,24 +575,8 @@
   overflow: clip;
 
   transition:
-    height 200ms var(--ease-out-quad),
+    var(--rp-motion) height 200ms var(--ease-out-quad),
     opacity 200ms var(--ease-out);
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
 
   &[data-expanded="true"] {
     will-change: height, opacity;
@@ -728,22 +664,6 @@
 
   /* On the host, not in `::after` where the transition lives: the variant reaches a pseudo-element
    * from its originating element, and appending its condition after `::after` matches nothing. */
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
 
   &::after {
     pointer-events: none;
@@ -763,7 +683,7 @@
     }
 
     transition:
-      background-color 150ms var(--ease-out),
+      var(--rp-motion) background-color 150ms var(--ease-out),
       inline-size 150ms var(--ease-out);
   }
 
@@ -905,24 +825,8 @@
   cursor: var(--cursor-interactive);
 
   transition:
-    background-color 150ms var(--ease-out),
+    var(--rp-motion) background-color 150ms var(--ease-out),
     color 150ms var(--ease-out);
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
 
   svg {
     width: calc(var(--spacing) * 4);

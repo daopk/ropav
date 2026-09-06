@@ -21,8 +21,24 @@ system:
 ```
 
 `"true"` forces animation off, `"false"` forces it on, and with the attribute absent the
-`prefers-reduced-motion` media query decides. Components read it through the `motion-reduce` and
-`motion-safe` variants, so it reaches everything at once.
+`prefers-reduced-motion` media query decides.
+
+The attribute sets an inherited custom property, `--rp-motion`, and every declaration that
+animates reads it — so the answer reaches a pseudo-element without anything restating it, and the
+**nearest** ancestor is the one that decides. A panel that turns motion back on inside a page that
+turned it off gets motion; one that turns it off inside a page that turned it on does not.
+
+Your own rules can join in the same way, by leading with the property:
+
+```css
+.thing {
+  transition: var(--rp-motion) opacity 200ms ease;
+}
+```
+
+With motion allowed it substitutes nothing and the declaration reads as written. With motion off
+it makes the declaration invalid, so the property falls back to its initial value — a duration of
+zero, or no animation name — and there is nothing left to see.
 
 ## Forced Colors Mode
 

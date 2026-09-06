@@ -85,23 +85,7 @@
   position: absolute;
   pointer-events: none;
 
-  transition: opacity 150ms var(--ease-smooth);
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
+  transition: var(--rp-motion) opacity 150ms var(--ease-smooth);
 
   /* Horizontal orientation - vertical divider */
   .rp-button-group--horizontal & {

@@ -19,26 +19,10 @@
   border-radius: min(32px, var(--component-radius));
 
   transition:
-    transform 250ms var(--ease-out-quart),
+    var(--rp-motion) transform 250ms var(--ease-out-quart),
     box-shadow 150ms var(--ease-out);
 
   will-change: transform;
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
 
   /* Cursor */
   cursor: var(--cursor-interactive);
@@ -119,23 +103,7 @@
   &[aria-selected="true"],
   &[data-selected="true"] {
     [data-slot="menu-item-indicator--checkmark"] {
-      transition: stroke-dashoffset 100ms linear;
-      &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-        transition-property: none;
-        &::before,
-        &::after {
-          transition-property: none;
-        }
-      }
-      @media (prefers-reduced-motion: reduce) {
-        &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-          transition-property: none;
-          &::before,
-          &::after {
-            transition-property: none;
-          }
-        }
-      }
+      transition: var(--rp-motion) stroke-dashoffset 100ms linear;
     }
 
     [data-slot="menu-item-indicator--dot"] {
@@ -207,25 +175,9 @@
     overlay,
     pointer-events;
   transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-  transition-duration: var(--tw-duration, var(--default-transition-duration));
+  transition-duration: var(--rp-motion) var(--tw-duration, var(--default-transition-duration));
   --tw-duration: 250ms;
-  transition-duration: 250ms;
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
+  transition-duration: var(--rp-motion) 250ms;
 
   /* Position on the inline-end when menu item has submenu */
   .rp-menu-item[data-has-submenu="true"] & {
@@ -244,25 +196,9 @@
        */
       transition-property: all;
       transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-      transition-duration: var(--tw-duration, var(--default-transition-duration));
+      transition-duration: var(--rp-motion) var(--tw-duration, var(--default-transition-duration));
       --tw-duration: 300ms;
-      transition-duration: 300ms;
-      &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-        transition-property: none;
-        &::before,
-        &::after {
-          transition-property: none;
-        }
-      }
-      @media (prefers-reduced-motion: reduce) {
-        &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-          transition-property: none;
-          &::before,
-          &::after {
-            transition-property: none;
-          }
-        }
-      }
+      transition-duration: var(--rp-motion) 300ms;
     }
   }
 
@@ -277,25 +213,9 @@
      */
       transition-property: all;
       transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-      transition-duration: var(--tw-duration, var(--default-transition-duration));
+      transition-duration: var(--rp-motion) var(--tw-duration, var(--default-transition-duration));
       --tw-duration: 250ms;
-      transition-duration: 250ms;
-      &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-        transition-property: none;
-        &::before,
-        &::after {
-          transition-property: none;
-        }
-      }
-      @media (prefers-reduced-motion: reduce) {
-        &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-          transition-property: none;
-          &::before,
-          &::after {
-            transition-property: none;
-          }
-        }
-      }
+      transition-duration: var(--rp-motion) 250ms;
     }
     /**
      * Default state: hidden and scaled down

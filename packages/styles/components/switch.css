@@ -120,24 +120,8 @@
   background-color: var(--switch-control-bg);
 
   transition:
-    background-color 250ms var(--ease-smooth),
+    var(--rp-motion) background-color 250ms var(--ease-smooth),
     box-shadow 150ms var(--ease-out);
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
 
   /* Forced Colors Mode paints the track and the thumb the same `Canvas`, so the thumb vanishes
    * inside the track and the switch stops showing its state - the position it moved to is not
@@ -183,22 +167,6 @@
   .rp-switch:has([data-slot="switch-content"][data-pressed="true"]) &,
   .rp-switch [data-slot="switch-content"][data-pressed="true"] & {
     background-color: var(--switch-control-bg-pressed);
-    &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-      transform: none;
-      &::before,
-      &::after {
-        transform: none;
-      }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-        transform: none;
-        &::before,
-        &::after {
-          transform: none;
-        }
-      }
-    }
   }
 
   /* Checked states */
@@ -294,24 +262,8 @@
   }
 
   transition:
-    margin 300ms var(--ease-out-fluid),
+    var(--rp-motion) margin 300ms var(--ease-out-fluid),
     background-color 200ms var(--ease-out);
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
 
   /* Selected/checked state - use margin instead of translate */
   .rp-switch[aria-checked="true"] &,

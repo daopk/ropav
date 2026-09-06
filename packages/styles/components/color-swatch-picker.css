@@ -40,26 +40,10 @@
   cursor: var(--cursor-interactive);
 
   transition:
-    border-color 100ms var(--ease-out),
+    var(--rp-motion) border-color 100ms var(--ease-out),
     box-shadow 100ms var(--ease-out);
   transform: translateZ(0) var(--rp-rotate-x,) var(--rp-rotate-y,) var(--rp-rotate-z,)
     var(--rp-skew-x,) var(--rp-skew-y,);
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
 
   /* Focus state */
   &:focus-visible,
@@ -120,25 +104,9 @@
 
   /* Inherit border-radius from item */
   border-radius: inherit;
-  transition: transform 100ms var(--ease-out);
+  transition: var(--rp-motion) transform 100ms var(--ease-out);
   transform: translateZ(0) var(--rp-rotate-x,) var(--rp-rotate-y,) var(--rp-rotate-z,)
     var(--rp-skew-x,) var(--rp-skew-y,);
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
 
   @media (hover: hover) {
     &:hover {
@@ -172,23 +140,7 @@
     /**
      * Transitions
      */
-    transition: transform 150ms var(--ease-out);
-    &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-        transition-property: none;
-        &::before,
-        &::after {
-          transition-property: none;
-        }
-      }
-    }
+    transition: var(--rp-motion) transform 150ms var(--ease-out);
   }
 
   /* Use black checkmark on light backgrounds */

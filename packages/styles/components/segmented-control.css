@@ -84,24 +84,8 @@
   cursor: var(--cursor-interactive);
 
   transition:
-    color 150ms var(--ease-smooth),
+    var(--rp-motion) color 150ms var(--ease-smooth),
     opacity 150ms var(--ease-smooth);
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
 
   /* Selected state */
   &[data-selected="true"] {
@@ -190,23 +174,7 @@
     background-color: color-mix(in oklab, var(--muted) 25%, transparent);
   }
 
-  transition: opacity 150ms var(--ease-smooth);
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
+  transition: var(--rp-motion) opacity 150ms var(--ease-smooth);
 
   /* Nothing to divide in front of the first segment. */
   .rp-segmented-control__item:first-child & {
@@ -257,25 +225,9 @@
    * though the pill only travels along one axis today, so a vertical orientation needs no
    * change here.
    */
-  transition-duration: 250ms;
+  transition-duration: var(--rp-motion) 250ms;
   transition-property: translate, width, height;
   transition-timing-function: var(--ease-out-fluid);
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
 }
 
 /* ==========================================================================

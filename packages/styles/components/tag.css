@@ -25,7 +25,7 @@
   color: var(--tag-fg);
 
   transition:
-    color 100ms var(--ease-smooth),
+    var(--rp-motion) color 100ms var(--ease-smooth),
     scale 100ms var(--ease-smooth),
     opacity 100ms var(--ease-smooth),
     background-color 100ms var(--ease-smooth),
@@ -33,22 +33,6 @@
   transform-origin: center;
   transform: translateZ(0) var(--rp-rotate-x,) var(--rp-rotate-y,) var(--rp-rotate-z,)
     var(--rp-skew-x,) var(--rp-skew-y,);
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
 
   /* Cursor */
   cursor: var(--cursor-interactive);

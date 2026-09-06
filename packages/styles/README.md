@@ -318,8 +318,13 @@ owns the legibility of what it puts there.
 ### Reduced motion
 
 `data-reduce-motion="true"` on any ancestor forces animations off, `"false"` forces them on regardless
-of the OS setting, and with neither the `prefers-reduced-motion` media query decides. Defined as the
-`motion-reduce` / `motion-safe` variants in `variants/index.css`.
+of the OS setting, and with neither the `prefers-reduced-motion` media query decides. The nearest
+ancestor that answered is the one that counts.
+
+The attribute sets `--rp-motion` — see `motion.css` — and every animated declaration leads with
+`var(--rp-motion)`, which substitutes nothing when motion is allowed and invalidates the whole
+declaration when it is not. The `motion-reduce` / `motion-safe` variants in `variants/index.css`
+stay for callers compiling this package's source with their own Tailwind.
 
 ### Forced colors
 

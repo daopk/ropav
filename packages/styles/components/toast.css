@@ -212,23 +212,7 @@
   }
 
   --toast-close-button-bg-hover: var(--default);
-  transition: opacity 150ms var(--ease-smooth);
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
+  transition: var(--rp-motion) opacity 150ms var(--ease-smooth);
   /* Overrides close button default icon size from 16px to 12px */
   [data-slot="close-button-icon"] {
     width: calc(var(--spacing) * 3.5);
@@ -303,21 +287,21 @@
 
 /* Bottom */
 ::view-transition-new(.rp-toast-bottom):only-child {
-  animation: rp-toast-slide-bottom-in 350ms;
+  animation: var(--rp-motion) rp-toast-slide-bottom-in 350ms;
 }
 
 ::view-transition-old(.rp-toast-bottom):only-child {
-  animation: rp-toast-slide-bottom-out 350ms;
+  animation: var(--rp-motion) rp-toast-slide-bottom-out 350ms;
   animation-fill-mode: forwards;
 }
 
 /* Top */
 ::view-transition-new(.rp-toast-top):only-child {
-  animation: rp-toast-slide-top-in 350ms;
+  animation: var(--rp-motion) rp-toast-slide-top-in 350ms;
 }
 
 ::view-transition-old(.rp-toast-top):only-child {
-  animation: rp-toast-slide-top-out 350ms;
+  animation: var(--rp-motion) rp-toast-slide-top-out 350ms;
   animation-fill-mode: forwards;
 }
 

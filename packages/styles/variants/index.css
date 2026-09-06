@@ -29,9 +29,23 @@
     }
   }
 
-  /* Fallback: system prefers-reduced-motion setting */
+  /*
+   * Fallback: the system preference, unless something said otherwise.
+   *
+   * Both answers have to be excluded, not just `"true"`. Excluding only that left
+   * `data-reduce-motion="false"` unable to do the one thing it exists for — under an OS asking
+   * for reduced motion the attribute changed nothing, and the documented priority above was a
+   * description of what this was meant to do rather than of what it did.
+   */
   @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+    &:not(
+      :is(
+        [data-reduce-motion="true"],
+        [data-reduce-motion="true"] *,
+        [data-reduce-motion="false"],
+        [data-reduce-motion="false"] *
+      )
+    ) {
       @slot;
 
       &::before,

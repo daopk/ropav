@@ -100,22 +100,6 @@
 
   /* On the host, not in `::after` where the transition lives: the variant reaches a pseudo-element
    * from its originating element, and appending its condition after `::after` matches nothing. */
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
 
   &::after {
     pointer-events: none;
@@ -133,7 +117,7 @@
     }
 
     transition:
-      background-color 150ms var(--ease-out),
+      var(--rp-motion) background-color 150ms var(--ease-out),
       inline-size 150ms var(--ease-out),
       block-size 150ms var(--ease-out);
   }
@@ -252,23 +236,7 @@
     background-color: CanvasText;
   }
 
-  transition: background-color 150ms var(--ease-out);
-  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-    transition-property: none;
-    &::before,
-    &::after {
-      transition-property: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-  }
+  transition: var(--rp-motion) background-color 150ms var(--ease-out);
 }
 
 .rp-splitter__handle-grip--horizontal {

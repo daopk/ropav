@@ -8,6 +8,9 @@
 @import "./base/base.css" layer(base);
 @import "./base/scrollbar.css" layer(base);
 
+/* Whether motion is allowed, as one inherited property the animated declarations read. */
+@import "./motion.css";
+
 /* The `@property` registrations the component rules compose through. Unlayered, and before the
  * rules that read them - an unregistered slot makes the declaration reading it invalid. */
 @import "./slots.css";

@@ -79,25 +79,9 @@
     }
 
     transition:
-      background-color 250ms var(--ease-smooth),
+      var(--rp-motion) background-color 250ms var(--ease-smooth),
       transform 250ms var(--ease-out),
       box-shadow 150ms var(--ease-out);
-    &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-        transition-property: none;
-        &::before,
-        &::after {
-          transition-property: none;
-        }
-      }
-    }
 
     /* after: Visible thumb element */
     &::after {
@@ -125,7 +109,7 @@
       transform-origin: center;
       transition-property: all;
       transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-      transition-duration: var(--tw-duration, var(--default-transition-duration));
+      transition-duration: var(--rp-motion) var(--tw-duration, var(--default-transition-duration));
     }
 
     /* Dragging state - cursor changes and thumb scales down */
@@ -133,31 +117,9 @@
       cursor: grabbing;
 
       &::after {
-        scale: 0.9;
-        &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-          --rp-scale-x: 100%;
-          --rp-scale-y: 100%;
-          scale: var(--rp-scale-x) var(--rp-scale-y);
-          &::before,
-          &::after {
-            --rp-scale-x: 100%;
-            --rp-scale-y: 100%;
-            scale: var(--rp-scale-x) var(--rp-scale-y);
-          }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-            --rp-scale-x: 100%;
-            --rp-scale-y: 100%;
-            scale: var(--rp-scale-x) var(--rp-scale-y);
-            &::before,
-            &::after {
-              --rp-scale-x: 100%;
-              --rp-scale-y: 100%;
-              scale: var(--rp-scale-x) var(--rp-scale-y);
-            }
-          }
-        }
+        /* Gated like a duration, and for the same reason: with motion off the declaration is
+         * invalid and `scale` falls back to its initial 1, which is the size it should be. */
+        scale: var(--rp-motion) 0.9;
       }
     }
 

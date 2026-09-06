@@ -37,46 +37,13 @@
       stroke: Highlight;
     }
 
-    transition: stroke-dashoffset 300ms var(--ease-out);
-    &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-      transition-property: none;
-      &::before,
-      &::after {
-        transition-property: none;
-      }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-        transition-property: none;
-        &::before,
-        &::after {
-          transition-property: none;
-        }
-      }
-    }
+    transition: var(--rp-motion) stroke-dashoffset 300ms var(--ease-out);
   }
 
   /* Indeterminate state - when no aria-valuenow is set */
   &:not([aria-valuenow]) {
     .rp-progress-circle__track {
-      animation: rp-progress-circle-spin 1s linear infinite;
-
-      &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
-        animation: none;
-        &::before,
-        &::after {
-          animation: none;
-        }
-      }
-      @media (prefers-reduced-motion: reduce) {
-        &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
-          animation: none;
-          &::before,
-          &::after {
-            animation: none;
-          }
-        }
-      }
+      animation: var(--rp-motion) rp-progress-circle-spin 1s linear infinite;
     }
   }
 
