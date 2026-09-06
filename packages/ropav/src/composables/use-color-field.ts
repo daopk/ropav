@@ -104,9 +104,13 @@ export const useColorField = (options: UseColorFieldOptions = {}): UseColorField
   });
 
   // Narrowed once: `useTextField` allows a textarea, but a colour field only ever renders an
-  // input, and everything below wants that type.
+  // input, and everything below wants that type. Guarded because this one is read while
+  // rendering, where the others narrowing an element run from a ref callback the server never
+  // reaches — and a server has no `HTMLInputElement` to test against, nor an element to test.
   const element = computed(() =>
-    field.element.value instanceof HTMLInputElement ? field.element.value : null,
+    typeof document !== "undefined" && field.element.value instanceof HTMLInputElement
+      ? field.element.value
+      : null,
   );
 
   const spin = useSpinButton({
