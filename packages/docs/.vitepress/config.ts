@@ -109,6 +109,8 @@ export default defineConfig({
             { link: "/components/link", text: "Link" },
             { link: "/components/disclosure-group", text: "DisclosureGroup" },
             { link: "/components/disclosure", text: "Disclosure" },
+            { link: "/components/accordion", text: "Accordion" },
+            { link: "/components/pagination", text: "Pagination" },
           ],
           text: "Navigation",
         },
