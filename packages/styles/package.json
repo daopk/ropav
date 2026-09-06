@@ -63,6 +63,7 @@
     "measure-size": "node scripts/measure-bundle-size.mjs",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist tsconfig.tsbuildinfo",
+    "prepublishOnly": "pnpm run build",
     "prepack": "clean-package",
     "postpack": "clean-package restore"
   },
