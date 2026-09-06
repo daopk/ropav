@@ -12,6 +12,8 @@ coverage
 __snapshots__
 **/__screenshots__/
 **/.vitest/
+# The migration harness's frozen golden; see packages/ropav/tests/styles/migration/README.md
+**/tests/styles/migration/__baseline__/
 coverage.json
 
 # next.js
