@@ -5,7 +5,8 @@ description: The package, the stylesheet, and how to import less of it.
 
 # Installation
 
-Ropav needs Vue 3.6 or newer — Vapor Mode is what it is built on — and Tailwind CSS 4.
+Ropav needs Vue 3.6 or newer — Vapor Mode is what it is built on. Tailwind CSS 4 is needed only
+by one of the two ways to take the stylesheet, and the other one needs no build step at all.
 
 ::: code-group
 
@@ -27,16 +28,53 @@ yarn add ropav
 
 ## The stylesheet
 
-Import it once, from your app's own CSS:
+Two ways in. They render the same components; what differs is whether anything has to compile.
+
+### Compiled, no build step
+
+One finished file — every rule resolved, nothing left to process. Take it from your CSS:
+
+```css
+@import "ropav/styles/bundled.css";
+```
+
+from your entry module:
+
+```ts
+import "ropav/styles/bundled.css";
+```
+
+or from the page, with no bundler in the picture at all:
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ropav/dist/ropav.min.css" />
+```
+
+It carries, in layer order (`theme, base, components, utilities`): the reset, the base styles and
+the scrollbar system, one rule set per component, the default theme's tokens for light and dark,
+and the classes the components name.
+
+The bundled themes are finished CSS too, so a second `<link>` is all another palette takes:
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ropav/styles/dist/themes/netflix.css" />
+```
+
+### Source, compiled by your own Tailwind
+
+If your app already runs Tailwind CSS 4, take the entry instead. Your build resolves it, and you
+get to drop the components you never import.
 
 ```css
 @import "tailwindcss";
 @import "ropav/styles";
 ```
 
-That single line brings in, in layer order (`theme, base, components, utilities`): Tailwind's own
-parts, the base styles and the scrollbar system, one rule set per component, the default theme's
-tokens for light and dark, and the utilities and custom variants the components rely on.
+::: warning It fails quietly
+These entries are `@import` statements, not CSS. Without a Tailwind 4 toolchain the import still
+succeeds and the app renders unstyled — nothing errors. If your components come out looking like
+bare HTML, this is why; take the compiled file above.
+:::
 
 ### If your app already resets
 
@@ -47,19 +85,10 @@ own Tailwind build — wants the other entry, which is identical in every other 
 @import "ropav/styles/no-preflight";
 ```
 
-### Telling Tailwind where to look
-
-Tailwind only emits the classes it can see. Ropav's components name theirs inside the package, so
-point `@source` at it or the components render unstyled:
-
-```css
-@source "../node_modules/ropav/dist/**/*.js";
-```
-
 ## Importing only what you need
 
-The whole stylesheet is the simple path. If you ship only a handful of components, take their CSS
-one file at a time instead:
+Also the Tailwind path. If you ship only a handful of components, take their CSS one file at a
+time instead of the whole entry:
 
 ```css
 @import "tailwindcss";
@@ -92,5 +121,6 @@ import { Button } from "ropav";
 </template>
 ```
 
-If it renders as unstyled text, the stylesheet is missing. If it renders as a plain browser
-button, Tailwind is not scanning the package — see above.
+If it renders as a plain browser button, the stylesheet never arrived — either it is not imported,
+or it is one of the source entries and nothing compiled it. If it renders styled but in the wrong
+colours, a theme is loaded and the palette is not: check `data-theme`.

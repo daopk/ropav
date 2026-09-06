@@ -1,9 +1,9 @@
 # @ropav/styles
 
-The style layer behind [`ropav`](https://www.npmjs.com/package/ropav): plain CSS for every component,
+The style layer behind [`ropav`](https://www.npmjs.com/package/ropav): a rule set for every component,
 themes, utilities, and custom variants, plus `tv()` variants that do nothing but map props to class names.
 Framework-agnostic — not a line of Vue or React in it. The only `dependency` is `tw-animate-css`;
-the only peer is `tailwindcss`.
+the only peer is `tailwindcss`, and `bundled.css` is the entry that does not need it.
 
 **[Theming guide](https://ropav.netlify.app/theming/)** ·
 [Tokens](https://ropav.netlify.app/theming/tokens) ·
@@ -30,13 +30,29 @@ Outside the repo you do not install it yourself — `ropav` depends on it and np
 
 ### Basic setup
 
-Import the stylesheet once, from your app's main CSS file:
+`@ropav/styles` is the entry your own Tailwind build resolves; `@ropav/styles/bundled.css` is the
+same stylesheet already resolved, for an app that has no build step to do it. Either one, once,
+from your app's main CSS file:
 
 ```css
+/* needs a Tailwind CSS 4 toolchain */
 @import "@ropav/styles";
+
+/* needs nothing */
+@import "@ropav/styles/bundled.css";
 ```
 
-That single line pulls in, in layer order (`theme, base, components, utilities`):
+The compiled file is also what the CDN fields point at, so a page can take it with no bundler:
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ropav/styles" />
+```
+
+> Reach for `bundled.css` unless you are running Tailwind. The entry above is a set of `@import`
+> statements, so without a toolchain to resolve them it succeeds and produces nothing — the app
+> renders unstyled and nothing errors.
+
+Either way you get, in layer order (`theme, base, components, utilities`):
 
 - Tailwind CSS v4 and `tw-animate-css`
 - base styles and the scrollbar system
@@ -55,10 +71,10 @@ That single line pulls in, in layer order (`theme, base, components, utilities`)
 @import "@ropav/styles/themes/default";
 ```
 
-> The granular subpaths — `./components/*.css`, `./base`, `./base/*.css`, `./themes/*`, `./themes/*.css`,
-> `./utilities`, `./variants` — exist **only in the published tarball**; `clean-package.config.json` writes them into
-> `exports` at `prepack` time. Inside the workspace, import the files from `packages/styles/` by relative path
-> instead.
+> `./bundled.css` and the granular subpaths — `./components/*.css`, `./base`, `./base/*.css`, `./themes/*`,
+> `./themes/*.css`, `./utilities`, `./variants` — exist **only in the published tarball**;
+> `clean-package.config.json` writes them into `exports` at `prepack` time. Inside the workspace, import the
+> files from `packages/styles/` by relative path instead.
 
 ### Variants
 
@@ -383,7 +399,14 @@ pnpm --filter @ropav/styles build
 ```
 
 Rolldown emits `dist/` as ES modules with `preserveModules` and one entry per component, `tsc` emits the `.d.ts`
-files, the CSS is copied across untouched, and `@tailwindcss/cli` produces the minified `dist/ropav.min.css`.
+files, the CSS is copied across untouched, and `scripts/bundle-css.mjs` produces the minified
+`dist/ropav.min.css`.
+
+That last step compiles from an empty working directory, because Tailwind roots automatic source detection
+there and would otherwise fill the utilities layer with whatever class-shaped words the package's own sources
+contain. Nothing is detected as a result, so the classes this package offers by name — the `@utility`
+definitions in `utilities/index.css` — are safelisted back explicitly, read from that file so the two cannot
+drift. `packages/ropav` builds its own `ropav.min.css` through the same function.
 
 `pnpm --filter @ropav/styles measure-size` prints a size report and writes `bundle-size.json`.
 

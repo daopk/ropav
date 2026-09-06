@@ -31,7 +31,7 @@ block rather than a build step. See [Theming](/theming/).
 
 ## Where to start
 
-- [Installation](/guide/installation) — the two imports you need.
+- [Installation](/guide/installation) — one package, and the stylesheet two ways.
 - [Vapor mode](/guide/vapor) — what it changes for you, and the one line a VDOM app needs.
 - [Theming](/theming/) — two axes, and the palettes that ship.
 - [Button](/components/button) — the component page every other one is shaped like.
