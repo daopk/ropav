@@ -3,7 +3,9 @@ import type { CSSProperties } from "vue";
 
 export interface ProgressBarRootProps {
   class?: string;
+  /** Progress bar color. @default "accent" */
   color?: ProgressBarVariants["color"];
+  /** Progress bar size. @default "md" */
   size?: ProgressBarVariants["size"];
   /** Whether a diagonal band is laid over the fill. */
   isStriped?: boolean;

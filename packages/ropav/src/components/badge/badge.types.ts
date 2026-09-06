@@ -6,13 +6,13 @@ export interface BadgeAnchorProps {
 
 export interface BadgeRootProps {
   class?: string;
-  /** Badge color. */
+  /** Badge color. @default "default" */
   color?: BadgeVariants["color"];
-  /** Badge placement. */
+  /** Badge placement. @default "top-right" */
   placement?: BadgeVariants["placement"];
-  /** Badge size. */
+  /** Badge size. @default "md" */
   size?: BadgeVariants["size"];
-  /** Badge variant. */
+  /** Badge variant. @default "primary" */
   variant?: BadgeVariants["variant"];
 }
 

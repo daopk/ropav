@@ -2,7 +2,9 @@ import type { ProgressCircleVariants } from "@ropav/styles";
 
 export interface ProgressCircleRootProps {
   class?: string;
+  /** Progress circle color. @default "accent" */
   color?: ProgressCircleVariants["color"];
+  /** Progress circle size. @default "md" */
   size?: ProgressCircleVariants["size"];
   /** Current progress. @default 0 */
   value?: number;

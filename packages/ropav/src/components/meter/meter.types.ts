@@ -3,7 +3,9 @@ import type { CSSProperties } from "vue";
 
 export interface MeterRootProps {
   class?: string;
+  /** Meter color. @default "accent" */
   color?: MeterVariants["color"];
+  /** Meter size. @default "md" */
   size?: MeterVariants["size"];
   /** Current quantity. @default 0 */
   value?: number;
