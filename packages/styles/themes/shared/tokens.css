@@ -1,0 +1,38 @@
+/**
+ * The tokens the stylesheet reads with a plain `var()`, declared as plain custom properties.
+ *
+ * Everything here is also declared by `theme.css`, and that is the point. That block is a
+ * `@theme`, which is Tailwind's extension point: the names in it exist because Tailwind emits
+ * them, and they stop existing the moment it leaves the build. Most of the block is only ever
+ * read through a utility, so expanding the utilities is enough — but these eight are read
+ * directly, by rules that name them in `transition-timing-function`, `border-width` and
+ * `box-shadow`, and a directly-read name has to be declared by something that is staying.
+ *
+ * The values match what `@theme` emits today, to the digit, so this file changes nothing on its
+ * own. It goes from duplicate to sole declaration when the `@theme` block is deleted.
+ *
+ * `--radius-*` is deliberately absent, and must stay absent. Those exist only as substitution
+ * sources for `rounded-*`: declared here they would resolve on `:root` and freeze the root
+ * theme's radius into every `data-theme` subtree, which is the one thing `inline` is buying.
+ */
+
+@layer theme {
+  :root {
+    /* Tailwind's own default curve, and the one the components reach for most. */
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
+
+    --ease-smooth: ease;
+    --ease-linear: linear;
+    --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+    --ease-out-fluid: cubic-bezier(0.32, 0.72, 0, 1);
+
+    /*
+     * Aliases, and read on `:root` rather than on the element — so a `data-theme` subtree that
+     * changes `--field-border-width` does not move them. That is how they already behave: the
+     * `@theme` block emits exactly these two declarations here, in this place.
+     */
+    --border-width-field: var(--field-border-width, var(--border-width));
+    --shadow-overlay: var(--overlay-shadow);
+  }
+}

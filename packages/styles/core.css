@@ -19,6 +19,10 @@
  * `themes/*.css` are opt-in and layer themselves the same way. */
 @import "./themes/default.css";
 
+/* The handful of tokens rules read with a plain `var()`, declared without going through
+ * Tailwind's `@theme`. Duplicates the block above on purpose - see the file. */
+@import "./themes/shared/tokens.css";
+
 /* Utilities */
 @import "./utilities/index.css";
 
