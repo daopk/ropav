@@ -1,5 +1,6 @@
 <script setup lang="ts" vapor>
 import type { SidebarRootProps, SidebarSlotProps } from "./sidebar.types";
+import type { StyleValue } from "vue";
 
 import { sidebarVariants } from "@ropav/styles";
 import { computed, onMounted, onUnmounted, shallowRef } from "vue";
@@ -156,9 +157,14 @@ const panelElement = shallowRef<HTMLElement | null>(null);
 
 // Nothing written until someone sets a width, so an untouched sidebar is sized by the stylesheet
 // rather than by a value restated here — the same call `splitter-panel.vue` makes about its basis.
-const style = computed(() =>
+//
+// The caller's own style rides along in the array rather than falling through beside it: this
+// binding drops to `undefined` the moment a width is cleared, and Vue answers that by removing the
+// attribute, which would take anything sharing it along.
+const style = computed<StyleValue>(() => [
+  props.style,
   state.width.value === undefined ? undefined : { "--sidebar-width": state.width.value },
-);
+]);
 
 provideSidebarContext({
   panelEl: computed(() => panelElement.value),

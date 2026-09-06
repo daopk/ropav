@@ -2,6 +2,7 @@ import type { PressEvent } from "../../composables/use-press";
 import type { LinkCurrent } from "../link/link.types";
 import type { SidebarCollapsibleMode } from "./sidebar.state";
 import type { SidebarVariants } from "@ropav/styles";
+import type { StyleValue } from "vue";
 
 /** Which edge of the page the panel sits on. */
 export type SidebarSide = NonNullable<SidebarVariants["side"]>;
@@ -11,6 +12,14 @@ export type SidebarVariant = NonNullable<SidebarVariants["variant"]>;
 
 export interface SidebarRootProps {
   class?: string;
+  /**
+   * Declared rather than left to fall through, because this root binds a style of its own and
+   * that style is `undefined` until someone sets a width. An `undefined` on a `:style` binding
+   * does not mean "leave it alone" — it takes the attribute off the element, and a caller's style
+   * merged into the same binding would go with it, at the moment the width happened to be
+   * cleared. Naming it here keeps the two in one binding that is only ever added to.
+   */
+  style?: StyleValue;
   /** @default "left" */
   side?: SidebarSide;
   /**
