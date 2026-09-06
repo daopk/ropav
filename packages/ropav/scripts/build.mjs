@@ -2,6 +2,7 @@
 import { execSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { cp, readdir, readFile, rename, rm, writeFile } from "node:fs/promises";
+import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import zlib from "node:zlib";
@@ -31,6 +32,27 @@ async function buildStyles() {
   }
 
   console.log("✅ Styles export created successfully");
+}
+
+/**
+ * The three files above are `@import` statements; a browser cannot follow the first of them,
+ * which names a package. This is the same stylesheet with everything resolved, for an app with
+ * no build step to do the resolving.
+ *
+ * Built through `@ropav/styles`'s own bundler rather than a second copy of it, so both packages
+ * offer the same artifact. This entry differs from that package's only by the override layer.
+ */
+async function bundleStyles() {
+  console.log("🗜️  Bundling CSS...");
+
+  const require = createRequire(import.meta.url);
+  const stylesRoot = path.dirname(require.resolve("@ropav/styles/package.json"));
+  const { bundleCss } = await import(path.join(stylesRoot, "scripts/bundle-css.mjs"));
+
+  await bundleCss({
+    entry: path.join(distDir, "styles.css"),
+    out: path.join(distDir, "ropav.min.css"),
+  });
 }
 
 /**
@@ -282,6 +304,7 @@ async function main() {
     await clean();
     await build();
     await buildStyles();
+    await bundleStyles();
 
     if (shouldGenerateTypes) {
       await generateTypes();
