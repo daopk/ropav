@@ -57,6 +57,9 @@ export default defineConfig({
         {
           items: [
             { link: "/components/textfield", text: "TextField" },
+            { link: "/components/input", text: "Input" },
+            { link: "/components/search-field", text: "SearchField" },
+            { link: "/components/input-otp", text: "InputOTP" },
             { link: "/components/textarea", text: "TextArea" },
             { link: "/components/input-group", text: "InputGroup" },
             { link: "/components/number-field", text: "NumberField" },
@@ -83,6 +86,7 @@ export default defineConfig({
             { link: "/components/menu", text: "Menu" },
             { link: "/components/tag-group", text: "TagGroup" },
             { link: "/components/slider", text: "Slider" },
+            { link: "/components/segmented-control", text: "SegmentedControl" },
             { link: "/components/switch-group", text: "SwitchGroup" },
           ],
           text: "Collections and controls",

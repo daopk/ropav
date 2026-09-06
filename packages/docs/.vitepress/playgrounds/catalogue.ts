@@ -283,6 +283,27 @@ export const catalogue: Record<string, CatalogueEntry> = {
     },
   },
 
+  "input-otp": {
+    controls: ["variant", "isDisabled", "isInvalid"],
+    file: "components/input-otp/input-otp-root.vue",
+    node: {
+      children: [
+        {
+          children: [
+            { props: { index: 0 }, tag: "InputOTPSlot" },
+            { props: { index: 1 }, tag: "InputOTPSlot" },
+            { props: { index: 2 }, tag: "InputOTPSlot" },
+            { props: { index: 3 }, tag: "InputOTPSlot" },
+          ],
+          tag: "InputOTPGroup",
+        },
+      ],
+      props: { "aria-label": "Verification code", defaultValue: "04", maxLength: 4 },
+      root: true,
+      tag: "InputOTP",
+    },
+  },
+
   kbd: {
     controls: ["variant"],
     file: "components/kbd/kbd-root.vue",
@@ -423,6 +444,54 @@ export const catalogue: Record<string, CatalogueEntry> = {
       props: { class: "flex max-h-32 w-72 flex-col gap-3 p-4" },
       root: true,
       tag: "ScrollShadow",
+    },
+  },
+
+  "search-field": {
+    controls: ["variant", "size", "fullWidth", "isDisabled", "isReadOnly", "isInvalid"],
+    file: "components/search-field/search-field-root.vue",
+    node: {
+      children: [
+        { children: ["Search"], tag: "Label" },
+        {
+          children: [
+            { tag: "SearchFieldSearchIcon" },
+            { props: { class: "w-64", placeholder: "Search…" }, tag: "SearchFieldInput" },
+            { tag: "SearchFieldClearButton" },
+          ],
+          tag: "SearchFieldGroup",
+        },
+      ],
+      props: { defaultValue: "oklch" },
+      root: true,
+      tag: "SearchField",
+    },
+  },
+
+  "segmented-control": {
+    controls: ["size", "fullWidth", "isDisabled"],
+    file: "components/segmented-control/segmented-control-root.vue",
+    node: {
+      children: [
+        {
+          children: ["Daily", { tag: "SegmentedControlIndicator" }],
+          props: { id: "daily" },
+          tag: "SegmentedControlItem",
+        },
+        {
+          children: ["Weekly", { tag: "SegmentedControlIndicator" }],
+          props: { id: "weekly" },
+          tag: "SegmentedControlItem",
+        },
+        {
+          children: ["Monthly", { tag: "SegmentedControlIndicator" }],
+          props: { id: "monthly" },
+          tag: "SegmentedControlItem",
+        },
+      ],
+      props: { "aria-label": "Reporting range", defaultSelectedKey: "weekly" },
+      root: true,
+      tag: "SegmentedControl",
     },
   },
 
