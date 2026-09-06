@@ -4,6 +4,7 @@ import { execSync } from "child_process";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import zlib from "zlib";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.join(__dirname, "..");
@@ -36,6 +37,48 @@ function formatBytes(bytes) {
     formatted: kb >= 1 ? `${kb.toFixed(2)} KB` : `${bytes} B`,
     kb: Math.round(kb * 1000) / 1000,
   };
+}
+
+/**
+ * What the file costs on the wire. The raw byte count is the least interesting number about a
+ * stylesheet — most of what a stylesheet repeats, a compressor removes.
+ */
+function getTransferSizes(filePath) {
+  const contents = fs.readFileSync(filePath);
+
+  return {
+    brotli: zlib.brotliCompressSync(contents).length,
+    bytes: contents.length,
+    gzip: zlib.gzipSync(contents, { level: 9 }).length,
+  };
+}
+
+/**
+ * Bytes per top-level `@layer`, which is what makes a size change legible: a layer growing
+ * because a component gained a rule reads nothing like the theme layer growing.
+ */
+function getLayerSizes(filePath) {
+  const css = fs.readFileSync(filePath, "utf8");
+  const layers = {};
+  let measuredTo = 0;
+
+  for (const match of css.matchAll(/@layer ([a-z-]+)\{/g)) {
+    // A layer nested inside one already measured is part of that layer's own bytes.
+    if (match.index < measuredTo) continue;
+
+    let depth = 0;
+    let end = match.index + match[0].length - 1;
+
+    for (; end < css.length; end++) {
+      if (css[end] === "{") depth++;
+      else if (css[end] === "}" && --depth === 0) break;
+    }
+
+    measuredTo = end + 1;
+    layers[match[1]] = measuredTo - match.index;
+  }
+
+  return layers;
 }
 
 /**
@@ -166,17 +209,16 @@ async function main() {
   }
 
   // Measure sizes
-  const indexPath = path.join(distDir, "index.css");
   const minifiedPath = path.join(distDir, "ropav.min.css");
 
-  const uncompressedSize = getFileSize(indexPath);
-  const minifiedSize = getFileSize(minifiedPath);
-
-  if (uncompressedSize === null) {
-    console.error("Error: dist/index.css not found. Run build first.");
+  if (getFileSize(minifiedPath) === null) {
+    console.error("Error: dist/ropav.min.css not found. Run build first.");
     process.exit(1);
   }
 
+  const transfer = getTransferSizes(minifiedPath);
+  const minifiedSize = transfer.bytes;
+  const layers = getLayerSizes(minifiedPath);
   const components = getComponentSizes();
 
   // Calculate totals
@@ -186,23 +228,40 @@ async function main() {
   const result = {
     components,
     componentsTotal: formatBytes(totalComponentBytes),
+    layers,
     minified: formatBytes(minifiedSize),
     timestamp: new Date().toISOString(),
-    uncompressed: formatBytes(uncompressedSize),
+    transfer,
   };
 
   // Display results
   console.log("Bundle Sizes:");
   console.log("-".repeat(60));
   console.log(
-    `Uncompressed (index.css):   ${result.uncompressed.formatted}${previous ? showComparison(uncompressedSize, previous.uncompressed.bytes, "uncompressed") : ""}`,
+    `Minified (ropav.min.css):   ${result.minified.formatted}${previous ? showComparison(minifiedSize, previous.minified.bytes, "minified") : ""}`,
   );
   console.log(
-    `Minified (ropav.min.css):  ${result.minified.formatted}${previous ? showComparison(minifiedSize, previous.minified.bytes, "minified") : ""}`,
+    `  gzip:                     ${formatBytes(transfer.gzip).formatted}${previous?.transfer ? showComparison(transfer.gzip, previous.transfer.gzip, "gzip") : ""}`,
   );
   console.log(
-    `Components total:           ${result.componentsTotal.formatted}${previous ? showComparison(totalComponentBytes, previous.componentsTotal?.bytes, "components") : ""}`,
+    `  brotli:                   ${formatBytes(transfer.brotli).formatted}${previous?.transfer ? showComparison(transfer.brotli, previous.transfer.brotli, "brotli") : ""}`,
   );
+  console.log(
+    `Components total (source):  ${result.componentsTotal.formatted}${previous ? showComparison(totalComponentBytes, previous.componentsTotal?.bytes, "components") : ""}`,
+  );
+  console.log();
+
+  console.log("Bundle by layer:");
+  console.log("-".repeat(60));
+
+  for (const [name, bytes] of Object.entries(layers).sort((a, b) => b[1] - a[1])) {
+    const share = ((bytes / minifiedSize) * 100).toFixed(1);
+
+    console.log(
+      `  @layer ${name.padEnd(22)} ${formatBytes(bytes).formatted.padStart(12)}  ${share.padStart(5)}%${previous?.layers ? showComparison(bytes, previous.layers[name], name) : ""}`,
+    );
+  }
+
   console.log();
 
   // Component breakdown (top 10 largest)
@@ -233,18 +292,23 @@ async function main() {
     console.log("Summary vs Previous Measurement");
     console.log("=".repeat(60));
 
-    const uncompressedDiff = uncompressedSize - previous.uncompressed.bytes;
     const minifiedDiff = minifiedSize - previous.minified.bytes;
+    const gzipDiff = previous.transfer ? transfer.gzip - previous.transfer.gzip : null;
 
     console.log(`Previous timestamp: ${previous.timestamp}`);
     console.log(`Current timestamp:  ${result.timestamp}`);
     console.log();
     console.log(
-      `Uncompressed change: ${uncompressedDiff > 0 ? "+" : ""}${formatBytes(uncompressedDiff).formatted}`,
-    );
-    console.log(
       `Minified change:     ${minifiedDiff > 0 ? "+" : ""}${formatBytes(minifiedDiff).formatted}`,
     );
+
+    // The one that reaches a user. A change to what the stylesheet repeats moves the raw count
+    // far more than it moves this.
+    if (gzipDiff !== null) {
+      console.log(
+        `Gzip change:         ${gzipDiff > 0 ? "+" : ""}${formatBytes(gzipDiff).formatted}`,
+      );
+    }
 
     if (minifiedDiff < 0) {
       const savedPercent = ((-minifiedDiff / previous.minified.bytes) * 100).toFixed(2);
