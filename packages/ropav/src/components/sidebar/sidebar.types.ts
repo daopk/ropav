@@ -29,8 +29,10 @@ export interface SidebarRootProps {
    * content beside it the card instead. Both quiet the rail, whose line has nothing left to divide,
    * and both take their gap and corner from `--sidebar-card-gap` and `--sidebar-card-radius`.
    *
-   * A panel that should merely stop painting says so with one utility — `class="bg-transparent"` —
-   * since nothing else paints that fill and there is no state set for it to flatten.
+   * A panel that should merely stop painting says so in one declaration —
+   * `.rp-sidebar__panel { background-color: transparent }` — since nothing else paints that fill
+   * and there is no state set for it to flatten. Author CSS is unlayered, so it outranks the rule
+   * it replaces without having to say where it sits.
    * @default "sidebar"
    */
   variant?: SidebarVariant;

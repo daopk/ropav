@@ -279,12 +279,18 @@ So a caller sets the property instead, and the states that read the others are l
 
 ```html
 <!-- No line at rest; it still flares on hover and while dragging. -->
-<Sidebar class="[--sidebar-rail-line:transparent]">
+<Sidebar style="--sidebar-rail-line: transparent">
 ```
 
+A custom property set inline lands on the element the component rules read it from and beats every
+one of them, without naming a layer or a selector — and without a build. For every instance rather
+than one, write the property in a rule of your own; author CSS is unlayered, so it outranks the
+`components` layer wherever you put it.
+
 The qualifier is what keeps this from becoming surface for its own sake. Where exactly one state
-paints a property, a caller can name that state from the call site — `hover:bg-*`, `focus-visible:outline-*` —
-and there is no other state for it to flatten, so no property is minted. It is the second state
+paints a property, a caller can name that state themselves — a rule on `:hover` or
+`:focus-visible`, or the matching utility if they run one — and there is no other state for it to
+flatten, so no property is minted. It is the second state
 painting the same thing that makes the call site unable to tell them apart.
 
 Defaults chain, so retuning one carries the states below it unless they are set too —
@@ -295,7 +301,7 @@ follows `--button-bg-hover`. Read `components/button.css` for the shape and
 Two limits. The properties are per component and resolve to the tokens above, so a palette change
 belongs in a theme rather than here. And Forced Colors Mode is not covered: those blocks paint the
 system keywords, which are the only colors exempt from the override and not a component's to
-retune — `[--sidebar-rail-line:transparent]` leaves the line drawn under High Contrast, on purpose.
+retune — setting `--sidebar-rail-line` leaves the line drawn under High Contrast, on purpose.
 
 `state-colors.test.ts` in the `ropav` package reads every component file and fails on a state color
 that does not go through a property. Its ledger of exceptions is currently empty, so an entry

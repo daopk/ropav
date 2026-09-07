@@ -47,16 +47,20 @@ to target is on the element, not locked inside a render function.
 Every component takes one, appended to the classes its recipe already carries.
 
 ```vue
+<!-- `w-full` here is a class your own build defines. Ropav ships no such utility. -->
 <Button class="w-full" variant="secondary">Save</Button>
 ```
 
-A utility passed this way wins on cascade order alone — component rules live in the `components`
-layer, utilities in the later `utilities` one — so nothing has to be stripped for it to take
-effect. That is the first thing to reach for.
+A class passed this way wins on cascade order alone — component rules live in the `components`
+layer, and yours is either unlayered or in a layer of your own, both of which land later — so
+nothing has to be stripped for it to take effect.
 
-It has two blind spots:
+It has three blind spots:
 
 - **It cannot reach a part drawn in `::before` or `::after`.**
 - **It flattens every state of whatever property it sets.**
+- **It only means something if something defines the class.** A utility build gives you one
+  vocabulary; a stylesheet of your own gives you another. Neither arrives with this package.
 
-[State colors](/theming/state-colors) is the way round both.
+[State colors](/theming/state-colors) is the way round all three: a custom property set with
+`style` needs no vocabulary at all.

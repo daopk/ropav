@@ -96,11 +96,14 @@ Component rules live in the `components` layer and utilities in the later `utili
 utility passed this way wins on layer order alone — nothing has to be stripped for it to land.
 
 A colour that more than one state paints goes through a custom property instead, so a single
-state can be retuned without flattening the rest.
+state can be retuned without flattening the rest. Those are set with `style`, which needs no build
+of any kind.
 
 ```vue
+<!-- `w-full` is a class of yours; the layer order is what makes it land -->
 <Button class="w-full" variant="secondary">Save</Button>
-<Button class="[--button-bg-hover:var(--success)]">Publish</Button>
+
+<Button style="--button-bg-hover: var(--success)">Publish</Button>
 ```
 
 ## Accessibility

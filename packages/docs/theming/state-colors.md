@@ -26,17 +26,37 @@ So you set the property instead, and the states that read the others are left st
 
 ```vue
 <!-- No line at rest; it still flares on hover and while dragging. -->
-<Sidebar class="[--sidebar-rail-line:transparent]" />
+<Sidebar style="--sidebar-rail-line: transparent" />
+```
+
+## Where to set one
+
+`style` — the attribute, not a binding. A custom property set inline lands on the element the
+component rules read it from, and it beats every one of them without naming a layer or a
+selector. It needs no build, so the same line works in a Vue template, in plain HTML, and in
+whatever your toolchain is.
+
+```vue
+<!-- a value that changes -->
+<Button :style="{ '--button-bg-hover': tint }">Publish</Button>
+```
+
+```css
+/* every button on the page, rather than this one. Author CSS is unlayered, so it outranks
+   the `components` layer wherever you put it. */
+.rp-button {
+  --button-bg-hover: var(--success);
+}
 ```
 
 ## Why the qualifier matters
 
 The "more than one state" clause is what keeps this from becoming surface for its own sake.
 
-Where exactly one state paints a property, you can name that state from the call site —
-`hover:bg-*`, `focus-visible:outline-*` — and there is no other state for it to flatten, so no
-property is minted. It is the *second* state painting the same thing that makes the call site
-unable to tell them apart.
+Where exactly one state paints a property, you can name that state yourself — a rule of your own
+on `:hover` or `:focus-visible`, or the matching utility if you run one — and there is no other
+state for it to flatten, so no property is minted. It is the *second* state painting the same
+thing that makes the call site unable to tell them apart.
 
 ## Defaults chain
 
@@ -46,7 +66,7 @@ follows `--button-bg-hover`. So a single override reaches the whole ladder, and 
 only where you want a different answer.
 
 ```vue
-<Button class="[--button-bg-hover:var(--success)]">Publish</Button>
+<Button style="--button-bg-hover: var(--success)">Publish</Button>
 ```
 
 ## Two limits
@@ -56,7 +76,7 @@ change belongs in a [theme](/theming/custom-theme) rather than here.
 
 **Forced Colors Mode is not covered.** Those blocks paint the system keywords, which are the only
 colours exempt from the override and not a component's to retune.
-`[--sidebar-rail-line:transparent]` leaves the line drawn under High Contrast, on purpose — see
+Setting `--sidebar-rail-line` leaves the line drawn under High Contrast, on purpose — see
 [Forced colors](/theming/forced-colors).
 
 ## It is enforced
