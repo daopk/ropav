@@ -126,14 +126,14 @@ multiples of it, so a `data-theme` that sets its own `--radius` moves all of the
 [Theming](/theming/) lists the names.
 
 ::: tip Upgrading from 0.9
-Until 0.10.0 these tokens were also reachable as Tailwind utilities — `bg-accent`, `text-muted`,
+These tokens were also reachable as Tailwind utilities — `bg-accent`, `text-muted`,
 `rounded-component` — through an entry named `ropav/styles/tailwind`. That entry has gone. The
 bracketed form above is what replaces it, and it needs nothing from this package to work.
 
 That entry also redefined Tailwind's `dark:` to follow `.dark` and `[data-theme="dark"]`. It no
 longer does, and Tailwind's own `dark:` follows the operating system instead — so an app with a
-theme toggle that writes `dark:` utilities has one thing to put back. The 0.10.0 release note
-carries the variant to copy.
+theme toggle that writes `dark:` utilities has one thing to put back. The release note carries
+the variant to copy.
 :::
 
 ## Importing only what you need

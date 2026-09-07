@@ -13,11 +13,11 @@ import { describe, expect, it } from "vitest";
  * begins with `tailwindcss` is on this list too, not only the at-rules: it is the shape the real
  * breakage took.
  *
- * This was a ledger that shrank through the migration, a file at a time, and 0.10.0 emptied it by
- * deleting the interop entry and the two files behind it. An empty expectation is not a spent
- * test — it is the strongest this one has ever been, and the only state in which the sentence at
- * the top is simply true. Anything reintroducing an at-rule only a Tailwind build understands
- * fails here rather than in an app that has no such build.
+ * This was a ledger that shrank through the migration, a file at a time, and emptied when the
+ * interop entry and the two files behind it went. An empty expectation is not a spent test — it
+ * is the strongest this one has ever been, and the only state in which the sentence at the top is
+ * simply true. Anything reintroducing an at-rule only a Tailwind build understands fails here
+ * rather than in an app that has no such build.
  */
 
 const STYLES = path.resolve(import.meta.dirname, "../../../styles");
