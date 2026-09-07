@@ -23,6 +23,10 @@
         "style": "./dist/animations.css",
         "default": "./dist/animations.css"
       },
+      "./compat-0.10.css": {
+        "style": "./dist/compat-0.10.css",
+        "default": "./dist/compat-0.10.css"
+      },
       "./motion.css": {
         "style": "./dist/motion.css",
         "default": "./dist/motion.css"

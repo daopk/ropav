@@ -27,7 +27,7 @@ async function buildStyles() {
   console.log("🎨 Creating styles export...");
 
   // The entry imports the override block, so it ships alongside it.
-  for (const file of ["styles.css", "styles-overrides.css"]) {
+  for (const file of ["styles.css", "styles-overrides.css", "styles-compat-0.10.css"]) {
     await cp(path.join(rootDir, "src", file), path.join(distDir, file));
   }
 

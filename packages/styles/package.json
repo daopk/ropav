@@ -44,6 +44,10 @@
       "style": "./animations.css",
       "default": "./animations.css"
     },
+    "./compat-0.10.css": {
+      "style": "./compat-0.10.css",
+      "default": "./compat-0.10.css"
+    },
     "./motion.css": {
       "style": "./motion.css",
       "default": "./motion.css"

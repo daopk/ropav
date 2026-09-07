@@ -80,6 +80,38 @@ for (const file of themeSheets) {
 
 const tailwind = names(readFileSync(import.meta.resolve("tailwindcss/theme.css").slice(7), "utf8"));
 
+/**
+ * The shim is generated from a list of Tailwind's names pinned inside `@ropav/styles`, because
+ * `tailwindcss` does not resolve from that package. Nothing there can check the pin, so it is
+ * checked here — against what the shim emitted rather than against the constant, since that file
+ * is the one that ships and the generator runs its `main()` on import.
+ */
+const compat = names(readFileSync(path.join(REPO, "packages/styles/compat-0.10.css"), "utf8"));
+
+describe("the palette's compatibility shim", () => {
+  it("re-declares no name Tailwind declares", () => {
+    // Vacuous if the shim turned out to be empty or unparsed.
+    expect({
+      aliased: compat.size > 50,
+      shared: [...compat].filter((name) => tailwind.has(name)).sort(),
+    }).toEqual({ aliased: true, shared: [] });
+  });
+
+  /*
+   * The other direction. A token whose bare name is free and which the shim skips is a name an
+   * app reading it gets nothing for — the quiet half of a migration path, an undeclared custom
+   * property taking its whole declaration down without a word.
+   */
+  it("aliases every token whose bare name is free", () => {
+    const expected = [...declared]
+      .map((name) => name.replace("--rp-", "--"))
+      .filter((name) => !tailwind.has(name))
+      .sort();
+
+    expect([...compat].sort()).toEqual(expected);
+  });
+});
+
 describe("the names the themes declare", () => {
   it("are none of Tailwind's", () => {
     // Vacuous if the resolved stylesheet turned out to be empty or unparsed.

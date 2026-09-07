@@ -1,0 +1,3 @@
+/* The palette under its pre-prefix names, for an app mid-migration. Opt in *beside*
+ * `ropav/styles`; it carries no component rules. Going at 1.0 — see the file it imports. */
+@import "@ropav/styles/compat-0.10.css";

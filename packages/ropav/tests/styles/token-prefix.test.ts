@@ -64,9 +64,29 @@ const stems = [...declared]
 const escape = (stem: string) => stem.replaceAll(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const BARE = new RegExp(`(?<![\\w-])--(?:${stems.map(escape).join("|")})(?![\\w-])`, "g");
 
+/**
+ * The files whose subject is the old spelling, and so cannot avoid writing it.
+ *
+ * `compat-0.10.css` aliases the palette back to its pre-prefix names so an app can migrate
+ * without a flag day; every name in it is residue by definition, and it goes at 1.0. The two
+ * checks are the other kind: one explains the boundary this regex needs by showing the shapes it
+ * has to tell apart, and the other pins shadcn's vocabulary as data in order to refuse it.
+ *
+ * Named rather than pattern-matched, and short on purpose — an exemption is a hole, and these
+ * three files hold no CSS and no component read, so the hole has nothing in it that could break.
+ */
+const ABOUT_THE_OLD_NAMES = new Set([
+  "packages/ropav/tests/styles/token-prefix.test.ts",
+  "packages/ropav/tests/styles/token-vocabulary.test.ts",
+  "packages/styles/compat-0.10.css",
+  "packages/styles/scripts/themes/tailwind-names.ts",
+]);
+
 const residue: string[] = [];
 
 for (const file of tracked()) {
+  if (ABOUT_THE_OLD_NAMES.has(file)) continue;
+
   let text: string;
 
   try {

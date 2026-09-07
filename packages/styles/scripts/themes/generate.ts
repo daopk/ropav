@@ -12,9 +12,11 @@
 import type { ThemeId, ThemePreset } from "./presets";
 
 import { execFileSync } from "node:child_process";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+
+import postcss from "postcss";
 
 import {
   calculateAccentForeground,
@@ -24,6 +26,7 @@ import {
   parseOklch,
 } from "./color";
 import { adaptiveAccents, fieldShadowCss, presets, radiusCssMap, themeIds } from "./presets";
+import { TAILWIND_NAMES } from "./tailwind-names";
 
 const stylesDir = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 
@@ -36,6 +39,64 @@ const stylesDir = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
  * presets carry the label, the presentation order and the radii only.
  */
 const HANDWRITTEN = new Set<ThemeId>(["default", "hero"]);
+
+/** Every custom property a rule under `themes/` declares, generated ones included. */
+function declaredTokens(themesDir: string): string[] {
+  const names = new Set<string>();
+
+  for (const entry of readdirSync(themesDir, { recursive: true, withFileTypes: true })) {
+    if (!entry.isFile() || !entry.name.endsWith(".css")) continue;
+
+    postcss.parse(readFileSync(join(entry.parentPath, entry.name), "utf8")).walkDecls((decl) => {
+      if (decl.prop.startsWith("--rp-")) names.add(decl.prop);
+    });
+  }
+
+  return [...names].sort();
+}
+
+/**
+ * The palette answering to the names it had before the prefix, for an app mid-migration.
+ *
+ * Outside `index.css` on purpose — in it, every consumer would get the bare names back and the
+ * collision with them. It is one `@import` a consumer adds and then deletes, and it goes at 1.0.
+ *
+ * Only the names Tailwind does not claim. That is what makes it safe to declare bare, and it is
+ * why the shim cannot simply be the whole token set: the excluded half is exactly the half whose
+ * bare spelling is contested.
+ *
+ * The aliases resolve here on `:root`, so a `data-theme` subtree that sets its own `--rp-accent`
+ * does not move the alias reading it — that keeps the root theme's value. An app themed by
+ * subtree has to read the prefixed names rather than lean on this.
+ */
+function renderCompat(tokens: string[]): string {
+  const aliased = tokens.filter((name) => !TAILWIND_NAMES.has(name.replace("--rp-", "--")));
+
+  return `/**
+ * The palette under the names it carried before the prefix — GENERATED, do not edit by hand.
+ *
+ * Run \`pnpm generate:themes\` after changing a theme.
+ *
+ * Opt in beside the entry, and delete the line once the app reads the prefixed names:
+ *
+ *   @import "@ropav/styles";
+ *   @import "@ropav/styles/compat-0.10.css";
+ *
+ * Carries only the names no other design system claims. The type scale, the weights, the
+ * container widths, the spacing step and the corner radius are absent: Tailwind declares all of
+ * those itself, and re-declaring one bare here would restore the collision the prefix removed.
+ *
+ * Every alias resolves on \`:root\`, so a \`data-theme\` subtree setting its own value moves the
+ * prefixed name and not the alias.
+ */
+
+@layer theme {
+  :root {
+${aliased.map((name) => `    ${name.replace("--rp-", "--")}: var(${name});`).join("\n")}
+  }
+}
+`;
+}
 
 /**
  * The scrollbar thumb tracks `--rp-foreground`, so it has to be re-derived per theme rather
@@ -298,7 +359,11 @@ ${[...themeIds]
   // Hand the output to the repo formatter rather than trying to match its line wrapping
   // here. Without this `pnpm format` rewrites what was just generated, and the generator
   // would dirty the tree on every run.
-  execFileSync("oxfmt", [...written, allFile, themesFile], { stdio: "inherit" });
+  const compatFile = join(stylesDir, "compat-0.10.css");
+
+  writeFileSync(compatFile, renderCompat(declaredTokens(themesDir)));
+
+  execFileSync("oxfmt", [...written, allFile, themesFile, compatFile], { stdio: "inherit" });
 
   // eslint-disable-next-line no-console
   console.log(`Generated ${generated.length} themes: ${generated.join(", ")}`);

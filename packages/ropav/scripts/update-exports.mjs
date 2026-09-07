@@ -51,6 +51,11 @@ export function buildExports(components) {
     },
     // The compiled stylesheet, for a consumer with no build step to resolve the entry above.
     "./styles/bundled.css": "./dist/ropav.min.css",
+    // The pre-prefix palette, opt-in and going at 1.0.
+    "./styles/compat-0.10.css": {
+      style: "./dist/styles-compat-0.10.css",
+      default: "./dist/styles-compat-0.10.css",
+    },
   };
 
   /* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */

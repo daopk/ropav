@@ -1,0 +1,121 @@
+/**
+ * The palette under the names it carried before the prefix — GENERATED, do not edit by hand.
+ *
+ * Run `pnpm generate:themes` after changing a theme.
+ *
+ * Opt in beside the entry, and delete the line once the app reads the prefixed names:
+ *
+ *   @import "@ropav/styles";
+ *   @import "@ropav/styles/compat-0.10.css";
+ *
+ * Carries only the names no other design system claims. The type scale, the weights, the
+ * container widths, the spacing step and the corner radius are absent: Tailwind declares all of
+ * those itself, and re-declaring one bare here would restore the collision the prefix removed.
+ *
+ * Every alias resolves on `:root`, so a `data-theme` subtree setting its own value moves the
+ * prefixed name and not the alias.
+ */
+
+@layer theme {
+  :root {
+    --accent: var(--rp-accent);
+    --accent-foreground: var(--rp-accent-foreground);
+    --accent-hover: var(--rp-accent-hover);
+    --accent-soft: var(--rp-accent-soft);
+    --accent-soft-foreground: var(--rp-accent-soft-foreground);
+    --accent-soft-hover: var(--rp-accent-soft-hover);
+    --backdrop: var(--rp-backdrop);
+    --background: var(--rp-background);
+    --background-inverse: var(--rp-background-inverse);
+    --background-secondary: var(--rp-background-secondary);
+    --background-tertiary: var(--rp-background-tertiary);
+    --black: var(--rp-black);
+    --border: var(--rp-border);
+    --border-secondary: var(--rp-border-secondary);
+    --border-tertiary: var(--rp-border-tertiary);
+    --border-width: var(--rp-border-width);
+    --border-width-field: var(--rp-border-width-field);
+    --component-radius: var(--rp-component-radius);
+    --cursor-disabled: var(--rp-cursor-disabled);
+    --cursor-interactive: var(--rp-cursor-interactive);
+    --danger: var(--rp-danger);
+    --danger-foreground: var(--rp-danger-foreground);
+    --danger-hover: var(--rp-danger-hover);
+    --danger-soft: var(--rp-danger-soft);
+    --danger-soft-foreground: var(--rp-danger-soft-foreground);
+    --danger-soft-hover: var(--rp-danger-soft-hover);
+    --default: var(--rp-default);
+    --default-foreground: var(--rp-default-foreground);
+    --default-hover: var(--rp-default-hover);
+    --default-soft: var(--rp-default-soft);
+    --default-soft-foreground: var(--rp-default-soft-foreground);
+    --default-soft-hover: var(--rp-default-soft-hover);
+    --disabled-opacity: var(--rp-disabled-opacity);
+    --ease-linear: var(--rp-ease-linear);
+    --ease-out-fluid: var(--rp-ease-out-fluid);
+    --ease-out-quad: var(--rp-ease-out-quad);
+    --ease-out-quart: var(--rp-ease-out-quart);
+    --ease-smooth: var(--rp-ease-smooth);
+    --eclipse: var(--rp-eclipse);
+    --field-background: var(--rp-field-background);
+    --field-border: var(--rp-field-border);
+    --field-border-focus: var(--rp-field-border-focus);
+    --field-border-hover: var(--rp-field-border-hover);
+    --field-border-invalid: var(--rp-field-border-invalid);
+    --field-border-width: var(--rp-field-border-width);
+    --field-focus: var(--rp-field-focus);
+    --field-foreground: var(--rp-field-foreground);
+    --field-hover: var(--rp-field-hover);
+    --field-placeholder: var(--rp-field-placeholder);
+    --field-radius: var(--rp-field-radius);
+    --field-shadow: var(--rp-field-shadow);
+    --focus: var(--rp-focus);
+    --focus-ring-offset: var(--rp-focus-ring-offset);
+    --foreground: var(--rp-foreground);
+    --link: var(--rp-link);
+    --muted: var(--rp-muted);
+    --overlay: var(--rp-overlay);
+    --overlay-edge: var(--rp-overlay-edge);
+    --overlay-edge-line: var(--rp-overlay-edge-line);
+    --overlay-foreground: var(--rp-overlay-foreground);
+    --overlay-shadow: var(--rp-overlay-shadow);
+    --scrollbar: var(--rp-scrollbar);
+    --scrollbar-color: var(--rp-scrollbar-color);
+    --scrollbar-gutter: var(--rp-scrollbar-gutter);
+    --scrollbar-thumb: var(--rp-scrollbar-thumb);
+    --scrollbar-track: var(--rp-scrollbar-track);
+    --scrollbar-width: var(--rp-scrollbar-width);
+    --segment: var(--rp-segment);
+    --segment-foreground: var(--rp-segment-foreground);
+    --separator: var(--rp-separator);
+    --separator-secondary: var(--rp-separator-secondary);
+    --separator-tertiary: var(--rp-separator-tertiary);
+    --shadow-overlay: var(--rp-shadow-overlay);
+    --skeleton-animation: var(--rp-skeleton-animation);
+    --snow: var(--rp-snow);
+    --state-layer: var(--rp-state-layer);
+    --success: var(--rp-success);
+    --success-foreground: var(--rp-success-foreground);
+    --success-hover: var(--rp-success-hover);
+    --success-soft: var(--rp-success-soft);
+    --success-soft-foreground: var(--rp-success-soft-foreground);
+    --success-soft-hover: var(--rp-success-soft-hover);
+    --surface: var(--rp-surface);
+    --surface-foreground: var(--rp-surface-foreground);
+    --surface-hover: var(--rp-surface-hover);
+    --surface-secondary: var(--rp-surface-secondary);
+    --surface-secondary-foreground: var(--rp-surface-secondary-foreground);
+    --surface-shadow: var(--rp-surface-shadow);
+    --surface-tertiary: var(--rp-surface-tertiary);
+    --surface-tertiary-foreground: var(--rp-surface-tertiary-foreground);
+    --tooltip-close-delay: var(--rp-tooltip-close-delay);
+    --tooltip-delay: var(--rp-tooltip-delay);
+    --warning: var(--rp-warning);
+    --warning-foreground: var(--rp-warning-foreground);
+    --warning-hover: var(--rp-warning-hover);
+    --warning-soft: var(--rp-warning-soft);
+    --warning-soft-foreground: var(--rp-warning-soft-foreground);
+    --warning-soft-hover: var(--rp-warning-soft-hover);
+    --white: var(--rp-white);
+  }
+}
