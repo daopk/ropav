@@ -125,3 +125,68 @@ describe("the tokens the stylesheets read", () => {
     expect(SET_AT_RUNTIME.filter((name) => !readSomewhere.has(name))).toEqual([]);
   });
 });
+
+/**
+ * A token that reads itself takes its own declaration down.
+ *
+ * `--x: var(--x)` is a cycle, and a cycle is not a fallback: the declaration is invalid at
+ * computed-value time and the property computes to its initial, so a registered slot lands on its
+ * `initial-value` and an unregistered one lands on nothing. It does not reach the inherited value
+ * the author was reaching for — a parent declaring `--x` is not what `var(--x)` finds inside the
+ * declaration of `--x`.
+ *
+ * Nothing else here would see one. The name is declared, so the check above passes; it is
+ * registered with an initial value, so `slot-registration.test.ts` passes; the value is still a
+ * length or a colour, so the palette checks pass. What moves is a resolved `box-shadow` on one
+ * state of one component, which only a computed-style snapshot compares — and that snapshot runs
+ * against a baseline that is not committed.
+ *
+ * Two shapes are flagged, and only these two, because only these two are cycles wherever they
+ * land: a declaration reading its own property, and a chain that closes inside one rule, where
+ * every declaration is resolving against the same element. A read that crosses rules is usually
+ * reading an ancestor's value, which is how the whole theme reaches a component.
+ */
+const READS = /var\(\s*(--[\w-]+)/g;
+
+const cycles: string[] = [];
+let followed = 0;
+
+for (const { file, root } of stylesheets) {
+  root.walkRules((rule) => {
+    const reads = new Map<string, string[]>();
+    const lines = new Map<string, number | undefined>();
+
+    for (const node of rule.nodes ?? []) {
+      if (node.type !== "decl" || !node.prop.startsWith("--")) continue;
+      followed++;
+      reads.set(
+        node.prop,
+        [...node.value.matchAll(READS)].map((match) => match[1]!),
+      );
+      lines.set(node.prop, node.source?.start?.line);
+    }
+
+    for (const [prop, names] of reads) {
+      const seen = new Set<string>();
+
+      const closes = (name: string): boolean => {
+        if (name === prop) return true;
+        if (seen.has(name)) return false;
+        seen.add(name);
+
+        return (reads.get(name) ?? []).some(closes);
+      };
+
+      if (names.some(closes)) {
+        cycles.push(`${file}:${lines.get(prop)} ${prop} resolves through itself`);
+      }
+    }
+  });
+}
+
+describe("a token that resolves through itself", () => {
+  it("is declared nowhere", () => {
+    // Vacuous unless the walk found declarations to follow.
+    expect({ cycles, followed: followed > 0 }).toEqual({ cycles: [], followed: true });
+  });
+});
