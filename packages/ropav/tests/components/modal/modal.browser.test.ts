@@ -113,6 +113,36 @@ describe("Modal (browser)", () => {
       result.unmount();
     });
 
+    /*
+     * A container that already fills the viewport has nowhere to rise from, and the stylesheet has
+     * always said so — under a selector every placement outweighed, so it never once applied. The
+     * placement is what decides this, and `auto` is the one a container has when nobody chose, so
+     * a case that set a placement would be testing the half that already worked.
+     */
+    it("enters a full-size container without the rise the placements give the rest", async () => {
+      const result = render({ size: "full" });
+
+      startSlowMotion();
+
+      await userEvent.click(triggerOf(result));
+      await nextTick();
+      await nextTick();
+      await nextTick();
+
+      const container = slot("modal-container")!;
+
+      expect(container.getAttribute("data-entering")).toBe("true");
+      expect(getComputedStyle(container).getPropertyValue("--rp-enter-translate-y").trim()).toBe(
+        "calc(0*100%)",
+      );
+
+      finishAnimations(slot("modal-backdrop")!);
+      finishAnimations(container);
+
+      await close(slot("modal-backdrop")!);
+      result.unmount();
+    });
+
     it("marks both elements exiting and keeps both in the document", async () => {
       const result = render();
       const backdrop = await open(result);

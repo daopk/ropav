@@ -221,9 +221,13 @@
 
   /* Entering animation */
   &[data-entering="true"] {
-    --rp-enter-translate-y: calc(0*100%);
     --rp-enter-scale: 1;
-    @media (width >= 40rem) {
+
+    /* Qualified by the placement it is overriding rather than left to weigh less than it. A
+     * container that already fills the viewport has nowhere to rise from, which is what this
+     * declaration has always said and never once done: every placement is a longer selector than
+     * this one, and `auto` is the placement a container has when nobody chose. */
+    &[data-placement] {
       --rp-enter-translate-y: calc(0*100%);
     }
   }
