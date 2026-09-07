@@ -115,6 +115,8 @@ const onChange = (event: Event) => {
 
   state.setValue(control.value === "" ? null : control.value);
 };
+
+/* A blank option so a single select can hold nothing, exactly as upstream renders it. */
 </script>
 
 <template>
@@ -136,7 +138,6 @@ const onChange = (event: Event) => {
         tabindex="-1"
         @change="onChange"
       >
-        <!-- A blank option so a single select can hold nothing, exactly as upstream renders it. -->
         <option label="&#160;" value="">&#160;</option>
         <option v-for="key in keys" :key="key" :value="String(key)">
           {{ state.collection.getItem(key)?.textValue() ?? "" }}

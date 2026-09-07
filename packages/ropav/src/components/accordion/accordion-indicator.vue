@@ -13,14 +13,15 @@ defineSlots<{ default?: () => unknown }>();
 
 const { slots } = useAccordionContext();
 const { isExpanded } = useAccordionItemContext();
+
+/*
+ * The class and `data-expanded` sit on this wrapper rather than on the icon itself.
+ * Reading a slot in Vapor renders it, so the icon cannot be inspected and cloned the
+ * way the React implementation does; a custom icon arrives as slot content instead.
+ */
 </script>
 
 <template>
-  <!--
-    The class and `data-expanded` sit on this wrapper rather than on the icon itself.
-    Reading a slot in Vapor renders it, so the icon cannot be inspected and cloned the
-    way the React implementation does; a custom icon arrives as slot content instead.
-  -->
   <span
     :class="composeSlotClassName(slots.indicator, props.class)"
     :data-expanded="dataAttr(isExpanded)"

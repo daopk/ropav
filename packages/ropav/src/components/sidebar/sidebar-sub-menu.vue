@@ -35,12 +35,15 @@ const { setPanelElement } = useDisclosurePanel({ isExpanded: collapsible.isExpan
 const className = computed(() =>
   composeSlotClassName(slots.value.subMenu, props.class, { isCollapsible: true }),
 );
+
+/*
+ * Gone entirely on the rail rather than merely shut. A child row carries no icon, so at 56px it
+ *    would be a nameless blank; and the trigger stops claiming to control anything there, which is
+ *    the other half of the same decision.
+ */
 </script>
 
 <template>
-  <!-- Gone entirely on the rail rather than merely shut. A child row carries no icon, so at 56px it
-    would be a nameless blank; and the trigger stops claiming to control anything there, which is
-    the other half of the same decision. -->
   <div
     v-if="!state.isCollapsed.value"
     :id="collapsible.subMenuId.value"

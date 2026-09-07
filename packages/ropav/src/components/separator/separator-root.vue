@@ -32,15 +32,16 @@ const isVertical = computed(() => resolvedOrientation.value === "vertical");
 const isDiv = computed(() => isVertical.value || context?.elementType === "div");
 
 const role = computed(() => context?.role ?? "separator");
+
+/*
+ * Both branches spell out `role="separator"` even though an `hr` implies it: React Aria
+ * emits it on the `hr` too, and matching it keeps the rendered markup identical across the
+ * two builds. `aria-orientation` is the opposite — horizontal is the ARIA default, so only
+ * the vertical branch declares it.
+ */
 </script>
 
 <template>
-  <!--
-    Both branches spell out `role="separator"` even though an `hr` implies it: React Aria
-    emits it on the `hr` too, and matching it keeps the rendered markup identical across the
-    two builds. `aria-orientation` is the opposite — horizontal is the ARIA default, so only
-    the vertical branch declares it.
-  -->
   <div
     v-if="isDiv"
     :aria-orientation="isVertical && role === 'separator' ? 'vertical' : undefined"

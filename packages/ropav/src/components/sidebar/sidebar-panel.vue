@@ -37,13 +37,21 @@ const ariaLabel = computed(() => (props.ariaLabelledby ? undefined : label.value
 const panelClass = computed(() =>
   composeSlotClassName(slots.value.panel, props.class, { inDrawer: state.isMobile.value }),
 );
+
+/*
+ * On a narrow viewport the panel is handed to the drawer wholesale: the backdrop, the focus
+ *    scope, the dismiss boundary and the swipe-to-close all come from there rather than being built
+ *    a second time here. The dialog gives up its own padding, because the sidebar's parts already
+ *    carry the nav's gutter and two insets read as a margin nobody asked for.
+ */
+
+/*
+ * The drawer names itself from its heading and falls back to the button that opened
+ *            it; the sidebar's trigger is not that button, so the name is given here instead.
+ */
 </script>
 
 <template>
-  <!-- On a narrow viewport the panel is handed to the drawer wholesale: the backdrop, the focus
-    scope, the dismiss boundary and the swipe-to-close all come from there rather than being built
-    a second time here. The dialog gives up its own padding, because the sidebar's parts already
-    carry the nav's gutter and two insets read as a margin nobody asked for. -->
   <DrawerRoot
     v-if="state.isMobile.value"
     :is-open="state.isMobileOpen.value"
@@ -52,8 +60,6 @@ const panelClass = computed(() =>
     <DrawerBackdrop>
       <DrawerContent :placement="side">
         <DrawerDialog class="rp-drawer__dialog--flush">
-          <!-- The drawer names itself from its heading and falls back to the button that opened
-            it; the sidebar's trigger is not that button, so the name is given here instead. -->
           <DrawerHeading class="rp-drawer__heading--hidden">{{ label }}</DrawerHeading>
           <nav
             :id="panelId"

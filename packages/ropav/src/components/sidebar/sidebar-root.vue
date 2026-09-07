@@ -178,12 +178,15 @@ provideSidebarContext({
 });
 
 defineExpose({ close: state.close, open: state.open, toggle: state.toggle });
+
+/*
+ * No role: the shell holds a landmark and the whole page beside it, and wrapping that in a
+ *    `group` only puts a boundary in the reading order that means nothing. The rail is a focusable
+ *    `separator`, which needs no group of its own.
+ */
 </script>
 
 <template>
-  <!-- No role: the shell holds a landmark and the whole page beside it, and wrapping that in a
-    `group` only puts a boundary in the reading order that means nothing. The rail is a focusable
-    `separator`, which needs no group of its own. -->
   <div
     :class="slots.base({ class: props.class })"
     :data-collapsed="dataAttr(state.isCollapsed.value)"

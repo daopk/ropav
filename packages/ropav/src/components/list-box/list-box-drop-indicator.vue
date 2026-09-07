@@ -57,12 +57,15 @@ const attrs = computed(() => ({
   "data-slot": "list-box-drop-indicator",
   role: "option",
 }));
+
+/*
+ * Wrapped only when windowed: outside a virtualizer there is nothing to position against,
+ *         and the extra element would sit between the listbox and its own option.
+ */
 </script>
 
 <template>
   <template v-if="!isHidden">
-    <!-- Wrapped only when windowed: outside a virtualizer there is nothing to position against,
-         and the extra element would sit between the listbox and its own option. -->
     <VirtualizerItem v-if="layoutInfo" :layout-info="layoutInfo">
       <div ref="element" v-bind="attrs" @click="indicator?.handlers.onClick()" />
     </VirtualizerItem>

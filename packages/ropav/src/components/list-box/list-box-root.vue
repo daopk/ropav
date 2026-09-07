@@ -387,6 +387,14 @@ const hasEmptySlot = computed(() => Boolean(callerSlots["empty"]));
 const rootStyle = computed(() =>
   isVirtualized.value ? { scrollbarWidth: "none" as const } : undefined,
 );
+
+/*
+ * A disabled option rather than a `presentation` wrapper. `presentation` flattens out of the
+ *      tree, so the listbox would end up owning the caller's empty content, which carries no role —
+ *      the same reason the virtualizer's wrapper below is fine and this one was not: that one holds
+ *      real options, this holds prose. Never registers with the collection, so the keyboard never
+ *      reaches it.
+ */
 </script>
 
 <template>
@@ -418,11 +426,6 @@ const rootStyle = computed(() =>
     @keydown.capture="typeahead.onKeydownCapture"
     @mousedown="onMousedown"
   >
-    <!-- A disabled option rather than a `presentation` wrapper. `presentation` flattens out of the
-      tree, so the listbox would end up owning the caller's empty content, which carries no role —
-      the same reason the virtualizer's wrapper below is fine and this one was not: that one holds
-      real options, this holds prose. Never registers with the collection, so the keyboard never
-      reaches it. -->
     <div v-if="hasEmptySlot && isEmpty" aria-disabled="true" role="option">
       <slot name="empty" />
     </div>

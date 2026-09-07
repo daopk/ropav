@@ -9,11 +9,14 @@ import { useSidebarContext } from "./sidebar.context";
 const props = defineProps<SidebarSeparatorProps>();
 
 const { slots } = useSidebarContext();
+
+/*
+ * The library's own rule, spaced for the nav. It keeps the separator's own full width, which
+ *    is the box every item beside it already fills; `sidebar-content.vue` hands down the `div`
+ *    element type so it takes part in the column rather than breaking out of it.
+ */
 </script>
 
 <template>
-  <!-- The library's own rule, spaced for the nav. It keeps the separator's own full width, which
-    is the box every item beside it already fills; `sidebar-content.vue` hands down the `div`
-    element type so it takes part in the column rather than breaking out of it. -->
   <SeparatorRoot :class="composeSlotClassName(slots.separator, props.class)" />
 </template>

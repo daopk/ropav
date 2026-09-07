@@ -73,13 +73,14 @@ watch([sentinel, () => collection.size.value, () => props.scrollOffset], observe
 });
 
 onUnmounted(disconnect);
+
+/*
+ * The sentinel is always rendered, loading or not: one that is absent can never report that it
+ * came into view, so the next page would never be asked for.
+ */
 </script>
 
 <template>
-  <!--
-    The sentinel is always rendered, loading or not: one that is absent can never report that it
-    came into view, so the next page would never be asked for.
-  -->
   <div inert :style="SENTINEL_WRAPPER_STYLE">
     <div ref="sentinel" :style="SENTINEL_STYLE" />
   </div>

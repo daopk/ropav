@@ -11,11 +11,14 @@ const props = defineProps<SidebarItemTrailingProps>();
 defineSlots<{ default?: (props: SidebarPartSlotProps) => unknown }>();
 
 const { slots, state } = useSidebarContext();
+
+/*
+ * Hidden outright when the sidebar narrows, unlike the label: a count or a chevron beside the
+ *    icon has nowhere to go on the rail, and repeats nothing the name does not already carry.
+ */
 </script>
 
 <template>
-  <!-- Hidden outright when the sidebar narrows, unlike the label: a count or a chevron beside the
-    icon has nowhere to go on the rail, and repeats nothing the name does not already carry. -->
   <span
     :class="composeSlotClassName(slots.itemTrailing, props.class)"
     :data-collapsed="dataAttr(state.isCollapsed.value)"

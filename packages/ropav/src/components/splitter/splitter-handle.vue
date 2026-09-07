@@ -214,14 +214,17 @@ const onPointerdown = (event: PointerEvent) => {
   states.onPointerdown(event);
   moveHandlers.onPointerdown(event);
 };
+
+/*
+ * `aria-orientation` is the inverse of `data-orientation`, and deliberately so: it describes the
+ * separator's own line, and a horizontally-arranged group is divided by a vertical one.
+ * `data-orientation` carries the group's axis, because that is what the stylesheet keys on.
+ */
+
+/* Before the target, which is the hit area and has to stay on top of it. */
 </script>
 
 <template>
-  <!--
-    `aria-orientation` is the inverse of `data-orientation`, and deliberately so: it describes the
-    separator's own line, and a horizontally-arranged group is divided by a vertical one.
-    `data-orientation` carries the group's axis, because that is what the stylesheet keys on.
-  -->
   <div
     :id="generatedId"
     ref="element"
@@ -252,7 +255,6 @@ const onPointerdown = (event: PointerEvent) => {
     @pointerenter="states.onPointerenter"
     @pointerleave="states.onPointerleave"
   >
-    <!-- Before the target, which is the hit area and has to stay on top of it. -->
     <span
       v-if="props.showGrip"
       aria-hidden="true"

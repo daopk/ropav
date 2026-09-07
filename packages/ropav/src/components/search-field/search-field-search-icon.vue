@@ -14,10 +14,11 @@ defineSlots<{ default?: () => unknown }>();
 const { slots } = useSearchFieldContext();
 
 const styles = computed(() => slots.value.searchIcon({ class: props.class }));
+
+/* eslint-disable-next-line vue/require-toggle-inside-transition */
 </script>
 
 <template>
-  <!-- eslint-disable-next-line vue/require-toggle-inside-transition -->
   <slot>
     <IconSearch :class="styles" data-slot="search-field-search-icon" />
   </slot>

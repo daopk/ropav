@@ -214,11 +214,14 @@ const onDblclick = () => {
 const railClass = computed(() =>
   composeSlotClassName(slots.value.rail, props.class, { isResizable: isResizable.value }),
 );
+
+/*
+ * Gone entirely on a narrow viewport: the panel is a drawer there, with nothing beside it for
+ *    a rail to divide.
+ */
 </script>
 
 <template>
-  <!-- Gone entirely on a narrow viewport: the panel is a drawer there, with nothing beside it for
-    a rail to divide. -->
   <div
     v-if="!state.isMobile.value"
     :aria-controls="panelId"

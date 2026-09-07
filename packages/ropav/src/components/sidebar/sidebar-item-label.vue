@@ -11,11 +11,14 @@ const props = defineProps<SidebarItemLabelProps>();
 defineSlots<{ default?: (props: SidebarPartSlotProps) => unknown }>();
 
 const { slots, state } = useSidebarContext();
+
+/*
+ * Collapsed, this goes `sr-only` rather than away: it is the item's accessible name, and an
+ *    icon-only nav that has dropped every name is a list of unlabelled buttons.
+ */
 </script>
 
 <template>
-  <!-- Collapsed, this goes `sr-only` rather than away: it is the item's accessible name, and an
-    icon-only nav that has dropped every name is a list of unlabelled buttons. -->
   <span
     :class="composeSlotClassName(slots.itemLabel, props.class)"
     :data-collapsed="dataAttr(state.isCollapsed.value)"

@@ -17,14 +17,15 @@ const styles = computed(() => fieldErrorVariants({ class: props.class }));
 // across a `v-if` would leave the field pointing `aria-describedby` at nothing.
 const fieldIds = useFieldIdsContext();
 const id = fieldIds?.claimErrorMessageId();
+
+/*
+ * `data-visible` is unconditional, matching React. The stylesheet collapses `.field-error`
+ * to zero height and no opacity without it, and this element only exists while the field is
+ * invalid, so there is no state in which it should stay collapsed.
+ */
 </script>
 
 <template>
-  <!--
-    `data-visible` is unconditional, matching React. The stylesheet collapses `.field-error`
-    to zero height and no opacity without it, and this element only exists while the field is
-    invalid, so there is no state in which it should stay collapsed.
-  -->
   <span :id="id" :class="styles" data-slot="field-error" data-visible="true">
     <slot />
   </span>

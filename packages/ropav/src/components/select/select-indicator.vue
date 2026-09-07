@@ -32,14 +32,15 @@ const dataSlot = computed(() => (hasSlot.value ? "select-indicator" : "select-de
 // Resolved here rather than in the template: a template unwraps the ref, and one of the slots is
 // itself named `value`, so `slots.value` in a template reads that slot instead of the ref.
 const styles = computed(() => composeSlotClassName(slots.value.indicator, props.class));
+
+/*
+ * The class and `data-open` sit on this wrapper rather than on the icon itself. Reading a slot
+ * in vapor renders it, so the icon cannot be inspected and cloned the way the React build does;
+ * a custom icon arrives as slot content instead and sizes itself.
+ */
 </script>
 
 <template>
-  <!--
-    The class and `data-open` sit on this wrapper rather than on the icon itself. Reading a slot
-    in vapor renders it, so the icon cannot be inspected and cloned the way the React build does;
-    a custom icon arrives as slot content instead and sizes itself.
-  -->
   <span :class="styles" :data-open="dataAttr(state.isOpen.value)" :data-slot="dataSlot">
     <slot v-if="hasSlot" />
     <IconChevronDown v-else />

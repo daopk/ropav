@@ -27,11 +27,14 @@ const collapsible = useSidebarCollapsibleContext();
 const hasCustomIcon = iconSlots.default !== undefined;
 
 const className = computed(() => composeSlotClassName(slots.value.itemIndicator, props.class));
+
+/*
+ * `data-collapsed` is what takes it off the rail, where there is no submenu for it to point at
+ *    and a chevron promising one would be a promise nothing keeps.
+ */
 </script>
 
 <template>
-  <!-- `data-collapsed` is what takes it off the rail, where there is no submenu for it to point at
-    and a chevron promising one would be a promise nothing keeps. -->
   <span
     v-if="hasCustomIcon"
     aria-hidden="true"

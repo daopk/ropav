@@ -21,11 +21,14 @@ const group = useSidebarGroupContext();
 const unregister = group?.registerLabel();
 
 onScopeDispose(() => unregister?.(), true);
+
+/*
+ * `sr-only` rather than gone when the sidebar narrows: this is what tells a screen reader which
+ *    group an item belongs to, and a collapsed sidebar is still being read.
+ */
 </script>
 
 <template>
-  <!-- `sr-only` rather than gone when the sidebar narrows: this is what tells a screen reader which
-    group an item belongs to, and a collapsed sidebar is still being read. -->
   <div
     :id="group?.labelId.value"
     :class="composeSlotClassName(slots.groupLabel, props.class)"

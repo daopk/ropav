@@ -12,13 +12,14 @@ const props = defineProps<RadioIndicatorProps>();
 defineSlots<{ default?: (props: RadioSlotProps) => unknown }>();
 
 const { isDisabled, isInvalid, isReadOnly, isRequired, isSelected, slots } = useRadioContext();
+
+/*
+ * No default content: the stylesheet draws the dot with `.rp-radio__indicator:empty::before`,
+ * so an indicator nobody fills has to stay genuinely empty.
+ */
 </script>
 
 <template>
-  <!--
-    No default content: the stylesheet draws the dot with `.rp-radio__indicator:empty::before`,
-    so an indicator nobody fills has to stay genuinely empty.
-  -->
   <span
     aria-hidden="true"
     :class="composeSlotClassName(slots.indicator, props.class)"
