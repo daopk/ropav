@@ -273,9 +273,16 @@ describe("the documentation", () => {
 
   it("teaches no authoring API that needs Tailwind to exist", () => {
     const teaching = pages.flatMap((file) => {
-      const hits = copyable(readFileSync(file, "utf8")).flatMap((block) =>
-        [...live(block).matchAll(AT_RULE)].map(([, rule]) => `@${rule}`),
-      );
+      const hits = copyable(readFileSync(file, "utf8"))
+        /*
+         * A block that imports Tailwind on its first line is not teaching a reader without one
+         * that their stylesheet does something — it is telling them what it needs. `@theme
+         * inline` is the only way to map a token onto a utility name, and the install guide shows
+         * it beside the bracket spelling that needs no mapping. The condition is on the block
+         * rather than on the page, so a block that quietly assumed a build still fails.
+         */
+        .filter((block) => !/@import\s+["']tailwindcss["']/.test(block))
+        .flatMap((block) => [...live(block).matchAll(AT_RULE)].map(([, rule]) => `@${rule}`));
 
       return [...new Set(hits)].map((hit) => `${path.relative(DOCS, file)}: ${hit}`);
     });

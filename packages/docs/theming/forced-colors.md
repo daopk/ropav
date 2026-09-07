@@ -7,8 +7,8 @@ description: The authoring rules for High Contrast, including the trap no comput
 
 Forced Colors Mode — Windows High Contrast — replaces author colours with the user's own palette
 and **strips `box-shadow` outright**. That second part is what makes it more than a colour
-question here: every ring in this library *is* a `box-shadow`, because that is what `ring-*`
-compiles to, and it sits on top of `outline-none`. Left alone, a focused control would have no
+question here: every ring in this library *is* a `box-shadow`, composed in a slot so that a ring and a
+drop shadow can share the property, and it sits on top of `outline-none`. Left alone, a focused control would have no
 indicator at all.
 
 If you are only *using* the components, there is nothing to do — see the guarantee in

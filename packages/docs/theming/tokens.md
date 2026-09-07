@@ -13,12 +13,20 @@ with a `-foreground` and a derived `-hover` and `-soft`), form fields (`--rp-fie
 `--rp-field-border`, `--rp-field-radius`, …), layout knobs (`--rp-spacing`, `--rp-border-width`, `--rp-radius`,
 `--rp-focus-ring-offset`, `--rp-cursor-interactive`), the scrollbar set, and the shadows.
 
-**Derived values** — the `--radius-xs` … `--radius-4xl` scale and the easing curves — are computed
-from those.
+**Declared, not derived** — the type scale, the weights and the easing curves live in
+`themes/shared/tokens.css`, because none of them turns on the palette or the appearance.
+
+There is no `--rp-radius-*` scale to read. A step is a multiple written where it is used —
+`calc(var(--rp-radius) * 3)` — so a `data-theme` setting its own `--rp-radius` moves every corner
+at once, which a scale declared on `:root` could not do.
 
 **Component properties** are the third tier, declared on a component's own block and private to
 it: `--button-bg`, `--switch-control-bg-checked-hover`, `--sidebar-rail-line`. They are the ones
 you reach for to retune a single state — see [State colors](/theming/state-colors).
+
+`--rp-` is the package's namespace rather than a tier of its own. The composition slots in
+`slots.css` carry it too — `--rp-ring`, `--rp-shadow`, the transform parts — and those are read by
+a declaration building one property out of several contributions, not declared by a theme.
 
 ::: tip The stylesheet is the list
 `themes/default.css` is the source of truth. A list of token names in prose goes stale the moment

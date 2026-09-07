@@ -121,7 +121,7 @@ packages/styles/
 │       └── tokens.css     # Every token a rule spells directly — type scale, weights, curves
 ├── utilities/index.css    # The classes offered by name rather than through a component
 ├── scripts/themes/        # Build-time theme generator — not published
-└── src/                   # TypeScript: tv() variants + shared utility class strings
+└── src/                   # TypeScript: tv() variants and the bundled theme list
 ```
 
 ## Class naming
@@ -356,8 +356,8 @@ variants read the media query directly and know nothing about the attribute.
 
 Forced Colors Mode - Windows High Contrast - replaces author colours with the user's own palette and
 strips `box-shadow` outright. That second part is what makes it more than a colour question here:
-every ring in this library *is* a `box-shadow`, because that is what `ring-*` compiles to, and it sits
-on top of `outline-none`. Left alone, a focused control would have no indicator at all.
+every ring in this library *is* a `box-shadow`, composed in a slot so that a ring and a drop shadow
+can share the property, and it sits on top of `outline-none`. Left alone, a focused control would have no indicator at all.
 
 Nothing to opt into. The three focus utilities - `focus-ring`, `focus-field-ring`,
 `invalid-field-ring` - draw an outline back in `Highlight` under `forced-colors: active`, so any
