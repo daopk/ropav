@@ -32,10 +32,10 @@ const onRemove = (keys: Set<string | number>) => {
 <style scoped>
 .group {
   width: 100%;
-  max-width: var(--container-sm);
+  max-width: var(--rp-container-sm);
 }
 
 .empty {
-  padding: var(--spacing);
+  padding: var(--rp-spacing);
 }
 </style>

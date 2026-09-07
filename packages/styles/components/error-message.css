@@ -1,12 +1,12 @@
 /* Base error message styles */
 .rp-error-message {
   height: auto;
-  font-size: var(--text-xs);
-  line-height: var(--rp-leading, var(--text-xs--line-height));
+  font-size: var(--rp-text-xs);
+  line-height: var(--rp-leading, var(--rp-text-xs--line-height));
   overflow-wrap: break-word;
-  color: var(--danger);
+  color: var(--rp-danger);
 
   transition:
-    var(--rp-motion) opacity 150ms var(--ease-out),
-    height 350ms var(--ease-smooth);
+    var(--rp-motion) opacity 150ms var(--rp-ease-out),
+    height 350ms var(--rp-ease-smooth);
 }

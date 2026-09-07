@@ -12,6 +12,6 @@ import { FieldError, Input, Label, TextField } from "ropav";
 
 <style scoped>
 .field {
-  width: calc(var(--spacing) * 72);
+  width: calc(var(--rp-spacing) * 72);
 }
 </style>

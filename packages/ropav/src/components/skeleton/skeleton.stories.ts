@@ -28,12 +28,12 @@ export const Default: Story = {
     components,
     setup: () => ({ args }),
     template: `
-      <div class="bg-surface-1 w-[200px] space-y-5 rounded-[calc(var(--radius)*3)] p-4 shadow-[var(--surface-shadow)]">
-        <Skeleton class="h-24 rounded-[calc(var(--radius)*1.5)]" v-bind="args" />
+      <div class="bg-surface-1 w-[200px] space-y-5 rounded-[calc(var(--rp-radius)*3)] p-4 shadow-[var(--rp-surface-shadow)]">
+        <Skeleton class="h-24 rounded-[calc(var(--rp-radius)*1.5)]" v-bind="args" />
         <div class="space-y-3">
-          <Skeleton class="h-3 w-3/5 rounded-[calc(var(--radius)*1)]" v-bind="args" />
-          <Skeleton class="h-3 w-4/5 rounded-[calc(var(--radius)*1)]" v-bind="args" />
-          <Skeleton class="h-3 w-2/5 rounded-[calc(var(--radius)*1)]" v-bind="args" />
+          <Skeleton class="h-3 w-3/5 rounded-[calc(var(--rp-radius)*1)]" v-bind="args" />
+          <Skeleton class="h-3 w-4/5 rounded-[calc(var(--rp-radius)*1)]" v-bind="args" />
+          <Skeleton class="h-3 w-2/5 rounded-[calc(var(--rp-radius)*1)]" v-bind="args" />
         </div>
       </div>
     `,
@@ -46,9 +46,9 @@ export const Grid: Story = {
     setup: () => ({ args }),
     template: `
       <div class="grid w-[450px] grid-cols-3 gap-4">
-        <Skeleton class="h-24 rounded-[calc(var(--radius)*1.5)]" v-bind="args" />
-        <Skeleton class="h-24 rounded-[calc(var(--radius)*1.5)]" v-bind="args" />
-        <Skeleton class="h-24 rounded-[calc(var(--radius)*1.5)]" v-bind="args" />
+        <Skeleton class="h-24 rounded-[calc(var(--rp-radius)*1.5)]" v-bind="args" />
+        <Skeleton class="h-24 rounded-[calc(var(--rp-radius)*1.5)]" v-bind="args" />
+        <Skeleton class="h-24 rounded-[calc(var(--rp-radius)*1.5)]" v-bind="args" />
       </div>
     `,
   }),
@@ -63,11 +63,11 @@ export const SingleShimmer: Story = {
     setup: () => ({ args }),
     template: `
       <div
-        class="rp-skeleton--shimmer relative grid w-[450px] grid-cols-3 gap-4 overflow-hidden rounded-[calc(var(--radius)*1.5)]"
+        class="rp-skeleton--shimmer relative grid w-[450px] grid-cols-3 gap-4 overflow-hidden rounded-[calc(var(--rp-radius)*1.5)]"
       >
-        <Skeleton class="h-24 rounded-[calc(var(--radius)*1.5)]" v-bind="args" />
-        <Skeleton class="h-24 rounded-[calc(var(--radius)*1.5)]" v-bind="args" />
-        <Skeleton class="h-24 rounded-[calc(var(--radius)*1.5)]" v-bind="args" />
+        <Skeleton class="h-24 rounded-[calc(var(--rp-radius)*1.5)]" v-bind="args" />
+        <Skeleton class="h-24 rounded-[calc(var(--rp-radius)*1.5)]" v-bind="args" />
+        <Skeleton class="h-24 rounded-[calc(var(--rp-radius)*1.5)]" v-bind="args" />
       </div>
     `,
   }),

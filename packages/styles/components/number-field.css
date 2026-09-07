@@ -2,7 +2,7 @@
 .rp-number-field {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing);
+  gap: var(--rp-spacing);
 
   &[data-invalid="true"],
   &[aria-invalid="true"] {
@@ -18,28 +18,28 @@
 
 .rp-number-field__group {
   display: grid;
-  height: calc(var(--spacing) * 9);
+  height: calc(var(--rp-spacing) * 9);
   align-items: center;
   overflow: hidden;
-  border-radius: var(--field-radius, calc(var(--radius) * 0.75));
+  border-radius: var(--rp-field-radius, calc(var(--rp-radius) * 0.75));
   border-style: var(--rp-border-style);
   border-width: 1px;
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
-  color: var(--field-foreground, var(--foreground));
-  --rp-shadow: var(--field-shadow);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+  color: var(--rp-field-foreground, var(--rp-foreground));
+  --rp-shadow: var(--rp-field-shadow);
   box-shadow: var(--rp-ring), var(--rp-shadow);
   --rp-outline-style: none;
   outline-style: none;
 
   /* The fill, per state. The `--secondary` variant re-points these and declares nothing else. */
-  --number-field-group-bg: var(--field-background, var(--default));
-  --number-field-group-bg-hover: var(--field-hover);
-  --number-field-group-bg-focus: var(--field-focus);
+  --number-field-group-bg: var(--rp-field-background, var(--rp-default));
+  --number-field-group-bg-hover: var(--rp-field-hover);
+  --number-field-group-bg-focus: var(--rp-field-focus);
 
   background-color: var(--number-field-group-bg);
-  border-width: var(--border-width-field);
-  border-color: var(--field-border);
+  border-width: var(--rp-border-width-field);
+  border-color: var(--rp-field-border);
 
   /* Forced Colors Mode flattens the fill onto the page and strips the shadow, leaving a control
    * with nothing to say it is one. `ButtonBorder` is the keyword the platform uses for a
@@ -63,16 +63,16 @@
   }
 
   transition:
-    var(--rp-motion) background-color 150ms var(--ease-smooth),
-    border-color 150ms var(--ease-smooth),
-    box-shadow 150ms var(--ease-out);
+    var(--rp-motion) background-color 150ms var(--rp-ease-smooth),
+    border-color 150ms var(--rp-ease-smooth),
+    box-shadow 150ms var(--rp-ease-out);
 
   /* Hover state */
   @media (hover: hover) {
     &:hover:not(:focus-within),
     &[data-hovered="true"]:not([data-focus-within="true"]) {
       background-color: var(--number-field-group-bg-hover);
-      border-color: var(--field-border-hover);
+      border-color: var(--rp-field-border-hover);
     }
   }
 
@@ -84,7 +84,7 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
+    --rp-ring-color: var(--rp-focus);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: 0px;
@@ -92,7 +92,7 @@
       outline: 2px solid Highlight;
       outline-offset: 0;
     }
-    border-color: var(--field-border-focus);
+    border-color: var(--rp-field-border-focus);
     background-color: var(--number-field-group-bg-focus);
   }
 
@@ -100,7 +100,7 @@
   &[data-invalid="true"] {
     outline-style: var(--rp-outline-style);
     outline-width: 1px;
-    outline-color: var(--danger);
+    outline-color: var(--rp-danger);
     --rp-outline-style: solid;
     outline-style: solid;
     --rp-ring-offset-width: 3px;
@@ -115,7 +115,7 @@
         var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
           var(--rp-ring-color, currentcolor);
       box-shadow: var(--rp-ring), var(--rp-shadow);
-      --rp-ring-color: var(--danger);
+      --rp-ring-color: var(--rp-danger);
       --rp-ring-offset-width: 0px;
       @media (forced-colors: active) {
         outline-width: 2px;
@@ -123,14 +123,14 @@
       }
     }
     background-color: var(--number-field-group-bg-focus);
-    border-color: var(--field-border-invalid);
+    border-color: var(--rp-field-border-invalid);
   }
 
   /* Disabled state */
   &[data-disabled="true"],
   &[aria-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -150,7 +150,7 @@
   &:has([data-slot="number-field-input"]:-webkit-autofill),
   &:has([data-slot="number-field-input"]:autofill) {
     background-color: var(--number-field-group-bg-focus);
-    border-color: var(--field-border-focus);
+    border-color: var(--rp-field-border-focus);
   }
 }
 
@@ -160,16 +160,16 @@
   border-style: var(--rp-border-style);
   border-width: 0px;
   background-color: transparent;
-  padding-inline: calc(var(--spacing) * 3);
-  padding-block: calc(var(--spacing) * 1.5);
-  font-size: var(--text-base);
-  line-height: var(--rp-leading, var(--text-base--line-height));
+  padding-inline: calc(var(--rp-spacing) * 3);
+  padding-block: calc(var(--rp-spacing) * 1.5);
+  font-size: var(--rp-text-base);
+  line-height: var(--rp-leading, var(--rp-text-base--line-height));
   @media (width >= 40rem) {
-    padding-block: calc(var(--spacing) * 2);
+    padding-block: calc(var(--rp-spacing) * 2);
   }
   @media (width >= 40rem) {
-    font-size: var(--text-sm);
-    line-height: var(--rp-leading, var(--text-sm--line-height));
+    font-size: var(--rp-text-sm);
+    line-height: var(--rp-leading, var(--rp-text-sm--line-height));
   }
   --rp-numeric-spacing: tabular-nums;
   font-variant-numeric: var(--rp-ordinal,) var(--rp-slashed-zero,) var(--rp-numeric-figure,)
@@ -212,8 +212,8 @@
   &:autofill {
     -webkit-box-shadow: 0 0 0 1000px transparent inset;
     box-shadow: 0 0 0 1000px transparent inset;
-    -webkit-text-fill-color: var(--field-foreground);
-    caret-color: var(--field-foreground);
+    -webkit-text-fill-color: var(--rp-field-foreground);
+    caret-color: var(--rp-field-foreground);
     transition: var(--rp-motion) background-color 9999s ease-in-out 0s;
   }
 }
@@ -222,32 +222,32 @@
 .rp-number-field__decrement-button {
   display: flex;
   height: 100%;
-  width: calc(var(--spacing) * 10);
+  width: calc(var(--rp-spacing) * 10);
   align-items: center;
   justify-content: center;
   border-radius: 0;
-  color: var(--field-foreground, var(--foreground));
+  color: var(--rp-field-foreground, var(--rp-foreground));
   --rp-outline-style: none;
   outline-style: none;
 
   --number-field-button-bg: transparent;
   --number-field-button-bg-pressed: color-mix(
     in oklab,
-    var(--field-foreground, var(--foreground)) 10%,
+    var(--rp-field-foreground, var(--rp-foreground)) 10%,
     transparent
   );
 
   background-color: var(--number-field-button-bg);
-  border-width: var(--border-width-field);
-  border-color: var(--field-border);
+  border-width: var(--rp-border-width-field);
+  border-color: var(--rp-field-border);
   border-style: solid;
 
   transition:
-    var(--rp-motion) background-color 150ms var(--ease-smooth),
-    border-color 150ms var(--ease-smooth);
+    var(--rp-motion) background-color 150ms var(--rp-ease-smooth),
+    border-color 150ms var(--rp-ease-smooth);
 
   /* Cursor */
-  cursor: var(--cursor-interactive);
+  cursor: var(--rp-cursor-interactive);
 
   /* Hover state */
   &:hover,
@@ -270,8 +270,8 @@
   &:disabled,
   &[data-disabled="true"],
   &[aria-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -282,34 +282,42 @@
   /* Icon styling */
   [data-slot="number-field-increment-button-icon"],
   [data-slot="number-field-decrement-button-icon"] {
-    width: calc(var(--spacing) * 4);
-    height: calc(var(--spacing) * 4);
+    width: calc(var(--rp-spacing) * 4);
+    height: calc(var(--rp-spacing) * 4);
   }
 }
 
 .rp-number-field__increment-button {
   border-start-start-radius: 0;
   border-end-start-radius: 0;
-  border-start-end-radius: var(--field-radius, calc(var(--radius) * 0.75));
-  border-end-end-radius: var(--field-radius, calc(var(--radius) * 0.75));
+  border-start-end-radius: var(--rp-field-radius, calc(var(--rp-radius) * 0.75));
+  border-end-end-radius: var(--rp-field-radius, calc(var(--rp-radius) * 0.75));
   border-inline-start-style: var(--rp-border-style);
   border-inline-start-width: 1px;
-  border-color: var(--field-placeholder, var(--muted));
+  border-color: var(--rp-field-placeholder, var(--rp-muted));
   @supports (color: color-mix(in lab, red, red)) {
-    border-color: color-mix(in oklab, var(--field-placeholder, var(--muted)) 15%, transparent);
+    border-color: color-mix(
+      in oklab,
+      var(--rp-field-placeholder, var(--rp-muted)) 15%,
+      transparent
+    );
   }
 }
 
 .rp-number-field__decrement-button {
-  border-start-start-radius: var(--field-radius, calc(var(--radius) * 0.75));
-  border-end-start-radius: var(--field-radius, calc(var(--radius) * 0.75));
+  border-start-start-radius: var(--rp-field-radius, calc(var(--rp-radius) * 0.75));
+  border-end-start-radius: var(--rp-field-radius, calc(var(--rp-radius) * 0.75));
   border-start-end-radius: 0;
   border-end-end-radius: 0;
   border-inline-end-style: var(--rp-border-style);
   border-inline-end-width: 1px;
-  border-color: var(--field-placeholder, var(--muted));
+  border-color: var(--rp-field-placeholder, var(--rp-muted));
   @supports (color: color-mix(in lab, red, red)) {
-    border-color: color-mix(in oklab, var(--field-placeholder, var(--muted)) 15%, transparent);
+    border-color: color-mix(
+      in oklab,
+      var(--rp-field-placeholder, var(--rp-muted)) 15%,
+      transparent
+    );
   }
 }
 
@@ -322,9 +330,9 @@
   --rp-shadow: 0 0 #0000;
   box-shadow: var(--rp-ring), var(--rp-shadow);
 
-  --number-field-group-bg: var(--default);
-  --number-field-group-bg-hover: var(--default-hover);
-  --number-field-group-bg-focus: var(--default);
+  --number-field-group-bg: var(--rp-default);
+  --number-field-group-bg-hover: var(--rp-default-hover);
+  --number-field-group-bg-focus: var(--rp-default);
 
   [data-slot="number-field-input"] {
     background-color: transparent;
@@ -347,7 +355,7 @@
 /* The stepper column stays 4px wider than the field is tall, as it is at `md`. */
 .rp-number-field--sm {
   .rp-number-field__group {
-    height: calc(var(--spacing) * 8);
+    height: calc(var(--rp-spacing) * 8);
 
     &:has([slot="decrement"]) {
       grid-template-columns: 36px 1fr;
@@ -363,27 +371,27 @@
   }
 
   .rp-number-field__input {
-    padding-block: var(--spacing);
-    font-size: var(--text-base);
-    line-height: var(--rp-leading, var(--text-base--line-height));
+    padding-block: var(--rp-spacing);
+    font-size: var(--rp-text-base);
+    line-height: var(--rp-leading, var(--rp-text-base--line-height));
     @media (width >= 40rem) {
-      padding-block: calc(var(--spacing) * 1.5);
+      padding-block: calc(var(--rp-spacing) * 1.5);
     }
     @media (width >= 40rem) {
-      font-size: var(--text-sm);
-      line-height: var(--rp-leading, var(--text-sm--line-height));
+      font-size: var(--rp-text-sm);
+      line-height: var(--rp-leading, var(--rp-text-sm--line-height));
     }
   }
 
   .rp-number-field__increment-button,
   .rp-number-field__decrement-button {
-    width: calc(var(--spacing) * 9);
+    width: calc(var(--rp-spacing) * 9);
   }
 }
 
 .rp-number-field--lg {
   .rp-number-field__group {
-    height: calc(var(--spacing) * 10);
+    height: calc(var(--rp-spacing) * 10);
 
     &:has([slot="decrement"]) {
       grid-template-columns: 44px 1fr;
@@ -399,13 +407,13 @@
   }
 
   .rp-number-field__input {
-    padding-block: calc(var(--spacing) * 2);
-    font-size: var(--text-base);
-    line-height: var(--rp-leading, var(--text-base--line-height));
+    padding-block: calc(var(--rp-spacing) * 2);
+    font-size: var(--rp-text-base);
+    line-height: var(--rp-leading, var(--rp-text-base--line-height));
   }
 
   .rp-number-field__increment-button,
   .rp-number-field__decrement-button {
-    width: calc(var(--spacing) * 11);
+    width: calc(var(--rp-spacing) * 11);
   }
 }

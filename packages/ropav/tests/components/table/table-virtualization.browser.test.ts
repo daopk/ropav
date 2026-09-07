@@ -213,7 +213,7 @@ describe("Table virtualization (browser)", () => {
 
     // The same palette shortfall the other grids scope out, and provably not this feature's: the
     // non-virtualized fixture reports it on all three column headers — `.rp-table__column` paints its
-    // label in `--muted` (#71717a) on `--surface-secondary` (#efeff0) at 12px for 4.2:1, under the
+    // label in `--rp-muted` (#71717a) on `--rp-surface-secondary` (#efeff0) at 12px for 4.2:1, under the
     // 4.5:1 WCAG AA floor. Every other rule still runs, which is where the risk of virtualizing
     // actually is: the roles, the counts and the `aria-rowindex`/`aria-colindex` pairs.
     await expectNoA11yViolations(container, PALETTE_CONTRAST_DEBT);

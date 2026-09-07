@@ -30,10 +30,10 @@ const items = [
 <style scoped>
 .panel {
   width: 100%;
-  max-width: var(--container-md);
+  max-width: var(--rp-container-md);
 }
 
 .tab-panel {
-  padding-top: calc(var(--spacing) * 4);
+  padding-top: calc(var(--rp-spacing) * 4);
 }
 </style>

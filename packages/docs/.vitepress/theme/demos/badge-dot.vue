@@ -25,11 +25,11 @@ const people = [
 .row {
   display: flex;
   align-items: center;
-  gap: calc(var(--spacing) * 3);
+  gap: calc(var(--rp-spacing) * 3);
 }
 
 .name {
-  font-size: var(--text-sm);
-  line-height: var(--text-sm--line-height);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-text-sm--line-height);
 }
 </style>

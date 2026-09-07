@@ -338,7 +338,7 @@ describe("Tooltip (browser)", () => {
       // The arrow overlaps a body it is filled to match, so an edge painted on the body alone
       // would stop at the join. With an arrow present the body's own shadow steps aside and the
       // edge is a filter, which follows the silhouette of body and arrow as one. The light theme
-      // spells `--overlay-edge` as drop-shadows, which is what the suite runs under.
+      // spells `--rp-overlay-edge` as drop-shadows, which is what the suite runs under.
       expect(styles.boxShadow).toBe("none");
       expect(styles.filter).toContain("drop-shadow");
 
@@ -373,7 +373,7 @@ describe("Tooltip (browser)", () => {
 
       // The default shape ships `fill="none"` as a presentation attribute, and the stylesheet
       // overrides it through the slot — which is the whole reason a custom arrow has to carry the
-      // slot itself. Compared against the tooltip's own background, since both resolve `--overlay`.
+      // slot itself. Compared against the tooltip's own background, since both resolve `--rp-overlay`.
       expect(getComputedStyle(arrow).fill).toBe(getComputedStyle(tooltip).backgroundColor);
 
       result.unmount();
@@ -510,8 +510,8 @@ describe("Tooltip (browser)", () => {
       const tooltip = await open(result);
 
       // Scoped to the tooltip, the way the popover suite scopes its own: the trigger is an
-      // ordinary button covered by the button suite, and its primary variant pairs `--accent`
-      // with `--accent-foreground` under the AA floor — a palette finding in `@ropav/styles`,
+      // ordinary button covered by the button suite, and its primary variant pairs `--rp-accent`
+      // with `--rp-accent-foreground` under the AA floor — a palette finding in `@ropav/styles`,
       // not something the tooltip decides.
       await expectNoA11yViolations(tooltip);
 

@@ -5,27 +5,27 @@
 .rp-menu-item {
   position: relative;
   display: flex;
-  min-height: calc(var(--spacing) * 9);
+  min-height: calc(var(--rp-spacing) * 9);
   width: 100%;
   align-items: center;
   justify-content: flex-start;
-  gap: calc(var(--spacing) * 3);
-  padding-inline: calc(var(--spacing) * 2);
-  padding-block: calc(var(--spacing) * 1.5);
+  gap: calc(var(--rp-spacing) * 3);
+  padding-inline: calc(var(--rp-spacing) * 2);
+  padding-block: calc(var(--rp-spacing) * 1.5);
   --rp-outline-style: none;
   outline-style: none;
   -webkit-tap-highlight-color: transparent;
 
-  border-radius: min(32px, var(--component-radius));
+  border-radius: min(32px, var(--rp-component-radius));
 
   transition:
-    var(--rp-motion) transform 250ms var(--ease-out-quart),
-    box-shadow 150ms var(--ease-out);
+    var(--rp-motion) transform 250ms var(--rp-ease-out-quart),
+    box-shadow 150ms var(--rp-ease-out);
 
   will-change: transform;
 
   /* Cursor */
-  cursor: var(--cursor-interactive);
+  cursor: var(--rp-cursor-interactive);
 
   [data-slot="label"] {
     pointer-events: none;
@@ -42,19 +42,19 @@
   }
 
   [data-slot="submenu-indicator"] svg {
-    width: calc(var(--spacing) * 3.5);
-    height: calc(var(--spacing) * 3.5);
+    width: calc(var(--rp-spacing) * 3.5);
+    height: calc(var(--rp-spacing) * 3.5);
   }
 
   /* Add inline-start padding when indicator is present */
   &:has(.rp-menu-item__indicator) {
-    padding-inline-start: calc(var(--spacing) * 7);
+    padding-inline-start: calc(var(--rp-spacing) * 7);
   }
 
   /* Add inline-end padding when indicator is present and has submenu */
   &[data-has-submenu="true"]:has(.rp-menu-item__indicator) {
-    padding-inline-start: calc(var(--spacing) * 2);
-    padding-inline-end: calc(var(--spacing) * 7);
+    padding-inline-start: calc(var(--rp-spacing) * 2);
+    padding-inline-end: calc(var(--rp-spacing) * 7);
   }
 
   /* Focus visible state (keyboard focus only) */
@@ -65,8 +65,8 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
-    --rp-ring-offset-color: var(--background);
+    --rp-ring-color: var(--rp-focus);
+    --rp-ring-offset-color: var(--rp-background);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: var(--rp-focus-ring-offset);
@@ -91,7 +91,7 @@
   @media (hover: hover) {
     &:hover,
     &[data-hovered="true"] {
-      background-color: var(--state-layer);
+      background-color: var(--rp-state-layer);
     }
   }
 
@@ -116,8 +116,8 @@
 
   /* Disabled state */
   &[data-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -132,17 +132,17 @@
 
 .rp-menu-item__indicator {
   position: absolute;
-  inset-inline-start: calc(var(--spacing) * 2);
+  inset-inline-start: calc(var(--rp-spacing) * 2);
   top: calc(1 / 2 * 100%);
   display: flex;
-  width: calc(var(--spacing) * 4);
-  height: calc(var(--spacing) * 4);
+  width: calc(var(--rp-spacing) * 4);
+  height: calc(var(--rp-spacing) * 4);
   flex-shrink: 0;
   --rp-translate-y: calc(calc(1 / 2 * 100%) * -1);
   translate: var(--rp-translate-x) var(--rp-translate-y);
   align-items: center;
   justify-content: center;
-  color: var(--muted);
+  color: var(--rp-muted);
 
   /**
    * Transitions
@@ -171,29 +171,30 @@
     content-visibility,
     overlay,
     pointer-events;
-  transition-timing-function: var(--rp-ease, var(--default-transition-timing-function));
-  transition-duration: var(--rp-motion) var(--rp-duration, var(--default-transition-duration));
+  transition-timing-function: var(--rp-ease, var(--rp-default-transition-timing-function));
+  transition-duration: var(--rp-motion) var(--rp-duration, var(--rp-default-transition-duration));
   --rp-duration: 250ms;
   transition-duration: var(--rp-motion) 250ms;
 
   /* Position on the inline-end when menu item has submenu */
   .rp-menu-item[data-has-submenu="true"] & {
     inset-inline-start: auto;
-    inset-inline-end: calc(var(--spacing) * 2);
+    inset-inline-end: calc(var(--rp-spacing) * 2);
   }
 
   /* Checkmark SVG indicator */
   [data-slot="menu-item-indicator--checkmark"] {
-    width: calc(var(--spacing) * 2.5);
-    height: calc(var(--spacing) * 2.5);
+    width: calc(var(--rp-spacing) * 2.5);
+    height: calc(var(--rp-spacing) * 2.5);
 
     .rp-menu-item[data-selection-mode="multiple"] & {
       /**
        * Transitions
        */
       transition-property: all;
-      transition-timing-function: var(--rp-ease, var(--default-transition-timing-function));
-      transition-duration: var(--rp-motion) var(--rp-duration, var(--default-transition-duration));
+      transition-timing-function: var(--rp-ease, var(--rp-default-transition-timing-function));
+      transition-duration: var(--rp-motion)
+        var(--rp-duration, var(--rp-default-transition-duration));
       --rp-duration: 300ms;
       transition-duration: var(--rp-motion) 300ms;
     }
@@ -201,16 +202,17 @@
 
   /* Dot SVG indicator */
   [data-slot="menu-item-indicator--dot"] {
-    width: calc(var(--spacing) * 2);
-    height: calc(var(--spacing) * 2);
+    width: calc(var(--rp-spacing) * 2);
+    height: calc(var(--rp-spacing) * 2);
 
     .rp-menu-item[data-selection-mode="multiple"] & {
       /**
      * Transitions
      */
       transition-property: all;
-      transition-timing-function: var(--rp-ease, var(--default-transition-timing-function));
-      transition-duration: var(--rp-motion) var(--rp-duration, var(--default-transition-duration));
+      transition-timing-function: var(--rp-ease, var(--rp-default-transition-timing-function));
+      transition-duration: var(--rp-motion)
+        var(--rp-duration, var(--rp-default-transition-duration));
       --rp-duration: 250ms;
       transition-duration: var(--rp-motion) 250ms;
     }
@@ -226,11 +228,11 @@
 
 /* Submenu indicator (chevron-right) */
 .rp-menu-item__indicator--submenu {
-  color: var(--muted);
+  color: var(--rp-muted);
 
   svg {
-    width: calc(var(--spacing) * 3);
-    height: calc(var(--spacing) * 3);
+    width: calc(var(--rp-spacing) * 3);
+    height: calc(var(--rp-spacing) * 3);
   }
 }
 
@@ -240,14 +242,14 @@
 
 /* Danger variant */
 .rp-menu-item--danger {
-  color: var(--danger);
+  color: var(--rp-danger);
 
   .rp-menu-item__indicator {
-    color: var(--danger);
+    color: var(--rp-danger);
   }
 
   /* A label declares a colour on itself, so it does not inherit the one above. */
   [data-slot="label"] {
-    color: var(--danger);
+    color: var(--rp-danger);
   }
 }

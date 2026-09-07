@@ -7,13 +7,13 @@ export interface TooltipRootProps {
   /**
    * How long the pointer has to rest on the trigger before the tooltip opens.
    *
-   * @default the `--tooltip-delay` custom property, or 1500
+   * @default the `--rp-tooltip-delay` custom property, or 1500
    */
   delay?: number;
   /**
    * How long the tooltip stays after the pointer leaves.
    *
-   * @default the `--tooltip-close-delay` custom property, or 500
+   * @default the `--rp-tooltip-close-delay` custom property, or 500
    */
   closeDelay?: number;
   /** Opens on hover and on keyboard focus, or on focus alone. @default "hover" */

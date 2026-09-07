@@ -5,12 +5,12 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: calc(var(--spacing) * 3);
+  gap: calc(var(--rp-spacing) * 3);
   overflow: visible;
-  padding: calc(var(--spacing) * 4);
-  --rp-shadow: var(--surface-shadow);
+  padding: calc(var(--rp-spacing) * 4);
+  --rp-shadow: var(--rp-surface-shadow);
   box-shadow: var(--rp-ring), var(--rp-shadow);
-  border-radius: min(32px, var(--component-radius));
+  border-radius: min(32px, var(--rp-component-radius));
 }
 
 /* Element - header */
@@ -21,21 +21,21 @@
 
 /* Element - title */
 .rp-card__title {
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
-  --rp-leading: calc(var(--spacing) * 6);
-  line-height: calc(var(--spacing) * 6);
-  font-weight: var(--font-weight-medium);
-  color: var(--foreground);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+  --rp-leading: calc(var(--rp-spacing) * 6);
+  line-height: calc(var(--rp-spacing) * 6);
+  font-weight: var(--rp-font-weight-medium);
+  color: var(--rp-foreground);
 }
 
 /* Element - description */
 .rp-card__description {
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
-  --rp-leading: calc(var(--spacing) * 5);
-  line-height: calc(var(--spacing) * 5);
-  color: var(--muted);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+  --rp-leading: calc(var(--rp-spacing) * 5);
+  line-height: calc(var(--rp-spacing) * 5);
+  color: var(--rp-muted);
 }
 
 /* Element - content */
@@ -43,7 +43,7 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: var(--spacing);
+  gap: var(--rp-spacing);
 }
 
 /* Element - footer */
@@ -64,7 +64,7 @@
 }
 
 .rp-card--default {
-  background-color: var(--surface);
+  background-color: var(--rp-surface);
 
   /* Forced Colors Mode flattens the fill onto the page and strips the shadow, so the container
    * stops having any shape and its contents sit loose on the page. */
@@ -75,7 +75,7 @@
 }
 
 .rp-card--secondary {
-  background-color: var(--surface-secondary);
+  background-color: var(--rp-surface-secondary);
 
   /* Forced Colors Mode flattens the fill onto the page and strips the shadow, so the container
    * stops having any shape and its contents sit loose on the page. */
@@ -86,7 +86,7 @@
 }
 
 .rp-card--tertiary {
-  background-color: var(--surface-tertiary);
+  background-color: var(--rp-surface-tertiary);
 
   /* Forced Colors Mode flattens the fill onto the page and strips the shadow, so the container
    * stops having any shape and its contents sit loose on the page. */

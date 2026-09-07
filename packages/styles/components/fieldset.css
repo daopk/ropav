@@ -2,7 +2,7 @@
 .rp-fieldset {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--spacing) * 6);
+  gap: calc(var(--rp-spacing) * 6);
   /* fix flexbox issue in Safari when fieldset with legend is inside a flexbox */
   flex-shrink: 1;
   flex-grow: 1;
@@ -10,24 +10,24 @@
 }
 
 .rp-fieldset__legend {
-  font-size: var(--text-base);
-  line-height: var(--rp-leading, var(--text-base--line-height));
-  font-weight: var(--font-weight-medium);
-  color: var(--foreground);
+  font-size: var(--rp-text-base);
+  line-height: var(--rp-leading, var(--rp-text-base--line-height));
+  font-weight: var(--rp-font-weight-medium);
+  color: var(--rp-foreground);
 }
 
 .rp-fieldset__field_group {
   width: 100%;
   :where(& > :not(:last-child)) {
     --rp-space-y-reverse: 0;
-    margin-block-start: calc(calc(var(--spacing) * 4) * var(--rp-space-y-reverse));
-    margin-block-end: calc(calc(var(--spacing) * 4) * calc(1 - var(--rp-space-y-reverse)));
+    margin-block-start: calc(calc(var(--rp-spacing) * 4) * var(--rp-space-y-reverse));
+    margin-block-end: calc(calc(var(--rp-spacing) * 4) * calc(1 - var(--rp-space-y-reverse)));
   }
 }
 
 .rp-fieldset__actions {
   display: flex;
   align-items: center;
-  gap: calc(var(--spacing) * 2);
-  padding-top: var(--spacing);
+  gap: calc(var(--rp-spacing) * 2);
+  padding-top: var(--rp-spacing);
 }

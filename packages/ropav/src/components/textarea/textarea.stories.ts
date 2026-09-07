@@ -61,7 +61,7 @@ export const FullWidth: Story = {
     template: `
       <div class="w-[400px] space-y-3">
         <TextArea full-width placeholder="Full width textarea" />
-        <Surface class="w-full rounded-[calc(var(--radius)*3)] p-6">
+        <Surface class="w-full rounded-[calc(var(--rp-radius)*3)] p-6">
           <TextArea full-width placeholder="Full width textarea on surface" variant="secondary" />
         </Surface>
       </div>

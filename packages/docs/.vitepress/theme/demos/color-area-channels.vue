@@ -32,16 +32,16 @@ import { ColorArea, ColorAreaThumb } from "ropav";
 .stack {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--spacing) * 2);
+  gap: calc(var(--rp-spacing) * 2);
 }
 
 .stack .note {
-  color: var(--muted);
-  font-size: var(--text-sm);
-  line-height: var(--text-sm--line-height);
+  color: var(--rp-muted);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-text-sm--line-height);
 }
 
 .area {
-  width: calc(var(--spacing) * 56);
+  width: calc(var(--rp-spacing) * 56);
 }
 </style>

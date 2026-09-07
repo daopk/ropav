@@ -26,7 +26,7 @@ export interface UseCssVariableOptions {
  *
  * @example
  * ```ts
- * const delay = computed(() => parseCssTime(useCssVariable("--tooltip-delay").value));
+ * const delay = computed(() => parseCssTime(useCssVariable("--rp-tooltip-delay").value));
  * ```
  */
 export const useCssVariable = (

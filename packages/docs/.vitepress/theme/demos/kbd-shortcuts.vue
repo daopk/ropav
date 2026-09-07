@@ -26,19 +26,19 @@ const shortcuts = [
 .list {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--spacing) * 2);
-  font-size: var(--text-sm);
-  line-height: var(--text-sm--line-height);
+  gap: calc(var(--rp-spacing) * 2);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-text-sm--line-height);
 }
 
 .row {
   display: flex;
   align-items: center;
-  gap: calc(var(--spacing) * 3);
+  gap: calc(var(--rp-spacing) * 3);
 }
 
 .term {
-  color: var(--muted);
-  width: calc(var(--spacing) * 16);
+  color: var(--rp-muted);
+  width: calc(var(--rp-spacing) * 16);
 }
 </style>

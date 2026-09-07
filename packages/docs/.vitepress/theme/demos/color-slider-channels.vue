@@ -33,8 +33,8 @@ const channels = [
 .stack {
   display: flex;
   width: 100%;
-  max-width: var(--container-sm);
+  max-width: var(--rp-container-sm);
   flex-direction: column;
-  gap: calc(var(--spacing) * 4);
+  gap: calc(var(--rp-spacing) * 4);
 }
 </style>

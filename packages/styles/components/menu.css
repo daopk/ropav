@@ -13,9 +13,9 @@
   display: flex;
   width: 100%;
   flex-direction: column;
-  gap: var(--spacing);
+  gap: var(--rp-spacing);
   overflow: clip;
-  padding: var(--spacing);
+  padding: var(--rp-spacing);
 
   /* This makes the separator take up 94% of the width and be centered */
   [data-slot="separator"] {
@@ -31,17 +31,17 @@
 /* A row is as tall as a field of the same size, so a collection standing beside one lines up. */
 .rp-menu--sm {
   [data-slot="menu-item"] {
-    min-height: calc(var(--spacing) * 8);
-    padding-block: var(--spacing);
+    min-height: calc(var(--rp-spacing) * 8);
+    padding-block: var(--rp-spacing);
   }
 }
 
 .rp-menu--lg {
-  font-size: var(--text-base);
-  line-height: var(--rp-leading, var(--text-base--line-height));
+  font-size: var(--rp-text-base);
+  line-height: var(--rp-leading, var(--rp-text-base--line-height));
 
   [data-slot="menu-item"] {
-    min-height: calc(var(--spacing) * 10);
-    padding-block: calc(var(--spacing) * 2);
+    min-height: calc(var(--rp-spacing) * 10);
+    padding-block: calc(var(--rp-spacing) * 2);
   }
 }

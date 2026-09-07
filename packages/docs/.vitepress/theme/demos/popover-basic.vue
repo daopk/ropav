@@ -25,12 +25,12 @@ import {
 
 <style scoped>
 .dialog {
-  max-width: calc(var(--spacing) * 64);
+  max-width: calc(var(--rp-spacing) * 64);
 }
 
 .note {
-  color: var(--muted);
-  font-size: var(--text-sm);
-  line-height: var(--text-sm--line-height);
+  color: var(--rp-muted);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-text-sm--line-height);
 }
 </style>

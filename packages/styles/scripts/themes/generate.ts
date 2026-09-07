@@ -32,49 +32,52 @@ const stylesDir = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
  *
  * Both tint their neutral ramp off a different hue than their accent, with a grey chroma that
  * varies per token — neither of which one preset can express. `default` additionally aliases the
- * primitives (`var(--white)`, `var(--eclipse)`), which the generator cannot produce at all. Their
+ * primitives (`var(--rp-white)`, `var(--rp-eclipse)`), which the generator cannot produce at all. Their
  * presets carry the label, the presentation order and the radii only.
  */
 const HANDWRITTEN = new Set<ThemeId>(["default", "hero"]);
 
 /**
- * The scrollbar thumb tracks `--foreground`, so it has to be re-derived per theme rather
+ * The scrollbar thumb tracks `--rp-foreground`, so it has to be re-derived per theme rather
  * than living in the shared token file. Mirrors `themes/default.css`.
  */
 const SCROLLBAR_CHAIN: Record<string, string> = {
-  "--scrollbar": "var(--scrollbar-thumb)",
-  "--scrollbar-color": "var(--scrollbar-thumb) var(--scrollbar-track)",
-  "--scrollbar-thumb": "color-mix(in oklch, var(--foreground) 15%, transparent)",
+  "--rp-scrollbar": "var(--rp-scrollbar-thumb)",
+  "--rp-scrollbar-color": "var(--rp-scrollbar-thumb) var(--rp-scrollbar-track)",
+  "--rp-scrollbar-thumb": "color-mix(in oklch, var(--rp-foreground) 15%, transparent)",
 };
 
 /**
- * Tokens that track `--foreground` and so cannot be left to `:root`.
+ * Tokens that track `--rp-foreground` and so cannot be left to `:root`.
  *
- * Everything else the default theme declares but a generated theme does not — `--spacing`,
- * `--cursor-*`, the primitives, the surface and overlay shadows, `--backdrop` — is either a
+ * Everything else the default theme declares but a generated theme does not — `--rp-spacing`,
+ * `--rp-cursor-*`, the primitives, the surface and overlay shadows, `--rp-backdrop` — is either a
  * constant or keyed on the light/dark axis, and `:root` / `.dark` still match an element
  * carrying a `data-theme`, so those come through unchanged.
  */
 const FOREGROUND_LINKED: Record<string, string> = {
-  "--link": "var(--foreground)",
+  "--rp-link": "var(--rp-foreground)",
 };
 
 /** Groups the flat variable map into the commented sections used by the default theme. */
 const SECTIONS: Array<{ title: string; match: (name: string) => boolean }> = [
-  { match: (n) => ["--background", "--foreground"].includes(n), title: "Base Colors" },
-  { match: (n) => n.startsWith("--surface") || n.startsWith("--overlay"), title: "Surfaces" },
-  { match: (n) => n === "--muted" || n.startsWith("--scrollbar"), title: "Muted and scrollbar" },
-  { match: (n) => n.startsWith("--default"), title: "Default" },
-  { match: (n) => n.startsWith("--accent") || n === "--focus", title: "Accent" },
-  { match: (n) => n.startsWith("--field"), title: "Form Fields" },
+  { match: (n) => ["--rp-background", "--rp-foreground"].includes(n), title: "Base Colors" },
+  { match: (n) => n.startsWith("--rp-surface") || n.startsWith("--rp-overlay"), title: "Surfaces" },
+  {
+    match: (n) => n === "--rp-muted" || n.startsWith("--rp-scrollbar"),
+    title: "Muted and scrollbar",
+  },
+  { match: (n) => n.startsWith("--rp-default"), title: "Default" },
+  { match: (n) => n.startsWith("--rp-accent") || n === "--rp-focus", title: "Accent" },
+  { match: (n) => n.startsWith("--rp-field"), title: "Form Fields" },
   {
     match: (n) =>
-      n.startsWith("--success") || n.startsWith("--warning") || n.startsWith("--danger"),
+      n.startsWith("--rp-success") || n.startsWith("--rp-warning") || n.startsWith("--rp-danger"),
     title: "Status Colors",
   },
-  { match: (n) => n.startsWith("--segment") || n === "--link", title: "Component Colors" },
+  { match: (n) => n.startsWith("--rp-segment") || n === "--rp-link", title: "Component Colors" },
   {
-    match: (n) => n.startsWith("--border") || n.startsWith("--separator"),
+    match: (n) => n.startsWith("--rp-border") || n.startsWith("--rp-separator"),
     title: "Borders and separators",
   },
 ];
@@ -85,7 +88,7 @@ const SECTIONS: Array<{ title: string; match: (name: string) => boolean }> = [
  *
  * The derived block is emitted in full rather than inherited from the default theme.
  * A custom property substitutes `var()` at the element where it is *declared*, so
- * `--accent-hover` declared on `:root` freezes against `:root`'s `--accent` — a subtree
+ * `--rp-accent-hover` declared on `:root` freezes against `:root`'s `--rp-accent` — a subtree
  * `<div data-theme="netflix">` would otherwise inherit the wrong hover colour.
  */
 function buildVariables(preset: ThemePreset, scheme: "light" | "dark") {
@@ -108,20 +111,20 @@ function buildVariables(preset: ThemePreset, scheme: "light" | "dark") {
     const accent = adaptive[scheme];
     const parsed = parseOklch(accent);
 
-    vars["--accent"] = accent;
-    vars["--accent-foreground"] = parsed
+    vars["--rp-accent"] = accent;
+    vars["--rp-accent-foreground"] = parsed
       ? calculateAccentForeground(parsed.l, parsed.c, parsed.h)
       : calculateAccentForeground(scheme === "light" ? 0 : 1, 0, 0);
-    vars["--focus"] = accent;
+    vars["--rp-focus"] = accent;
   }
 
   /*
    * Emitted for both schemes, never one. `:root`'s dark placeholder and a theme's light block
    * have equal specificity, so leaving dark out would let the light shadow win under `.dark`.
    */
-  vars["--field-shadow"] = (preset.fieldShadow ?? fieldShadowCss)[scheme];
+  vars["--rp-field-shadow"] = (preset.fieldShadow ?? fieldShadowCss)[scheme];
 
-  delete vars["--scrollbar"];
+  delete vars["--rp-scrollbar"];
 
   Object.assign(vars, getDerivedColorFormulas(scheme));
 
@@ -130,7 +133,7 @@ function buildVariables(preset: ThemePreset, scheme: "light" | "dark") {
   if (adaptive) {
     // A monochrome accent has no hue to tint the soft foreground with, so let it read as
     // the accent itself rather than a muddy blend.
-    vars["--accent-soft-foreground"] = adaptive[scheme];
+    vars["--rp-accent-soft-foreground"] = adaptive[scheme];
   }
 
   return vars;
@@ -181,9 +184,9 @@ function renderTheme(id: ThemeId) {
   const layout = {
     // Only `default` pairs its components with its fields. Emitted for every theme regardless,
     // or `:root`'s value would inherit into a `data-theme` subtree.
-    "--component-radius": "calc(var(--radius) * 3)",
-    "--field-radius": radiusCssMap[preset.formRadius],
-    "--radius": radiusCssMap[preset.radius],
+    "--rp-component-radius": "calc(var(--rp-radius) * 3)",
+    "--rp-field-radius": radiusCssMap[preset.formRadius],
+    "--rp-radius": radiusCssMap[preset.radius],
   };
 
   return `/**

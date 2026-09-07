@@ -46,6 +46,6 @@ import {
 }
 
 .channel {
-  padding-inline: var(--spacing);
+  padding-inline: var(--rp-spacing);
 }
 </style>

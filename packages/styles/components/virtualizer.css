@@ -14,7 +14,7 @@
  * The component gives it the viewport's width. */
 .rp-virtualizer__scrollbar {
   position: sticky;
-  inset-inline-start: calc(var(--spacing) * 0);
+  inset-inline-start: calc(var(--rp-spacing) * 0);
   top: 0px;
   z-index: 2;
   height: 0px;
@@ -25,19 +25,19 @@
   touch-action: none;
   -webkit-user-select: none;
   user-select: none;
-  background-color: var(--scrollbar-track);
+  background-color: var(--rp-scrollbar-track);
 
   /* The content wrapper drops pointers mid-scroll so a fast scroll does not hover every row it
    * passes. The track is what is being dragged, so it keeps taking them. */
   pointer-events: auto;
 
   &[data-orientation="vertical"] {
-    inset-inline-end: calc(var(--spacing) * 0);
+    inset-inline-end: calc(var(--rp-spacing) * 0);
     top: 0px;
   }
 
   &[data-orientation="horizontal"] {
-    inset-inline-start: calc(var(--spacing) * 0);
+    inset-inline-start: calc(var(--rp-spacing) * 0);
   }
 }
 
@@ -48,9 +48,17 @@
   /* The thumb's fill, per state. Three states paint it and one declaration cannot tell them
    * apart, so each reads its own. Both lit values are an alpha rather than a neutral, so the
    * thumb stays visible over whatever the scroller happens to be showing. */
-  --virtualizer-scrollbar-thumb-bg: var(--scrollbar-thumb);
-  --virtualizer-scrollbar-thumb-bg-hover: color-mix(in oklch, var(--foreground) 25%, transparent);
-  --virtualizer-scrollbar-thumb-bg-pressed: color-mix(in oklch, var(--foreground) 35%, transparent);
+  --virtualizer-scrollbar-thumb-bg: var(--rp-scrollbar-thumb);
+  --virtualizer-scrollbar-thumb-bg-hover: color-mix(
+    in oklch,
+    var(--rp-foreground) 25%,
+    transparent
+  );
+  --virtualizer-scrollbar-thumb-bg-pressed: color-mix(
+    in oklch,
+    var(--rp-foreground) 35%,
+    transparent
+  );
 
   background-color: var(--virtualizer-scrollbar-thumb-bg);
 

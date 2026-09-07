@@ -22,12 +22,12 @@ import { Splitter, SplitterHandle, SplitterPanel } from "ropav";
 
 <style scoped>
 .frame {
-  border-color: var(--border);
-  height: calc(var(--spacing) * 56);
+  border-color: var(--rp-border);
+  height: calc(var(--rp-spacing) * 56);
   width: 100%;
-  max-width: var(--container-lg);
+  max-width: var(--rp-container-lg);
   overflow: hidden;
-  border-radius: calc(var(--radius) * 1.5);
+  border-radius: calc(var(--rp-radius) * 1.5);
   border-style: solid;
   border-width: 1px;
 }
@@ -36,7 +36,7 @@ import { Splitter, SplitterHandle, SplitterPanel } from "ropav";
   display: grid;
   height: 100%;
   place-items: center;
-  font-size: var(--text-sm);
-  line-height: var(--text-sm--line-height);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-text-sm--line-height);
 }
 </style>

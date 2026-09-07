@@ -1,7 +1,7 @@
 @import "../styles/globals.css";
 
 :root {
-  --font-sans:
+  --rp-font-sans:
     Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
     "Segoe UI Symbol", "Noto Color Emoji";
 }
@@ -13,17 +13,17 @@
  * look broken. */
 :root:not([data-theme]),
 [data-theme="default"] {
-  --background: lab(96.5432% -0.0000596046 0);
-  --foreground: lab(8.34178% 0.607349 -2.12998);
+  --rp-background: lab(96.5432% -0.0000596046 0);
+  --rp-foreground: lab(8.34178% 0.607349 -2.12998);
 }
 
 html,
 body {
-  font-family: var(--font-sans);
+  font-family: var(--rp-font-sans);
 }
 
 :root:not([data-theme]).dark,
 [data-theme="default"].dark {
-  --background: lab(1.54547% 0.178337 -0.64671);
-  --foreground: lab(98.9676% -0.0000298023 -0.0000119209);
+  --rp-background: lab(1.54547% 0.178337 -0.64671);
+  --rp-foreground: lab(98.9676% -0.0000298023 -0.0000119209);
 }

@@ -11,9 +11,9 @@ import { describe, expect, it } from "vitest";
  * type scale, the font weights, the transition defaults, the container widths — were spelled
  * directly by component rules and declared by nobody in this repository: they arrived from
  * `tailwindcss/theme.css` because the entry imported it. Removing that import would have taken
- * `font-size: var(--text-sm)` down on eighty-seven declarations at once, and not to the rule
+ * `font-size: var(--rp-text-sm)` down on eighty-seven declarations at once, and not to the rule
  * underneath but to the property's initial value, with no error and no build failure. A page of
- * components at the browser's default size and weight, and a source that still said `--text-sm`.
+ * components at the browser's default size and weight, and a source that still said `--rp-text-sm`.
  *
  * `slot-registration.test.ts` asks a stricter question of the `--rp-*` composition slots, which
  * have to resolve on an element that sets none of them. This asks the flat one of everything

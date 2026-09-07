@@ -3,19 +3,19 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing);
+  gap: var(--rp-spacing);
 }
 
 .rp-tag-group__list {
   position: relative;
   display: flex;
   flex-wrap: wrap;
-  gap: calc(var(--spacing) * 1.5);
+  gap: calc(var(--rp-spacing) * 1.5);
 }
 
 .rp-tag-group [slot="description"],
 .rp-tag-group [data-slot="description"],
 .rp-tag-group [slot="errorMessage"],
 .rp-tag-group [data-slot="error-message"] {
-  padding: var(--spacing);
+  padding: var(--rp-spacing);
 }

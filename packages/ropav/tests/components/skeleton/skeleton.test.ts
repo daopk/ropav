@@ -11,12 +11,12 @@ const renderSkeleton = (props: Record<string, unknown> = {}) => renderVapor(Fixt
 
 describe("Skeleton", () => {
   beforeEach(() => {
-    document.documentElement.style.removeProperty("--skeleton-animation");
+    document.documentElement.style.removeProperty("--rp-skeleton-animation");
     clearCssVariableCache();
   });
 
   afterEach(() => {
-    document.documentElement.style.removeProperty("--skeleton-animation");
+    document.documentElement.style.removeProperty("--rp-skeleton-animation");
     clearCssVariableCache();
   });
 
@@ -52,7 +52,7 @@ describe("Skeleton", () => {
     });
 
     it("reads the animation type from the theme custom property", () => {
-      document.documentElement.style.setProperty("--skeleton-animation", "pulse");
+      document.documentElement.style.setProperty("--rp-skeleton-animation", "pulse");
 
       const { container, unmount } = renderSkeleton();
 
@@ -62,7 +62,7 @@ describe("Skeleton", () => {
     });
 
     it("lets an explicit animation type override the theme", () => {
-      document.documentElement.style.setProperty("--skeleton-animation", "pulse");
+      document.documentElement.style.setProperty("--rp-skeleton-animation", "pulse");
 
       const { container, unmount } = renderSkeleton({ animationType: "none" });
 

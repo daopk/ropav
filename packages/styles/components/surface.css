@@ -3,7 +3,7 @@
 /* Block */
 .rp-surface {
   position: relative;
-  color: var(--foreground);
+  color: var(--rp-foreground);
 }
 
 /* Modifier - variant */
@@ -12,8 +12,8 @@
 }
 
 .rp-surface--default {
-  background-color: var(--surface);
-  color: var(--surface-foreground);
+  background-color: var(--rp-surface);
+  color: var(--rp-surface-foreground);
 
   /* Forced Colors Mode flattens the fill onto the page and strips the shadow, so the container
    * stops having any shape - its contents just sit loose on the page. An outline rather than a
@@ -25,8 +25,8 @@
 }
 
 .rp-surface--secondary {
-  background-color: var(--surface-secondary);
-  color: var(--surface-secondary-foreground);
+  background-color: var(--rp-surface-secondary);
+  color: var(--rp-surface-secondary-foreground);
 
   /* Forced Colors Mode flattens the fill onto the page and strips the shadow, so the container
    * stops having any shape - its contents just sit loose on the page. An outline rather than a
@@ -38,8 +38,8 @@
 }
 
 .rp-surface--tertiary {
-  background-color: var(--surface-tertiary);
-  color: var(--surface-tertiary-foreground);
+  background-color: var(--rp-surface-tertiary);
+  color: var(--rp-surface-tertiary-foreground);
 
   /* Forced Colors Mode flattens the fill onto the page and strips the shadow, so the container
    * stops having any shape - its contents just sit loose on the page. An outline rather than a

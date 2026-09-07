@@ -3,7 +3,7 @@
 .rp-slider {
   display: grid;
   width: 100%;
-  gap: var(--spacing);
+  gap: var(--rp-spacing);
 
   grid-template-areas:
     "label output"
@@ -12,17 +12,17 @@
 
   [data-slot="label"] {
     width: fit-content;
-    font-size: var(--text-sm);
-    line-height: var(--rp-leading, var(--text-sm--line-height));
-    font-weight: var(--font-weight-medium);
+    font-size: var(--rp-text-sm);
+    line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+    font-weight: var(--rp-font-weight-medium);
 
     grid-area: label;
   }
 
   .rp-slider__output {
-    font-size: var(--text-sm);
-    line-height: var(--rp-leading, var(--text-sm--line-height));
-    font-weight: var(--font-weight-medium);
+    font-size: var(--rp-text-sm);
+    line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+    font-weight: var(--rp-font-weight-medium);
     --rp-numeric-spacing: tabular-nums;
     font-variant-numeric: var(--rp-ordinal,) var(--rp-slashed-zero,) var(--rp-numeric-figure,)
       var(--rp-numeric-spacing,) var(--rp-numeric-fraction,);
@@ -32,9 +32,9 @@
 
   .rp-slider__track {
     position: relative;
-    background-color: var(--default);
+    background-color: var(--rp-default);
 
-    border-radius: min(32px, var(--component-radius));
+    border-radius: min(32px, var(--rp-component-radius));
 
     grid-area: track;
 
@@ -51,7 +51,7 @@
   .rp-slider__fill {
     pointer-events: none;
     position: absolute;
-    background-color: var(--accent);
+    background-color: var(--rp-accent);
 
     /* The only thing showing how far along the value is */
     @media (forced-colors: active) {
@@ -66,10 +66,10 @@
     cursor: grab;
     align-items: center;
     justify-content: center;
-    background-color: var(--accent);
+    background-color: var(--rp-accent);
     -webkit-tap-highlight-color: transparent;
 
-    border-radius: min(32px, var(--component-radius));
+    border-radius: min(32px, var(--rp-component-radius));
 
     /* The wrapper is the fill colour in ordinary use, which hides it against the fill. Flattened
      * to `Canvas` it would punch a hole through the fill instead, so it steps back and lets
@@ -79,21 +79,21 @@
     }
 
     transition:
-      var(--rp-motion) background-color 250ms var(--ease-smooth),
-      transform 250ms var(--ease-out),
-      box-shadow 150ms var(--ease-out);
+      var(--rp-motion) background-color 250ms var(--rp-ease-smooth),
+      transform 250ms var(--rp-ease-out),
+      box-shadow 150ms var(--rp-ease-out);
 
     /* after: Visible thumb element */
     &::after {
       position: relative;
       z-index: 10;
-      background-color: var(--accent-foreground);
-      color: var(--color-black);
-      --rp-shadow: var(--field-shadow);
+      background-color: var(--rp-accent-foreground);
+      color: var(--rp-color-black);
+      --rp-shadow: var(--rp-field-shadow);
       box-shadow: var(--rp-ring), var(--rp-shadow);
       content: "";
 
-      border-radius: min(32px, var(--component-radius));
+      border-radius: min(32px, var(--rp-component-radius));
 
       /* Both the knob's fill and the shadow that separates it from the track are gone under
        * forced colors. `Canvas` inside a `CanvasText` ring reads against the bare track on one
@@ -106,8 +106,9 @@
 
       transform-origin: center;
       transition-property: all;
-      transition-timing-function: var(--rp-ease, var(--default-transition-timing-function));
-      transition-duration: var(--rp-motion) var(--rp-duration, var(--default-transition-duration));
+      transition-timing-function: var(--rp-ease, var(--rp-default-transition-timing-function));
+      transition-duration: var(--rp-motion)
+        var(--rp-duration, var(--rp-default-transition-duration));
     }
 
     /* Dragging state - cursor changes and thumb scales down */
@@ -129,8 +130,8 @@
         var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
           var(--rp-ring-color, currentcolor);
       box-shadow: var(--rp-ring), var(--rp-shadow);
-      --rp-ring-color: var(--focus);
-      --rp-ring-offset-color: var(--background);
+      --rp-ring-color: var(--rp-focus);
+      --rp-ring-offset-color: var(--rp-background);
       --rp-outline-style: none;
       outline-style: none;
       --rp-ring-offset-width: var(--rp-focus-ring-offset);
@@ -150,8 +151,8 @@
   &:disabled,
   &[data-disabled="true"],
   &[aria-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -168,7 +169,7 @@
     flex-direction: column;
 
     .rp-slider__track {
-      height: calc(var(--spacing) * 5);
+      height: calc(var(--rp-spacing) * 5);
       width: 100%;
       /* Add transparent borders to provide space for thumb at edges */
       /* Thumb width is 1.5rem (24px), so half is 0.75rem (12px) */
@@ -184,7 +185,7 @@
       }
 
       &[data-fill-start="true"] {
-        border-inline-start-color: var(--accent);
+        border-inline-start-color: var(--rp-accent);
 
         /* Carries the fill past the spacer to the end of the bar, so it has to be the fill
          * colour rather than the `Canvas` the base rule neutralises the spacers with. */
@@ -194,7 +195,7 @@
       }
 
       &[data-fill-end="true"] {
-        border-inline-end-color: var(--accent);
+        border-inline-end-color: var(--rp-accent);
 
         @media (forced-colors: active) {
           border-inline-end-color: Highlight;
@@ -223,7 +224,7 @@
   /* Vertical orientation */
   &[data-orientation="vertical"] {
     height: 100%;
-    gap: calc(var(--spacing) * 2);
+    gap: calc(var(--rp-spacing) * 2);
 
     flex-direction: row;
     grid-template-areas:
@@ -243,7 +244,7 @@
 
     .rp-slider__track {
       height: 100%;
-      width: calc(var(--spacing) * 5);
+      width: calc(var(--rp-spacing) * 5);
       /* Add transparent borders to provide space for thumb at edges */
       /* Thumb height is 1.5rem (24px), so half is 0.75rem (12px) */
       border-block-style: var(--rp-border-style);
@@ -258,7 +259,7 @@
       }
 
       &[data-fill-start="true"] {
-        border-bottom-color: var(--accent);
+        border-bottom-color: var(--rp-accent);
 
         @media (forced-colors: active) {
           border-bottom-color: Highlight;
@@ -266,7 +267,7 @@
       }
 
       &[data-fill-end="true"] {
-        border-top-color: var(--accent);
+        border-top-color: var(--rp-accent);
 
         @media (forced-colors: active) {
           border-top-color: Highlight;

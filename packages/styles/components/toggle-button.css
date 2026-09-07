@@ -7,17 +7,17 @@
   position: relative;
   isolation: isolate;
   display: inline-flex;
-  height: calc(var(--spacing) * 9);
+  height: calc(var(--rp-spacing) * 9);
   width: fit-content;
   transform-origin: center;
   align-items: center;
   justify-content: center;
-  gap: calc(var(--spacing) * 2);
-  border-radius: var(--component-radius, calc(var(--radius) * 3));
-  padding-inline: calc(var(--spacing) * 4);
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
-  font-weight: var(--font-weight-medium);
+  gap: calc(var(--rp-spacing) * 2);
+  border-radius: var(--rp-component-radius, calc(var(--rp-radius) * 3));
+  padding-inline: calc(var(--rp-spacing) * 4);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+  font-weight: var(--rp-font-weight-medium);
   white-space: nowrap;
   --rp-outline-style: none;
   outline-style: none;
@@ -26,9 +26,9 @@
   -webkit-tap-highlight-color: transparent;
 
   transition:
-    var(--rp-motion) transform 250ms var(--ease-smooth),
-    background-color 100ms var(--ease-out),
-    box-shadow 100ms var(--ease-out);
+    var(--rp-motion) transform 250ms var(--rp-ease-smooth),
+    background-color 100ms var(--rp-ease-out),
+    box-shadow 100ms var(--rp-ease-out);
   transform: translateZ(0) var(--rp-rotate-x,) var(--rp-rotate-y,) var(--rp-rotate-z,)
     var(--rp-skew-x,) var(--rp-skew-y,);
 
@@ -42,19 +42,19 @@
   }
 
   /* Cursor */
-  cursor: var(--cursor-interactive);
+  cursor: var(--rp-cursor-interactive);
 
   /* Default tokens (unselected state) */
-  --toggle-button-bg: var(--default);
-  --toggle-button-bg-hover: var(--default-hover);
-  --toggle-button-bg-pressed: var(--default-hover);
+  --toggle-button-bg: var(--rp-default);
+  --toggle-button-bg-hover: var(--rp-default-hover);
+  --toggle-button-bg-pressed: var(--rp-default-hover);
   --toggle-button-fg: currentColor;
 
   /* Selected state tokens */
-  --toggle-button-bg-selected: var(--accent-soft);
-  --toggle-button-bg-selected-hover: var(--accent-soft-hover);
-  --toggle-button-bg-selected-pressed: var(--accent-soft-hover);
-  --toggle-button-fg-selected: var(--accent-soft-foreground);
+  --toggle-button-bg-selected: var(--rp-accent-soft);
+  --toggle-button-bg-selected-hover: var(--rp-accent-soft-hover);
+  --toggle-button-bg-selected-pressed: var(--rp-accent-soft-hover);
+  --toggle-button-fg-selected: var(--rp-accent-soft-foreground);
 
   background-color: var(--toggle-button-bg);
   color: var(--toggle-button-fg);
@@ -67,8 +67,8 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
-    --rp-ring-offset-color: var(--background);
+    --rp-ring-color: var(--rp-focus);
+    --rp-ring-offset-color: var(--rp-background);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: var(--rp-focus-ring-offset);
@@ -81,8 +81,8 @@
   /* Disabled state */
   &:disabled,
   &[aria-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -132,10 +132,10 @@
   /* SVG icon styling */
   & svg {
     pointer-events: none;
-    margin-inline: calc(var(--spacing) * -0.5);
-    margin-block: var(--spacing);
-    width: calc(var(--spacing) * 4);
-    height: calc(var(--spacing) * 4);
+    margin-inline: calc(var(--rp-spacing) * -0.5);
+    margin-block: var(--rp-spacing);
+    width: calc(var(--rp-spacing) * 4);
+    height: calc(var(--rp-spacing) * 4);
     flex-shrink: 0;
     align-self: center;
   }
@@ -146,8 +146,8 @@
    ========================================================================== */
 
 .rp-toggle-button--sm {
-  height: calc(var(--spacing) * 8);
-  padding-inline: calc(var(--spacing) * 3);
+  height: calc(var(--rp-spacing) * 8);
+  padding-inline: calc(var(--rp-spacing) * 3);
 
   &:active,
   &[data-pressed="true"] {
@@ -160,9 +160,9 @@
 }
 
 .rp-toggle-button--lg {
-  height: calc(var(--spacing) * 10);
-  font-size: var(--text-base);
-  line-height: var(--rp-leading, var(--text-base--line-height));
+  height: calc(var(--rp-spacing) * 10);
+  font-size: var(--rp-text-base);
+  line-height: var(--rp-leading, var(--rp-text-base--line-height));
 
   &:active,
   &[data-pressed="true"] {
@@ -175,16 +175,16 @@
    ========================================================================== */
 
 .rp-toggle-button--default {
-  --toggle-button-bg: var(--default);
-  --toggle-button-bg-hover: var(--default-hover);
-  --toggle-button-bg-pressed: var(--default-hover);
+  --toggle-button-bg: var(--rp-default);
+  --toggle-button-bg-hover: var(--rp-default-hover);
+  --toggle-button-bg-pressed: var(--rp-default-hover);
 }
 
 .rp-toggle-button--ghost {
   --toggle-button-bg: transparent;
-  --toggle-button-bg-hover: var(--state-layer);
-  --toggle-button-bg-pressed: var(--state-layer);
-  --toggle-button-fg: var(--default-foreground);
+  --toggle-button-bg-hover: var(--rp-state-layer);
+  --toggle-button-bg-pressed: var(--rp-state-layer);
+  --toggle-button-fg: var(--rp-default-foreground);
 }
 
 /* ==========================================================================
@@ -192,14 +192,14 @@
    ========================================================================== */
 
 .rp-toggle-button--icon-only {
-  width: calc(var(--spacing) * 9);
+  width: calc(var(--rp-spacing) * 9);
   padding: 0px;
 }
 
 .rp-toggle-button--icon-only.rp-toggle-button--sm {
-  width: calc(var(--spacing) * 8);
+  width: calc(var(--rp-spacing) * 8);
 }
 
 .rp-toggle-button--icon-only.rp-toggle-button--lg {
-  width: calc(var(--spacing) * 10);
+  width: calc(var(--rp-spacing) * 10);
 }

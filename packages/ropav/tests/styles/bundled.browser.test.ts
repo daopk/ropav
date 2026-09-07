@@ -107,7 +107,7 @@ describe.skipIf(!css)("the bundled stylesheet", () => {
   it("carries the theme, so a component is painted and not just laid out", () => {
     const { styleOf, token } = mount(`<button class="rp-button rp-button--primary">Save</button>`);
 
-    expect(token("--accent")).not.toBe("");
+    expect(token("--rp-accent")).not.toBe("");
     // The variant sets `--button-bg` to the accent; the base rule paints it.
     expect(styleOf(".rp-button").backgroundColor).not.toBe("rgba(0, 0, 0, 0)");
   });

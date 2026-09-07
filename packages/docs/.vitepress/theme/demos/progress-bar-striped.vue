@@ -27,8 +27,8 @@ const bars = [
 .stack {
   display: flex;
   width: 100%;
-  max-width: var(--container-md);
+  max-width: var(--rp-container-md);
   flex-direction: column;
-  gap: calc(var(--spacing) * 6);
+  gap: calc(var(--rp-spacing) * 6);
 }
 </style>

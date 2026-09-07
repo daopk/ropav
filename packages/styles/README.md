@@ -218,8 +218,8 @@ of this package, and no need to go through a theme file at all:
 
 ```css
 :root {
-  --accent: oklch(0.62 0.19 253.83);
-  --radius: 0.5rem;
+  --rp-accent: oklch(0.62 0.19 253.83);
+  --rp-radius: 0.5rem;
 }
 ```
 
@@ -227,38 +227,38 @@ Author CSS outside a cascade layer outranks everything here, so these win wherev
 
 To add a theme rather than change the default one, write the same token block under your own attribute.
 It has to redeclare the *derived* tokens too, not just the authored ones: a custom property substitutes
-`var()` where it is declared, so an `--accent-hover` inherited from `:root` would still be mixed from
-the root's `--accent`. Copy a generated theme and edit it, or generate one.
+`var()` where it is declared, so an `--rp-accent-hover` inherited from `:root` would still be mixed from
+the root's `--rp-accent`. Copy a generated theme and edit it, or generate one.
 
 ```css
 @layer theme {
   [data-theme="ocean"] {
     color-scheme: light;
-    --accent: oklch(0.62 0.14 220);
-    --accent-hover: color-mix(in oklab, var(--accent) 90%, var(--accent-foreground) 10%);
+    --rp-accent: oklch(0.62 0.14 220);
+    --rp-accent-hover: color-mix(in oklab, var(--rp-accent) 90%, var(--rp-accent-foreground) 10%);
     /* … */
   }
 }
 ```
 
 A theme only needs to carry colours. Everything keyed on neither the palette nor the appearance —
-`--spacing`, `--cursor-*`, the primitives, the shadows, `--backdrop` — stays on `:root` and `.dark` in
+`--rp-spacing`, `--rp-cursor-*`, the primitives, the shadows, `--rp-backdrop` — stays on `:root` and `.dark` in
 `themes/default.css`, both of which keep matching an element that carries a `data-theme`.
 
 ### Tokens
 
-Base colors (`--background`, `--surface`, `--overlay`, `--muted`), interactive and status colors
-(`--accent`, `--success`, `--warning`, `--danger`, each with a `-foreground` and a derived `-hover` and
-`-soft`), form fields (`--field-background`, `--field-border`, `--field-radius`, …), layout knobs
-(`--spacing`, `--border-width`, `--radius`, `--rp-focus-ring-offset`, `--cursor-interactive`), the
+Base colors (`--rp-background`, `--rp-surface`, `--rp-overlay`, `--rp-muted`), interactive and status colors
+(`--rp-accent`, `--rp-success`, `--rp-warning`, `--rp-danger`, each with a `-foreground` and a derived `-hover` and
+`-soft`), form fields (`--rp-field-background`, `--rp-field-border`, `--rp-field-radius`, …), layout knobs
+(`--rp-spacing`, `--rp-border-width`, `--rp-radius`, `--rp-focus-ring-offset`, `--rp-cursor-interactive`), the
 scrollbar set, and shadows.
 
 **`themes/default.css` is the source of truth — read it rather than a list in a README**, which goes
 stale the moment a token moves. `themes/shared/tokens.css` holds the rest of what a rule can name
 directly: the type scale, the weights and the easing curves.
 
-There is no `--radius-*` scale to read. A step is a multiple written where it is used —
-`calc(var(--radius) * 3)` — so a `data-theme` setting its own `--radius` moves every corner at once,
+There is no `--rp-radius-*` scale to read. A step is a multiple written where it is used —
+`calc(var(--rp-radius) * 3)` — so a `data-theme` setting its own `--rp-radius` moves every corner at once,
 which a scale declared on `:root` could not do.
 
 ### State colors
@@ -314,25 +314,25 @@ let something through — a blurred header, a panel over an image, a window whos
 draws. What sits on one of those has no way to know what is behind it, and that splits the palette
 in two.
 
-**Safe on anything: the tokens that are an alpha.** `--state-layer` is what a state paints, and
-`--separator` and `--border` are the lines — each an alpha of `--surface-foreground` rather than a
+**Safe on anything: the tokens that are an alpha.** `--rp-state-layer` is what a state paints, and
+`--rp-separator` and `--rp-border` are the lines — each an alpha of `--rp-surface-foreground` rather than a
 neutral of its own. An alpha darkens or lightens whatever it lands on, so it holds its contrast
 against a fill it was never tuned for: another surface, the far half of the theme, or a photograph.
-The `-soft` family and `--scrollbar-thumb` are alphas too, which is why a selection is
-`--accent-soft` wherever the library marks one.
+The `-soft` family and `--rp-scrollbar-thumb` are alphas too, which is why a selection is
+`--rp-accent-soft` wherever the library marks one.
 
-**Not safe: the fills.** `--default`, `--accent`, the status colors, `--surface` and its secondary
+**Not safe: the fills.** `--rp-default`, `--rp-accent`, the status colors, `--rp-surface` and its secondary
 and tertiary steps are opaque, and they are meant to be — a badge you can read the page through is a
 broken badge. They assume a background because they *are* one. Use them to fill a box, never to mark
 a state on a box that is already transparent.
 
-`--surface-hover` sits on the fill side of that line despite the name: it is a surface that has been
+`--rp-surface-hover` sits on the fill side of that line despite the name: it is a surface that has been
 tinted and stays opaque, for a component opaque at rest whose hover must stay that way.
-`--state-layer` is the one for a component transparent at rest. Reaching for the wrong one fails
+`--rp-state-layer` is the one for a component transparent at rest. Reaching for the wrong one fails
 quietly — a translucent hover on an opaque tag shows the page through it, and a flat neutral on a
 transparent row vanishes the moment the fill behind it matches.
 
-The line between the two is what a color is for, not what it looks like. `--default` is a fine grey
+The line between the two is what a color is for, not what it looks like. `--rp-default` is a fine grey
 until it is asked to be a state layer: then it is a fixed lightness laid on an unknown one, and the
 day those two match it is gone with nothing to fail but the eye.
 
@@ -370,8 +370,8 @@ it again in system colours, after the fill:
 
 ```css
 .thing[data-selected="true"] {
-  background-color: var(--accent);
-  color: var(--accent-foreground);
+  background-color: var(--rp-accent);
+  color: var(--rp-accent-foreground);
 
   @media (forced-colors: active) {
     forced-color-adjust: none;

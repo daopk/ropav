@@ -6,17 +6,17 @@
   /* Breadcrumb link */
   .rp-breadcrumbs__link {
     position: relative;
-    padding-inline: calc(var(--spacing) * 0.5);
-    font-size: var(--text-sm);
-    line-height: var(--rp-leading, var(--text-sm--line-height));
-    --rp-leading: calc(var(--spacing) * 5);
-    line-height: calc(var(--spacing) * 5);
-    font-weight: var(--font-weight-medium);
+    padding-inline: calc(var(--rp-spacing) * 0.5);
+    font-size: var(--rp-text-sm);
+    line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+    --rp-leading: calc(var(--rp-spacing) * 5);
+    line-height: calc(var(--rp-spacing) * 5);
+    font-weight: var(--rp-font-weight-medium);
     text-decoration-line: none;
     opacity: 100%;
 
-    --breadcrumbs-link-fg: var(--muted);
-    --breadcrumbs-link-fg-current: var(--link);
+    --breadcrumbs-link-fg: var(--rp-muted);
+    --breadcrumbs-link-fg-current: var(--rp-link);
 
     color: var(--breadcrumbs-link-fg);
 
@@ -38,15 +38,15 @@
     flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    gap: calc(var(--spacing) * 0.5);
-    padding-inline: calc(var(--spacing) * 0.5);
+    gap: calc(var(--rp-spacing) * 0.5);
+    padding-inline: calc(var(--rp-spacing) * 0.5);
   }
 
   /* Separator icon */
   .rp-breadcrumbs__separator {
-    width: calc(var(--spacing) * 3);
-    height: calc(var(--spacing) * 3);
-    color: var(--muted);
+    width: calc(var(--rp-spacing) * 3);
+    height: calc(var(--rp-spacing) * 3);
+    color: var(--rp-muted);
     &:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) {
       rotate: 180deg;
     }

@@ -14,7 +14,7 @@ import { CloseButton } from "ropav";
 
 <style scoped>
 .glyph {
-  width: calc(var(--spacing) * 3.5);
-  height: calc(var(--spacing) * 3.5);
+  width: calc(var(--rp-spacing) * 3.5);
+  height: calc(var(--rp-spacing) * 3.5);
 }
 </style>

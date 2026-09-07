@@ -1,39 +1,39 @@
 .rp-input {
-  border-radius: var(--field-radius, calc(var(--radius) * 0.75));
+  border-radius: var(--rp-field-radius, calc(var(--rp-radius) * 0.75));
   border-style: var(--rp-border-style);
   border-width: 1px;
-  padding-inline: calc(var(--spacing) * 3);
-  padding-block: calc(var(--spacing) * 1.5);
-  font-size: var(--text-base);
-  line-height: var(--rp-leading, var(--text-base--line-height));
+  padding-inline: calc(var(--rp-spacing) * 3);
+  padding-block: calc(var(--rp-spacing) * 1.5);
+  font-size: var(--rp-text-base);
+  line-height: var(--rp-leading, var(--rp-text-base--line-height));
   @media (width >= 40rem) {
-    padding-block: calc(var(--spacing) * 2);
+    padding-block: calc(var(--rp-spacing) * 2);
   }
   @media (width >= 40rem) {
-    font-size: var(--text-sm);
-    line-height: var(--rp-leading, var(--text-sm--line-height));
+    font-size: var(--rp-text-sm);
+    line-height: var(--rp-leading, var(--rp-text-sm--line-height));
   }
-  color: var(--field-foreground, var(--foreground));
-  --rp-shadow: var(--field-shadow);
+  color: var(--rp-field-foreground, var(--rp-foreground));
+  --rp-shadow: var(--rp-field-shadow);
   box-shadow: var(--rp-ring), var(--rp-shadow);
   --rp-outline-style: none;
   outline-style: none;
   &::placeholder {
-    color: var(--field-placeholder, var(--muted));
+    color: var(--rp-field-placeholder, var(--rp-muted));
   }
 
   /* The fill, per state. The `--secondary` variant re-points these and declares nothing else. */
-  --input-bg: var(--field-background, var(--default));
-  --input-bg-hover: var(--field-hover);
-  --input-bg-focus: var(--field-focus);
+  --input-bg: var(--rp-field-background, var(--rp-default));
+  --input-bg-hover: var(--rp-field-hover);
+  --input-bg-focus: var(--rp-field-focus);
 
   background-color: var(--input-bg);
 
-  border-width: var(--border-width-field);
-  border-color: var(--field-border);
+  border-width: var(--rp-border-width-field);
+  border-color: var(--rp-field-border);
 
   /* Forced Colors Mode flattens the fill onto the page and strips the shadow, leaving a field that
-   * reads as bare text - `--border-width-field` is 0, so the declared border brings nothing
+   * reads as bare text - `--rp-border-width-field` is 0, so the declared border brings nothing
    * back on its own. `ButtonBorder` is the keyword the platform uses for a control's
    * edge; an outline rather than a border so nothing shifts, and the focus ring replaces it
    * while focused, which is the right order of importance. */
@@ -43,15 +43,15 @@
   }
 
   transition:
-    var(--rp-motion) background-color 150ms var(--ease-smooth),
-    border-color 150ms var(--ease-smooth),
-    box-shadow 150ms var(--ease-out);
+    var(--rp-motion) background-color 150ms var(--rp-ease-smooth),
+    border-color 150ms var(--rp-ease-smooth),
+    box-shadow 150ms var(--rp-ease-out);
 
   @media (hover: hover) {
     &:hover:not(:focus):not(:focus-visible),
     &[data-hovered="true"]:not([data-focused="true"]):not([data-focus-visible="true"]) {
       background-color: var(--input-bg-hover);
-      border-color: var(--field-border-hover);
+      border-color: var(--rp-field-border-hover);
     }
   }
 
@@ -63,7 +63,7 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
+    --rp-ring-color: var(--rp-focus);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: 0px;
@@ -71,7 +71,7 @@
       outline: 2px solid Highlight;
       outline-offset: 0;
     }
-    border-color: var(--field-border-focus);
+    border-color: var(--rp-field-border-focus);
     background-color: var(--input-bg-focus);
   }
 
@@ -84,7 +84,7 @@
   &[data-invalid="true"] {
     outline-style: var(--rp-outline-style);
     outline-width: 1px;
-    outline-color: var(--danger);
+    outline-color: var(--rp-danger);
     --rp-outline-style: solid;
     outline-style: solid;
     --rp-ring-offset-width: 3px;
@@ -99,7 +99,7 @@
         var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
           var(--rp-ring-color, currentcolor);
       box-shadow: var(--rp-ring), var(--rp-shadow);
-      --rp-ring-color: var(--danger);
+      --rp-ring-color: var(--rp-danger);
       --rp-ring-offset-width: 0px;
       @media (forced-colors: active) {
         outline-width: 2px;
@@ -113,8 +113,8 @@
   &:disabled,
   &[data-disabled="true"],
   &[aria-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -132,9 +132,9 @@
   --rp-shadow: 0 0 #0000;
   box-shadow: var(--rp-ring), var(--rp-shadow);
 
-  --input-bg: var(--default);
-  --input-bg-hover: var(--default-hover);
-  --input-bg-focus: var(--default);
+  --input-bg: var(--rp-default);
+  --input-bg-hover: var(--rp-default-hover);
+  --input-bg-focus: var(--rp-default);
 }
 
 /* Full width modifier */
@@ -147,20 +147,20 @@
    ========================================================================== */
 
 .rp-input--sm {
-  padding-block: var(--spacing);
-  font-size: var(--text-base);
-  line-height: var(--rp-leading, var(--text-base--line-height));
+  padding-block: var(--rp-spacing);
+  font-size: var(--rp-text-base);
+  line-height: var(--rp-leading, var(--rp-text-base--line-height));
   @media (width >= 40rem) {
-    padding-block: calc(var(--spacing) * 1.5);
+    padding-block: calc(var(--rp-spacing) * 1.5);
   }
   @media (width >= 40rem) {
-    font-size: var(--text-sm);
-    line-height: var(--rp-leading, var(--text-sm--line-height));
+    font-size: var(--rp-text-sm);
+    line-height: var(--rp-leading, var(--rp-text-sm--line-height));
   }
 }
 
 .rp-input--lg {
-  padding-block: calc(var(--spacing) * 2);
-  font-size: var(--text-base);
-  line-height: var(--rp-leading, var(--text-base--line-height));
+  padding-block: calc(var(--rp-spacing) * 2);
+  font-size: var(--rp-text-base);
+  line-height: var(--rp-leading, var(--rp-text-base--line-height));
 }

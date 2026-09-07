@@ -14,6 +14,6 @@ import { DropZone, DropZoneTrigger } from "ropav";
 <style scoped>
 .zone {
   width: 100%;
-  max-width: var(--container-md);
+  max-width: var(--rp-container-md);
 }
 </style>

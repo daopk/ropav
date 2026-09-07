@@ -17,8 +17,8 @@ const runs = [
 
 <style scoped>
 .dot {
-  width: calc(var(--spacing) * 2);
-  height: calc(var(--spacing) * 2);
+  width: calc(var(--rp-spacing) * 2);
+  height: calc(var(--rp-spacing) * 2);
   flex-shrink: 0;
   border-radius: 50%;
   background-color: currentcolor;

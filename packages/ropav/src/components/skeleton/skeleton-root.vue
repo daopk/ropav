@@ -13,7 +13,7 @@ defineSlots<{ default?: () => unknown }>();
 
 // Keep the animation themeable without baking the default into the component. A prop remains an
 // explicit override, matching `useCSSVariable` in the React implementation.
-const resolvedAnimationType = useCssVariable("--skeleton-animation", {
+const resolvedAnimationType = useCssVariable("--rp-skeleton-animation", {
   override: () => props.animationType,
 });
 

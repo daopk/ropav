@@ -248,7 +248,7 @@ export const Validation: Story = {
           <FieldError>Please select at least one notification method.</FieldError>
         </CheckboxGroup>
         <Button type="submit">Submit</Button>
-        <p v-if="submitted !== null" class="text-sm text-[var(--muted)]" data-testid="submitted">
+        <p v-if="submitted !== null" class="text-sm text-[var(--rp-muted)]" data-testid="submitted">
           Selected preferences: {{ submitted }}
         </p>
       </Form>
@@ -291,7 +291,7 @@ export const Controlled: Story = {
             Writing
           </CheckboxContent>
         </Checkbox>
-        <Label class="my-4 text-sm text-[var(--muted)]">Selected: {{ selected.join(", ") || "None" }}</Label>
+        <Label class="my-4 text-sm text-[var(--rp-muted)]">Selected: {{ selected.join(", ") || "None" }}</Label>
       </CheckboxGroup>
     `,
   }),

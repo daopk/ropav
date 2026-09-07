@@ -32,8 +32,8 @@ import {
 .stack {
   display: flex;
   width: 100%;
-  max-width: var(--container-xs);
+  max-width: var(--rp-container-xs);
   flex-direction: column;
-  gap: calc(var(--spacing) * 4);
+  gap: calc(var(--rp-spacing) * 4);
 }
 </style>

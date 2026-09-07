@@ -23,21 +23,21 @@ const links = ["Blog", "Docs", "Source"] as const;
 <style scoped>
 .panel {
   width: 100%;
-  max-width: var(--container-md);
+  max-width: var(--rp-container-md);
 }
 
 .panel .note {
-  color: var(--muted);
+  color: var(--rp-muted);
 }
 
 .panel .rule {
-  margin-block: calc(var(--spacing) * 4);
+  margin-block: calc(var(--rp-spacing) * 4);
 }
 
 .row {
   display: flex;
-  height: calc(var(--spacing) * 5);
+  height: calc(var(--rp-spacing) * 5);
   align-items: center;
-  gap: calc(var(--spacing) * 4);
+  gap: calc(var(--rp-spacing) * 4);
 }
 </style>

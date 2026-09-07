@@ -1,31 +1,31 @@
 /* Date input group styles */
 .rp-date-input-group {
   display: inline-flex;
-  height: calc(var(--spacing) * 9);
+  height: calc(var(--rp-spacing) * 9);
   align-items: center;
   overflow: hidden;
-  border-radius: var(--field-radius, calc(var(--radius) * 0.75));
+  border-radius: var(--rp-field-radius, calc(var(--rp-radius) * 0.75));
   border-style: var(--rp-border-style);
   border-width: 1px;
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
-  color: var(--field-foreground, var(--foreground));
-  --rp-shadow: var(--field-shadow);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+  color: var(--rp-field-foreground, var(--rp-foreground));
+  --rp-shadow: var(--rp-field-shadow);
   box-shadow: var(--rp-ring), var(--rp-shadow);
   --rp-outline-style: none;
   outline-style: none;
 
   /* The fill, per state. The `--secondary` variant re-points these and declares nothing else. */
-  --date-input-group-bg: var(--field-background, var(--default));
-  --date-input-group-bg-hover: var(--field-hover);
-  --date-input-group-bg-focus: var(--field-focus);
+  --date-input-group-bg: var(--rp-field-background, var(--rp-default));
+  --date-input-group-bg-hover: var(--rp-field-hover);
+  --date-input-group-bg-focus: var(--rp-field-focus);
 
   background-color: var(--date-input-group-bg);
-  border-width: var(--border-width-field);
-  border-color: var(--field-border);
+  border-width: var(--rp-border-width-field);
+  border-color: var(--rp-field-border);
 
   /* Forced Colors Mode flattens the fill onto the page and strips the shadow, leaving a field that
-   * reads as bare text - `--border-width-field` is 0, so the declared border brings nothing back on
+   * reads as bare text - `--rp-border-width-field` is 0, so the declared border brings nothing back on
    * its own. An outline rather than a width so nothing shifts, and the focus ring replaces it while
    * focused, which is the right order of importance. */
   @media (forced-colors: active) {
@@ -34,16 +34,16 @@
   }
 
   transition:
-    var(--rp-motion) background-color 150ms var(--ease-smooth),
-    border-color 150ms var(--ease-smooth),
-    box-shadow 150ms var(--ease-out);
+    var(--rp-motion) background-color 150ms var(--rp-ease-smooth),
+    border-color 150ms var(--rp-ease-smooth),
+    box-shadow 150ms var(--rp-ease-out);
 
   /* Hover state */
   @media (hover: hover) {
     &:hover:not(:focus-within),
     &[data-hovered="true"]:not([data-focus-within="true"]) {
       background-color: var(--date-input-group-bg-hover);
-      border-color: var(--field-border-hover);
+      border-color: var(--rp-field-border-hover);
     }
   }
 
@@ -69,7 +69,7 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
+    --rp-ring-color: var(--rp-focus);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: 0px;
@@ -83,7 +83,7 @@
   &[data-invalid="true"] {
     outline-style: var(--rp-outline-style);
     outline-width: 1px;
-    outline-color: var(--danger);
+    outline-color: var(--rp-danger);
     --rp-outline-style: solid;
     outline-style: solid;
     --rp-ring-offset-width: 3px;
@@ -98,7 +98,7 @@
         var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
           var(--rp-ring-color, currentcolor);
       box-shadow: var(--rp-ring), var(--rp-shadow);
-      --rp-ring-color: var(--danger);
+      --rp-ring-color: var(--rp-danger);
       --rp-ring-offset-width: 0px;
       @media (forced-colors: active) {
         outline-width: 2px;
@@ -106,14 +106,14 @@
       }
     }
     background-color: var(--date-input-group-bg-focus);
-    border-color: var(--field-border-invalid);
+    border-color: var(--rp-field-border-invalid);
   }
 
   /* Disabled state */
   &[data-disabled="true"],
   &[aria-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -132,16 +132,16 @@
   border-style: var(--rp-border-style);
   border-width: 0px;
   background-color: transparent;
-  padding-inline: calc(var(--spacing) * 3);
-  padding-block: calc(var(--spacing) * 1.5);
-  font-size: var(--text-base);
-  line-height: var(--rp-leading, var(--text-base--line-height));
+  padding-inline: calc(var(--rp-spacing) * 3);
+  padding-block: calc(var(--rp-spacing) * 1.5);
+  font-size: var(--rp-text-base);
+  line-height: var(--rp-leading, var(--rp-text-base--line-height));
   @media (width >= 40rem) {
-    padding-block: calc(var(--spacing) * 2);
+    padding-block: calc(var(--rp-spacing) * 2);
   }
   @media (width >= 40rem) {
-    font-size: var(--text-sm);
-    line-height: var(--rp-leading, var(--text-sm--line-height));
+    font-size: var(--rp-text-sm);
+    line-height: var(--rp-leading, var(--rp-text-sm--line-height));
   }
   --rp-shadow: 0 0 #0000;
   box-shadow: var(--rp-ring), var(--rp-shadow);
@@ -152,14 +152,14 @@
   .rp-date-input-group:has([data-slot="date-input-group-prefix"]) & {
     border-start-start-radius: 0;
     border-end-start-radius: 0;
-    padding-inline-start: calc(var(--spacing) * 2);
+    padding-inline-start: calc(var(--rp-spacing) * 2);
   }
 
   /* Remove border radius on right side when suffix is present */
   .rp-date-input-group:has([data-slot="date-input-group-suffix"]) & {
     border-start-end-radius: 0;
     border-end-end-radius: 0;
-    padding-inline-end: calc(var(--spacing) * 2);
+    padding-inline-end: calc(var(--rp-spacing) * 2);
   }
 
   .rp-date-input-group:has(.rp-date-range-picker__range-separator) & {
@@ -195,8 +195,8 @@
 
 .rp-date-input-group__segment {
   display: inline-block;
-  border-radius: calc(var(--radius) * 0.75);
-  padding-inline: calc(var(--spacing) * 0.5);
+  border-radius: calc(var(--rp-radius) * 0.75);
+  padding-inline: calc(var(--rp-spacing) * 0.5);
   text-align: end;
   text-wrap: nowrap;
   --rp-outline-style: none;
@@ -205,14 +205,14 @@
   /* The fill and the digits, per state. Five states repaint the text here, so a caller retuning
    * any one of them from a single declaration would take the other four with it. */
   --date-input-group-segment-bg: transparent;
-  --date-input-group-segment-bg-focused: var(--accent-soft);
-  --date-input-group-segment-bg-invalid-focused: var(--danger-soft);
+  --date-input-group-segment-bg-focused: var(--rp-accent-soft);
+  --date-input-group-segment-bg-invalid-focused: var(--rp-danger-soft);
   --date-input-group-segment-fg: currentcolor;
-  --date-input-group-segment-fg-literal: var(--muted);
-  --date-input-group-segment-fg-placeholder: var(--field-placeholder, var(--muted));
-  --date-input-group-segment-fg-focused: var(--accent-soft-foreground);
-  --date-input-group-segment-fg-invalid: var(--danger);
-  --date-input-group-segment-fg-invalid-focused: var(--danger-soft-foreground);
+  --date-input-group-segment-fg-literal: var(--rp-muted);
+  --date-input-group-segment-fg-placeholder: var(--rp-field-placeholder, var(--rp-muted));
+  --date-input-group-segment-fg-focused: var(--rp-accent-soft-foreground);
+  --date-input-group-segment-fg-invalid: var(--rp-danger);
+  --date-input-group-segment-fg-invalid-focused: var(--rp-danger-soft-foreground);
 
   background-color: var(--date-input-group-segment-bg);
   color: var(--date-input-group-segment-fg);
@@ -257,8 +257,8 @@
 .rp-date-input-group__prefix {
   pointer-events: none;
   flex-shrink: 0;
-  color: var(--field-placeholder, var(--muted));
-  margin-inline-start: calc(var(--spacing) * 3);
+  color: var(--rp-field-placeholder, var(--rp-muted));
+  margin-inline-start: calc(var(--rp-spacing) * 3);
   margin-inline-end: 0px;
   display: flex;
   align-items: center;
@@ -267,8 +267,8 @@
 .rp-date-input-group__suffix {
   pointer-events: none;
   flex-shrink: 0;
-  color: var(--field-placeholder, var(--muted));
-  margin-inline-end: calc(var(--spacing) * 3);
+  color: var(--rp-field-placeholder, var(--rp-muted));
+  margin-inline-end: calc(var(--rp-spacing) * 3);
   display: flex;
   align-items: center;
 }
@@ -282,9 +282,9 @@
   --rp-shadow: 0 0 #0000;
   box-shadow: var(--rp-ring), var(--rp-shadow);
 
-  --date-input-group-bg: var(--default);
-  --date-input-group-bg-hover: var(--default-hover);
-  --date-input-group-bg-focus: var(--default);
+  --date-input-group-bg: var(--rp-default);
+  --date-input-group-bg-hover: var(--rp-default-hover);
+  --date-input-group-bg-focus: var(--rp-default);
 
   [data-slot="date-input-group-input"] {
     background-color: transparent;
@@ -301,28 +301,28 @@
    ========================================================================== */
 
 .rp-date-input-group--sm {
-  height: calc(var(--spacing) * 8);
+  height: calc(var(--rp-spacing) * 8);
 
   .rp-date-input-group__input {
-    padding-block: var(--spacing);
-    font-size: var(--text-base);
-    line-height: var(--rp-leading, var(--text-base--line-height));
+    padding-block: var(--rp-spacing);
+    font-size: var(--rp-text-base);
+    line-height: var(--rp-leading, var(--rp-text-base--line-height));
     @media (width >= 40rem) {
-      padding-block: calc(var(--spacing) * 1.5);
+      padding-block: calc(var(--rp-spacing) * 1.5);
     }
     @media (width >= 40rem) {
-      font-size: var(--text-sm);
-      line-height: var(--rp-leading, var(--text-sm--line-height));
+      font-size: var(--rp-text-sm);
+      line-height: var(--rp-leading, var(--rp-text-sm--line-height));
     }
   }
 }
 
 .rp-date-input-group--lg {
-  height: calc(var(--spacing) * 10);
+  height: calc(var(--rp-spacing) * 10);
 
   .rp-date-input-group__input {
-    padding-block: calc(var(--spacing) * 2);
-    font-size: var(--text-base);
-    line-height: var(--rp-leading, var(--text-base--line-height));
+    padding-block: calc(var(--rp-spacing) * 2);
+    font-size: var(--rp-text-base);
+    line-height: var(--rp-leading, var(--rp-text-base--line-height));
   }
 }

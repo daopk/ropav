@@ -3,6 +3,6 @@
   flex-direction: column;
 
   [data-slot="checkbox"] {
-    margin-top: calc(var(--spacing) * 4);
+    margin-top: calc(var(--rp-spacing) * 4);
   }
 }

@@ -7,11 +7,11 @@ description: The custom properties, and which of them survive a surface you can 
 
 Three tiers, narrowing as they go.
 
-**Theme tokens** are the palette: base colours (`--background`, `--surface`, `--overlay`,
-`--muted`), interactive and status colours (`--accent`, `--success`, `--warning`, `--danger`, each
-with a `-foreground` and a derived `-hover` and `-soft`), form fields (`--field-background`,
-`--field-border`, `--field-radius`, …), layout knobs (`--spacing`, `--border-width`, `--radius`,
-`--rp-focus-ring-offset`, `--cursor-interactive`), the scrollbar set, and the shadows.
+**Theme tokens** are the palette: base colours (`--rp-background`, `--rp-surface`, `--rp-overlay`,
+`--rp-muted`), interactive and status colours (`--rp-accent`, `--rp-success`, `--rp-warning`, `--rp-danger`, each
+with a `-foreground` and a derived `-hover` and `-soft`), form fields (`--rp-field-background`,
+`--rp-field-border`, `--rp-field-radius`, …), layout knobs (`--rp-spacing`, `--rp-border-width`, `--rp-radius`,
+`--rp-focus-ring-offset`, `--rp-cursor-interactive`), the scrollbar set, and the shadows.
 
 **Derived values** — the `--radius-xs` … `--radius-4xl` scale and the easing curves — are computed
 from those.
@@ -34,29 +34,29 @@ splits the palette in two.
 
 ### Safe on anything: the tokens that are an alpha
 
-`--state-layer` is what a state paints. `--separator` and `--border` are the lines — each an alpha
-of `--surface-foreground` rather than a neutral of its own. An alpha darkens or lightens whatever
+`--rp-state-layer` is what a state paints. `--rp-separator` and `--rp-border` are the lines — each an alpha
+of `--rp-surface-foreground` rather than a neutral of its own. An alpha darkens or lightens whatever
 it lands on, so it holds its contrast against a fill it was never tuned for: another surface, the
 far half of the theme, or a photograph.
 
-The `-soft` family and `--scrollbar-thumb` are alphas too, which is why a selection is
-`--accent-soft` wherever the library marks one.
+The `-soft` family and `--rp-scrollbar-thumb` are alphas too, which is why a selection is
+`--rp-accent-soft` wherever the library marks one.
 
 ### Not safe: the fills
 
-`--default`, `--accent`, the status colours, `--surface` and its secondary and tertiary steps are
+`--rp-default`, `--rp-accent`, the status colours, `--rp-surface` and its secondary and tertiary steps are
 opaque, and they are meant to be — a badge you can read the page through is a broken badge. They
 assume a background because they **are** one. Use them to fill a box, never to mark a state on a
 box that is already transparent.
 
-`--surface-hover` sits on the fill side of that line despite the name: it is a surface that has
+`--rp-surface-hover` sits on the fill side of that line despite the name: it is a surface that has
 been tinted and stays opaque, for a component opaque at rest whose hover must stay that way.
-`--state-layer` is the one for a component transparent at rest.
+`--rp-state-layer` is the one for a component transparent at rest.
 
 Reaching for the wrong one fails quietly. A translucent hover on an opaque tag shows the page
 through it; a flat neutral on a transparent row vanishes the moment the fill behind it matches.
 
-The line between the two is what a colour is *for*, not what it looks like. `--default` is a fine
+The line between the two is what a colour is *for*, not what it looks like. `--rp-default` is a fine
 grey until it is asked to be a state layer: then it is a fixed lightness laid on an unknown one,
 and the day those two match it is gone with nothing to fail but the eye.
 

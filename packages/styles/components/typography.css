@@ -1,70 +1,70 @@
 .rp-typography {
-  color: var(--foreground);
+  color: var(--rp-foreground);
 }
 
 .rp-typography-prose {
-  color: var(--foreground);
+  color: var(--rp-foreground);
 }
 
 .rp-typography-prose h1 {
-  font-size: var(--text-4xl);
-  line-height: var(--rp-leading, var(--text-4xl--line-height));
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: var(--tracking-tight);
+  font-size: var(--rp-text-4xl);
+  line-height: var(--rp-leading, var(--rp-text-4xl--line-height));
+  font-weight: var(--rp-font-weight-semibold);
+  letter-spacing: var(--rp-tracking-tight);
 }
 
 .rp-typography-prose h2 {
-  font-size: var(--text-3xl);
-  line-height: var(--rp-leading, var(--text-3xl--line-height));
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: var(--tracking-tight);
+  font-size: var(--rp-text-3xl);
+  line-height: var(--rp-leading, var(--rp-text-3xl--line-height));
+  font-weight: var(--rp-font-weight-semibold);
+  letter-spacing: var(--rp-tracking-tight);
 }
 
 .rp-typography-prose h3 {
-  font-size: var(--text-2xl);
-  line-height: var(--rp-leading, var(--text-2xl--line-height));
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: var(--tracking-tight);
+  font-size: var(--rp-text-2xl);
+  line-height: var(--rp-leading, var(--rp-text-2xl--line-height));
+  font-weight: var(--rp-font-weight-semibold);
+  letter-spacing: var(--rp-tracking-tight);
 }
 
 .rp-typography-prose h4 {
-  font-size: var(--text-xl);
-  line-height: var(--rp-leading, var(--text-xl--line-height));
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: var(--tracking-tight);
+  font-size: var(--rp-text-xl);
+  line-height: var(--rp-leading, var(--rp-text-xl--line-height));
+  font-weight: var(--rp-font-weight-semibold);
+  letter-spacing: var(--rp-tracking-tight);
 }
 
 .rp-typography-prose h5 {
-  font-size: var(--text-lg);
-  line-height: var(--rp-leading, var(--text-lg--line-height));
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: var(--tracking-tight);
+  font-size: var(--rp-text-lg);
+  line-height: var(--rp-leading, var(--rp-text-lg--line-height));
+  font-weight: var(--rp-font-weight-semibold);
+  letter-spacing: var(--rp-tracking-tight);
 }
 
 .rp-typography-prose h6 {
-  font-size: var(--text-base);
-  line-height: var(--rp-leading, var(--text-base--line-height));
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: var(--tracking-tight);
+  font-size: var(--rp-text-base);
+  line-height: var(--rp-leading, var(--rp-text-base--line-height));
+  font-weight: var(--rp-font-weight-semibold);
+  letter-spacing: var(--rp-tracking-tight);
 }
 
 .rp-typography-prose p {
-  font-size: var(--text-base);
-  line-height: var(--rp-leading, var(--text-base--line-height));
-  --rp-leading: calc(var(--spacing) * 7);
-  line-height: calc(var(--spacing) * 7);
+  font-size: var(--rp-text-base);
+  line-height: var(--rp-leading, var(--rp-text-base--line-height));
+  --rp-leading: calc(var(--rp-spacing) * 7);
+  line-height: calc(var(--rp-spacing) * 7);
 }
 
 .rp-typography-prose code {
-  background-color: var(--default);
-  padding-inline: calc(var(--spacing) * 1.5);
-  padding-block: calc(var(--spacing) * 0.5);
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
-  color: var(--foreground);
+  background-color: var(--rp-default);
+  padding-inline: calc(var(--rp-spacing) * 1.5);
+  padding-block: calc(var(--rp-spacing) * 0.5);
+  font-family: var(--rp-font-mono);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+  color: var(--rp-foreground);
 
-  border-radius: min(32px, var(--component-radius));
+  border-radius: min(32px, var(--rp-component-radius));
 
   /* Code is marked out by a tinted background and nothing else, so forced colors leaves it
    * indistinguishable from the prose around it - the monospace face is all that is left. */
@@ -75,68 +75,68 @@
 }
 
 .rp-typography-prose a {
-  font-weight: var(--font-weight-medium);
-  color: var(--link);
+  font-weight: var(--rp-font-weight-medium);
+  color: var(--rp-link);
   text-decoration-line: underline;
   text-underline-offset: 4px;
 }
 
 .rp-typography-prose blockquote {
-  margin-top: calc(var(--spacing) * 4);
+  margin-top: calc(var(--rp-spacing) * 4);
   border-inline-start-style: var(--rp-border-style);
   border-inline-start-width: 4px;
-  border-color: var(--border);
-  padding-inline-start: calc(var(--spacing) * 4);
-  color: var(--muted);
+  border-color: var(--rp-border);
+  padding-inline-start: calc(var(--rp-spacing) * 4);
+  color: var(--rp-muted);
   font-style: italic;
 }
 
 .rp-typography-prose ul {
-  margin-block: calc(var(--spacing) * 4);
+  margin-block: calc(var(--rp-spacing) * 4);
   list-style-type: disc;
   :where(& > :not(:last-child)) {
     --rp-space-y-reverse: 0;
-    margin-block-start: calc(calc(var(--spacing) * 2) * var(--rp-space-y-reverse));
-    margin-block-end: calc(calc(var(--spacing) * 2) * calc(1 - var(--rp-space-y-reverse)));
+    margin-block-start: calc(calc(var(--rp-spacing) * 2) * var(--rp-space-y-reverse));
+    margin-block-end: calc(calc(var(--rp-spacing) * 2) * calc(1 - var(--rp-space-y-reverse)));
   }
-  padding-inline-start: calc(var(--spacing) * 6);
+  padding-inline-start: calc(var(--rp-spacing) * 6);
 }
 
 .rp-typography-prose ol {
-  margin-block: calc(var(--spacing) * 4);
+  margin-block: calc(var(--rp-spacing) * 4);
   list-style-type: decimal;
   :where(& > :not(:last-child)) {
     --rp-space-y-reverse: 0;
-    margin-block-start: calc(calc(var(--spacing) * 2) * var(--rp-space-y-reverse));
-    margin-block-end: calc(calc(var(--spacing) * 2) * calc(1 - var(--rp-space-y-reverse)));
+    margin-block-start: calc(calc(var(--rp-spacing) * 2) * var(--rp-space-y-reverse));
+    margin-block-end: calc(calc(var(--rp-spacing) * 2) * calc(1 - var(--rp-space-y-reverse)));
   }
-  padding-inline-start: calc(var(--spacing) * 6);
+  padding-inline-start: calc(var(--rp-spacing) * 6);
 }
 
 .rp-typography-prose li {
-  font-size: var(--text-base);
-  line-height: var(--rp-leading, var(--text-base--line-height));
-  --rp-leading: calc(var(--spacing) * 7);
-  line-height: calc(var(--spacing) * 7);
+  font-size: var(--rp-text-base);
+  line-height: var(--rp-leading, var(--rp-text-base--line-height));
+  --rp-leading: calc(var(--rp-spacing) * 7);
+  line-height: calc(var(--rp-spacing) * 7);
 }
 
 .rp-typography-prose hr {
-  margin-block: calc(var(--spacing) * 8);
-  border-color: var(--separator);
+  margin-block: calc(var(--rp-spacing) * 8);
+  border-color: var(--rp-separator);
 }
 
 .rp-typography-prose pre {
-  margin-block: calc(var(--spacing) * 4);
+  margin-block: calc(var(--rp-spacing) * 4);
   overflow-x: auto;
-  background-color: var(--default);
-  padding: calc(var(--spacing) * 4);
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
-  --rp-leading: var(--leading-relaxed);
-  line-height: var(--leading-relaxed);
+  background-color: var(--rp-default);
+  padding: calc(var(--rp-spacing) * 4);
+  font-family: var(--rp-font-mono);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+  --rp-leading: var(--rp-leading-relaxed);
+  line-height: var(--rp-leading-relaxed);
 
-  border-radius: min(32px, var(--component-radius));
+  border-radius: min(32px, var(--rp-component-radius));
 
   /* Code is marked out by a tinted background and nothing else, so forced colors leaves it
    * indistinguishable from the prose around it - the monospace face is all that is left. */
@@ -147,8 +147,8 @@
 }
 
 .rp-typography-prose strong {
-  font-weight: var(--font-weight-semibold);
-  color: var(--foreground);
+  font-weight: var(--rp-font-weight-semibold);
+  color: var(--rp-foreground);
 }
 
 .rp-typography-prose em {
@@ -156,84 +156,84 @@
 }
 
 .rp-typography-prose img {
-  margin-block: calc(var(--spacing) * 4);
+  margin-block: calc(var(--rp-spacing) * 4);
 
-  border-radius: min(32px, var(--component-radius));
+  border-radius: min(32px, var(--rp-component-radius));
 }
 
 .rp-typography--h1 {
-  font-size: var(--text-4xl);
-  line-height: var(--rp-leading, var(--text-4xl--line-height));
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: var(--tracking-tight);
+  font-size: var(--rp-text-4xl);
+  line-height: var(--rp-leading, var(--rp-text-4xl--line-height));
+  font-weight: var(--rp-font-weight-semibold);
+  letter-spacing: var(--rp-tracking-tight);
 }
 
 .rp-typography--h2 {
-  font-size: var(--text-3xl);
-  line-height: var(--rp-leading, var(--text-3xl--line-height));
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: var(--tracking-tight);
+  font-size: var(--rp-text-3xl);
+  line-height: var(--rp-leading, var(--rp-text-3xl--line-height));
+  font-weight: var(--rp-font-weight-semibold);
+  letter-spacing: var(--rp-tracking-tight);
 }
 
 .rp-typography--h3 {
-  font-size: var(--text-2xl);
-  line-height: var(--rp-leading, var(--text-2xl--line-height));
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: var(--tracking-tight);
+  font-size: var(--rp-text-2xl);
+  line-height: var(--rp-leading, var(--rp-text-2xl--line-height));
+  font-weight: var(--rp-font-weight-semibold);
+  letter-spacing: var(--rp-tracking-tight);
 }
 
 .rp-typography--h4 {
-  font-size: var(--text-xl);
-  line-height: var(--rp-leading, var(--text-xl--line-height));
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: var(--tracking-tight);
+  font-size: var(--rp-text-xl);
+  line-height: var(--rp-leading, var(--rp-text-xl--line-height));
+  font-weight: var(--rp-font-weight-semibold);
+  letter-spacing: var(--rp-tracking-tight);
 }
 
 .rp-typography--h5 {
-  font-size: var(--text-lg);
-  line-height: var(--rp-leading, var(--text-lg--line-height));
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: var(--tracking-tight);
+  font-size: var(--rp-text-lg);
+  line-height: var(--rp-leading, var(--rp-text-lg--line-height));
+  font-weight: var(--rp-font-weight-semibold);
+  letter-spacing: var(--rp-tracking-tight);
 }
 
 .rp-typography--h6 {
-  font-size: var(--text-base);
-  line-height: var(--rp-leading, var(--text-base--line-height));
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: var(--tracking-tight);
+  font-size: var(--rp-text-base);
+  line-height: var(--rp-leading, var(--rp-text-base--line-height));
+  font-weight: var(--rp-font-weight-semibold);
+  letter-spacing: var(--rp-tracking-tight);
 }
 
 .rp-typography--body {
-  font-size: var(--text-base);
-  line-height: var(--rp-leading, var(--text-base--line-height));
-  --rp-leading: calc(var(--spacing) * 7);
-  line-height: calc(var(--spacing) * 7);
+  font-size: var(--rp-text-base);
+  line-height: var(--rp-leading, var(--rp-text-base--line-height));
+  --rp-leading: calc(var(--rp-spacing) * 7);
+  line-height: calc(var(--rp-spacing) * 7);
 }
 
 .rp-typography--body-sm {
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
-  --rp-leading: calc(var(--spacing) * 6);
-  line-height: calc(var(--spacing) * 6);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+  --rp-leading: calc(var(--rp-spacing) * 6);
+  line-height: calc(var(--rp-spacing) * 6);
 }
 
 .rp-typography--body-xs {
-  font-size: var(--text-xs);
-  line-height: var(--rp-leading, var(--text-xs--line-height));
-  --rp-leading: calc(var(--spacing) * 5);
-  line-height: calc(var(--spacing) * 5);
+  font-size: var(--rp-text-xs);
+  line-height: var(--rp-leading, var(--rp-text-xs--line-height));
+  --rp-leading: calc(var(--rp-spacing) * 5);
+  line-height: calc(var(--rp-spacing) * 5);
 }
 
 .rp-typography--code {
-  background-color: var(--default);
-  padding-inline: calc(var(--spacing) * 1.5);
-  padding-block: calc(var(--spacing) * 0.5);
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
-  color: var(--foreground);
+  background-color: var(--rp-default);
+  padding-inline: calc(var(--rp-spacing) * 1.5);
+  padding-block: calc(var(--rp-spacing) * 0.5);
+  font-family: var(--rp-font-mono);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+  color: var(--rp-foreground);
 
-  border-radius: min(32px, var(--component-radius));
+  border-radius: min(32px, var(--rp-component-radius));
 
   /* Code is marked out by a tinted background and nothing else, so forced colors leaves it
    * indistinguishable from the prose around it - the monospace face is all that is left. */
@@ -260,11 +260,11 @@
 }
 
 .rp-typography--color-default {
-  color: var(--foreground);
+  color: var(--rp-foreground);
 }
 
 .rp-typography--color-muted {
-  color: var(--muted);
+  color: var(--rp-muted);
 }
 
 .rp-typography--truncate {
@@ -275,17 +275,17 @@
 }
 
 .rp-typography--weight-normal {
-  font-weight: var(--font-weight-normal);
+  font-weight: var(--rp-font-weight-normal);
 }
 
 .rp-typography--weight-medium {
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--rp-font-weight-medium);
 }
 
 .rp-typography--weight-semibold {
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--rp-font-weight-semibold);
 }
 
 .rp-typography--weight-bold {
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--rp-font-weight-bold);
 }

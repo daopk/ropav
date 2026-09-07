@@ -26,6 +26,6 @@ const show = (variant: "danger" | "default" | "success") => {
 .row {
   display: flex;
   flex-wrap: wrap;
-  gap: calc(var(--spacing) * 3);
+  gap: calc(var(--rp-spacing) * 3);
 }
 </style>

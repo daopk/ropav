@@ -13,6 +13,6 @@ import { Paragraph } from "ropav";
 
 <style scoped>
 .frame {
-  width: calc(var(--spacing) * 64);
+  width: calc(var(--rp-spacing) * 64);
 }
 </style>

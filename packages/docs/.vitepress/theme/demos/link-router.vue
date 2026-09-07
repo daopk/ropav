@@ -39,19 +39,19 @@ const navigate = (href: string) => {
 .stack {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--spacing) * 3);
+  gap: calc(var(--rp-spacing) * 3);
 }
 
 .nav {
   display: flex;
   align-items: center;
-  gap: calc(var(--spacing) * 4);
+  gap: calc(var(--rp-spacing) * 4);
 }
 
 .nav .tab {
   text-decoration-line: none;
   &[data-current="true"] {
-    font-weight: var(--font-weight-semibold);
+    font-weight: var(--rp-font-weight-semibold);
   }
   &[data-current="true"] {
     text-decoration-line: underline;
@@ -59,8 +59,8 @@ const navigate = (href: string) => {
 }
 
 .stack .note {
-  color: var(--muted);
-  font-size: var(--text-sm);
-  line-height: var(--text-sm--line-height);
+  color: var(--rp-muted);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-text-sm--line-height);
 }
 </style>

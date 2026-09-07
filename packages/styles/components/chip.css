@@ -4,19 +4,19 @@
   width: fit-content;
   flex-shrink: 0;
   align-items: center;
-  gap: calc(var(--spacing) * 0.5);
-  padding-inline: calc(var(--spacing) * 2);
-  padding-block: calc(var(--spacing) * 0.5);
-  font-size: var(--text-xs);
-  line-height: var(--rp-leading, var(--text-xs--line-height));
-  --rp-leading: calc(var(--spacing) * 5);
-  line-height: calc(var(--spacing) * 5);
-  font-weight: var(--font-weight-medium);
+  gap: calc(var(--rp-spacing) * 0.5);
+  padding-inline: calc(var(--rp-spacing) * 2);
+  padding-block: calc(var(--rp-spacing) * 0.5);
+  font-size: var(--rp-text-xs);
+  line-height: var(--rp-leading, var(--rp-text-xs--line-height));
+  --rp-leading: calc(var(--rp-spacing) * 5);
+  line-height: calc(var(--rp-spacing) * 5);
+  font-weight: var(--rp-font-weight-medium);
 
-  border-radius: min(32px, var(--component-radius));
+  border-radius: min(32px, var(--rp-component-radius));
 
   /* Default tokens */
-  --chip-bg: var(--default);
+  --chip-bg: var(--rp-default);
   --chip-fg: currentColor;
 
   background-color: var(--chip-bg);
@@ -37,28 +37,28 @@
 }
 
 .rp-chip__label {
-  padding-inline: calc(var(--spacing) * 0.5);
+  padding-inline: calc(var(--rp-spacing) * 0.5);
 }
 
 /* Color variants - set foreground color */
 .rp-chip--accent {
-  --chip-fg: var(--accent-soft-foreground);
+  --chip-fg: var(--rp-accent-soft-foreground);
 }
 
 .rp-chip--danger {
-  --chip-fg: var(--danger-soft-foreground);
+  --chip-fg: var(--rp-danger-soft-foreground);
 }
 
 .rp-chip--default {
-  --chip-fg: var(--default-foreground);
+  --chip-fg: var(--rp-default-foreground);
 }
 
 .rp-chip--success {
-  --chip-fg: var(--success-soft-foreground);
+  --chip-fg: var(--rp-success-soft-foreground);
 }
 
 .rp-chip--warning {
-  --chip-fg: var(--warning-soft-foreground);
+  --chip-fg: var(--rp-warning-soft-foreground);
 }
 
 /* Variant styles */
@@ -83,23 +83,23 @@
 
 /* Size variants */
 .rp-chip--sm {
-  padding-inline: var(--spacing);
+  padding-inline: var(--rp-spacing);
   padding-block: 0px;
-  font-size: var(--text-xs);
-  line-height: var(--rp-leading, var(--text-xs--line-height));
+  font-size: var(--rp-text-xs);
+  line-height: var(--rp-leading, var(--rp-text-xs--line-height));
 }
 
 .rp-chip--md {
-  font-size: var(--text-xs);
-  line-height: var(--rp-leading, var(--text-xs--line-height));
+  font-size: var(--rp-text-xs);
+  line-height: var(--rp-leading, var(--rp-text-xs--line-height));
 }
 
 .rp-chip--lg {
-  padding-inline: calc(var(--spacing) * 3);
-  padding-block: var(--spacing);
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
-  font-weight: var(--font-weight-medium);
+  padding-inline: calc(var(--rp-spacing) * 3);
+  padding-block: var(--rp-spacing);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+  font-weight: var(--rp-font-weight-medium);
 }
 
 /* ====================== */
@@ -108,47 +108,47 @@
 
 /* Primary variants - solid backgrounds */
 .rp-chip--primary.rp-chip--accent {
-  --chip-bg: var(--accent);
-  --chip-fg: var(--accent-foreground);
+  --chip-bg: var(--rp-accent);
+  --chip-fg: var(--rp-accent-foreground);
 }
 
 .rp-chip--primary.rp-chip--success {
-  --chip-bg: var(--success);
-  --chip-fg: var(--success-foreground);
+  --chip-bg: var(--rp-success);
+  --chip-fg: var(--rp-success-foreground);
 }
 
 .rp-chip--primary.rp-chip--warning {
-  --chip-bg: var(--warning);
-  --chip-fg: var(--warning-foreground);
+  --chip-bg: var(--rp-warning);
+  --chip-fg: var(--rp-warning-foreground);
 }
 
 .rp-chip--primary.rp-chip--danger {
-  --chip-bg: var(--danger);
-  --chip-fg: var(--danger-foreground);
+  --chip-bg: var(--rp-danger);
+  --chip-fg: var(--rp-danger-foreground);
 }
 
 /* Soft variants - muted backgrounds */
 .rp-chip--accent.rp-chip--soft {
-  --chip-bg: var(--accent-soft);
-  --chip-fg: var(--accent-soft-foreground);
+  --chip-bg: var(--rp-accent-soft);
+  --chip-fg: var(--rp-accent-soft-foreground);
 }
 
 .rp-chip--success.rp-chip--soft {
-  --chip-bg: var(--success-soft);
-  --chip-fg: var(--success-soft-foreground);
+  --chip-bg: var(--rp-success-soft);
+  --chip-fg: var(--rp-success-soft-foreground);
 }
 
 .rp-chip--warning.rp-chip--soft {
-  --chip-bg: var(--warning-soft);
-  --chip-fg: var(--warning-soft-foreground);
+  --chip-bg: var(--rp-warning-soft);
+  --chip-fg: var(--rp-warning-soft-foreground);
 }
 
 .rp-chip--danger.rp-chip--soft {
-  --chip-bg: var(--danger-soft);
-  --chip-fg: var(--danger-soft-foreground);
+  --chip-bg: var(--rp-danger-soft);
+  --chip-fg: var(--rp-danger-soft-foreground);
 }
 
 .rp-chip--default.rp-chip--soft {
-  --chip-bg: var(--default-soft);
-  --chip-fg: var(--default-soft-foreground);
+  --chip-bg: var(--rp-default-soft);
+  --chip-fg: var(--rp-default-soft-foreground);
 }

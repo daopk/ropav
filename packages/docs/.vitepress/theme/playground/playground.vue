@@ -76,8 +76,8 @@ watch(
 .playground__stage {
   display: grid;
   grid-template-columns: 1fr;
-  color: var(--foreground);
-  background-color: var(--background);
+  color: var(--rp-foreground);
+  background-color: var(--rp-background);
 }
 
 @media (min-width: 48rem) {

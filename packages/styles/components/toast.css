@@ -21,46 +21,46 @@
 /* Placement variants - Bottom */
 .rp-toast-region--bottom {
   /* left-1/2 + -translate-x-1/2 centers in both LTR and RTL (translate is physical) */
-  bottom: calc(var(--spacing) * 4);
+  bottom: calc(var(--rp-spacing) * 4);
   left: calc(1 / 2 * 100%);
   --rp-translate-x: calc(calc(1 / 2 * 100%) * -1);
   translate: var(--rp-translate-x) var(--rp-translate-y);
 }
 
 .rp-toast-region--bottom-start {
-  inset-inline-start: calc(var(--spacing) * 4);
-  bottom: calc(var(--spacing) * 4);
+  inset-inline-start: calc(var(--rp-spacing) * 4);
+  bottom: calc(var(--rp-spacing) * 4);
 }
 
 .rp-toast-region--bottom-end {
-  inset-inline-end: calc(var(--spacing) * 4);
-  bottom: calc(var(--spacing) * 4);
+  inset-inline-end: calc(var(--rp-spacing) * 4);
+  bottom: calc(var(--rp-spacing) * 4);
 }
 
 /* Placement variants - Top */
 .rp-toast-region--top {
   /* left-1/2 + -translate-x-1/2 centers in both LTR and RTL (translate is physical) */
-  top: calc(var(--spacing) * 4);
+  top: calc(var(--rp-spacing) * 4);
   left: calc(1 / 2 * 100%);
   --rp-translate-x: calc(calc(1 / 2 * 100%) * -1);
   translate: var(--rp-translate-x) var(--rp-translate-y);
 }
 
 .rp-toast-region--top-start {
-  inset-inline-start: calc(var(--spacing) * 4);
-  top: calc(var(--spacing) * 4);
+  inset-inline-start: calc(var(--rp-spacing) * 4);
+  top: calc(var(--rp-spacing) * 4);
 }
 
 .rp-toast-region--top-end {
-  inset-inline-end: calc(var(--spacing) * 4);
-  top: calc(var(--spacing) * 4);
+  inset-inline-end: calc(var(--rp-spacing) * 4);
+  top: calc(var(--rp-spacing) * 4);
 }
 
 .rp-toast-region:focus-visible {
   outline-style: var(--rp-outline-style);
   outline-width: 2px;
   outline-offset: 2px;
-  outline-color: var(--focus);
+  outline-color: var(--rp-focus);
 }
 
 /* Base toast styles */
@@ -74,13 +74,13 @@
   flex-direction: row;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: calc(var(--spacing) * 1.5);
-  background-color: var(--surface);
-  padding-inline: calc(var(--spacing) * 4);
-  padding-block: calc(var(--spacing) * 3);
-  --rp-shadow: var(--overlay-shadow);
+  gap: calc(var(--rp-spacing) * 1.5);
+  background-color: var(--rp-surface);
+  padding-inline: calc(var(--rp-spacing) * 4);
+  padding-block: calc(var(--rp-spacing) * 3);
+  --rp-shadow: var(--rp-overlay-shadow);
   box-shadow: var(--rp-ring), var(--rp-shadow);
-  border-radius: min(32px, var(--component-radius));
+  border-radius: min(32px, var(--rp-component-radius));
 }
 
 .rp-toast--bottom,
@@ -118,7 +118,7 @@
   outline-style: var(--rp-outline-style);
   outline-width: 2px;
   outline-offset: 2px;
-  outline-color: var(--focus);
+  outline-color: var(--rp-focus);
 }
 
 /* Toast placements + view transitions */
@@ -150,74 +150,74 @@
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing);
-  color: var(--overlay-foreground);
+  padding: var(--rp-spacing);
+  color: var(--rp-overlay-foreground);
   -webkit-user-select: none;
   user-select: none;
 
   [data-slot="toast-default-icon"] {
     box-sizing: content-box;
-    width: calc(var(--spacing) * 4);
-    height: calc(var(--spacing) * 4);
+    width: calc(var(--rp-spacing) * 4);
+    height: calc(var(--rp-spacing) * 4);
   }
 
   /* Spinner styles override for toast */
   [data-slot="spinner"] {
-    width: calc(var(--spacing) * 4);
-    height: calc(var(--spacing) * 4);
+    width: calc(var(--rp-spacing) * 4);
+    height: calc(var(--rp-spacing) * 4);
   }
 
   [data-slot="spinner-icon"] {
-    width: calc(var(--spacing) * 4);
-    height: calc(var(--spacing) * 4);
+    width: calc(var(--rp-spacing) * 4);
+    height: calc(var(--rp-spacing) * 4);
   }
 }
 
 /* Toast title */
 .rp-toast__title {
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
-  --rp-leading: calc(var(--spacing) * 5);
-  line-height: calc(var(--spacing) * 5);
-  font-weight: var(--font-weight-medium);
-  color: var(--overlay-foreground);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+  --rp-leading: calc(var(--rp-spacing) * 5);
+  line-height: calc(var(--rp-spacing) * 5);
+  font-weight: var(--rp-font-weight-medium);
+  color: var(--rp-overlay-foreground);
 }
 
 /* Toast description */
 .rp-toast__description {
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
-  color: var(--muted);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+  color: var(--rp-muted);
 }
 
 /* Toast close button */
 .rp-toast__close-button {
   pointer-events: none;
   position: absolute;
-  inset-inline-end: calc(var(--spacing) * -1);
-  top: calc(var(--spacing) * -1);
-  width: calc(var(--spacing) * 5);
-  height: calc(var(--spacing) * 5);
-  border-color: var(--border);
-  background-color: var(--default);
+  inset-inline-end: calc(var(--rp-spacing) * -1);
+  top: calc(var(--rp-spacing) * -1);
+  width: calc(var(--rp-spacing) * 5);
+  height: calc(var(--rp-spacing) * 5);
+  border-color: var(--rp-border);
+  background-color: var(--rp-default);
   opacity: 0%;
   @media (width >= 40rem) {
     border-style: var(--rp-border-style);
     border-width: 1px;
   }
   @media (width >= 40rem) {
-    background-color: var(--overlay);
+    background-color: var(--rp-overlay);
   }
 
-  --toast-close-button-bg-hover: var(--default);
-  transition: var(--rp-motion) opacity 150ms var(--ease-smooth);
+  --toast-close-button-bg-hover: var(--rp-default);
+  transition: var(--rp-motion) opacity 150ms var(--rp-ease-smooth);
   /* Overrides close button default icon size from 16px to 12px */
   [data-slot="close-button-icon"] {
-    width: calc(var(--spacing) * 3.5);
-    height: calc(var(--spacing) * 3.5);
+    width: calc(var(--rp-spacing) * 3.5);
+    height: calc(var(--rp-spacing) * 3.5);
     @media (width >= 40rem) {
-      width: calc(var(--spacing) * 3);
-      height: calc(var(--spacing) * 3);
+      width: calc(var(--rp-spacing) * 3);
+      height: calc(var(--rp-spacing) * 3);
     }
   }
 
@@ -238,7 +238,7 @@
 
 /* Toast action button */
 .rp-toast__action {
-  margin-top: calc(var(--spacing) * 2);
+  margin-top: calc(var(--rp-spacing) * 2);
   @media (width >= 40rem) {
     margin-top: 0px;
   }
@@ -246,31 +246,31 @@
 
 /* Variant modifiers */
 .rp-toast--accent .rp-toast__title {
-  color: var(--accent-soft-foreground);
+  color: var(--rp-accent-soft-foreground);
 }
 
 .rp-toast--success .rp-toast__title {
-  color: var(--success-soft-foreground);
+  color: var(--rp-success-soft-foreground);
 }
 
 .rp-toast--success .rp-toast__indicator {
-  color: var(--success-soft-foreground);
+  color: var(--rp-success-soft-foreground);
 }
 
 .rp-toast--warning .rp-toast__title {
-  color: var(--warning-soft-foreground);
+  color: var(--rp-warning-soft-foreground);
 }
 
 .rp-toast--warning .rp-toast__indicator {
-  color: var(--warning-soft-foreground);
+  color: var(--rp-warning-soft-foreground);
 }
 
 .rp-toast--danger .rp-toast__title {
-  color: var(--danger-soft-foreground);
+  color: var(--rp-danger-soft-foreground);
 }
 
 .rp-toast--danger .rp-toast__indicator {
-  color: var(--danger-soft-foreground);
+  color: var(--rp-danger-soft-foreground);
 }
 
 /* View transition animations */

@@ -93,7 +93,7 @@ export const Sizes: Story = {
             <Avatar :size="size.value"><AvatarImage :src="avatarUrl" /></Avatar>
             <Badge v-bind="args" :size="size.value"><BadgeLabel>99+</BadgeLabel></Badge>
           </BadgeAnchor>
-          <span class="text-xs text-[var(--muted)]">{{ size.label }}</span>
+          <span class="text-xs text-[var(--rp-muted)]">{{ size.label }}</span>
         </div>
       </div>
     `,
@@ -116,7 +116,7 @@ export const Colors: Story = {
             <Avatar><AvatarImage :src="avatarUrl" /></Avatar>
             <Badge v-bind="args" :color="color" />
           </BadgeAnchor>
-          <span class="text-xs text-[var(--muted)] capitalize">{{ color }}</span>
+          <span class="text-xs text-[var(--rp-muted)] capitalize">{{ color }}</span>
         </div>
       </div>
     `,
@@ -143,14 +143,14 @@ export const WithContent: Story = {
             <Avatar><AvatarImage :src="avatarUrl" /></Avatar>
             <Badge v-bind="args" :color="item.color"><BadgeLabel>{{ item.content }}</BadgeLabel></Badge>
           </BadgeAnchor>
-          <span class="text-xs text-[var(--muted)]">{{ item.label }}</span>
+          <span class="text-xs text-[var(--rp-muted)]">{{ item.label }}</span>
         </div>
         <div class="flex flex-col items-center gap-2">
           <BadgeAnchor>
             <Avatar><AvatarImage :src="avatarUrl" /></Avatar>
             <Badge v-bind="args" color="accent"><IconBell /></Badge>
           </BadgeAnchor>
-          <span class="text-xs text-[var(--muted)]">Icon</span>
+          <span class="text-xs text-[var(--rp-muted)]">Icon</span>
         </div>
       </div>
     `,
@@ -175,7 +175,7 @@ export const Placements: Story = {
             <Avatar><AvatarImage :src="avatarUrl" /></Avatar>
             <Badge color="accent" :placement="placement" size="sm" />
           </BadgeAnchor>
-          <span class="text-xs text-[var(--muted)]">{{ placement }}</span>
+          <span class="text-xs text-[var(--rp-muted)]">{{ placement }}</span>
         </div>
       </div>
     `,
@@ -194,7 +194,7 @@ export const Variants: Story = {
       <div class="flex flex-col gap-8">
         <template v-for="(variant, index) in variants" :key="variant">
           <div class="flex flex-col gap-4">
-            <h3 class="text-sm font-semibold text-[var(--muted)] capitalize">{{ variant }}</h3>
+            <h3 class="text-sm font-semibold text-[var(--rp-muted)] capitalize">{{ variant }}</h3>
             <div class="flex items-center gap-8">
               <div v-for="color in colors" :key="color" class="flex flex-col items-center gap-2">
                 <BadgeAnchor>
@@ -203,7 +203,7 @@ export const Variants: Story = {
                     <BadgeLabel>5</BadgeLabel>
                   </Badge>
                 </BadgeAnchor>
-                <span class="text-xs text-[var(--muted)] capitalize">{{ color }}</span>
+                <span class="text-xs text-[var(--rp-muted)] capitalize">{{ color }}</span>
               </div>
             </div>
           </div>
@@ -229,7 +229,7 @@ export const DotBadge: Story = {
     template: `
       <div class="flex flex-col gap-8">
         <div class="flex flex-col gap-4">
-          <h3 class="text-sm font-semibold text-[var(--muted)]">Status Indicators</h3>
+          <h3 class="text-sm font-semibold text-[var(--rp-muted)]">Status Indicators</h3>
           <div class="flex items-center gap-8">
             <BadgeAnchor v-for="color in colors" :key="color">
               <Avatar size="sm"><AvatarImage :src="avatarUrl" /></Avatar>
@@ -239,14 +239,14 @@ export const DotBadge: Story = {
         </div>
         <Separator />
         <div class="flex flex-col gap-4">
-          <h3 class="text-sm font-semibold text-[var(--muted)]">Sizes</h3>
+          <h3 class="text-sm font-semibold text-[var(--rp-muted)]">Sizes</h3>
           <div class="flex items-center gap-8">
             <div v-for="size in sizes" :key="size.value" class="flex flex-col items-center gap-2">
               <BadgeAnchor>
                 <Avatar :size="size.value"><AvatarImage :src="avatarUrl" /></Avatar>
                 <Badge color="success" placement="bottom-right" :size="size.value" />
               </BadgeAnchor>
-              <span class="text-xs text-[var(--muted)]">{{ size.label }}</span>
+              <span class="text-xs text-[var(--rp-muted)]">{{ size.label }}</span>
             </div>
           </div>
         </div>

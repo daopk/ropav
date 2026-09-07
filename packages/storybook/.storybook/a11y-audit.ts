@@ -11,7 +11,7 @@ import { PALETTE_CONTRAST_DEBT, expectNoA11yViolations } from "@ropav/testing/he
  * axe's relational rules mean anything: an `option` outside a `listbox` or a `row` outside a `grid`
  * reports a failure that says more about the harness than about the component.
  *
- * Contrast is deliberately not part of it. `--accent` and `--danger` sit below the AA floor for
+ * Contrast is deliberately not part of it. `--rp-accent` and `--rp-danger` sit below the AA floor for
  * normal text, and axe has no way to accept two specific colours while still judging the rest, so
  * leaving the rule on here would keep every story that paints with either permanently red.
  *

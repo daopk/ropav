@@ -133,7 +133,7 @@
     &::placeholder,
     & *::placeholder {
       opacity: 1;
-      color: var(--field-placeholder, var(--muted));
+      color: var(--rp-field-placeholder, var(--rp-muted));
     }
   }
 

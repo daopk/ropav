@@ -34,8 +34,8 @@ defineSlots<{ code?: () => unknown; default?: () => unknown }>();
   gap: 16px;
   align-items: center;
   padding: 32px 24px;
-  color: var(--foreground);
-  background-color: var(--background);
+  color: var(--rp-foreground);
+  background-color: var(--rp-background);
 }
 
 .demo__source {
@@ -49,7 +49,7 @@ defineSlots<{ code?: () => unknown; default?: () => unknown }>();
   font-size: 13px;
   font-weight: 500;
   color: var(--vp-c-text-2);
-  cursor: var(--cursor-interactive, pointer);
+  cursor: var(--rp-cursor-interactive, pointer);
   user-select: none;
 }
 

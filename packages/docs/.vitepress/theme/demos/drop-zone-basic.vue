@@ -23,14 +23,14 @@ const onSelect = (files: File[]) => {
 .stack {
   display: flex;
   width: 100%;
-  max-width: var(--container-md);
+  max-width: var(--rp-container-md);
   flex-direction: column;
-  gap: calc(var(--spacing) * 3);
+  gap: calc(var(--rp-spacing) * 3);
 }
 
 .note {
-  color: var(--muted);
-  font-size: var(--text-sm);
-  line-height: var(--text-sm--line-height);
+  color: var(--rp-muted);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-text-sm--line-height);
 }
 </style>

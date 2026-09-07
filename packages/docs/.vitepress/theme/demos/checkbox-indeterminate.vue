@@ -24,6 +24,6 @@ import { Checkbox, CheckboxContent, CheckboxControl, CheckboxIndicator } from "r
 .stack {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--spacing) * 3);
+  gap: calc(var(--rp-spacing) * 3);
 }
 </style>

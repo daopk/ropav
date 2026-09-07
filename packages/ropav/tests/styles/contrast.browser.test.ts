@@ -58,19 +58,19 @@ type Pair = {
 };
 
 const PAIRS: readonly Pair[] = [
-  { bg: "--background", fg: "--foreground" },
-  { bg: "--background", fg: "--muted" },
-  { bg: "--surface", fg: "--muted" },
-  { bg: "--surface", fg: "--surface-foreground" },
-  { bg: "--surface-secondary", fg: "--muted" },
-  { bg: "--surface-tertiary", fg: "--muted" },
-  { bg: "--overlay", fg: "--overlay-foreground" },
-  { bg: "--field-background", fg: "--field-foreground" },
-  { bg: "--field-background", fg: "--field-placeholder" },
-  { bg: "--default", fg: "--default-foreground" },
+  { bg: "--rp-background", fg: "--rp-foreground" },
+  { bg: "--rp-background", fg: "--rp-muted" },
+  { bg: "--rp-surface", fg: "--rp-muted" },
+  { bg: "--rp-surface", fg: "--rp-surface-foreground" },
+  { bg: "--rp-surface-secondary", fg: "--rp-muted" },
+  { bg: "--rp-surface-tertiary", fg: "--rp-muted" },
+  { bg: "--rp-overlay", fg: "--rp-overlay-foreground" },
+  { bg: "--rp-field-background", fg: "--rp-field-foreground" },
+  { bg: "--rp-field-background", fg: "--rp-field-placeholder" },
+  { bg: "--rp-default", fg: "--rp-default-foreground" },
   {
-    bg: "--success",
-    fg: "--success-foreground",
+    bg: "--rp-success",
+    fg: "--rp-success-foreground",
     knownDebt: [
       "airbnb/light", // 4.39
       "airbnb/dark", // 2.96
@@ -80,8 +80,8 @@ const PAIRS: readonly Pair[] = [
     ],
   },
   {
-    bg: "--warning",
-    fg: "--warning-foreground",
+    bg: "--rp-warning",
+    fg: "--rp-warning-foreground",
     knownDebt: [
       "airbnb/light", // 2.92
       "netflix/light", // 4.46
@@ -89,12 +89,12 @@ const PAIRS: readonly Pair[] = [
   },
   /**
    * Measured, not guessed. Every entry is one theme and one scheme that sits below the floor, with
-   * the ratio it sits at - `--accent` and `--danger` carry brand identity, and lifting either
+   * the ratio it sits at - `--rp-accent` and `--rp-danger` carry brand identity, and lifting either
    * means a visibly darker blue or red across the themes that use them.
    */
   {
-    bg: "--accent",
-    fg: "--accent-foreground",
+    bg: "--rp-accent",
+    fg: "--rp-accent-foreground",
     knownDebt: [
       "default/light", // 3.63
       "default/dark", // 3.63
@@ -107,8 +107,8 @@ const PAIRS: readonly Pair[] = [
     ],
   },
   {
-    bg: "--background",
-    fg: "--danger",
+    bg: "--rp-background",
+    fg: "--rp-danger",
     knownDebt: [
       "default/light", // 3.27
       "airbnb/dark", // 3.65
@@ -123,8 +123,8 @@ const PAIRS: readonly Pair[] = [
     ],
   },
   {
-    bg: "--danger",
-    fg: "--danger-foreground",
+    bg: "--rp-danger",
+    fg: "--rp-danger-foreground",
     knownDebt: [
       "default/light", // 3.48
       "default/dark", // 4.35
@@ -208,7 +208,7 @@ describe("token contrast (browser)", () => {
   it("resolves tokens rather than reading the oklch back", () => {
     // The whole table is vacuous if this is wrong - every pair would compare two misparsed
     // numbers and agree with itself.
-    const [resolved] = paint(mount("default", "light"), ["--background"]);
+    const [resolved] = paint(mount("default", "light"), ["--rp-background"]);
 
     expect(resolved).toEqual([245, 245, 245]);
   });

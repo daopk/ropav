@@ -6,7 +6,7 @@
 .rp-color-slider {
   display: grid;
   width: 100%;
-  gap: var(--spacing);
+  gap: var(--rp-spacing);
 
   grid-template-areas:
     "label output"
@@ -44,17 +44,17 @@
 
   [data-slot="label"] {
     width: fit-content;
-    font-size: var(--text-sm);
-    line-height: var(--rp-leading, var(--text-sm--line-height));
-    font-weight: var(--font-weight-medium);
+    font-size: var(--rp-text-sm);
+    line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+    font-weight: var(--rp-font-weight-medium);
 
     grid-area: label;
   }
 
   .rp-color-slider__output {
-    font-size: var(--text-sm);
-    line-height: var(--rp-leading, var(--text-sm--line-height));
-    font-weight: var(--font-weight-medium);
+    font-size: var(--rp-text-sm);
+    line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+    font-weight: var(--rp-font-weight-medium);
     --rp-numeric-spacing: tabular-nums;
     font-variant-numeric: var(--rp-ordinal,) var(--rp-slashed-zero,) var(--rp-numeric-figure,)
       var(--rp-numeric-spacing,) var(--rp-numeric-fraction,);
@@ -65,7 +65,7 @@
   .rp-color-slider__track {
     position: relative;
 
-    border-radius: min(32px, var(--component-radius));
+    border-radius: min(32px, var(--rp-component-radius));
 
     grid-area: track;
     /* Edge cap pseudo-elements */
@@ -87,21 +87,21 @@
     justify-content: center;
     -webkit-tap-highlight-color: transparent;
 
-    border-radius: min(32px, var(--component-radius));
+    border-radius: min(32px, var(--rp-component-radius));
 
     /* Border to create white ring around the thumb */
     border-style: var(--rp-border-style);
     border-width: 3px;
-    border-color: var(--color-white);
-    --rp-shadow: var(--overlay-shadow);
+    border-color: var(--rp-color-white);
+    --rp-shadow: var(--rp-overlay-shadow);
     box-shadow: var(--rp-ring), var(--rp-shadow);
 
     /* Ensure thumb is above edge caps */
     z-index: 1;
 
     transition:
-      var(--rp-motion) transform 250ms var(--ease-out),
-      box-shadow 150ms var(--ease-out);
+      var(--rp-motion) transform 250ms var(--rp-ease-out),
+      box-shadow 150ms var(--rp-ease-out);
 
     /* Dragging state - cursor changes and thumb scales down */
     &[data-dragging="true"] {
@@ -116,8 +116,8 @@
         var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
           var(--rp-ring-color, currentcolor);
       box-shadow: var(--rp-ring), var(--rp-shadow);
-      --rp-ring-color: var(--focus);
-      --rp-ring-offset-color: var(--background);
+      --rp-ring-color: var(--rp-focus);
+      --rp-ring-offset-color: var(--rp-background);
       --rp-outline-style: none;
       outline-style: none;
       --rp-ring-offset-width: var(--rp-focus-ring-offset);
@@ -130,7 +130,7 @@
     /* Disabled state */
     &[data-disabled="true"] {
       cursor: default;
-      background-color: var(--default);
+      background-color: var(--rp-default);
     }
   }
 
@@ -138,8 +138,8 @@
   &:disabled,
   &[data-disabled="true"],
   &[aria-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -156,7 +156,7 @@
     flex-direction: column;
 
     .rp-color-slider__track {
-      height: calc(var(--spacing) * 5);
+      height: calc(var(--rp-spacing) * 5);
       justify-self: center;
       border-radius: 0;
       width: calc(100% - 1.25rem);
@@ -175,8 +175,8 @@
       }
 
       &::before {
-        border-start-start-radius: min(32px, var(--component-radius));
-        border-end-start-radius: min(32px, var(--component-radius));
+        border-start-start-radius: min(32px, var(--rp-component-radius));
+        border-end-start-radius: min(32px, var(--rp-component-radius));
         inset-inline-start: -0.625rem;
         box-shadow:
           inset 1px 0 0 0 rgba(0, 0, 0, 0.1),
@@ -188,8 +188,8 @@
       }
 
       &::after {
-        border-start-end-radius: min(32px, var(--component-radius));
-        border-end-end-radius: min(32px, var(--component-radius));
+        border-start-end-radius: min(32px, var(--rp-component-radius));
+        border-end-end-radius: min(32px, var(--rp-component-radius));
         inset-inline-end: -0.625rem;
         box-shadow:
           inset -1px 0 0 0 rgba(0, 0, 0, 0.1),
@@ -201,15 +201,15 @@
 
     .rp-color-slider__thumb {
       top: calc(1 / 2 * 100%);
-      width: calc(var(--spacing) * 4);
-      height: calc(var(--spacing) * 4);
+      width: calc(var(--rp-spacing) * 4);
+      height: calc(var(--rp-spacing) * 4);
     }
   }
 
   /* Vertical orientation */
   &[data-orientation="vertical"] {
     height: 100%;
-    gap: calc(var(--spacing) * 2);
+    gap: calc(var(--rp-spacing) * 2);
 
     flex-direction: row;
     grid-template-areas:
@@ -253,7 +253,7 @@
     }
 
     .rp-color-slider__track {
-      width: calc(var(--spacing) * 5);
+      width: calc(var(--rp-spacing) * 5);
       justify-self: center;
       border-radius: 0;
       height: calc(100% - 1.25rem);
@@ -266,15 +266,15 @@
       /* Edge caps for vertical orientation */
       &::before,
       &::after {
-        inset-inline-start: calc(var(--spacing) * 0);
+        inset-inline-start: calc(var(--rp-spacing) * 0);
         width: 100%;
         height: 0.625rem; /* Half thumb height + 2px gap */
       }
 
       &::before {
         bottom: -0.625rem;
-        border-end-start-radius: min(32px, var(--component-radius));
-        border-end-end-radius: min(32px, var(--component-radius));
+        border-end-start-radius: min(32px, var(--rp-component-radius));
+        border-end-end-radius: min(32px, var(--rp-component-radius));
         /* Left, right, and bottom borders for bottom cap */
         box-shadow:
           inset 1px 0 0 0 rgba(0, 0, 0, 0.1),
@@ -287,8 +287,8 @@
 
       &::after {
         top: -0.625rem;
-        border-start-start-radius: min(32px, var(--component-radius));
-        border-start-end-radius: min(32px, var(--component-radius));
+        border-start-start-radius: min(32px, var(--rp-component-radius));
+        border-start-end-radius: min(32px, var(--rp-component-radius));
         /* Left, right, and top borders for top cap */
         box-shadow:
           inset 1px 0 0 0 rgba(0, 0, 0, 0.1),
@@ -301,8 +301,8 @@
     .rp-color-slider__thumb {
       /* Cross-axis centering; React Aria applies a physical translateX(-50%), so keep left-1/2 for RTL correctness */
       left: calc(1 / 2 * 100%);
-      width: calc(var(--spacing) * 4);
-      height: calc(var(--spacing) * 4);
+      width: calc(var(--rp-spacing) * 4);
+      height: calc(var(--rp-spacing) * 4);
     }
   }
 }

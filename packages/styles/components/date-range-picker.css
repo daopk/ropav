@@ -5,7 +5,7 @@
 .rp-date-range-picker {
   display: inline-flex;
   flex-direction: column;
-  gap: var(--spacing);
+  gap: var(--rp-spacing);
 
   .rp-date-input-group__suffix,
   .rp-date-input-group__prefix {
@@ -17,15 +17,15 @@
   display: inline-flex;
   width: 100%;
   align-items: center;
-  border-radius: var(--field-radius, calc(var(--radius) * 0.75));
-  padding: var(--spacing);
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
+  border-radius: var(--rp-field-radius, calc(var(--rp-radius) * 0.75));
+  padding: var(--rp-spacing);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
   -webkit-tap-highlight-color: transparent;
 
-  cursor: var(--cursor-interactive);
+  cursor: var(--rp-cursor-interactive);
 
-  transition: var(--rp-motion) box-shadow 150ms var(--ease-out);
+  transition: var(--rp-motion) box-shadow 150ms var(--rp-ease-out);
 
   &:focus-visible:not(:focus),
   &[data-focus-visible="true"] {
@@ -34,8 +34,8 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
-    --rp-ring-offset-color: var(--background);
+    --rp-ring-color: var(--rp-focus);
+    --rp-ring-offset-color: var(--rp-background);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: var(--rp-focus-ring-offset);
@@ -48,8 +48,8 @@
   &:disabled,
   &[data-disabled="true"],
   &[aria-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -60,16 +60,16 @@
 
 .rp-date-range-picker__trigger-indicator {
   display: inline-flex;
-  width: calc(var(--spacing) * 4);
-  height: calc(var(--spacing) * 4);
+  width: calc(var(--rp-spacing) * 4);
+  height: calc(var(--rp-spacing) * 4);
   align-items: center;
   justify-content: center;
-  color: var(--field-placeholder, var(--muted));
+  color: var(--rp-field-placeholder, var(--rp-muted));
 }
 
 .rp-date-range-picker__range-separator {
-  padding-inline: var(--spacing);
-  color: var(--field-placeholder, var(--muted));
+  padding-inline: var(--rp-spacing);
+  color: var(--rp-field-placeholder, var(--rp-muted));
   -webkit-user-select: none;
   user-select: none;
 }
@@ -83,11 +83,11 @@
   scrollbar-width: none;
   overflow-y: auto;
   overscroll-behavior: contain;
-  background-color: var(--overlay);
-  padding: calc(var(--spacing) * 3);
+  background-color: var(--rp-overlay);
+  padding: calc(var(--rp-spacing) * 3);
 
-  box-shadow: var(--shadow-overlay);
-  border-radius: min(32px, var(--component-radius));
+  box-shadow: var(--rp-shadow-overlay);
+  border-radius: min(32px, var(--rp-component-radius));
 
   &:focus-visible:not(:focus),
   &[data-focus-visible="true"] {
@@ -105,19 +105,19 @@
     --rp-enter-scale: 0.95;
 
     &[data-placement^="top"] {
-      --rp-enter-translate-y: calc(1*var(--spacing));
+      --rp-enter-translate-y: calc(1*var(--rp-spacing));
     }
 
     &[data-placement^="bottom"] {
-      --rp-enter-translate-y: calc(1*var(--spacing)*-1);
+      --rp-enter-translate-y: calc(1*var(--rp-spacing)*-1);
     }
 
     &[data-placement^="left"] {
-      --rp-enter-translate-x: calc(1*var(--spacing));
+      --rp-enter-translate-x: calc(1*var(--rp-spacing));
     }
 
     &[data-placement^="right"] {
-      --rp-enter-translate-x: calc(1*var(--spacing)*-1);
+      --rp-enter-translate-x: calc(1*var(--rp-spacing)*-1);
     }
   }
 
@@ -134,8 +134,8 @@
   &[data-exiting="true"],
   &[data-entering="true"] {
     transition-property: opacity, transform;
-    transition-timing-function: var(--rp-ease, var(--default-transition-timing-function));
-    transition-duration: var(--rp-motion) var(--rp-duration, var(--default-transition-duration));
+    transition-timing-function: var(--rp-ease, var(--rp-default-transition-timing-function));
+    transition-duration: var(--rp-motion) var(--rp-duration, var(--rp-default-transition-duration));
     will-change: opacity, transform;
   }
 }

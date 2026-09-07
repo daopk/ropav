@@ -34,8 +34,8 @@ defineSlots<{ default?: () => unknown }>();
  * changes one declaration instead of every call site. A prop still wins, and the built-in defaults
  * are the floor when the property is not declared at all.
  */
-const cssDelay = useCssVariable("--tooltip-delay");
-const cssCloseDelay = useCssVariable("--tooltip-close-delay");
+const cssDelay = useCssVariable("--rp-tooltip-delay");
+const cssCloseDelay = useCssVariable("--rp-tooltip-close-delay");
 
 const state = useTooltipTriggerState({
   closeDelay: () => props.closeDelay ?? parseCssTime(cssCloseDelay.value),

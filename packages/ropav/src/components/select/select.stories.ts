@@ -745,7 +745,7 @@ export const Controlled: Story = {
               <ListBox>${optionsTemplate}</ListBox>
             </SelectPopover>
           </Select>
-          <p class="text-sm text-[var(--muted)]">Selected: {{ selectedName }}</p>
+          <p class="text-sm text-[var(--rp-muted)]">Selected: {{ selectedName }}</p>
         </div>
       `,
     };
@@ -787,7 +787,7 @@ export const ControlledMultiple: Story = {
               <ListBox selection-mode="multiple">${optionsTemplate}</ListBox>
             </SelectPopover>
           </Select>
-          <p class="text-sm text-[var(--muted)]">Selected: {{ summary }}</p>
+          <p class="text-sm text-[var(--rp-muted)]">Selected: {{ summary }}</p>
         </div>
       `,
     };
@@ -827,7 +827,7 @@ export const ControlledOpenState: Story = {
             </SelectPopover>
           </Select>
           <Button @click="toggle">{{ isOpen ? "Close" : "Open" }} Select</Button>
-          <p class="text-sm text-[var(--muted)]">Select is {{ isOpen ? "open" : "closed" }}</p>
+          <p class="text-sm text-[var(--rp-muted)]">Select is {{ isOpen ? "open" : "closed" }}</p>
         </div>
       `,
     };
@@ -888,7 +888,7 @@ export const AsynchronousLoading: Story = {
               <ListBoxLoadMoreItem :is-loading="isLoading" @load-more="loadMore">
                 <div class="flex items-center justify-center gap-2 py-2">
                   <Spinner size="sm" />
-                  <span class="text-sm text-[var(--muted)]">Loading more...</span>
+                  <span class="text-sm text-[var(--rp-muted)]">Loading more...</span>
                 </div>
               </ListBoxLoadMoreItem>
             </ListBox>

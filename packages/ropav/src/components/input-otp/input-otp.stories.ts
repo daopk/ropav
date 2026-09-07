@@ -57,7 +57,7 @@ export const Default: Story = {
       <div class="flex w-[280px] flex-col gap-2">
         <div class="flex flex-col gap-1">
           <Label>Verify account</Label>
-          <p class="text-sm text-[var(--muted)]">We&apos;ve sent a code to a****@gmail.com</p>
+          <p class="text-sm text-[var(--rp-muted)]">We&apos;ve sent a code to a****@gmail.com</p>
         </div>
         <InputOTP aria-label="Verification code" :max-length="6">
           <InputOTPGroup>
@@ -73,8 +73,8 @@ export const Default: Story = {
           </InputOTPGroup>
         </InputOTP>
         <div class="flex items-center gap-[5px] px-1 pt-1">
-          <p class="text-sm text-[var(--muted)]">Didn&apos;t receive a code?</p>
-          <Link class="text-[var(--foreground)]" underline="always">Resend</Link>
+          <p class="text-sm text-[var(--rp-muted)]">Didn&apos;t receive a code?</p>
+          <Link class="text-[var(--rp-foreground)]" underline="always">Resend</Link>
         </div>
       </div>
     `,
@@ -220,7 +220,7 @@ export const Controlled: Story = {
         <Description>
           <template v-if="value.length > 0">
             Value: {{ value }} ({{ value.length }}/6) &bull;
-            <button class="font-medium text-[var(--foreground)] underline" @click="clear">Clear</button>
+            <button class="font-medium text-[var(--rp-foreground)] underline" @click="clear">Clear</button>
           </template>
           <template v-else>Enter a 6-digit code</template>
         </Description>
@@ -447,8 +447,8 @@ export const FormExample: Story = {
           <template v-else>Verify</template>
         </Button>
         <div class="flex items-center justify-center gap-1">
-          <p class="text-sm text-[var(--muted)]">Having trouble?</p>
-          <Link class="text-sm text-[var(--foreground)]" underline="always">Use backup code</Link>
+          <p class="text-sm text-[var(--rp-muted)]">Having trouble?</p>
+          <Link class="text-sm text-[var(--rp-foreground)]" underline="always">Use backup code</Link>
         </div>
       </Form>
     `,

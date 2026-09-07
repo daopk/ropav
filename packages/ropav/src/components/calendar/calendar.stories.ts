@@ -482,7 +482,7 @@ export const Invalid: Story = {
           ${header}
           ${grid}
         </Calendar>
-        <p v-if="isInvalid" class="text-sm text-[var(--danger)]">Date must be today or in the future</p>
+        <p v-if="isInvalid" class="text-sm text-[var(--rp-danger)]">Date must be today or in the future</p>
         <Description v-else class="text-center">Select a future date</Description>
       </div>
     `,
@@ -994,12 +994,12 @@ export const BookingCalendar: Story = {
           </CalendarGrid>
         </Calendar>
         <div class="flex flex-col gap-2 text-center">
-          <div class="flex items-center justify-center gap-4 text-xs text-[var(--muted)]">
+          <div class="flex items-center justify-center gap-4 text-xs text-[var(--rp-muted)]">
             <span class="flex items-center gap-1">
-              <span class="size-2 rounded-full bg-[var(--muted)]" /> Has bookings
+              <span class="size-2 rounded-full bg-[var(--rp-muted)]" /> Has bookings
             </span>
             <span class="flex items-center gap-1">
-              <span class="size-2 rounded-full bg-[var(--default)]" /> Weekend/Unavailable
+              <span class="size-2 rounded-full bg-[var(--rp-default)]" /> Weekend/Unavailable
             </span>
           </div>
           <Button v-if="value" size="sm" variant="primary">Book {{ value.toString() }}</Button>
@@ -1038,7 +1038,7 @@ export const YearPickerStyledCells: Story = {
                 :id="id"
                 :class="
                   isCurrentYear && !isSelected
-                    ? 'text-[var(--accent)] ring-1 ring-[var(--accent)]/60 ring-inset'
+                    ? 'text-[var(--rp-accent)] ring-1 ring-[var(--rp-accent)]/60 ring-inset'
                     : undefined
                 "
               />
@@ -1066,7 +1066,7 @@ export const YearPickerCustomCells: Story = {
                   <span>{{ year }}</span>
                   <span
                     v-if="isCurrentYear"
-                    :class="isSelected ? 'text-[var(--accent-foreground)]' : 'text-[var(--accent)]'"
+                    :class="isSelected ? 'text-[var(--rp-accent-foreground)]' : 'text-[var(--rp-accent)]'"
                   >
                     Now
                   </span>
@@ -1150,7 +1150,7 @@ export const EventCalendar: Story = {
             </CalendarGridBody>
           </CalendarGrid>
         </Calendar>
-        <div class="flex flex-col gap-1 text-xs text-[var(--muted)]">
+        <div class="flex flex-col gap-1 text-xs text-[var(--rp-muted)]">
           <p>Dates with indicators have scheduled events</p>
         </div>
       </div>

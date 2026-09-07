@@ -179,7 +179,7 @@ const settle = () =>
  *
  * The test was `[class*="--"]`, which reads the two hyphens of *any* custom property as a
  * modifier. That held while a custom property only ever appeared in a class that set one; a
- * utility naming a token - `bg-[var(--surface)]` - matches it too, and swept every decorative box
+ * utility naming a token - `bg-[var(--rp-surface)]` - matches it too, and swept every decorative box
  * in every story into the audit, where a story's plain grey panel has no state to lose and fails
  * for not having one. Where the `--` sits is what tells the two apart.
  */

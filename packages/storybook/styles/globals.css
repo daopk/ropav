@@ -42,7 +42,7 @@
 
 :root {
   /* Use OS-native cursor for interactive elements (macOS style) */
-  --cursor-interactive: pointer;
+  --rp-cursor-interactive: pointer;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -52,11 +52,11 @@
 
 [data-theme="dark"],
 .dark {
-  --cursor-interactive: pointer;
+  --rp-cursor-interactive: pointer;
 }
 
 body {
-  background-color: var(--background);
+  background-color: var(--rp-background);
 }
 
 /*

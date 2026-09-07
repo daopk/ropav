@@ -80,8 +80,8 @@ const template = `
         </Button>
       </DisclosureHeading>
       <DisclosureContent>
-        <DisclosureBody class="flex flex-col items-center rounded-[calc(var(--radius)*3)] bg-[var(--surface)] p-2 p-4 text-center shadow-[var(--surface-shadow)]">
-          <p class="text-sm text-[var(--muted)]">
+        <DisclosureBody class="flex flex-col items-center rounded-[calc(var(--rp-radius)*3)] bg-[var(--rp-surface)] p-2 p-4 text-center shadow-[var(--rp-surface-shadow)]">
+          <p class="text-sm text-[var(--rp-muted)]">
             Scan this QR code with your camera app to preview the Ropav native components.
           </p>
           <img
@@ -89,7 +89,7 @@ const template = `
             class="aspect-square w-full max-w-54 object-cover"
             :src="qrCodeSrc"
           />
-          <p class="text-sm text-[var(--muted)]">Expo must be installed on your device.</p>
+          <p class="text-sm text-[var(--rp-muted)]">Expo must be installed on your device.</p>
           <Button class="mt-4" variant="primary">
             <IconApple />
             Download on App Store
@@ -130,12 +130,12 @@ export const Controlled: Story = {
           <Chip :color="isExpanded ? 'success' : 'default'">State: {{ isExpanded ? "Expanded" : "Collapsed" }}</Chip>
         </div>
         <Disclosure :is-disabled="args.isDisabled" :is-expanded="isExpanded" @expanded-change="isExpanded = $event">
-          <DisclosureTrigger class="mb-2 flex w-full items-center justify-between rounded-[calc(var(--radius)*0.75)] border border-gray-300 px-4 py-2 text-start hover:bg-gray-50">
+          <DisclosureTrigger class="mb-2 flex w-full items-center justify-between rounded-[calc(var(--rp-radius)*0.75)] border border-gray-300 px-4 py-2 text-start hover:bg-gray-50">
             <span>Toggle content</span>
             <IconChevronDown class="size-4 transition-transform duration-200" />
           </DisclosureTrigger>
           <DisclosureContent>
-            <DisclosureBody class="rounded-[calc(var(--radius)*1)] border p-4">
+            <DisclosureBody class="rounded-[calc(var(--rp-radius)*1)] border p-4">
               <p class="text-sm">
                 This disclosure is controlled from outside. You can toggle it using the button above
                 or by clicking the trigger.
@@ -155,7 +155,7 @@ export const ProductDetails: Story = {
     template: `
       <div class="w-full max-w-md">
         <Disclosure :is-disabled="args.isDisabled" :is-expanded="isExpanded" @expanded-change="isExpanded = $event">
-          <DisclosureTrigger class="flex w-full items-center justify-between rounded-[calc(var(--radius)*0.75)] border border-gray-300 px-4 py-2 text-start hover:bg-gray-50">
+          <DisclosureTrigger class="flex w-full items-center justify-between rounded-[calc(var(--rp-radius)*0.75)] border border-gray-300 px-4 py-2 text-start hover:bg-gray-50">
             <span class="flex items-center gap-2">
               <IconBox />
               View product details
@@ -165,7 +165,7 @@ export const ProductDetails: Story = {
           </DisclosureTrigger>
           <DisclosureContent>
             <DisclosureBody class="pt-2">
-              <div class="space-y-4 rounded-[calc(var(--radius)*1)] border p-4">
+              <div class="space-y-4 rounded-[calc(var(--rp-radius)*1)] border p-4">
                 <h3 class="text-lg font-semibold">Product Details</h3>
                 <div class="grid gap-2 text-sm">
                   <div class="flex justify-between">

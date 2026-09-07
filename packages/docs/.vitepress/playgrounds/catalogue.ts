@@ -607,7 +607,7 @@ export const catalogue: Record<string, CatalogueEntry> = {
       ],
       props: {
         "aria-label": "Editor layout",
-        class: "h-48 w-full max-w-sm overflow-hidden rounded-xl border border-[var(--border)]",
+        class: "h-48 w-full max-w-sm overflow-hidden rounded-xl border border-[var(--rp-border)]",
       },
       root: true,
       tag: "Splitter",

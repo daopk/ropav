@@ -21,7 +21,7 @@ export type Report = Record<string, Record<string, Record<string, string>>>;
  * make a rename read as two thousand regressions while saying nothing the `box-shadow` line does
  * not already say.
  *
- * Every token this package means as a token is unprefixed (`--accent`, `--field-border`), so a
+ * Every token this package means as a token is unprefixed (`--rp-accent`, `--rp-field-border`), so a
  * prefixed name is machinery by construction.
  */
 const recorded = (sheets: StyleSheetList) =>

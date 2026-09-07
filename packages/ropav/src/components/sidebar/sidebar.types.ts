@@ -258,7 +258,7 @@ export interface SidebarItemTooltipProps {
   /**
    * How long the pointer has to rest on the item before the tooltip opens.
    *
-   * Left to the theme's `--tooltip-delay` by default, the same as every other tooltip. A rail is a
+   * Left to the theme's `--rp-tooltip-delay` by default, the same as every other tooltip. A rail is a
    * good reason to want this shorter — the label is the only way to read the item, not a hint
    * beside one — but that is a decision about the whole product's tooltips, not about this part.
    */

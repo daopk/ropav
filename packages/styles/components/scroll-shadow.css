@@ -7,17 +7,17 @@
 
 /* Orientation: Vertical */
 .rp-scroll-shadow--vertical {
-  scrollbar-width: var(--scrollbar-width);
-  scrollbar-color: var(--scrollbar-color);
-  scrollbar-gutter: var(--scrollbar-gutter);
+  scrollbar-width: var(--rp-scrollbar-width);
+  scrollbar-color: var(--rp-scrollbar-color);
+  scrollbar-gutter: var(--rp-scrollbar-gutter);
   overflow-y: auto;
 }
 
 /* Orientation: Horizontal */
 .rp-scroll-shadow--horizontal {
-  scrollbar-width: var(--scrollbar-width);
-  scrollbar-color: var(--scrollbar-color);
-  scrollbar-gutter: var(--scrollbar-gutter);
+  scrollbar-width: var(--rp-scrollbar-width);
+  scrollbar-color: var(--rp-scrollbar-color);
+  scrollbar-gutter: var(--rp-scrollbar-gutter);
   overflow-x: auto;
 }
 

@@ -4,7 +4,7 @@
   display: flex;
   width: 100%;
   align-items: center;
-  gap: calc(var(--spacing) * 2);
+  gap: calc(var(--rp-spacing) * 2);
 
   &[data-disabled="true"] {
     cursor: not-allowed;
@@ -17,52 +17,52 @@
   display: flex;
   min-width: 0px;
   align-items: center;
-  gap: calc(var(--spacing) * 2);
+  gap: calc(var(--rp-spacing) * 2);
 }
 
 /* Individual slot box - fully rounded, standalone */
 .rp-input-otp__slot {
   position: relative;
   display: flex;
-  height: calc(var(--spacing) * 10);
-  width: calc(var(--spacing) * 9.5);
+  height: calc(var(--rp-spacing) * 10);
+  width: calc(var(--rp-spacing) * 9.5);
   min-width: 0px;
   flex: 1;
   align-items: center;
   justify-content: center;
   border-style: var(--rp-border-style);
   border-width: 1px;
-  color: var(--field-foreground, var(--foreground));
-  --rp-shadow: var(--field-shadow);
+  color: var(--rp-field-foreground, var(--rp-foreground));
+  --rp-shadow: var(--rp-field-shadow);
   box-shadow: var(--rp-ring), var(--rp-shadow);
 
   /* The fill, per state. The `--secondary` variant re-points these and declares nothing else. */
-  --input-otp-slot-bg: var(--field-background, var(--default));
-  --input-otp-slot-bg-hover: var(--field-hover);
-  --input-otp-slot-bg-focus: var(--field-focus);
+  --input-otp-slot-bg: var(--rp-field-background, var(--rp-default));
+  --input-otp-slot-bg-hover: var(--rp-field-hover);
+  --input-otp-slot-bg-focus: var(--rp-field-focus);
 
   background-color: var(--input-otp-slot-bg);
-  border-radius: var(--field-radius, calc(var(--radius) * 0.75));
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
-  font-weight: var(--font-weight-semibold);
+  border-radius: var(--rp-field-radius, calc(var(--rp-radius) * 0.75));
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+  font-weight: var(--rp-font-weight-semibold);
   --rp-outline-style: none;
   outline-style: none;
 
-  border-width: var(--border-width-field);
-  border-color: var(--field-border);
+  border-width: var(--rp-border-width-field);
+  border-color: var(--rp-field-border);
 
   transition:
-    var(--rp-motion) background-color 150ms var(--ease-smooth),
-    border-color 150ms var(--ease-smooth),
-    box-shadow 150ms var(--ease-out);
+    var(--rp-motion) background-color 150ms var(--rp-ease-smooth),
+    border-color 150ms var(--rp-ease-smooth),
+    box-shadow 150ms var(--rp-ease-out);
 
   /* Hover */
   @media (hover: hover) {
     &:hover,
     &[data-hovered="true"] {
       background-color: var(--input-otp-slot-bg-hover);
-      border-color: var(--field-border-hover);
+      border-color: var(--rp-field-border-hover);
     }
   }
 
@@ -74,7 +74,7 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
+    --rp-ring-color: var(--rp-focus);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: 0px;
@@ -93,8 +93,8 @@
 
   /* Disabled */
   &[data-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -106,7 +106,7 @@
   &[data-invalid="true"] {
     outline-style: var(--rp-outline-style);
     outline-width: 1px;
-    outline-color: var(--danger);
+    outline-color: var(--rp-danger);
     --rp-outline-style: solid;
     outline-style: solid;
     --rp-ring-offset-width: 3px;
@@ -121,7 +121,7 @@
         var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
           var(--rp-ring-color, currentcolor);
       box-shadow: var(--rp-ring), var(--rp-shadow);
-      --rp-ring-color: var(--danger);
+      --rp-ring-color: var(--rp-danger);
       --rp-ring-offset-width: 0px;
       @media (forced-colors: active) {
         outline-width: 2px;
@@ -134,24 +134,24 @@
 
 /* Slot value */
 .rp-input-otp__slot-value {
-  font-size: var(--text-lg);
-  line-height: var(--rp-leading, var(--text-lg--line-height));
-  --rp-leading: calc(var(--spacing) * 6);
-  line-height: calc(var(--spacing) * 6);
+  font-size: var(--rp-text-lg);
+  line-height: var(--rp-leading, var(--rp-text-lg--line-height));
+  --rp-leading: calc(var(--rp-spacing) * 6);
+  line-height: calc(var(--rp-spacing) * 6);
   letter-spacing: -0.27px;
 
-  animation: var(--rp-motion) rp-slot-value-in 250ms var(--ease-smooth) both;
+  animation: var(--rp-motion) rp-slot-value-in 250ms var(--rp-ease-smooth) both;
   transform-origin: bottom center;
 }
 
 /* Caret */
 .rp-input-otp__caret {
   position: absolute;
-  height: calc(var(--spacing) * 4);
+  height: calc(var(--rp-spacing) * 4);
   width: 2px;
   animation: var(--rp-motion) rp-caret-blink 1.2s ease-out infinite;
-  border-radius: calc(var(--radius) * 0.5);
-  background-color: var(--field-placeholder, var(--muted));
+  border-radius: calc(var(--rp-radius) * 0.5);
+  background-color: var(--rp-field-placeholder, var(--rp-muted));
 }
 
 /* Separator */
@@ -159,8 +159,8 @@
   height: 2px;
   width: 6px;
   flex-shrink: 0;
-  border-radius: calc(var(--radius) * 0.5);
-  background-color: var(--separator);
+  border-radius: calc(var(--rp-radius) * 0.5);
+  background-color: var(--rp-separator);
 }
 
 /* Variant property definitions */
@@ -172,9 +172,9 @@
   --rp-shadow: 0 0 #0000;
   box-shadow: var(--rp-ring), var(--rp-shadow);
 
-  --input-otp-slot-bg: var(--default);
-  --input-otp-slot-bg-hover: var(--default-hover);
-  --input-otp-slot-bg-focus: var(--default);
+  --input-otp-slot-bg: var(--rp-default);
+  --input-otp-slot-bg-hover: var(--rp-default-hover);
+  --input-otp-slot-bg-focus: var(--rp-default);
 }
 
 /* Animations */

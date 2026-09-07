@@ -28,8 +28,8 @@ import { Label, Slider, SliderFill, SliderOutput, SliderThumb, SliderTrack } fro
 <style scoped>
 .stack {
   display: flex;
-  width: calc(var(--spacing) * 64);
+  width: calc(var(--rp-spacing) * 64);
   flex-direction: column;
-  gap: calc(var(--spacing) * 6);
+  gap: calc(var(--rp-spacing) * 6);
 }
 </style>

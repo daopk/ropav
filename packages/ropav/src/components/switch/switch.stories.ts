@@ -143,7 +143,7 @@ export const Controlled: Story = {
             Enable notifications
           </SwitchContent>
         </Switch>
-        <p class="text-sm text-[var(--muted)]">Switch is {{ isSelected ? "on" : "off" }}</p>
+        <p class="text-sm text-[var(--rp-muted)]">Switch is {{ isSelected ? "on" : "off" }}</p>
       </div>
     `,
   }),

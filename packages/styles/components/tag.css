@@ -5,37 +5,37 @@
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing);
-  font-weight: var(--font-weight-medium);
+  gap: var(--rp-spacing);
+  font-weight: var(--rp-font-weight-medium);
   -webkit-user-select: none;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 
-  border-radius: min(32px, var(--component-radius));
+  border-radius: min(32px, var(--rp-component-radius));
 
   /* The fill and label, per state. The variants re-point these and declare nothing else. */
   --tag-bg: transparent;
   --tag-bg-hover: var(--tag-bg);
-  --tag-bg-selected: var(--accent-soft);
-  --tag-bg-selected-hover: var(--accent-soft-hover);
+  --tag-bg-selected: var(--rp-accent-soft);
+  --tag-bg-selected-hover: var(--rp-accent-soft-hover);
   --tag-fg: currentcolor;
-  --tag-fg-selected: var(--accent-soft-foreground);
+  --tag-fg-selected: var(--rp-accent-soft-foreground);
 
   background-color: var(--tag-bg);
   color: var(--tag-fg);
 
   transition:
-    var(--rp-motion) color 100ms var(--ease-smooth),
-    scale 100ms var(--ease-smooth),
-    opacity 100ms var(--ease-smooth),
-    background-color 100ms var(--ease-smooth),
-    box-shadow 100ms var(--ease-out);
+    var(--rp-motion) color 100ms var(--rp-ease-smooth),
+    scale 100ms var(--rp-ease-smooth),
+    opacity 100ms var(--rp-ease-smooth),
+    background-color 100ms var(--rp-ease-smooth),
+    box-shadow 100ms var(--rp-ease-out);
   transform-origin: center;
   transform: translateZ(0) var(--rp-rotate-x,) var(--rp-rotate-y,) var(--rp-rotate-z,)
     var(--rp-skew-x,) var(--rp-skew-y,);
 
   /* Cursor */
-  cursor: var(--cursor-interactive);
+  cursor: var(--rp-cursor-interactive);
 
   /* Forced Colors Mode flattens the fill onto the page and strips the shadow, leaving a control
    * that reads as bare text. `ButtonBorder` is the keyword the platform uses for a control's
@@ -56,8 +56,8 @@
   /* SVG icon styling */
   & svg {
     pointer-events: none;
-    width: calc(var(--spacing) * 3);
-    height: calc(var(--spacing) * 3);
+    width: calc(var(--rp-spacing) * 3);
+    height: calc(var(--rp-spacing) * 3);
     flex-shrink: 0;
     align-self: center;
     color: currentcolor;
@@ -66,8 +66,8 @@
 
 /* Disabled state */
 .rp-tag:is([data-disabled="true"], [aria-disabled="true"]) {
-  opacity: var(--disabled-opacity);
-  cursor: var(--cursor-disabled);
+  opacity: var(--rp-disabled-opacity);
+  cursor: var(--rp-cursor-disabled);
   pointer-events: none;
   @media (forced-colors: active) {
     color: GrayText;
@@ -82,8 +82,8 @@
     var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
       var(--rp-ring-color, currentcolor);
   box-shadow: var(--rp-ring), var(--rp-shadow);
-  --rp-ring-color: var(--focus);
-  --rp-ring-offset-color: var(--background);
+  --rp-ring-color: var(--rp-focus);
+  --rp-ring-offset-color: var(--rp-background);
   --rp-outline-style: none;
   outline-style: none;
   --rp-ring-offset-width: var(--rp-focus-ring-offset);
@@ -119,43 +119,43 @@
 
 /* Size */
 .rp-tag--sm {
-  padding-inline: calc(var(--spacing) * 2);
-  padding-block: calc(var(--spacing) * 0.5);
-  font-size: var(--text-xs);
-  line-height: var(--rp-leading, var(--text-xs--line-height));
+  padding-inline: calc(var(--rp-spacing) * 2);
+  padding-block: calc(var(--rp-spacing) * 0.5);
+  font-size: var(--rp-text-xs);
+  line-height: var(--rp-leading, var(--rp-text-xs--line-height));
 }
 
 .rp-tag--md {
-  padding-inline: calc(var(--spacing) * 2);
-  padding-block: var(--spacing);
-  font-size: var(--text-xs);
-  line-height: var(--rp-leading, var(--text-xs--line-height));
+  padding-inline: calc(var(--rp-spacing) * 2);
+  padding-block: var(--rp-spacing);
+  font-size: var(--rp-text-xs);
+  line-height: var(--rp-leading, var(--rp-text-xs--line-height));
 }
 
 .rp-tag--lg {
-  padding-inline: calc(var(--spacing) * 2.5);
-  padding-block: calc(var(--spacing) * 1.5);
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
+  padding-inline: calc(var(--rp-spacing) * 2.5);
+  padding-block: calc(var(--rp-spacing) * 1.5);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
 }
 
 /* Variant */
 .rp-tag--default {
-  --tag-bg: var(--default);
-  --tag-bg-hover: var(--default-hover);
-  --tag-fg: var(--default-foreground);
+  --tag-bg: var(--rp-default);
+  --tag-bg-hover: var(--rp-default-hover);
+  --tag-fg: var(--rp-default-foreground);
 }
 
 .rp-tag--surface {
-  --tag-bg: var(--surface);
-  --tag-bg-hover: var(--surface-hover);
-  --tag-fg: var(--surface-foreground);
+  --tag-bg: var(--rp-surface);
+  --tag-bg-hover: var(--rp-surface-hover);
+  --tag-fg: var(--rp-surface-foreground);
 }
 
 /* Remove Button  */
 .rp-tag__remove-button {
-  width: calc(var(--spacing) * 3);
-  height: calc(var(--spacing) * 3);
+  width: calc(var(--rp-spacing) * 3);
+  height: calc(var(--rp-spacing) * 3);
   color: inherit;
 
   /* SVG icon styling */

@@ -8,7 +8,7 @@
   width: fit-content;
   grid-auto-flow: column;
   align-items: center;
-  gap: calc(var(--spacing) * 2);
+  gap: calc(var(--rp-spacing) * 2);
 
   .rp-separator--vertical {
     height: calc(1 / 2 * 100%);
@@ -37,10 +37,10 @@
 
 /* Attached variant */
 .rp-toolbar--attached {
-  border-radius: var(--component-radius, calc(var(--radius) * 3));
-  background-color: var(--surface);
-  padding: var(--spacing);
-  --rp-shadow: var(--overlay-shadow);
+  border-radius: var(--rp-component-radius, calc(var(--rp-radius) * 3));
+  background-color: var(--rp-surface);
+  padding: var(--rp-spacing);
+  --rp-shadow: var(--rp-overlay-shadow);
   box-shadow: var(--rp-ring), var(--rp-shadow);
 
   /* Forced Colors Mode flattens the fill onto the page and strips the shadow, so the container

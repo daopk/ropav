@@ -20,23 +20,23 @@ import { Surface, Typography } from "ropav";
 .outer {
   display: flex;
   width: 100%;
-  max-width: var(--container-sm);
+  max-width: var(--rp-container-sm);
   flex-direction: column;
-  gap: calc(var(--spacing) * 3);
-  border-radius: calc(var(--radius) * 2);
-  padding: calc(var(--spacing) * 5);
+  gap: calc(var(--rp-spacing) * 3);
+  border-radius: calc(var(--rp-radius) * 2);
+  padding: calc(var(--rp-spacing) * 5);
 }
 
 .middle {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--spacing) * 2);
-  border-radius: calc(var(--radius) * 1.5);
-  padding: calc(var(--spacing) * 4);
+  gap: calc(var(--rp-spacing) * 2);
+  border-radius: calc(var(--rp-radius) * 1.5);
+  padding: calc(var(--rp-spacing) * 4);
 }
 
 .inner {
-  border-radius: var(--radius);
-  padding: calc(var(--spacing) * 3);
+  border-radius: var(--rp-radius);
+  padding: calc(var(--rp-spacing) * 3);
 }
 </style>

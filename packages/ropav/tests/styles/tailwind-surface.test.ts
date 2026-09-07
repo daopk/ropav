@@ -93,7 +93,7 @@ describe("the published stylesheets", () => {
  *
  * The stylesheets were the whole of this check for as long as CSS was the only place a utility
  * could hide. It was not: `@ropav/styles` exported three constants made of `focus-visible:ring-*`
- * and `disabled:opacity-[var(--disabled-opacity)]` from its root, for a package that compiles no
+ * and `disabled:opacity-[var(--rp-disabled-opacity)]` from its root, for a package that compiles no
  * Tailwind — a consumer importing one got a string that named nothing. Nobody called them, which
  * is the only reason it never showed.
  *
@@ -117,7 +117,7 @@ const SOURCE_ROOTS = [
 const UTILITY_VARIANT =
   /(?:^|\s)(?:group-|peer-)?(?:hover|focus|focus-visible|focus-within|active|disabled|aria-disabled|checked|dark|rtl|ltr|sm|md|lg|xl|2xl|first|last|odd|even|motion-safe|motion-reduce|print):[a-z[]/;
 
-/** An arbitrary value (`text-[var(--muted)]`) or an arbitrary property (`[--button-bg:red]`). */
+/** An arbitrary value (`text-[var(--rp-muted)]`) or an arbitrary property (`[--button-bg:red]`). */
 const UTILITY_ARBITRARY = /[\w)\]]-\[|(?:^|\s)\[--[a-z-]+:/;
 
 const STRING_LITERAL = /"([^"\\\n]*)"|'([^'\\\n]*)'|`([^`\\]*)`/g;
@@ -217,11 +217,11 @@ const copyable = (source: string): string[] => [
 ];
 
 /**
- * A custom property written as a class — `class="[--button-bg-hover:var(--success)]"` — was how
+ * A custom property written as a class — `class="[--button-bg-hover:var(--rp-success)]"` — was how
  * every page taught the one mechanism this library offers for retuning a state. It is a class name
  * and nothing else to a reader with no build to compile it: no error, no colour, no clue.
  *
- * Narrow on purpose. An arbitrary *value* — `bg-[var(--accent)]` — stays legal, because
+ * Narrow on purpose. An arbitrary *value* — `bg-[var(--rp-accent)]` — stays legal, because
  * `guide/installation.md` shows it deliberately and labels it as the Tailwind spelling of reading
  * a token. It is the arbitrary *property* that has no meaning outside one build and a strictly
  * better replacement inside every other: the `style` attribute, which needs none.

@@ -2,7 +2,7 @@
 .rp-combo-box {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing);
+  gap: var(--rp-spacing);
 
   &[data-invalid="true"],
   &[aria-invalid="true"] {
@@ -21,7 +21,7 @@
 
     /* Add inline-end padding when trigger is present */
     &:has(+ .rp-combo-box__trigger) {
-      padding-inline-end: calc(var(--spacing) * 7);
+      padding-inline-end: calc(var(--rp-spacing) * 7);
     }
 
     /* Focus state (input.css only has focus-visible, but combo-box also needs focus) */
@@ -32,7 +32,7 @@
         var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
           var(--rp-ring-color, currentcolor);
       box-shadow: var(--rp-ring), var(--rp-shadow);
-      --rp-ring-color: var(--focus);
+      --rp-ring-color: var(--rp-focus);
       --rp-outline-style: none;
       outline-style: none;
       --rp-ring-offset-width: 0px;
@@ -40,16 +40,16 @@
         outline: 2px solid Highlight;
         outline-offset: 0;
       }
-      border-color: var(--field-border-focus);
-      background-color: var(--field-focus);
+      border-color: var(--rp-field-border-focus);
+      background-color: var(--rp-field-focus);
     }
 
     /* Disabled state */
     &:disabled,
     &[data-disabled],
     &[aria-disabled="true"] {
-      opacity: var(--disabled-opacity);
-      cursor: var(--cursor-disabled);
+      opacity: var(--rp-disabled-opacity);
+      cursor: var(--rp-cursor-disabled);
       pointer-events: none;
       @media (forced-colors: active) {
         color: GrayText;
@@ -67,15 +67,15 @@
 }
 
 .rp-combo-box__value {
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
   overflow-wrap: break-word;
   &:empty {
     display: none;
   }
 
-  --combo-box-value-fg: var(--field-foreground, var(--foreground));
-  --combo-box-value-fg-placeholder: var(--field-placeholder, var(--muted));
+  --combo-box-value-fg: var(--rp-field-foreground, var(--rp-foreground));
+  --combo-box-value-fg-placeholder: var(--rp-field-placeholder, var(--rp-muted));
 
   color: var(--combo-box-value-fg);
 
@@ -91,7 +91,7 @@
 
 .rp-combo-box__trigger {
   position: absolute;
-  inset-inline-end: calc(var(--spacing) * 0);
+  inset-inline-end: calc(var(--rp-spacing) * 0);
   top: calc(1 / 2 * 100%);
   display: flex;
   height: 100%;
@@ -101,8 +101,8 @@
   cursor: pointer;
   align-items: center;
   justify-content: center;
-  padding-inline-end: calc(var(--spacing) * 2);
-  color: var(--field-placeholder, var(--muted));
+  padding-inline-end: calc(var(--rp-spacing) * 2);
+  color: var(--rp-field-placeholder, var(--rp-muted));
   transition-property:
     color,
     background-color,
@@ -127,8 +127,8 @@
     content-visibility,
     overlay,
     pointer-events;
-  transition-timing-function: var(--rp-ease, var(--default-transition-timing-function));
-  transition-duration: var(--rp-motion) var(--rp-duration, var(--default-transition-duration));
+  transition-timing-function: var(--rp-ease, var(--rp-default-transition-timing-function));
+  transition-duration: var(--rp-motion) var(--rp-duration, var(--rp-default-transition-duration));
   --rp-duration: 150ms;
   transition-duration: var(--rp-motion) 150ms;
   -webkit-tap-highlight-color: transparent;
@@ -140,8 +140,8 @@
   --rp-outline-style: none;
   outline-style: none;
 
-  --combo-box-trigger-fg: var(--field-placeholder, var(--muted));
-  --combo-box-trigger-fg-hover: var(--field-foreground, var(--foreground));
+  --combo-box-trigger-fg: var(--rp-field-placeholder, var(--rp-muted));
+  --combo-box-trigger-fg-hover: var(--rp-field-foreground, var(--rp-foreground));
 
   color: var(--combo-box-trigger-fg);
 
@@ -162,9 +162,9 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
+    --rp-ring-color: var(--rp-focus);
     --rp-ring-offset-width: 2px;
-    --rp-ring-offset-color: var(--background);
+    --rp-ring-offset-color: var(--rp-background);
     --rp-outline-style: none;
     outline-style: none;
   }
@@ -183,11 +183,11 @@
   }
 
   [data-slot="combo-box-trigger-default-icon"] {
-    width: calc(var(--spacing) * 4);
-    height: calc(var(--spacing) * 4);
+    width: calc(var(--rp-spacing) * 4);
+    height: calc(var(--rp-spacing) * 4);
     transition-property: transform, translate, scale, rotate;
-    transition-timing-function: var(--rp-ease, var(--default-transition-timing-function));
-    transition-duration: var(--rp-motion) var(--rp-duration, var(--default-transition-duration));
+    transition-timing-function: var(--rp-ease, var(--rp-default-transition-timing-function));
+    transition-duration: var(--rp-motion) var(--rp-duration, var(--rp-default-transition-duration));
     --rp-duration: 150ms;
     transition-duration: var(--rp-motion) 150ms;
   }
@@ -202,18 +202,18 @@
 .rp-combo-box__popover {
   min-width: var(--trigger-width);
   transform-origin: var(--trigger-anchor-point);
-  scroll-padding-block: var(--spacing);
-  scrollbar-width: var(--scrollbar-width);
-  scrollbar-color: var(--scrollbar-color);
-  scrollbar-gutter: var(--scrollbar-gutter);
+  scroll-padding-block: var(--rp-spacing);
+  scrollbar-width: var(--rp-scrollbar-width);
+  scrollbar-color: var(--rp-scrollbar-color);
+  scrollbar-gutter: var(--rp-scrollbar-gutter);
   overflow-y: auto;
   overscroll-behavior: contain;
-  background-color: var(--overlay);
+  background-color: var(--rp-overlay);
   padding: 0px;
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
-  border-radius: min(32px, var(--component-radius));
-  box-shadow: var(--shadow-overlay);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+  border-radius: min(32px, var(--rp-component-radius));
+  box-shadow: var(--rp-shadow-overlay);
 
   /* Focus state */
   &:focus-visible:not(:focus),
@@ -234,19 +234,19 @@
 
     /* Placement-specific translations */
     &[data-placement="top"] {
-      --rp-enter-translate-y: calc(1*var(--spacing));
+      --rp-enter-translate-y: calc(1*var(--rp-spacing));
     }
 
     &[data-placement="bottom"] {
-      --rp-enter-translate-y: calc(1*var(--spacing)*-1);
+      --rp-enter-translate-y: calc(1*var(--rp-spacing)*-1);
     }
 
     &[data-placement="left"] {
-      --rp-enter-translate-x: calc(1*var(--spacing));
+      --rp-enter-translate-x: calc(1*var(--rp-spacing));
     }
 
     &[data-placement="right"] {
-      --rp-enter-translate-x: calc(1*var(--spacing)*-1);
+      --rp-enter-translate-x: calc(1*var(--rp-spacing)*-1);
     }
   }
 
@@ -264,14 +264,14 @@
   &[data-exiting="true"],
   &[data-entering="true"] {
     transition-property: opacity, transform;
-    transition-timing-function: var(--rp-ease, var(--default-transition-timing-function));
-    transition-duration: var(--rp-motion) var(--rp-duration, var(--default-transition-duration));
+    transition-timing-function: var(--rp-ease, var(--rp-default-transition-timing-function));
+    transition-duration: var(--rp-motion) var(--rp-duration, var(--rp-default-transition-duration));
     will-change: opacity, transform;
   }
 
   /* Arrow styling */
   & [data-slot="popover-overlay-arrow"] {
-    fill: var(--overlay);
+    fill: var(--rp-overlay);
   }
 
   /* Arrow rotation based on placement */
@@ -289,13 +289,13 @@
 
   /* Listbox styles */
   [data-slot="list-box"] {
-    padding: calc(var(--spacing) * 1.5);
+    padding: calc(var(--rp-spacing) * 1.5);
     --rp-outline-style: none;
     outline-style: none;
   }
 
   [data-slot="list-box-item"] {
-    padding-inline: calc(var(--spacing) * 2.5);
+    padding-inline: calc(var(--rp-spacing) * 2.5);
 
     /* As the combo-box is single-select, we don't need to animate the checkmark */
     [data-slot="list-box-item-indicator--checkmark"] {
@@ -312,18 +312,18 @@
  * left - reached from the popover's own class, since it is teleported out of this tree. */
 .rp-combo-box__popover--sm {
   [data-slot="list-box-item"] {
-    min-height: calc(var(--spacing) * 8);
-    padding-block: var(--spacing);
+    min-height: calc(var(--rp-spacing) * 8);
+    padding-block: var(--rp-spacing);
   }
 }
 
 .rp-combo-box__popover--lg {
-  font-size: var(--text-base);
-  line-height: var(--rp-leading, var(--text-base--line-height));
+  font-size: var(--rp-text-base);
+  line-height: var(--rp-leading, var(--rp-text-base--line-height));
 
   [data-slot="list-box-item"] {
-    min-height: calc(var(--spacing) * 10);
-    padding-block: calc(var(--spacing) * 2);
+    min-height: calc(var(--rp-spacing) * 10);
+    padding-block: calc(var(--rp-spacing) * 2);
   }
 }
 

@@ -71,6 +71,6 @@ import {
 
 <style scoped>
 .field {
-  width: calc(var(--spacing) * 80);
+  width: calc(var(--rp-spacing) * 80);
 }
 </style>

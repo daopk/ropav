@@ -1,11 +1,11 @@
 /* Field error styles */
 .rp-field-error {
   height: 0px;
-  padding-inline: var(--spacing);
-  font-size: var(--text-xs);
-  line-height: var(--rp-leading, var(--text-xs--line-height));
+  padding-inline: var(--rp-spacing);
+  font-size: var(--rp-text-xs);
+  line-height: var(--rp-leading, var(--rp-text-xs--line-height));
   overflow-wrap: break-word;
-  color: var(--danger);
+  color: var(--rp-danger);
   opacity: 0%;
   &[data-visible] {
     height: auto;
@@ -15,8 +15,8 @@
   }
 
   transition:
-    var(--rp-motion) opacity 150ms var(--ease-out),
-    height 350ms var(--ease-smooth);
+    var(--rp-motion) opacity 150ms var(--rp-ease-out),
+    height 350ms var(--rp-ease-smooth);
 }
 
 /*
@@ -33,7 +33,7 @@
   height: auto;
   min-height: 0px;
   padding: 0px;
-  color: var(--muted);
+  color: var(--rp-muted);
   opacity: 100%;
   transition: var(--rp-motion) none;
 }

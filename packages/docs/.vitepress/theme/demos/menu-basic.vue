@@ -23,7 +23,7 @@ import { Label, Menu, MenuItem, Separator, Surface } from "ropav";
 
 <style scoped>
 .surface {
-  width: calc(var(--spacing) * 56);
+  width: calc(var(--rp-spacing) * 56);
   padding: 0;
 }
 </style>

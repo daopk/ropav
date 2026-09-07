@@ -1,7 +1,7 @@
 /* Base empty-state styles */
 .rp-empty-state {
-  padding: calc(var(--spacing) * 2);
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
-  color: var(--muted);
+  padding: calc(var(--rp-spacing) * 2);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+  color: var(--rp-muted);
 }

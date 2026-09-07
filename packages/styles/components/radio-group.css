@@ -6,14 +6,14 @@
   /* Default orientation */
   &[data-orientation="vertical"] {
     [data-slot="radio"] {
-      margin-top: calc(var(--spacing) * 4);
+      margin-top: calc(var(--rp-spacing) * 4);
     }
   }
 
   &[data-orientation="horizontal"] {
     flex-direction: row;
     flex-wrap: wrap;
-    gap: calc(var(--spacing) * 4);
+    gap: calc(var(--rp-spacing) * 4);
   }
 }
 
@@ -27,13 +27,13 @@
   box-shadow: var(--rp-ring), var(--rp-shadow);
   background-color: var(--radio-control-bg);
 
-  --radio-control-bg: var(--default);
-  --radio-control-bg-hover: var(--default-hover);
+  --radio-control-bg: var(--rp-default);
+  --radio-control-bg-hover: var(--rp-default-hover);
 
   /* Hover state */
   .rp-radio:has([data-slot="radio-content"][data-hovered="true"]) &,
   .rp-radio [data-slot="radio-content"][data-hovered="true"] & {
-    border-color: var(--field-border-hover);
+    border-color: var(--rp-field-border-hover);
   }
 
   /* Default indicator color (unselected) */

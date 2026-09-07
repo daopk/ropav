@@ -1,8 +1,8 @@
 /* Base description styles */
 .rp-description {
-  font-size: var(--text-xs);
-  line-height: var(--rp-leading, var(--text-xs--line-height));
+  font-size: var(--rp-text-xs);
+  line-height: var(--rp-leading, var(--rp-text-xs--line-height));
   text-wrap: wrap;
   overflow-wrap: break-word;
-  color: var(--muted);
+  color: var(--rp-muted);
 }

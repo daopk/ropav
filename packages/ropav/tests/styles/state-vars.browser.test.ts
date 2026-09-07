@@ -54,13 +54,13 @@ const parts: Part[] = [
     pseudo: "::after",
     stateHost: ".rp-sidebar__rail",
     states: [
-      { attr: null, knob: "--sidebar-rail-line", paints: "var(--separator)" },
-      { attr: ["data-hovered"], knob: "--sidebar-rail-line-hover", paints: "var(--accent)" },
+      { attr: null, knob: "--sidebar-rail-line", paints: "var(--rp-separator)" },
+      { attr: ["data-hovered"], knob: "--sidebar-rail-line-hover", paints: "var(--rp-accent)" },
       {
         attr: ["data-dragging"],
         follows: ["--sidebar-rail-line-hover"],
         knob: "--sidebar-rail-line-dragging",
-        paints: "var(--accent)",
+        paints: "var(--rp-accent)",
       },
     ],
   },
@@ -95,14 +95,18 @@ const parts: Part[] = [
     stateHost: ".rp-sidebar__item",
     states: [
       { attr: null, knob: "--sidebar-item-bg", paints: "transparent" },
-      { attr: ["data-hovered"], knob: "--sidebar-item-bg-hover", paints: "var(--state-layer)" },
+      { attr: ["data-hovered"], knob: "--sidebar-item-bg-hover", paints: "var(--rp-state-layer)" },
       {
         attr: ["data-pressed"],
         follows: ["--sidebar-item-bg-hover"],
         knob: "--sidebar-item-bg-pressed",
-        paints: "var(--state-layer)",
+        paints: "var(--rp-state-layer)",
       },
-      { attr: ["data-current"], knob: "--sidebar-item-bg-current", paints: "var(--accent-soft)" },
+      {
+        attr: ["data-current"],
+        knob: "--sidebar-item-bg-current",
+        paints: "var(--rp-accent-soft)",
+      },
     ],
   },
   {
@@ -112,11 +116,11 @@ const parts: Part[] = [
     paint: ".rp-sidebar__item",
     stateHost: ".rp-sidebar__item",
     states: [
-      { attr: null, knob: "--sidebar-item-fg", paints: "var(--foreground)", prop: "color" },
+      { attr: null, knob: "--sidebar-item-fg", paints: "var(--rp-foreground)", prop: "color" },
       {
         attr: ["data-current"],
         knob: "--sidebar-item-fg-current",
-        paints: "var(--accent-soft-foreground)",
+        paints: "var(--rp-accent-soft-foreground)",
         prop: "color",
       },
     ],
@@ -134,13 +138,13 @@ const parts: Part[] = [
     paint: ".rp-button",
     stateHost: ".rp-button",
     states: [
-      { attr: null, knob: "--button-bg", paints: "var(--accent)" },
-      { attr: ["data-hovered"], knob: "--button-bg-hover", paints: "var(--accent-hover)" },
+      { attr: null, knob: "--button-bg", paints: "var(--rp-accent)" },
+      { attr: ["data-hovered"], knob: "--button-bg-hover", paints: "var(--rp-accent-hover)" },
       {
         attr: ["data-pressed"],
         follows: ["--button-bg-hover"],
         knob: "--button-bg-pressed",
-        paints: "var(--accent-hover)",
+        paints: "var(--rp-accent-hover)",
       },
     ],
   },
@@ -161,9 +165,9 @@ const parts: Part[] = [
       {
         attr: ["data-hovered"],
         knob: "--button-bg-hover",
-        paints: "color-mix(in oklab, var(--state-layer) 60%, transparent)",
+        paints: "color-mix(in oklab, var(--rp-state-layer) 60%, transparent)",
       },
-      { attr: ["data-pressed"], knob: "--button-bg-pressed", paints: "var(--state-layer)" },
+      { attr: ["data-pressed"], knob: "--button-bg-pressed", paints: "var(--rp-state-layer)" },
     ],
   },
   {
@@ -173,9 +177,9 @@ const parts: Part[] = [
     paint: ".rp-input",
     stateHost: ".rp-input",
     states: [
-      { attr: null, knob: "--input-bg", paints: "var(--field-background, var(--default))" },
-      { attr: ["data-hovered"], knob: "--input-bg-hover", paints: "var(--field-hover)" },
-      { attr: ["data-focused"], knob: "--input-bg-focus", paints: "var(--field-focus)" },
+      { attr: null, knob: "--input-bg", paints: "var(--rp-field-background, var(--rp-default))" },
+      { attr: ["data-hovered"], knob: "--input-bg-hover", paints: "var(--rp-field-hover)" },
+      { attr: ["data-focused"], knob: "--input-bg-focus", paints: "var(--rp-field-focus)" },
     ],
   },
   {
@@ -187,9 +191,9 @@ const parts: Part[] = [
     paint: ".rp-input",
     stateHost: ".rp-input",
     states: [
-      { attr: null, knob: "--input-bg", paints: "var(--default)" },
-      { attr: ["data-hovered"], knob: "--input-bg-hover", paints: "var(--default-hover)" },
-      { attr: ["data-focused"], knob: "--input-bg-focus", paints: "var(--default)" },
+      { attr: null, knob: "--input-bg", paints: "var(--rp-default)" },
+      { attr: ["data-hovered"], knob: "--input-bg-hover", paints: "var(--rp-default-hover)" },
+      { attr: ["data-focused"], knob: "--input-bg-focus", paints: "var(--rp-default)" },
     ],
   },
   {
@@ -201,16 +205,16 @@ const parts: Part[] = [
     paint: ".rp-search-field__group",
     stateHost: ".rp-search-field__group",
     states: [
-      { attr: null, knob: "--search-field-group-bg", paints: "var(--default)" },
+      { attr: null, knob: "--search-field-group-bg", paints: "var(--rp-default)" },
       {
         attr: ["data-hovered"],
         knob: "--search-field-group-bg-hover",
-        paints: "var(--default-hover)",
+        paints: "var(--rp-default-hover)",
       },
       {
         attr: ["data-invalid"],
         knob: "--search-field-group-bg-focus",
-        paints: "var(--default)",
+        paints: "var(--rp-default)",
       },
     ],
   },
@@ -226,19 +230,19 @@ const parts: Part[] = [
       {
         attr: null,
         knob: "--link-decoration",
-        paints: "var(--separator-tertiary)",
+        paints: "var(--rp-separator-tertiary)",
         prop: "textDecorationColor",
       },
       {
         attr: ["data-hovered"],
         knob: "--link-decoration-hover",
-        paints: "color-mix(in oklab, var(--muted) 50%, transparent)",
+        paints: "color-mix(in oklab, var(--rp-muted) 50%, transparent)",
         prop: "textDecorationColor",
       },
       {
         attr: ["data-pressed"],
         knob: "--link-decoration-pressed",
-        paints: "var(--muted)",
+        paints: "var(--rp-muted)",
         prop: "textDecorationColor",
       },
     ],
@@ -252,13 +256,13 @@ const parts: Part[] = [
     paint: ".rp-tag",
     stateHost: ".rp-tag",
     states: [
-      { attr: null, knob: "--tag-bg", paints: "var(--default)" },
-      { attr: ["data-hovered"], knob: "--tag-bg-hover", paints: "var(--default-hover)" },
-      { attr: ["data-selected"], knob: "--tag-bg-selected", paints: "var(--accent-soft)" },
+      { attr: null, knob: "--tag-bg", paints: "var(--rp-default)" },
+      { attr: ["data-hovered"], knob: "--tag-bg-hover", paints: "var(--rp-default-hover)" },
+      { attr: ["data-selected"], knob: "--tag-bg-selected", paints: "var(--rp-accent-soft)" },
       {
         attr: ["data-selected", "data-hovered"],
         knob: "--tag-bg-selected-hover",
-        paints: "var(--accent-soft-hover)",
+        paints: "var(--rp-accent-soft-hover)",
       },
     ],
   },
@@ -271,26 +275,26 @@ const parts: Part[] = [
     paint: ".rp-table__cell",
     stateHost: ".rp-table__row",
     states: [
-      { attr: null, knob: "--table-cell-bg", paints: "var(--surface)" },
+      { attr: null, knob: "--table-cell-bg", paints: "var(--rp-surface)" },
       {
         attr: ["data-hovered"],
         knob: "--table-cell-bg-hover",
-        paints: "var(--surface-hover)",
+        paints: "var(--rp-surface-hover)",
       },
       {
         attr: ["data-selected"],
         knob: "--table-cell-bg-selected",
-        paints: "var(--accent-soft)",
+        paints: "var(--rp-accent-soft)",
       },
       {
         attr: ["data-selected", "data-hovered"],
         knob: "--table-cell-bg-selected-hover",
-        paints: "var(--accent-soft-hover)",
+        paints: "var(--rp-accent-soft-hover)",
       },
       {
         attr: ["data-drop-target"],
         knob: "--table-cell-bg-drop-target",
-        paints: "var(--accent-soft)",
+        paints: "var(--rp-accent-soft)",
       },
     ],
   },
@@ -306,7 +310,7 @@ const parts: Part[] = [
       {
         attr: ["data-drop-target"],
         knob: "--table-drop-indicator-bg",
-        paints: "var(--accent)",
+        paints: "var(--rp-accent)",
       },
     ],
   },
@@ -323,7 +327,7 @@ const parts: Part[] = [
       {
         attr: ["data-drop-target"],
         knob: "--table-drop-indicator-bg",
-        paints: "var(--accent)",
+        paints: "var(--rp-accent)",
       },
     ],
   },
@@ -337,7 +341,7 @@ const parts: Part[] = [
       {
         attr: ["data-drop-target"],
         knob: "--list-box-drop-indicator-bg",
-        paints: "var(--accent)",
+        paints: "var(--rp-accent)",
       },
     ],
   },
@@ -353,7 +357,7 @@ const parts: Part[] = [
       {
         attr: ["data-drop-target"],
         knob: "--list-box-drop-indicator-bg",
-        paints: "var(--accent)",
+        paints: "var(--rp-accent)",
       },
     ],
   },
@@ -369,17 +373,17 @@ const parts: Part[] = [
       {
         attr: null,
         knob: "--checkbox-control-bg",
-        paints: "var(--field-background, var(--default))",
+        paints: "var(--rp-field-background, var(--rp-default))",
       },
       {
         attr: ["data-indeterminate"],
         knob: "--checkbox-control-bg-checked",
-        paints: "var(--accent)",
+        paints: "var(--rp-accent)",
       },
       {
         attr: ["data-indeterminate", "data-invalid"],
         knob: "--checkbox-control-bg-invalid",
-        paints: "var(--danger)",
+        paints: "var(--rp-danger)",
       },
     ],
   },
@@ -394,17 +398,17 @@ const parts: Part[] = [
       {
         attr: ["data-today"],
         knob: "--range-calendar-day-bg-today",
-        paints: "var(--accent-soft)",
+        paints: "var(--rp-accent-soft)",
       },
       {
         attr: ["data-selection-end"],
         knob: "--range-calendar-day-bg-cap",
-        paints: "var(--accent)",
+        paints: "var(--rp-accent)",
       },
       {
         attr: ["data-hovered"],
         knob: "--range-calendar-day-bg-hover",
-        paints: "var(--state-layer)",
+        paints: "var(--rp-state-layer)",
       },
     ],
   },
@@ -416,13 +420,13 @@ const parts: Part[] = [
     pseudo: "::after",
     stateHost: ".rp-splitter__handle",
     states: [
-      { attr: null, knob: "--splitter-line", paints: "var(--separator)" },
-      { attr: ["data-hovered"], knob: "--splitter-line-hover", paints: "var(--accent)" },
+      { attr: null, knob: "--splitter-line", paints: "var(--rp-separator)" },
+      { attr: ["data-hovered"], knob: "--splitter-line-hover", paints: "var(--rp-accent)" },
       {
         attr: ["data-dragging"],
         follows: ["--splitter-line-hover"],
         knob: "--splitter-line-dragging",
-        paints: "var(--accent)",
+        paints: "var(--rp-accent)",
       },
     ],
   },
@@ -433,13 +437,13 @@ const parts: Part[] = [
     paint: ".rp-splitter__handle-grip",
     stateHost: ".rp-splitter__handle",
     states: [
-      { attr: null, knob: "--splitter-grip-bg", paints: "var(--separator)" },
-      { attr: ["data-hovered"], knob: "--splitter-grip-bg-hover", paints: "var(--accent)" },
+      { attr: null, knob: "--splitter-grip-bg", paints: "var(--rp-separator)" },
+      { attr: ["data-hovered"], knob: "--splitter-grip-bg-hover", paints: "var(--rp-accent)" },
       {
         attr: ["data-dragging"],
         follows: ["--splitter-grip-bg-hover"],
         knob: "--splitter-grip-bg-dragging",
-        paints: "var(--accent)",
+        paints: "var(--rp-accent)",
       },
     ],
   },

@@ -12,17 +12,17 @@
   display: inline-flex;
   width: max-content;
   align-items: center;
-  background-color: var(--default);
-  padding: var(--spacing);
+  background-color: var(--rp-default);
+  padding: var(--rp-spacing);
 
   /* The same corner a button of this size wears, not a larger one stepped out by the padding.
    * The size scale already lines the track up with a button and a field; a corner of its own
    * would break that agreement at exactly the place two of them sit side by side.
    *
-   * Read through `var(--component-radius)` rather than the `rounded-component` utility, because
+   * Read through `var(--rp-component-radius)` rather than the `rounded-component` utility, because
    * raw CSS resolves the alias on `:root` and then inherits the root theme's radius into every
    * `data-theme` subtree. */
-  border-radius: min(32px, var(--component-radius));
+  border-radius: min(32px, var(--rp-component-radius));
 
   /* Forced Colors Mode flattens the track's fill onto the page, which leaves the pill sitting
    * in nothing. `CanvasText` is the platform's own edge; an outline rather than a border so
@@ -34,8 +34,8 @@
 
   /* Disabled state */
   &[data-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -51,22 +51,22 @@
 .rp-segmented-control__item {
   position: relative;
   display: inline-flex;
-  height: calc(var(--spacing) * 7);
+  height: calc(var(--rp-spacing) * 7);
   min-width: 0px;
   flex-shrink: 0;
   appearance: none;
   align-items: center;
   justify-content: center;
-  gap: calc(var(--spacing) * 2);
-  border-radius: var(--component-radius, calc(var(--radius) * 3));
+  gap: calc(var(--rp-spacing) * 2);
+  border-radius: var(--rp-component-radius, calc(var(--rp-radius) * 3));
   border-style: var(--rp-border-style);
   border-width: 0px;
   background-color: transparent;
-  padding-inline: calc(var(--spacing) * 3);
+  padding-inline: calc(var(--rp-spacing) * 3);
   text-align: center;
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
-  font-weight: var(--font-weight-medium);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+  font-weight: var(--rp-font-weight-medium);
   white-space: nowrap;
   --rp-outline-style: none;
   outline-style: none;
@@ -74,18 +74,18 @@
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 
-  --segmented-control-item-fg: var(--muted);
-  --segmented-control-item-fg-hover: var(--foreground);
-  --segmented-control-item-fg-selected: var(--segment-foreground);
+  --segmented-control-item-fg: var(--rp-muted);
+  --segmented-control-item-fg-hover: var(--rp-foreground);
+  --segmented-control-item-fg-selected: var(--rp-segment-foreground);
 
   color: var(--segmented-control-item-fg);
 
   z-index: 1;
-  cursor: var(--cursor-interactive);
+  cursor: var(--rp-cursor-interactive);
 
   transition:
-    var(--rp-motion) color 150ms var(--ease-smooth),
-    opacity 150ms var(--ease-smooth);
+    var(--rp-motion) color 150ms var(--rp-ease-smooth),
+    opacity 150ms var(--rp-ease-smooth);
 
   /* Selected state */
   &[data-selected="true"] {
@@ -122,8 +122,8 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
-    --rp-ring-offset-color: var(--background);
+    --rp-ring-color: var(--rp-focus);
+    --rp-ring-offset-color: var(--rp-background);
     --rp-outline-style: none;
     outline-style: none;
     @media (forced-colors: active) {
@@ -141,8 +141,8 @@
   /* Disabled state */
   &:disabled,
   &[data-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -160,17 +160,17 @@
 .rp-segmented-control__separator {
   pointer-events: none;
   position: absolute;
-  inset-inline-start: calc(var(--spacing) * 0);
+  inset-inline-start: calc(var(--rp-spacing) * 0);
   top: calc(1 / 4 * 100%);
   height: calc(1 / 2 * 100%);
   width: 1px;
-  border-radius: calc(var(--radius) * 0.5);
-  background-color: var(--muted);
+  border-radius: calc(var(--rp-radius) * 0.5);
+  background-color: var(--rp-muted);
   @supports (color: color-mix(in lab, red, red)) {
-    background-color: color-mix(in oklab, var(--muted) 25%, transparent);
+    background-color: color-mix(in oklab, var(--rp-muted) 25%, transparent);
   }
 
-  transition: var(--rp-motion) opacity 150ms var(--ease-smooth);
+  transition: var(--rp-motion) opacity 150ms var(--rp-ease-smooth);
 
   /* Nothing to divide in front of the first segment. */
   .rp-segmented-control__item:first-child & {
@@ -195,13 +195,13 @@
 
 .rp-segmented-control__indicator {
   position: absolute;
-  inset-inline-start: calc(var(--spacing) * 0);
+  inset-inline-start: calc(var(--rp-spacing) * 0);
   top: 0px;
   width: 100%;
   height: 100%;
-  border-radius: var(--component-radius, calc(var(--radius) * 3));
-  background-color: var(--segment);
-  --rp-shadow: var(--surface-shadow);
+  border-radius: var(--rp-component-radius, calc(var(--rp-radius) * 3));
+  background-color: var(--rp-segment);
+  --rp-shadow: var(--rp-surface-shadow);
   box-shadow: var(--rp-ring), var(--rp-shadow);
 
   z-index: -1;
@@ -221,7 +221,7 @@
    */
   transition-duration: var(--rp-motion) 250ms;
   transition-property: translate, width, height;
-  transition-timing-function: var(--ease-out-fluid);
+  transition-timing-function: var(--rp-ease-out-fluid);
 }
 
 /* ==========================================================================
@@ -231,10 +231,10 @@
    ========================================================================== */
 
 .rp-segmented-control--sm .rp-segmented-control__item {
-  height: calc(var(--spacing) * 6);
-  padding-inline: calc(var(--spacing) * 2.5);
-  font-size: var(--text-xs);
-  line-height: var(--rp-leading, var(--text-xs--line-height));
+  height: calc(var(--rp-spacing) * 6);
+  padding-inline: calc(var(--rp-spacing) * 2.5);
+  font-size: var(--rp-text-xs);
+  line-height: var(--rp-leading, var(--rp-text-xs--line-height));
 }
 
 .rp-segmented-control--md {
@@ -242,8 +242,8 @@
 }
 
 .rp-segmented-control--lg .rp-segmented-control__item {
-  height: calc(var(--spacing) * 8);
-  padding-inline: calc(var(--spacing) * 4);
+  height: calc(var(--rp-spacing) * 8);
+  padding-inline: calc(var(--rp-spacing) * 4);
 }
 
 /* ==========================================================================

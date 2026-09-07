@@ -35,7 +35,7 @@
 .rp-range-calendar:has(.rp-calendar-year-picker__year-grid) > [data-slot="range-calendar-grid"] {
   will-change: opacity;
   transition:
-    var(--rp-motion) opacity 150ms var(--ease-out),
+    var(--rp-motion) opacity 150ms var(--rp-ease-out),
     visibility 0ms linear;
 }
 
@@ -48,7 +48,7 @@
   opacity: 0%;
   visibility: hidden;
   transition:
-    var(--rp-motion) opacity 150ms var(--ease-out),
+    var(--rp-motion) opacity 150ms var(--rp-ease-out),
     visibility 0ms linear 150ms;
 }
 
@@ -60,12 +60,12 @@
   flex: 1;
   align-items: center;
   justify-content: flex-start;
-  gap: var(--spacing);
-  border-radius: calc(var(--radius) * 1);
+  gap: var(--rp-spacing);
+  border-radius: calc(var(--rp-radius) * 1);
   --rp-outline-style: none;
   outline-style: none;
 
-  cursor: var(--cursor-interactive);
+  cursor: var(--rp-cursor-interactive);
   touch-action: manipulation;
 
   /* Focus state */
@@ -75,8 +75,8 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
-    --rp-ring-offset-color: var(--background);
+    --rp-ring-color: var(--rp-focus);
+    --rp-ring-offset-color: var(--rp-background);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: var(--rp-focus-ring-offset);
@@ -88,22 +88,22 @@
 }
 
 .rp-calendar-year-picker__trigger-heading {
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
-  font-weight: var(--font-weight-medium);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+  font-weight: var(--rp-font-weight-medium);
 
-  transition: var(--rp-motion) color 150ms var(--ease-out);
+  transition: var(--rp-motion) color 150ms var(--rp-ease-out);
 }
 
 .rp-calendar-year-picker__trigger-indicator {
-  font-size: var(--text-xs);
-  line-height: var(--rp-leading, var(--text-xs--line-height));
-  color: var(--accent-soft-foreground);
+  font-size: var(--rp-text-xs);
+  line-height: var(--rp-leading, var(--rp-text-xs--line-height));
+  color: var(--rp-accent-soft-foreground);
   &:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) {
     transform: rotate(180deg);
   }
 
-  transition: var(--rp-motion) transform 150ms var(--ease-out);
+  transition: var(--rp-motion) transform 150ms var(--rp-ease-out);
 }
 
 /* Rotate chevron when open */
@@ -112,7 +112,7 @@
 }
 
 .rp-calendar-year-picker__trigger[data-open="true"] .rp-calendar-year-picker__trigger-heading {
-  color: var(--accent-soft-foreground);
+  color: var(--rp-accent-soft-foreground);
 }
 
 /* -----------------------------------------------------------------------------
@@ -124,16 +124,16 @@
 .rp-calendar-year-picker__year-grid {
   pointer-events: none;
   position: absolute;
-  inset-inline-start: calc(var(--spacing) * 0);
-  inset-inline-end: calc(var(--spacing) * 0);
+  inset-inline-start: calc(var(--rp-spacing) * 0);
+  inset-inline-end: calc(var(--rp-spacing) * 0);
   display: grid;
-  scrollbar-width: var(--scrollbar-width);
-  scrollbar-color: var(--scrollbar-color);
-  scrollbar-gutter: var(--scrollbar-gutter);
+  scrollbar-width: var(--rp-scrollbar-width);
+  scrollbar-color: var(--rp-scrollbar-color);
+  scrollbar-gutter: var(--rp-scrollbar-gutter);
   align-content: flex-start;
-  gap: var(--spacing);
+  gap: var(--rp-spacing);
   overflow-y: auto;
-  padding: var(--spacing);
+  padding: var(--rp-spacing);
   opacity: 0%;
   grid-template-columns: repeat(3, 1fr);
 
@@ -146,7 +146,7 @@
   opacity: 100%;
 
   /* When opening: slight delay so the day grid starts fading out first */
-  transition: var(--rp-motion) opacity 200ms var(--ease-out) 50ms;
+  transition: var(--rp-motion) opacity 200ms var(--rp-ease-out) 50ms;
 }
 
 /* -----------------------------------------------------------------------------
@@ -155,14 +155,14 @@
 .rp-calendar-year-picker__year-cell {
   position: relative;
   display: inline-flex;
-  height: calc(var(--spacing) * 8);
+  height: calc(var(--rp-spacing) * 8);
   align-items: center;
   justify-content: center;
-  border-radius: var(--component-radius, calc(var(--radius) * 3));
-  padding-inline: calc(var(--spacing) * 2.5);
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
-  font-weight: var(--font-weight-medium);
+  border-radius: var(--rp-component-radius, calc(var(--rp-radius) * 3));
+  padding-inline: calc(var(--rp-spacing) * 2.5);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+  font-weight: var(--rp-font-weight-medium);
   --rp-outline-style: none;
   outline-style: none;
   -webkit-user-select: none;
@@ -172,28 +172,28 @@
 
   /* The fill and label, per state — selected and hovered land together on the current year. */
   --calendar-year-picker-year-cell-bg: transparent;
-  --calendar-year-picker-year-cell-bg-hover: var(--state-layer);
-  --calendar-year-picker-year-cell-bg-selected: var(--accent);
-  --calendar-year-picker-year-cell-bg-selected-hover: var(--accent-hover);
+  --calendar-year-picker-year-cell-bg-hover: var(--rp-state-layer);
+  --calendar-year-picker-year-cell-bg-selected: var(--rp-accent);
+  --calendar-year-picker-year-cell-bg-selected-hover: var(--rp-accent-hover);
   --calendar-year-picker-year-cell-fg: currentcolor;
-  --calendar-year-picker-year-cell-fg-hover: var(--default-foreground);
-  --calendar-year-picker-year-cell-fg-selected: var(--accent-foreground);
+  --calendar-year-picker-year-cell-fg-hover: var(--rp-default-foreground);
+  --calendar-year-picker-year-cell-fg-selected: var(--rp-accent-foreground);
 
   background-color: var(--calendar-year-picker-year-cell-bg);
   color: var(--calendar-year-picker-year-cell-fg);
 
   /* Same as `.rp-tag`. */
   transition:
-    var(--rp-motion) color 100ms var(--ease-smooth),
-    scale 100ms var(--ease-smooth),
-    opacity 100ms var(--ease-smooth),
-    background-color 100ms var(--ease-smooth),
-    box-shadow 100ms var(--ease-out);
+    var(--rp-motion) color 100ms var(--rp-ease-smooth),
+    scale 100ms var(--rp-ease-smooth),
+    opacity 100ms var(--rp-ease-smooth),
+    background-color 100ms var(--rp-ease-smooth),
+    box-shadow 100ms var(--rp-ease-out);
   transform-origin: center;
   transform: translateZ(0) var(--rp-rotate-x,) var(--rp-rotate-y,) var(--rp-rotate-z,)
     var(--rp-skew-x,) var(--rp-skew-y,);
 
-  cursor: var(--cursor-interactive);
+  cursor: var(--rp-cursor-interactive);
 
   /* Hover state (when not selected) – only on devices that support hover */
   @media (hover: hover) and (pointer: fine) {
@@ -230,8 +230,8 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
-    --rp-ring-offset-color: var(--background);
+    --rp-ring-color: var(--rp-focus);
+    --rp-ring-offset-color: var(--rp-background);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: var(--rp-focus-ring-offset);

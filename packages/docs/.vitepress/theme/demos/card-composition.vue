@@ -28,6 +28,6 @@ import {
 
 <style scoped>
 .card {
-  width: calc(var(--spacing) * 80);
+  width: calc(var(--rp-spacing) * 80);
 }
 </style>

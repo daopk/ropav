@@ -13,6 +13,6 @@ import { Description, Label, TextArea, TextField } from "ropav";
 <style scoped>
 .field {
   width: 100%;
-  max-width: var(--container-sm);
+  max-width: var(--rp-container-sm);
 }
 </style>

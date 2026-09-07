@@ -6,11 +6,11 @@
 .rp-color-area {
   position: relative;
   width: 100%;
-  max-width: calc(var(--spacing) * 56);
+  max-width: calc(var(--rp-spacing) * 56);
   flex-shrink: 0;
   -webkit-tap-highlight-color: transparent;
 
-  border-radius: min(32px, var(--component-radius));
+  border-radius: min(32px, var(--rp-component-radius));
 
   /* Square aspect ratio */
   aspect-ratio: 1 / 1;
@@ -23,8 +23,8 @@
 
   /* Disabled state */
   &[data-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -56,11 +56,11 @@
    ========================================================================== */
 
 .rp-color-area__thumb {
-  width: calc(var(--spacing) * 4);
-  height: calc(var(--spacing) * 4);
+  width: calc(var(--rp-spacing) * 4);
+  height: calc(var(--rp-spacing) * 4);
   will-change: width, height;
 
-  border-radius: min(32px, var(--component-radius));
+  border-radius: min(32px, var(--rp-component-radius));
 
   /* Current color from React Aria */
   background-color: var(--color-area-thumb-color);
@@ -74,8 +74,8 @@
     inset 0 0 0 1px rgba(0, 0, 0, 0.1);
 
   transition:
-    var(--rp-motion) width 150ms var(--ease-out),
-    height 150ms var(--ease-out);
+    var(--rp-motion) width 150ms var(--rp-ease-out),
+    height 150ms var(--rp-ease-out);
 
   /* Focus state */
   &[data-focus-visible="true"] {
@@ -84,8 +84,8 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
-    --rp-ring-offset-color: var(--background);
+    --rp-ring-color: var(--rp-focus);
+    --rp-ring-offset-color: var(--rp-background);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: var(--rp-focus-ring-offset);
@@ -97,14 +97,14 @@
 
   /* Dragging state */
   &[data-dragging="true"] {
-    width: calc(var(--spacing) * 5);
-    height: calc(var(--spacing) * 5);
+    width: calc(var(--rp-spacing) * 5);
+    height: calc(var(--rp-spacing) * 5);
   }
 
   /* Disabled state */
   &[data-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;

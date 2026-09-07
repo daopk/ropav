@@ -96,8 +96,8 @@ takes no toolchain at all:
 
 ```css
 .thing {
-  background-color: var(--accent);
-  color: var(--accent-foreground);
+  background-color: var(--rp-accent);
+  color: var(--rp-accent-foreground);
 }
 ```
 
@@ -105,14 +105,14 @@ The same names work inline in a Tailwind build, where the square brackets are wh
 value, not a name from my theme":
 
 ```html
-<p class="bg-[var(--accent)] text-[var(--accent-foreground)]">…</p>
+<p class="bg-[var(--rp-accent)] text-[var(--rp-accent-foreground)]">…</p>
 ```
 
-The radius scale is the one place to read twice. `--radius` is the scale, and the steps are
-multiples of it, so a `data-theme` that sets its own `--radius` moves all of them at once:
+The radius scale is the one place to read twice. `--rp-radius` is the scale, and the steps are
+multiples of it, so a `data-theme` that sets its own `--rp-radius` moves all of them at once:
 
 ```html
-<div class="rounded-[calc(var(--radius)*3)]">…</div>
+<div class="rounded-[calc(var(--rp-radius)*3)]">…</div>
 ```
 
 [Theming](/theming/) lists the names.

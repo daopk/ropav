@@ -48,16 +48,16 @@ import {
 
 <style scoped>
 .frame {
-  height: calc(var(--spacing) * 72);
+  height: calc(var(--rp-spacing) * 72);
   width: 100%;
   overflow: hidden;
-  border-radius: var(--radius);
+  border-radius: var(--rp-radius);
   border-style: solid;
   border-width: 1px;
-  border-color: var(--border);
+  border-color: var(--rp-border);
 }
 
 .inset {
-  padding: calc(var(--spacing) * 4);
+  padding: calc(var(--rp-spacing) * 4);
 }
 </style>

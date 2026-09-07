@@ -48,8 +48,8 @@ import {
 }
 
 .note {
-  color: var(--muted);
-  font-size: var(--text-sm);
-  line-height: var(--text-sm--line-height);
+  color: var(--rp-muted);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-text-sm--line-height);
 }
 </style>

@@ -5,26 +5,29 @@
  * invalid at computed-value time and the property falls all the way back to its initial value —
  * not to the rule underneath, and with no error anywhere. Every name below was arriving from
  * Tailwind's own theme, which the build no longer runs, so every one of them is a rule that would
- * have quietly stopped working: `font-size: var(--text-sm)` wherever a component sets its type,
- * `font-weight: var(--font-weight-medium)` wherever one emphasises a label, and a page of
+ * have quietly stopped working: `font-size: var(--rp-text-sm)` wherever a component sets its type,
+ * `font-weight: var(--rp-font-weight-medium)` wherever one emphasises a label, and a page of
  * components rendering at the browser's default size and weight with the source unchanged.
  *
- * The names are Tailwind's because the declarations reading them are what the utilities compiled
- * to, and renaming a token is a separate change from moving where it comes from. The values match
- * what `@theme` was emitting, to the digit, so the move is not a retune.
+ * The names were Tailwind's, because the declarations reading them are what the utilities compiled
+ * to. They carry the `rp-` prefix now. Declared bare they tied with Tailwind's own `@layer theme`
+ * block at equal specificity — `:root` against `:root, :host` — so which of the two answered was
+ * decided by import order: either a consumer's `@theme` was silently discarded, or their spacing
+ * scale was silently inside every component here. The values are untouched, so this is not a retune.
  *
- * `--radius-*` is deliberately absent, and must stay absent. Those exist only as substitution
- * sources for `rounded-*`: declared here they would resolve on `:root` and freeze the root
- * theme's radius into every `data-theme` subtree, which is the one thing `inline` is buying.
+ * `--radius-*` is deliberately absent, and must stay absent. Those are Tailwind's, and exist only
+ * as substitution sources for `rounded-*`: declared here they would resolve on `:root` and freeze
+ * the root theme's radius into every `data-theme` subtree. `token-vocabulary.test.ts` is what
+ * holds that vocabulary, and shadcn's, out of this file.
  */
 
 @layer theme {
   :root {
     /* `.rp-kbd` and the prose rules name these directly, with nothing behind them if they go. */
-    --font-sans:
+    --rp-font-sans:
       -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial,
       sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    --font-mono:
+    --rp-font-mono:
       ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
       monospace;
 
@@ -33,67 +36,67 @@
      * sets one sets the other — that pairing is why the sizes are a scale rather than eight
      * lengths, and why the `--…--line-height` half cannot be dropped as redundant.
      */
-    --text-xs: 0.75rem;
-    --text-xs--line-height: calc(1 / 0.75);
-    --text-sm: 0.875rem;
-    --text-sm--line-height: calc(1.25 / 0.875);
-    --text-base: 1rem;
-    --text-base--line-height: calc(1.5 / 1);
-    --text-lg: 1.125rem;
-    --text-lg--line-height: calc(1.75 / 1.125);
-    --text-xl: 1.25rem;
-    --text-xl--line-height: calc(1.75 / 1.25);
-    --text-2xl: 1.5rem;
-    --text-2xl--line-height: calc(2 / 1.5);
-    --text-3xl: 1.875rem;
-    --text-3xl--line-height: calc(2.25 / 1.875);
-    --text-4xl: 2.25rem;
-    --text-4xl--line-height: calc(2.5 / 2.25);
+    --rp-text-xs: 0.75rem;
+    --rp-text-xs--line-height: calc(1 / 0.75);
+    --rp-text-sm: 0.875rem;
+    --rp-text-sm--line-height: calc(1.25 / 0.875);
+    --rp-text-base: 1rem;
+    --rp-text-base--line-height: calc(1.5 / 1);
+    --rp-text-lg: 1.125rem;
+    --rp-text-lg--line-height: calc(1.75 / 1.125);
+    --rp-text-xl: 1.25rem;
+    --rp-text-xl--line-height: calc(1.75 / 1.25);
+    --rp-text-2xl: 1.5rem;
+    --rp-text-2xl--line-height: calc(2 / 1.5);
+    --rp-text-3xl: 1.875rem;
+    --rp-text-3xl--line-height: calc(2.25 / 1.875);
+    --rp-text-4xl: 2.25rem;
+    --rp-text-4xl--line-height: calc(2.5 / 2.25);
 
-    --font-weight-normal: 400;
-    --font-weight-medium: 500;
-    --font-weight-semibold: 600;
-    --font-weight-bold: 700;
+    --rp-font-weight-normal: 400;
+    --rp-font-weight-medium: 500;
+    --rp-font-weight-semibold: 600;
+    --rp-font-weight-bold: 700;
 
-    --leading-relaxed: 1.625;
-    --tracking-tight: -0.025em;
+    --rp-leading-relaxed: 1.625;
+    --rp-tracking-tight: -0.025em;
 
     /* What a `transition` with no duration or curve of its own runs at. */
-    --default-transition-duration: 150ms;
-    --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    --rp-default-transition-duration: 150ms;
+    --rp-default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 
     /* Tailwind's own default curve, and the one the components reach for most. */
-    --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --rp-ease-out: cubic-bezier(0, 0, 0.2, 1);
 
-    --ease-smooth: ease;
-    --ease-linear: linear;
-    --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
-    --ease-out-fluid: cubic-bezier(0.32, 0.72, 0, 1);
+    --rp-ease-smooth: ease;
+    --rp-ease-linear: linear;
+    --rp-ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --rp-ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+    --rp-ease-out-fluid: cubic-bezier(0.32, 0.72, 0, 1);
 
     /* The widths a dialog, an alert dialog and a tooltip stop growing at. */
-    --container-xs: 20rem;
-    --container-sm: 24rem;
-    --container-md: 28rem;
-    --container-lg: 32rem;
+    --rp-container-xs: 20rem;
+    --rp-container-sm: 24rem;
+    --rp-container-md: 28rem;
+    --rp-container-lg: 32rem;
 
     /* The backdrop blur behind an overlay. */
-    --blur-md: 12px;
+    --rp-blur-md: 12px;
 
     /*
      * The two colours that mean the ends of the range rather than a palette entry — a slider
      * track's checkerboard, a swatch's transparency grid, a thumb over an arbitrary hue. A theme
      * has no business moving them, which is why they are not in one.
      */
-    --color-black: #000;
-    --color-white: #fff;
+    --rp-color-black: #000;
+    --rp-color-white: #fff;
 
     /*
      * Aliases, and read on `:root` rather than on the element — so a `data-theme` subtree that
-     * changes `--field-border-width` does not move them. That is how they already behave: the
+     * changes `--rp-field-border-width` does not move them. That is how they already behave: the
      * `@theme` block emitted exactly these two declarations here, in this place.
      */
-    --border-width-field: var(--field-border-width, var(--border-width));
-    --shadow-overlay: var(--overlay-shadow);
+    --rp-border-width-field: var(--rp-field-border-width, var(--rp-border-width));
+    --rp-shadow-overlay: var(--rp-overlay-shadow);
   }
 }

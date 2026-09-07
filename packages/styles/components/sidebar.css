@@ -17,8 +17,8 @@
   /* The two widths the panel resolves between. Held on the shell rather than the panel so a caller
    * retunes both from one place, and so a drag can write the expanded one to the same property the
    * stylesheet reads. */
-  --sidebar-width: calc(var(--spacing) * 64);
-  --sidebar-width-icon: calc(var(--spacing) * 14);
+  --sidebar-width: calc(var(--rp-spacing) * 64);
+  --sidebar-width-icon: calc(var(--rp-spacing) * 14);
   /* The gap a card stands off by and the corner it wears, for the variants where something is
    * a card: the panel under `--floating`, the inset under `--card`. One pair rather than two,
    * because a variant makes exactly one of them a card and a second set would be the same two
@@ -26,8 +26,8 @@
    *
    * The corner is the one every container in the library wears, so a sidebar's card and a Card
    * dropped beside it round the same. */
-  --sidebar-card-gap: calc(var(--spacing) * 2);
-  --sidebar-card-radius: min(32px, var(--component-radius));
+  --sidebar-card-gap: calc(var(--rp-spacing) * 2);
+  --sidebar-card-radius: min(32px, var(--rp-component-radius));
   /* The rail's line and the grab area around it, matching `splitter.css` — same hairline, same
    * reasoning about a target no one can hit, same wait before it flares. */
   --sidebar-rail-gutter: 1px;
@@ -35,8 +35,8 @@
   --sidebar-highlight-delay: 500ms;
   /* What the line is painted with, at rest and lit. Separate properties so a caller can retune one
    * state without flattening the rest onto a single colour. */
-  --sidebar-rail-line: var(--separator);
-  --sidebar-rail-line-hover: var(--accent);
+  --sidebar-rail-line: var(--rp-separator);
+  --sidebar-rail-line-hover: var(--rp-accent);
   --sidebar-rail-line-dragging: var(--sidebar-rail-line-hover);
 
   isolation: isolate;
@@ -71,12 +71,12 @@
   flex-grow: 0;
   flex-direction: column;
   overflow: hidden;
-  background-color: var(--surface);
-  color: var(--surface-foreground);
+  background-color: var(--rp-surface);
+  color: var(--rp-surface-foreground);
 
   inline-size: var(--sidebar-width);
 
-  transition: var(--rp-motion) inline-size 200ms var(--ease-out);
+  transition: var(--rp-motion) inline-size 200ms var(--rp-ease-out);
 }
 
 /* Under the pointer the panel follows it exactly. Easing towards each frame's width instead makes
@@ -97,18 +97,18 @@
 .rp-sidebar__panel--left {
   border-inline-end-style: var(--rp-border-style);
   border-inline-end-width: 1px;
-  border-color: var(--separator);
+  border-color: var(--rp-separator);
   @supports (color: color-mix(in lab, red, red)) {
-    border-color: color-mix(in oklab, var(--separator) 50%, transparent);
+    border-color: color-mix(in oklab, var(--rp-separator) 50%, transparent);
   }
 }
 
 .rp-sidebar__panel--right {
   border-inline-start-style: var(--rp-border-style);
   border-inline-start-width: 1px;
-  border-color: var(--separator);
+  border-color: var(--rp-separator);
   @supports (color: color-mix(in lab, red, red)) {
-    border-color: color-mix(in oklab, var(--separator) 50%, transparent);
+    border-color: color-mix(in oklab, var(--rp-separator) 50%, transparent);
   }
 }
 
@@ -131,11 +131,11 @@
 .rp-sidebar__panel--floating {
   border-style: var(--rp-border-style);
   border-width: 1px;
-  border-color: var(--separator);
+  border-color: var(--rp-separator);
   @supports (color: color-mix(in lab, red, red)) {
-    border-color: color-mix(in oklab, var(--separator) 50%, transparent);
+    border-color: color-mix(in oklab, var(--rp-separator) 50%, transparent);
   }
-  --rp-shadow: var(--surface-shadow);
+  --rp-shadow: var(--rp-surface-shadow);
   box-shadow: var(--rp-ring), var(--rp-shadow);
 
   margin: var(--sidebar-card-gap);
@@ -196,8 +196,8 @@
   display: flex;
   flex-shrink: 0;
   flex-direction: column;
-  gap: calc(var(--spacing) * 2);
-  padding: calc(var(--spacing) * 2);
+  gap: calc(var(--rp-spacing) * 2);
+  padding: calc(var(--rp-spacing) * 2);
 }
 
 /* The scroll region. `overflow-x-hidden` because the panel narrows around its contents during the
@@ -212,10 +212,10 @@
   min-height: 0px;
   flex: 1;
   flex-direction: column;
-  gap: var(--spacing);
+  gap: var(--rp-spacing);
   overflow-x: hidden;
   overflow-y: auto;
-  padding: calc(var(--spacing) * 2);
+  padding: calc(var(--rp-spacing) * 2);
 
   scroll-padding-block: var(--scroll-shadow-size, 0px);
 }
@@ -224,7 +224,7 @@
  * Navigation, so `.rp-scroll-shadow--vertical`'s `scrollbar` wins at equal specificity and the nav
  * would grow a full-width scrollbar the moment it became a shadow container. */
 .rp-sidebar__content.rp-scroll-shadow {
-  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  scrollbar-color: var(--rp-scrollbar-thumb) var(--rp-scrollbar-track);
   scrollbar-gutter: auto;
   scrollbar-width: thin;
 
@@ -242,8 +242,8 @@
   display: flex;
   flex-shrink: 0;
   flex-direction: column;
-  gap: calc(var(--spacing) * 2);
-  padding: calc(var(--spacing) * 2);
+  gap: calc(var(--rp-spacing) * 2);
+  padding: calc(var(--rp-spacing) * 2);
 }
 
 /* ==========================================================================
@@ -255,7 +255,7 @@
   width: 100%;
   min-width: 0px;
   flex-direction: column;
-  gap: calc(var(--spacing) * 0.5);
+  gap: calc(var(--rp-spacing) * 0.5);
 }
 
 /* Matches `.rp-header`, which is the same muted label above the same kind of list. */
@@ -264,14 +264,14 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  padding-inline: calc(var(--spacing) * 2);
-  padding-top: calc(var(--spacing) * 1.5);
-  padding-bottom: var(--spacing);
+  padding-inline: calc(var(--rp-spacing) * 2);
+  padding-top: calc(var(--rp-spacing) * 1.5);
+  padding-bottom: var(--rp-spacing);
   text-align: start;
-  font-size: var(--text-xs);
-  line-height: var(--rp-leading, var(--text-xs--line-height));
-  font-weight: var(--font-weight-medium);
-  color: var(--muted);
+  font-size: var(--rp-text-xs);
+  line-height: var(--rp-leading, var(--rp-text-xs--line-height));
+  font-weight: var(--rp-font-weight-medium);
+  color: var(--rp-muted);
 }
 
 /* `sr-only` rather than `hidden`: the label is what tells a screen reader which group an item
@@ -295,7 +295,7 @@
  * class string. It needs no taking back: the rule runs the width of the content's padding box,
  * which is exactly the box every item beside it already fills. */
 .rp-sidebar__separator {
-  margin-block: var(--spacing);
+  margin-block: var(--rp-spacing);
 }
 
 /* ==========================================================================
@@ -305,17 +305,17 @@
 .rp-sidebar__item {
   position: relative;
   display: flex;
-  min-height: calc(var(--spacing) * 9);
+  min-height: calc(var(--rp-spacing) * 9);
   width: 100%;
   min-width: 0px;
   align-items: center;
   justify-content: flex-start;
-  gap: calc(var(--spacing) * 2);
-  border-radius: var(--component-radius, calc(var(--radius) * 3));
-  padding-inline: calc(var(--spacing) * 2);
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
-  font-weight: var(--font-weight-medium);
+  gap: calc(var(--rp-spacing) * 2);
+  border-radius: var(--rp-component-radius, calc(var(--rp-radius) * 3));
+  padding-inline: calc(var(--rp-spacing) * 2);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+  font-weight: var(--rp-font-weight-medium);
   text-decoration-line: none;
   --rp-outline-style: none;
   outline-style: none;
@@ -324,21 +324,21 @@
   /* The row's fill and label, per state. A caller retuning the resting pair used to flatten the
    * current page's along with it, since one declaration cannot tell the states apart. */
   --sidebar-item-bg: transparent;
-  --sidebar-item-bg-hover: var(--state-layer);
+  --sidebar-item-bg-hover: var(--rp-state-layer);
   --sidebar-item-bg-pressed: var(--sidebar-item-bg-hover);
-  --sidebar-item-bg-current: var(--accent-soft);
-  --sidebar-item-fg: var(--foreground);
-  --sidebar-item-fg-current: var(--accent-soft-foreground);
+  --sidebar-item-bg-current: var(--rp-accent-soft);
+  --sidebar-item-fg: var(--rp-foreground);
+  --sidebar-item-fg-current: var(--rp-accent-soft-foreground);
 
   background-color: var(--sidebar-item-bg);
   color: var(--sidebar-item-fg);
 
   /* Cursor */
-  cursor: var(--cursor-interactive);
+  cursor: var(--rp-cursor-interactive);
 
   transition:
-    var(--rp-motion) background-color 150ms var(--ease-out),
-    color 150ms var(--ease-out);
+    var(--rp-motion) background-color 150ms var(--rp-ease-out),
+    color 150ms var(--rp-ease-out);
 
   /* Hover state */
   @media (hover: hover) {
@@ -356,8 +356,8 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
-    --rp-ring-offset-color: var(--background);
+    --rp-ring-color: var(--rp-focus);
+    --rp-ring-offset-color: var(--rp-background);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: var(--rp-focus-ring-offset);
@@ -390,8 +390,8 @@
 
   /* Disabled state */
   &[data-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -409,15 +409,15 @@
 
 .rp-sidebar__item-icon {
   display: flex;
-  width: calc(var(--spacing) * 4);
-  height: calc(var(--spacing) * 4);
+  width: calc(var(--rp-spacing) * 4);
+  height: calc(var(--rp-spacing) * 4);
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
 
   svg {
-    width: calc(var(--spacing) * 4);
-    height: calc(var(--spacing) * 4);
+    width: calc(var(--rp-spacing) * 4);
+    height: calc(var(--rp-spacing) * 4);
   }
 }
 
@@ -475,11 +475,11 @@
  * it is `ms-auto` and not `ml-auto`. */
 .rp-sidebar__item-indicator {
   margin-inline-start: auto;
-  width: calc(var(--spacing) * 3.5);
-  height: calc(var(--spacing) * 3.5);
+  width: calc(var(--rp-spacing) * 3.5);
+  height: calc(var(--rp-spacing) * 3.5);
   flex-shrink: 0;
   rotate: calc(90deg * -1);
-  color: var(--muted);
+  color: var(--rp-muted);
   &:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) {
     rotate: 90deg;
   }
@@ -511,8 +511,8 @@
     content-visibility,
     overlay,
     pointer-events;
-  transition-timing-function: var(--rp-ease, var(--default-transition-timing-function));
-  transition-duration: var(--rp-motion) var(--rp-duration, var(--default-transition-duration));
+  transition-timing-function: var(--rp-ease, var(--rp-default-transition-timing-function));
+  transition-duration: var(--rp-motion) var(--rp-duration, var(--rp-default-transition-duration));
   --rp-duration: 250ms;
   transition-duration: var(--rp-motion) 250ms;
 
@@ -534,18 +534,18 @@
   /* The row's own inline padding plus half its icon, which lands the line on the icon's centre.
    * Written from those two rather than as the number they come to, so retuning either moves the
    * line with it instead of leaving it a few pixels off. */
-  --sidebar-sub-indent: calc(var(--spacing) * 2 + calc(var(--spacing) * 4) / 2);
+  --sidebar-sub-indent: calc(var(--rp-spacing) * 2 + calc(var(--rp-spacing) * 4) / 2);
 
   display: flex;
   min-width: 0px;
   flex-direction: column;
-  gap: calc(var(--spacing) * 0.5);
+  gap: calc(var(--rp-spacing) * 0.5);
   border-inline-start-style: var(--rp-border-style);
   border-inline-start-width: 1px;
-  border-color: var(--separator);
+  border-color: var(--rp-separator);
 
   margin-inline-start: var(--sidebar-sub-indent);
-  padding-inline-start: calc(var(--spacing) * 2);
+  padding-inline-start: calc(var(--rp-spacing) * 2);
 
   /* A border is one of the few things Forced Colors Mode recolours rather than flattens, so the
    * line survives on its own — but only while it has a colour left to recolour. */
@@ -570,8 +570,8 @@
   overflow: clip;
 
   transition:
-    var(--rp-motion) height 200ms var(--ease-out-quad),
-    opacity 200ms var(--ease-out);
+    var(--rp-motion) height 200ms var(--rp-ease-out-quad),
+    opacity 200ms var(--rp-ease-out);
 
   &[data-expanded="true"] {
     will-change: height, opacity;
@@ -583,7 +583,7 @@
  * of what it is — a destination under a heading rather than another heading. */
 .rp-sidebar__item--sub {
   gap: 0px;
-  font-weight: var(--font-weight-normal);
+  font-weight: var(--rp-font-weight-normal);
 }
 
 /* ==========================================================================
@@ -599,12 +599,12 @@
   flex: 1;
   flex-direction: column;
   overflow: hidden;
-  background-color: var(--background);
+  background-color: var(--rp-background);
 }
 
-/* The page beside a bare panel, and now the thing that paints. `--surface` rather than the base
- * rule's `--background`: this stopped being the page's background the moment it became a plate
- * lying on one, which is what `--surface` names.
+/* The page beside a bare panel, and now the thing that paints. `--rp-surface` rather than the base
+ * rule's `--rp-background`: this stopped being the page's background the moment it became a plate
+ * lying on one, which is what `--rp-surface` names.
  *
  * The first of this component's modifiers to *add* paint rather than drop it, which is what puts it
  * in front of the forced-colors sweep as a box with something to lose. Under the mode the fill
@@ -612,9 +612,9 @@
  * takes the same inset outline every container that paints takes, offset inwards so nothing moves
  * and the radius above still holds it. */
 .rp-sidebar__inset--card {
-  background-color: var(--surface);
-  color: var(--surface-foreground);
-  --rp-shadow: var(--surface-shadow);
+  background-color: var(--rp-surface);
+  color: var(--rp-surface-foreground);
+  --rp-shadow: var(--rp-surface-shadow);
   box-shadow: var(--rp-ring), var(--rp-shadow);
 
   margin: var(--sidebar-card-gap);
@@ -653,7 +653,7 @@
   touch-action: none;
 
   inline-size: var(--sidebar-rail-gutter);
-  cursor: var(--cursor-interactive);
+  cursor: var(--rp-cursor-interactive);
 
   /* On the host, not in `::after` where the transition lives: the variant reaches a pseudo-element
    * from its originating element, and appending its condition after `::after` matches nothing. */
@@ -662,7 +662,7 @@
     pointer-events: none;
     position: absolute;
     inset-block: 0px;
-    border-radius: calc(var(--radius) * 0.5);
+    border-radius: calc(var(--rp-radius) * 0.5);
     --rp-content: "";
     content: var(--rp-content);
 
@@ -676,8 +676,8 @@
     }
 
     transition:
-      var(--rp-motion) background-color 150ms var(--ease-out),
-      inline-size 150ms var(--ease-out);
+      var(--rp-motion) background-color 150ms var(--rp-ease-out),
+      inline-size 150ms var(--rp-ease-out);
   }
 
   &:hover::after,
@@ -719,8 +719,8 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
-    --rp-ring-offset-color: var(--background);
+    --rp-ring-color: var(--rp-focus);
+    --rp-ring-offset-color: var(--rp-background);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: var(--rp-focus-ring-offset);
@@ -731,8 +731,8 @@
   }
 
   &[data-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -749,9 +749,9 @@
 }
 
 /* Only a rail that resizes says so with the cursor. One that merely toggles is a button, and
- * `--cursor-interactive` on the base rule already covers it.
+ * `--rp-cursor-interactive` on the base rule already covers it.
  *
- * Excluded rather than ordered: a disabled rail takes `--cursor-disabled` from the state rule
+ * Excluded rather than ordered: a disabled rail takes `--rp-cursor-disabled` from the state rule
  * above, which outweighs this one only while `--resizable` is a class. Written as an attribute the
  * two weigh the same and the later rule is this one, so the exclusion has to be in the selector. */
 .rp-sidebar__rail--resizable:not([data-disabled="true"]) {
@@ -795,12 +795,12 @@
 
 .rp-sidebar__trigger {
   display: inline-flex;
-  width: calc(var(--spacing) * 8);
-  height: calc(var(--spacing) * 8);
+  width: calc(var(--rp-spacing) * 8);
+  height: calc(var(--rp-spacing) * 8);
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  border-radius: var(--component-radius, calc(var(--radius) * 3));
+  border-radius: var(--rp-component-radius, calc(var(--rp-radius) * 3));
   --rp-outline-style: none;
   outline-style: none;
   -webkit-user-select: none;
@@ -808,23 +808,23 @@
   -webkit-tap-highlight-color: transparent;
 
   --sidebar-trigger-bg: transparent;
-  --sidebar-trigger-bg-hover: var(--state-layer);
-  --sidebar-trigger-fg: var(--muted);
-  --sidebar-trigger-fg-hover: var(--foreground);
+  --sidebar-trigger-bg-hover: var(--rp-state-layer);
+  --sidebar-trigger-fg: var(--rp-muted);
+  --sidebar-trigger-fg-hover: var(--rp-foreground);
 
   background-color: var(--sidebar-trigger-bg);
   color: var(--sidebar-trigger-fg);
 
   /* Cursor */
-  cursor: var(--cursor-interactive);
+  cursor: var(--rp-cursor-interactive);
 
   transition:
-    var(--rp-motion) background-color 150ms var(--ease-out),
-    color 150ms var(--ease-out);
+    var(--rp-motion) background-color 150ms var(--rp-ease-out),
+    color 150ms var(--rp-ease-out);
 
   svg {
-    width: calc(var(--spacing) * 4);
-    height: calc(var(--spacing) * 4);
+    width: calc(var(--rp-spacing) * 4);
+    height: calc(var(--rp-spacing) * 4);
   }
 
   /* Hover state */
@@ -844,8 +844,8 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
-    --rp-ring-offset-color: var(--background);
+    --rp-ring-color: var(--rp-focus);
+    --rp-ring-offset-color: var(--rp-background);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: var(--rp-focus-ring-offset);
@@ -857,8 +857,8 @@
 
   /* Disabled state */
   &[data-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;

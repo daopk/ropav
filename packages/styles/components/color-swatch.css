@@ -2,8 +2,8 @@
 .rp-color-swatch {
   position: relative;
   box-sizing: border-box;
-  width: calc(var(--spacing) * 8);
-  height: calc(var(--spacing) * 8);
+  width: calc(var(--rp-spacing) * 8);
+  height: calc(var(--rp-spacing) * 8);
   flex-shrink: 0;
 
   /* Checkered background pattern for transparency */
@@ -17,29 +17,29 @@
 
 /* Shape variants */
 .rp-color-swatch--circle {
-  border-radius: calc(var(--radius) * 2);
+  border-radius: calc(var(--rp-radius) * 2);
 }
 
 .rp-color-swatch--square {
-  border-radius: min(32px, var(--component-radius));
+  border-radius: min(32px, var(--rp-component-radius));
 }
 
 /* Size variants */
 .rp-color-swatch--xs {
-  width: calc(var(--spacing) * 4);
-  height: calc(var(--spacing) * 4);
+  width: calc(var(--rp-spacing) * 4);
+  height: calc(var(--rp-spacing) * 4);
 
   &.rp-color-swatch--circle {
-    border-radius: calc(var(--radius) * 1);
+    border-radius: calc(var(--rp-radius) * 1);
   }
 }
 
 .rp-color-swatch--sm {
-  width: calc(var(--spacing) * 6);
-  height: calc(var(--spacing) * 6);
+  width: calc(var(--rp-spacing) * 6);
+  height: calc(var(--rp-spacing) * 6);
 
   &.rp-color-swatch--circle {
-    border-radius: calc(var(--radius) * 1.5);
+    border-radius: calc(var(--rp-radius) * 1.5);
   }
 }
 
@@ -48,19 +48,19 @@
 }
 
 .rp-color-swatch--lg {
-  width: calc(var(--spacing) * 9);
-  height: calc(var(--spacing) * 9);
+  width: calc(var(--rp-spacing) * 9);
+  height: calc(var(--rp-spacing) * 9);
 
   &.rp-color-swatch--circle {
-    border-radius: calc(var(--radius) * 3);
+    border-radius: calc(var(--rp-radius) * 3);
   }
 }
 
 .rp-color-swatch--xl {
-  width: calc(var(--spacing) * 10);
-  height: calc(var(--spacing) * 10);
+  width: calc(var(--rp-spacing) * 10);
+  height: calc(var(--rp-spacing) * 10);
 
   &.rp-color-swatch--circle {
-    border-radius: calc(var(--radius) * 3);
+    border-radius: calc(var(--rp-radius) * 3);
   }
 }

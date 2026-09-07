@@ -3,7 +3,7 @@
 .rp-textfield {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing);
+  gap: var(--rp-spacing);
 
   &[data-invalid="true"],
   &[aria-invalid="true"] {

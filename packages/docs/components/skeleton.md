@@ -34,7 +34,7 @@ content lands, and the reader has been shown a shape that turned out to be a lie
 
 ## The animation is a theme decision
 
-`animation-type` is an override. Left unset, the skeleton reads `--skeleton-animation` from the
+`animation-type` is an override. Left unset, the skeleton reads `--rp-skeleton-animation` from the
 theme, so a theme can settle on `pulse` or turn the animation off across a whole application
 without a prop being passed anywhere.
 
@@ -43,10 +43,10 @@ on the container. A container carrying it that has skeletons inside runs a singl
 them and stops each child's own:
 
 ```vue
-<div class="rp-skeleton--shimmer relative grid grid-cols-3 gap-4 overflow-hidden rounded-[calc(var(--radius)*1.5)]">
-  <Skeleton class="h-24 rounded-[calc(var(--radius)*1.5)]" />
-  <Skeleton class="h-24 rounded-[calc(var(--radius)*1.5)]" />
-  <Skeleton class="h-24 rounded-[calc(var(--radius)*1.5)]" />
+<div class="rp-skeleton--shimmer relative grid grid-cols-3 gap-4 overflow-hidden rounded-[calc(var(--rp-radius)*1.5)]">
+  <Skeleton class="h-24 rounded-[calc(var(--rp-radius)*1.5)]" />
+  <Skeleton class="h-24 rounded-[calc(var(--rp-radius)*1.5)]" />
+  <Skeleton class="h-24 rounded-[calc(var(--rp-radius)*1.5)]" />
 </div>
 ```
 
@@ -58,7 +58,7 @@ them and stops each child's own:
 - Under Forced Colors Mode the fill flattens to the page colour and the shimmer is dropped
   outright, so the placeholder is given an inset outline instead — otherwise it would vanish.
 - Neither animation is turned off for a reader who has asked for reduced motion. Setting
-  `--skeleton-animation: none` in the theme is how to answer that across an application.
+  `--rp-skeleton-animation: none` in the theme is how to answer that across an application.
 
 ## API
 

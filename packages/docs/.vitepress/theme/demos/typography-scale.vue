@@ -16,6 +16,6 @@ import { Heading, Paragraph, Typography } from "ropav";
 .stack {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--spacing) * 2);
+  gap: calc(var(--rp-spacing) * 2);
 }
 </style>

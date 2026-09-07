@@ -161,7 +161,7 @@ export const WithSections: Story = {
     components,
     setup: () => ({ actions: FILE_ACTIONS }),
     template: `
-      <Surface class="w-[256px] rounded-[calc(var(--radius)*3)] shadow-[var(--surface-shadow)]">
+      <Surface class="w-[256px] rounded-[calc(var(--rp-radius)*3)] shadow-[var(--rp-surface-shadow)]">
         <ListBox aria-label="File actions" class="w-full p-2" selection-mode="none">
           <ListBoxSection>
             <Header>Actions</Header>
@@ -172,7 +172,7 @@ export const WithSections: Story = {
               :text-value="action.title"
             >
               <div class="flex h-8 items-start justify-center pt-px">
-                <span class="size-4 shrink-0 text-[var(--muted)]" />
+                <span class="size-4 shrink-0 text-[var(--rp-muted)]" />
               </div>
               <div class="flex flex-col">
                 <Label>{{ action.title }}</Label>
@@ -189,7 +189,7 @@ export const WithSections: Story = {
             <Header>Danger zone</Header>
             <ListBoxItem id="delete-file" text-value="Delete file" variant="danger">
               <div class="flex h-8 items-start justify-center pt-px">
-                <span class="size-4 shrink-0 text-[var(--danger)]" />
+                <span class="size-4 shrink-0 text-[var(--rp-danger)]" />
               </div>
               <div class="flex flex-col">
                 <Label>Delete file</Label>
@@ -213,7 +213,7 @@ export const WithDisabledItems: Story = {
     components,
     setup: () => ({ actions: FILE_ACTIONS }),
     template: `
-      <Surface class="w-[256px] rounded-[calc(var(--radius)*3)] shadow-[var(--surface-shadow)]">
+      <Surface class="w-[256px] rounded-[calc(var(--rp-radius)*3)] shadow-[var(--rp-surface-shadow)]">
         <ListBox
           aria-label="File actions"
           class="w-full p-2"
@@ -255,7 +255,7 @@ export const MultiSelect: Story = {
     components,
     setup: () => ({ avatarUrl, users: USERS }),
     template: `
-      <Surface class="w-[256px] rounded-[calc(var(--radius)*3)] shadow-[var(--surface-shadow)]">
+      <Surface class="w-[256px] rounded-[calc(var(--rp-radius)*3)] shadow-[var(--rp-surface-shadow)]">
         <ListBox aria-label="Users" selection-mode="multiple">
           ${userItems(true)}
         </ListBox>
@@ -269,7 +269,7 @@ export const CustomCheckIcon: Story = {
     components,
     setup: () => ({ avatarUrl, users: USERS }),
     template: `
-      <Surface class="w-[256px] rounded-[calc(var(--radius)*3)] shadow-[var(--surface-shadow)]">
+      <Surface class="w-[256px] rounded-[calc(var(--rp-radius)*3)] shadow-[var(--rp-surface-shadow)]">
         <ListBox aria-label="Users" selection-mode="multiple">
           <ListBoxItem v-for="user in users" :key="user.id" :id="user.id" :text-value="user.name">
             <Avatar size="sm">
@@ -281,7 +281,7 @@ export const CustomCheckIcon: Story = {
               <Description>{{ user.email }}</Description>
             </div>
             <ListBoxItemIndicator v-slot="{isSelected}">
-              <span v-if="isSelected" class="text-[var(--accent)]">✓</span>
+              <span v-if="isSelected" class="text-[var(--rp-accent)]">✓</span>
             </ListBoxItemIndicator>
           </ListBoxItem>
         </ListBox>
@@ -296,7 +296,7 @@ export const Controlled: Story = {
     setup: () => ({ avatarUrl, selected: ref(new Set(["2"])), users: USERS }),
     template: `
       <div class="flex flex-col gap-4">
-        <Surface class="w-[256px] rounded-[calc(var(--radius)*3)] shadow-[var(--surface-shadow)]">
+        <Surface class="w-[256px] rounded-[calc(var(--rp-radius)*3)] shadow-[var(--rp-surface-shadow)]">
           <ListBox
             v-model:selected-keys="selected"
             aria-label="Users"
@@ -305,7 +305,7 @@ export const Controlled: Story = {
             ${userItems(true)}
           </ListBox>
         </Surface>
-        <p class="text-sm text-[var(--muted)]">Selected: {{ [...selected].join(", ") || "none" }}</p>
+        <p class="text-sm text-[var(--rp-muted)]">Selected: {{ [...selected].join(", ") || "none" }}</p>
       </div>
     `,
   }),

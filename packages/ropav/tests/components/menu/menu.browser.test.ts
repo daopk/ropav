@@ -48,8 +48,10 @@ describe("Menu (browser)", () => {
       const forget = itemFor(container, "forget");
 
       expect(forget).toHaveClass("rp-menu-item--danger");
-      expect(getComputedStyle(forget).color).toBe(resolve("var(--danger)"));
-      expect(getComputedStyle(itemFor(container, "copy")).color).not.toBe(resolve("var(--danger)"));
+      expect(getComputedStyle(forget).color).toBe(resolve("var(--rp-danger)"));
+      expect(getComputedStyle(itemFor(container, "copy")).color).not.toBe(
+        resolve("var(--rp-danger)"),
+      );
 
       unmount();
     });
@@ -64,10 +66,10 @@ describe("Menu (browser)", () => {
       const { container, unmount } = render({ items: ITEMS, withLabel: true });
 
       expect(getComputedStyle(labelIn(itemFor(container, "forget"))).color).toBe(
-        resolve("var(--danger)"),
+        resolve("var(--rp-danger)"),
       );
       expect(getComputedStyle(labelIn(itemFor(container, "copy"))).color).toBe(
-        resolve("var(--foreground)"),
+        resolve("var(--rp-foreground)"),
       );
 
       unmount();
@@ -84,7 +86,7 @@ describe("Menu (browser)", () => {
       const forget = itemFor(container, "forget");
 
       expect(forget).toHaveAttribute("data-disabled", "true");
-      expect(getComputedStyle(forget).color).toBe(resolve("var(--danger)"));
+      expect(getComputedStyle(forget).color).toBe(resolve("var(--rp-danger)"));
       expect(Number(getComputedStyle(forget).opacity)).toBeLessThan(1);
 
       unmount();

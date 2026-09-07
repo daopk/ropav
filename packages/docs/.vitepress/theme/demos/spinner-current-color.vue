@@ -11,11 +11,11 @@ import { Spinner } from "ropav";
 
 <style scoped>
 .note {
-  color: var(--muted);
+  color: var(--rp-muted);
   display: flex;
   align-items: center;
-  gap: calc(var(--spacing) * 2);
-  font-size: var(--text-sm);
-  line-height: var(--text-sm--line-height);
+  gap: calc(var(--rp-spacing) * 2);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-text-sm--line-height);
 }
 </style>

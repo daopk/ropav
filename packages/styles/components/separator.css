@@ -3,12 +3,12 @@
 /* Base separator with default horizontal orientation */
 .rp-separator {
   flex-shrink: 0;
-  border-radius: calc(var(--radius) * 0.5);
+  border-radius: calc(var(--rp-radius) * 0.5);
   border-top-style: var(--rp-border-style);
   border-top-width: 0px;
   border-bottom-style: var(--rp-border-style);
   border-bottom-width: 0px;
-  background-color: var(--separator);
+  background-color: var(--rp-separator);
 
   /* Default size - horizontal orientation */
   height: 1px;
@@ -23,7 +23,7 @@
 
 .rp-separator--vertical {
   height: auto;
-  min-height: calc(var(--spacing) * 2);
+  min-height: calc(var(--rp-spacing) * 2);
   width: 1px;
   align-self: stretch;
 }
@@ -35,7 +35,7 @@
  * each one sets `background-color` after the base rule and would otherwise win. All three land on
  * the same ink - the mode has no second tier to give them. */
 .rp-separator--default {
-  background-color: var(--separator);
+  background-color: var(--rp-separator);
 
   @media (forced-colors: active) {
     background-color: CanvasText;
@@ -43,7 +43,7 @@
 }
 
 .rp-separator--secondary {
-  background-color: var(--separator-secondary);
+  background-color: var(--rp-separator-secondary);
 
   @media (forced-colors: active) {
     background-color: CanvasText;
@@ -51,7 +51,7 @@
 }
 
 .rp-separator--tertiary {
-  background-color: var(--separator-tertiary);
+  background-color: var(--rp-separator-tertiary);
 
   @media (forced-colors: active) {
     background-color: CanvasText;
@@ -61,7 +61,7 @@
 .rp-separator__container {
   display: flex;
   align-items: center;
-  gap: calc(var(--spacing) * 3);
+  gap: calc(var(--rp-spacing) * 3);
 }
 
 .rp-separator__container--horizontal {
@@ -86,7 +86,7 @@
   justify-content: center;
   text-align: center;
   white-space: nowrap;
-  color: var(--muted);
+  color: var(--rp-muted);
 }
 
 .rp-separator__content--horizontal {

@@ -287,7 +287,7 @@ describe("SegmentedControl (browser)", () => {
 
     await ready();
 
-    // The track, the segments and the pill all read `--component-radius`, so a segmented control
+    // The track, the segments and the pill all read `--rp-component-radius`, so a segmented control
     // sitting beside a button of the same size meets it corner for corner. Stepping the track's
     // corner out by its own padding would break that at the one place the two touch.
     const track = getComputedStyle(trackIn(container)).borderRadius;
@@ -305,9 +305,9 @@ describe("SegmentedControl (browser)", () => {
 
     const track = trackIn(container);
 
-    // The default theme flattens `--component-radius` onto its field radius, 6px; uber keeps the
+    // The default theme flattens `--rp-component-radius` onto its field radius, 6px; uber keeps the
     // pill-ish 3x of a 4px base, 12px. Reading a different corner under each is what proves the
-    // track goes through `--component-radius` at all rather than through a radius of its own.
+    // track goes through `--rp-component-radius` at all rather than through a radius of its own.
     expect(getComputedStyle(track).borderRadius).toBe("6px");
 
     container.dataset["theme"] = "uber";

@@ -5,17 +5,17 @@
   position: relative;
   isolation: isolate;
   display: inline-flex;
-  height: calc(var(--spacing) * 9);
+  height: calc(var(--rp-spacing) * 9);
   width: fit-content;
   transform-origin: center;
   align-items: center;
   justify-content: center;
-  gap: calc(var(--spacing) * 2);
-  border-radius: var(--component-radius, calc(var(--radius) * 3));
-  padding-inline: calc(var(--spacing) * 4);
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
-  font-weight: var(--font-weight-medium);
+  gap: calc(var(--rp-spacing) * 2);
+  border-radius: var(--rp-component-radius, calc(var(--rp-radius) * 3));
+  padding-inline: calc(var(--rp-spacing) * 4);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+  font-weight: var(--rp-font-weight-medium);
   white-space: nowrap;
   --rp-outline-style: none;
   outline-style: none;
@@ -24,15 +24,15 @@
   -webkit-tap-highlight-color: transparent;
 
   transition:
-    var(--rp-motion) transform 250ms var(--ease-smooth),
-    background-color 100ms var(--ease-out),
-    box-shadow 100ms var(--ease-out);
+    var(--rp-motion) transform 250ms var(--rp-ease-smooth),
+    background-color 100ms var(--rp-ease-out),
+    box-shadow 100ms var(--rp-ease-out);
   transform: translateZ(0) var(--rp-rotate-x,) var(--rp-rotate-y,) var(--rp-rotate-z,)
     var(--rp-skew-x,) var(--rp-skew-y,);
   will-change: transform;
 
   /* Cursor */
-  cursor: var(--cursor-interactive);
+  cursor: var(--rp-cursor-interactive);
 
   /* Default tokens (fallback behavior) */
   --button-bg: transparent;
@@ -60,8 +60,8 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
-    --rp-ring-offset-color: var(--background);
+    --rp-ring-color: var(--rp-focus);
+    --rp-ring-offset-color: var(--rp-background);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: var(--rp-focus-ring-offset);
@@ -74,8 +74,8 @@
   /* Disabled state */
   &:disabled,
   &[aria-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -106,10 +106,10 @@
   /* SVG icon styling - exclude spinner and link-icon svgs */
   & svg:not([data-slot="spinner"] svg, [data-slot="link-icon"] svg) {
     pointer-events: none;
-    margin-inline: calc(var(--spacing) * -0.5);
-    margin-block: var(--spacing);
-    width: calc(var(--spacing) * 4);
-    height: calc(var(--spacing) * 4);
+    margin-inline: calc(var(--rp-spacing) * -0.5);
+    margin-block: var(--rp-spacing);
+    width: calc(var(--rp-spacing) * 4);
+    height: calc(var(--rp-spacing) * 4);
     flex-shrink: 0;
     align-self: center;
   }
@@ -117,8 +117,8 @@
 
 /* Size variants */
 .rp-button--sm {
-  height: calc(var(--spacing) * 8);
-  padding-inline: calc(var(--spacing) * 3);
+  height: calc(var(--rp-spacing) * 8);
+  padding-inline: calc(var(--rp-spacing) * 3);
 
   &:active,
   &[data-pressed="true"] {
@@ -131,9 +131,9 @@
 }
 
 .rp-button--lg {
-  height: calc(var(--spacing) * 10);
-  font-size: var(--text-base);
-  line-height: var(--rp-leading, var(--text-base--line-height));
+  height: calc(var(--rp-spacing) * 10);
+  font-size: var(--rp-text-base);
+  line-height: var(--rp-leading, var(--rp-text-base--line-height));
 
   &:active,
   &[data-pressed="true"] {
@@ -143,9 +143,9 @@
 
 /* Color variants - only set custom property values */
 .rp-button--primary {
-  --button-bg: var(--accent);
-  --button-bg-hover: var(--accent-hover);
-  --button-fg: var(--accent-foreground);
+  --button-bg: var(--rp-accent);
+  --button-bg-hover: var(--rp-accent-hover);
+  --button-fg: var(--rp-accent-foreground);
 
   /* Solid against outlined is the one distinction that survives - forced colors has no keyword
    * for "this is the important one", so the emphasis has to come from the fill. `Highlight` is
@@ -159,40 +159,40 @@
 }
 
 .rp-button--secondary {
-  --button-bg: var(--default);
-  --button-bg-hover: var(--default-hover);
-  --button-fg: var(--accent-soft-foreground);
+  --button-bg: var(--rp-default);
+  --button-bg-hover: var(--rp-default-hover);
+  --button-fg: var(--rp-accent-soft-foreground);
 }
 
 .rp-button--tertiary {
-  --button-bg: var(--default);
-  --button-bg-hover: var(--default-hover);
+  --button-bg: var(--rp-default);
+  --button-bg-hover: var(--rp-default-hover);
 }
 
 .rp-button--ghost,
 .rp-button--outline {
   --button-bg: transparent;
-  --button-bg-hover: var(--state-layer);
-  --button-fg: var(--default-foreground);
+  --button-bg-hover: var(--rp-state-layer);
+  --button-fg: var(--rp-default-foreground);
 }
 
 .rp-button--outline {
   border-style: var(--rp-border-style);
   border-width: 1px;
-  border-color: var(--border);
-  --button-bg-hover: color-mix(in oklab, var(--state-layer) 60%, transparent);
+  border-color: var(--rp-border);
+  --button-bg-hover: color-mix(in oklab, var(--rp-state-layer) 60%, transparent);
 
   /* The one variant that steps out of the chain, because its hover steps out of the scale: the
    * border already reads as a lit edge, so the fill behind it is held to 60% and the press is
    * what restores the full layer. Every other variant lets `--button-bg-pressed` follow the
    * hover it is given, which is what makes retuning one of them reach both. */
-  --button-bg-pressed: var(--state-layer);
+  --button-bg-pressed: var(--rp-state-layer);
 }
 
 .rp-button--danger {
-  --button-bg: var(--danger);
-  --button-bg-hover: var(--danger-hover);
-  --button-fg: var(--danger-foreground);
+  --button-bg: var(--rp-danger);
+  --button-bg-hover: var(--rp-danger-hover);
+  --button-fg: var(--rp-danger-foreground);
 
   /* Solid like the primary one. The danger colour itself cannot survive - there is no keyword
    * for it - so the label is what says this is the destructive action. */
@@ -204,23 +204,23 @@
 }
 
 .rp-button--danger-soft {
-  --button-bg: var(--danger-soft);
-  --button-bg-hover: var(--danger-soft-hover);
-  --button-fg: var(--danger-soft-foreground);
+  --button-bg: var(--rp-danger-soft);
+  --button-bg-hover: var(--rp-danger-soft-hover);
+  --button-fg: var(--rp-danger-soft-foreground);
 }
 
 /* Icon-only modifier */
 .rp-button--icon-only {
-  width: calc(var(--spacing) * 9);
+  width: calc(var(--rp-spacing) * 9);
   padding: 0px;
 }
 
 .rp-button--icon-only.rp-button--sm {
-  width: calc(var(--spacing) * 8);
+  width: calc(var(--rp-spacing) * 8);
 }
 
 .rp-button--icon-only.rp-button--lg {
-  width: calc(var(--spacing) * 10);
+  width: calc(var(--rp-spacing) * 10);
 }
 
 /* Full width modifier */

@@ -30,8 +30,8 @@ const colorFor = (value: number) => (value >= 90 ? "danger" : value >= 70 ? "war
 .stack {
   display: flex;
   width: 100%;
-  max-width: var(--container-md);
+  max-width: var(--rp-container-md);
   flex-direction: column;
-  gap: calc(var(--spacing) * 6);
+  gap: calc(var(--rp-spacing) * 6);
 }
 </style>

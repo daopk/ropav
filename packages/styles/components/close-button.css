@@ -5,26 +5,26 @@
   position: relative;
   isolation: isolate;
   display: inline-flex;
-  height: calc(var(--spacing) * 6);
-  width: calc(var(--spacing) * 6);
+  height: calc(var(--rp-spacing) * 6);
+  width: calc(var(--rp-spacing) * 6);
   flex-shrink: 0;
   transform-origin: center;
   align-items: center;
   justify-content: center;
-  border-radius: calc(var(--radius) * 1.5);
-  padding: var(--spacing);
+  border-radius: calc(var(--rp-radius) * 1.5);
+  padding: var(--rp-spacing);
   -webkit-user-select: none;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 
   /* Cursor */
-  cursor: var(--cursor-interactive);
+  cursor: var(--rp-cursor-interactive);
 
   transition:
-    var(--rp-motion) transform 250ms var(--ease-out-quart),
-    color 150ms var(--ease-out),
-    background-color 100ms var(--ease-out),
-    box-shadow 150ms var(--ease-out);
+    var(--rp-motion) transform 250ms var(--rp-ease-out-quart),
+    color 150ms var(--rp-ease-out),
+    background-color 100ms var(--rp-ease-out),
+    box-shadow 150ms var(--rp-ease-out);
   transform: translateZ(0) var(--rp-rotate-x,) var(--rp-rotate-y,) var(--rp-rotate-z,)
     var(--rp-skew-x,) var(--rp-skew-y,);
 
@@ -36,8 +36,8 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
-    --rp-ring-offset-color: var(--background);
+    --rp-ring-color: var(--rp-focus);
+    --rp-ring-offset-color: var(--rp-background);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: var(--rp-focus-ring-offset);
@@ -50,8 +50,8 @@
   /* Disabled state */
   &:disabled,
   &[aria-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -67,21 +67,21 @@
   /* SVG icon styling*/
   & svg {
     pointer-events: none;
-    width: calc(var(--spacing) * 4);
-    height: calc(var(--spacing) * 4);
+    width: calc(var(--rp-spacing) * 4);
+    height: calc(var(--rp-spacing) * 4);
     flex-shrink: 0;
     align-self: center;
-    margin-inline: calc(var(--spacing) * -0.5);
-    margin-block: calc(var(--spacing) * 0.5);
+    margin-inline: calc(var(--rp-spacing) * -0.5);
+    margin-block: calc(var(--rp-spacing) * 0.5);
   }
 }
 
 /* Variants */
 .rp-close-button--default {
-  color: var(--muted);
+  color: var(--rp-muted);
 
-  --close-button-bg: var(--default);
-  --close-button-bg-hover: var(--default-hover);
+  --close-button-bg: var(--rp-default);
+  --close-button-bg-hover: var(--rp-default-hover);
 
   background-color: var(--close-button-bg);
 

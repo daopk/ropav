@@ -2,12 +2,12 @@
 .rp-switch-group {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--spacing) * 6);
+  gap: calc(var(--rp-spacing) * 6);
 }
 
 .rp-switch-group__items {
   display: flex;
-  gap: calc(var(--spacing) * 4);
+  gap: calc(var(--rp-spacing) * 4);
 }
 
 /* Orientation modifiers */

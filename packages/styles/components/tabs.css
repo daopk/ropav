@@ -1,7 +1,7 @@
 /* Base tabs component */
 .rp-tabs {
   display: flex;
-  gap: calc(var(--spacing) * 2);
+  gap: calc(var(--rp-spacing) * 2);
 
   /* Orientation styles */
   &[data-orientation="horizontal"] {
@@ -16,9 +16,9 @@
 /* Tab list container */
 .rp-tabs__list-container {
   position: relative;
-  background-color: var(--default);
+  background-color: var(--rp-default);
 
-  border-radius: min(32px, var(--component-radius));
+  border-radius: min(32px, var(--rp-component-radius));
 
   /* Vertical scroller fills the container height so overflow detection
      engages when the wrapper height is constrained (e.g. h-[240px]) */
@@ -32,9 +32,9 @@
     position: absolute;
     z-index: 2;
     display: none;
-    width: calc(var(--spacing) * 4);
-    height: calc(var(--spacing) * 4);
-    cursor: var(--cursor-interactive);
+    width: calc(var(--rp-spacing) * 4);
+    height: calc(var(--rp-spacing) * 4);
+    cursor: var(--rp-cursor-interactive);
     align-items: center;
     justify-content: center;
     border-radius: calc(infinity * 1px);
@@ -42,11 +42,11 @@
     border-width: 0px;
     background-color: transparent;
     padding: 0px;
-    color: var(--foreground);
+    color: var(--rp-foreground);
     --rp-outline-style: none;
     outline-style: none;
 
-    transition: var(--rp-motion) opacity 150ms var(--ease-smooth);
+    transition: var(--rp-motion) opacity 150ms var(--rp-ease-smooth);
 
     @media (hover: hover) {
       &:hover {
@@ -60,8 +60,8 @@
         var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
           var(--rp-ring-color, currentcolor);
       box-shadow: var(--rp-ring), var(--rp-shadow);
-      --rp-ring-color: var(--focus);
-      --rp-ring-offset-color: var(--background);
+      --rp-ring-color: var(--rp-focus);
+      --rp-ring-offset-color: var(--rp-background);
       --rp-outline-style: none;
       outline-style: none;
       --rp-ring-offset-width: var(--rp-focus-ring-offset);
@@ -75,14 +75,14 @@
   /* Chevron position - horizontal orientation */
   &:has([data-orientation="horizontal"]) {
     > .rp-tabs__list-container__scroll-prev {
-      inset-inline-start: calc(var(--spacing) * 1);
+      inset-inline-start: calc(var(--rp-spacing) * 1);
       top: calc(1 / 2 * 100%);
       --rp-translate-y: calc(calc(1 / 2 * 100%) * -1);
       translate: var(--rp-translate-x) var(--rp-translate-y);
     }
 
     > .rp-tabs__list-container__scroll-next {
-      inset-inline-end: calc(var(--spacing) * 1);
+      inset-inline-end: calc(var(--rp-spacing) * 1);
       top: calc(1 / 2 * 100%);
       --rp-translate-y: calc(calc(1 / 2 * 100%) * -1);
       translate: var(--rp-translate-x) var(--rp-translate-y);
@@ -99,14 +99,14 @@
   /* Chevron position - vertical orientation */
   &:has([data-orientation="vertical"]) {
     > .rp-tabs__list-container__scroll-prev {
-      top: var(--spacing);
+      top: var(--rp-spacing);
       left: calc(1 / 2 * 100%);
       --rp-translate-x: calc(calc(1 / 2 * 100%) * -1);
       translate: var(--rp-translate-x) var(--rp-translate-y);
     }
 
     > .rp-tabs__list-container__scroll-next {
-      bottom: var(--spacing);
+      bottom: var(--rp-spacing);
       left: calc(1 / 2 * 100%);
       --rp-translate-x: calc(calc(1 / 2 * 100%) * -1);
       translate: var(--rp-translate-x) var(--rp-translate-y);
@@ -142,7 +142,7 @@
 /* Tab list */
 .rp-tabs__list {
   display: inline-flex;
-  padding: var(--spacing);
+  padding: var(--rp-spacing);
 
   /* Horizontal orientation - grow with content so ScrollShadow can detect overflow */
   &[data-orientation="horizontal"] {
@@ -154,10 +154,10 @@
   /* Vertical orientation */
   &[data-orientation="vertical"] {
     flex-direction: column;
-    gap: var(--spacing);
+    gap: var(--rp-spacing);
 
     .rp-tabs__tab {
-      min-width: calc(var(--spacing) * 20);
+      min-width: calc(var(--rp-spacing) * 20);
     }
   }
 }
@@ -166,33 +166,33 @@
 .rp-tabs__tab {
   position: relative;
   display: flex;
-  height: calc(var(--spacing) * 8);
+  height: calc(var(--rp-spacing) * 8);
   width: 100%;
   align-items: center;
   justify-content: center;
-  border-radius: var(--component-radius, calc(var(--radius) * 3));
-  padding-inline: calc(var(--spacing) * 4);
+  border-radius: var(--rp-component-radius, calc(var(--rp-radius) * 3));
+  padding-inline: calc(var(--rp-spacing) * 4);
   text-align: center;
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
-  font-weight: var(--font-weight-medium);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+  font-weight: var(--rp-font-weight-medium);
   --rp-outline-style: none;
   outline-style: none;
   -webkit-tap-highlight-color: transparent;
 
-  --tabs-tab-fg: var(--muted);
-  --tabs-tab-fg-selected: var(--segment-foreground);
+  --tabs-tab-fg: var(--rp-muted);
+  --tabs-tab-fg-selected: var(--rp-segment-foreground);
 
   color: var(--tabs-tab-fg);
 
   z-index: 1;
-  cursor: var(--cursor-interactive);
+  cursor: var(--rp-cursor-interactive);
 
   transition:
-    var(--rp-motion) color 150ms var(--ease-smooth),
-    background-color 150ms var(--ease-smooth),
-    box-shadow 150ms var(--ease-out),
-    opacity 150ms var(--ease-smooth);
+    var(--rp-motion) color 150ms var(--rp-ease-smooth),
+    background-color 150ms var(--rp-ease-smooth),
+    box-shadow 150ms var(--rp-ease-out),
+    opacity 150ms var(--rp-ease-smooth);
 
   /* Selected state */
   &[data-selected="true"] {
@@ -217,8 +217,8 @@
   &:disabled,
   &[data-disabled="true"],
   &[aria-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -242,8 +242,8 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
-    --rp-ring-offset-color: var(--background);
+    --rp-ring-color: var(--rp-focus);
+    --rp-ring-offset-color: var(--rp-background);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: var(--rp-focus-ring-offset);
@@ -258,17 +258,17 @@
 .rp-tabs__separator {
   pointer-events: none;
   position: absolute;
-  border-radius: calc(var(--radius) * 0.5);
-  background-color: var(--muted);
+  border-radius: calc(var(--rp-radius) * 0.5);
+  background-color: var(--rp-muted);
   @supports (color: color-mix(in lab, red, red)) {
-    background-color: color-mix(in oklab, var(--muted) 25%, transparent);
+    background-color: color-mix(in oklab, var(--rp-muted) 25%, transparent);
   }
 
-  transition: var(--rp-motion) opacity 150ms var(--ease-smooth);
+  transition: var(--rp-motion) opacity 150ms var(--rp-ease-smooth);
 
   /* Horizontal tabs - vertical separator */
   .rp-tabs__list[data-orientation="horizontal"] & {
-    inset-inline-start: calc(var(--spacing) * 0);
+    inset-inline-start: calc(var(--rp-spacing) * 0);
     top: calc(1 / 4 * 100%);
     height: calc(1 / 2 * 100%);
     width: 1px;
@@ -286,38 +286,38 @@
 /* Tab panel */
 .rp-tabs__panel {
   width: 100%;
-  padding: calc(var(--spacing) * 2);
+  padding: calc(var(--rp-spacing) * 2);
   --rp-outline-style: none;
   outline-style: none;
 
   /* Exiting animations */
   &[data-exiting="true"] {
     position: absolute;
-    inset-inline-start: calc(var(--spacing) * 0);
+    inset-inline-start: calc(var(--rp-spacing) * 0);
     top: 0px;
     width: 100%;
   }
 
   /* Orientation spacing */
   &[data-orientation="horizontal"] {
-    margin-top: calc(var(--spacing) * 4);
+    margin-top: calc(var(--rp-spacing) * 4);
   }
 
   &[data-orientation="vertical"] {
-    margin-inline-start: calc(var(--spacing) * 4);
+    margin-inline-start: calc(var(--rp-spacing) * 4);
   }
 }
 
 /* Tab indicator - React Aria's SelectionIndicator */
 .rp-tabs__indicator {
   position: absolute;
-  inset-inline-start: calc(var(--spacing) * 0);
+  inset-inline-start: calc(var(--rp-spacing) * 0);
   top: 0px;
   width: 100%;
   height: 100%;
-  border-radius: var(--component-radius, calc(var(--radius) * 3));
-  background-color: var(--segment);
-  --rp-shadow: var(--surface-shadow);
+  border-radius: var(--rp-component-radius, calc(var(--rp-radius) * 3));
+  background-color: var(--rp-segment);
+  --rp-shadow: var(--rp-surface-shadow);
   box-shadow: var(--rp-ring), var(--rp-shadow);
 
   z-index: -1;
@@ -331,7 +331,7 @@
 
   transition-duration: var(--rp-motion) 250ms;
   transition-property: translate, width, height;
-  transition-timing-function: var(--ease-out-fluid);
+  transition-timing-function: var(--rp-ease-out-fluid);
 }
 
 /* ==========================================================================
@@ -361,7 +361,7 @@
 
       /* Selected state - use text-foreground */
       &[data-selected="true"] {
-        color: var(--foreground);
+        color: var(--rp-foreground);
 
         /* Here the indicator is a line under the tab rather than a pill behind it, so the
          * label keeps the ordinary text colour instead of the base variant's
@@ -375,7 +375,7 @@
     /* Tab indicator - line style */
     .rp-tabs__indicator {
       border-radius: 0;
-      background-color: var(--accent);
+      background-color: var(--rp-accent);
       --rp-shadow: 0 0 #0000;
       box-shadow: var(--rp-ring), var(--rp-shadow);
 
@@ -391,12 +391,12 @@
   &[data-orientation="horizontal"] > .rp-tabs__list-container {
     border-bottom-style: var(--rp-border-style);
     border-bottom-width: 1px;
-    border-color: var(--border);
+    border-color: var(--rp-border);
 
     .rp-tabs__indicator {
       top: auto;
       bottom: 0px;
-      height: calc(var(--spacing) * 0.5);
+      height: calc(var(--rp-spacing) * 0.5);
     }
   }
 
@@ -404,13 +404,13 @@
   &[data-orientation="vertical"] > .rp-tabs__list-container {
     border-inline-start-style: var(--rp-border-style);
     border-inline-start-width: 1px;
-    border-color: var(--border);
+    border-color: var(--rp-border);
 
     .rp-tabs__indicator {
-      inset-inline-start: calc(var(--spacing) * 0);
+      inset-inline-start: calc(var(--rp-spacing) * 0);
       top: 0px;
       height: 100%;
-      width: calc(var(--spacing) * 0.5);
+      width: calc(var(--rp-spacing) * 0.5);
     }
   }
 }

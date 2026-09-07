@@ -9,13 +9,13 @@
   justify-content: center;
 
   /* Default color token (accent) */
-  --progress-circle-stroke: var(--accent);
-  --progress-circle-track-stroke: var(--default);
+  --progress-circle-stroke: var(--rp-accent);
+  --progress-circle-track-stroke: var(--rp-default);
 
   .rp-progress-circle__track {
     /* Default size (matches --md) */
-    width: calc(var(--spacing) * 7);
-    height: calc(var(--spacing) * 7);
+    width: calc(var(--rp-spacing) * 7);
+    height: calc(var(--rp-spacing) * 7);
   }
 
   .rp-progress-circle__track-circle {
@@ -37,7 +37,7 @@
       stroke: Highlight;
     }
 
-    transition: var(--rp-motion) stroke-dashoffset 300ms var(--ease-out);
+    transition: var(--rp-motion) stroke-dashoffset 300ms var(--rp-ease-out);
   }
 
   /* Indeterminate state - when no aria-valuenow is set */
@@ -51,8 +51,8 @@
   &:disabled,
   &[data-disabled="true"],
   &[aria-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -80,8 +80,8 @@
 
 .rp-progress-circle--sm {
   .rp-progress-circle__track {
-    width: calc(var(--spacing) * 5);
-    height: calc(var(--spacing) * 5);
+    width: calc(var(--rp-spacing) * 5);
+    height: calc(var(--rp-spacing) * 5);
   }
 }
 
@@ -91,8 +91,8 @@
 
 .rp-progress-circle--lg {
   .rp-progress-circle__track {
-    width: calc(var(--spacing) * 9);
-    height: calc(var(--spacing) * 9);
+    width: calc(var(--rp-spacing) * 9);
+    height: calc(var(--rp-spacing) * 9);
   }
 }
 
@@ -101,21 +101,21 @@
    ========================================================================== */
 
 .rp-progress-circle--default {
-  --progress-circle-stroke: var(--default-foreground);
+  --progress-circle-stroke: var(--rp-default-foreground);
 }
 
 .rp-progress-circle--accent {
-  --progress-circle-stroke: var(--accent);
+  --progress-circle-stroke: var(--rp-accent);
 }
 
 .rp-progress-circle--success {
-  --progress-circle-stroke: var(--success);
+  --progress-circle-stroke: var(--rp-success);
 }
 
 .rp-progress-circle--warning {
-  --progress-circle-stroke: var(--warning);
+  --progress-circle-stroke: var(--rp-warning);
 }
 
 .rp-progress-circle--danger {
-  --progress-circle-stroke: var(--danger);
+  --progress-circle-stroke: var(--rp-danger);
 }

@@ -41,6 +41,6 @@ const byName = (item: { name: string }) => item.name;
 
 <style scoped>
 .field {
-  width: calc(var(--spacing) * 64);
+  width: calc(var(--rp-spacing) * 64);
 }
 </style>

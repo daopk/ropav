@@ -1,29 +1,29 @@
 /* Base styles */
 .rp-kbd {
   display: inline-flex;
-  height: calc(var(--spacing) * 6);
+  height: calc(var(--rp-spacing) * 6);
   align-items: center;
   :where(& > :not(:last-child)) {
     --rp-space-x-reverse: 0;
-    margin-inline-start: calc(calc(var(--spacing) * 0.5) * var(--rp-space-x-reverse));
-    margin-inline-end: calc(calc(var(--spacing) * 0.5) * calc(1 - var(--rp-space-x-reverse)));
+    margin-inline-start: calc(calc(var(--rp-spacing) * 0.5) * var(--rp-space-x-reverse));
+    margin-inline-end: calc(calc(var(--rp-spacing) * 0.5) * calc(1 - var(--rp-space-x-reverse)));
   }
-  background-color: var(--default);
-  padding-inline: calc(var(--spacing) * 2);
+  background-color: var(--rp-default);
+  padding-inline: calc(var(--rp-spacing) * 2);
   text-align: center;
-  font-family: var(--font-sans);
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
-  font-weight: var(--font-weight-medium);
+  font-family: var(--rp-font-sans);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+  font-weight: var(--rp-font-weight-medium);
   white-space: nowrap;
-  color: var(--muted);
+  color: var(--rp-muted);
   &:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) {
     :where(& > :not(:last-child)) {
       --rp-space-x-reverse: 1;
     }
   }
 
-  border-radius: min(32px, var(--component-radius));
+  border-radius: min(32px, var(--rp-component-radius));
   word-spacing: -0.25rem;
 }
 

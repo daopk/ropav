@@ -2,7 +2,7 @@
  * Ropav scrollbar system
  *
  * Modes via data-scrollbar on any ancestor:
- *   (unset) — Ropav scrollbar from theme --scrollbar-width/color/gutter (light/dark)
+ *   (unset) — Ropav scrollbar from theme --rp-scrollbar-width/color/gutter (light/dark)
  *   thin    — Ropav themed thin scrollbar, useful for overriding inherited default mode
  *   default — OS / browser scrollbar (auto)
  *   none    — hidden (inherited to descendants using @apply scrollbar)
@@ -12,19 +12,19 @@
  * ============================================================================= */
 
 [data-scrollbar="thin"] {
-  --scrollbar-width: thin;
-  --scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
-  --scrollbar-gutter: auto;
+  --rp-scrollbar-width: thin;
+  --rp-scrollbar-color: var(--rp-scrollbar-thumb) var(--rp-scrollbar-track);
+  --rp-scrollbar-gutter: auto;
 }
 
 [data-scrollbar="default"] {
-  --scrollbar-width: auto;
-  --scrollbar-color: auto;
-  --scrollbar-gutter: auto;
+  --rp-scrollbar-width: auto;
+  --rp-scrollbar-color: auto;
+  --rp-scrollbar-gutter: auto;
 }
 
 [data-scrollbar="none"] {
-  --scrollbar-width: none;
-  --scrollbar-color: auto;
-  --scrollbar-gutter: auto;
+  --rp-scrollbar-width: none;
+  --rp-scrollbar-color: auto;
+  --rp-scrollbar-gutter: auto;
 }

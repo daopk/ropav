@@ -35,6 +35,6 @@ const interests = [
 <style scoped>
 .group {
   width: 100%;
-  max-width: var(--container-md);
+  max-width: var(--rp-container-md);
 }
 </style>

@@ -41,10 +41,10 @@ import {
 .stack {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--spacing) * 4);
+  gap: calc(var(--rp-spacing) * 4);
 }
 
 .field {
-  width: calc(var(--spacing) * 48);
+  width: calc(var(--rp-spacing) * 48);
 }
 </style>

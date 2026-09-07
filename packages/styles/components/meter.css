@@ -6,28 +6,28 @@
 .rp-meter {
   display: grid;
   width: 100%;
-  gap: var(--spacing);
+  gap: var(--rp-spacing);
   grid-template-areas:
     "label output"
     "track track";
   grid-template-columns: 1fr auto;
 
   /* Default color tokens (accent) */
-  --meter-fill: var(--accent);
+  --meter-fill: var(--rp-accent);
 
   [data-slot="label"] {
     width: fit-content;
-    font-size: var(--text-sm);
-    line-height: var(--rp-leading, var(--text-sm--line-height));
-    font-weight: var(--font-weight-medium);
+    font-size: var(--rp-text-sm);
+    line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+    font-weight: var(--rp-font-weight-medium);
 
     grid-area: label;
   }
 
   .rp-meter__output {
-    font-size: var(--text-sm);
-    line-height: var(--rp-leading, var(--text-sm--line-height));
-    font-weight: var(--font-weight-medium);
+    font-size: var(--rp-text-sm);
+    line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+    font-weight: var(--rp-font-weight-medium);
     --rp-numeric-spacing: tabular-nums;
     font-variant-numeric: var(--rp-ordinal,) var(--rp-slashed-zero,) var(--rp-numeric-figure,)
       var(--rp-numeric-spacing,) var(--rp-numeric-fraction,);
@@ -38,14 +38,14 @@
   .rp-meter__track {
     position: relative;
     overflow: hidden;
-    background-color: var(--default);
+    background-color: var(--rp-default);
 
-    border-radius: min(32px, var(--component-radius));
+    border-radius: min(32px, var(--rp-component-radius));
 
     grid-area: track;
 
     /* Default height (matches --md) */
-    height: calc(var(--spacing) * 2);
+    height: calc(var(--rp-spacing) * 2);
 
     /* Track and fill are both plain backgrounds, so forced colors flattens the pair onto the
      * page and the whole meter stops rendering - no bar, no value. */
@@ -58,11 +58,11 @@
 
   .rp-meter__fill {
     position: absolute;
-    inset-inline-start: calc(var(--spacing) * 0);
+    inset-inline-start: calc(var(--rp-spacing) * 0);
     top: 0px;
     height: 100%;
 
-    border-radius: min(32px, var(--component-radius));
+    border-radius: min(32px, var(--rp-component-radius));
 
     background-color: var(--meter-fill);
 
@@ -70,15 +70,15 @@
       background-color: Highlight;
     }
 
-    transition: var(--rp-motion) width 300ms var(--ease-out);
+    transition: var(--rp-motion) width 300ms var(--rp-ease-out);
   }
 
   /* Disabled state */
   &:disabled,
   &[data-disabled="true"],
   &[aria-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -97,7 +97,7 @@
 
 .rp-meter--sm {
   .rp-meter__track {
-    height: var(--spacing);
+    height: var(--rp-spacing);
   }
 }
 
@@ -107,7 +107,7 @@
 
 .rp-meter--lg {
   .rp-meter__track {
-    height: calc(var(--spacing) * 3);
+    height: calc(var(--rp-spacing) * 3);
   }
 }
 
@@ -116,21 +116,21 @@
    ========================================================================== */
 
 .rp-meter--default {
-  --meter-fill: var(--default-foreground);
+  --meter-fill: var(--rp-default-foreground);
 }
 
 .rp-meter--accent {
-  --meter-fill: var(--accent);
+  --meter-fill: var(--rp-accent);
 }
 
 .rp-meter--success {
-  --meter-fill: var(--success);
+  --meter-fill: var(--rp-success);
 }
 
 .rp-meter--warning {
-  --meter-fill: var(--warning);
+  --meter-fill: var(--rp-warning);
 }
 
 .rp-meter--danger {
-  --meter-fill: var(--danger);
+  --meter-fill: var(--rp-danger);
 }

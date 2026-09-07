@@ -17,7 +17,7 @@ const sizes = ["sm", "md", "lg"] as const;
 .stack {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--spacing) * 4);
+  gap: calc(var(--rp-spacing) * 4);
 }
 
 .label {
@@ -25,6 +25,6 @@ const sizes = ["sm", "md", "lg"] as const;
 }
 
 .field {
-  width: calc(var(--spacing) * 64);
+  width: calc(var(--rp-spacing) * 64);
 }
 </style>

@@ -12,7 +12,7 @@ const components = {
 };
 
 /** Every panel gets the same padded box, so the stories differ only in the splitter itself. */
-const pane = "flex h-full w-full items-center justify-center p-4 text-small text-[var(--muted)]";
+const pane = "flex h-full w-full items-center justify-center p-4 text-small text-[var(--rp-muted)]";
 
 const meta: StoryMeta = {
   argTypes: {
@@ -29,7 +29,7 @@ const meta: StoryMeta = {
   decorators: [
     () => ({
       template:
-        '<div class="h-72 w-[42rem] max-w-full overflow-hidden rounded-[calc(var(--radius)*1)] border"><story /></div>',
+        '<div class="h-72 w-[42rem] max-w-full overflow-hidden rounded-[calc(var(--rp-radius)*1)] border"><story /></div>',
     }),
   ],
   parameters: {

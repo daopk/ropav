@@ -64,8 +64,8 @@
   --splitter-target: 15px;
   /* The pill's short axis and its long one. It is positioned rather than laid out, so it straddles a
    * gutter narrower than itself without the panels giving up a pixel. */
-  --splitter-grip-thickness: calc(var(--spacing) * 1);
-  --splitter-grip-length: calc(var(--spacing) * 6);
+  --splitter-grip-thickness: calc(var(--rp-spacing) * 1);
+  --splitter-grip-length: calc(var(--rp-spacing) * 6);
   /* How long the pointer has to stay before the divider lights up. A grab area many times the width
    * of the line is one a pointer crosses on its way somewhere else, and a divider that flares at
    * every crossing reads as a twitch rather than an invitation. Waiting means only an approach that
@@ -73,11 +73,11 @@
   --splitter-highlight-delay: 500ms;
   /* What the line and the grip are painted with, at rest and lit. Separate properties so a caller
    * can retune one state without flattening the rest onto a single colour. */
-  --splitter-line: var(--separator);
-  --splitter-line-hover: var(--accent);
+  --splitter-line: var(--rp-separator);
+  --splitter-line-hover: var(--rp-accent);
   --splitter-line-dragging: var(--splitter-line-hover);
-  --splitter-grip-bg: var(--separator);
-  --splitter-grip-bg-hover: var(--accent);
+  --splitter-grip-bg: var(--rp-separator);
+  --splitter-grip-bg-hover: var(--rp-accent);
   --splitter-grip-bg-dragging: var(--splitter-grip-bg-hover);
 
   position: relative;
@@ -104,7 +104,7 @@
   &::after {
     pointer-events: none;
     position: absolute;
-    border-radius: calc(var(--radius) * 0.5);
+    border-radius: calc(var(--rp-radius) * 0.5);
     --rp-content: "";
     content: var(--rp-content);
 
@@ -117,9 +117,9 @@
     }
 
     transition:
-      var(--rp-motion) background-color 150ms var(--ease-out),
-      inline-size 150ms var(--ease-out),
-      block-size 150ms var(--ease-out);
+      var(--rp-motion) background-color 150ms var(--rp-ease-out),
+      inline-size 150ms var(--rp-ease-out),
+      block-size 150ms var(--rp-ease-out);
   }
 
   /* Delayed on the way in and immediate on the way out: the delay lives here rather than in the
@@ -171,8 +171,8 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
-    --rp-ring-offset-color: var(--background);
+    --rp-ring-color: var(--rp-focus);
+    --rp-ring-offset-color: var(--rp-background);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: var(--rp-focus-ring-offset);
@@ -183,8 +183,8 @@
   }
 
   &[data-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -233,7 +233,7 @@
     background-color: CanvasText;
   }
 
-  transition: var(--rp-motion) background-color 150ms var(--ease-out);
+  transition: var(--rp-motion) background-color 150ms var(--rp-ease-out);
 }
 
 .rp-splitter__handle-grip--horizontal {
@@ -248,7 +248,7 @@
 
 /* A horizontal group puts its panels side by side, so the divider is a vertical line. */
 .rp-splitter__handle--horizontal {
-  /* Excluded rather than ordered. A disabled handle takes `--cursor-disabled` from the state rule
+  /* Excluded rather than ordered. A disabled handle takes `--rp-cursor-disabled` from the state rule
    * above, which outweighs this one only while the axis is a class; written as an attribute the
    * two weigh the same and the later rule is this one, so the exclusion has to be in the selector
    * for the cursor to keep saying what the pointer can do. */
@@ -277,7 +277,7 @@
 
 /* A vertical group stacks its panels, so the divider is a horizontal line. */
 .rp-splitter__handle--vertical {
-  /* Excluded rather than ordered. A disabled handle takes `--cursor-disabled` from the state rule
+  /* Excluded rather than ordered. A disabled handle takes `--rp-cursor-disabled` from the state rule
    * above, which outweighs this one only while the axis is a class; written as an attribute the
    * two weigh the same and the later rule is this one, so the exclusion has to be in the selector
    * for the cursor to keep saying what the pointer can do. */

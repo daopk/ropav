@@ -17,6 +17,6 @@ import { Label, TimeField, TimeFieldGroup, TimeFieldInput, TimeFieldSegment } fr
 
 <style scoped>
 .field {
-  width: calc(var(--spacing) * 64);
+  width: calc(var(--rp-spacing) * 64);
 }
 </style>

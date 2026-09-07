@@ -9,8 +9,8 @@
  * Base Calendar Styles
  * -------------------------------------------------------------------------- */
 .rp-calendar {
-  width: calc(var(--spacing) * 63);
-  max-width: calc(var(--spacing) * 63);
+  width: calc(var(--rp-spacing) * 63);
+  max-width: calc(var(--rp-spacing) * 63);
 
   container-type: inline-size;
 }
@@ -59,7 +59,7 @@
   .rp-calendar__grid-body {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    margin-top: var(--spacing);
+    margin-top: var(--rp-spacing);
     width: 100%;
 
     & > tr {
@@ -79,8 +79,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-inline: calc(var(--spacing) * 0.5);
-  padding-bottom: calc(var(--spacing) * 4);
+  padding-inline: calc(var(--rp-spacing) * 0.5);
+  padding-bottom: calc(var(--rp-spacing) * 4);
 
   &:has(.rp-calendar-year-picker__trigger[data-open="true"]) {
     .rp-calendar__nav-button {
@@ -92,38 +92,38 @@
 
 .rp-calendar__heading {
   flex: 1;
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
-  font-weight: var(--font-weight-medium);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+  font-weight: var(--rp-font-weight-medium);
 }
 
 .rp-calendar__nav-button {
   display: flex;
-  width: calc(var(--spacing) * 6);
-  height: calc(var(--spacing) * 6);
+  width: calc(var(--rp-spacing) * 6);
+  height: calc(var(--rp-spacing) * 6);
   align-items: center;
   justify-content: center;
-  color: var(--accent-soft-foreground);
+  color: var(--rp-accent-soft-foreground);
 
-  border-radius: min(32px, var(--component-radius));
+  border-radius: min(32px, var(--rp-component-radius));
 
   will-change: scale;
 
   transition:
-    var(--rp-motion) transform 250ms var(--ease-out),
-    background-color 100ms var(--ease-out),
-    box-shadow 100ms var(--ease-out),
-    opacity 150ms var(--ease-out);
+    var(--rp-motion) transform 250ms var(--rp-ease-out),
+    background-color 100ms var(--rp-ease-out),
+    box-shadow 100ms var(--rp-ease-out),
+    opacity 150ms var(--rp-ease-out);
   transform: translateZ(0) var(--rp-rotate-x,) var(--rp-rotate-y,) var(--rp-rotate-z,)
     var(--rp-skew-x,) var(--rp-skew-y,);
 
-  cursor: var(--cursor-interactive);
+  cursor: var(--rp-cursor-interactive);
 
   /* Hover state – only on devices that support hover (avoids false triggers on touch) */
   @media (hover: hover) {
     &:hover,
     &[data-hovered="true"] {
-      background-color: var(--state-layer);
+      background-color: var(--rp-state-layer);
     }
   }
 
@@ -141,8 +141,8 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
-    --rp-ring-offset-color: var(--background);
+    --rp-ring-color: var(--rp-focus);
+    --rp-ring-offset-color: var(--rp-background);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: var(--rp-focus-ring-offset);
@@ -155,8 +155,8 @@
   /* Disabled state */
   &:disabled,
   &[data-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -166,8 +166,8 @@
 }
 
 .rp-calendar__nav-button-icon {
-  width: calc(var(--spacing) * 4);
-  height: calc(var(--spacing) * 4);
+  width: calc(var(--rp-spacing) * 4);
+  height: calc(var(--rp-spacing) * 4);
   &:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) {
     rotate: 180deg;
   }
@@ -208,7 +208,7 @@
 
   /* Add top spacing between header and first body row */
   & > tr:first-child > td {
-    margin-top: var(--spacing);
+    margin-top: var(--rp-spacing);
   }
 }
 
@@ -223,11 +223,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-bottom: calc(var(--spacing) * 2);
-  font-size: var(--text-xs);
-  line-height: var(--rp-leading, var(--text-xs--line-height));
-  font-weight: var(--font-weight-medium);
-  color: var(--muted);
+  padding-bottom: calc(var(--rp-spacing) * 2);
+  font-size: var(--rp-text-xs);
+  line-height: var(--rp-leading, var(--rp-text-xs--line-height));
+  font-weight: var(--rp-font-weight-medium);
+  color: var(--rp-muted);
 }
 
 /* -----------------------------------------------------------------------------
@@ -243,42 +243,42 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
-  font-weight: var(--font-weight-medium);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+  font-weight: var(--rp-font-weight-medium);
   --rp-outline-style: none;
   outline-style: none;
   -webkit-tap-highlight-color: transparent;
 
-  border-radius: min(32px, var(--component-radius));
+  border-radius: min(32px, var(--rp-component-radius));
 
   /* Eight states repaint a day, several of them in pairs — today and hovered, selected and
    * pressed, selected and outside the month. One declaration cannot tell them apart, so each
    * reads its own. */
   --calendar-cell-bg: transparent;
-  --calendar-cell-bg-hover: var(--state-layer);
+  --calendar-cell-bg-hover: var(--rp-state-layer);
   --calendar-cell-bg-pressed: var(--calendar-cell-bg-hover);
-  --calendar-cell-bg-today: var(--accent-soft);
-  --calendar-cell-bg-today-hover: var(--accent-soft-hover);
-  --calendar-cell-bg-selected: var(--accent);
-  --calendar-cell-bg-selected-pressed: var(--accent-hover);
-  --calendar-cell-bg-selected-outside-month: var(--state-layer);
+  --calendar-cell-bg-today: var(--rp-accent-soft);
+  --calendar-cell-bg-today-hover: var(--rp-accent-soft-hover);
+  --calendar-cell-bg-selected: var(--rp-accent);
+  --calendar-cell-bg-selected-pressed: var(--rp-accent-hover);
+  --calendar-cell-bg-selected-outside-month: var(--rp-state-layer);
   --calendar-cell-fg: currentcolor;
-  --calendar-cell-fg-today: var(--accent-soft-foreground);
-  --calendar-cell-fg-selected: var(--accent-foreground);
-  --calendar-cell-fg-outside-month: var(--muted);
+  --calendar-cell-fg-today: var(--rp-accent-soft-foreground);
+  --calendar-cell-fg-selected: var(--rp-accent-foreground);
+  --calendar-cell-fg-outside-month: var(--rp-muted);
 
   background-color: var(--calendar-cell-bg);
   color: var(--calendar-cell-fg);
 
   will-change: scale;
   transition:
-    var(--rp-motion) transform 250ms var(--ease-out),
-    box-shadow 100ms var(--ease-out);
+    var(--rp-motion) transform 250ms var(--rp-ease-out),
+    box-shadow 100ms var(--rp-ease-out);
   transform: translateZ(0) var(--rp-rotate-x,) var(--rp-rotate-y,) var(--rp-rotate-z,)
     var(--rp-skew-x,) var(--rp-skew-y,);
 
-  cursor: var(--cursor-interactive);
+  cursor: var(--rp-cursor-interactive);
 
   /* Focus state */
   &:focus-visible:not(:focus),
@@ -288,8 +288,8 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
-    --rp-ring-offset-color: var(--background);
+    --rp-ring-color: var(--rp-focus);
+    --rp-ring-offset-color: var(--rp-background);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: var(--rp-focus-ring-offset);
@@ -364,8 +364,8 @@
 
   /* Unavailable dates */
   &[data-unavailable="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -376,8 +376,8 @@
   /* Disabled state */
   &:disabled:not([data-outside-month="true"]),
   &[data-disabled="true"]:not([data-outside-month="true"]) {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -391,16 +391,16 @@
 /* Cell indicator - small dot at bottom center of cell */
 .rp-calendar__cell-indicator {
   position: absolute;
-  bottom: var(--spacing);
+  bottom: var(--rp-spacing);
   left: calc(1 / 2 * 100%);
   width: 3px;
   height: 3px;
   --rp-translate-x: calc(calc(1 / 2 * 100%) * -1);
   translate: var(--rp-translate-x) var(--rp-translate-y);
-  border-radius: calc(var(--radius) * 0.25);
+  border-radius: calc(var(--rp-radius) * 0.25);
 
-  --calendar-cell-indicator-bg: var(--muted);
-  --calendar-cell-indicator-bg-selected: var(--accent-foreground);
+  --calendar-cell-indicator-bg: var(--rp-muted);
+  --calendar-cell-indicator-bg-selected: var(--rp-accent-foreground);
 
   background-color: var(--calendar-cell-indicator-bg);
 

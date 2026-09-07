@@ -45,7 +45,7 @@ whatever your toolchain is.
 /* every button on the page, rather than this one. Author CSS is unlayered, so it outranks
    the `components` layer wherever you put it. */
 .rp-button {
-  --button-bg-hover: var(--success);
+  --button-bg-hover: var(--rp-success);
 }
 ```
 
@@ -66,7 +66,7 @@ follows `--button-bg-hover`. So a single override reaches the whole ladder, and 
 only where you want a different answer.
 
 ```vue
-<Button style="--button-bg-hover: var(--success)">Publish</Button>
+<Button style="--button-bg-hover: var(--rp-success)">Publish</Button>
 ```
 
 ## Two limits

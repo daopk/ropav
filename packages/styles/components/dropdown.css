@@ -5,7 +5,7 @@
 .rp-dropdown {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing);
+  gap: var(--rp-spacing);
 }
 
 .rp-dropdown__trigger {
@@ -22,14 +22,14 @@
   }
 
   transition:
-    var(--rp-motion) transform 250ms var(--ease-out-quart),
-    background-color 150ms var(--ease-smooth),
-    box-shadow 150ms var(--ease-out);
+    var(--rp-motion) transform 250ms var(--rp-ease-out-quart),
+    background-color 150ms var(--rp-ease-smooth),
+    box-shadow 150ms var(--rp-ease-out);
   transform: translateZ(0) var(--rp-rotate-x,) var(--rp-rotate-y,) var(--rp-rotate-z,)
     var(--rp-skew-x,) var(--rp-skew-y,);
 
   /* Cursor */
-  cursor: var(--cursor-interactive);
+  cursor: var(--rp-cursor-interactive);
 
   /* Focus state */
   &:focus-visible:not(:focus),
@@ -39,8 +39,8 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
-    --rp-ring-offset-color: var(--background);
+    --rp-ring-color: var(--rp-focus);
+    --rp-ring-offset-color: var(--rp-background);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: var(--rp-focus-ring-offset);
@@ -53,8 +53,8 @@
   /* Disabled state */
   &:disabled,
   &[aria-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -78,22 +78,22 @@
 .rp-dropdown__popover {
   max-width: 48svw;
   transform-origin: var(--trigger-anchor-point);
-  scroll-padding-block: var(--spacing);
-  scrollbar-width: var(--scrollbar-width);
-  scrollbar-color: var(--scrollbar-color);
-  scrollbar-gutter: var(--scrollbar-gutter);
+  scroll-padding-block: var(--rp-spacing);
+  scrollbar-width: var(--rp-scrollbar-width);
+  scrollbar-color: var(--rp-scrollbar-color);
+  scrollbar-gutter: var(--rp-scrollbar-gutter);
   overflow-y: auto;
   overscroll-behavior: contain;
-  background-color: var(--overlay);
+  background-color: var(--rp-overlay);
   padding: 0px;
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
   will-change: transform;
   @media (width >= 48rem) {
-    min-width: calc(var(--spacing) * 55);
+    min-width: calc(var(--rp-spacing) * 55);
   }
-  border-radius: min(32px, var(--component-radius));
-  box-shadow: var(--shadow-overlay);
+  border-radius: min(32px, var(--rp-component-radius));
+  box-shadow: var(--rp-shadow-overlay);
 
   /* Focus state */
   &:focus-visible:not(:focus),
@@ -114,19 +114,19 @@
 
     /* Placement-specific translations */
     &[data-placement="top"] {
-      --rp-enter-translate-y: calc(1*var(--spacing));
+      --rp-enter-translate-y: calc(1*var(--rp-spacing));
     }
 
     &[data-placement="bottom"] {
-      --rp-enter-translate-y: calc(1*var(--spacing)*-1);
+      --rp-enter-translate-y: calc(1*var(--rp-spacing)*-1);
     }
 
     &[data-placement="left"] {
-      --rp-enter-translate-x: calc(1*var(--spacing));
+      --rp-enter-translate-x: calc(1*var(--rp-spacing));
     }
 
     &[data-placement="right"] {
-      --rp-enter-translate-x: calc(1*var(--spacing)*-1);
+      --rp-enter-translate-x: calc(1*var(--rp-spacing)*-1);
     }
   }
 
@@ -144,14 +144,14 @@
   &[data-exiting="true"],
   &[data-entering="true"] {
     transition-property: opacity, transform;
-    transition-timing-function: var(--rp-ease, var(--default-transition-timing-function));
-    transition-duration: var(--rp-motion) var(--rp-duration, var(--default-transition-duration));
+    transition-timing-function: var(--rp-ease, var(--rp-default-transition-timing-function));
+    transition-duration: var(--rp-motion) var(--rp-duration, var(--rp-default-transition-duration));
     will-change: opacity, transform;
   }
 
   /* Arrow styling */
   & [data-slot="popover-overlay-arrow"] {
-    fill: var(--overlay);
+    fill: var(--rp-overlay);
   }
 
   /* Arrow rotation based on placement */
@@ -171,13 +171,13 @@
    * they sit here rather than on `.rp-dropdown__menu` because `menu.css` is imported after this file
    * and would otherwise win at equal specificity. */
   [data-slot="dropdown-menu"] {
-    gap: calc(var(--spacing) * 0.5);
-    padding: calc(var(--spacing) * 1.5);
+    gap: calc(var(--rp-spacing) * 0.5);
+    padding: calc(var(--rp-spacing) * 1.5);
     --rp-outline-style: none;
     outline-style: none;
   }
 
   [data-slot="menu-item"] {
-    padding-inline: calc(var(--spacing) * 2.5);
+    padding-inline: calc(var(--rp-spacing) * 2.5);
   }
 }

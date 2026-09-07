@@ -158,18 +158,18 @@ const nativeItems = `
           <IconQrCode />
           Preview Ropav Native
         </div>
-        <DisclosureIndicator class="text-[var(--muted)]" />
+        <DisclosureIndicator class="text-[var(--rp-muted)]" />
       </Button>
     </DisclosureHeading>
     <DisclosureContent>
       <DisclosureBody class="mx-2 flex flex-col items-center gap-2 p-4 text-center">
-        <p class="text-sm text-[var(--muted)]">
+        <p class="text-sm text-[var(--rp-muted)]">
           Scan this QR code with your camera app to preview the Ropav native components.
         </p>
         <img alt="Expo Go QR Code" class="aspect-square w-full max-w-54 object-cover" :src="qrCodeSrc" />
-        <p class="text-sm text-[var(--muted)]">Expo must be installed on your device.</p>
+        <p class="text-sm text-[var(--rp-muted)]">Expo must be installed on your device.</p>
         <Button class="mt-4" variant="primary">
-          <IconExpo class="[&_path]:fill-[var(--accent-foreground)]" />
+          <IconExpo class="[&_path]:fill-[var(--rp-accent-foreground)]" />
           Preview on Expo Go
         </Button>
       </DisclosureBody>
@@ -186,16 +186,16 @@ const nativeItems = `
           <IconApple />
           Download Ropav Native
         </div>
-        <DisclosureIndicator class="text-[var(--muted)]" />
+        <DisclosureIndicator class="text-[var(--rp-muted)]" />
       </Button>
     </DisclosureHeading>
     <DisclosureContent>
       <DisclosureBody class="mx-2 flex flex-col items-center gap-2 p-4 text-center">
-        <p class="text-sm text-[var(--muted)]">
+        <p class="text-sm text-[var(--rp-muted)]">
           Scan this QR code with your camera app to preview the Ropav native components.
         </p>
         <img alt="Expo Go QR Code" class="aspect-square w-full max-w-54 object-cover" :src="qrCodeSrc" />
-        <p class="text-sm text-[var(--muted)]">Expo must be installed on your device.</p>
+        <p class="text-sm text-[var(--rp-muted)]">Expo must be installed on your device.</p>
         <Button class="mt-4" variant="primary">
           <IconApple />
           Download on App Store
@@ -220,7 +220,7 @@ export const Default: Story = {
     },
     template: `
       <div class="w-full max-w-md">
-        <div class="flex flex-col gap-4 rounded-[calc(var(--radius)*3)] bg-[var(--surface)] p-4 shadow-[var(--surface-shadow)]">
+        <div class="flex flex-col gap-4 rounded-[calc(var(--rp-radius)*3)] bg-[var(--rp-surface)] p-4 shadow-[var(--rp-surface-shadow)]">
           <DisclosureGroup
             :allows-multiple-expanded="args.allowsMultipleExpanded"
             :expanded-keys="expandedKeys"
@@ -261,7 +261,7 @@ export const Controlled: Story = {
     },
     template: `
       <div class="w-full max-w-md">
-        <div class="flex flex-col gap-4 rounded-[calc(var(--radius)*3)] bg-[var(--surface)] p-4 shadow-[var(--surface-shadow)]">
+        <div class="flex flex-col gap-4 rounded-[calc(var(--rp-radius)*3)] bg-[var(--rp-surface)] p-4 shadow-[var(--rp-surface-shadow)]">
           <div class="mb-2 flex items-center justify-between">
             <h3 class="text-lg font-semibold">Ropav Native</h3>
             <div class="flex gap-2">
@@ -328,7 +328,7 @@ export const Showcase1: Story = {
       };
     },
     template: `
-      <section class="w-full overflow-hidden bg-[var(--surface)]">
+      <section class="w-full overflow-hidden bg-[var(--rp-surface)]">
         <div class="flex w-full items-center gap-8 px-8 py-8">
           <div
             class="z-[1] hidden flex-col gap-5 opacity-0 sm:flex transition-all duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] data-[expanded=true]:duration-400 translate-y-[120px] data-[expanded=true]:translate-y-0 data-[expanded=true]:opacity-100 scale-50 data-[expanded=true]:scale-100"
@@ -342,7 +342,7 @@ export const Showcase1: Story = {
               variant="secondary"
               @click="onPrevious"
             >
-              <svg class="size-8 fill-[var(--foreground)]" viewBox="0 0 36 36">
+              <svg class="size-8 fill-[var(--rp-foreground)]" viewBox="0 0 36 36">
                 <path d="m11 20c0-.3838.1465-.7676.4395-1.0605l5.5-5.5c.5854-.5859 1.5356-.5859 2.1211 0l5.5 5.5c.5859.5859.5859 1.5352 0 2.1211-.5854.5859-1.5356.5859-2.1211 0l-4.4395-4.4395-4.4395 4.4395c-.5854.5859-1.5356.5859-2.1211 0-.293-.293-.4395-.6768-.4395-1.0605z" />
               </svg>
             </Button>
@@ -354,7 +354,7 @@ export const Showcase1: Story = {
               variant="secondary"
               @click="onNext"
             >
-              <svg class="size-8 fill-[var(--foreground)]" viewBox="0 0 36 36">
+              <svg class="size-8 fill-[var(--rp-foreground)]" viewBox="0 0 36 36">
                 <path d="m19.0625 22.5597 5.5-5.5076c.5854-.5854.5825-1.5323-.0039-2.1157-.5869-.5835-1.5366-.5815-2.1211.0039l-4.4375 4.4438-4.4375-4.4438c-.5845-.5854-1.5342-.5874-2.1211-.0039-.2944.2922-.4414.676-.4414 1.0598 0 .3818.1455.7637.4375 1.0559l5.5 5.5076c.2813.2815.6636.4403 1.0625.4403s.7812-.1588 1.0625-.4403z" />
               </svg>
             </Button>
@@ -373,7 +373,7 @@ export const Showcase1: Story = {
                     <div class="flex w-full items-center justify-start gap-3">
                       <span
                         v-if="item.id === 'colors'"
-                        class="group relative size-6 rounded-[calc(var(--radius)*1)] shadow-[inset_0px_-1px_0px_0px_rgba(255,255,255,.5)]"
+                        class="group relative size-6 rounded-[calc(var(--rp-radius)*1)] shadow-[inset_0px_-1px_0px_0px_rgba(255,255,255,.5)]"
                         style="background-color: #f77314"
                       >
                         <span class="sr-only">Copy Cosmic Orange color</span>
@@ -390,7 +390,7 @@ export const Showcase1: Story = {
                 </DisclosureHeading>
                 <DisclosureContent class="duration-[420ms] ease-[cubic-bezier(0.95,0.05,0.795,0.035)] ease-[cubic-bezier(0.25,0.46,0.45,0.94)]">
                   <DisclosureBody
-                    class="mt-3 flex max-w-sm flex-col items-center gap-2 rounded-[calc(var(--radius)*2)] bg-[rgba(42,42,45,0.72)] p-7 text-start backdrop-blur-[20px]"
+                    class="mt-3 flex max-w-sm flex-col items-center gap-2 rounded-[calc(var(--rp-radius)*2)] bg-[rgba(42,42,45,0.72)] p-7 text-start backdrop-blur-[20px]"
                     :data-expanded="expandedKeys.has(item.id)"
                   >
                     <p
@@ -417,7 +417,7 @@ export const Showcase1: Story = {
           :data-selected="expandedKeys.has(item.id)"
           :src="item.imgSrc"
           :style="{
-            transition: transitionFor(item.id, 'opacity 1000ms ease-out, translate 900ms var(--ease-out-quad)'),
+            transition: transitionFor(item.id, 'opacity 1000ms ease-out, translate 900ms var(--rp-ease-out-quad)'),
             willChange: 'opacity, translate',
           }"
         />

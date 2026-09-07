@@ -43,6 +43,6 @@ const styles = [
 .stack {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--spacing) * 6);
+  gap: calc(var(--rp-spacing) * 6);
 }
 </style>

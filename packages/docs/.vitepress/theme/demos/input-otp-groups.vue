@@ -25,6 +25,6 @@ import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot, Label } from 
 .stack {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--spacing) * 2);
+  gap: calc(var(--rp-spacing) * 2);
 }
 </style>

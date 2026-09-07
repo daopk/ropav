@@ -278,7 +278,7 @@ describe("forced colors mode (browser)", () => {
     );
 
     // The knob reads against the bare track on one side and the fill on the other, so it is
-    // the ring that has to survive - `shadow-[var(--field-shadow)]` is a box-shadow and does not.
+    // the ring that has to survive - `shadow-[var(--rp-field-shadow)]` is a box-shadow and does not.
     expect(knob.outlineStyle).not.toBe("none");
     expect(knob.backgroundColor).toBe(systemColor("Canvas"));
     // The wrapper matches the fill normally; opaque here it would punch a hole through it.
@@ -313,7 +313,7 @@ describe("forced colors mode (browser)", () => {
   ])("keeps the %s identifiable as a control", (_name, markup) => {
     // Every one of these is a fill and a shadow and nothing else - flattened, they read as bare
     // text with no sign they can be clicked or typed into. The fields make it worse:
-    // `--border-width-field` is 0, so their declared border brings nothing back on its own.
+    // `--rp-border-width-field` is 0, so their declared border brings nothing back on its own.
     const control = mount(markup);
     const style = styleOf(control);
 

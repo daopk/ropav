@@ -141,7 +141,7 @@ export const Controlled: Story = {
             <Tag v-for="name in categories" :key="name" :id="name">{{ name }}</Tag>
           </TagGroupList>
         </TagGroup>
-        <p class="text-sm text-[var(--muted)]">Selected: {{ [...selected].join(", ") || "none" }}</p>
+        <p class="text-sm text-[var(--rp-muted)]">Selected: {{ [...selected].join(", ") || "none" }}</p>
       </div>
     `,
   }),
@@ -311,12 +311,12 @@ export const WithListData: Story = {
           <Description>Select team members for your project</Description>
         </TagGroup>
         <div v-if="selectedMembers.length" class="mt-4 flex flex-col gap-2">
-          <p class="text-sm font-medium text-[var(--muted)]">Selected:</p>
+          <p class="text-sm font-medium text-[var(--rp-muted)]">Selected:</p>
           <div class="flex flex-wrap gap-2">
             <div
               v-for="user in selectedMembers"
               :key="user.id + '-selected'"
-              class="flex items-center gap-2 rounded-[calc(var(--radius)*1)] bg-[var(--surface-tertiary)] px-2 py-1"
+              class="flex items-center gap-2 rounded-[calc(var(--rp-radius)*1)] bg-[var(--rp-surface-tertiary)] px-2 py-1"
             >
               <Avatar class="size-4" size="sm">
                 <AvatarImage :src="user.avatarUrl" />

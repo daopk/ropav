@@ -28,7 +28,7 @@ import {
 <style scoped>
 .panel {
   width: 100%;
-  max-width: var(--container-md);
+  max-width: var(--rp-container-md);
 }
 
 .trigger {
@@ -37,15 +37,15 @@ import {
 }
 
 .indicator {
-  color: var(--muted);
+  color: var(--rp-muted);
 }
 
 /* `DisclosureBody` puts the class on the element inside its root, which a scoped rule cannot
    reach on its own - the panel is the nearest thing wearing the scope. */
 .panel :deep(.body) {
-  color: var(--muted);
-  padding: calc(var(--spacing) * 3);
-  font-size: var(--text-sm);
-  line-height: var(--text-sm--line-height);
+  color: var(--rp-muted);
+  padding: calc(var(--rp-spacing) * 3);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-text-sm--line-height);
 }
 </style>

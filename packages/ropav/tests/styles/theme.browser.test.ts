@@ -45,35 +45,35 @@ describe("theme layer (browser)", () => {
   it("leaves the document on the default theme when other themes are loaded", () => {
     // Importing a theme must not apply it. Every bundled theme is scoped to its own
     // `data-theme`, so loading them all changes nothing until one is asked for.
-    expect(token(root(), "--accent")).toBe("oklch(0.62 0.2 260)");
+    expect(token(root(), "--rp-accent")).toBe("oklch(0.62 0.2 260)");
   });
 
   it("swaps the palette for the subtree carrying data-theme", () => {
     const { host } = mount({ "data-theme": "netflix" });
 
-    expect(token(host, "--accent")).not.toBe(token(root(), "--accent"));
-    expect(token(host, "--radius")).toBe("0.125rem");
+    expect(token(host, "--rp-accent")).not.toBe(token(root(), "--rp-accent"));
+    expect(token(host, "--rp-radius")).toBe("0.125rem");
   });
 
   it("re-derives color-mix tokens against the theme, not the document", () => {
     // The reason each generated theme carries its full derived block instead of leaning on
     // the default theme's. A custom property substitutes `var()` where it is *declared*, so
-    // `--accent-hover` declared once on `:root` would freeze against the root's `--accent`
+    // `--rp-accent-hover` declared once on `:root` would freeze against the root's `--rp-accent`
     // and a themed subtree would inherit the wrong hover colour.
     const { child, host } = mount({ "data-theme": "netflix" });
 
-    expect(token(host, "--accent-hover")).toContain(token(host, "--accent"));
-    expect(token(host, "--accent-hover")).not.toBe(token(root(), "--accent-hover"));
+    expect(token(host, "--rp-accent-hover")).toContain(token(host, "--rp-accent"));
+    expect(token(host, "--rp-accent-hover")).not.toBe(token(root(), "--rp-accent-hover"));
 
     // And the resolved value, not the formula, is what inherits.
-    expect(token(child, "--accent-hover")).toBe(token(host, "--accent-hover"));
+    expect(token(child, "--rp-accent-hover")).toBe(token(host, "--rp-accent-hover"));
   });
 
   it("keeps the light/dark axis orthogonal to the theme", () => {
     const light = mount({ "data-theme": "netflix" });
     const dark = mount({ class: "dark", "data-theme": "netflix" });
 
-    expect(token(dark.host, "--background")).not.toBe(token(light.host, "--background"));
+    expect(token(dark.host, "--rp-background")).not.toBe(token(light.host, "--rp-background"));
     expect(getComputedStyle(dark.host).colorScheme).toBe("dark");
     expect(getComputedStyle(light.host).colorScheme).toBe("light");
   });
@@ -87,7 +87,7 @@ describe("theme layer (browser)", () => {
     themed.setAttribute("data-theme", "uber");
     host.appendChild(themed);
 
-    expect(token(themed, "--accent")).toBe("oklch(0.9848 0 0)");
+    expect(token(themed, "--rp-accent")).toBe("oklch(0.9848 0 0)");
   });
 
   it("inherits structural tokens from the default theme", () => {
@@ -96,9 +96,9 @@ describe("theme layer (browser)", () => {
     // `.dark`, both of which keep matching an element that carries a `data-theme`.
     const { host } = mount({ "data-theme": "netflix" });
 
-    expect(token(host, "--spacing")).toBe(token(root(), "--spacing"));
-    expect(token(host, "--backdrop")).toBe(token(root(), "--backdrop"));
-    expect(token(host, "--cursor-interactive")).toBe(token(root(), "--cursor-interactive"));
+    expect(token(host, "--rp-spacing")).toBe(token(root(), "--rp-spacing"));
+    expect(token(host, "--rp-backdrop")).toBe(token(root(), "--rp-backdrop"));
+    expect(token(host, "--rp-cursor-interactive")).toBe(token(root(), "--rp-cursor-interactive"));
   });
 
   it("keeps the theme layer below the component layer", () => {

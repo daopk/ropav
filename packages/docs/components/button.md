@@ -103,7 +103,7 @@ of any kind.
 <!-- `w-full` is a class of yours; the layer order is what makes it land -->
 <Button class="w-full" variant="secondary">Save</Button>
 
-<Button style="--button-bg-hover: var(--success)">Publish</Button>
+<Button style="--button-bg-hover: var(--rp-success)">Publish</Button>
 ```
 
 ## Accessibility

@@ -3,23 +3,23 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--spacing);
+  gap: var(--rp-spacing);
   -webkit-tap-highlight-color: transparent;
 
   /* Cursor */
-  cursor: var(--cursor-interactive);
+  cursor: var(--rp-cursor-interactive);
 
   /* Default tokens for switch control states */
-  --switch-control-bg: var(--default);
+  --switch-control-bg: var(--rp-default);
   --switch-control-bg-hover: color-mix(in oklab, var(--switch-control-bg), transparent 20%);
   --switch-control-bg-pressed: var(--switch-control-bg-hover);
-  --switch-control-bg-checked: var(--accent);
-  --switch-control-bg-checked-hover: var(--accent-hover);
+  --switch-control-bg-checked: var(--rp-accent);
+  --switch-control-bg-checked-hover: var(--rp-accent-hover);
 
   /* Disabled state */
   &[data-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -28,8 +28,8 @@
 
     [data-slot="description"],
     [data-slot="field-error"] {
-      opacity: var(--disabled-opacity);
-      cursor: var(--cursor-disabled);
+      opacity: var(--rp-disabled-opacity);
+      cursor: var(--rp-cursor-disabled);
       pointer-events: none;
       @media (forced-colors: active) {
         color: GrayText;
@@ -57,9 +57,9 @@
     width: 100%;
     min-width: 0px;
     padding-inline-start: calc(2.5rem + 0.75rem);
-    font-size: var(--text-xs);
-    line-height: var(--rp-leading, var(--text-xs--line-height));
-    color: var(--muted);
+    font-size: var(--rp-text-xs);
+    line-height: var(--rp-leading, var(--rp-text-xs--line-height));
+    color: var(--rp-muted);
   }
 
   &.rp-switch--sm > [data-slot="description"] {
@@ -113,15 +113,15 @@
   align-items: center;
   overflow: hidden;
 
-  border-radius: min(32px, var(--component-radius));
+  border-radius: min(32px, var(--rp-component-radius));
   height: 1.25rem; /* 20px on desktop (14px base), 20px on mobile (16px base) - scales with font-size */
   width: 2.5rem; /* 35px on desktop, 40px on mobile - scales with font-size */
 
   background-color: var(--switch-control-bg);
 
   transition:
-    var(--rp-motion) background-color 250ms var(--ease-smooth),
-    box-shadow 150ms var(--ease-out);
+    var(--rp-motion) background-color 250ms var(--rp-ease-smooth),
+    box-shadow 150ms var(--rp-ease-out);
 
   /* Forced Colors Mode paints the track and the thumb the same `Canvas`, so the thumb vanishes
    * inside the track and the switch stops showing its state - the position it moved to is not
@@ -141,8 +141,8 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
-    --rp-ring-offset-color: var(--background);
+    --rp-ring-color: var(--rp-focus);
+    --rp-ring-offset-color: var(--rp-background);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: var(--rp-focus-ring-offset);
@@ -202,11 +202,11 @@
   display: inline-flex;
   cursor: inherit;
   align-items: center;
-  gap: calc(var(--spacing) * 3);
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
-  font-weight: var(--font-weight-medium);
-  color: var(--foreground);
+  gap: calc(var(--rp-spacing) * 3);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+  font-weight: var(--rp-font-weight-medium);
+  color: var(--rp-foreground);
   --rp-outline-style: none;
   outline-style: none;
   -webkit-user-select: none;
@@ -232,18 +232,18 @@
 /* Switch thumb */
 .rp-switch__thumb {
   /* Default size (medium) with margin-based positioning */
-  margin-inline-start: calc(var(--spacing) * 0.5);
+  margin-inline-start: calc(var(--rp-spacing) * 0.5);
   display: flex;
   transform-origin: center;
-  color: var(--color-black);
-  --rp-shadow: var(--field-shadow);
+  color: var(--rp-color-black);
+  --rp-shadow: var(--rp-field-shadow);
   box-shadow: var(--rp-ring), var(--rp-shadow);
 
-  border-radius: min(32px, var(--component-radius));
+  border-radius: min(32px, var(--rp-component-radius));
 
-  --switch-thumb-bg: var(--white);
-  --switch-thumb-bg-selected: var(--accent-foreground);
-  --switch-thumb-bg-disabled: color-mix(in oklab, var(--default-foreground) 20%, transparent);
+  --switch-thumb-bg: var(--rp-white);
+  --switch-thumb-bg-selected: var(--rp-accent-foreground);
+  --switch-thumb-bg-disabled: color-mix(in oklab, var(--rp-default-foreground) 20%, transparent);
 
   background-color: var(--switch-thumb-bg);
   height: 1rem; /* ~14px on desktop, ~16px on mobile */
@@ -257,14 +257,14 @@
   }
 
   transition:
-    var(--rp-motion) margin 300ms var(--ease-out-fluid),
-    background-color 200ms var(--ease-out);
+    var(--rp-motion) margin 300ms var(--rp-ease-out-fluid),
+    background-color 200ms var(--rp-ease-out);
 
   /* Selected/checked state - use margin instead of translate */
   .rp-switch[aria-checked="true"] &,
   .rp-switch[data-selected="true"] & {
     margin-inline-start: calc(100% - 1.5rem);
-    color: var(--accent);
+    color: var(--rp-accent);
 
     background-color: var(--switch-thumb-bg-selected);
     box-shadow:
@@ -317,10 +317,10 @@
 
 /* Switch label */
 .rp-switch__label {
-  font-size: var(--text-base);
-  line-height: var(--rp-leading, var(--text-base--line-height));
-  font-weight: var(--font-weight-medium);
-  color: var(--foreground);
+  font-size: var(--rp-text-base);
+  line-height: var(--rp-leading, var(--rp-text-base--line-height));
+  font-weight: var(--rp-font-weight-medium);
+  color: var(--rp-foreground);
 }
 
 .rp-switch [data-slot="label"] {
@@ -329,7 +329,7 @@
 }
 
 .rp-switch__content [data-slot="label"] {
-  cursor: var(--cursor-interactive);
+  cursor: var(--rp-cursor-interactive);
 }
 
 .rp-switch [data-slot="description"] {

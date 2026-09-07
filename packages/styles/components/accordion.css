@@ -8,15 +8,15 @@
 
 /* Accordion elements */
 .rp-accordion__body {
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
 }
 
 .rp-accordion__body-inner {
-  padding-inline: calc(var(--spacing) * 4);
+  padding-inline: calc(var(--rp-spacing) * 4);
   padding-top: 0px;
-  padding-bottom: calc(var(--spacing) * 4);
-  color: var(--muted);
+  padding-bottom: calc(var(--rp-spacing) * 4);
+  color: var(--rp-muted);
 }
 
 .rp-accordion__heading {
@@ -25,10 +25,10 @@
 
 .rp-accordion__indicator {
   margin-inline-start: auto;
-  width: calc(var(--spacing) * 4);
-  height: calc(var(--spacing) * 4);
+  width: calc(var(--rp-spacing) * 4);
+  height: calc(var(--rp-spacing) * 4);
   flex-shrink: 0;
-  color: var(--muted);
+  color: var(--rp-muted);
 
   /**
    * Transitions
@@ -57,8 +57,8 @@
     content-visibility,
     overlay,
     pointer-events;
-  transition-timing-function: var(--rp-ease, var(--default-transition-timing-function));
-  transition-duration: var(--rp-motion) var(--rp-duration, var(--default-transition-duration));
+  transition-timing-function: var(--rp-ease, var(--rp-default-transition-timing-function));
+  transition-duration: var(--rp-motion) var(--rp-duration, var(--rp-default-transition-duration));
   --rp-duration: 250ms;
   transition-duration: var(--rp-motion) 250ms;
 
@@ -78,12 +78,12 @@
 .rp-accordion__item::after {
   content: "";
   position: absolute;
-  inset-inline-start: calc(var(--spacing) * 0);
+  inset-inline-start: calc(var(--rp-spacing) * 0);
   bottom: 0px;
   height: 1px;
   width: 100%;
-  border-radius: calc(var(--radius) * 0.25);
-  background-color: var(--separator);
+  border-radius: calc(var(--rp-radius) * 0.25);
+  background-color: var(--rp-separator);
 }
 
 .rp-accordion__item:last-child::after {
@@ -97,30 +97,30 @@
 /* ------------------------------------ */
 
 .rp-accordion__trigger {
-  cursor: var(--cursor-interactive);
+  cursor: var(--rp-cursor-interactive);
 
   /* Base Styles */
   display: flex;
   flex: 1;
   align-items: center;
   justify-content: space-between;
-  padding-inline: calc(var(--spacing) * 4);
-  padding-block: calc(var(--spacing) * 4);
+  padding-inline: calc(var(--rp-spacing) * 4);
+  padding-block: calc(var(--rp-spacing) * 4);
   text-align: start;
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
-  font-weight: var(--font-weight-medium);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+  font-weight: var(--rp-font-weight-medium);
   -webkit-tap-highlight-color: transparent;
 
   transition:
-    var(--rp-motion) opacity 150ms var(--ease-out),
-    box-shadow 150ms var(--ease-out);
+    var(--rp-motion) opacity 150ms var(--rp-ease-out),
+    box-shadow 150ms var(--rp-ease-out);
 
   /* Hover state */
   @media (hover: hover) {
     &:hover:not([aria-expanded="true"]),
     &[data-hovered="true"]:not([aria-expanded="true"]) {
-      background-color: color-mix(in oklab, var(--foreground) 3%, transparent 90%);
+      background-color: color-mix(in oklab, var(--rp-foreground) 3%, transparent 90%);
     }
   }
 
@@ -136,8 +136,8 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
-    --rp-ring-offset-color: var(--background);
+    --rp-ring-color: var(--rp-focus);
+    --rp-ring-offset-color: var(--rp-background);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: var(--rp-focus-ring-offset);
@@ -150,8 +150,8 @@
   /* Disabled State */
   &:disabled,
   &[aria-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -166,8 +166,8 @@
   overflow: clip;
 
   transition:
-    var(--rp-motion) height 200ms var(--ease-out-quad),
-    opacity 200ms var(--ease-out);
+    var(--rp-motion) height 200ms var(--rp-ease-out-quad),
+    opacity 200ms var(--rp-ease-out);
 
   &[data-expanded="true"] {
     will-change: height, opacity;
@@ -177,8 +177,8 @@
 
 /* Surface variant */
 .rp-accordion--surface {
-  background-color: var(--surface);
-  border-radius: min(32px, var(--component-radius));
+  background-color: var(--rp-surface);
+  border-radius: min(32px, var(--rp-component-radius));
 
   /* Forced Colors Mode flattens the fill onto the page and strips the shadow, so the container
    * stops having any shape and its contents sit loose on the page. */
@@ -191,15 +191,15 @@
     @media (hover: hover) {
       &:hover:not([aria-expanded="true"]),
       &[data-hovered="true"]:not([aria-expanded="true"]) {
-        background-color: var(--state-layer);
+        background-color: var(--rp-state-layer);
       }
     }
   }
 
   .rp-accordion__item::after {
-    background-color: var(--surface-foreground);
+    background-color: var(--rp-surface-foreground);
     @supports (color: color-mix(in lab, red, red)) {
-      background-color: color-mix(in oklab, var(--surface-foreground) 6%, transparent);
+      background-color: color-mix(in oklab, var(--rp-surface-foreground) 6%, transparent);
     }
   }
 }
@@ -213,13 +213,13 @@
 
   /* Special rounding for first and last items in surface variant */
   &:first-child [data-slot="accordion-trigger"] {
-    border-start-start-radius: min(32px, var(--component-radius));
-    border-start-end-radius: min(32px, var(--component-radius));
+    border-start-start-radius: min(32px, var(--rp-component-radius));
+    border-start-end-radius: min(32px, var(--rp-component-radius));
   }
 
   &:last-child:not(:has([data-slot="accordion-trigger"][aria-expanded="true"]))
     [data-slot="accordion-trigger"] {
-    border-end-start-radius: min(32px, var(--component-radius));
-    border-end-end-radius: min(32px, var(--component-radius));
+    border-end-start-radius: min(32px, var(--rp-component-radius));
+    border-end-end-radius: min(32px, var(--rp-component-radius));
   }
 }

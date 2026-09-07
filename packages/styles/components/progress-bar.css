@@ -6,34 +6,34 @@
 .rp-progress-bar {
   display: grid;
   width: 100%;
-  gap: var(--spacing);
+  gap: var(--rp-spacing);
   grid-template-areas:
     "label output"
     "track track";
   grid-template-columns: 1fr auto;
 
   /* Default color token (accent) */
-  --progress-bar-fill: var(--accent);
+  --progress-bar-fill: var(--rp-accent);
 
   /* Derived from the fill rather than declared per colour: mixing toward the track's own colour
    * lands lighter in the light theme and darker in the dark one, so the band separates whichever
    * side of the fill it falls on. */
-  --progress-bar-stripe: color-mix(in oklab, var(--progress-bar-fill) 80%, var(--default));
+  --progress-bar-stripe: color-mix(in oklab, var(--progress-bar-fill) 80%, var(--rp-default));
   --progress-bar-stripe-size: 1rem;
 
   [data-slot="label"] {
     width: fit-content;
-    font-size: var(--text-sm);
-    line-height: var(--rp-leading, var(--text-sm--line-height));
-    font-weight: var(--font-weight-medium);
+    font-size: var(--rp-text-sm);
+    line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+    font-weight: var(--rp-font-weight-medium);
 
     grid-area: label;
   }
 
   .rp-progress-bar__output {
-    font-size: var(--text-sm);
-    line-height: var(--rp-leading, var(--text-sm--line-height));
-    font-weight: var(--font-weight-medium);
+    font-size: var(--rp-text-sm);
+    line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+    font-weight: var(--rp-font-weight-medium);
     --rp-numeric-spacing: tabular-nums;
     font-variant-numeric: var(--rp-ordinal,) var(--rp-slashed-zero,) var(--rp-numeric-figure,)
       var(--rp-numeric-spacing,) var(--rp-numeric-fraction,);
@@ -44,14 +44,14 @@
   .rp-progress-bar__track {
     position: relative;
     overflow: hidden;
-    background-color: var(--default);
+    background-color: var(--rp-default);
 
-    border-radius: min(32px, var(--component-radius));
+    border-radius: min(32px, var(--rp-component-radius));
 
     grid-area: track;
 
     /* Default height (matches --md) */
-    height: calc(var(--spacing) * 2);
+    height: calc(var(--rp-spacing) * 2);
 
     /* Track and fill are both plain backgrounds, so forced colors flattens the pair onto the
      * page and the whole bar stops rendering. */
@@ -64,11 +64,11 @@
 
   .rp-progress-bar__fill {
     position: absolute;
-    inset-inline-start: calc(var(--spacing) * 0);
+    inset-inline-start: calc(var(--rp-spacing) * 0);
     top: 0px;
     height: 100%;
 
-    border-radius: min(32px, var(--component-radius));
+    border-radius: min(32px, var(--rp-component-radius));
 
     background-color: var(--progress-bar-fill);
 
@@ -76,7 +76,7 @@
       background-color: Highlight;
     }
 
-    transition: var(--rp-motion) width 300ms var(--ease-out);
+    transition: var(--rp-motion) width 300ms var(--rp-ease-out);
   }
 
   /* Indeterminate state - when no aria-valuenow is set */
@@ -93,8 +93,8 @@
   &:disabled,
   &[data-disabled="true"],
   &[aria-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -130,7 +130,7 @@
   --progress-bar-stripe-size: 0.5rem;
 
   .rp-progress-bar__track {
-    height: var(--spacing);
+    height: var(--rp-spacing);
   }
 }
 
@@ -142,7 +142,7 @@
   --progress-bar-stripe-size: 1.25rem;
 
   .rp-progress-bar__track {
-    height: calc(var(--spacing) * 3);
+    height: calc(var(--rp-spacing) * 3);
   }
 }
 
@@ -151,23 +151,23 @@
    ========================================================================== */
 
 .rp-progress-bar--default {
-  --progress-bar-fill: var(--default-foreground);
+  --progress-bar-fill: var(--rp-default-foreground);
 }
 
 .rp-progress-bar--accent {
-  --progress-bar-fill: var(--accent);
+  --progress-bar-fill: var(--rp-accent);
 }
 
 .rp-progress-bar--success {
-  --progress-bar-fill: var(--success);
+  --progress-bar-fill: var(--rp-success);
 }
 
 .rp-progress-bar--warning {
-  --progress-bar-fill: var(--warning);
+  --progress-bar-fill: var(--rp-warning);
 }
 
 .rp-progress-bar--danger {
-  --progress-bar-fill: var(--danger);
+  --progress-bar-fill: var(--rp-danger);
 }
 
 /* ==========================================================================

@@ -29,8 +29,8 @@ background — a tag, a calendar day, a table row — restate the state in syste
 
 ```css
 .thing[data-selected="true"] {
-  background-color: var(--accent);
-  color: var(--accent-foreground);
+  background-color: var(--rp-accent);
+  color: var(--rp-accent-foreground);
 
   @media (forced-colors: active) {
     forced-color-adjust: none;

@@ -68,6 +68,6 @@ import {
 .field {
   display: flex;
   flex-direction: column;
-  width: calc(var(--spacing) * 72);
+  width: calc(var(--rp-spacing) * 72);
 }
 </style>

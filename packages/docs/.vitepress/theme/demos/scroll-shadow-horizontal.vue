@@ -25,32 +25,32 @@ const talks = [
 <style scoped>
 .frame {
   width: 100%;
-  max-width: var(--container-md);
+  max-width: var(--rp-container-md);
   padding: 0;
 }
 
 .scroller {
-  padding: calc(var(--spacing) * 4);
+  padding: calc(var(--rp-spacing) * 4);
 }
 
 .track {
   display: flex;
   width: max-content;
-  gap: calc(var(--spacing) * 4);
+  gap: calc(var(--rp-spacing) * 4);
 }
 
 .tile {
-  min-width: calc(var(--spacing) * 44);
-  padding: calc(var(--spacing) * 4);
+  min-width: calc(var(--rp-spacing) * 44);
+  padding: calc(var(--rp-spacing) * 4);
 }
 
 .tile .tile__title {
-  font-size: var(--text-sm);
-  line-height: var(--text-sm--line-height);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-text-sm--line-height);
 }
 
 .tile .tile__note {
-  font-size: var(--text-xs);
-  line-height: var(--text-xs--line-height);
+  font-size: var(--rp-text-xs);
+  line-height: var(--rp-text-xs--line-height);
 }
 </style>

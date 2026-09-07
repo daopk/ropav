@@ -554,7 +554,7 @@ describe("Popover (browser)", () => {
       const popover = await open(result);
 
       // `color-contrast` is scoped out, not silenced: the button inside the popover is a primary
-      // one, pairing `--accent` with `--accent-foreground` under the 4.5:1 WCAG AA floor. Both
+      // one, pairing `--rp-accent` with `--rp-accent-foreground` under the 4.5:1 WCAG AA floor. Both
       // come from `@ropav/styles`, so the finding belongs to the palette — it is not something
       // the popover decides.
       await expectNoA11yViolations(popover, PALETTE_CONTRAST_DEBT);

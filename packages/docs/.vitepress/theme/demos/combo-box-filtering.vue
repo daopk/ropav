@@ -42,6 +42,6 @@ const byName = (city: { name: string }) => city.name;
 
 <style scoped>
 .field {
-  width: calc(var(--spacing) * 64);
+  width: calc(var(--rp-spacing) * 64);
 }
 </style>

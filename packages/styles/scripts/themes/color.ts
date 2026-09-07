@@ -355,12 +355,12 @@ function generateSemanticColor(
 
   return {
     color: {
-      name: `--${name}`,
+      name: `--rp-${name}`,
       oklchDark: colorDark,
       oklchLight: colorLight,
     },
     foreground: {
-      name: `--${name}-foreground`,
+      name: `--rp-${name}-foreground`,
       oklchDark: fgDarkTheme,
       oklchLight: fgLightTheme,
     },
@@ -392,19 +392,19 @@ export function generateThemeColors(params: ColorGenerationParams): GeneratedThe
   const defaultsLight = DEFAULT_THEME_VALUES.light;
   const defaultsDark = DEFAULT_THEME_VALUES.dark;
 
-  // --accent: Apply all three parameters (lightness, chroma, hue)
+  // --rp-accent: Apply all three parameters (lightness, chroma, hue)
   const accentLight = formatOklch({ c: chroma, h: hue, l: lightness });
   const accentDark = formatOklch({ c: chroma, h: hue, l: lightness }); // Same for both modes typically
 
   const accent: ThemeColor = {
-    name: "--accent",
+    name: "--rp-accent",
     oklchDark: accentDark,
     oklchLight: accentLight,
   };
 
-  // --accent-foreground: Use override if provided, otherwise calculate based on accent lightness
+  // --rp-accent-foreground: Use override if provided, otherwise calculate based on accent lightness
   const accentForeground: ThemeColor = {
-    name: "--accent-foreground",
+    name: "--rp-accent-foreground",
     oklchDark:
       semanticOverrides?.dark?.accentForeground ??
       calculateAccentForeground(lightness, chroma, hue),
@@ -413,65 +413,65 @@ export function generateThemeColors(params: ColorGenerationParams): GeneratedThe
       calculateAccentForeground(lightness, chroma, hue),
   };
 
-  // --focus: Same as accent
+  // --rp-focus: Same as accent
   const focus: ThemeColor = {
-    name: "--focus",
+    name: "--rp-focus",
     oklchDark: accentDark,
     oklchLight: accentLight,
   };
 
-  // --background: Apply hue and gray chroma adjustments
+  // --rp-background: Apply hue and gray chroma adjustments
   const background: ThemeColor = {
-    name: "--background",
+    name: "--rp-background",
     oklchDark: formatOklch(adjustChroma(adjustHue(defaultsDark.background, hue), grayChroma)),
     oklchLight: formatOklch(adjustChroma(adjustHue(defaultsLight.background, hue), grayChroma)),
   };
 
-  // --foreground: Apply hue and chroma adjustments
+  // --rp-foreground: Apply hue and chroma adjustments
   const foreground: ThemeColor = {
-    name: "--foreground",
+    name: "--rp-foreground",
     oklchDark: formatOklch(adjustChroma(adjustHue(defaultsDark.foreground, hue), grayChroma)),
     oklchLight: formatOklch(adjustChroma(adjustHue(defaultsLight.foreground, hue), grayChroma)),
   };
 
-  // --muted: Apply hue and gray chroma adjustments
+  // --rp-muted: Apply hue and gray chroma adjustments
   const muted: ThemeColor = {
-    name: "--muted",
+    name: "--rp-muted",
     oklchDark: formatOklch(adjustChroma(adjustHue(defaultsDark.muted, hue), grayChroma * 2)),
     oklchLight: formatOklch(adjustChroma(adjustHue(defaultsLight.muted, hue), grayChroma * 2)),
   };
 
-  // --default: Apply hue and gray chroma adjustments
+  // --rp-default: Apply hue and gray chroma adjustments
   const defaultColor: ThemeColor = {
-    name: "--default",
+    name: "--rp-default",
     oklchDark: formatOklch(adjustChroma(adjustHue(defaultsDark.default, hue), grayChroma)),
     oklchLight: formatOklch(adjustChroma(adjustHue(defaultsLight.default, hue), grayChroma)),
   };
 
-  // --default-foreground: Eclipse with adjusted hue / Snow
+  // --rp-default-foreground: Eclipse with adjusted hue / Snow
   const defaultForeground: ThemeColor = {
-    name: "--default-foreground",
+    name: "--rp-default-foreground",
     oklchDark: "oklch(99.11% 0 0)",
     oklchLight: formatOklch({ c: 0.0059, h: hue, l: 0.2103 }), // Snow
   };
 
-  // --surface: Apply subtle hue and chroma
+  // --rp-surface: Apply subtle hue and chroma
   const surface: ThemeColor = {
-    name: "--surface",
+    name: "--rp-surface",
     oklchDark: formatOklch(adjustChroma(adjustHue(defaultsDark.surface, hue), grayChroma * 2)),
     oklchLight: formatOklch(adjustChroma(adjustHue(defaultsLight.surface, hue), grayChroma * 0.5)),
   };
 
-  // --surface-foreground: Same as foreground
+  // --rp-surface-foreground: Same as foreground
   const surfaceForeground: ThemeColor = {
-    name: "--surface-foreground",
+    name: "--rp-surface-foreground",
     oklchDark: foreground.oklchDark,
     oklchLight: foreground.oklchLight,
   };
 
-  // --surface-secondary: Apply hue and chroma adjustments
+  // --rp-surface-secondary: Apply hue and chroma adjustments
   const surfaceSecondary: ThemeColor = {
-    name: "--surface-secondary",
+    name: "--rp-surface-secondary",
     oklchDark: formatOklch(
       adjustChroma(adjustHue(defaultsDark.surfaceSecondary, hue), grayChroma * 1.5),
     ),
@@ -480,16 +480,16 @@ export function generateThemeColors(params: ColorGenerationParams): GeneratedThe
     ),
   };
 
-  // --surface-secondary-foreground: Uses foreground value
+  // --rp-surface-secondary-foreground: Uses foreground value
   const surfaceSecondaryForeground: ThemeColor = {
-    name: "--surface-secondary-foreground",
+    name: "--rp-surface-secondary-foreground",
     oklchDark: foreground.oklchDark,
     oklchLight: foreground.oklchLight,
   };
 
-  // --surface-tertiary: Apply hue and chroma adjustments
+  // --rp-surface-tertiary: Apply hue and chroma adjustments
   const surfaceTertiary: ThemeColor = {
-    name: "--surface-tertiary",
+    name: "--rp-surface-tertiary",
     oklchDark: formatOklch(
       adjustChroma(adjustHue(defaultsDark.surfaceTertiary, hue), grayChroma * 1.5),
     ),
@@ -498,79 +498,79 @@ export function generateThemeColors(params: ColorGenerationParams): GeneratedThe
     ),
   };
 
-  // --surface-tertiary-foreground: Uses foreground value
+  // --rp-surface-tertiary-foreground: Uses foreground value
   const surfaceTertiaryForeground: ThemeColor = {
-    name: "--surface-tertiary-foreground",
+    name: "--rp-surface-tertiary-foreground",
     oklchDark: foreground.oklchDark,
     oklchLight: foreground.oklchLight,
   };
 
-  // --overlay: Apply subtle hue and chroma
+  // --rp-overlay: Apply subtle hue and chroma
   const overlay: ThemeColor = {
-    name: "--overlay",
+    name: "--rp-overlay",
     oklchDark: formatOklch(adjustChroma(adjustHue(defaultsDark.overlay, hue), grayChroma * 2)),
     oklchLight: formatOklch(adjustChroma(adjustHue(defaultsLight.overlay, hue), grayChroma * 0.3)),
   };
 
-  // --overlay-foreground: Same as foreground
+  // --rp-overlay-foreground: Same as foreground
   const overlayForeground: ThemeColor = {
-    name: "--overlay-foreground",
+    name: "--rp-overlay-foreground",
     oklchDark: foreground.oklchDark,
     oklchLight: foreground.oklchLight,
   };
 
-  // --scrollbar: Apply hue and gray chroma
+  // --rp-scrollbar: Apply hue and gray chroma
   const scrollbar: ThemeColor = {
-    name: "--scrollbar",
+    name: "--rp-scrollbar",
     oklchDark: formatOklch(adjustChroma(adjustHue(defaultsDark.scrollbar, hue), grayChroma)),
     oklchLight: formatOklch(adjustChroma(adjustHue(defaultsLight.scrollbar, hue), grayChroma)),
   };
 
-  // --segment: Apply hue and gray chroma
+  // --rp-segment: Apply hue and gray chroma
   const segment: ThemeColor = {
-    name: "--segment",
+    name: "--rp-segment",
     oklchDark: formatOklch(adjustChroma(adjustHue(defaultsDark.segment, hue), grayChroma)),
     oklchLight: formatOklch(adjustChroma(adjustHue(defaultsLight.segment, hue), grayChroma)),
   };
 
-  // --segment-foreground: Same as foreground
+  // --rp-segment-foreground: Same as foreground
   const segmentForeground: ThemeColor = {
-    name: "--segment-foreground",
+    name: "--rp-segment-foreground",
     oklchDark: foreground.oklchDark,
     oklchLight: foreground.oklchLight,
   };
 
-  // --border: Apply hue and gray chroma
+  // --rp-border: Apply hue and gray chroma
   const border: ThemeColor = {
-    name: "--border",
+    name: "--rp-border",
     oklchDark: formatOklch(adjustChroma(adjustHue(defaultsDark.border, hue), grayChroma)),
     oklchLight: formatOklch(adjustChroma(adjustHue(defaultsLight.border, hue), grayChroma)),
   };
 
-  // --separator: Apply hue and gray chroma
+  // --rp-separator: Apply hue and gray chroma
   const separator: ThemeColor = {
-    name: "--separator",
+    name: "--rp-separator",
     oklchDark: formatOklch(adjustChroma(adjustHue(defaultsDark.separator, hue), grayChroma)),
     oklchLight: formatOklch(adjustChroma(adjustHue(defaultsLight.separator, hue), grayChroma)),
   };
 
-  // --field-background: Same as surface (white in light, dark surface in dark)
+  // --rp-field-background: Same as surface (white in light, dark surface in dark)
   const fieldBackground: ThemeColor = {
-    name: "--field-background",
+    name: "--rp-field-background",
     oklchDark: surface.oklchDark,
     oklchLight: surface.oklchLight,
   };
 
-  // --field-foreground: Same as foreground
+  // --rp-field-foreground: Same as foreground
   const fieldForeground: ThemeColor = {
-    name: "--field-foreground",
+    name: "--rp-field-foreground",
     oklchDark: foreground.oklchDark,
     oklchLight: foreground.oklchLight,
   };
 
-  // --field-placeholder: Same as muted
+  // --rp-field-placeholder: Same as muted
   const fieldPlaceholder: ThemeColor = {
-    name: "--field-placeholder",
+    name: "--rp-field-placeholder",
     oklchDark: muted.oklchDark,
     oklchLight: muted.oklchLight,
   };
@@ -590,12 +590,12 @@ export function generateThemeColors(params: ColorGenerationParams): GeneratedThe
 
     successColors = {
       color: {
-        name: "--success",
+        name: "--rp-success",
         oklchDark: darkSuccessOverride?.color ?? calculated.color.oklchDark,
         oklchLight: lightSuccessOverride?.color ?? calculated.color.oklchLight,
       },
       foreground: {
-        name: "--success-foreground",
+        name: "--rp-success-foreground",
         oklchDark:
           darkSuccessOverride?.foreground ??
           calculateForeground(darkSuccessOverride?.color ?? calculated.color.oklchDark),
@@ -617,12 +617,12 @@ export function generateThemeColors(params: ColorGenerationParams): GeneratedThe
 
     warningColors = {
       color: {
-        name: "--warning",
+        name: "--rp-warning",
         oklchDark: darkWarningOverride?.color ?? calculated.color.oklchDark,
         oklchLight: lightWarningOverride?.color ?? calculated.color.oklchLight,
       },
       foreground: {
-        name: "--warning-foreground",
+        name: "--rp-warning-foreground",
         oklchDark:
           darkWarningOverride?.foreground ??
           calculateForeground(darkWarningOverride?.color ?? calculated.color.oklchDark),
@@ -644,12 +644,12 @@ export function generateThemeColors(params: ColorGenerationParams): GeneratedThe
 
     dangerColors = {
       color: {
-        name: "--danger",
+        name: "--rp-danger",
         oklchDark: darkDangerOverride?.color ?? calculated.color.oklchDark,
         oklchLight: lightDangerOverride?.color ?? calculated.color.oklchLight,
       },
       foreground: {
-        name: "--danger-foreground",
+        name: "--rp-danger-foreground",
         oklchDark:
           darkDangerOverride?.foreground ??
           calculateForeground(darkDangerOverride?.color ?? calculated.color.oklchDark),
@@ -731,70 +731,80 @@ export function getDerivedColorFormulas(
   const [softPct, softHoverPct] = isLight ? ["15%", "20%"] : ["12%", "16%"];
   const statePct = isLight ? "9%" : "7%";
 
-  const vibrantSoftFg = "color-mix(in oklab, var(--VAR) 92%, var(--foreground) 8%)";
+  const vibrantSoftFg = "color-mix(in oklab, var(--VAR) 92%, var(--rp-foreground) 8%)";
   const sfFg = (colorVar: string, accessibleFormula: string) =>
     vibrant ? vibrantSoftFg.replace("--VAR", colorVar) : accessibleFormula;
 
   return {
-    "--accent-hover": "color-mix(in oklab, var(--accent) 90%, var(--accent-foreground) 10%)",
-    "--accent-soft": `color-mix(in oklab, var(--accent) ${softPct}, transparent)`,
-    "--accent-soft-foreground": sfFg(
+    "--rp-accent-hover":
+      "color-mix(in oklab, var(--rp-accent) 90%, var(--rp-accent-foreground) 10%)",
+    "--rp-accent-soft": `color-mix(in oklab, var(--rp-accent) ${softPct}, transparent)`,
+    "--rp-accent-soft-foreground": sfFg(
       "accent",
       isLight
-        ? "color-mix(in oklab, var(--accent) 70%, var(--foreground) 45%)"
-        : "color-mix(in oklab, var(--accent) 80%, var(--foreground) 30%)",
+        ? "color-mix(in oklab, var(--rp-accent) 70%, var(--rp-foreground) 45%)"
+        : "color-mix(in oklab, var(--rp-accent) 80%, var(--rp-foreground) 30%)",
     ),
-    "--accent-soft-hover": `color-mix(in oklab, var(--accent) ${softHoverPct}, transparent)`,
-    "--background-inverse": "var(--foreground)",
-    "--background-secondary": "color-mix(in oklab, var(--background) 96%, var(--foreground) 4%)",
-    "--background-tertiary": "color-mix(in oklab, var(--background) 92%, var(--foreground) 8%)",
-    "--border-secondary": "color-mix(in oklab, var(--surface) 78%, var(--surface-foreground) 22%)",
-    "--border-tertiary": "color-mix(in oklab, var(--surface) 66%, var(--surface-foreground) 34%)",
-    "--danger-hover": "color-mix(in oklab, var(--danger) 90%, var(--danger-foreground) 10%)",
-    "--danger-soft": "color-mix(in oklab, var(--danger) 15%, transparent)",
-    "--danger-soft-foreground": sfFg(
+    "--rp-accent-soft-hover": `color-mix(in oklab, var(--rp-accent) ${softHoverPct}, transparent)`,
+    "--rp-background-inverse": "var(--rp-foreground)",
+    "--rp-background-secondary":
+      "color-mix(in oklab, var(--rp-background) 96%, var(--rp-foreground) 4%)",
+    "--rp-background-tertiary":
+      "color-mix(in oklab, var(--rp-background) 92%, var(--rp-foreground) 8%)",
+    "--rp-border-secondary":
+      "color-mix(in oklab, var(--rp-surface) 78%, var(--rp-surface-foreground) 22%)",
+    "--rp-border-tertiary":
+      "color-mix(in oklab, var(--rp-surface) 66%, var(--rp-surface-foreground) 34%)",
+    "--rp-danger-hover":
+      "color-mix(in oklab, var(--rp-danger) 90%, var(--rp-danger-foreground) 10%)",
+    "--rp-danger-soft": "color-mix(in oklab, var(--rp-danger) 15%, transparent)",
+    "--rp-danger-soft-foreground": sfFg(
       "danger",
       isLight
-        ? "color-mix(in oklab, var(--danger) 70%, var(--foreground) 40%)"
-        : "color-mix(in oklab, var(--danger) 80%, var(--foreground) 30%)",
+        ? "color-mix(in oklab, var(--rp-danger) 70%, var(--rp-foreground) 40%)"
+        : "color-mix(in oklab, var(--rp-danger) 80%, var(--rp-foreground) 30%)",
     ),
-    "--danger-soft-hover": "color-mix(in oklab, var(--danger) 20%, transparent)",
-    "--default-hover": "color-mix(in oklab, var(--default) 96%, var(--default-foreground) 4%)",
-    "--default-soft": "color-mix(in oklab, var(--default) 50%, transparent)",
-    "--default-soft-foreground": "var(--default-foreground)",
-    "--default-soft-hover": "color-mix(in oklab, var(--default) 60%, transparent)",
-    "--field-border-focus":
-      "color-mix(in oklab, var(--field-border, var(--border)) 74%, var(--field-foreground, var(--foreground)) 22%)",
-    "--field-border-hover":
-      "color-mix(in oklab, var(--field-border, var(--border)) 88%, var(--field-foreground, var(--foreground)) 10%)",
-    "--field-border-invalid": "var(--danger)",
-    "--field-focus": "var(--field-background, var(--default))",
-    "--field-hover":
-      "color-mix(in oklab, var(--field-background, var(--default)) 90%, var(--field-foreground, var(--foreground)) 2%)",
-    "--separator-secondary":
-      "color-mix(in oklab, var(--surface) 85%, var(--surface-foreground) 15%)",
-    "--separator-tertiary":
-      "color-mix(in oklab, var(--surface) 81%, var(--surface-foreground) 19%)",
-    "--state-layer": `color-mix(in oklab, var(--surface-foreground) ${statePct}, transparent)`,
-    "--success-hover": "color-mix(in oklab, var(--success) 90%, var(--success-foreground) 10%)",
-    "--success-soft": `color-mix(in oklab, var(--success) ${softPct}, transparent)`,
-    "--success-soft-foreground": sfFg(
+    "--rp-danger-soft-hover": "color-mix(in oklab, var(--rp-danger) 20%, transparent)",
+    "--rp-default-hover":
+      "color-mix(in oklab, var(--rp-default) 96%, var(--rp-default-foreground) 4%)",
+    "--rp-default-soft": "color-mix(in oklab, var(--rp-default) 50%, transparent)",
+    "--rp-default-soft-foreground": "var(--rp-default-foreground)",
+    "--rp-default-soft-hover": "color-mix(in oklab, var(--rp-default) 60%, transparent)",
+    "--rp-field-border-focus":
+      "color-mix(in oklab, var(--rp-field-border, var(--rp-border)) 74%, var(--rp-field-foreground, var(--rp-foreground)) 22%)",
+    "--rp-field-border-hover":
+      "color-mix(in oklab, var(--rp-field-border, var(--rp-border)) 88%, var(--rp-field-foreground, var(--rp-foreground)) 10%)",
+    "--rp-field-border-invalid": "var(--rp-danger)",
+    "--rp-field-focus": "var(--rp-field-background, var(--rp-default))",
+    "--rp-field-hover":
+      "color-mix(in oklab, var(--rp-field-background, var(--rp-default)) 90%, var(--rp-field-foreground, var(--rp-foreground)) 2%)",
+    "--rp-separator-secondary":
+      "color-mix(in oklab, var(--rp-surface) 85%, var(--rp-surface-foreground) 15%)",
+    "--rp-separator-tertiary":
+      "color-mix(in oklab, var(--rp-surface) 81%, var(--rp-surface-foreground) 19%)",
+    "--rp-state-layer": `color-mix(in oklab, var(--rp-surface-foreground) ${statePct}, transparent)`,
+    "--rp-success-hover":
+      "color-mix(in oklab, var(--rp-success) 90%, var(--rp-success-foreground) 10%)",
+    "--rp-success-soft": `color-mix(in oklab, var(--rp-success) ${softPct}, transparent)`,
+    "--rp-success-soft-foreground": sfFg(
       "success",
       isLight
-        ? "color-mix(in oklab, var(--success) 80%, var(--foreground) 75%)"
-        : "color-mix(in oklab, var(--success) 80%, var(--foreground) 30%)",
+        ? "color-mix(in oklab, var(--rp-success) 80%, var(--rp-foreground) 75%)"
+        : "color-mix(in oklab, var(--rp-success) 80%, var(--rp-foreground) 30%)",
     ),
-    "--success-soft-hover": `color-mix(in oklab, var(--success) ${softHoverPct}, transparent)`,
-    "--surface-hover": "color-mix(in oklab, var(--surface) 92%, var(--surface-foreground) 8%)",
-    "--warning-hover": "color-mix(in oklab, var(--warning) 90%, var(--warning-foreground) 10%)",
-    "--warning-soft": `color-mix(in oklab, var(--warning) ${softPct}, transparent)`,
-    "--warning-soft-foreground": sfFg(
+    "--rp-success-soft-hover": `color-mix(in oklab, var(--rp-success) ${softHoverPct}, transparent)`,
+    "--rp-surface-hover":
+      "color-mix(in oklab, var(--rp-surface) 92%, var(--rp-surface-foreground) 8%)",
+    "--rp-warning-hover":
+      "color-mix(in oklab, var(--rp-warning) 90%, var(--rp-warning-foreground) 10%)",
+    "--rp-warning-soft": `color-mix(in oklab, var(--rp-warning) ${softPct}, transparent)`,
+    "--rp-warning-soft-foreground": sfFg(
       "warning",
       isLight
-        ? "color-mix(in oklab, var(--warning) 80%, var(--foreground) 70%)"
-        : "color-mix(in oklab, var(--warning) 80%, var(--foreground) 30%)",
+        ? "color-mix(in oklab, var(--rp-warning) 80%, var(--rp-foreground) 70%)"
+        : "color-mix(in oklab, var(--rp-warning) 80%, var(--rp-foreground) 30%)",
     ),
-    "--warning-soft-hover": `color-mix(in oklab, var(--warning) ${softHoverPct}, transparent)`,
+    "--rp-warning-soft-hover": `color-mix(in oklab, var(--rp-warning) ${softHoverPct}, transparent)`,
   };
 }
 
@@ -811,62 +821,62 @@ export function getColorVariablesForElement(
   const vars: Record<string, string> = {};
 
   // Core colors
-  vars["--background"] = getValue(colors.background);
-  vars["--foreground"] = getValue(colors.foreground);
+  vars["--rp-background"] = getValue(colors.background);
+  vars["--rp-foreground"] = getValue(colors.foreground);
 
   // Accent
-  vars["--accent"] = getValue(colors.accent);
-  vars["--accent-foreground"] = getValue(colors.accentForeground);
-  vars["--focus"] = getValue(colors.focus);
+  vars["--rp-accent"] = getValue(colors.accent);
+  vars["--rp-accent-foreground"] = getValue(colors.accentForeground);
+  vars["--rp-focus"] = getValue(colors.focus);
 
   // UI colors
-  vars["--muted"] = getValue(colors.muted);
+  vars["--rp-muted"] = getValue(colors.muted);
 
-  vars["--default"] = getValue(colors.default);
-  vars["--default-foreground"] = getValue(colors.defaultForeground);
+  vars["--rp-default"] = getValue(colors.default);
+  vars["--rp-default-foreground"] = getValue(colors.defaultForeground);
 
-  vars["--surface"] = getValue(colors.surface);
-  vars["--surface-foreground"] = getValue(colors.surfaceForeground);
+  vars["--rp-surface"] = getValue(colors.surface);
+  vars["--rp-surface-foreground"] = getValue(colors.surfaceForeground);
 
-  vars["--surface-secondary"] = getValue(colors.surfaceSecondary);
-  vars["--surface-secondary-foreground"] = getValue(colors.surfaceSecondaryForeground);
+  vars["--rp-surface-secondary"] = getValue(colors.surfaceSecondary);
+  vars["--rp-surface-secondary-foreground"] = getValue(colors.surfaceSecondaryForeground);
 
-  vars["--surface-tertiary"] = getValue(colors.surfaceTertiary);
-  vars["--surface-tertiary-foreground"] = getValue(colors.surfaceTertiaryForeground);
+  vars["--rp-surface-tertiary"] = getValue(colors.surfaceTertiary);
+  vars["--rp-surface-tertiary-foreground"] = getValue(colors.surfaceTertiaryForeground);
 
-  vars["--overlay"] = getValue(colors.overlay);
-  vars["--overlay-foreground"] = getValue(colors.overlayForeground);
+  vars["--rp-overlay"] = getValue(colors.overlay);
+  vars["--rp-overlay-foreground"] = getValue(colors.overlayForeground);
 
-  vars["--scrollbar"] = getValue(colors.scrollbar);
+  vars["--rp-scrollbar"] = getValue(colors.scrollbar);
 
-  vars["--segment"] = getValue(colors.segment);
-  vars["--segment-foreground"] = getValue(colors.segmentForeground);
+  vars["--rp-segment"] = getValue(colors.segment);
+  vars["--rp-segment-foreground"] = getValue(colors.segmentForeground);
 
-  /* An edge, as an alpha of the surface foreground - `--surface-hover`'s reasoning, applied to
+  /* An edge, as an alpha of the surface foreground - `--rp-surface-hover`'s reasoning, applied to
    * a line. A flat neutral is picked against one fill and then disappears against any other of
-   * its own lightness: in the dark half `--separator` sat 0.7% from `--surface-secondary`, so a
+   * its own lightness: in the dark half `--rp-separator` sat 0.7% from `--rp-surface-secondary`, so a
    * box drawn on the secondary fill had no edge left. */
-  vars["--border"] =
-    `color-mix(in oklab, var(--surface-foreground) ${isLight ? "14%" : "7%"}, transparent)`;
+  vars["--rp-border"] =
+    `color-mix(in oklab, var(--rp-surface-foreground) ${isLight ? "14%" : "7%"}, transparent)`;
 
-  vars["--separator"] =
-    `color-mix(in oklab, var(--surface-foreground) ${isLight ? "12%" : "4%"}, transparent)`;
+  vars["--rp-separator"] =
+    `color-mix(in oklab, var(--rp-surface-foreground) ${isLight ? "12%" : "4%"}, transparent)`;
 
   // Field colors
-  vars["--field-background"] = getValue(colors.fieldBackground);
-  vars["--field-border"] = "transparent";
-  vars["--field-foreground"] = getValue(colors.fieldForeground);
-  vars["--field-placeholder"] = getValue(colors.fieldPlaceholder);
+  vars["--rp-field-background"] = getValue(colors.fieldBackground);
+  vars["--rp-field-border"] = "transparent";
+  vars["--rp-field-foreground"] = getValue(colors.fieldForeground);
+  vars["--rp-field-placeholder"] = getValue(colors.fieldPlaceholder);
 
   // Semantic colors
-  vars["--success"] = getValue(colors.success);
-  vars["--success-foreground"] = getValue(colors.successForeground);
+  vars["--rp-success"] = getValue(colors.success);
+  vars["--rp-success-foreground"] = getValue(colors.successForeground);
 
-  vars["--warning"] = getValue(colors.warning);
-  vars["--warning-foreground"] = getValue(colors.warningForeground);
+  vars["--rp-warning"] = getValue(colors.warning);
+  vars["--rp-warning-foreground"] = getValue(colors.warningForeground);
 
-  vars["--danger"] = getValue(colors.danger);
-  vars["--danger-foreground"] = getValue(colors.dangerForeground);
+  vars["--rp-danger"] = getValue(colors.danger);
+  vars["--rp-danger-foreground"] = getValue(colors.dangerForeground);
 
   return vars;
 }

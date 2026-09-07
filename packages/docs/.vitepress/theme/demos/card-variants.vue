@@ -15,6 +15,6 @@ import { Card, CardContent, CardTitle } from "ropav";
 
 <style scoped>
 .card {
-  width: calc(var(--spacing) * 52);
+  width: calc(var(--rp-spacing) * 52);
 }
 </style>

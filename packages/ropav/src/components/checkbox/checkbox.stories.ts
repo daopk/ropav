@@ -73,7 +73,7 @@ export const Variants: Story = {
     template: `
       <div class="flex flex-col gap-4 px-4">
         <div class="flex flex-col gap-2">
-          <p class="text-sm font-medium text-[var(--muted)]">Primary variant</p>
+          <p class="text-sm font-medium text-[var(--rp-muted)]">Primary variant</p>
           <Checkbox name="primary" variant="primary">
             <CheckboxContent>
               <CheckboxControl>
@@ -85,7 +85,7 @@ export const Variants: Story = {
           </Checkbox>
         </div>
         <div class="flex flex-col gap-2">
-          <p class="text-sm font-medium text-[var(--muted)]">Secondary variant</p>
+          <p class="text-sm font-medium text-[var(--rp-muted)]">Secondary variant</p>
           <Checkbox name="secondary" variant="secondary">
             <CheckboxContent>
               <CheckboxControl>
@@ -239,7 +239,7 @@ export const Controlled: Story = {
             Email notifications
           </CheckboxContent>
         </Checkbox>
-        <p class="mt-2 text-sm text-[var(--muted)]">
+        <p class="mt-2 text-sm text-[var(--rp-muted)]">
           Status: <span class="font-medium">{{ isSelected ? "Enabled" : "Disabled" }}</span>
         </p>
       </div>
@@ -311,7 +311,7 @@ export const FullRounded: Story = {
     template: `
       <div class="flex flex-col gap-6 px-4">
         <div class="flex flex-col gap-3">
-          <Label class="text-[var(--muted)]">Rounded checkboxes</Label>
+          <Label class="text-[var(--rp-muted)]">Rounded checkboxes</Label>
           <Checkbox
             class="[&_[data-slot='checkbox-default-indicator--checkmark']]:size-2"
             id="small-rounded"
@@ -396,12 +396,12 @@ export const FeaturesAndAddOnsExample: Story = {
             <div class="flex flex-col gap-2">
               <Checkbox v-for="addon in addOns" :key="addon.value" :id="addon.value" :value="addon.value">
                 <CheckboxContent
-                  class="group relative flex w-full flex-row items-start justify-start gap-4 rounded-[calc(var(--radius)*3)] bg-[var(--surface-tertiary)] px-5 py-4 transition-all data-[selected=true]:bg-[var(--accent)]/10"
+                  class="group relative flex w-full flex-row items-start justify-start gap-4 rounded-[calc(var(--rp-radius)*3)] bg-[var(--rp-surface-tertiary)] px-5 py-4 transition-all data-[selected=true]:bg-[var(--rp-accent)]/10"
                 >
                   <CheckboxControl class="absolute end-4 top-3 size-5 rounded-full before:rounded-full">
                     <CheckboxIndicator />
                   </CheckboxControl>
-                  <component :is="addon.icon" class="size-5 text-[var(--accent)]" />
+                  <component :is="addon.icon" class="size-5 text-[var(--rp-accent)]" />
                   <div class="flex flex-col gap-1">
                     <span>{{ addon.title }}</span>
                     <Description>{{ addon.description }}</Description>

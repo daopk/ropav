@@ -31,8 +31,8 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
-    --rp-ring-offset-color: var(--background);
+    --rp-ring-color: var(--rp-focus);
+    --rp-ring-offset-color: var(--rp-background);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: var(--rp-focus-ring-offset);
@@ -50,7 +50,7 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
+    --rp-ring-color: var(--rp-focus);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: 0px;
@@ -72,7 +72,7 @@
   .invalid-field-ring {
     /* Unfocused: show 1px outline */
     outline-width: 1px;
-    outline-color: var(--danger);
+    outline-color: var(--rp-danger);
     --rp-outline-style: solid;
     outline-style: solid;
 
@@ -88,7 +88,7 @@
         var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
           var(--rp-ring-color, currentcolor);
       box-shadow: var(--rp-ring), var(--rp-shadow);
-      --rp-ring-color: var(--danger);
+      --rp-ring-color: var(--rp-danger);
       --rp-ring-offset-width: 0px;
 
       /* The unfocused outline above survives forced colors, but the ring marking focus does
@@ -109,8 +109,8 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
-    --rp-ring-offset-color: var(--background);
+    --rp-ring-color: var(--rp-focus);
+    --rp-ring-offset-color: var(--rp-background);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: var(--rp-focus-ring-offset);
@@ -127,7 +127,7 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
+    --rp-ring-color: var(--rp-focus);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: 0px;
@@ -140,7 +140,7 @@
 
   .status-invalid-field {
     outline-width: 1px;
-    outline-color: var(--danger);
+    outline-color: var(--rp-danger);
     --rp-outline-style: solid;
     outline-style: solid;
 
@@ -155,7 +155,7 @@
         var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
           var(--rp-ring-color, currentcolor);
       box-shadow: var(--rp-ring), var(--rp-shadow);
-      --rp-ring-color: var(--danger);
+      --rp-ring-color: var(--rp-danger);
       --rp-ring-offset-width: 0px;
 
       @media (forced-colors: active) {
@@ -166,8 +166,8 @@
   }
 
   .status-disabled {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
 
     /* Forced colors leaves `opacity` alone, so the element still reads as dimmed without this.
@@ -215,14 +215,14 @@
 
   /* === Scrollbars (standards-only; apply per scroll slot in component CSS) === */
   .scrollbar {
-    scrollbar-width: var(--scrollbar-width);
-    scrollbar-color: var(--scrollbar-color);
-    scrollbar-gutter: var(--scrollbar-gutter);
+    scrollbar-width: var(--rp-scrollbar-width);
+    scrollbar-color: var(--rp-scrollbar-color);
+    scrollbar-gutter: var(--rp-scrollbar-gutter);
   }
 
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    scrollbar-color: var(--rp-scrollbar-thumb) var(--rp-scrollbar-track);
     scrollbar-gutter: auto;
   }
 
@@ -256,32 +256,32 @@
    * `lg` keeps 16px throughout, as the large button does.
    */
   .field-line-sm {
-    padding-block: var(--spacing);
-    font-size: var(--text-base);
-    line-height: var(--rp-leading, var(--text-base--line-height));
+    padding-block: var(--rp-spacing);
+    font-size: var(--rp-text-base);
+    line-height: var(--rp-leading, var(--rp-text-base--line-height));
 
     @media (width >= 40rem) {
-      padding-block: calc(var(--spacing) * 1.5);
-      font-size: var(--text-sm);
-      line-height: var(--rp-leading, var(--text-sm--line-height));
+      padding-block: calc(var(--rp-spacing) * 1.5);
+      font-size: var(--rp-text-sm);
+      line-height: var(--rp-leading, var(--rp-text-sm--line-height));
     }
   }
 
   .field-line-md {
-    padding-block: calc(var(--spacing) * 1.5);
-    font-size: var(--text-base);
-    line-height: var(--rp-leading, var(--text-base--line-height));
+    padding-block: calc(var(--rp-spacing) * 1.5);
+    font-size: var(--rp-text-base);
+    line-height: var(--rp-leading, var(--rp-text-base--line-height));
 
     @media (width >= 40rem) {
-      padding-block: calc(var(--spacing) * 2);
-      font-size: var(--text-sm);
-      line-height: var(--rp-leading, var(--text-sm--line-height));
+      padding-block: calc(var(--rp-spacing) * 2);
+      font-size: var(--rp-text-sm);
+      line-height: var(--rp-leading, var(--rp-text-sm--line-height));
     }
   }
 
   .field-line-lg {
-    padding-block: calc(var(--spacing) * 2);
-    font-size: var(--text-base);
-    line-height: var(--rp-leading, var(--text-base--line-height));
+    padding-block: calc(var(--rp-spacing) * 2);
+    font-size: var(--rp-text-base);
+    line-height: var(--rp-leading, var(--rp-text-base--line-height));
   }
 }

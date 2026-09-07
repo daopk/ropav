@@ -23,7 +23,7 @@ export const radiusCssMap = {
 export type RadiusId = keyof typeof radiusCssMap;
 
 /**
- * `--field-shadow` for a preset that does not override it — the elevation form controls have
+ * `--rp-field-shadow` for a preset that does not override it — the elevation form controls have
  * carried since the port.
  *
  * Dark is a transparent placeholder rather than `none`: every ring in the library is a
@@ -46,11 +46,11 @@ export interface ThemePreset {
   hue: number;
   /** Lightness of the accent colour. */
   lightness: number;
-  /** `--radius`. */
+  /** `--rp-radius`. */
   radius: RadiusId;
-  /** `--field-radius`, for form controls. */
+  /** `--rp-field-radius`, for form controls. */
   formRadius: RadiusId;
-  /** `--field-shadow`, per scheme. Omit for `fieldShadowCss`. */
+  /** `--rp-field-shadow`, per scheme. Omit for `fieldShadowCss`. */
   fieldShadow?: { light: string; dark: string };
   /** Exact semantic colours, where a brand's own palette beats the calculated one. */
   semanticOverrides?: SemanticOverrides;

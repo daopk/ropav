@@ -10,8 +10,8 @@ is no rebuild of the package, and no need to go through a theme file at all:
 
 ```css
 :root {
-  --accent: oklch(0.62 0.19 253.83);
-  --radius: 0.5rem;
+  --rp-accent: oklch(0.62 0.19 253.83);
+  --rp-radius: 0.5rem;
 }
 ```
 
@@ -27,22 +27,22 @@ Write the same token block under your own attribute:
   [data-theme="ocean"] {
     color-scheme: light;
 
-    --accent: oklch(0.62 0.14 220);
-    --accent-hover: color-mix(in oklab, var(--accent) 90%, var(--accent-foreground) 10%);
+    --rp-accent: oklch(0.62 0.14 220);
+    --rp-accent-hover: color-mix(in oklab, var(--rp-accent) 90%, var(--rp-accent-foreground) 10%);
     /* … */
   }
 }
 ```
 
 **It has to redeclare the derived tokens too, not just the authored ones.** A custom property
-substitutes `var()` at the element where it is *declared*, so an `--accent-hover` inherited from
-`:root` would still be mixed from the root's `--accent` — the hover would stay the old colour
+substitutes `var()` at the element where it is *declared*, so an `--rp-accent-hover` inherited from
+`:root` would still be mixed from the root's `--rp-accent` — the hover would stay the old colour
 while the resting state moved. Copying a bundled theme and editing it is the reliable way in.
 
 ## What a theme does not need to carry
 
-Only colours. Everything keyed on neither the palette nor the appearance — `--spacing`,
-`--cursor-*`, the primitives, the shadows, `--backdrop` — stays on `:root` and `.dark` in the
+Only colours. Everything keyed on neither the palette nor the appearance — `--rp-spacing`,
+`--rp-cursor-*`, the primitives, the shadows, `--rp-backdrop` — stays on `:root` and `.dark` in the
 default theme, and both of those keep matching an element that carries a `data-theme`.
 
 ## Both halves, always

@@ -6,12 +6,12 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--spacing);
+  gap: var(--rp-spacing);
   --rp-outline-style: none;
   outline-style: none;
   -webkit-tap-highlight-color: transparent;
 
-  cursor: var(--cursor-interactive);
+  cursor: var(--rp-cursor-interactive);
 
   /* Field-level help text (siblings of the button), indented to align under the label */
   & > [data-slot="description"],
@@ -19,12 +19,12 @@
     width: 100%;
     min-width: 0px;
     cursor: default;
-    padding-inline-start: calc(var(--spacing) * 7);
-    font-size: var(--text-xs);
-    line-height: var(--rp-leading, var(--text-xs--line-height));
+    padding-inline-start: calc(var(--rp-spacing) * 7);
+    font-size: var(--rp-text-xs);
+    line-height: var(--rp-leading, var(--rp-text-xs--line-height));
     text-wrap: wrap;
     overflow-wrap: break-word;
-    color: var(--muted);
+    color: var(--rp-muted);
     -webkit-user-select: none;
     user-select: none;
   }
@@ -35,13 +35,13 @@
   }
 
   .rp-checkbox__content [data-slot="label"] {
-    cursor: var(--cursor-interactive);
+    cursor: var(--rp-cursor-interactive);
   }
 
   /* Disabled state */
   &[data-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -50,8 +50,8 @@
 
     [data-slot="description"],
     [data-slot="field-error"] {
-      opacity: var(--disabled-opacity);
-      cursor: var(--cursor-disabled);
+      opacity: var(--rp-disabled-opacity);
+      cursor: var(--rp-cursor-disabled);
       pointer-events: none;
       @media (forced-colors: active) {
         color: GrayText;
@@ -64,14 +64,14 @@
   &[data-selected="true"],
   &[data-indeterminate="true"] {
     .rp-checkbox__indicator {
-      border-color: var(--accent-foreground);
+      border-color: var(--rp-accent-foreground);
     }
   }
 
   /* Checkmark SVG indicator */
   [data-slot="checkbox-default-indicator--checkmark"] {
-    width: calc(var(--spacing) * 2.5);
-    height: calc(var(--spacing) * 2.5);
+    width: calc(var(--rp-spacing) * 2.5);
+    height: calc(var(--rp-spacing) * 2.5);
     stroke-width: 2.5px;
 
     color: var(--checkbox-control-fg-checked);
@@ -80,8 +80,8 @@
      * Transitions
      */
     transition-property: all;
-    transition-timing-function: var(--rp-ease, var(--default-transition-timing-function));
-    transition-duration: var(--rp-motion) var(--rp-duration, var(--default-transition-duration));
+    transition-timing-function: var(--rp-ease, var(--rp-default-transition-timing-function));
+    transition-duration: var(--rp-motion) var(--rp-duration, var(--rp-default-transition-duration));
     --rp-duration: 200ms;
     transition-duration: var(--rp-motion) 200ms;
   }
@@ -101,8 +101,8 @@
   /* Indeterminate line indicator */
   &[data-indeterminate="true"] {
     [data-slot="checkbox-default-indicator--indeterminate"] {
-      width: calc(var(--spacing) * 3);
-      height: calc(var(--spacing) * 3);
+      width: calc(var(--rp-spacing) * 3);
+      height: calc(var(--rp-spacing) * 3);
     }
   }
 
@@ -122,16 +122,16 @@
 .rp-checkbox__control {
   position: relative;
   display: inline-flex;
-  width: calc(var(--spacing) * 4);
-  height: calc(var(--spacing) * 4);
+  width: calc(var(--rp-spacing) * 4);
+  height: calc(var(--rp-spacing) * 4);
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   border-style: var(--rp-border-style);
   border-width: 1px;
-  border-width: var(--border-width-field);
-  --rp-shadow: var(--field-shadow);
+  border-width: var(--rp-border-width-field);
+  --rp-shadow: var(--rp-field-shadow);
   box-shadow: var(--rp-ring), var(--rp-shadow);
   --rp-outline-style: none;
   outline-style: none;
@@ -139,34 +139,34 @@
 
   /* The cap is what keeps the box reading square at 16px: the field radius is set for a 36px
    * control, and worn whole here it looks twice as round as the field beside it. */
-  border-radius: min(var(--field-radius, calc(var(--radius) * 0.75)), 25%);
+  border-radius: min(var(--rp-field-radius, calc(var(--rp-radius) * 0.75)), 25%);
 
   /* Four things carry state here: the box's fill and edge, the glyph inside it, and the `::before`
    * that scales in behind the glyph. Checked and indeterminate share a colour, as do the two
    * invalid pairings, so each is named for what it means rather than for every combination.
    * `--secondary` re-points the fill and nothing else. */
-  --checkbox-control-bg: var(--field-background, var(--default));
-  --checkbox-control-bg-checked: var(--accent);
-  --checkbox-control-bg-checked-pressed: var(--accent-hover);
-  --checkbox-control-bg-invalid: var(--danger);
-  --checkbox-control-border: var(--field-border, var(--border));
-  --checkbox-control-border-hover: var(--field-border-hover);
+  --checkbox-control-bg: var(--rp-field-background, var(--rp-default));
+  --checkbox-control-bg-checked: var(--rp-accent);
+  --checkbox-control-bg-checked-pressed: var(--rp-accent-hover);
+  --checkbox-control-bg-invalid: var(--rp-danger);
+  --checkbox-control-border: var(--rp-field-border, var(--rp-border));
+  --checkbox-control-border-hover: var(--rp-field-border-hover);
   --checkbox-control-border-checked: transparent;
-  --checkbox-control-fg-checked: var(--accent-foreground);
-  --checkbox-control-fg-invalid: var(--danger-foreground);
-  --checkbox-control-fill: var(--accent);
-  --checkbox-control-fill-hover: var(--accent-hover);
-  --checkbox-control-fill-invalid: var(--danger);
+  --checkbox-control-fg-checked: var(--rp-accent-foreground);
+  --checkbox-control-fg-invalid: var(--rp-danger-foreground);
+  --checkbox-control-fill: var(--rp-accent);
+  --checkbox-control-fill-hover: var(--rp-accent-hover);
+  --checkbox-control-fill-invalid: var(--rp-danger);
 
   background-color: var(--checkbox-control-bg);
   border-color: var(--checkbox-control-border);
 
   transition:
-    var(--rp-motion) background-color 200ms var(--ease-out),
-    border-color 200ms var(--ease-out),
-    transform 100ms var(--ease-out);
+    var(--rp-motion) background-color 200ms var(--rp-ease-out),
+    border-color 200ms var(--rp-ease-out),
+    transform 100ms var(--rp-ease-out);
 
-  cursor: var(--cursor-interactive);
+  cursor: var(--rp-cursor-interactive);
 
   /* Background indicator pseudo-element */
   &::before {
@@ -187,9 +187,9 @@
     background-color: var(--checkbox-control-fill);
 
     transition:
-      var(--rp-motion) scale 100ms var(--ease-linear),
-      opacity 200ms var(--ease-linear),
-      background-color 200ms var(--ease-out);
+      var(--rp-motion) scale 100ms var(--rp-ease-linear),
+      opacity 200ms var(--rp-ease-linear),
+      background-color 200ms var(--rp-ease-out);
   }
 
   /* Interactive states */
@@ -202,8 +202,8 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
-    --rp-ring-offset-color: var(--background);
+    --rp-ring-color: var(--rp-focus);
+    --rp-ring-offset-color: var(--rp-background);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: var(--rp-focus-ring-offset);
@@ -271,7 +271,7 @@
     & {
     outline-style: var(--rp-outline-style);
     outline-width: 1px;
-    outline-color: var(--danger);
+    outline-color: var(--rp-danger);
     --rp-outline-style: solid;
     outline-style: solid;
     --rp-ring-offset-width: 3px;
@@ -286,7 +286,7 @@
         var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
           var(--rp-ring-color, currentcolor);
       box-shadow: var(--rp-ring), var(--rp-shadow);
-      --rp-ring-color: var(--danger);
+      --rp-ring-color: var(--rp-danger);
       --rp-ring-offset-width: 0px;
       @media (forced-colors: active) {
         outline-width: 2px;
@@ -330,8 +330,8 @@
   position: relative;
   z-index: 10;
   display: flex;
-  width: calc(var(--spacing) * 3);
-  height: calc(var(--spacing) * 3);
+  width: calc(var(--rp-spacing) * 3);
+  height: calc(var(--rp-spacing) * 3);
   align-items: center;
   justify-content: center;
 
@@ -348,8 +348,8 @@
    ========================================================================== */
 
 .rp-checkbox--disabled {
-  opacity: var(--disabled-opacity);
-  cursor: var(--cursor-disabled);
+  opacity: var(--rp-disabled-opacity);
+  cursor: var(--rp-cursor-disabled);
   pointer-events: none;
   @media (forced-colors: active) {
     color: GrayText;
@@ -372,7 +372,7 @@
   /* No border and no shadow leave the fill as the only thing drawing this box, so a flat neutral
    * erases it against any surface of the same lightness — a hovered table row is exactly that.
    * The state layer is an alpha, so it keeps its step over whatever it lands on. */
-  --checkbox-control-bg: var(--state-layer);
+  --checkbox-control-bg: var(--rp-state-layer);
 }
 
 /* Checkbox content — the clickable label (control + label text) */
@@ -381,11 +381,11 @@
   display: inline-flex;
   cursor: inherit;
   align-items: center;
-  gap: calc(var(--spacing) * 3);
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
-  font-weight: var(--font-weight-medium);
-  color: var(--foreground);
+  gap: calc(var(--rp-spacing) * 3);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+  font-weight: var(--rp-font-weight-medium);
+  color: var(--rp-foreground);
   --rp-outline-style: none;
   outline-style: none;
   -webkit-user-select: none;

@@ -137,7 +137,7 @@ export const VisibilityChange: Story = {
     },
     template: `
       <div class="flex flex-col gap-4">
-        <div class="rounded bg-[var(--default)] p-4 text-sm font-semibold">Vertical Shadow State: {{ state }}</div>
+        <div class="rounded bg-[var(--rp-default)] p-4 text-sm font-semibold">Vertical Shadow State: {{ state }}</div>
         <ScrollShadow
           class="max-h-[240px] max-w-sm p-4"
           :on-visibility-change="setState"

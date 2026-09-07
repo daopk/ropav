@@ -2,14 +2,14 @@
 .rp-avatar {
   position: relative;
   display: flex;
-  width: calc(var(--spacing) * 10);
-  height: calc(var(--spacing) * 10);
+  width: calc(var(--rp-spacing) * 10);
+  height: calc(var(--rp-spacing) * 10);
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border-radius: calc(var(--radius) * 3);
-  background-color: var(--default);
+  border-radius: calc(var(--rp-radius) * 3);
+  background-color: var(--rp-default);
 
   /* Forced Colors Mode flattens the fill onto the page, so a fallback avatar is initials sitting
    * loose on the page with no shape around them. The edge goes here rather than on the fallback:
@@ -28,10 +28,10 @@
   height: 100%;
   align-items: center;
   justify-content: center;
-  background-color: var(--default);
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
-  font-weight: var(--font-weight-medium);
+  background-color: var(--rp-default);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+  font-weight: var(--rp-font-weight-medium);
 }
 
 /* Avatar image element */
@@ -46,17 +46,17 @@
    * Transitions
    */
   transition-property: opacity;
-  transition-timing-function: var(--rp-ease, var(--default-transition-timing-function));
-  transition-duration: var(--rp-motion) var(--rp-duration, var(--default-transition-duration));
+  transition-timing-function: var(--rp-ease, var(--rp-default-transition-timing-function));
+  transition-duration: var(--rp-motion) var(--rp-duration, var(--rp-default-transition-duration));
   --rp-duration: 250ms;
   transition-duration: var(--rp-motion) 250ms;
 }
 
 /* Size modifiers */
 .rp-avatar--sm {
-  width: calc(var(--spacing) * 8);
-  height: calc(var(--spacing) * 8);
-  border-radius: calc(var(--radius) * 2);
+  width: calc(var(--rp-spacing) * 8);
+  height: calc(var(--rp-spacing) * 8);
+  border-radius: calc(var(--rp-radius) * 2);
 }
 
 .rp-avatar--md {
@@ -64,35 +64,35 @@
 }
 
 .rp-avatar--lg {
-  width: calc(var(--spacing) * 12);
-  height: calc(var(--spacing) * 12);
-  border-radius: calc(var(--radius) * 3);
+  width: calc(var(--rp-spacing) * 12);
+  height: calc(var(--rp-spacing) * 12);
+  border-radius: calc(var(--rp-radius) * 3);
 
   .rp-avatar__fallback {
-    font-size: var(--text-base);
-    line-height: var(--rp-leading, var(--text-base--line-height));
+    font-size: var(--rp-text-base);
+    line-height: var(--rp-leading, var(--rp-text-base--line-height));
   }
 }
 
 /* Color modifiers for fallback */
 .rp-avatar__fallback--accent {
-  color: var(--accent-soft-foreground);
+  color: var(--rp-accent-soft-foreground);
 }
 
 .rp-avatar__fallback--default {
-  color: var(--default-soft-foreground);
+  color: var(--rp-default-soft-foreground);
 }
 
 .rp-avatar__fallback--success {
-  color: var(--success-soft-foreground);
+  color: var(--rp-success-soft-foreground);
 }
 
 .rp-avatar__fallback--warning {
-  color: var(--warning-soft-foreground);
+  color: var(--rp-warning-soft-foreground);
 }
 
 .rp-avatar__fallback--danger {
-  color: var(--danger-soft-foreground);
+  color: var(--rp-danger-soft-foreground);
 }
 
 /* Variant modifiers */
@@ -101,26 +101,26 @@
 }
 
 .rp-avatar--soft .rp-avatar__fallback--accent {
-  background-color: var(--accent-soft);
-  color: var(--accent-soft-foreground);
+  background-color: var(--rp-accent-soft);
+  color: var(--rp-accent-soft-foreground);
 }
 
 .rp-avatar--soft .rp-avatar__fallback--success {
-  background-color: var(--success-soft);
-  color: var(--success-soft-foreground);
+  background-color: var(--rp-success-soft);
+  color: var(--rp-success-soft-foreground);
 }
 
 .rp-avatar--soft .rp-avatar__fallback--warning {
-  background-color: var(--warning-soft);
-  color: var(--warning-soft-foreground);
+  background-color: var(--rp-warning-soft);
+  color: var(--rp-warning-soft-foreground);
 }
 
 .rp-avatar--soft .rp-avatar__fallback--default {
-  background-color: var(--default-soft);
-  color: var(--default-soft-foreground);
+  background-color: var(--rp-default-soft);
+  color: var(--rp-default-soft-foreground);
 }
 
 .rp-avatar--soft .rp-avatar__fallback--danger {
-  background-color: var(--danger-soft);
-  color: var(--danger-soft-foreground);
+  background-color: var(--rp-danger-soft);
+  color: var(--rp-danger-soft-foreground);
 }

@@ -191,20 +191,20 @@ export const Group: Story = {
     template: `
       <div class="flex flex-col gap-4">
         <div class="flex items-center justify-center -space-x-2">
-          <Avatar v-for="user in users" :key="user.id" class="ring-2 ring-[var(--background)]">
+          <Avatar v-for="user in users" :key="user.id" class="ring-2 ring-[var(--rp-background)]">
             <AvatarImage :src="user.imageUrl" />
             <AvatarFallback>{{ user.name.charAt(0) }}</AvatarFallback>
           </Avatar>
-          <Avatar class="ring-2 ring-[var(--background)]">
+          <Avatar class="ring-2 ring-[var(--rp-background)]">
             <AvatarFallback class="border-none">+5</AvatarFallback>
           </Avatar>
         </div>
         <div class="flex items-center justify-center -space-x-2">
-          <Avatar v-for="circle in circles" :key="circle.id" class="ring-2 ring-[var(--background)]">
+          <Avatar v-for="circle in circles" :key="circle.id" class="ring-2 ring-[var(--rp-background)]">
             <AvatarImage :src="circle.imageUrl" />
             <AvatarFallback>{{ circle.name }}</AvatarFallback>
           </Avatar>
-          <Avatar class="ring-2 ring-[var(--background)]">
+          <Avatar class="ring-2 ring-[var(--rp-background)]">
             <AvatarFallback class="border-none">+5</AvatarFallback>
           </Avatar>
         </div>
@@ -265,14 +265,14 @@ export const Variants: Story = {
             :key="color"
             class="flex w-20 shrink-0 items-center justify-center"
           >
-            <span class="text-xs text-[var(--muted)] capitalize">{{ color }}</span>
+            <span class="text-xs text-[var(--rp-muted)] capitalize">{{ color }}</span>
           </div>
         </div>
 
         <Separator />
 
         <div v-for="row in rows" :key="row.label" class="flex items-center gap-3">
-          <div class="w-24 shrink-0 text-sm text-[var(--muted)]">{{ row.label }}</div>
+          <div class="w-24 shrink-0 text-sm text-[var(--rp-muted)]">{{ row.label }}</div>
           <div
             v-for="(color, colorIndex) in colors"
             :key="color"

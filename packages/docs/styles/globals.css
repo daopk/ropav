@@ -44,7 +44,7 @@
 @source "../.vitepress/theme/**/*.{vue,ts}";
 
 :root {
-  --cursor-interactive: pointer;
+  --rp-cursor-interactive: pointer;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;

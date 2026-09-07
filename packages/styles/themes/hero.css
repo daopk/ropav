@@ -6,14 +6,14 @@
  *
  * Not generated. The generator derives every grey from one hue and one chroma, and this palette
  * does neither: its greys sit around hue 286 while its accent is at 253.83, its grey chroma runs
- * from 0 (`--background`) to 0.0138 (`--muted`), and `--surface-tertiary` strays to 247.91 on
+ * from 0 (`--rp-background`) to 0.0138 (`--rp-muted`), and `--rp-surface-tertiary` strays to 247.91 on
  * dark. Its `scripts/themes/presets.ts` entry records the accent seeds and the radius pair, which
  * is what the theme list and the Storybook toolbar read; `pnpm generate:themes` skips it.
  *
- * Colours, radii and the field shadow, like every other theme — `--spacing`, `--cursor-*`, the
- * primitives, the surface and overlay shadows and `--backdrop` stay on `:root` / `.dark` in
+ * Colours, radii and the field shadow, like every other theme — `--rp-spacing`, `--rp-cursor-*`, the
+ * primitives, the surface and overlay shadows and `--rp-backdrop` stay on `:root` / `.dark` in
  * `themes/default.css`, which keeps matching an element that carries a `data-theme`. The primitive *values* are spelled out rather than
- * aliased through `var(--eclipse)`, so this palette holds whatever the default theme is tuned to.
+ * aliased through `var(--rp-eclipse)`, so this palette holds whatever the default theme is tuned to.
  *
  * The `theme` layer is declared inside this file, so it can be imported with or without a
  * `layer()` wrapper:
@@ -30,81 +30,81 @@
     color-scheme: light;
 
     /* Radius */
-    --radius: 0.5rem;
-    --field-radius: calc(var(--radius) * 1.5);
-    --component-radius: calc(var(--radius) * 3);
+    --rp-radius: 0.5rem;
+    --rp-field-radius: calc(var(--rp-radius) * 1.5);
+    --rp-component-radius: calc(var(--rp-radius) * 3);
 
     /* == Light Theme Variables == */
 
     /* Base Colors */
-    --background: oklch(0.9702 0 0);
-    --foreground: oklch(0.2103 0.0059 285.89);
+    --rp-background: oklch(0.9702 0 0);
+    --rp-foreground: oklch(0.2103 0.0059 285.89);
 
     /* Surface: Used for non-overlay components (cards, accordions, disclosure groups) */
-    --surface: oklch(100% 0 0);
-    --surface-foreground: var(--foreground);
+    --rp-surface: oklch(100% 0 0);
+    --rp-surface-foreground: var(--rp-foreground);
 
-    --surface-secondary: oklch(0.9524 0.0013 286.37);
-    --surface-secondary-foreground: var(--foreground);
+    --rp-surface-secondary: oklch(0.9524 0.0013 286.37);
+    --rp-surface-secondary-foreground: var(--rp-foreground);
 
-    --surface-tertiary: oklch(0.9373 0.0013 286.37);
-    --surface-tertiary-foreground: var(--foreground);
+    --rp-surface-tertiary: oklch(0.9373 0.0013 286.37);
+    --rp-surface-tertiary-foreground: var(--rp-foreground);
 
     /* Overlay: Used for floating/overlay components (tooltips, popovers, modals, menus) */
-    --overlay: oklch(100% 0 0);
-    --overlay-foreground: var(--foreground);
+    --rp-overlay: oklch(100% 0 0);
+    --rp-overlay-foreground: var(--rp-foreground);
 
-    --muted: oklch(0.516 0.0138 285.94);
+    --rp-muted: oklch(0.516 0.0138 285.94);
 
-    --scrollbar: var(--scrollbar-thumb);
-    --scrollbar-thumb: color-mix(in oklch, var(--foreground) 15%, transparent);
-    --scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    --rp-scrollbar: var(--rp-scrollbar-thumb);
+    --rp-scrollbar-thumb: color-mix(in oklch, var(--rp-foreground) 15%, transparent);
+    --rp-scrollbar-color: var(--rp-scrollbar-thumb) var(--rp-scrollbar-track);
 
-    --default: oklch(94% 0.001 286.375);
-    --default-foreground: oklch(0.2103 0.0059 285.89);
+    --rp-default: oklch(94% 0.001 286.375);
+    --rp-default-foreground: oklch(0.2103 0.0059 285.89);
 
-    --accent: oklch(0.6204 0.195 253.83);
-    --accent-foreground: oklch(0.9911 0 0);
+    --rp-accent: oklch(0.6204 0.195 253.83);
+    --rp-accent-foreground: oklch(0.9911 0 0);
 
     /* Form Fields */
-    --field-background: oklch(100% 0 0);
-    --field-foreground: oklch(0.2103 0.0059 285.89);
-    --field-placeholder: var(--muted);
-    --field-border: transparent; /* no border by default on form fields */
-    --field-shadow:
+    --rp-field-background: oklch(100% 0 0);
+    --rp-field-foreground: oklch(0.2103 0.0059 285.89);
+    --rp-field-placeholder: var(--rp-muted);
+    --rp-field-border: transparent; /* no border by default on form fields */
+    --rp-field-shadow:
       0 2px 4px 0 rgba(0, 0, 0, 0.04), 0 1px 2px 0 rgba(0, 0, 0, 0.06),
       0 0 1px 0 rgba(0, 0, 0, 0.06);
 
     /* Status Colors */
-    --success: oklch(0.7329 0.1935 150.81);
-    --success-foreground: oklch(0.2103 0.0059 285.89);
+    --rp-success: oklch(0.7329 0.1935 150.81);
+    --rp-success-foreground: oklch(0.2103 0.0059 285.89);
 
-    --warning: oklch(0.7819 0.1585 72.33);
-    --warning-foreground: oklch(0.2103 0.0059 285.89);
+    --rp-warning: oklch(0.7819 0.1585 72.33);
+    --rp-warning-foreground: oklch(0.2103 0.0059 285.89);
 
-    --danger: oklch(0.6532 0.2328 25.74);
-    --danger-foreground: oklch(0.9911 0 0);
+    --rp-danger: oklch(0.6532 0.2328 25.74);
+    --rp-danger-foreground: oklch(0.9911 0 0);
 
     /* Component Colors */
-    --segment: oklch(100% 0 0);
-    --segment-foreground: oklch(0.2103 0.0059 285.89);
+    --rp-segment: oklch(100% 0 0);
+    --rp-segment-foreground: oklch(0.2103 0.0059 285.89);
 
     /* Misc Colors */
-    /* An edge, as an alpha of the surface foreground - `--surface-hover`'s reasoning, applied to a
+    /* An edge, as an alpha of the surface foreground - `--rp-surface-hover`'s reasoning, applied to a
      * line. A flat neutral is picked against one fill and then disappears against any other of its
-     * own lightness: in the dark half `--separator` sat 0.7% from `--surface-secondary`, so a box
+     * own lightness: in the dark half `--rp-separator` sat 0.7% from `--rp-surface-secondary`, so a box
      * drawn on the secondary fill had no edge left. */
-    --border: color-mix(in oklab, var(--surface-foreground) 14%, transparent);
-    --separator: color-mix(in oklab, var(--surface-foreground) 12%, transparent);
-    --focus: var(--accent);
-    --link: var(--foreground);
+    --rp-border: color-mix(in oklab, var(--rp-surface-foreground) 14%, transparent);
+    --rp-separator: color-mix(in oklab, var(--rp-surface-foreground) 12%, transparent);
+    --rp-focus: var(--rp-accent);
+    --rp-link: var(--rp-foreground);
 
     /* Calculated Colors */
-    --surface-hover: color-mix(in oklab, var(--surface) 92%, var(--surface-foreground) 8%);
+    --rp-surface-hover: color-mix(in oklab, var(--rp-surface) 92%, var(--rp-surface-foreground) 8%);
 
     /* The layer a state paints on whatever is behind it, named for what it is rather than for one
      * of the states it serves - hover reads it, so do a press and the muted selection a calendar
-     * gives a day outside the month. Distinct from `--surface-hover` above, which is a surface
+     * gives a day outside the month. Distinct from `--rp-surface-hover` above, which is a surface
      * that has been tinted and stays opaque: this one is an alpha, so a component transparent at
      * rest can mark a state without inventing a fill of its own.
      *
@@ -115,60 +115,108 @@
      * The halves carry different percentages because compositing happens in sRGB while the palette
      * is authored in Oklab: the same alpha reads stronger over a dark surface than a light one.
      * These are the pair that lands where the flat neutral used to. */
-    --state-layer: color-mix(in oklab, var(--surface-foreground) 9%, transparent);
+    --rp-state-layer: color-mix(in oklab, var(--rp-surface-foreground) 9%, transparent);
 
-    --background-secondary: color-mix(in oklab, var(--background) 96%, var(--foreground) 4%);
-    --background-tertiary: color-mix(in oklab, var(--background) 92%, var(--foreground) 8%);
-    --background-inverse: var(--foreground);
-
-    --default-hover: color-mix(in oklab, var(--default) 96%, var(--default-foreground) 4%);
-    --accent-hover: color-mix(in oklab, var(--accent) 90%, var(--accent-foreground) 10%);
-    --success-hover: color-mix(in oklab, var(--success) 90%, var(--success-foreground) 10%);
-    --warning-hover: color-mix(in oklab, var(--warning) 90%, var(--warning-foreground) 10%);
-    --danger-hover: color-mix(in oklab, var(--danger) 90%, var(--danger-foreground) 10%);
-
-    --field-hover: color-mix(
+    --rp-background-secondary: color-mix(
       in oklab,
-      var(--field-background, var(--default)) 90%,
-      var(--field-foreground, var(--foreground)) 2%
+      var(--rp-background) 96%,
+      var(--rp-foreground) 4%
     );
-    --field-focus: var(--field-background, var(--default));
-    --field-border-hover: color-mix(
+    --rp-background-tertiary: color-mix(
       in oklab,
-      var(--field-border, var(--border)) 88%,
-      var(--field-foreground, var(--foreground)) 10%
+      var(--rp-background) 92%,
+      var(--rp-foreground) 8%
     );
-    --field-border-focus: color-mix(
+    --rp-background-inverse: var(--rp-foreground);
+
+    --rp-default-hover: color-mix(in oklab, var(--rp-default) 96%, var(--rp-default-foreground) 4%);
+    --rp-accent-hover: color-mix(in oklab, var(--rp-accent) 90%, var(--rp-accent-foreground) 10%);
+    --rp-success-hover: color-mix(
       in oklab,
-      var(--field-border, var(--border)) 74%,
-      var(--field-foreground, var(--foreground)) 22%
+      var(--rp-success) 90%,
+      var(--rp-success-foreground) 10%
+    );
+    --rp-warning-hover: color-mix(
+      in oklab,
+      var(--rp-warning) 90%,
+      var(--rp-warning-foreground) 10%
+    );
+    --rp-danger-hover: color-mix(in oklab, var(--rp-danger) 90%, var(--rp-danger-foreground) 10%);
+
+    --rp-field-hover: color-mix(
+      in oklab,
+      var(--rp-field-background, var(--rp-default)) 90%,
+      var(--rp-field-foreground, var(--rp-foreground)) 2%
+    );
+    --rp-field-focus: var(--rp-field-background, var(--rp-default));
+    --rp-field-border-hover: color-mix(
+      in oklab,
+      var(--rp-field-border, var(--rp-border)) 88%,
+      var(--rp-field-foreground, var(--rp-foreground)) 10%
+    );
+    --rp-field-border-focus: color-mix(
+      in oklab,
+      var(--rp-field-border, var(--rp-border)) 74%,
+      var(--rp-field-foreground, var(--rp-foreground)) 22%
     );
 
-    --default-soft: color-mix(in oklab, var(--default) 50%, transparent);
-    --default-soft-foreground: var(--default-foreground);
-    --default-soft-hover: color-mix(in oklab, var(--default) 60%, transparent);
+    --rp-default-soft: color-mix(in oklab, var(--rp-default) 50%, transparent);
+    --rp-default-soft-foreground: var(--rp-default-foreground);
+    --rp-default-soft-hover: color-mix(in oklab, var(--rp-default) 60%, transparent);
 
-    --accent-soft: color-mix(in oklab, var(--accent) 15%, transparent);
-    --accent-soft-foreground: color-mix(in oklab, var(--accent) 70%, var(--foreground) 45%);
-    --accent-soft-hover: color-mix(in oklab, var(--accent) 20%, transparent);
+    --rp-accent-soft: color-mix(in oklab, var(--rp-accent) 15%, transparent);
+    --rp-accent-soft-foreground: color-mix(
+      in oklab,
+      var(--rp-accent) 70%,
+      var(--rp-foreground) 45%
+    );
+    --rp-accent-soft-hover: color-mix(in oklab, var(--rp-accent) 20%, transparent);
 
-    --danger-soft: color-mix(in oklab, var(--danger) 15%, transparent);
-    --danger-soft-foreground: color-mix(in oklab, var(--danger) 70%, var(--foreground) 40%);
-    --danger-soft-hover: color-mix(in oklab, var(--danger) 20%, transparent);
+    --rp-danger-soft: color-mix(in oklab, var(--rp-danger) 15%, transparent);
+    --rp-danger-soft-foreground: color-mix(
+      in oklab,
+      var(--rp-danger) 70%,
+      var(--rp-foreground) 40%
+    );
+    --rp-danger-soft-hover: color-mix(in oklab, var(--rp-danger) 20%, transparent);
 
-    --warning-soft: color-mix(in oklab, var(--warning) 15%, transparent);
-    --warning-soft-foreground: color-mix(in oklab, var(--warning) 80%, var(--foreground) 70%);
-    --warning-soft-hover: color-mix(in oklab, var(--warning) 20%, transparent);
+    --rp-warning-soft: color-mix(in oklab, var(--rp-warning) 15%, transparent);
+    --rp-warning-soft-foreground: color-mix(
+      in oklab,
+      var(--rp-warning) 80%,
+      var(--rp-foreground) 70%
+    );
+    --rp-warning-soft-hover: color-mix(in oklab, var(--rp-warning) 20%, transparent);
 
-    --success-soft: color-mix(in oklab, var(--success) 15%, transparent);
-    --success-soft-foreground: color-mix(in oklab, var(--success) 80%, var(--foreground) 75%);
-    --success-soft-hover: color-mix(in oklab, var(--success) 20%, transparent);
+    --rp-success-soft: color-mix(in oklab, var(--rp-success) 15%, transparent);
+    --rp-success-soft-foreground: color-mix(
+      in oklab,
+      var(--rp-success) 80%,
+      var(--rp-foreground) 75%
+    );
+    --rp-success-soft-hover: color-mix(in oklab, var(--rp-success) 20%, transparent);
 
-    --separator-secondary: color-mix(in oklab, var(--surface) 85%, var(--surface-foreground) 15%);
-    --separator-tertiary: color-mix(in oklab, var(--surface) 81%, var(--surface-foreground) 19%);
+    --rp-separator-secondary: color-mix(
+      in oklab,
+      var(--rp-surface) 85%,
+      var(--rp-surface-foreground) 15%
+    );
+    --rp-separator-tertiary: color-mix(
+      in oklab,
+      var(--rp-surface) 81%,
+      var(--rp-surface-foreground) 19%
+    );
 
-    --border-secondary: color-mix(in oklab, var(--surface) 78%, var(--surface-foreground) 22%);
-    --border-tertiary: color-mix(in oklab, var(--surface) 66%, var(--surface-foreground) 34%);
+    --rp-border-secondary: color-mix(
+      in oklab,
+      var(--rp-surface) 78%,
+      var(--rp-surface-foreground) 22%
+    );
+    --rp-border-tertiary: color-mix(
+      in oklab,
+      var(--rp-surface) 66%,
+      var(--rp-surface-foreground) 34%
+    );
   }
 
   [data-theme="hero"].dark,
@@ -177,106 +225,154 @@
     /* == Dark Theme Variables == */
 
     /* Base Colors */
-    --background: oklch(12% 0.005 285.823);
-    --foreground: oklch(0.9911 0 0);
+    --rp-background: oklch(12% 0.005 285.823);
+    --rp-foreground: oklch(0.9911 0 0);
 
     /* Surface: Used for non-overlay components (cards, accordions, disclosure groups) */
-    --surface: oklch(0.2103 0.0059 285.89);
-    --surface-foreground: var(--foreground);
+    --rp-surface: oklch(0.2103 0.0059 285.89);
+    --rp-surface-foreground: var(--rp-foreground);
 
-    --surface-secondary: oklch(0.257 0.0037 286.14);
-    --surface-tertiary: oklch(0.2721 0.0024 247.91);
+    --rp-surface-secondary: oklch(0.257 0.0037 286.14);
+    --rp-surface-tertiary: oklch(0.2721 0.0024 247.91);
 
     /* Overlay: Used for floating/overlay components (tooltips, popovers, modals, menus) - lighter for contrast */
-    --overlay: oklch(0.2103 0.0059 285.89);
-    --overlay-foreground: var(--foreground);
+    --rp-overlay: oklch(0.2103 0.0059 285.89);
+    --rp-overlay-foreground: var(--rp-foreground);
 
-    --muted: oklch(70.5% 0.015 286.067);
+    --rp-muted: oklch(70.5% 0.015 286.067);
 
-    --scrollbar: var(--scrollbar-thumb);
-    --scrollbar-thumb: color-mix(in oklch, var(--foreground) 15%, transparent);
-    --scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    --rp-scrollbar: var(--rp-scrollbar-thumb);
+    --rp-scrollbar-thumb: color-mix(in oklch, var(--rp-foreground) 15%, transparent);
+    --rp-scrollbar-color: var(--rp-scrollbar-thumb) var(--rp-scrollbar-track);
 
-    --default: oklch(27.4% 0.006 286.033);
-    --default-foreground: oklch(0.9911 0 0);
+    --rp-default: oklch(27.4% 0.006 286.033);
+    --rp-default-foreground: oklch(0.9911 0 0);
 
     /* Form Fields */
-    --field-background: oklch(0.2103 0.0059 285.89);
-    --field-foreground: var(--foreground);
-    --field-shadow: 0 0 0 0 transparent inset; /* placeholder, so ring utilities still compose */
+    --rp-field-background: oklch(0.2103 0.0059 285.89);
+    --rp-field-foreground: var(--rp-foreground);
+    --rp-field-shadow: 0 0 0 0 transparent inset; /* placeholder, so ring utilities still compose */
 
     /* Status Colors */
-    --warning: oklch(0.8203 0.1388 76.34);
-    --warning-foreground: oklch(0.2103 0.0059 285.89);
+    --rp-warning: oklch(0.8203 0.1388 76.34);
+    --rp-warning-foreground: oklch(0.2103 0.0059 285.89);
 
-    --danger: oklch(0.594 0.1967 24.63);
-    --danger-foreground: oklch(0.9911 0 0);
+    --rp-danger: oklch(0.594 0.1967 24.63);
+    --rp-danger-foreground: oklch(0.9911 0 0);
 
     /* Component Colors */
-    --segment: oklch(0.3964 0.01 285.93);
-    --segment-foreground: var(--foreground);
+    --rp-segment: oklch(0.3964 0.01 285.93);
+    --rp-segment-foreground: var(--rp-foreground);
 
     /* Misc Colors */
-    --border: color-mix(in oklab, var(--surface-foreground) 7%, transparent);
-    --separator: color-mix(in oklab, var(--surface-foreground) 4%, transparent);
-    --focus: var(--accent);
-    --link: var(--foreground);
+    --rp-border: color-mix(in oklab, var(--rp-surface-foreground) 7%, transparent);
+    --rp-separator: color-mix(in oklab, var(--rp-surface-foreground) 4%, transparent);
+    --rp-focus: var(--rp-accent);
+    --rp-link: var(--rp-foreground);
 
     /* Calculated Colors */
-    --surface-hover: color-mix(in oklab, var(--surface) 92%, var(--surface-foreground) 8%);
-    --state-layer: color-mix(in oklab, var(--surface-foreground) 7%, transparent);
+    --rp-surface-hover: color-mix(in oklab, var(--rp-surface) 92%, var(--rp-surface-foreground) 8%);
+    --rp-state-layer: color-mix(in oklab, var(--rp-surface-foreground) 7%, transparent);
 
-    --background-secondary: color-mix(in oklab, var(--background) 96%, var(--foreground) 4%);
-    --background-tertiary: color-mix(in oklab, var(--background) 92%, var(--foreground) 8%);
-    --background-inverse: var(--foreground);
-
-    --default-hover: color-mix(in oklab, var(--default) 96%, var(--default-foreground) 4%);
-    --accent-hover: color-mix(in oklab, var(--accent) 90%, var(--accent-foreground) 10%);
-    --success-hover: color-mix(in oklab, var(--success) 90%, var(--success-foreground) 10%);
-    --warning-hover: color-mix(in oklab, var(--warning) 90%, var(--warning-foreground) 10%);
-    --danger-hover: color-mix(in oklab, var(--danger) 90%, var(--danger-foreground) 10%);
-
-    --field-hover: color-mix(
+    --rp-background-secondary: color-mix(
       in oklab,
-      var(--field-background, var(--default)) 90%,
-      var(--field-foreground, var(--foreground)) 2%
+      var(--rp-background) 96%,
+      var(--rp-foreground) 4%
     );
-    --field-focus: var(--field-background, var(--default));
-    --field-border-hover: color-mix(
+    --rp-background-tertiary: color-mix(
       in oklab,
-      var(--field-border, var(--border)) 88%,
-      var(--field-foreground, var(--foreground)) 10%
+      var(--rp-background) 92%,
+      var(--rp-foreground) 8%
     );
-    --field-border-focus: color-mix(
+    --rp-background-inverse: var(--rp-foreground);
+
+    --rp-default-hover: color-mix(in oklab, var(--rp-default) 96%, var(--rp-default-foreground) 4%);
+    --rp-accent-hover: color-mix(in oklab, var(--rp-accent) 90%, var(--rp-accent-foreground) 10%);
+    --rp-success-hover: color-mix(
       in oklab,
-      var(--field-border, var(--border)) 74%,
-      var(--field-foreground, var(--foreground)) 22%
+      var(--rp-success) 90%,
+      var(--rp-success-foreground) 10%
+    );
+    --rp-warning-hover: color-mix(
+      in oklab,
+      var(--rp-warning) 90%,
+      var(--rp-warning-foreground) 10%
+    );
+    --rp-danger-hover: color-mix(in oklab, var(--rp-danger) 90%, var(--rp-danger-foreground) 10%);
+
+    --rp-field-hover: color-mix(
+      in oklab,
+      var(--rp-field-background, var(--rp-default)) 90%,
+      var(--rp-field-foreground, var(--rp-foreground)) 2%
+    );
+    --rp-field-focus: var(--rp-field-background, var(--rp-default));
+    --rp-field-border-hover: color-mix(
+      in oklab,
+      var(--rp-field-border, var(--rp-border)) 88%,
+      var(--rp-field-foreground, var(--rp-foreground)) 10%
+    );
+    --rp-field-border-focus: color-mix(
+      in oklab,
+      var(--rp-field-border, var(--rp-border)) 74%,
+      var(--rp-field-foreground, var(--rp-foreground)) 22%
     );
 
-    --default-soft: color-mix(in oklab, var(--default) 50%, transparent);
-    --default-soft-foreground: var(--default-foreground);
-    --default-soft-hover: color-mix(in oklab, var(--default) 60%, transparent);
+    --rp-default-soft: color-mix(in oklab, var(--rp-default) 50%, transparent);
+    --rp-default-soft-foreground: var(--rp-default-foreground);
+    --rp-default-soft-hover: color-mix(in oklab, var(--rp-default) 60%, transparent);
 
-    --accent-soft: color-mix(in oklab, var(--accent) 12%, transparent);
-    --accent-soft-foreground: color-mix(in oklab, var(--accent) 80%, var(--foreground) 30%);
-    --accent-soft-hover: color-mix(in oklab, var(--accent) 16%, transparent);
+    --rp-accent-soft: color-mix(in oklab, var(--rp-accent) 12%, transparent);
+    --rp-accent-soft-foreground: color-mix(
+      in oklab,
+      var(--rp-accent) 80%,
+      var(--rp-foreground) 30%
+    );
+    --rp-accent-soft-hover: color-mix(in oklab, var(--rp-accent) 16%, transparent);
 
-    --danger-soft: color-mix(in oklab, var(--danger) 15%, transparent);
-    --danger-soft-foreground: color-mix(in oklab, var(--danger) 80%, var(--foreground) 30%);
-    --danger-soft-hover: color-mix(in oklab, var(--danger) 20%, transparent);
+    --rp-danger-soft: color-mix(in oklab, var(--rp-danger) 15%, transparent);
+    --rp-danger-soft-foreground: color-mix(
+      in oklab,
+      var(--rp-danger) 80%,
+      var(--rp-foreground) 30%
+    );
+    --rp-danger-soft-hover: color-mix(in oklab, var(--rp-danger) 20%, transparent);
 
-    --warning-soft: color-mix(in oklab, var(--warning) 12%, transparent);
-    --warning-soft-foreground: color-mix(in oklab, var(--warning) 80%, var(--foreground) 30%);
-    --warning-soft-hover: color-mix(in oklab, var(--warning) 16%, transparent);
+    --rp-warning-soft: color-mix(in oklab, var(--rp-warning) 12%, transparent);
+    --rp-warning-soft-foreground: color-mix(
+      in oklab,
+      var(--rp-warning) 80%,
+      var(--rp-foreground) 30%
+    );
+    --rp-warning-soft-hover: color-mix(in oklab, var(--rp-warning) 16%, transparent);
 
-    --success-soft: color-mix(in oklab, var(--success) 12%, transparent);
-    --success-soft-foreground: color-mix(in oklab, var(--success) 80%, var(--foreground) 30%);
-    --success-soft-hover: color-mix(in oklab, var(--success) 16%, transparent);
+    --rp-success-soft: color-mix(in oklab, var(--rp-success) 12%, transparent);
+    --rp-success-soft-foreground: color-mix(
+      in oklab,
+      var(--rp-success) 80%,
+      var(--rp-foreground) 30%
+    );
+    --rp-success-soft-hover: color-mix(in oklab, var(--rp-success) 16%, transparent);
 
-    --separator-secondary: color-mix(in oklab, var(--surface) 85%, var(--surface-foreground) 15%);
-    --separator-tertiary: color-mix(in oklab, var(--surface) 81%, var(--surface-foreground) 19%);
+    --rp-separator-secondary: color-mix(
+      in oklab,
+      var(--rp-surface) 85%,
+      var(--rp-surface-foreground) 15%
+    );
+    --rp-separator-tertiary: color-mix(
+      in oklab,
+      var(--rp-surface) 81%,
+      var(--rp-surface-foreground) 19%
+    );
 
-    --border-secondary: color-mix(in oklab, var(--surface) 78%, var(--surface-foreground) 22%);
-    --border-tertiary: color-mix(in oklab, var(--surface) 66%, var(--surface-foreground) 34%);
+    --rp-border-secondary: color-mix(
+      in oklab,
+      var(--rp-surface) 78%,
+      var(--rp-surface-foreground) 22%
+    );
+    --rp-border-tertiary: color-mix(
+      in oklab,
+      var(--rp-surface) 66%,
+      var(--rp-surface-foreground) 34%
+    );
   }
 }

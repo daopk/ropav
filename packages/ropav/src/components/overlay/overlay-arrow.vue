@@ -115,7 +115,7 @@ const style = computed<Record<string, string>>(() => {
 </script>
 
 <!--
-  The zero-sized svg carries the hairline filter the stylesheet points `--overlay-edge` at.
+  The zero-sized svg carries the hairline filter the stylesheet points `--rp-overlay-edge` at.
 
   The arrow and the body are two shapes filled with the same colour, and any edge painted on
   either of them alone draws itself across the join. A filter on the overlay sees the two as one
@@ -147,7 +147,7 @@ const style = computed<Record<string, string>>(() => {
         x="-50%"
         y="-50%"
       >
-        <feFlood result="line" style="flood-color: var(--overlay-edge-line, transparent)" />
+        <feFlood result="line" style="flood-color: var(--rp-overlay-edge-line, transparent)" />
         <feComposite in="line" in2="SourceAlpha" operator="out" result="outside" />
         <feGaussianBlur in="outside" result="soft" stdDeviation="0.5" />
         <feComposite in="soft" in2="SourceAlpha" operator="in" result="glow" />

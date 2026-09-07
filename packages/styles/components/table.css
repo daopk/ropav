@@ -21,19 +21,19 @@
    cannot push beyond.
    -------------------------------------------------------------------------- */
 .rp-table__scroll-container {
-  scrollbar-width: var(--scrollbar-width);
-  scrollbar-color: var(--scrollbar-color);
-  scrollbar-gutter: var(--scrollbar-gutter);
+  scrollbar-width: var(--rp-scrollbar-width);
+  scrollbar-color: var(--rp-scrollbar-color);
+  scrollbar-gutter: var(--rp-scrollbar-gutter);
   overflow-x: auto;
   scrollbar-gutter: auto;
 }
 
 .rp-table-root--primary {
-  background-color: var(--surface-secondary);
-  padding-inline: var(--spacing);
-  padding-bottom: var(--spacing);
+  background-color: var(--rp-surface-secondary);
+  padding-inline: var(--rp-spacing);
+  padding-bottom: var(--rp-spacing);
 
-  border-radius: min(32px, var(--component-radius));
+  border-radius: min(32px, var(--rp-component-radius));
 
   /* Forced Colors Mode flattens the fill onto the page and strips the shadow, so the container
    * stops having any shape and its contents sit loose on the page. */
@@ -56,7 +56,7 @@
 }
 
 .rp-table-root--secondary .rp-table__column {
-  background-color: var(--surface-secondary);
+  background-color: var(--rp-surface-secondary);
 }
 
 /* Round only the truly first/last column header.
@@ -69,8 +69,8 @@
     th.rp-table__column:first-child,
     [role="row"] > [role="presentation"]:first-of-type > .rp-table__column
   ) {
-  border-start-start-radius: min(32px, var(--component-radius));
-  border-end-start-radius: min(32px, var(--component-radius));
+  border-start-start-radius: min(32px, var(--rp-component-radius));
+  border-end-start-radius: min(32px, var(--rp-component-radius));
 }
 
 .rp-table-root--secondary
@@ -78,8 +78,8 @@
     th.rp-table__column:last-child,
     [role="row"] > [role="presentation"]:last-of-type > .rp-table__column
   ) {
-  border-start-end-radius: min(32px, var(--component-radius));
-  border-end-end-radius: min(32px, var(--component-radius));
+  border-start-end-radius: min(32px, var(--rp-component-radius));
+  border-end-end-radius: min(32px, var(--rp-component-radius));
 }
 
 /* Secondary: body has no shadow or rounded corners */
@@ -107,13 +107,13 @@
   .rp-table__cell {
     border-bottom-style: var(--rp-border-style);
     border-bottom-width: 1px;
-    border-color: var(--separator-tertiary);
+    border-color: var(--rp-separator-tertiary);
     @supports (color: color-mix(in lab, red, red)) {
-      border-color: color-mix(in oklab, var(--separator-tertiary) 50%, transparent);
+      border-color: color-mix(in oklab, var(--rp-separator-tertiary) 50%, transparent);
     }
 
     --table-cell-bg: transparent;
-    --table-cell-bg-hover: color-mix(in oklab, var(--state-layer) 50%, transparent);
+    --table-cell-bg-hover: color-mix(in oklab, var(--rp-state-layer) 50%, transparent);
   }
 }
 
@@ -126,8 +126,8 @@
   --rp-border-spacing-x: 0px;
   --rp-border-spacing-y: 0px;
   border-spacing: var(--rp-border-spacing-x) var(--rp-border-spacing-y);
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
 }
 
 /* Primary variant: table gets the white surface card look */
@@ -141,11 +141,11 @@
 .rp-table__header {
   border-bottom-style: var(--rp-border-style);
   border-bottom-width: 1px;
-  border-color: var(--separator);
+  border-color: var(--rp-separator);
   @supports (color: color-mix(in lab, red, red)) {
-    border-color: color-mix(in oklab, var(--separator) 50%, transparent);
+    border-color: color-mix(in oklab, var(--rp-separator) 50%, transparent);
   }
-  background-color: var(--surface-secondary);
+  background-color: var(--rp-surface-secondary);
 }
 
 /* --------------------------------------------------------------------------
@@ -153,15 +153,15 @@
    -------------------------------------------------------------------------- */
 .rp-table__column {
   position: relative;
-  padding-inline: calc(var(--spacing) * 4);
-  padding-block: calc(var(--spacing) * 2.5);
+  padding-inline: calc(var(--rp-spacing) * 4);
+  padding-block: calc(var(--rp-spacing) * 2.5);
   text-align: start;
-  font-size: var(--text-xs);
-  line-height: var(--rp-leading, var(--text-xs--line-height));
-  font-weight: var(--font-weight-medium);
+  font-size: var(--rp-text-xs);
+  line-height: var(--rp-leading, var(--rp-text-xs--line-height));
+  font-weight: var(--rp-font-weight-medium);
 
-  --table-column-fg: var(--muted);
-  --table-column-fg-hover: var(--foreground);
+  --table-column-fg: var(--rp-muted);
+  --table-column-fg-hover: var(--rp-foreground);
 
   color: var(--table-column-fg);
 
@@ -170,14 +170,14 @@
     content: "";
     pointer-events: none;
     position: absolute;
-    inset-inline-end: calc(var(--spacing) * 0);
+    inset-inline-end: calc(var(--rp-spacing) * 0);
     top: calc(1 / 2 * 100%);
-    height: calc(var(--spacing) * 4);
+    height: calc(var(--rp-spacing) * 4);
     width: 1px;
     --rp-translate-y: calc(calc(1 / 2 * 100%) * -1);
     translate: var(--rp-translate-x) var(--rp-translate-y);
-    border-radius: calc(var(--radius) * 0.5);
-    background-color: var(--separator);
+    border-radius: calc(var(--rp-radius) * 0.5);
+    background-color: var(--rp-separator);
   }
 
   &:last-child:not(:only-child)::after {
@@ -193,7 +193,7 @@
 
   /* Sortable columns */
   &[data-allows-sorting="true"] {
-    cursor: var(--cursor-interactive);
+    cursor: var(--rp-cursor-interactive);
   }
 
   @media (hover: hover) {
@@ -206,10 +206,10 @@
   /* Focus visible — inset shadow for consistent table focus styling */
   &:focus-visible,
   &[data-focus-visible="true"] {
-    border-radius: calc(var(--radius) * 1);
+    border-radius: calc(var(--rp-radius) * 1);
     --rp-outline-style: none;
     outline-style: none;
-    box-shadow: inset 0 0 0 2px var(--focus);
+    box-shadow: inset 0 0 0 2px var(--rp-focus);
   }
 }
 
@@ -236,18 +236,18 @@
    -------------------------------------------------------------------------- */
 .rp-table__sortable-column-indicator {
   display: inline-grid;
-  width: calc(var(--spacing) * 3);
-  height: calc(var(--spacing) * 3);
+  width: calc(var(--rp-spacing) * 3);
+  height: calc(var(--rp-spacing) * 3);
   transform: var(--rp-rotate-x,) var(--rp-rotate-y,) var(--rp-rotate-z,) var(--rp-skew-x,)
     var(--rp-skew-y,);
   place-content: center;
   transition-property: transform, translate, scale, rotate;
-  transition-timing-function: var(--rp-ease, var(--default-transition-timing-function));
-  transition-duration: var(--rp-motion) var(--rp-duration, var(--default-transition-duration));
+  transition-timing-function: var(--rp-ease, var(--rp-default-transition-timing-function));
+  transition-duration: var(--rp-motion) var(--rp-duration, var(--rp-default-transition-duration));
   --rp-duration: 100ms;
   transition-duration: var(--rp-motion) 100ms;
-  --rp-ease: var(--ease-out);
-  transition-timing-function: var(--ease-out);
+  --rp-ease: var(--rp-ease-out);
+  transition-timing-function: var(--rp-ease-out);
 
   &[data-direction="descending"] {
     rotate: 180deg;
@@ -262,16 +262,16 @@
      (border-radius on <tbody> itself has no effect).
      Logical properties so corners follow `dir` in RTL. */
   & tr:first-child td:first-child {
-    border-start-start-radius: min(32px, var(--component-radius));
+    border-start-start-radius: min(32px, var(--rp-component-radius));
   }
   & tr:first-child td:last-child {
-    border-start-end-radius: min(32px, var(--component-radius));
+    border-start-end-radius: min(32px, var(--rp-component-radius));
   }
   & tr:last-child td:first-child {
-    border-end-start-radius: min(32px, var(--component-radius));
+    border-end-start-radius: min(32px, var(--rp-component-radius));
   }
   & tr:last-child td:last-child {
-    border-end-end-radius: min(32px, var(--component-radius));
+    border-end-end-radius: min(32px, var(--rp-component-radius));
   }
 
   /* Virtualized: elements are divs, not tr/td, and only a window of the rows
@@ -281,7 +281,7 @@
     position: relative;
     height: 100%;
     overflow: clip;
-    border-radius: min(32px, var(--component-radius));
+    border-radius: min(32px, var(--rp-component-radius));
   }
 }
 
@@ -295,9 +295,9 @@
   /* Bottom separator */
   border-bottom-style: var(--rp-border-style);
   border-bottom-width: 1px;
-  border-color: var(--separator);
+  border-color: var(--rp-separator);
   @supports (color: color-mix(in lab, red, red)) {
-    border-color: color-mix(in oklab, var(--separator) 50%, transparent);
+    border-color: color-mix(in oklab, var(--rp-separator) 50%, transparent);
   }
 
   /* Last row in body has no bottom border */
@@ -338,8 +338,8 @@
   /* Disabled state */
   &[aria-disabled="true"],
   &[data-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -370,37 +370,37 @@
    -------------------------------------------------------------------------- */
 .rp-table__cell {
   height: 100%;
-  padding-inline: calc(var(--spacing) * 4);
-  padding-block: calc(var(--spacing) * 3);
+  padding-inline: calc(var(--rp-spacing) * 4);
+  padding-block: calc(var(--rp-spacing) * 3);
   vertical-align: middle;
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
-  color: var(--foreground);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+  color: var(--rp-foreground);
 
   /* The row's fill, per state, declared on the cell because that is what paints — Firefox clips a
    * row's own background outside the border radius. `.rp-table-root--secondary` re-points two. */
-  --table-cell-bg: var(--surface);
-  --table-cell-bg-hover: var(--surface-hover);
-  --table-cell-bg-selected: var(--accent-soft);
-  --table-cell-bg-selected-hover: var(--accent-soft-hover);
-  --table-cell-bg-drop-target: var(--accent-soft);
+  --table-cell-bg: var(--rp-surface);
+  --table-cell-bg-hover: var(--rp-surface-hover);
+  --table-cell-bg-selected: var(--rp-accent-soft);
+  --table-cell-bg-selected-hover: var(--rp-accent-soft-hover);
+  --table-cell-bg-drop-target: var(--rp-accent-soft);
 
   background-color: var(--table-cell-bg);
 
   border-bottom-style: var(--rp-border-style);
   border-bottom-width: 1px;
-  border-color: var(--separator-tertiary);
+  border-color: var(--rp-separator-tertiary);
   @supports (color: color-mix(in lab, red, red)) {
-    border-color: color-mix(in oklab, var(--separator-tertiary) 50%, transparent);
+    border-color: color-mix(in oklab, var(--rp-separator-tertiary) 50%, transparent);
   }
 
   /* Focus visible — inset shadow so focus stays within the cell boundaries */
   &:focus-visible,
   &[data-focus-visible="true"] {
-    border-radius: calc(var(--radius) * 1);
+    border-radius: calc(var(--rp-radius) * 1);
     --rp-outline-style: none;
     outline-style: none;
-    box-shadow: inset 0 0 0 2px var(--focus);
+    box-shadow: inset 0 0 0 2px var(--rp-focus);
   }
 }
 
@@ -429,8 +429,8 @@
 .rp-table__row:is(:focus-visible, [data-focus-visible="true"])
   > *:only-child
   :is(.rp-table__cell, .rp-table__column) {
-  border-radius: calc(var(--radius) * 1);
-  --rp-shadow: inset 0 0 0 2px var(--rp-shadow-color, var(--focus));
+  border-radius: calc(var(--rp-radius) * 1);
+  --rp-shadow: inset 0 0 0 2px var(--rp-shadow-color, var(--rp-focus));
   box-shadow: var(--rp-ring), var(--rp-shadow);
   --rp-outline-style: none;
   outline-style: none;
@@ -441,12 +441,12 @@
 .rp-table__row:is(:focus-visible, [data-focus-visible="true"])
   > *:first-child:not(:only-child)
   :is(.rp-table__cell, .rp-table__column) {
-  border-start-start-radius: calc(var(--radius) * 1);
-  border-end-start-radius: calc(var(--radius) * 1);
+  border-start-start-radius: calc(var(--rp-radius) * 1);
+  border-end-start-radius: calc(var(--rp-radius) * 1);
   --rp-shadow:
-    inset 2px 0 0 0 var(--rp-shadow-color, var(--focus)),
-    inset 0 2px 0 0 var(--rp-shadow-color, var(--focus)),
-    inset 0 -2px 0 0 var(--rp-shadow-color, var(--focus));
+    inset 2px 0 0 0 var(--rp-shadow-color, var(--rp-focus)),
+    inset 0 2px 0 0 var(--rp-shadow-color, var(--rp-focus)),
+    inset 0 -2px 0 0 var(--rp-shadow-color, var(--rp-focus));
   box-shadow: var(--rp-ring), var(--rp-shadow);
   --rp-outline-style: none;
   outline-style: none;
@@ -457,12 +457,12 @@
 .rp-table__row:is(:focus-visible, [data-focus-visible="true"])
   > *:last-child:not(:only-child)
   :is(.rp-table__cell, .rp-table__column) {
-  border-start-end-radius: calc(var(--radius) * 1);
-  border-end-end-radius: calc(var(--radius) * 1);
+  border-start-end-radius: calc(var(--rp-radius) * 1);
+  border-end-end-radius: calc(var(--rp-radius) * 1);
   --rp-shadow:
-    inset -2px 0 0 0 var(--rp-shadow-color, var(--focus)),
-    inset 0 2px 0 0 var(--rp-shadow-color, var(--focus)),
-    inset 0 -2px 0 0 var(--rp-shadow-color, var(--focus));
+    inset -2px 0 0 0 var(--rp-shadow-color, var(--rp-focus)),
+    inset 0 2px 0 0 var(--rp-shadow-color, var(--rp-focus)),
+    inset 0 -2px 0 0 var(--rp-shadow-color, var(--rp-focus));
   box-shadow: var(--rp-ring), var(--rp-shadow);
   --rp-outline-style: none;
   outline-style: none;
@@ -474,8 +474,8 @@
   > *:not(:first-child):not(:last-child):not(:only-child)
   :is(.rp-table__cell, .rp-table__column) {
   --rp-shadow:
-    inset 0 2px 0 0 var(--rp-shadow-color, var(--focus)),
-    inset 0 -2px 0 0 var(--rp-shadow-color, var(--focus));
+    inset 0 2px 0 0 var(--rp-shadow-color, var(--rp-focus)),
+    inset 0 -2px 0 0 var(--rp-shadow-color, var(--rp-focus));
   box-shadow: var(--rp-ring), var(--rp-shadow);
   --rp-outline-style: none;
   outline-style: none;
@@ -489,7 +489,7 @@
    -------------------------------------------------------------------------- */
 .rp-table__drop-indicator {
   --table-drop-indicator-size: 2px;
-  --table-drop-indicator-bg: var(--accent);
+  --table-drop-indicator-bg: var(--rp-accent);
 }
 
 /* Windowed, the layout has already placed it: a band straddling the boundary, out of flow. */
@@ -538,8 +538,8 @@ tr.rp-table__drop-indicator {
 .rp-table__footer {
   display: flex;
   align-items: center;
-  padding-inline: calc(var(--spacing) * 4);
-  padding-block: calc(var(--spacing) * 2.5);
+  padding-inline: calc(var(--rp-spacing) * 4);
+  padding-block: calc(var(--rp-spacing) * 2.5);
 }
 
 /* --------------------------------------------------------------------------
@@ -547,9 +547,9 @@ tr.rp-table__drop-indicator {
    -------------------------------------------------------------------------- */
 .rp-table__resizable-container {
   position: relative;
-  scrollbar-width: var(--scrollbar-width);
-  scrollbar-color: var(--scrollbar-color);
-  scrollbar-gutter: var(--scrollbar-gutter);
+  scrollbar-width: var(--rp-scrollbar-width);
+  scrollbar-color: var(--rp-scrollbar-color);
+  scrollbar-gutter: var(--rp-scrollbar-gutter);
   overflow: auto;
   scrollbar-gutter: auto;
 }
@@ -561,20 +561,20 @@ tr.rp-table__drop-indicator {
 .rp-table__column-resizer {
   /* Match the ::after separator: absolute, right edge, short vertical line */
   position: absolute;
-  inset-inline-end: calc(var(--spacing) * 0);
+  inset-inline-end: calc(var(--rp-spacing) * 0);
   top: calc(1 / 2 * 100%);
-  height: calc(var(--spacing) * 4);
+  height: calc(var(--rp-spacing) * 4);
   width: 1px;
   --rp-translate-y: calc(calc(1 / 2 * 100%) * -1);
   translate: var(--rp-translate-x) var(--rp-translate-y);
-  border-radius: calc(var(--radius) * 0.5);
+  border-radius: calc(var(--rp-radius) * 0.5);
   /* Make it interactive — wider hit area with transparent padding */
   box-sizing: content-box;
   --rp-translate-x: calc(1 / 2 * 100%);
   translate: var(--rp-translate-x) var(--rp-translate-y);
   cursor: col-resize;
   touch-action: none;
-  padding-inline: calc(var(--spacing) * 2);
+  padding-inline: calc(var(--rp-spacing) * 2);
   /* Reset appearance */
   --rp-border-style: none;
   border-style: none;
@@ -582,24 +582,24 @@ tr.rp-table__drop-indicator {
   --rp-outline-style: none;
   outline-style: none;
 
-  --table-resizer-bg: var(--separator);
-  --table-resizer-bg-hover: var(--accent);
+  --table-resizer-bg: var(--rp-separator);
+  --table-resizer-bg-hover: var(--rp-accent);
   --table-resizer-bg-resizing: var(--table-resizer-bg-hover);
-  --table-resizer-bg-focus-visible: var(--focus);
+  --table-resizer-bg-focus-visible: var(--rp-focus);
 
   background-color: var(--table-resizer-bg);
 
   &[data-hovered="true"],
   &:hover {
     height: 100%;
-    width: calc(var(--spacing) * 0.5);
+    width: calc(var(--rp-spacing) * 0.5);
 
     background-color: var(--table-resizer-bg-hover);
   }
 
   &[data-resizing="true"] {
     height: 100%;
-    width: calc(var(--spacing) * 0.5);
+    width: calc(var(--rp-spacing) * 0.5);
 
     background-color: var(--table-resizer-bg-resizing);
   }
@@ -607,7 +607,7 @@ tr.rp-table__drop-indicator {
   &[data-focus-visible="true"],
   &:focus-visible {
     height: 100%;
-    width: calc(var(--spacing) * 0.5);
+    width: calc(var(--rp-spacing) * 0.5);
 
     background-color: var(--table-resizer-bg-focus-visible);
   }
@@ -626,7 +626,7 @@ tr.rp-table__drop-indicator {
 .rp-table__load-more {
   & td,
   & [role="rowheader"] {
-    padding-block: calc(var(--spacing) * 3);
+    padding-block: calc(var(--rp-spacing) * 3);
     text-align: center;
     & > * {
       margin-inline: auto;
@@ -642,6 +642,6 @@ tr.rp-table__drop-indicator {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: calc(var(--spacing) * 2);
-  padding-block: calc(var(--spacing) * 2);
+  gap: calc(var(--rp-spacing) * 2);
+  padding-block: calc(var(--rp-spacing) * 2);
 }

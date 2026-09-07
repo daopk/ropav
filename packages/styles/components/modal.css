@@ -8,12 +8,12 @@
  */
 .rp-modal__trigger {
   display: inline-block;
-  cursor: var(--cursor-interactive);
+  cursor: var(--rp-cursor-interactive);
 
   transition:
-    var(--rp-motion) transform 250ms var(--ease-out-quart),
-    background-color 150ms var(--ease-smooth),
-    box-shadow 150ms var(--ease-out);
+    var(--rp-motion) transform 250ms var(--rp-ease-out-quart),
+    background-color 150ms var(--rp-ease-smooth),
+    box-shadow 150ms var(--rp-ease-out);
 
   /* Focus state */
   &:focus-visible:not(:focus),
@@ -23,8 +23,8 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
-    --rp-ring-offset-color: var(--background);
+    --rp-ring-color: var(--rp-focus);
+    --rp-ring-offset-color: var(--rp-background);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: var(--rp-focus-ring-offset);
@@ -37,8 +37,8 @@
   /* Disabled state */
   &:disabled,
   &[aria-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -72,8 +72,8 @@
     animation: var(--rp-motion) rp-enter var(--rp-duration, 0.15s) var(--rp-ease, ease);
     --rp-duration: 150ms;
     transition-duration: var(--rp-motion) 150ms;
-    --rp-ease: var(--ease-out);
-    transition-timing-function: var(--ease-out);
+    --rp-ease: var(--rp-ease-out);
+    transition-timing-function: var(--rp-ease-out);
     --rp-enter-opacity: 0;
   }
 
@@ -82,8 +82,8 @@
     animation: var(--rp-motion) rp-exit var(--rp-duration, 0.15s) var(--rp-ease, ease);
     --rp-duration: 100ms;
     transition-duration: var(--rp-motion) 100ms;
-    --rp-ease: var(--ease-out);
-    transition-timing-function: var(--ease-out);
+    --rp-ease: var(--rp-ease-out);
+    transition-timing-function: var(--rp-ease-out);
     --rp-exit-opacity: 0;
   }
 
@@ -104,15 +104,15 @@
  * Modifier: backdrop--opaque
  */
 .rp-modal__backdrop--opaque {
-  background-color: var(--backdrop);
+  background-color: var(--rp-backdrop);
 }
 
 /**
  * Modifier: backdrop--blur
  */
 .rp-modal__backdrop--blur {
-  background-color: var(--backdrop);
-  --rp-backdrop-blur: blur(var(--blur-md));
+  background-color: var(--rp-backdrop);
+  --rp-backdrop-blur: blur(var(--rp-blur-md));
   -webkit-backdrop-filter: var(--rp-backdrop-blur,) var(--rp-backdrop-brightness,)
     var(--rp-backdrop-contrast,) var(--rp-backdrop-grayscale,) var(--rp-backdrop-hue-rotate,)
     var(--rp-backdrop-invert,) var(--rp-backdrop-opacity,) var(--rp-backdrop-saturate,)
@@ -134,10 +134,10 @@
   width: 100%;
   min-width: 0px;
   flex: 1;
-  padding: calc(var(--spacing) * 4);
+  padding: calc(var(--rp-spacing) * 4);
   @media (width >= 40rem) {
     width: fit-content;
-    padding: calc(var(--spacing) * 10);
+    padding: calc(var(--rp-spacing) * 10);
   }
   pointer-events: none;
 
@@ -152,14 +152,14 @@
     --rp-enter-scale: 1.05;
 
     &[data-placement="auto"] {
-      --rp-enter-translate-y: calc(1*var(--spacing));
+      --rp-enter-translate-y: calc(1*var(--rp-spacing));
       @media (width >= 40rem) {
         --rp-enter-translate-y: calc(0*100%);
       }
     }
 
     &[data-placement="top"] {
-      --rp-enter-translate-y: calc(1*var(--spacing)*-1);
+      --rp-enter-translate-y: calc(1*var(--rp-spacing)*-1);
     }
 
     &[data-placement="center"] {
@@ -167,7 +167,7 @@
     }
 
     &[data-placement="bottom"] {
-      --rp-enter-translate-y: calc(1*var(--spacing));
+      --rp-enter-translate-y: calc(1*var(--rp-spacing));
     }
   }
 
@@ -202,9 +202,9 @@
 }
 
 .rp-modal__backdrop:has(.rp-modal__container--scroll-outside) {
-  scrollbar-width: var(--scrollbar-width);
-  scrollbar-color: var(--scrollbar-color);
-  scrollbar-gutter: var(--scrollbar-gutter);
+  scrollbar-width: var(--rp-scrollbar-width);
+  scrollbar-color: var(--rp-scrollbar-color);
+  scrollbar-gutter: var(--rp-scrollbar-gutter);
   align-items: flex-start;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -246,13 +246,13 @@
   display: flex;
   width: 100%;
   flex-direction: column;
-  background-color: var(--overlay);
-  --rp-shadow: var(--overlay-shadow);
+  background-color: var(--rp-overlay);
+  --rp-shadow: var(--rp-overlay-shadow);
   box-shadow: var(--rp-ring), var(--rp-shadow);
   --rp-outline-style: none;
   outline-style: none;
-  border-radius: min(32px, var(--component-radius));
-  padding: calc(var(--spacing) * 6);
+  border-radius: min(32px, var(--rp-component-radius));
+  padding: calc(var(--rp-spacing) * 6);
   pointer-events: auto;
 
   &[data-placement="auto"] {
@@ -297,28 +297,28 @@
  * Modifier: dialog--xs
  */
 .rp-modal__dialog--xs {
-  max-width: var(--container-xs);
+  max-width: var(--rp-container-xs);
 }
 
 /**
  * Modifier: dialog--sm
  */
 .rp-modal__dialog--sm {
-  max-width: var(--container-sm);
+  max-width: var(--rp-container-sm);
 }
 
 /**
  * Modifier: dialog--md
  */
 .rp-modal__dialog--md {
-  max-width: var(--container-md);
+  max-width: var(--rp-container-md);
 }
 
 /**
  * Modifier: dialog--lg
  */
 .rp-modal__dialog--lg {
-  max-width: var(--container-lg);
+  max-width: var(--rp-container-lg);
 }
 
 /**
@@ -348,7 +348,7 @@
 .rp-modal__header {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--spacing) * 3);
+  gap: calc(var(--rp-spacing) * 3);
   margin-bottom: 0px;
 
   /* When header contains icon, use flex-col layout with gap */
@@ -362,10 +362,10 @@
  */
 .rp-modal__heading {
   vertical-align: middle;
-  font-size: var(--text-base);
-  line-height: var(--rp-leading, var(--text-base--line-height));
-  font-weight: var(--font-weight-medium);
-  color: var(--foreground);
+  font-size: var(--rp-text-base);
+  line-height: var(--rp-leading, var(--rp-text-base--line-height));
+  font-weight: var(--rp-font-weight-medium);
+  color: var(--rp-foreground);
 }
 
 /**
@@ -375,10 +375,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: calc(var(--spacing) * 10);
-  height: calc(var(--spacing) * 10);
+  width: calc(var(--rp-spacing) * 10);
+  height: calc(var(--rp-spacing) * 10);
   flex-shrink: 0;
-  border-radius: calc(var(--radius) * 3);
+  border-radius: calc(var(--rp-radius) * 3);
   -webkit-user-select: none;
   user-select: none;
 }
@@ -389,11 +389,11 @@
 .rp-modal__body {
   min-height: 0px;
   flex: 1;
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
   --rp-leading: 1.43;
   line-height: 1.43;
-  color: var(--muted);
+  color: var(--rp-muted);
   margin: calc(3px * -1);
   margin-block: 0px;
   overflow: visible;
@@ -404,9 +404,9 @@
  * Modifier: body--scroll-inside
  */
 .rp-modal__body--scroll-inside {
-  scrollbar-width: var(--scrollbar-width);
-  scrollbar-color: var(--scrollbar-color);
-  scrollbar-gutter: var(--scrollbar-gutter);
+  scrollbar-width: var(--rp-scrollbar-width);
+  scrollbar-color: var(--rp-scrollbar-color);
+  scrollbar-gutter: var(--rp-scrollbar-gutter);
   overflow-y: auto;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
@@ -427,7 +427,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-  gap: calc(var(--spacing) * 2);
+  gap: calc(var(--rp-spacing) * 2);
   margin-top: 0px;
 }
 
@@ -436,21 +436,21 @@
  */
 .rp-modal__close-trigger {
   position: absolute;
-  inset-inline-end: calc(var(--spacing) * 4);
-  top: calc(var(--spacing) * 4);
+  inset-inline-end: calc(var(--rp-spacing) * 4);
+  top: calc(var(--rp-spacing) * 4);
 }
 
 /**
  * Elements Spacing
  */
 .rp-modal__header + .rp-modal__body {
-  margin-top: calc(var(--spacing) * 2);
+  margin-top: calc(var(--rp-spacing) * 2);
 }
 
 .rp-modal__header + .rp-modal__footer {
-  margin-top: calc(var(--spacing) * 5);
+  margin-top: calc(var(--rp-spacing) * 5);
 }
 
 .rp-modal__body + .rp-modal__footer {
-  margin-top: calc(var(--spacing) * 5);
+  margin-top: calc(var(--rp-spacing) * 5);
 }

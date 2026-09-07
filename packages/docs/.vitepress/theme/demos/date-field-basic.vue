@@ -23,6 +23,6 @@ import { DateField, DateFieldGroup, DateFieldInput, DateFieldSegment, Label } fr
 .field {
   display: flex;
   flex-direction: column;
-  width: calc(var(--spacing) * 64);
+  width: calc(var(--rp-spacing) * 64);
 }
 </style>

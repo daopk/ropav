@@ -8,22 +8,22 @@
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  gap: calc(var(--spacing) * 0.5);
-  font-weight: var(--font-weight-medium);
+  gap: calc(var(--rp-spacing) * 0.5);
+  font-weight: var(--rp-font-weight-medium);
 
   /* Default size (matches --md) */
-  min-height: calc(var(--spacing) * 7);
-  min-width: calc(var(--spacing) * 7);
-  border-radius: calc(var(--radius) * 3);
-  font-size: var(--text-xs);
-  line-height: var(--rp-leading, var(--text-xs--line-height));
+  min-height: calc(var(--rp-spacing) * 7);
+  min-width: calc(var(--rp-spacing) * 7);
+  border-radius: calc(var(--rp-radius) * 3);
+  font-size: var(--rp-text-xs);
+  line-height: var(--rp-leading, var(--rp-text-xs--line-height));
   --rp-leading: 1.34;
   line-height: 1.34;
 
   /* Default tokens */
-  --badge-bg: var(--default);
-  --badge-fg: var(--default-foreground);
-  --badge-border: var(--background);
+  --badge-bg: var(--rp-default);
+  --badge-fg: var(--rp-default-foreground);
+  --badge-border: var(--rp-background);
 
   background-color: var(--badge-bg);
   color: var(--badge-fg);
@@ -39,7 +39,7 @@
 }
 
 .rp-badge__label {
-  padding-inline: calc(var(--spacing) * 0.5);
+  padding-inline: calc(var(--rp-spacing) * 0.5);
 }
 
 .rp-badge-anchor {
@@ -53,11 +53,11 @@
    ========================================================================== */
 
 .rp-badge--lg {
-  min-height: calc(var(--spacing) * 8);
-  min-width: calc(var(--spacing) * 8);
-  border-radius: calc(var(--radius) * 2);
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
+  min-height: calc(var(--rp-spacing) * 8);
+  min-width: calc(var(--rp-spacing) * 8);
+  border-radius: calc(var(--rp-radius) * 2);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
   --rp-leading: 1.43;
   line-height: 1.43;
 }
@@ -67,9 +67,9 @@
 }
 
 .rp-badge--sm {
-  min-height: calc(var(--spacing) * 4);
-  min-width: calc(var(--spacing) * 4);
-  border-radius: calc(var(--radius) * 1.5);
+  min-height: calc(var(--rp-spacing) * 4);
+  min-width: calc(var(--rp-spacing) * 4);
+  border-radius: calc(var(--rp-radius) * 1.5);
   font-size: 10px;
   --rp-leading: 1.34;
   line-height: 1.34;
@@ -80,23 +80,23 @@
    ========================================================================== */
 
 .rp-badge--accent {
-  --badge-fg: var(--accent-soft-foreground);
+  --badge-fg: var(--rp-accent-soft-foreground);
 }
 
 .rp-badge--default {
-  --badge-fg: var(--default-foreground);
+  --badge-fg: var(--rp-default-foreground);
 }
 
 .rp-badge--success {
-  --badge-fg: var(--success-soft-foreground);
+  --badge-fg: var(--rp-success-soft-foreground);
 }
 
 .rp-badge--warning {
-  --badge-fg: var(--warning-soft-foreground);
+  --badge-fg: var(--rp-warning-soft-foreground);
 }
 
 .rp-badge--danger {
-  --badge-fg: var(--danger-soft-foreground);
+  --badge-fg: var(--rp-danger-soft-foreground);
 }
 
 /* ==========================================================================
@@ -152,28 +152,28 @@
    ========================================================================== */
 
 .rp-badge--primary.rp-badge--accent {
-  --badge-bg: var(--accent);
-  --badge-fg: var(--accent-foreground);
+  --badge-bg: var(--rp-accent);
+  --badge-fg: var(--rp-accent-foreground);
 }
 
 .rp-badge--primary.rp-badge--default {
-  --badge-bg: var(--default);
-  --badge-fg: var(--default-foreground);
+  --badge-bg: var(--rp-default);
+  --badge-fg: var(--rp-default-foreground);
 }
 
 .rp-badge--primary.rp-badge--success {
-  --badge-bg: var(--success);
-  --badge-fg: var(--success-foreground);
+  --badge-bg: var(--rp-success);
+  --badge-fg: var(--rp-success-foreground);
 }
 
 .rp-badge--primary.rp-badge--warning {
-  --badge-bg: var(--warning);
-  --badge-fg: var(--warning-foreground);
+  --badge-bg: var(--rp-warning);
+  --badge-fg: var(--rp-warning-foreground);
 }
 
 .rp-badge--primary.rp-badge--danger {
-  --badge-bg: var(--danger);
-  --badge-fg: var(--danger-foreground);
+  --badge-bg: var(--rp-danger);
+  --badge-fg: var(--rp-danger-foreground);
 }
 
 /* ==========================================================================
@@ -181,26 +181,26 @@
    ========================================================================== */
 
 .rp-badge--soft.rp-badge--accent {
-  --badge-bg: var(--accent-soft);
-  --badge-fg: var(--accent-soft-foreground);
+  --badge-bg: var(--rp-accent-soft);
+  --badge-fg: var(--rp-accent-soft-foreground);
 }
 
 .rp-badge--soft.rp-badge--default {
-  --badge-bg: var(--default-soft);
-  --badge-fg: var(--default-soft-foreground);
+  --badge-bg: var(--rp-default-soft);
+  --badge-fg: var(--rp-default-soft-foreground);
 }
 
 .rp-badge--soft.rp-badge--success {
-  --badge-bg: var(--success-soft);
-  --badge-fg: var(--success-soft-foreground);
+  --badge-bg: var(--rp-success-soft);
+  --badge-fg: var(--rp-success-soft-foreground);
 }
 
 .rp-badge--soft.rp-badge--warning {
-  --badge-bg: var(--warning-soft);
-  --badge-fg: var(--warning-soft-foreground);
+  --badge-bg: var(--rp-warning-soft);
+  --badge-fg: var(--rp-warning-soft-foreground);
 }
 
 .rp-badge--soft.rp-badge--danger {
-  --badge-bg: var(--danger-soft);
-  --badge-fg: var(--danger-soft-foreground);
+  --badge-bg: var(--rp-danger-soft);
+  --badge-fg: var(--rp-danger-soft-foreground);
 }

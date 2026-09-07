@@ -218,7 +218,7 @@ describe("Table (browser)", () => {
       });
 
       // `color-contrast` is scoped out, not silenced: `.rp-table__column` paints its label in
-      // `--muted` (#71717a) on `--surface-secondary` (#efeff0) at 12px for 4.2:1, under the
+      // `--rp-muted` (#71717a) on `--rp-surface-secondary` (#efeff0) at 12px for 4.2:1, under the
       // 4.5:1 WCAG AA floor. Both colours come out of `@ropav/styles` and measure identical on
       // React at 6006, so the shortfall belongs to the palette rather than to this port.
       await expectNoA11yViolations(container, PALETTE_CONTRAST_DEBT);

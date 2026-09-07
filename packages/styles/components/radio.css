@@ -14,12 +14,12 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--spacing);
+  gap: var(--rp-spacing);
   --rp-outline-style: none;
   outline-style: none;
   -webkit-tap-highlight-color: transparent;
 
-  cursor: var(--cursor-interactive);
+  cursor: var(--rp-cursor-interactive);
 
   [data-slot="label"] {
     -webkit-user-select: none;
@@ -27,7 +27,7 @@
   }
 
   .rp-radio__content [data-slot="label"] {
-    cursor: var(--cursor-interactive);
+    cursor: var(--rp-cursor-interactive);
   }
 
   /* Field-level help text (siblings of the button), indented to align under the label */
@@ -36,12 +36,12 @@
     width: 100%;
     min-width: 0px;
     cursor: default;
-    padding-inline-start: calc(var(--spacing) * 7);
-    font-size: var(--text-xs);
-    line-height: var(--rp-leading, var(--text-xs--line-height));
+    padding-inline-start: calc(var(--rp-spacing) * 7);
+    font-size: var(--rp-text-xs);
+    line-height: var(--rp-leading, var(--rp-text-xs--line-height));
     text-wrap: wrap;
     overflow-wrap: break-word;
-    color: var(--muted);
+    color: var(--rp-muted);
     -webkit-user-select: none;
     user-select: none;
   }
@@ -50,8 +50,8 @@
   &:disabled,
   &[data-disabled="true"],
   &[aria-disabled="true"] {
-    opacity: var(--disabled-opacity);
-    cursor: var(--cursor-disabled);
+    opacity: var(--rp-disabled-opacity);
+    cursor: var(--rp-cursor-disabled);
     pointer-events: none;
     @media (forced-colors: active) {
       color: GrayText;
@@ -60,8 +60,8 @@
 
     [data-slot="description"],
     [data-slot="field-error"] {
-      opacity: var(--disabled-opacity);
-      cursor: var(--cursor-disabled);
+      opacity: var(--rp-disabled-opacity);
+      cursor: var(--rp-cursor-disabled);
       pointer-events: none;
       @media (forced-colors: active) {
         color: GrayText;
@@ -77,11 +77,11 @@
   display: inline-flex;
   cursor: inherit;
   align-items: center;
-  gap: calc(var(--spacing) * 3);
-  font-size: var(--text-sm);
-  line-height: var(--rp-leading, var(--text-sm--line-height));
-  font-weight: var(--font-weight-medium);
-  color: var(--foreground);
+  gap: calc(var(--rp-spacing) * 3);
+  font-size: var(--rp-text-sm);
+  line-height: var(--rp-leading, var(--rp-text-sm--line-height));
+  font-weight: var(--rp-font-weight-medium);
+  color: var(--rp-foreground);
   --rp-outline-style: none;
   outline-style: none;
   -webkit-user-select: none;
@@ -96,29 +96,29 @@
 .rp-radio__control {
   position: relative;
   display: inline-flex;
-  width: calc(var(--spacing) * 4);
-  height: calc(var(--spacing) * 4);
+  width: calc(var(--rp-spacing) * 4);
+  height: calc(var(--rp-spacing) * 4);
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  border-radius: calc(var(--radius) * 1);
+  border-radius: calc(var(--rp-radius) * 1);
   border-style: var(--rp-border-style);
   border-width: 1px;
-  border-width: var(--border-width-field);
-  border-color: var(--field-border, var(--border));
-  background-color: var(--field-background, var(--default));
-  --rp-shadow: var(--field-shadow);
+  border-width: var(--rp-border-width-field);
+  border-color: var(--rp-field-border, var(--rp-border));
+  background-color: var(--rp-field-background, var(--rp-default));
+  --rp-shadow: var(--rp-field-shadow);
   box-shadow: var(--rp-ring), var(--rp-shadow);
   --rp-outline-style: none;
   outline-style: none;
   -webkit-tap-highlight-color: transparent;
 
   transition:
-    var(--rp-motion) background-color 200ms var(--ease-out),
-    border-color 200ms var(--ease-out),
-    transform 100ms var(--ease-out);
+    var(--rp-motion) background-color 200ms var(--rp-ease-out),
+    border-color 200ms var(--rp-ease-out),
+    transform 100ms var(--rp-ease-out);
 
-  cursor: var(--cursor-interactive);
+  cursor: var(--rp-cursor-interactive);
 
   /* Interactive states */
   /* Focus */
@@ -129,8 +129,8 @@
       var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
         var(--rp-ring-color, currentcolor);
     box-shadow: var(--rp-ring), var(--rp-shadow);
-    --rp-ring-color: var(--focus);
-    --rp-ring-offset-color: var(--background);
+    --rp-ring-color: var(--rp-focus);
+    --rp-ring-offset-color: var(--rp-background);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: var(--rp-focus-ring-offset);
@@ -143,7 +143,7 @@
   /* Hover */
   .rp-radio:has([data-slot="radio-content"][data-hovered="true"]) &,
   .rp-radio [data-slot="radio-content"][data-hovered="true"] & {
-    border-color: var(--field-border-hover);
+    border-color: var(--rp-field-border-hover);
   }
 
   /* Hover - only when not selected */
@@ -152,7 +152,7 @@
     )
     & {
     .rp-radio__indicator:empty::before {
-      background-color: var(--field-hover);
+      background-color: var(--rp-field-hover);
     }
   }
 
@@ -170,14 +170,14 @@
   .rp-radio:has([data-slot="radio-content"][aria-checked="true"]) &,
   .rp-radio:has(input:checked) & {
     border-color: transparent;
-    background-color: var(--accent);
+    background-color: var(--rp-accent);
   }
 
   /* Selected + Pressed */
   .rp-radio[data-selected]:has([data-slot="radio-content"][data-pressed="true"]) &,
   .rp-radio:has([data-slot="radio-content"][data-pressed="true"][aria-checked="true"]) &,
   .rp-radio:has(input:checked):has([data-slot="radio-content"][data-pressed="true"]) & {
-    background-color: var(--accent-hover);
+    background-color: var(--rp-accent-hover);
   }
 
   /* Validation states */
@@ -186,7 +186,7 @@
   .rp-radio[aria-invalid="true"] & {
     outline-style: var(--rp-outline-style);
     outline-width: 1px;
-    outline-color: var(--danger);
+    outline-color: var(--rp-danger);
     --rp-outline-style: solid;
     outline-style: solid;
     --rp-ring-offset-width: 3px;
@@ -201,7 +201,7 @@
         var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
           var(--rp-ring-color, currentcolor);
       box-shadow: var(--rp-ring), var(--rp-shadow);
-      --rp-ring-color: var(--danger);
+      --rp-ring-color: var(--rp-danger);
       --rp-ring-offset-width: 0px;
       @media (forced-colors: active) {
         outline-width: 2px;
@@ -217,7 +217,7 @@
   .rp-radio[aria-invalid="true"]:has(input:checked) & {
     outline-style: var(--rp-outline-style);
     outline-width: 1px;
-    outline-color: var(--danger);
+    outline-color: var(--rp-danger);
     --rp-outline-style: solid;
     outline-style: solid;
     --rp-ring-offset-width: 3px;
@@ -232,7 +232,7 @@
         var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
           var(--rp-ring-color, currentcolor);
       box-shadow: var(--rp-ring), var(--rp-shadow);
-      --rp-ring-color: var(--danger);
+      --rp-ring-color: var(--rp-danger);
       --rp-ring-offset-width: 0px;
       @media (forced-colors: active) {
         outline-width: 2px;
@@ -266,23 +266,23 @@
    (e.g., custom icon). When custom content is present, these default dot styles are not applied. */
 .rp-radio__indicator:empty::before {
   content: "";
-  border-radius: calc(var(--radius) * 1);
-  background-color: var(--field-background, var(--default));
+  border-radius: calc(var(--rp-radius) * 1);
+  background-color: var(--rp-field-background, var(--rp-default));
 
   width: 100%;
   height: 100%;
   scale: 1;
 
   transition:
-    var(--rp-motion) scale 200ms var(--ease-out),
-    background-color 200ms var(--ease-out);
+    var(--rp-motion) scale 200ms var(--rp-ease-out),
+    background-color 200ms var(--rp-ease-out);
 }
 
 /* Selected state */
 .rp-radio[data-selected] .rp-radio__indicator:empty::before,
 .rp-radio:has([data-slot="radio-content"][aria-checked="true"]) .rp-radio__indicator:empty::before,
 .rp-radio:has(input:checked) .rp-radio__indicator:empty::before {
-  background-color: var(--accent-foreground);
+  background-color: var(--rp-accent-foreground);
   scale: 0.4286; /* 6px */
 
   /* Forced Colors Mode paints the control and this dot the same `Canvas`, which leaves a
@@ -308,8 +308,8 @@
    ========================================================================== */
 
 .rp-radio--disabled {
-  opacity: var(--disabled-opacity);
-  cursor: var(--cursor-disabled);
+  opacity: var(--rp-disabled-opacity);
+  cursor: var(--rp-cursor-disabled);
   pointer-events: none;
   @media (forced-colors: active) {
     color: GrayText;
