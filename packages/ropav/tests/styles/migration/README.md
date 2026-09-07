@@ -15,7 +15,7 @@ because most of it outlived the change. The name is where it came from, not what
   element is actually carrying. The golden below cannot see this: it stops every animation at
   `t=0`, where such a keyframe equals the resting state.
 - **`coverage.browser.test.ts`** — the guard on the harness itself, which fails if the matrix
-  stops reaching the `components` layer.
+  stops reaching the `components` layer, or if `renamed.ts` stops describing it.
 
 ## The golden
 
@@ -49,6 +49,24 @@ VITE_FREEZE_STYLES=1 pnpm --filter ropav exec vitest run --project vue-browser t
 That writes `__baseline__/computed-styles.json`, which is gitignored. Then make the change and run
 the suite normally; the snapshot test reports which cases moved, and by which property, rather
 than dumping the file.
+
+## Renaming a selector
+
+A case is keyed by its selector, so rewriting one retires a case and introduces another: the
+report gains a `-` and a `+` that no longer name the same rule, and the values that were supposed
+to be compared never are. `renamed.ts` maps a selector to the one the baseline was keyed by, and
+only the key is substituted — the DOM is still built from the selector the sheet declares, so the
+case goes on measuring the element the rule matches. What a rule is called becomes a label, and
+the comparison is left holding the values, which is the only part a rename should not move.
+
+Write the key the way CSSOM hands the selector back rather than the way the file spells it; the
+quoting inside `[]` is normalised, and nesting arrives resolved through `:is()`. An entry that
+matches nothing would do nothing and say nothing, so `coverage.browser.test.ts` holds the table
+against the sheet both ways round: no key that names an undeclared selector, and no rename that
+lands on an id another rule already answers to — that one costs a case rather than raising, since
+the matrix keeps the first case per id.
+
+## Reading the report
 
 Two things to know about reading the report. A line with `|` is a property that moved on a case
 both reports name — that is the signal. A line with `+` or `-` is a case id that appeared or

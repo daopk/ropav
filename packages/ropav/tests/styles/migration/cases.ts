@@ -6,13 +6,21 @@
  * automatically — a rule added during the migration is a case, without anyone listing it.
  */
 
+import type { Renamed } from "./renamed";
+
+import { RENAMED } from "./renamed";
 import { splitTopLevel } from "./selector-dom";
 
 /** A rule to render, and the conditions it renders under. */
 export interface Case {
   /** `@media` / `@supports` preludes wrapping the rule, outermost first. */
   conditions: string[];
-  /** Stable across runs, and stable under reordering — the snapshot is keyed by it. */
+  /**
+   * Stable across runs, and stable under reordering — the snapshot is keyed by it.
+   *
+   * Usually the selector, but not always: a rule listed in `renamed.ts` keeps the id it had, so
+   * the comparison pairs it with the baseline instead of reporting a death and a birth.
+   */
   id: string;
   selector: string;
 }
@@ -72,7 +80,11 @@ const walk = (
 };
 
 /** Every rule the `components` layer declares, deduplicated by selector and conditions. */
-export const componentCases = (sheets: StyleSheetList, layerName = "components"): Case[] => {
+export const componentCases = (
+  sheets: StyleSheetList,
+  layerName = "components",
+  renamed: Renamed = RENAMED,
+): Case[] => {
   const seen = new Map<string, Case>();
 
   for (const sheet of sheets) {
@@ -87,7 +99,7 @@ export const componentCases = (sheets: StyleSheetList, layerName = "components")
     walk(rules, "", [], "", (selector, layer, conditions) => {
       if (layer !== layerName) return;
 
-      const id = [...conditions, selector].join(" ");
+      const id = [...conditions, renamed[selector] ?? selector].join(" ");
 
       if (!seen.has(id)) seen.set(id, { conditions, id, selector });
     });
