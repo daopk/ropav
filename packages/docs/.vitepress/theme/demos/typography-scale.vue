@@ -3,7 +3,7 @@ import { Heading, Paragraph, Typography } from "ropav";
 </script>
 
 <template>
-  <div class="flex flex-col gap-2">
+  <div class="stack">
     <Heading :level="1">Heading level 1</Heading>
     <Heading :level="3">Heading level 3</Heading>
     <Paragraph>Body text, the size everything else is measured against.</Paragraph>
@@ -11,3 +11,11 @@ import { Heading, Paragraph, Typography } from "ropav";
     <Typography color="muted" type="body-xs">Body extra small, muted.</Typography>
   </div>
 </template>
+
+<style scoped>
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing) * 2);
+}
+</style>

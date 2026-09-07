@@ -3,7 +3,7 @@ import { Label, TimeField, TimeFieldGroup, TimeFieldInput, TimeFieldSegment } fr
 </script>
 
 <template>
-  <TimeField class="w-64" name="time">
+  <TimeField class="field" name="time">
     <Label>Start time</Label>
     <TimeFieldGroup>
       <TimeFieldInput>
@@ -14,3 +14,9 @@ import { Label, TimeField, TimeFieldGroup, TimeFieldInput, TimeFieldSegment } fr
     </TimeFieldGroup>
   </TimeField>
 </template>
+
+<style scoped>
+.field {
+  width: calc(var(--spacing) * 64);
+}
+</style>

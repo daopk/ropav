@@ -10,7 +10,17 @@ const runs = [
 
 <template>
   <Chip v-for="run in runs" :key="run.label" :color="run.color" variant="soft">
-    <span aria-hidden="true" class="size-2 shrink-0 rounded-full bg-current" />
+    <span aria-hidden="true" class="dot" />
     <ChipLabel>{{ run.label }}</ChipLabel>
   </Chip>
 </template>
+
+<style scoped>
+.dot {
+  width: calc(var(--spacing) * 2);
+  height: calc(var(--spacing) * 2);
+  flex-shrink: 0;
+  border-radius: 50%;
+  background-color: currentcolor;
+}
+</style>

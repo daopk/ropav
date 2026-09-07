@@ -10,7 +10,7 @@ import {
 </script>
 
 <template>
-  <div class="flex w-full max-w-xs flex-col gap-4">
+  <div class="stack">
     <ColorField default-value="#0485f7">
       <Label>Hex</Label>
       <ColorInputGroup>
@@ -27,3 +27,13 @@ import {
     </ColorField>
   </div>
 </template>
+
+<style scoped>
+.stack {
+  display: flex;
+  width: 100%;
+  max-width: var(--container-xs);
+  flex-direction: column;
+  gap: calc(var(--spacing) * 4);
+}
+</style>

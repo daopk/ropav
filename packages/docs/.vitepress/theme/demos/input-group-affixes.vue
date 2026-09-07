@@ -11,8 +11,8 @@ import {
 </script>
 
 <template>
-  <div class="flex flex-col gap-4">
-    <TextField class="w-72" name="q">
+  <div class="stack">
+    <TextField class="field" name="q">
       <Label>Search</Label>
       <InputGroup>
         <InputGroupPrefix>
@@ -22,7 +22,7 @@ import {
       </InputGroup>
     </TextField>
 
-    <TextField class="w-72" name="domain">
+    <TextField class="field" name="domain">
       <Label>Subdomain</Label>
       <InputGroup>
         <InputGroupInput placeholder="acme" />
@@ -31,3 +31,15 @@ import {
     </TextField>
   </div>
 </template>
+
+<style scoped>
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing) * 4);
+}
+
+.field {
+  width: calc(var(--spacing) * 72);
+}
+</style>

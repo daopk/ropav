@@ -9,9 +9,9 @@ const shortcuts = [
 </script>
 
 <template>
-  <dl class="flex flex-col gap-2 text-sm">
-    <div v-for="shortcut in shortcuts" :key="shortcut.action" class="flex items-center gap-3">
-      <dt class="text-muted w-16">{{ shortcut.action }}</dt>
+  <dl class="list">
+    <div v-for="shortcut in shortcuts" :key="shortcut.action" class="row">
+      <dt class="term">{{ shortcut.action }}</dt>
       <dd>
         <Kbd>
           <KbdAbbr v-for="key in shortcut.keys" :key="key" :key-value="key" />
@@ -21,3 +21,24 @@ const shortcuts = [
     </div>
   </dl>
 </template>
+
+<style scoped>
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing) * 2);
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing) * 3);
+}
+
+.term {
+  color: var(--muted);
+  width: calc(var(--spacing) * 16);
+}
+</style>

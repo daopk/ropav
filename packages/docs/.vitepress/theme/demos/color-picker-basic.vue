@@ -23,7 +23,7 @@ import {
     <ColorPickerPopover>
       <ColorArea
         aria-label="Saturation and brightness"
-        class="max-w-full"
+        class="picker"
         color-space="hsb"
         x-channel="saturation"
         y-channel="brightness"
@@ -31,7 +31,7 @@ import {
         <ColorAreaThumb />
       </ColorArea>
 
-      <ColorSlider channel="hue" class="px-1" color-space="hsb">
+      <ColorSlider channel="hue" class="channel" color-space="hsb">
         <ColorSliderTrack>
           <ColorSliderThumb />
         </ColorSliderTrack>
@@ -39,3 +39,13 @@ import {
     </ColorPickerPopover>
   </ColorPicker>
 </template>
+
+<style scoped>
+.picker {
+  max-width: 100%;
+}
+
+.channel {
+  padding-inline: var(--spacing);
+}
+</style>

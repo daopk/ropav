@@ -15,16 +15,27 @@ const onRemove = (keys: Set<string | number>) => {
 </script>
 
 <template>
-  <TagGroup class="w-full max-w-sm" :on-remove="onRemove" selection-mode="multiple">
+  <TagGroup class="group" :on-remove="onRemove" selection-mode="multiple">
     <Label>Categories</Label>
     <TagGroupList>
       <Tag v-for="tag in tags" :id="tag.id" :key="tag.id" :text-value="tag.name">
         {{ tag.name }}
       </Tag>
       <template #empty>
-        <EmptyState class="p-1">Every category removed</EmptyState>
+        <EmptyState class="empty">Every category removed</EmptyState>
       </template>
     </TagGroupList>
     <Description>Backspace removes the focused tag.</Description>
   </TagGroup>
 </template>
+
+<style scoped>
+.group {
+  width: 100%;
+  max-width: var(--container-sm);
+}
+
+.empty {
+  padding: var(--spacing);
+}
+</style>

@@ -24,10 +24,10 @@ const people = [
 </script>
 
 <template>
-  <div class="w-full max-w-2xl">
+  <div class="frame">
     <Table>
       <TableScrollContainer>
-        <TableContent aria-label="Team" class="min-w-[480px]">
+        <TableContent aria-label="Team" class="table">
           <TableHeader>
             <TableColumn
               v-for="column in columns"
@@ -51,3 +51,14 @@ const people = [
     </Table>
   </div>
 </template>
+
+<style scoped>
+.frame {
+  width: 100%;
+  max-width: var(--container-2xl);
+}
+
+.table {
+  min-width: 480px;
+}
+</style>

@@ -3,8 +3,19 @@ import { Spinner } from "ropav";
 </script>
 
 <template>
-  <p class="text-muted flex items-center gap-2 text-sm">
+  <div class="note">
     <Spinner color="current" size="sm" />
     Checking the domain
-  </p>
+  </div>
 </template>
+
+<style scoped>
+.note {
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing) * 2);
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+}
+</style>

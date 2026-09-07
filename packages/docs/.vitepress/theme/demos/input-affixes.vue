@@ -5,10 +5,26 @@ const sizes = ["sm", "md", "lg"] as const;
 </script>
 
 <template>
-  <div class="flex flex-col gap-4">
+  <div class="stack">
     <TextField v-for="size in sizes" :key="size" :size="size">
-      <Label class="capitalize">{{ size }}</Label>
-      <Input class="w-64" :placeholder="`A ${size} control`" />
+      <Label class="label">{{ size }}</Label>
+      <Input class="field" :placeholder="`A ${size} control`" />
     </TextField>
   </div>
 </template>
+
+<style scoped>
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing) * 4);
+}
+
+.label {
+  text-transform: capitalize;
+}
+
+.field {
+  width: calc(var(--spacing) * 64);
+}
+</style>

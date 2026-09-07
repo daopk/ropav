@@ -10,17 +10,42 @@ import {
 </script>
 
 <template>
-  <Disclosure class="w-full max-w-md" default-expanded>
+  <Disclosure class="panel" default-expanded>
     <DisclosureHeading>
-      <Button class="w-full justify-between" variant="tertiary">
+      <Button class="trigger" variant="tertiary">
         What is in the box?
-        <DisclosureIndicator class="text-muted" />
+        <DisclosureIndicator class="indicator" />
       </Button>
     </DisclosureHeading>
     <DisclosureContent>
-      <DisclosureBody class="text-muted p-3 text-sm">
+      <DisclosureBody class="body">
         Every component, its stylesheet, and the types that go with them.
       </DisclosureBody>
     </DisclosureContent>
   </Disclosure>
 </template>
+
+<style scoped>
+.panel {
+  width: 100%;
+  max-width: var(--container-md);
+}
+
+.trigger {
+  width: 100%;
+  justify-content: space-between;
+}
+
+.indicator {
+  color: var(--muted);
+}
+
+/* `DisclosureBody` puts the class on the element inside its root, which a scoped rule cannot
+   reach on its own - the panel is the nearest thing wearing the scope. */
+.panel :deep(.body) {
+  color: var(--muted);
+  padding: calc(var(--spacing) * 3);
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+}
+</style>

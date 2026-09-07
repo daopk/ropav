@@ -20,7 +20,7 @@ import {
 
     <ModalBackdrop>
       <ModalContainer>
-        <ModalDialog class="sm:max-w-[360px]">
+        <ModalDialog class="dialog">
           <ModalCloseTrigger />
 
           <ModalHeader>
@@ -42,3 +42,11 @@ import {
     </ModalBackdrop>
   </Modal>
 </template>
+
+<style scoped>
+.dialog {
+  @media (width >= 40rem) {
+    max-width: 360px;
+  }
+}
+</style>

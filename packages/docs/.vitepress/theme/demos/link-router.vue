@@ -15,22 +15,52 @@ const navigate = (href: string) => {
 
 <template>
   <RouterProvider :is-current="isCurrent" :navigate="navigate">
-    <div class="flex flex-col gap-3">
-      <nav class="flex items-center gap-4">
+    <div class="stack">
+      <nav class="nav">
         <Link
           v-for="href in ['/inbox', '/drafts', '/sent']"
           :key="href"
           aria-current="auto"
-          class="no-underline data-[current=true]:font-semibold data-[current=true]:underline"
+          class="tab"
           :href="href"
         >
           {{ href.slice(1) }}
         </Link>
       </nav>
 
-      <p class="text-muted text-sm">
+      <p class="note">
         Route: <code>{{ path }}</code> — no reload, and no router in the library.
       </p>
     </div>
   </RouterProvider>
 </template>
+
+<style scoped>
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing) * 3);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing) * 4);
+}
+
+.nav .tab {
+  text-decoration-line: none;
+  &[data-current="true"] {
+    font-weight: var(--font-weight-semibold);
+  }
+  &[data-current="true"] {
+    text-decoration-line: underline;
+  }
+}
+
+.stack .note {
+  color: var(--muted);
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+}
+</style>

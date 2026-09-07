@@ -9,7 +9,7 @@ const people = [
 </script>
 
 <template>
-  <div v-for="person in people" :key="person.initials" class="flex items-center gap-3">
+  <div v-for="person in people" :key="person.initials" class="row">
     <BadgeAnchor>
       <Avatar>
         <AvatarFallback>{{ person.initials }}</AvatarFallback>
@@ -17,6 +17,19 @@ const people = [
       <Badge :color="person.color" placement="bottom-right" size="sm" />
     </BadgeAnchor>
 
-    <span class="text-sm">{{ person.name }} — {{ person.status }}</span>
+    <span class="name">{{ person.name }} — {{ person.status }}</span>
   </div>
 </template>
+
+<style scoped>
+.row {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing) * 3);
+}
+
+.name {
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+}
+</style>

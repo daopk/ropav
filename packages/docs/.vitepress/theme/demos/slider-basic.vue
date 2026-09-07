@@ -3,7 +3,7 @@ import { Label, Slider, SliderFill, SliderOutput, SliderThumb, SliderTrack } fro
 </script>
 
 <template>
-  <div class="flex w-64 flex-col gap-6">
+  <div class="stack">
     <Slider :default-value="30">
       <Label>Volume</Label>
       <SliderOutput />
@@ -24,3 +24,12 @@ import { Label, Slider, SliderFill, SliderOutput, SliderThumb, SliderTrack } fro
     </Slider>
   </div>
 </template>
+
+<style scoped>
+.stack {
+  display: flex;
+  width: calc(var(--spacing) * 64);
+  flex-direction: column;
+  gap: calc(var(--spacing) * 6);
+}
+</style>

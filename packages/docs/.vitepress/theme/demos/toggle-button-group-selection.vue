@@ -14,7 +14,7 @@ const styles = [
 </script>
 
 <template>
-  <div class="flex flex-col gap-6">
+  <div class="stack">
     <ToggleButtonGroup
       aria-label="Alignment"
       :default-selected-keys="['left']"
@@ -38,3 +38,11 @@ const styles = [
     </ToggleButtonGroup>
   </div>
 </template>
+
+<style scoped>
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing) * 6);
+}
+</style>

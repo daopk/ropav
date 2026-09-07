@@ -5,13 +5,13 @@ const links = ["Blog", "Docs", "Source"] as const;
 </script>
 
 <template>
-  <div class="w-full max-w-md">
+  <div class="panel">
     <Typography type="h4">Ropav</Typography>
-    <Typography class="text-muted" type="body-sm">A component library for Vue.</Typography>
+    <Typography class="note" type="body-sm">A component library for Vue.</Typography>
 
-    <Separator class="my-4" />
+    <Separator class="rule" />
 
-    <div class="flex h-5 items-center gap-4">
+    <div class="row">
       <template v-for="(link, index) in links" :key="link">
         <Separator v-if="index > 0" orientation="vertical" />
         <Typography type="body-sm">{{ link }}</Typography>
@@ -19,3 +19,25 @@ const links = ["Blog", "Docs", "Source"] as const;
     </div>
   </div>
 </template>
+
+<style scoped>
+.panel {
+  width: 100%;
+  max-width: var(--container-md);
+}
+
+.panel .note {
+  color: var(--muted);
+}
+
+.panel .rule {
+  margin-block: calc(var(--spacing) * 4);
+}
+
+.row {
+  display: flex;
+  height: calc(var(--spacing) * 5);
+  align-items: center;
+  gap: calc(var(--spacing) * 4);
+}
+</style>

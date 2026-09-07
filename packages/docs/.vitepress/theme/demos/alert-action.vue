@@ -3,7 +3,7 @@ import { Alert, AlertContent, AlertDescription, AlertIndicator, AlertTitle, Butt
 </script>
 
 <template>
-  <Alert class="w-full max-w-xl" status="accent">
+  <Alert class="alert" status="accent">
     <AlertIndicator />
     <AlertContent>
       <AlertTitle>A new version is available</AlertTitle>
@@ -12,3 +12,10 @@ import { Alert, AlertContent, AlertDescription, AlertIndicator, AlertTitle, Butt
     <Button size="sm">Refresh</Button>
   </Alert>
 </template>
+
+<style scoped>
+.alert {
+  width: 100%;
+  max-width: var(--container-xl);
+}
+</style>

@@ -3,7 +3,7 @@ import { Label, ProgressBar, ProgressBarFill, ProgressBarOutput, ProgressBarTrac
 </script>
 
 <template>
-  <div class="flex w-full max-w-md flex-col gap-6">
+  <div class="stack">
     <ProgressBar :value="60">
       <Label>Uploading</Label>
       <ProgressBarOutput />
@@ -16,3 +16,13 @@ import { Label, ProgressBar, ProgressBarFill, ProgressBarOutput, ProgressBarTrac
     </ProgressBar>
   </div>
 </template>
+
+<style scoped>
+.stack {
+  display: flex;
+  width: 100%;
+  max-width: var(--container-md);
+  flex-direction: column;
+  gap: calc(var(--spacing) * 6);
+}
+</style>

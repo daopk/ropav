@@ -13,7 +13,7 @@ const show = (variant: "danger" | "default" | "success") => {
 </script>
 
 <template>
-  <div class="flex flex-wrap gap-3">
+  <div class="row">
     <Button size="sm" variant="secondary" @click="show('default')">Default</Button>
     <Button size="sm" variant="secondary" @click="show('success')">Success</Button>
     <Button size="sm" variant="danger-soft" @click="show('danger')">Danger</Button>
@@ -21,3 +21,11 @@ const show = (variant: "danger" | "default" | "success") => {
     <ToastProvider placement="bottom" :queue />
   </div>
 </template>
+
+<style scoped>
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--spacing) * 3);
+}
+</style>

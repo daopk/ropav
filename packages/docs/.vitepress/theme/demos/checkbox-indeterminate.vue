@@ -3,7 +3,7 @@ import { Checkbox, CheckboxContent, CheckboxControl, CheckboxIndicator } from "r
 </script>
 
 <template>
-  <div class="flex flex-col gap-3">
+  <div class="stack">
     <Checkbox
       v-for="state in ['unchecked', 'checked', 'mixed'] as const"
       :key="state"
@@ -19,3 +19,11 @@ import { Checkbox, CheckboxContent, CheckboxControl, CheckboxIndicator } from "r
     </Checkbox>
   </div>
 </template>
+
+<style scoped>
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing) * 3);
+}
+</style>

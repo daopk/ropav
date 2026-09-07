@@ -17,7 +17,7 @@ const interests = [
 </script>
 
 <template>
-  <CheckboxGroup class="w-full max-w-md" :default-value="['coding']" name="interests">
+  <CheckboxGroup class="group" :default-value="['coding']" name="interests">
     <Label>Interests</Label>
     <Description>Choose all that apply.</Description>
 
@@ -31,3 +31,10 @@ const interests = [
     </Checkbox>
   </CheckboxGroup>
 </template>
+
+<style scoped>
+.group {
+  width: 100%;
+  max-width: var(--container-md);
+}
+</style>

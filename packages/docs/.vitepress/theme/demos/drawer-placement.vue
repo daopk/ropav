@@ -18,7 +18,7 @@ const placements = ["bottom", "right"] as const;
 
 <template>
   <Drawer v-for="placement in placements" :key="placement">
-    <Button class="capitalize" variant="secondary">{{ placement }}</Button>
+    <Button class="side" variant="secondary">{{ placement }}</Button>
 
     <DrawerBackdrop>
       <DrawerContent :placement="placement">
@@ -28,7 +28,7 @@ const placements = ["bottom", "right"] as const;
             <DrawerHeading>Filters</DrawerHeading>
           </DrawerHeader>
           <DrawerBody>
-            <p class="text-muted text-sm">
+            <p class="note">
               The handle is draggable, so the drawer can be dismissed by flicking it away.
             </p>
           </DrawerBody>
@@ -41,3 +41,15 @@ const placements = ["bottom", "right"] as const;
     </DrawerBackdrop>
   </Drawer>
 </template>
+
+<style scoped>
+.side {
+  text-transform: capitalize;
+}
+
+.note {
+  color: var(--muted);
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+}
+</style>

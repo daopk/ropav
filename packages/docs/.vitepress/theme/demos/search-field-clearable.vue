@@ -14,8 +14,14 @@ import {
     <Label>Search the docs</Label>
     <SearchFieldGroup>
       <SearchFieldSearchIcon />
-      <SearchFieldInput class="w-72" placeholder="Search…" />
+      <SearchFieldInput class="field" placeholder="Search…" />
       <SearchFieldClearButton />
     </SearchFieldGroup>
   </SearchField>
 </template>
+
+<style scoped>
+.field {
+  width: calc(var(--spacing) * 72);
+}
+</style>

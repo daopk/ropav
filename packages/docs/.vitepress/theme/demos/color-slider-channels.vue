@@ -12,7 +12,7 @@ const channels = [
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
+  <div class="stack">
     <ColorSlider
       v-for="item in channels"
       :key="item.channel"
@@ -28,3 +28,13 @@ const channels = [
     </ColorSlider>
   </div>
 </template>
+
+<style scoped>
+.stack {
+  display: flex;
+  width: 100%;
+  max-width: var(--container-sm);
+  flex-direction: column;
+  gap: calc(var(--spacing) * 4);
+}
+</style>

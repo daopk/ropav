@@ -10,8 +10,8 @@ import {
 </script>
 
 <template>
-  <div class="flex flex-col gap-4">
-    <NumberField class="w-48" :default-value="1024" :min-value="0" name="width">
+  <div class="stack">
+    <NumberField class="field" :default-value="1024" :min-value="0" name="width">
       <Label>Width</Label>
       <NumberFieldGroup>
         <NumberFieldDecrementButton />
@@ -21,7 +21,7 @@ import {
     </NumberField>
 
     <NumberField
-      class="w-48"
+      class="field"
       :default-value="0.15"
       :format-options="{ style: 'percent' }"
       name="rate"
@@ -36,3 +36,15 @@ import {
     </NumberField>
   </div>
 </template>
+
+<style scoped>
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing) * 4);
+}
+
+.field {
+  width: calc(var(--spacing) * 48);
+}
+</style>

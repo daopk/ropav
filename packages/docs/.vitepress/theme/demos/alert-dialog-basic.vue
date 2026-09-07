@@ -20,14 +20,14 @@ import {
 
     <AlertDialogBackdrop>
       <AlertDialogContainer>
-        <AlertDialogDialog class="sm:max-w-[400px]">
+        <AlertDialogDialog class="dialog">
           <AlertDialogHeader>
             <AlertDialogIcon status="danger" />
             <AlertDialogHeading>Delete this project?</AlertDialogHeading>
           </AlertDialogHeader>
 
           <AlertDialogBody>
-            <p class="text-muted text-sm">Everything in it goes with it. This cannot be undone.</p>
+            <p class="note">Everything in it goes with it. This cannot be undone.</p>
           </AlertDialogBody>
 
           <AlertDialogFooter>
@@ -39,3 +39,17 @@ import {
     </AlertDialogBackdrop>
   </AlertDialog>
 </template>
+
+<style scoped>
+.dialog {
+  @media (width >= 40rem) {
+    max-width: 400px;
+  }
+}
+
+.note {
+  color: var(--muted);
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+}
+</style>

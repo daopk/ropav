@@ -3,7 +3,7 @@ import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot, Label } from 
 </script>
 
 <template>
-  <div class="flex flex-col gap-2">
+  <div class="stack">
     <Label>Verification code</Label>
     <InputOTP aria-label="Verification code" default-value="042" :max-length="6">
       <InputOTPGroup>
@@ -20,3 +20,11 @@ import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot, Label } from 
     </InputOTP>
   </div>
 </template>
+
+<style scoped>
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing) * 2);
+}
+</style>

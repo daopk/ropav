@@ -12,7 +12,7 @@ const colorFor = (value: number) => (value >= 90 ? "danger" : value >= 70 ? "war
 </script>
 
 <template>
-  <div class="flex w-full max-w-md flex-col gap-6">
+  <div class="stack">
     <Meter
       v-for="disk in disks"
       :key="disk.label"
@@ -25,3 +25,13 @@ const colorFor = (value: number) => (value >= 90 ? "danger" : value >= 70 ? "war
     </Meter>
   </div>
 </template>
+
+<style scoped>
+.stack {
+  display: flex;
+  width: 100%;
+  max-width: var(--container-md);
+  flex-direction: column;
+  gap: calc(var(--spacing) * 6);
+}
+</style>

@@ -10,11 +10,27 @@ const onSelect = (files: File[]) => {
 </script>
 
 <template>
-  <div class="flex w-full max-w-md flex-col gap-3">
+  <div class="stack">
     <DropZone aria-label="Upload files" multiple @select="onSelect">
       <p>Drop files here, or <DropZoneTrigger>browse</DropZoneTrigger></p>
     </DropZone>
 
-    <p v-if="taken.length" class="text-muted text-sm">Took: {{ taken.join(", ") }}</p>
+    <p v-if="taken.length" class="note">Took: {{ taken.join(", ") }}</p>
   </div>
 </template>
+
+<style scoped>
+.stack {
+  display: flex;
+  width: 100%;
+  max-width: var(--container-md);
+  flex-direction: column;
+  gap: calc(var(--spacing) * 3);
+}
+
+.note {
+  color: var(--muted);
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+}
+</style>

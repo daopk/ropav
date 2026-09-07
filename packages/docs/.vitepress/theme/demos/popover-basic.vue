@@ -15,10 +15,22 @@ import {
 
     <PopoverContent placement="bottom">
       <PopoverArrow />
-      <PopoverDialog class="max-w-64">
+      <PopoverDialog class="dialog">
         <PopoverHeading>Share this project</PopoverHeading>
-        <p class="text-muted text-sm">Anyone with the link can read it. Nobody can edit.</p>
+        <p class="note">Anyone with the link can read it. Nobody can edit.</p>
       </PopoverDialog>
     </PopoverContent>
   </Popover>
 </template>
+
+<style scoped>
+.dialog {
+  max-width: calc(var(--spacing) * 64);
+}
+
+.note {
+  color: var(--muted);
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+}
+</style>

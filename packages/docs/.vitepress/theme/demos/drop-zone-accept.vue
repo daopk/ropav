@@ -3,10 +3,17 @@ import { DropZone, DropZoneTrigger } from "ropav";
 </script>
 
 <template>
-  <DropZone accept="image/*" aria-label="Upload images" class="w-full max-w-md" multiple>
+  <DropZone accept="image/*" aria-label="Upload images" class="zone" multiple>
     <template #default="{ status }">
       <p v-if="status === 'reject'">Only images can be dropped here</p>
       <p v-else>Drop images here, or <DropZoneTrigger>browse</DropZoneTrigger></p>
     </template>
   </DropZone>
 </template>
+
+<style scoped>
+.zone {
+  width: 100%;
+  max-width: var(--container-md);
+}
+</style>

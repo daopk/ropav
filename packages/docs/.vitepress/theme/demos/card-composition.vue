@@ -11,7 +11,7 @@ import {
 </script>
 
 <template>
-  <Card class="w-80">
+  <Card class="card">
     <CardHeader>
       <CardTitle>Weekly report</CardTitle>
       <CardDescription>Sent every Monday at 9am.</CardDescription>
@@ -25,3 +25,9 @@ import {
     </CardFooter>
   </Card>
 </template>
+
+<style scoped>
+.card {
+  width: calc(var(--spacing) * 80);
+}
+</style>

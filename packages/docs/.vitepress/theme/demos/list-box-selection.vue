@@ -9,7 +9,7 @@ const people = [
 </script>
 
 <template>
-  <Surface class="w-56 p-0">
+  <Surface class="surface">
     <ListBox aria-label="Reviewers" :default-selected-keys="['ada']" selection-mode="multiple">
       <ListBoxSection>
         <ListBoxItem v-for="person in people" :id="person.id" :key="person.id">
@@ -20,3 +20,10 @@ const people = [
     </ListBox>
   </Surface>
 </template>
+
+<style scoped>
+.surface {
+  width: calc(var(--spacing) * 56);
+  padding: 0;
+}
+</style>

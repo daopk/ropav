@@ -13,7 +13,7 @@ import {
 </script>
 
 <template>
-  <Fieldset class="w-full max-w-md">
+  <Fieldset class="fieldset">
     <FieldsetLegend>Billing address</FieldsetLegend>
     <Description>Where the invoice is sent.</Description>
 
@@ -34,3 +34,10 @@ import {
     </FieldsetActions>
   </Fieldset>
 </template>
+
+<style scoped>
+.fieldset {
+  width: 100%;
+  max-width: var(--container-md);
+}
+</style>

@@ -10,7 +10,7 @@ const statuses = [
 </script>
 
 <template>
-  <div class="flex w-full max-w-xl flex-col gap-3">
+  <div class="stack">
     <Alert v-for="entry in statuses" :key="entry.status" :status="entry.status">
       <AlertIndicator />
       <AlertContent>
@@ -20,3 +20,13 @@ const statuses = [
     </Alert>
   </div>
 </template>
+
+<style scoped>
+.stack {
+  display: flex;
+  width: 100%;
+  max-width: var(--container-xl);
+  flex-direction: column;
+  gap: calc(var(--spacing) * 3);
+}
+</style>

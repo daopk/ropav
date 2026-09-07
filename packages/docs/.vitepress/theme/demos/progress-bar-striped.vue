@@ -8,7 +8,7 @@ const bars = [
 </script>
 
 <template>
-  <div class="flex w-full max-w-md flex-col gap-6">
+  <div class="stack">
     <ProgressBar
       v-for="bar in bars"
       :key="bar.label"
@@ -22,3 +22,13 @@ const bars = [
     </ProgressBar>
   </div>
 </template>
+
+<style scoped>
+.stack {
+  display: flex;
+  width: 100%;
+  max-width: var(--container-md);
+  flex-direction: column;
+  gap: calc(var(--spacing) * 6);
+}
+</style>

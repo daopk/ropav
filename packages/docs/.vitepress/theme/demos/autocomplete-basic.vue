@@ -23,7 +23,7 @@ const byName = (city: { name: string }) => city.name;
 
 <template>
   <Autocomplete
-    class="w-64"
+    class="field"
     :item-text-value="byName"
     :items="cities"
     placeholder="Pick a city"
@@ -45,3 +45,9 @@ const byName = (city: { name: string }) => city.name;
     </AutocompletePopover>
   </Autocomplete>
 </template>
+
+<style scoped>
+.field {
+  width: calc(var(--spacing) * 64);
+}
+</style>

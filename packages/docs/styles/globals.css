@@ -38,8 +38,9 @@
  * offers. Relative because the granular subpaths only exist in the published tarball. */
 @import "../../styles/themes/all.css";
 
-/* Tailwind has to scan the Vue sources, or the classes the SFCs name never get emitted. */
-@source "../../ropav/src/**/*.{vue,ts}";
+/* Tailwind has to scan the sources, or the classes they name never get emitted. The library's own
+ * `src` used to be scanned too; the demos are written in the tokens now and the only utilities
+ * left under it are in stories this site never renders, which were emitted for nothing. */
 @source "../.vitepress/theme/**/*.{vue,ts}";
 
 :root {
@@ -59,7 +60,13 @@
  * The `.vp-doc` prefix is load-bearing. `:is()` takes the highest specificity among its
  * arguments, so without it this rule only ties with `.vp-doc p` and wins on source order.
  *
- * `all` leaves custom properties alone, so the palette still reaches a reverted subtree. */
+ * `all` leaves custom properties alone, so the palette still reaches a reverted subtree.
+ *
+ * It also reverts a demo's own styles, which is the one thing it should not: a `<style scoped>`
+ * rule is unlayered and `.note[data-v-x]` scores under the selector below, so `all: revert-layer`
+ * drops it back to the layer beneath. A demo styling one of these tags therefore has to out-score
+ * this rule - `.stack .note` rather than `.note` - or put the class on a tag the list leaves
+ * alone. */
 .vp-doc
   .ropav-demo
   :is(

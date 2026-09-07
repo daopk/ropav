@@ -3,22 +3,22 @@ import { ColorArea, ColorAreaThumb } from "ropav";
 </script>
 
 <template>
-  <div class="flex flex-col gap-2">
-    <p class="text-muted text-sm">Saturation × brightness</p>
+  <div class="stack">
+    <p class="note">Saturation × brightness</p>
     <ColorArea
       aria-label="Saturation and brightness"
-      class="w-56"
+      class="area"
       default-value="hsb(30, 100%, 100%)"
     >
       <ColorAreaThumb />
     </ColorArea>
   </div>
 
-  <div class="flex flex-col gap-2">
-    <p class="text-muted text-sm">Red × green</p>
+  <div class="stack">
+    <p class="note">Red × green</p>
     <ColorArea
       aria-label="Red and green"
-      class="w-56"
+      class="area"
       default-value="rgb(255, 100, 50)"
       x-channel="red"
       y-channel="green"
@@ -27,3 +27,21 @@ import { ColorArea, ColorAreaThumb } from "ropav";
     </ColorArea>
   </div>
 </template>
+
+<style scoped>
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing) * 2);
+}
+
+.stack .note {
+  color: var(--muted);
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+}
+
+.area {
+  width: calc(var(--spacing) * 56);
+}
+</style>

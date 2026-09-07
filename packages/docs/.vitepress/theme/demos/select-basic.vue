@@ -22,7 +22,7 @@ const byName = (item: { name: string }) => item.name;
 </script>
 
 <template>
-  <Select class="w-64" :item-text-value="byName" :items="items" placeholder="Pick a city">
+  <Select class="field" :item-text-value="byName" :items="items" placeholder="Pick a city">
     <Label>Destination</Label>
     <SelectTrigger>
       <SelectValue />
@@ -38,3 +38,9 @@ const byName = (item: { name: string }) => item.name;
     </SelectPopover>
   </Select>
 </template>
+
+<style scoped>
+.field {
+  width: calc(var(--spacing) * 64);
+}
+</style>

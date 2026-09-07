@@ -24,17 +24,42 @@ const sections = [
 </script>
 
 <template>
-  <DisclosureGroup class="w-full max-w-md" :default-expanded-keys="['styling']">
+  <DisclosureGroup class="panel" :default-expanded-keys="['styling']">
     <Disclosure v-for="section in sections" :id="section.id" :key="section.id">
       <DisclosureHeading>
-        <Button class="w-full justify-between" variant="tertiary">
+        <Button class="trigger" variant="tertiary">
           {{ section.label }}
-          <DisclosureIndicator class="text-muted" />
+          <DisclosureIndicator class="indicator" />
         </Button>
       </DisclosureHeading>
       <DisclosureContent>
-        <DisclosureBody class="text-muted p-3 text-sm">{{ section.body }}</DisclosureBody>
+        <DisclosureBody class="body">{{ section.body }}</DisclosureBody>
       </DisclosureContent>
     </Disclosure>
   </DisclosureGroup>
 </template>
+
+<style scoped>
+.panel {
+  width: 100%;
+  max-width: var(--container-md);
+}
+
+.trigger {
+  width: 100%;
+  justify-content: space-between;
+}
+
+.indicator {
+  color: var(--muted);
+}
+
+/* `DisclosureBody` puts the class on the element inside its root, which a scoped rule cannot
+   reach on its own - the panel is the nearest thing wearing the scope. */
+.panel :deep(.body) {
+  color: var(--muted);
+  padding: calc(var(--spacing) * 3);
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+}
+</style>

@@ -3,12 +3,50 @@ import { Card, Skeleton } from "ropav";
 </script>
 
 <template>
-  <Card class="flex w-56 flex-col gap-5">
-    <Skeleton class="h-24 rounded-xl" />
-    <div class="flex flex-col gap-3">
-      <Skeleton class="h-3 w-3/5 rounded-lg" />
-      <Skeleton class="h-3 w-4/5 rounded-lg" />
-      <Skeleton class="h-3 w-2/5 rounded-lg" />
+  <Card class="card">
+    <Skeleton class="thumb" />
+    <div class="lines">
+      <Skeleton class="line line--short" />
+      <Skeleton class="line line--long" />
+      <Skeleton class="line line--stub" />
     </div>
   </Card>
 </template>
+
+<style scoped>
+.card {
+  display: flex;
+  width: calc(var(--spacing) * 56);
+  flex-direction: column;
+  gap: calc(var(--spacing) * 5);
+}
+
+.thumb {
+  height: calc(var(--spacing) * 24);
+  border-radius: calc(var(--radius) * 1.5);
+}
+
+.lines {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing) * 3);
+}
+
+.line.line--short {
+  height: calc(var(--spacing) * 3);
+  width: 60%;
+  border-radius: var(--radius);
+}
+
+.line.line--long {
+  height: calc(var(--spacing) * 3);
+  width: 80%;
+  border-radius: var(--radius);
+}
+
+.line.line--stub {
+  height: calc(var(--spacing) * 3);
+  width: 40%;
+  border-radius: var(--radius);
+}
+</style>

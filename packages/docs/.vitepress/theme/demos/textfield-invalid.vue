@@ -3,9 +3,15 @@ import { FieldError, Input, Label, TextField } from "ropav";
 </script>
 
 <template>
-  <TextField class="w-72" is-invalid name="email">
+  <TextField class="field" is-invalid name="email">
     <Label>Email address</Label>
     <Input default-value="not-an-address" type="email" />
     <FieldError>Enter an address in the form name@example.com.</FieldError>
   </TextField>
 </template>
+
+<style scoped>
+.field {
+  width: calc(var(--spacing) * 72);
+}
+</style>

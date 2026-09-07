@@ -3,7 +3,7 @@ import { Label, Menu, MenuItem, Separator, Surface } from "ropav";
 </script>
 
 <template>
-  <Surface class="w-56 p-0">
+  <Surface class="surface">
     <Menu aria-label="File actions">
       <MenuItem id="new" text-value="New file">
         <Label>New file</Label>
@@ -20,3 +20,10 @@ import { Label, Menu, MenuItem, Separator, Surface } from "ropav";
     </Menu>
   </Surface>
 </template>
+
+<style scoped>
+.surface {
+  width: calc(var(--spacing) * 56);
+  padding: 0;
+}
+</style>

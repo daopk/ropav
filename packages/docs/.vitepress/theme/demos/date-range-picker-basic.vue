@@ -23,7 +23,7 @@ import {
 </script>
 
 <template>
-  <DateRangePicker class="w-80" end-name="endDate" start-name="startDate">
+  <DateRangePicker class="field" end-name="endDate" start-name="startDate">
     <Label>Trip dates</Label>
 
     <DateRangePickerGroup full-width>
@@ -68,3 +68,9 @@ import {
     </DateRangePickerPopover>
   </DateRangePicker>
 </template>
+
+<style scoped>
+.field {
+  width: calc(var(--spacing) * 80);
+}
+</style>

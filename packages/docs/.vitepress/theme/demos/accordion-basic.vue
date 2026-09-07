@@ -29,7 +29,7 @@ const questions = [
 </script>
 
 <template>
-  <Accordion class="w-full max-w-md" :default-expanded-keys="['styling']">
+  <Accordion class="panel" :default-expanded-keys="['styling']">
     <AccordionItem v-for="question in questions" :id="question.id" :key="question.id">
       <AccordionHeading>
         <AccordionTrigger>
@@ -43,3 +43,10 @@ const questions = [
     </AccordionItem>
   </Accordion>
 </template>
+
+<style scoped>
+.panel {
+  width: 100%;
+  max-width: var(--container-md);
+}
+</style>

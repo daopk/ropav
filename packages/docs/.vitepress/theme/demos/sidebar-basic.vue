@@ -17,7 +17,7 @@ import {
 </script>
 
 <template>
-  <div class="h-72 w-full overflow-hidden rounded-lg border border-[var(--border)]">
+  <div class="frame">
     <Sidebar collapsible="icon">
       <SidebarPanel aria-label="Main">
         <SidebarHeader>Acme</SidebarHeader>
@@ -39,9 +39,25 @@ import {
         </SidebarContent>
       </SidebarPanel>
 
-      <SidebarInset class="p-4">
+      <SidebarInset class="inset">
         <SidebarTrigger />
       </SidebarInset>
     </Sidebar>
   </div>
 </template>
+
+<style scoped>
+.frame {
+  height: calc(var(--spacing) * 72);
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius);
+  border-style: solid;
+  border-width: 1px;
+  border-color: var(--border);
+}
+
+.inset {
+  padding: calc(var(--spacing) * 4);
+}
+</style>

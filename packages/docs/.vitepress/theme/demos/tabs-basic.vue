@@ -9,7 +9,7 @@ const items = [
 </script>
 
 <template>
-  <div class="w-full max-w-md">
+  <div class="panel">
     <Tabs>
       <TabsListContainer>
         <TabsList aria-label="Project settings">
@@ -20,9 +20,20 @@ const items = [
         </TabsList>
       </TabsListContainer>
 
-      <TabsPanel v-for="item in items" :id="item.id" :key="item.id" class="pt-4">
+      <TabsPanel v-for="item in items" :id="item.id" :key="item.id" class="tab-panel">
         {{ item.body }}
       </TabsPanel>
     </Tabs>
   </div>
 </template>
+
+<style scoped>
+.panel {
+  width: 100%;
+  max-width: var(--container-md);
+}
+
+.tab-panel {
+  padding-top: calc(var(--spacing) * 4);
+}
+</style>

@@ -22,7 +22,7 @@ const byName = (city: { name: string }) => city.name;
 </script>
 
 <template>
-  <ComboBox v-slot="{ items: matches }" class="w-64" :item-text-value="byName" :items="cities">
+  <ComboBox v-slot="{ items: matches }" class="field" :item-text-value="byName" :items="cities">
     <Label>Destination</Label>
     <ComboBoxInputGroup>
       <Input placeholder="Start typing…" />
@@ -39,3 +39,9 @@ const byName = (city: { name: string }) => city.name;
     </ComboBoxPopover>
   </ComboBox>
 </template>
+
+<style scoped>
+.field {
+  width: calc(var(--spacing) * 64);
+}
+</style>
