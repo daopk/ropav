@@ -1,12 +1,18 @@
 /**
- * Composition slots — GENERATED, do not edit by hand.
+ * Composition slots.
  *
- * Run `node scripts/migration/codemod.mjs` to rewrite this file.
+ * Each of these is read by a declaration that composes several contributions into one property:
+ * a `box-shadow` built from a ring and a shadow, a `transform` from six. The registration is
+ * what gives an unset slot a value to resolve to, so a rule that sets one of them does not have
+ * to set the rest. Without it a slot read through `var()` is an undefined custom property, which
+ * makes the whole declaration invalid at computed-value time — `border-style:
+ * var(--rp-border-style)` silently becomes `none`, and the border it was sizing disappears.
  *
- * Each of these is read by a declaration that composes several utilities into one property:
- * a `box-shadow` built from five contributions, a `transform` from six. The registration is
- * what gives an unset slot a value to resolve to, so a rule that sets one of them does not
- * have to set the rest.
+ * This file was generated for as long as there was something to generate it from: the codemod
+ * classified the slots off the `@apply` corpus, and wrote whichever ones both ends of belonged to
+ * this package. That corpus is gone — expanding it is what removed it — and a run over what
+ * survives classifies only the handful of slots those statements happen to name. So the set is
+ * maintained here now, and shrinks by hand as each composed group is dissolved.
  */
 
 @property --rp-shadow {
@@ -18,24 +24,25 @@
   syntax: "*";
   inherits: false;
 }
-@property --rp-inset-shadow {
-  syntax: "*";
-  inherits: false;
-  initial-value: 0 0 #0000;
-}
 @property --rp-ring-color {
   syntax: "*";
   inherits: false;
 }
-@property --rp-ring-shadow {
+/*
+ * A ring is two shadows: the gap, painted in the page's colour, over the ring in its own. Both
+ * live in one slot, and the initial value holds *both* places open rather than one.
+ *
+ * That is load-bearing rather than tidy. Chromium pairs shadow lists positionally and pads the
+ * shorter one at the end, so a list that grows by an entry while a transition runs pairs the drop
+ * shadow with the ring and renders the blend of the two. Keeping the length equal in every state
+ * is what the five-slot form did by accident, and no golden reads a midpoint.
+ */
+@property --rp-ring {
   syntax: "*";
   inherits: false;
-  initial-value: 0 0 #0000;
-}
-@property --rp-inset-ring-shadow {
-  syntax: "*";
-  inherits: false;
-  initial-value: 0 0 #0000;
+  initial-value:
+    0 0 #0000,
+    0 0 #0000;
 }
 @property --rp-ring-inset {
   syntax: "*";
@@ -50,11 +57,6 @@
   syntax: "*";
   inherits: false;
   initial-value: #fff;
-}
-@property --rp-ring-offset-shadow {
-  syntax: "*";
-  inherits: false;
-  initial-value: 0 0 #0000;
 }
 @property --rp-content {
   syntax: "*";

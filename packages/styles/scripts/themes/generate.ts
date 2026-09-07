@@ -38,12 +38,6 @@ const stylesDir = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const HANDWRITTEN = new Set<ThemeId>(["default", "hero"]);
 
 /**
- * `--tw-ring-color` is a Tailwind internal; the hand-written default does not set it and
- * neither should a theme.
- */
-const SKIP_DERIVED = new Set(["--tw-ring-color"]);
-
-/**
  * The scrollbar thumb tracks `--foreground`, so it has to be re-derived per theme rather
  * than living in the shared token file. Mirrors `themes/default.css`.
  */
@@ -129,9 +123,7 @@ function buildVariables(preset: ThemePreset, scheme: "light" | "dark") {
 
   delete vars["--scrollbar"];
 
-  for (const [name, value] of Object.entries(getDerivedColorFormulas(scheme))) {
-    if (!SKIP_DERIVED.has(name)) vars[name] = value;
-  }
+  Object.assign(vars, getDerivedColorFormulas(scheme));
 
   Object.assign(vars, SCROLLBAR_CHAIN, FOREGROUND_LINKED);
 

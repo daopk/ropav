@@ -90,9 +90,7 @@
       background-color: var(--accent-foreground);
       color: var(--color-black);
       --rp-shadow: var(--field-shadow);
-      box-shadow:
-        var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
-        var(--rp-ring-shadow), var(--rp-shadow);
+      box-shadow: var(--rp-ring), var(--rp-shadow);
       content: "";
 
       border-radius: min(32px, var(--component-radius));
@@ -126,15 +124,12 @@
     /* Focus state - increase z-index */
     &[data-focus-visible="true"] {
       z-index: 10;
-      --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
-        var(--rp-ring-color, currentcolor);
-      box-shadow:
-        var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
-        var(--rp-ring-shadow), var(--rp-shadow);
+      --rp-ring:
+        var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width) var(--rp-ring-offset-color),
+        var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+          var(--rp-ring-color, currentcolor);
+      box-shadow: var(--rp-ring), var(--rp-shadow);
       --rp-ring-color: var(--focus);
-      --rp-ring-offset-width: 0px;
-      --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
-        var(--rp-ring-offset-color);
       --rp-ring-offset-color: var(--background);
       --rp-outline-style: none;
       outline-style: none;

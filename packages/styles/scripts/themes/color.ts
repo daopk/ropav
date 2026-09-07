@@ -786,7 +786,6 @@ export function getDerivedColorFormulas(
     ),
     "--success-soft-hover": `color-mix(in oklab, var(--success) ${softHoverPct}, transparent)`,
     "--surface-hover": "color-mix(in oklab, var(--surface) 92%, var(--surface-foreground) 8%)",
-    "--tw-ring-color": "var(--focus)",
     "--warning-hover": "color-mix(in oklab, var(--warning) 90%, var(--warning-foreground) 10%)",
     "--warning-soft": `color-mix(in oklab, var(--warning) ${softPct}, transparent)`,
     "--warning-soft-foreground": sfFg(

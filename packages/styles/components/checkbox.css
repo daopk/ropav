@@ -132,9 +132,7 @@
   border-width: 1px;
   border-width: var(--border-width-field);
   --rp-shadow: var(--field-shadow);
-  box-shadow:
-    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
-    var(--rp-ring-shadow), var(--rp-shadow);
+  box-shadow: var(--rp-ring), var(--rp-shadow);
   --rp-outline-style: none;
   outline-style: none;
   -webkit-tap-highlight-color: transparent;
@@ -199,15 +197,12 @@
   .rp-checkbox:focus-visible &,
   .rp-checkbox:has([data-slot="checkbox-content"][data-focus-visible="true"]) &,
   .rp-checkbox [data-slot="checkbox-content"][data-focus-visible="true"] & {
-    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
-      var(--rp-ring-color, currentcolor);
-    box-shadow:
-      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
-      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring:
+      var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width) var(--rp-ring-offset-color),
+      var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+        var(--rp-ring-color, currentcolor);
+    box-shadow: var(--rp-ring), var(--rp-shadow);
     --rp-ring-color: var(--focus);
-    --rp-ring-offset-width: 0px;
-    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
-      var(--rp-ring-offset-color);
     --rp-ring-offset-color: var(--background);
     --rp-outline-style: none;
     outline-style: none;
@@ -286,15 +281,12 @@
     &[data-focus-visible="true"],
     &:focus-within,
     &[data-focus-within="true"] {
-      --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
-        var(--rp-ring-color, currentcolor);
-      box-shadow:
-        var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
-        var(--rp-ring-shadow), var(--rp-shadow);
+      --rp-ring:
+        var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width) var(--rp-ring-offset-color),
+        var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+          var(--rp-ring-color, currentcolor);
+      box-shadow: var(--rp-ring), var(--rp-shadow);
       --rp-ring-color: var(--danger);
-      --rp-ring-offset-width: 0px;
-      --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
-        var(--rp-ring-offset-color);
       --rp-ring-offset-width: 0px;
       @media (forced-colors: active) {
         outline-width: 2px;
@@ -375,9 +367,7 @@
 
 .rp-checkbox--secondary .rp-checkbox__control {
   --rp-shadow: 0 0 #0000;
-  box-shadow:
-    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
-    var(--rp-ring-shadow), var(--rp-shadow);
+  box-shadow: var(--rp-ring), var(--rp-shadow);
 
   /* No border and no shadow leave the fill as the only thing drawing this box, so a flat neutral
    * erases it against any surface of the same lightness — a hovered table row is exactly that.

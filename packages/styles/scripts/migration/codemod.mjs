@@ -14,7 +14,7 @@
  * every file and reports what moved. Only an empty diff leaves the edit in place.
  */
 /* eslint-disable no-console */
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
 import {
@@ -24,7 +24,7 @@ import {
   stylesheets,
   stylesRoot,
 } from "./corpus.mjs";
-import { normalise, propertyBlocks, renameSlots } from "./normalise.mjs";
+import { normalise, renameSlots } from "./normalise.mjs";
 import { compileCss, expandApplyLists } from "./oracle.mjs";
 import { compare } from "./verify.mjs";
 import { rewrite } from "./writer.mjs";
@@ -38,35 +38,6 @@ const argument = (name) => {
 const flag = (name) => process.argv.includes(`--${name}`);
 
 const entry = `@import "${stylesRoot}/index.css";`;
-const slotsFile = path.join(stylesRoot, "slots.css");
-
-/**
- * The registrations the renamed slots need, as a file this package owns.
- *
- * `@property` is not decoration. A slot read through `var()` with nothing registering it is an
- * undefined custom property, which makes the whole declaration invalid at computed-value time —
- * `border-style: var(--rp-border-style)` silently becomes `none`, and the border it was sizing
- * disappears. Tailwind ships these today; renaming the slots without bringing them is how the
- * rename stops being a rename.
- *
- * Generated, and regenerated on every run: the set shrinks as the composed groups are dissolved.
- */
-const slotsCss = (blocks) =>
-  [
-    "/**",
-    " * Composition slots — GENERATED, do not edit by hand.",
-    " *",
-    " * Run `node scripts/migration/codemod.mjs` to rewrite this file.",
-    " *",
-    " * Each of these is read by a declaration that composes several utilities into one property:",
-    " * a `box-shadow` built from five contributions, a `transform` from six. The registration is",
-    " * what gives an unset slot a value to resolve to, so a rule that sets one of them does not",
-    " * have to set the rest.",
-    " */",
-    "",
-    ...blocks,
-    "",
-  ].join("\n");
 
 /** The files to rewrite: everything with an `@apply`, or the ones named. */
 const targets = () => {
@@ -104,10 +75,6 @@ const main = () => {
   console.log(
     `Slots: dropping ${drop.size} unread, renaming ${rename.size}, leaving ${defer.size} to the animation library.`,
   );
-
-  // `core.css` imports it, so it has to exist before anything can be compiled — including the
-  // compile whose output decides what goes in it.
-  if (!existsSync(slotsFile)) writeFileSync(slotsFile, slotsCss([]));
 
   const before = compileCss(entry);
   const original = new Map(files.map((file) => [file, readFileSync(file, "utf8")]));
@@ -155,8 +122,6 @@ const main = () => {
   }
 
   console.log(`\n✓ The components layer is unchanged.`);
-  writeFileSync(slotsFile, slotsCss(propertyBlocks(before, rename)));
-  console.log(`  ${propertyBlocks(before, rename).length} slots registered in slots.css.`);
 
   if (flag("dry")) {
     restore();

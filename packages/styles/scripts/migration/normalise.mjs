@@ -61,20 +61,3 @@ export const normalise = (css, { defer = new Set(), drop }) =>
  * Renaming only the generated half leaves the override writing a name nobody reads.
  */
 export const renameSlots = (css, { defer = new Set() } = {}) => renamed(css, defer);
-
-/**
- * The `@property` blocks the renamed slots need, taken from the ones Tailwind ships.
- *
- * Only the renamed ones. A deferred slot still answers to its old name, which Tailwind is still
- * registering, and registering it twice under two names would leave two independent slots where
- * the composition needs one.
- */
-export const propertyBlocks = (compiled, rename) => {
-  const blocks = [];
-
-  for (const match of compiled.matchAll(/@property\s+(--tw-[\w-]+)\s*\{[^}]*\}/g)) {
-    if (rename.has(match[1])) blocks.push(renamed(match[0], new Set()));
-  }
-
-  return blocks;
-};

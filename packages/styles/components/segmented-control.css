@@ -117,19 +117,15 @@
   /* Focus states - comprehensive fallback */
   &:focus-visible:not(:focus),
   &[data-focus-visible="true"] {
-    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
-      var(--rp-ring-color, currentcolor);
-    box-shadow:
-      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
-      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring:
+      var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width) var(--rp-ring-offset-color),
+      var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+        var(--rp-ring-color, currentcolor);
+    box-shadow: var(--rp-ring), var(--rp-shadow);
     --rp-ring-color: var(--focus);
-    --rp-ring-offset-width: 0px;
-    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
-      var(--rp-ring-offset-color);
     --rp-ring-offset-color: var(--background);
     --rp-outline-style: none;
     outline-style: none;
-    --rp-ring-offset-width: var(--ring-offset-width);
     @media (forced-colors: active) {
       outline: 2px solid Highlight;
       outline-offset: 2px;
@@ -206,9 +202,7 @@
   border-radius: var(--component-radius, calc(var(--radius) * 3));
   background-color: var(--segment);
   --rp-shadow: var(--surface-shadow);
-  box-shadow:
-    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
-    var(--rp-ring-shadow), var(--rp-shadow);
+  box-shadow: var(--rp-ring), var(--rp-shadow);
 
   z-index: -1;
 

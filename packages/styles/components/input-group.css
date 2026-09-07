@@ -10,9 +10,7 @@
   line-height: var(--rp-leading, var(--text-sm--line-height));
   color: var(--field-foreground, var(--foreground));
   --rp-shadow: var(--field-shadow);
-  box-shadow:
-    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
-    var(--rp-ring-shadow), var(--rp-shadow);
+  box-shadow: var(--rp-ring), var(--rp-shadow);
   --rp-outline-style: none;
   outline-style: none;
 
@@ -57,14 +55,12 @@
   /* Focus within state - only when input/textarea is focused */
   &:has([data-slot="input-group-input"]:focus),
   &:has([data-slot="input-group-textarea"]:focus) {
-    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
-      var(--rp-ring-color, currentcolor);
-    box-shadow:
-      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
-      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring:
+      var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width) var(--rp-ring-offset-color),
+      var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+        var(--rp-ring-color, currentcolor);
+    box-shadow: var(--rp-ring), var(--rp-shadow);
     --rp-ring-color: var(--focus);
-    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
-      var(--rp-ring-offset-color);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: 0px;
@@ -90,15 +86,12 @@
     &[data-focus-visible="true"],
     &:focus-within,
     &[data-focus-within="true"] {
-      --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
-        var(--rp-ring-color, currentcolor);
-      box-shadow:
-        var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
-        var(--rp-ring-shadow), var(--rp-shadow);
+      --rp-ring:
+        var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width) var(--rp-ring-offset-color),
+        var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+          var(--rp-ring-color, currentcolor);
+      box-shadow: var(--rp-ring), var(--rp-shadow);
       --rp-ring-color: var(--danger);
-      --rp-ring-offset-width: 0px;
-      --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
-        var(--rp-ring-offset-color);
       --rp-ring-offset-width: 0px;
       @media (forced-colors: active) {
         outline-width: 2px;
@@ -155,9 +148,7 @@
     line-height: var(--rp-leading, var(--text-sm--line-height));
   }
   --rp-shadow: 0 0 #0000;
-  box-shadow:
-    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
-    var(--rp-ring-shadow), var(--rp-shadow);
+  box-shadow: var(--rp-ring), var(--rp-shadow);
   --rp-outline-style: none;
   outline-style: none;
   &::placeholder {
@@ -280,9 +271,7 @@
 
 .rp-input-group--secondary {
   --rp-shadow: 0 0 #0000;
-  box-shadow:
-    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
-    var(--rp-ring-shadow), var(--rp-shadow);
+  box-shadow: var(--rp-ring), var(--rp-shadow);
 
   --input-group-bg: var(--default);
   --input-group-bg-hover: var(--default-hover);

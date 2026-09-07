@@ -36,9 +36,7 @@
   line-height: var(--rp-leading, var(--text-sm--line-height));
   color: var(--field-foreground, var(--foreground));
   --rp-shadow: var(--field-shadow);
-  box-shadow:
-    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
-    var(--rp-ring-shadow), var(--rp-shadow);
+  box-shadow: var(--rp-ring), var(--rp-shadow);
   --rp-outline-style: none;
   outline-style: none;
 
@@ -76,14 +74,12 @@
   /* Focus within state */
   &[data-focus-within="true"],
   &:focus-within {
-    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
-      var(--rp-ring-color, currentcolor);
-    box-shadow:
-      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
-      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring:
+      var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width) var(--rp-ring-offset-color),
+      var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+        var(--rp-ring-color, currentcolor);
+    box-shadow: var(--rp-ring), var(--rp-shadow);
     --rp-ring-color: var(--focus);
-    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
-      var(--rp-ring-offset-color);
     --rp-outline-style: none;
     outline-style: none;
     --rp-ring-offset-width: 0px;
@@ -107,15 +103,12 @@
     &[data-focus-visible="true"],
     &:focus-within,
     &[data-focus-within="true"] {
-      --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
-        var(--rp-ring-color, currentcolor);
-      box-shadow:
-        var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
-        var(--rp-ring-shadow), var(--rp-shadow);
+      --rp-ring:
+        var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width) var(--rp-ring-offset-color),
+        var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+          var(--rp-ring-color, currentcolor);
+      box-shadow: var(--rp-ring), var(--rp-shadow);
       --rp-ring-color: var(--danger);
-      --rp-ring-offset-width: 0px;
-      --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
-        var(--rp-ring-offset-color);
       --rp-ring-offset-width: 0px;
       @media (forced-colors: active) {
         outline-width: 2px;
@@ -172,9 +165,7 @@
     line-height: var(--rp-leading, var(--text-sm--line-height));
   }
   --rp-shadow: 0 0 #0000;
-  box-shadow:
-    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
-    var(--rp-ring-shadow), var(--rp-shadow);
+  box-shadow: var(--rp-ring), var(--rp-shadow);
   --rp-outline-style: none;
   outline-style: none;
 
@@ -256,9 +247,7 @@
 
 .rp-search-field--secondary .rp-search-field__group {
   --rp-shadow: 0 0 #0000;
-  box-shadow:
-    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
-    var(--rp-ring-shadow), var(--rp-shadow);
+  box-shadow: var(--rp-ring), var(--rp-shadow);
 
   --search-field-group-bg: var(--default);
   --search-field-group-bg-hover: var(--default-hover);

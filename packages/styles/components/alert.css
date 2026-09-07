@@ -12,9 +12,7 @@
   padding-inline: calc(var(--spacing) * 4);
   padding-block: calc(var(--spacing) * 3);
   --rp-shadow: var(--surface-shadow);
-  box-shadow:
-    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
-    var(--rp-ring-shadow), var(--rp-shadow);
+  box-shadow: var(--rp-ring), var(--rp-shadow);
 
   /* Forced Colors Mode flattens the fill onto the page and strips the shadow, so the container
    * stops having any shape - its contents just sit loose on the page. An outline rather than a

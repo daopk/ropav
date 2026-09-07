@@ -24,9 +24,7 @@
 
 .rp-radio-group--secondary .rp-radio__control {
   --rp-shadow: 0 0 #0000;
-  box-shadow:
-    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
-    var(--rp-ring-shadow), var(--rp-shadow);
+  box-shadow: var(--rp-ring), var(--rp-shadow);
   background-color: var(--radio-control-bg);
 
   --radio-control-bg: var(--default);

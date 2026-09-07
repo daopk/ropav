@@ -85,9 +85,7 @@
 /* Secondary: body has no shadow or rounded corners */
 .rp-table-root--secondary .rp-table__body {
   --rp-shadow: 0 0 #0000;
-  box-shadow:
-    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
-    var(--rp-ring-shadow), var(--rp-shadow);
+  box-shadow: var(--rp-ring), var(--rp-shadow);
 
   /* Non-virtualized */
   & tr:first-child td:first-child,
@@ -423,9 +421,7 @@
 .rp-table__row:is(:focus-visible, [data-focus-visible="true"])
   :is(.rp-table__cell, .rp-table__column) {
   --rp-shadow: 0 0 #0000;
-  box-shadow:
-    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
-    var(--rp-ring-shadow), var(--rp-shadow);
+  box-shadow: var(--rp-ring), var(--rp-shadow);
 }
 
 .rp-table__row:is(:focus-visible, [data-focus-visible="true"])
@@ -435,9 +431,7 @@
   :is(.rp-table__cell, .rp-table__column) {
   border-radius: calc(var(--radius) * 1);
   --rp-shadow: inset 0 0 0 2px var(--rp-shadow-color, var(--focus));
-  box-shadow:
-    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
-    var(--rp-ring-shadow), var(--rp-shadow);
+  box-shadow: var(--rp-ring), var(--rp-shadow);
   --rp-outline-style: none;
   outline-style: none;
 }
@@ -453,9 +447,7 @@
     inset 2px 0 0 0 var(--rp-shadow-color, var(--focus)),
     inset 0 2px 0 0 var(--rp-shadow-color, var(--focus)),
     inset 0 -2px 0 0 var(--rp-shadow-color, var(--focus));
-  box-shadow:
-    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
-    var(--rp-ring-shadow), var(--rp-shadow);
+  box-shadow: var(--rp-ring), var(--rp-shadow);
   --rp-outline-style: none;
   outline-style: none;
 }
@@ -471,9 +463,7 @@
     inset -2px 0 0 0 var(--rp-shadow-color, var(--focus)),
     inset 0 2px 0 0 var(--rp-shadow-color, var(--focus)),
     inset 0 -2px 0 0 var(--rp-shadow-color, var(--focus));
-  box-shadow:
-    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
-    var(--rp-ring-shadow), var(--rp-shadow);
+  box-shadow: var(--rp-ring), var(--rp-shadow);
   --rp-outline-style: none;
   outline-style: none;
 }
@@ -486,9 +476,7 @@
   --rp-shadow:
     inset 0 2px 0 0 var(--rp-shadow-color, var(--focus)),
     inset 0 -2px 0 0 var(--rp-shadow-color, var(--focus));
-  box-shadow:
-    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
-    var(--rp-ring-shadow), var(--rp-shadow);
+  box-shadow: var(--rp-ring), var(--rp-shadow);
   --rp-outline-style: none;
   outline-style: none;
 }
