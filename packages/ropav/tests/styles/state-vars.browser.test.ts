@@ -122,6 +122,51 @@ const parts: Part[] = [
     ],
   },
   {
+    /*
+     * The chain the docs describe, on the variant a caller actually gets: `.rp-button` points
+     * pressed at hover, and every colour variant used to restate it as its own hover — the same
+     * value, arriving nearer, so the chain never ran and retuning hover left the press behind.
+     * `follows` is what holds the repair.
+     */
+    html: `<button class="rp-button rp-button--primary"></button>`,
+    knobHost: ".rp-button",
+    name: "the primary button's fill",
+    paint: ".rp-button",
+    stateHost: ".rp-button",
+    states: [
+      { attr: null, knob: "--button-bg", paints: "var(--accent)" },
+      { attr: ["data-hovered"], knob: "--button-bg-hover", paints: "var(--accent-hover)" },
+      {
+        attr: ["data-pressed"],
+        follows: ["--button-bg-hover"],
+        knob: "--button-bg-pressed",
+        paints: "var(--accent-hover)",
+      },
+    ],
+  },
+  {
+    /*
+     * The one variant that stays out of the chain, and the reason `follows` is per state rather
+     * than a rule about the whole set: the border already reads as a lit edge, so the hover fill
+     * behind it is held to 60% and the press is what restores the full layer. No `follows` here
+     * is the assertion — retuning hover must leave this press where it is.
+     */
+    html: `<button class="rp-button rp-button--outline"></button>`,
+    knobHost: ".rp-button",
+    name: "the outline button's fill",
+    paint: ".rp-button",
+    stateHost: ".rp-button",
+    states: [
+      { attr: null, knob: "--button-bg", paints: "transparent" },
+      {
+        attr: ["data-hovered"],
+        knob: "--button-bg-hover",
+        paints: "color-mix(in oklab, var(--state-layer) 60%, transparent)",
+      },
+      { attr: ["data-pressed"], knob: "--button-bg-pressed", paints: "var(--state-layer)" },
+    ],
+  },
+  {
     html: `<input class="rp-input" />`,
     knobHost: ".rp-input",
     name: "the field's fill",

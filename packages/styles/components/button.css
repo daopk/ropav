@@ -145,7 +145,6 @@
 .rp-button--primary {
   --button-bg: var(--accent);
   --button-bg-hover: var(--accent-hover);
-  --button-bg-pressed: var(--accent-hover);
   --button-fg: var(--accent-foreground);
 
   /* Solid against outlined is the one distinction that survives - forced colors has no keyword
@@ -162,21 +161,18 @@
 .rp-button--secondary {
   --button-bg: var(--default);
   --button-bg-hover: var(--default-hover);
-  --button-bg-pressed: var(--default-hover);
   --button-fg: var(--accent-soft-foreground);
 }
 
 .rp-button--tertiary {
   --button-bg: var(--default);
   --button-bg-hover: var(--default-hover);
-  --button-bg-pressed: var(--default-hover);
 }
 
 .rp-button--ghost,
 .rp-button--outline {
   --button-bg: transparent;
   --button-bg-hover: var(--state-layer);
-  --button-bg-pressed: var(--state-layer);
   --button-fg: var(--default-foreground);
 }
 
@@ -185,12 +181,17 @@
   border-width: 1px;
   border-color: var(--border);
   --button-bg-hover: color-mix(in oklab, var(--state-layer) 60%, transparent);
+
+  /* The one variant that steps out of the chain, because its hover steps out of the scale: the
+   * border already reads as a lit edge, so the fill behind it is held to 60% and the press is
+   * what restores the full layer. Every other variant lets `--button-bg-pressed` follow the
+   * hover it is given, which is what makes retuning one of them reach both. */
+  --button-bg-pressed: var(--state-layer);
 }
 
 .rp-button--danger {
   --button-bg: var(--danger);
   --button-bg-hover: var(--danger-hover);
-  --button-bg-pressed: var(--danger-hover);
   --button-fg: var(--danger-foreground);
 
   /* Solid like the primary one. The danger colour itself cannot survive - there is no keyword
@@ -205,7 +206,6 @@
 .rp-button--danger-soft {
   --button-bg: var(--danger-soft);
   --button-bg-hover: var(--danger-soft-hover);
-  --button-bg-pressed: var(--danger-soft-hover);
   --button-fg: var(--danger-soft-foreground);
 }
 
