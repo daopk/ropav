@@ -264,6 +264,13 @@
   }
 }
 
+/* For a dialog whose contents carry their own gutter - a sidebar rendered as a drawer is the one
+ * that does, its parts already spacing themselves - where the dialog's own padding lands as a
+ * second inset nobody asked for. */
+.rp-drawer__dialog--flush {
+  padding: 0;
+}
+
 /**
  * Element: header - the top section with the title
  */
@@ -283,6 +290,23 @@
   line-height: var(--rp-leading, var(--text-base--line-height));
   font-weight: var(--font-weight-medium);
   color: var(--foreground);
+}
+
+/* The drawer takes its accessible name from this heading, and a drawer opened by something that
+ * is not its own trigger has nowhere else to get one. Where the name is all that is wanted, the
+ * heading stays in the tree for a screen reader and leaves the box - `hidden` would take it from
+ * both. Same nine declarations as `.rp-sidebar__group-label[data-collapsed="true"]`; the file
+ * spells them rather than sharing, so a component stylesheet stays readable on its own. */
+.rp-drawer__heading--hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border-width: 0;
 }
 
 /**

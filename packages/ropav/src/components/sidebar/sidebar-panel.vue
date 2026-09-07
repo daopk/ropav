@@ -51,10 +51,10 @@ const panelClass = computed(() =>
   >
     <DrawerBackdrop>
       <DrawerContent :placement="side">
-        <DrawerDialog class="p-0">
+        <DrawerDialog class="rp-drawer__dialog--flush">
           <!-- The drawer names itself from its heading and falls back to the button that opened
             it; the sidebar's trigger is not that button, so the name is given here instead. -->
-          <DrawerHeading class="sr-only">{{ label }}</DrawerHeading>
+          <DrawerHeading class="rp-drawer__heading--hidden">{{ label }}</DrawerHeading>
           <nav
             :id="panelId"
             :ref="setElement"

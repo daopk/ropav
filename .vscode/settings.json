@@ -21,12 +21,15 @@
   "[css]": { "editor.defaultFormatter": "oxc.oxc-vscode" },
   "[json]": { "editor.defaultFormatter": "oxc.oxc-vscode" },
   "[jsonc]": { "editor.defaultFormatter": "oxc.oxc-vscode" },
-  "tailwindCSS.classFunctions": ["tv"],
+  // Only the two places that actually run Tailwind. Pointed at the library sources it offered
+  // utility completions inside them, and three of those completions were written into components
+  // that ship - where nothing resolves them. `classFunctions` is gone with it: a recipe emits
+  // `rp-` BEM names, so IntelliSense had nothing to say about one anyway.
   "tailwindCSS.experimental.configFile": {
     "packages/storybook/styles/globals.css": [
-      "packages/ropav/**",
-      "packages/storybook/**",
-      "packages/styles/**"
-    ]
+      "packages/ropav/src/**/*.stories.ts",
+      "packages/storybook/**"
+    ],
+    "packages/docs/styles/globals.css": ["packages/docs/**"]
   }
 }
