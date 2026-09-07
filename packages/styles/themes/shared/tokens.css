@@ -74,11 +74,17 @@
     --rp-ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
     --rp-ease-out-fluid: cubic-bezier(0.32, 0.72, 0, 1);
 
-    /* The widths a dialog, an alert dialog and a tooltip stop growing at. */
+    /*
+     * The widths a dialog, an alert dialog and a tooltip stop growing at. The scale runs past
+     * what those use because the documentation's demos cap themselves here too, and a demo is
+     * written in the tokens it teaches so a reader can paste one.
+     */
     --rp-container-xs: 20rem;
     --rp-container-sm: 24rem;
     --rp-container-md: 28rem;
     --rp-container-lg: 32rem;
+    --rp-container-xl: 36rem;
+    --rp-container-2xl: 42rem;
 
     /* The backdrop blur behind an overlay. */
     --rp-blur-md: 12px;

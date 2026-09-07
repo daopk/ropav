@@ -55,7 +55,7 @@ const people = [
 <style scoped>
 .frame {
   width: 100%;
-  max-width: var(--container-2xl);
+  max-width: var(--rp-container-2xl);
 }
 
 .table {

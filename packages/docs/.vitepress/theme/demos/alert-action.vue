@@ -16,6 +16,6 @@ import { Alert, AlertContent, AlertDescription, AlertIndicator, AlertTitle, Butt
 <style scoped>
 .alert {
   width: 100%;
-  max-width: var(--container-xl);
+  max-width: var(--rp-container-xl);
 }
 </style>

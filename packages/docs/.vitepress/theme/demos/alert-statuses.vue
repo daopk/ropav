@@ -25,7 +25,7 @@ const statuses = [
 .stack {
   display: flex;
   width: 100%;
-  max-width: var(--container-xl);
+  max-width: var(--rp-container-xl);
   flex-direction: column;
   gap: calc(var(--rp-spacing) * 3);
 }
