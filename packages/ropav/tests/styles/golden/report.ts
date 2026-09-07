@@ -1,5 +1,5 @@
 /**
- * The report the migration is compared against, and the summary of how two of them differ.
+ * The frozen report a run is compared against, and the summary of how two of them differ.
  *
  * Kept apart from the test so the shape is stated once: a report is `mode -> case id -> property
  * -> computed value`, and a difference is a line naming all four.
@@ -15,11 +15,11 @@ export type Report = Record<string, Record<string, Record<string, string>>>;
 /**
  * The composition slots are left out on purpose, under either name.
  *
- * `--tw-ring-shadow` and its kin exist only to let one utility compose with the next; the
- * migration renames them to `--rp-` and later dissolves several groups outright. What matters is
- * the property they compose *into* — the `box-shadow` an element ends up with — and recording the
- * slots as well would make a rename read as two thousand regressions while saying nothing the
- * `box-shadow` line does not already say.
+ * `--tw-ring-shadow` and its kin existed only to let one utility compose with the next; they were
+ * renamed to `--rp-` and several groups dissolved outright. What matters is the property they
+ * compose *into* — the `box-shadow` an element ends up with — and recording the slots as well would
+ * make a rename read as two thousand regressions while saying nothing the `box-shadow` line does
+ * not already say.
  *
  * Every token this package means as a token is unprefixed (`--accent`, `--field-border`), so a
  * prefixed name is machinery by construction.

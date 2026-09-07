@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { componentCases } from "./cases";
-import { renderAll } from "./render";
+import { componentCases } from "./golden/cases";
+import { renderAll } from "./golden/render";
 
 /**
  * The half of the pair the golden cannot see.

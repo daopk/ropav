@@ -1,7 +1,7 @@
 /**
  * Renders every case and reads back what the browser resolved.
  *
- * The migration rewrites how declarations are written, not what they should compute to, so the
+ * What a refactor moves is how declarations are written, not what they should compute to, so the
  * check that means anything is the computed value on a real element — after the cascade has
  * picked a winner, after `var()` has resolved, after the layer order has been applied. A diff of
  * declarations cannot see any of that, and those are the three things most likely to move.

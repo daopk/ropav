@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { componentCases } from "./cases";
-import { declaredProperties, mount, renderAll } from "./render";
+import { componentCases } from "./golden/cases";
+import { declaredProperties, mount, renderAll } from "./golden/render";
 
 import source from "@/styles.css?inline";
 
@@ -22,7 +22,7 @@ import source from "@/styles.css?inline";
  * depend on `pnpm build`.
  */
 
-const built = import.meta.glob("../../../dist/ropav.min.css", {
+const built = import.meta.glob("../../dist/ropav.min.css", {
   eager: true,
   import: "default",
   query: "?raw",
@@ -77,7 +77,7 @@ const equivalent = (one: string, two: string): boolean => {
   });
 };
 
-describe.skipIf(!compiled)("the compiled stylesheet", () => {
+describe.skipIf(!compiled)("the compiler", () => {
   it("renders every component rule the same as the source it was built from", () => {
     const sourceDoc = mount(source);
     const compiledDoc = mount(compiled!);

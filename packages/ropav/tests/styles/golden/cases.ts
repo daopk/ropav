@@ -3,7 +3,7 @@
  *
  * CSSOM rather than the file: the layer a rule landed in is the question the snapshot exists to
  * answer, and only the parsed sheet knows it. It also means the matrix follows the stylesheet
- * automatically — a rule added during the migration is a case, without anyone listing it.
+ * automatically — a rule added anywhere is a case, without anyone listing it.
  */
 
 import type { Renamed } from "./renamed";

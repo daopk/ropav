@@ -1,9 +1,9 @@
 import { VARIANT_ATTRIBUTES } from "@ropav/testing/helpers/component-attributes";
 import { describe, expect, it } from "vitest";
 
-import { componentCases } from "./migration/cases";
-import { mount } from "./migration/render";
-import { splitTopLevel, topLevelCombinators } from "./migration/selector-dom";
+import { componentCases } from "./golden/cases";
+import { mount } from "./golden/render";
+import { splitTopLevel, topLevelCombinators } from "./golden/selector-dom";
 
 /**
  * A variant attribute styles the element wearing it, and nothing under it.

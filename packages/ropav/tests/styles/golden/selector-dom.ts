@@ -1,10 +1,10 @@
 /**
  * Builds the smallest DOM a selector matches.
  *
- * The migration snapshot needs one rendered element per rule, and the rules are what say which
- * elements exist: `.rp-switch[aria-checked=true] .rp-switch__control` describes a control inside a
- * checked switch, and nothing else in the repository does. Reading the DOM back out of the
- * selector is the only way to cover every rule without hand-writing two thousand fixtures.
+ * The golden needs one rendered element per rule, and the rules are what say which elements
+ * exist: `.rp-switch[aria-checked=true] .rp-switch__control` describes a control inside a checked
+ * switch, and nothing else in the repository does. Reading the DOM back out of the selector is the
+ * only way to cover every rule without hand-writing two thousand fixtures.
  *
  * Nothing here has to be right by inspection. Every synthesis is checked with `matches()` against
  * the selector it came from, so a gap in this parser shows up as a rejected case and a smaller
@@ -84,10 +84,12 @@ export const splitTopLevel = (input: string, delimiter: string): string[] => {
 /**
  * Rewrites `:is()` and `:where()` whose alternative spans a combinator into plain descendant form.
  *
- * Tailwind compiles every variant into one, so `:is(.rp-card) .rp-card__body` arrives wrapped
- * several deep, and an argument like `.rp-calendar:has(…) > [data-slot="calendar-grid"]` describes
- * an ancestor the compound alone cannot express. Hoisting the ancestor half out to the left says
- * the same thing in a shape the builder can follow.
+ * Nesting resolves through `:is()` — that is what `&` compiles to — and CSSOM hands a selector
+ * back resolved. So `.rp-card { & .rp-card__body { … } }` arrives as
+ * `:is(.rp-card) .rp-card__body`, a rule nested several deep arrives wrapped several deep, and an
+ * argument like `.rp-calendar:has(…) > [data-slot="calendar-grid"]` describes an ancestor the
+ * compound alone cannot express. Hoisting the ancestor half out to the left says the same thing in
+ * a shape the builder can follow.
  *
  * The rewrite is not required to be sound — only useful. `matches()` is what decides, so a case it
  * gets wrong is dropped, not mismeasured.

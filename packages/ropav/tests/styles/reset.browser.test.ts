@@ -5,20 +5,19 @@ import styles from "@/styles.css?inline";
 /**
  * The reset stops at the component.
  *
- * It replaced Tailwind's preflight, which reset the whole page — and a page-wide reset from a
- * component library is a bug that only ever shows up in someone else's markup: the host's own
- * headings and lists lose their margins on a page that never asked this package to touch them,
- * and nothing errors. So the scope is `[class^="rp-"]`, `[class*=" rp-"]` and their descendants,
- * and this is the test that says so.
+ * It replaced a page-wide reset — and a page-wide reset from a component library is a bug that
+ * only ever shows up in someone else's markup: the host's own headings and lists lose their
+ * margins on a page that never asked this package to touch them, and nothing errors. So the scope
+ * is `[class^="rp-"]`, `[class*=" rp-"]` and their descendants, and this is the test that says so.
  *
  * The suffix cases are the ones a naive `[class*="rp-"]` would swallow. Both are plausible names
  * in somebody else's codebase, and the naive form was tried: `.corp-rp-widget` lost its margin.
  *
- * The other half of what the reset has to do — supply everything preflight used to supply, inside
- * a component — is `bundled.browser.test.ts`'s subject by way of the whole stylesheet, and was
- * measured rule by rule when the reset was written: without it the components came out in the
- * browser's default serif, at `content-box`, and with every border gone, because the rules size a
- * border with `border-width` alone and let the reset supply the style.
+ * The other half of what the reset has to do — supply inside a component everything the page-wide
+ * one used to supply everywhere — is `bundled.browser.test.ts`'s subject by way of the whole
+ * stylesheet, and was measured rule by rule when the reset was written: without it the components
+ * came out in the browser's default serif, at `content-box`, and with every border gone, because
+ * the rules size a border with `border-width` alone and let the reset supply the style.
  */
 
 /** A document of its own, because a reset is a property of the page it is on. */

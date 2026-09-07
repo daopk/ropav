@@ -15,7 +15,7 @@ import { firstSatisfiable, parseComplex, splitTopLevel } from "./selector-dom";
  *
  * `renamed.ts` can fall the same way. It is a table of strings matched against a sheet, and an
  * entry that matches nothing does nothing — the rule it was written for goes back to being a
- * death and a birth in the report, which reads as noise the migration already produces plenty of.
+ * death and a birth in the report, which reads as noise a report this size produces plenty of.
  * So the table is held against the sheet here, both ways round.
  *
  * What is left out, and why nothing here can reach it:
@@ -56,9 +56,9 @@ it("reaches the component layer", () => {
   const reached = (cases.length - missed.length) / cases.length;
 
   /*
-   * A floor, not a count. The layer shrinks as the migration goes on — moving the reduced-motion
-   * gate onto an inherited property took 425 rules out of it in one step — so this only has to
-   * catch the matrix collapsing, which is what a broken reader looks like.
+   * A floor, not a count. The layer shrinks — moving the reduced-motion gate onto an inherited
+   * property took 425 rules out of it in one step — so this only has to catch the matrix
+   * collapsing, which is what a broken reader looks like.
    */
   expect(cases.length, "the layer is being read at all").toBeGreaterThan(1500);
   expect(reached, `residue ${JSON.stringify(byReason)}`).toBeGreaterThanOrEqual(FLOOR);

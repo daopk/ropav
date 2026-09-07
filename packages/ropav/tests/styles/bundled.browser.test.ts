@@ -57,7 +57,7 @@ afterEach(() => {
   for (const frame of frames.splice(0)) frame.remove();
 });
 
-describe.skipIf(!css)("the compiled stylesheet", () => {
+describe.skipIf(!css)("the bundled stylesheet", () => {
   it("is finished — a browser has nothing left to fetch", () => {
     expect(css).not.toContain("@import");
   });
@@ -74,12 +74,12 @@ describe.skipIf(!css)("the compiled stylesheet", () => {
 
   /*
    * On a `div`, not the button: a button is `border-box` and margin-free by UA default, so it
-   * reads as reset whether one arrived or not. Every `w-full` beside a `px-*` in the component
-   * layer is written against this.
+   * reads as reset whether one arrived or not. Every full-width rule sitting beside a horizontal
+   * padding in the component layer is written against this.
    *
-   * Inside a component, because that is as far as the reset goes. It replaced Tailwind's
-   * preflight, which did the same job to the whole page — including the parts of it this library
-   * was never asked to touch.
+   * Inside a component, because that is as far as the reset goes. It replaced a page-wide reset,
+   * which did the same job to every part of the page — including the parts this library was never
+   * asked to touch.
    */
   it("carries the reset the component layer is written against", () => {
     const { styleOf } = mount(
