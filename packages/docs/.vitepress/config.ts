@@ -21,7 +21,8 @@ const PALETTE_BOOT = `;(() => {
 
 export default defineConfig({
   cleanUrls: true,
-  description: "Beautiful and modern Vue UI library built with Vapor Mode and Tailwind CSS 4.",
+  description:
+    "Accessible Vue components built with Vapor Mode — keyboard, focus and screen-reader behaviour included, themeable down to a single state.",
   head: [["script", { id: "check-palette" }, PALETTE_BOOT]],
 
   // One constant drives the build and the browser, so a repainted block matches its neighbours.
@@ -36,6 +37,7 @@ export default defineConfig({
       { link: "/guide/", text: "Guide" },
       { link: "/components/", text: "Components" },
       { link: "/theming/", text: "Theming" },
+      { link: STORYBOOK, text: "Storybook" },
     ],
     sidebar: {
       /*

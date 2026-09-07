@@ -3,8 +3,8 @@ layout: home
 
 hero:
   name: Ropav
-  text: Vue components that render without a virtual DOM
-  tagline: Built on Vapor Mode, styled in plain CSS, with the accessibility layer ported from React Aria.
+  text: Vue components, straight to the DOM
+  tagline: Every component arrives with the keyboard, focus and screen-reader behaviour already done.
   actions:
     - theme: brand
       text: Get started
@@ -21,8 +21,8 @@ features:
     details: Every component compiles to direct DOM operations rather than to a virtual DOM tree. It is opt-in per file, so a Vapor component drops into an application that is not.
     link: /guide/vapor
     linkText: How it works
-  - title: Behaviour ported, not approximated
-    details: Focus management, keyboard interaction, collections and internationalisation are re-implemented from React Aria rather than guessed at — including the parts that only show up on a screen reader.
+  - title: Behaviour, not just markup
+    details: Focus management, keyboard interaction, collections and internationalisation are implemented in full rather than approximated — including the parts that only show up on a screen reader.
     link: /guide/accessibility
     linkText: What that covers
   - title: Themes on two axes
