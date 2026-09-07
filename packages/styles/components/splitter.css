@@ -248,7 +248,13 @@
 
 /* A horizontal group puts its panels side by side, so the divider is a vertical line. */
 .rp-splitter__handle--horizontal {
-  cursor: col-resize;
+  /* Excluded rather than ordered. A disabled handle takes `--cursor-disabled` from the state rule
+   * above, which outweighs this one only while the axis is a class; written as an attribute the
+   * two weigh the same and the later rule is this one, so the exclusion has to be in the selector
+   * for the cursor to keep saying what the pointer can do. */
+  &:not([data-disabled="true"]) {
+    cursor: col-resize;
+  }
 
   inline-size: var(--splitter-gutter);
 
@@ -271,7 +277,13 @@
 
 /* A vertical group stacks its panels, so the divider is a horizontal line. */
 .rp-splitter__handle--vertical {
-  cursor: row-resize;
+  /* Excluded rather than ordered. A disabled handle takes `--cursor-disabled` from the state rule
+   * above, which outweighs this one only while the axis is a class; written as an attribute the
+   * two weigh the same and the later rule is this one, so the exclusion has to be in the selector
+   * for the cursor to keep saying what the pointer can do. */
+  &:not([data-disabled="true"]) {
+    cursor: row-resize;
+  }
 
   block-size: var(--splitter-gutter);
 

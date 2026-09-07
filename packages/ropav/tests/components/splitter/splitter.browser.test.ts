@@ -219,6 +219,19 @@ describe("Splitter (browser)", () => {
     vertical.unmount();
   });
 
+  /*
+   * Both the axis and the disabled state have a claim on the cursor, and the state has to take it:
+   * a divider nothing can move must not go on advertising a drag. Which of them wins is decided by
+   * the selectors, and the two weigh the same as soon as the axis stops being a class - so this
+   * pins the outcome rather than the arithmetic that currently produces it.
+   */
+  it("stops offering the drag once the handle is disabled", async () => {
+    const { container, unmount } = await render({ isDisabled: true });
+
+    expect(getComputedStyle(slot(container, "splitter-handle")).cursor).toBe("not-allowed");
+    unmount();
+  });
+
   /* A one-pixel line is not a target anyone can hit, so the target reaches past the gutter. */
   it("extends the grab area past the divider", async () => {
     await parkPointer();

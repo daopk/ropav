@@ -749,8 +749,12 @@
 }
 
 /* Only a rail that resizes says so with the cursor. One that merely toggles is a button, and
- * `--cursor-interactive` on the base rule already covers it. */
-.rp-sidebar__rail--resizable {
+ * `--cursor-interactive` on the base rule already covers it.
+ *
+ * Excluded rather than ordered: a disabled rail takes `--cursor-disabled` from the state rule
+ * above, which outweighs this one only while `--resizable` is a class. Written as an attribute the
+ * two weigh the same and the later rule is this one, so the exclusion has to be in the selector. */
+.rp-sidebar__rail--resizable:not([data-disabled="true"]) {
   cursor: col-resize;
 }
 

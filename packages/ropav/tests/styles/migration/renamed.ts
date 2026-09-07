@@ -20,5 +20,9 @@
  */
 export type Renamed = Record<string, string>;
 
-/** Empty until a rename lands. A codemod that renames selectors writes its map here. */
-export const RENAMED: Renamed = {};
+/** A codemod that renames selectors writes its map here; entries above it are written by hand. */
+export const RENAMED: Renamed = {
+  // The rule did not move, it narrowed: the resize cursor now excludes the disabled rail rather
+  // than outweighing it. Same declaration, same element measured — only the name is longer.
+  '.rp-sidebar__rail--resizable:not([data-disabled="true"])': ".rp-sidebar__rail--resizable",
+};

@@ -179,6 +179,20 @@ describe("resizing", () => {
   });
 
   /*
+   * `--resizable` and `[data-disabled]` both have a claim on the cursor, and the state has to take
+   * it: an edge nothing can move must not go on advertising a drag. Which of them wins is decided
+   * by the selectors, and the two weigh the same as soon as the modifier stops being a class - so
+   * this pins the outcome rather than the arithmetic that currently produces it.
+   */
+  it("stops offering the drag once the rail is disabled", async () => {
+    const { container } = mount({ breakpoint: WIDE, isDisabled: true, isResizable: true });
+
+    await settled(slot(container, "sidebar-panel"));
+
+    expect(getComputedStyle(slot(container, "sidebar-rail")).cursor).toBe("not-allowed");
+  });
+
+  /*
    * A width the rail cannot read off the declaration — `rem` here, and nothing at all is the same
    * case — so the only number available is a measurement of the panel. Taken during setup that
    * measurement is zero, because the tree is still being built and an element outside the document
