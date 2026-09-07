@@ -110,6 +110,21 @@ describe("Menu", () => {
 
       unmount();
     });
+
+    it("renders a label inside an item as a span rather than a form control's label", async () => {
+      const { container, unmount } = render({ withLabel: true });
+
+      await settle();
+
+      const label = container.querySelector('[data-slot="label"]')!;
+
+      // A `label` implies a labelable control to point `for` at, and an item is not one — it names
+      // itself from its own content, so there would be nothing for the attribute to carry.
+      expect(label.tagName).toBe("SPAN");
+      expect(label).not.toHaveAttribute("for");
+
+      unmount();
+    });
   });
 
   /**
