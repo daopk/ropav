@@ -51,6 +51,29 @@ for (const { root } of roots) {
 }
 
 /**
+ * A prefixed name the themes declare is a token, not a slot.
+ *
+ * The two tiers share the `--rp-` namespace, so the prefix alone no longer says which is which.
+ * The boundary is the path. A name declared by a rule under `themes/` is a theme token — set on
+ * `:root` or on a `data-theme` element and inherited down — so a component reading one is reading
+ * an ancestor, not composing a property out of contributions that may all be absent. A slot is
+ * every other prefixed name, and it still has to resolve on an element that sets none of them.
+ *
+ * Keyed off the path rather than a list of names, because a list is what would go stale: a token
+ * added to a theme is excluded by where it is written, and a slot added without a registration
+ * still fails here, which is the case this check was written for.
+ */
+const themeTokens = new Set<string>();
+
+for (const { file, root } of roots) {
+  if (!file.startsWith(`themes${path.sep}`)) continue;
+
+  root.walkDecls((decl) => {
+    if (decl.prop.startsWith("--rp-")) themeTokens.add(decl.prop);
+  });
+}
+
+/**
  * Everything one element sees from one rule: its own declarations, and those of any `@media` or
  * `@supports` nested inside it. Not a nested *rule* — that selects a different element, or the
  * same one in a state this one cannot count on.
@@ -85,6 +108,7 @@ for (const { file, root } of roots) {
         const name = match[1]!;
 
         if (onElement.has(name) || registered.get(name) === true) continue;
+        if (themeTokens.has(name)) continue;
         if (INVALID_BY_DESIGN.has(name)) continue;
 
         const why = registered.has(name) ? "registered with no initial-value" : "not registered";
