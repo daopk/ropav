@@ -1,6 +1,7 @@
 /*
- * The theme, as Tailwind's extension point — the entry to import if you want `bg-accent`,
- * `text-muted`, `rounded-component` and the rest of the utility surface this package used to
+ * Everything in this package that only a Tailwind build can read — the theme as Tailwind's
+ * extension point, and the variants written against it. Import it if you want `bg-accent`,
+ * `text-muted`, `rounded-component`, `dark:` and the rest of the surface this package used to
  * hand out as a side effect of being built with Tailwind.
  *
  * The name says the vendor on purpose. Everything else here has stopped naming one, and this file
@@ -14,8 +15,9 @@
  * │  with none.                                                                              │
  * └─────────────────────────────────────────────────────────────────────────────────────────┘
  *
- * The block itself is shared with the main entry for now. When the main entry stops carrying it,
- * this file is the only thing left importing it, and deleting this file deletes both.
+ * Nothing else imports either file any more, so this entry is what keeps them reachable and
+ * deleting it deletes all three.
  */
 
 @import "./themes/shared/theme.css";
+@import "./variants/index.css";

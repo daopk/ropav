@@ -1,19 +1,17 @@
 /**
  * The tokens the stylesheet reads with a plain `var()`, declared as plain custom properties.
  *
- * Most of these are also declared by `theme.css`, and that is the point. That block is a
- * `@theme`, which is Tailwind's extension point: the names in it exist because Tailwind emits
- * them, and they stop existing the moment it leaves the build. Most of the block is only ever
- * read through a utility, so expanding the utilities is enough — but the names here are read
- * directly, by rules that spell them in `transition-timing-function`, `border-width`,
- * `box-shadow` and `font-family`, and a directly-read name has to be declared by something that
- * is staying.
+ * A name read with no fallback has to be declared by something, or the declaration reading it is
+ * invalid at computed-value time and the property falls all the way back to its initial value —
+ * not to the rule underneath, and with no error anywhere. Every name below was arriving from
+ * Tailwind's own theme, which the build no longer runs, so every one of them is a rule that would
+ * have quietly stopped working: `font-size: var(--text-sm)` wherever a component sets its type,
+ * `font-weight: var(--font-weight-medium)` wherever one emphasises a label, and a page of
+ * components rendering at the browser's default size and weight with the source unchanged.
  *
- * The font stacks are the exception to the duplication: `theme.css` never declared them, and they
- * would have gone out with Tailwind's own theme unnoticed.
- *
- * The values match what `@theme` emits today, to the digit, so this file changes nothing on its
- * own. It goes from duplicate to sole declaration when the `@theme` block is deleted.
+ * The names are Tailwind's because the declarations reading them are what the utilities compiled
+ * to, and renaming a token is a separate change from moving where it comes from. The values match
+ * what `@theme` was emitting, to the digit, so the move is not a retune.
  *
  * `--radius-*` is deliberately absent, and must stay absent. Those exist only as substitution
  * sources for `rounded-*`: declared here they would resolve on `:root` and freeze the root
@@ -22,19 +20,47 @@
 
 @layer theme {
   :root {
-    /*
-     * The two font stacks, which `theme.css` does *not* declare — they have only ever come from
-     * Tailwind's own theme, so deleting this package's `@theme` block would not have replaced
-     * them. `.rp-kbd` and the prose rules read them by name with no fallback, and a name with
-     * nothing behind it takes its whole declaration down: the type would fall back to the
-     * browser's default rather than to the surrounding text.
-     */
+    /* `.rp-kbd` and the prose rules name these directly, with nothing behind them if they go. */
     --font-sans:
       -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial,
       sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono:
       ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
       monospace;
+
+    /*
+     * The type scale. Each size carries a paired line height under a second name, and a rule that
+     * sets one sets the other — that pairing is why the sizes are a scale rather than eight
+     * lengths, and why the `--…--line-height` half cannot be dropped as redundant.
+     */
+    --text-xs: 0.75rem;
+    --text-xs--line-height: calc(1 / 0.75);
+    --text-sm: 0.875rem;
+    --text-sm--line-height: calc(1.25 / 0.875);
+    --text-base: 1rem;
+    --text-base--line-height: calc(1.5 / 1);
+    --text-lg: 1.125rem;
+    --text-lg--line-height: calc(1.75 / 1.125);
+    --text-xl: 1.25rem;
+    --text-xl--line-height: calc(1.75 / 1.25);
+    --text-2xl: 1.5rem;
+    --text-2xl--line-height: calc(2 / 1.5);
+    --text-3xl: 1.875rem;
+    --text-3xl--line-height: calc(2.25 / 1.875);
+    --text-4xl: 2.25rem;
+    --text-4xl--line-height: calc(2.5 / 2.25);
+
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+
+    --leading-relaxed: 1.625;
+    --tracking-tight: -0.025em;
+
+    /* What a `transition` with no duration or curve of its own runs at. */
+    --default-transition-duration: 150ms;
+    --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 
     /* Tailwind's own default curve, and the one the components reach for most. */
     --ease-out: cubic-bezier(0, 0, 0.2, 1);
@@ -45,10 +71,27 @@
     --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
     --ease-out-fluid: cubic-bezier(0.32, 0.72, 0, 1);
 
+    /* The widths a dialog, an alert dialog and a tooltip stop growing at. */
+    --container-xs: 20rem;
+    --container-sm: 24rem;
+    --container-md: 28rem;
+    --container-lg: 32rem;
+
+    /* The backdrop blur behind an overlay. */
+    --blur-md: 12px;
+
+    /*
+     * The two colours that mean the ends of the range rather than a palette entry — a slider
+     * track's checkerboard, a swatch's transparency grid, a thumb over an arbitrary hue. A theme
+     * has no business moving them, which is why they are not in one.
+     */
+    --color-black: #000;
+    --color-white: #fff;
+
     /*
      * Aliases, and read on `:root` rather than on the element — so a `data-theme` subtree that
      * changes `--field-border-width` does not move them. That is how they already behave: the
-     * `@theme` block emits exactly these two declarations here, in this place.
+     * `@theme` block emitted exactly these two declarations here, in this place.
      */
     --border-width-field: var(--field-border-width, var(--border-width));
     --shadow-overlay: var(--overlay-shadow);

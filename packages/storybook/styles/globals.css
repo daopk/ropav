@@ -1,5 +1,17 @@
+/*
+ * Tailwind itself, which this app runs for its own sake: the stories are written in utility
+ * classes. It used to arrive through `ropav/styles`, which imported it - and a consumer got a
+ * whole utility layer as a side effect of importing a component library's stylesheet. That is
+ * what stopped, so the app that wants Tailwind now asks for it.
+ */
+@import "tailwindcss";
+
 /* The stylesheet the library ships, not `@ropav/styles` directly - it carries rules on top. */
 @import "ropav/styles";
+
+/* The library's tokens as Tailwind's extension point, so a story can write `bg-accent`. Going
+ * away in 0.10.0; read the token directly - `var(--accent)` - in anything written after that. */
+@import "ropav/styles/tailwind";
 
 /* Every bundled theme, so the toolbar can switch between them. An app imports only the ones
  * it offers. Relative because the granular subpaths only exist in the published tarball. */

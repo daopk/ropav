@@ -1,8 +1,11 @@
-@layer theme, base, components, utilities;
+/*
+ * The same stylesheet as `index.css`, under the name an app with its own reset used to need.
+ *
+ * There is nothing left to leave out. The entry existed because `index.css` pulled in Tailwind's
+ * preflight, which resets the whole page and is not a library's to set; the components carry a
+ * reset of their own now, scoped to the prefix, and it is in both files because there is only one
+ * file. Kept as an alias so that an import written against 0.8 keeps resolving, and removed in
+ * 0.10.0.
+ */
 
-/* `index.css` without Tailwind's preflight, for an app that already resets - one running
- * its own Tailwind build, or carrying a reset of its own. Identical in every other way. */
-@import "tailwindcss/theme.css" layer(theme);
-@import "tailwindcss/utilities.css" layer(utilities);
-
-@import "./core.css";
+@import "./index.css";

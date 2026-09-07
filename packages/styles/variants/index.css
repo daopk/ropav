@@ -11,6 +11,12 @@
  *   dark:bg-gray-900             - Dark mode styles
  *
  * Priority: Explicit data attributes → System preferences (fallback); `dark` is explicit-only
+ *
+ * For an app writing Tailwind classes, and reached only through `tailwind.css` — the stylesheet
+ * itself uses none of these. Motion is a custom property the animated declarations read (see
+ * `motion.css`), and the components pick their dark values off the token layer, so the variants
+ * here are an authoring convenience rather than something a component depends on. They go with
+ * the rest of the interop in 0.10.0.
  * ================================================================================================
  */
 

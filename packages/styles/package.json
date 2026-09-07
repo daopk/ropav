@@ -1,12 +1,11 @@
 {
   "name": "@ropav/styles",
   "version": "0.8.1",
-  "description": "Ropav core styles - framework-agnostic CSS and Tailwind variants",
+  "description": "Ropav core styles - framework-agnostic CSS",
   "keywords": [
     "css",
     "design system",
-    "ropav",
-    "tailwindcss"
+    "ropav"
   ],
   "homepage": "https://github.com/daopk/ropav",
   "bugs": {
@@ -49,6 +48,18 @@
       "style": "./tailwind.css",
       "default": "./tailwind.css"
     },
+    "./animations.css": {
+      "style": "./animations.css",
+      "default": "./animations.css"
+    },
+    "./motion.css": {
+      "style": "./motion.css",
+      "default": "./motion.css"
+    },
+    "./slots.css": {
+      "style": "./slots.css",
+      "default": "./slots.css"
+    },
     "./components/*": {
       "types": "./src/components/*/index.ts",
       "import": "./src/components/*/index.ts",
@@ -72,16 +83,12 @@
     "postpack": "clean-package restore"
   },
   "devDependencies": {
-    "@tailwindcss/cli": "catalog:",
     "@types/node": "catalog:",
     "clean-package": "2.2.0",
+    "lightningcss": "catalog:",
     "rolldown": "1.2.7",
-    "tailwindcss": "catalog:",
     "tsx": "4.23.13",
     "typescript": "catalog:"
-  },
-  "peerDependencies": {
-    "tailwindcss": ">=4.0.0"
   },
   "clean-package": "./clean-package.config.json"
 }

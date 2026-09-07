@@ -76,12 +76,32 @@ describe.skipIf(!css)("the compiled stylesheet", () => {
    * On a `div`, not the button: a button is `border-box` and margin-free by UA default, so it
    * reads as reset whether one arrived or not. Every `w-full` beside a `px-*` in the component
    * layer is written against this.
+   *
+   * Inside a component, because that is as far as the reset goes. It replaced Tailwind's
+   * preflight, which did the same job to the whole page — including the parts of it this library
+   * was never asked to touch.
    */
   it("carries the reset the component layer is written against", () => {
-    const { styleOf } = mount(`<div id="plain"><p id="prose">text</p></div>`);
+    const { styleOf } = mount(
+      `<div class="rp-card"><div id="plain"><p id="prose">text</p></div></div>`,
+    );
 
     expect(styleOf("#plain").boxSizing).toBe("border-box");
     expect(styleOf("#prose").marginBlockStart).toBe("0px");
+  });
+
+  /*
+   * And the other side of that, which is the behaviour change 0.9.0 leads with. A page loading
+   * this file gets a component library, not a reset: its own headings keep their margins, and
+   * `html` keeps whatever font and line height the page gave it — neither of which a rule scoped
+   * to the `rp-` prefix is able to set.
+   */
+  it("resets nothing outside a component", () => {
+    const { styleOf, token } = mount(`<div id="plain"><p id="prose">text</p></div>`);
+
+    expect(styleOf("#plain").boxSizing).toBe("content-box");
+    expect(styleOf("#prose").marginBlockStart).toBe("16px");
+    expect(token("--default-font-family")).toBe("");
   });
 
   it("carries the theme, so a component is painted and not just laid out", () => {

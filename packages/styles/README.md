@@ -1,9 +1,9 @@
 # @ropav/styles
 
 The style layer behind [`ropav`](https://www.npmjs.com/package/ropav): a rule set for every component,
-themes, utilities, and custom variants, plus `tv()` variants that do nothing but map props to class names.
-Framework-agnostic — not a line of Vue or React in it, and no `dependency` at all. The only peer
-is `tailwindcss`, and `bundled.css` is the entry that does not need it.
+themes and utilities, plus `tv()` variants that do nothing but map props to class names.
+Framework-agnostic — not a line of Vue or React in it, no dependency, and no peer. Plain CSS
+either way you take it.
 
 **[Theming guide](https://ropav.netlify.app/theming/)** ·
 [Tokens](https://ropav.netlify.app/theming/tokens) ·
@@ -30,15 +30,15 @@ Outside the repo you do not install it yourself — `ropav` depends on it and np
 
 ### Basic setup
 
-`@ropav/styles` is the entry your own Tailwind build resolves; `@ropav/styles/bundled.css` is the
-same stylesheet already resolved, for an app that has no build step to do it. Either one, once,
-from your app's main CSS file:
+`@ropav/styles` is the entry, a list of `@import` statements for anything that follows them;
+`@ropav/styles/bundled.css` is the same stylesheet already resolved, for a page with nothing to
+follow them. Either one, once, from your app's main CSS file:
 
 ```css
-/* needs a Tailwind CSS 4 toolchain */
+/* your bundler resolves the imports */
 @import "@ropav/styles";
 
-/* needs nothing */
+/* already resolved */
 @import "@ropav/styles/bundled.css";
 ```
 
@@ -48,31 +48,43 @@ The compiled file is also what the CDN fields point at, so a page can take it wi
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ropav/styles" />
 ```
 
-> Reach for `bundled.css` unless you are running Tailwind. The entry above is a set of `@import`
-> statements, so without a toolchain to resolve them it succeeds and produces nothing — the app
-> renders unstyled and nothing errors.
+> Reach for `bundled.css` if nothing in your pipeline follows a CSS `@import`. The entry above is
+> a set of them, so unresolved it succeeds and produces nothing — the app renders unstyled and
+> nothing errors. That shipped once.
 
 Either way you get, in layer order (`theme, base, components, utilities`):
 
-- Tailwind CSS v4
-- the keyframes the components animate through
+- the scoped reset, and the keyframes the components animate through
 - base styles and the scrollbar system
 - the component layer — 88 files, one per component
-- the default theme: tokens for light and dark
-- utilities and custom variants
+- the default theme: tokens for light and dark, and every token a rule names directly
+- the classes offered by name rather than through a component
+
+The one thing it does not carry is the page's own `font-family` and `line-height`. The reset is
+scoped to the `rp-` prefix, and a rule that stops at the component cannot set those — they live on
+`html` and belong to the app. Any ordinary reset supplies them; without one the components inherit
+the browser's default, which is a serif.
 
 ### Importing only what you need
 
+Everything the components stand on comes first, once — the registrations, the motion switch and
+the tokens are not optional, and leaving one out fails quietly rather than loudly:
+
 ```css
-@import "tailwindcss";
+@import "@ropav/styles/base/reset.css";
+@import "@ropav/styles/base/base.css" layer(base);
+@import "@ropav/styles/base/scrollbar.css" layer(base);
+@import "@ropav/styles/motion.css";
+@import "@ropav/styles/slots.css";
+@import "@ropav/styles/animations.css";
+@import "@ropav/styles/themes/default";
+@import "@ropav/styles/themes/shared/tokens.css";
 
 @import "@ropav/styles/components/button.css" layer(components);
 @import "@ropav/styles/components/chip.css" layer(components);
-@import "@ropav/styles/themes/shared/theme.css";
-@import "@ropav/styles/themes/default";
 ```
 
-> `./bundled.css` and the granular subpaths — `./components/*.css`, `./base`, `./base/*.css`, `./themes/*`,
+> `./bundled.css` and the pattern subpaths — `./components/*.css`, `./base`, `./base/*.css`, `./themes/*`,
 > `./themes/*.css`, `./utilities`, `./variants` — exist **only in the published tarball**;
 > `clean-package.config.json` writes them into `exports` at `prepack` time. Inside the workspace, import the
 > files from `packages/styles/` by relative path instead.
@@ -93,8 +105,14 @@ Every component also has its own subpath so bundlers can drop the rest:
 ```
 packages/styles/
 ├── index.css              # Entry point — declares layer order, then imports everything below
+├── no-preflight.css       # Alias for index.css, kept for 0.8 imports; removed in 0.10.0
+├── tailwind.css           # The Tailwind interop entry; removed in 0.10.0
+├── motion.css             # `--rp-motion`, the switch every animated declaration reads
+├── slots.css              # `@property` registrations the component rules compose through
+├── animations.css         # Every keyframe, names being document-global
 ├── base/
-│   ├── base.css           # Layout tokens, typography, resets
+│   ├── reset.css          # The reset, scoped to the `rp-` prefix
+│   ├── base.css           # Layout tokens, typography
 │   └── scrollbar.css      # Scrollbar system
 ├── components/            # 88 CSS files, one per component
 ├── themes/
@@ -102,9 +120,10 @@ packages/styles/
 │   ├── sky.css … rabbit.css  # Ten more themes — generated, do not edit
 │   ├── all.css            # Every bundled theme, for docs and playgrounds
 │   └── shared/
-│       └── theme.css      # @theme block — derived values, radius scale, easing curves
-├── utilities/index.css    # Tailwind v4 @utility definitions
-├── variants/index.css     # Tailwind v4 @custom-variant definitions
+│       ├── tokens.css     # Every token a rule spells directly — type scale, weights, curves
+│       └── theme.css      # @theme block, for Tailwind interop only — see tailwind.css
+├── utilities/index.css    # The classes offered by name rather than through a component
+├── variants/index.css     # @custom-variant definitions, for Tailwind interop only
 ├── scripts/themes/        # Build-time theme generator — not published
 └── src/                   # TypeScript: tv() variants + shared utility class strings
 ```
@@ -324,8 +343,8 @@ ancestor that answered is the one that counts.
 
 The attribute sets `--rp-motion` — see `motion.css` — and every animated declaration leads with
 `var(--rp-motion)`, which substitutes nothing when motion is allowed and invalidates the whole
-declaration when it is not. The `motion-reduce` / `motion-safe` variants in `variants/index.css`
-stay for callers compiling this package's source with their own Tailwind.
+declaration when it is not. The `motion-reduce` / `motion-safe` variants are Tailwind's own
+concept and live behind `tailwind.css` with the rest of the interop.
 
 ### Forced colors
 
@@ -340,18 +359,27 @@ component that goes through `status-focused`, `status-focused-field` or `status-
 covered without a line of its own. `status-disabled` picks up `GrayText` the same way.
 
 The other half is state carried only by `background-color`, which the override flattens into its
-surroundings. Where selection is *just* a background - a tag, a calendar day, a table row - apply
-`forced-selected`, **as an `@apply` statement of its own**:
+surroundings. Where selection is *just* a background - a tag, a calendar day, a table row - state
+it again in system colours, after the fill:
 
 ```css
 .thing[data-selected="true"] {
-  @apply bg-accent text-accent-foreground;
-  @apply forced-selected;
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+
+  @media (forced-colors: active) {
+    forced-color-adjust: none;
+    background-color: Highlight;
+    border-color: Highlight;
+    color: HighlightText;
+  }
 }
 ```
 
-Folded into the line above it, Tailwind sorts the list and hoists the nested media query over the
-plain declarations, and the `background-color` it exists to override wins instead. Where selection
+The block has to come after the fill it overrides, which used to be a trap worth a paragraph: as
+`@apply forced-selected` it had to stand as a statement of its own, because Tailwind sorted a list
+and hoisted the nested media query above the plain declarations. Written out there is nothing to
+sort. `.forced-selected` is still there as a class if a caller wants it. Where selection
 also moves a thumb or shows a glyph, the component writes its own `forced-colors` block, because
 those parts need colours of their own - see `switch.css`, `radio.css`, `tabs.css`, `range-calendar.css`,
 `slider.css` and `skeleton.css`.
@@ -408,11 +436,11 @@ Rolldown emits `dist/` as ES modules with `preserveModules` and one entry per co
 files, the CSS is copied across untouched, and `scripts/bundle-css.mjs` produces the minified
 `dist/ropav.min.css`.
 
-That last step compiles from an empty working directory, because Tailwind roots automatic source detection
-there and would otherwise fill the utilities layer with whatever class-shaped words the package's own sources
-contain. Nothing is detected as a result, so the classes this package offers by name — the `@utility`
-definitions in `utilities/index.css` — are safelisted back explicitly, read from that file so the two cannot
-drift. `packages/ropav` builds its own `ropav.min.css` through the same function.
+That last step is Lightning CSS: it follows the `@import` graph, lowers nesting for the browser
+floor and minifies. The floor is stated in that file rather than queried from a browserslist,
+because a floor that moves on a lockfile bump is not a floor. `packages/ropav` builds its own
+`ropav.min.css` through the same function, and `bundled.browser.test.ts` in that package renders
+the result against the source to check that the compiler changed nothing anyone can see.
 
 `pnpm --filter @ropav/styles measure-size` prints a size report and writes `bundle-size.json`.
 

@@ -4,7 +4,7 @@ layout: home
 hero:
   name: Ropav
   text: Vue components that render without a virtual DOM
-  tagline: Built on Vapor Mode and Tailwind CSS 4, with the accessibility layer ported from React Aria.
+  tagline: Built on Vapor Mode, styled in plain CSS, with the accessibility layer ported from React Aria.
   actions:
     - theme: brand
       text: Get started

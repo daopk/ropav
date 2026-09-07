@@ -11,6 +11,32 @@ import type { Case } from "./cases";
 
 import { firstSatisfiable } from "./selector-dom";
 
+/**
+ * A document of its own, carrying one stylesheet.
+ *
+ * A reset is a property of the page it is on, so two of them cannot share a document — and two
+ * builds of the same stylesheet certainly cannot. An iframe is the cheapest second page there is.
+ */
+export const mount = (css: string): Document => {
+  const frame = document.createElement("iframe");
+
+  frame.setAttribute("style", "position:absolute;top:-100000px;left:0;width:1280px;height:720px");
+  document.body.appendChild(frame);
+
+  const doc = frame.contentDocument!;
+
+  doc.open();
+  doc.write("<!doctype html><html><head></head><body></body></html>");
+  doc.close();
+
+  const style = doc.createElement("style");
+
+  style.textContent = css;
+  doc.head.appendChild(style);
+
+  return doc;
+};
+
 /** The document states the components are written against. */
 export const MODES = {
   dark: { class: "dark" },

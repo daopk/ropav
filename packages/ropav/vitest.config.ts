@@ -29,6 +29,8 @@ export default defineConfig({
       mergeConfig(
         vueBrowserConfig,
         defineConfig({
+          // Not for the library, which is plain CSS now, but for the suite's own fixtures —
+          // `tests/tailwind.css` says why.
           plugins: [vue({ features: { vapor: true } }), tailwindcss()],
           resolve: { alias },
           test: {

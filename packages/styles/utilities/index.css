@@ -1,180 +1,285 @@
-/* === Focus Ring === */
-/*
- * Every ring here is a `box-shadow` - that is what `ring-*` compiles to - and Forced Colors
- * Mode strips `box-shadow` outright. Since `outline-none` has already given up the native
- * outline, the two together leave no focus indicator at all, which is WCAG 2.4.7 across every
- * component that focuses. Each utility therefore draws an outline back under
+/**
+ * The classes this package offers by name rather than through a component.
+ *
+ * They are plain CSS in the `utilities` layer, which is what they compiled to when they were
+ * `@utility` definitions — the layer is half of what a utility means, because landing after
+ * `components` is how a class passed through `class` beats the component rule it is correcting.
+ * The file declares the layer itself so that importing it on its own gives the same answer as
+ * importing it through the entry.
+ *
+ * Every ring below is a `box-shadow` and Forced Colors Mode strips `box-shadow` outright. Since
+ * these also give up the native outline, the two together would leave no focus indicator at all —
+ * WCAG 2.4.7, across every component that focuses. So each one draws an outline back under
  * `forced-colors: active`, in `Highlight`: system colours are exempt from the override, and
  * `Highlight` is the one the platform reserves for the focused control.
  */
-@utility focus-ring {
-  @apply ring-2 ring-focus ring-offset-0 ring-offset-background outline-none;
-  /* Overrides the ring offset from the theme variables */
-  --tw-ring-offset-width: var(--ring-offset-width);
 
-  @media (forced-colors: active) {
-    outline: 2px solid Highlight;
-    outline-offset: 2px;
-  }
-}
+@layer utilities {
+  /* === Focus Ring === */
 
-@utility focus-field-ring {
-  @apply ring-2 ring-focus ring-offset-0 outline-none;
-  /* No separation - ring sits directly against the element */
-  --tw-ring-offset-width: 0px;
+  /*
+   * A ring is two shadows in one slot — the gap in the page's colour over the ring in its own —
+   * so that a rule setting a ring and a rule setting a drop shadow can each name one contribution
+   * without restating the other. `--rp-ring-offset-width` is the separation; the theme's
+   * `--ring-offset-width` is what it reads here, which is what makes the offset themeable.
+   */
+  .focus-ring {
+    --rp-ring:
+      var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width) var(--rp-ring-offset-color),
+      var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+        var(--rp-ring-color, currentcolor);
+    box-shadow: var(--rp-ring), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-ring-offset-color: var(--background);
+    --rp-outline-style: none;
+    outline-style: none;
+    --rp-ring-offset-width: var(--ring-offset-width);
 
-  /* Offset stays at 0, matching the ring this stands in for */
-  @media (forced-colors: active) {
-    outline: 2px solid Highlight;
-    outline-offset: 0;
-  }
-}
-
-@utility invalid-field-ring {
-  /* Unfocused: show 1px outline */
-  @apply outline-1 outline-danger outline-solid;
-  --tw-ring-offset-width: 3px;
-
-  /* Focused: show 2px ring in danger color, remove outline */
-  &:focus,
-  &:focus-visible,
-  &[data-focused="true"],
-  &[data-focus-visible="true"],
-  &:focus-within,
-  &[data-focus-within="true"] {
-    @apply ring-2 ring-danger ring-offset-0;
-    --tw-ring-offset-width: 0px;
-
-    /* The unfocused outline above survives forced colors, but the ring marking focus does
-     * not - widen and recolour the outline instead, or a focused invalid field is
-     * indistinguishable from an unfocused one. The danger colour is not the loss it looks
-     * like: forced colors overrides it either way, and the error message carries it. */
     @media (forced-colors: active) {
-      outline-width: 2px;
-      outline-color: Highlight;
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
     }
   }
-}
 
-@utility no-highlight {
-  -webkit-tap-highlight-color: transparent;
-}
+  /* No separation - ring sits directly against the element */
+  .focus-field-ring {
+    --rp-ring:
+      var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width) var(--rp-ring-offset-color),
+      var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+        var(--rp-ring-color, currentcolor);
+    box-shadow: var(--rp-ring), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-outline-style: none;
+    outline-style: none;
+    --rp-ring-offset-width: 0px;
 
-/* === Statuses === */
-@utility status-focused {
-  @apply focus-ring;
-}
-
-@utility status-focused-field {
-  @apply focus-field-ring;
-}
-
-@utility status-invalid-field {
-  @apply invalid-field-ring;
-}
-
-@utility status-disabled {
-  opacity: var(--disabled-opacity);
-  cursor: var(--cursor-disabled);
-  pointer-events: none;
-
-  /* Forced colors leaves `opacity` alone, so the element still reads as dimmed without this.
-   * `GrayText` is the signal the platform actually uses for a disabled control, and it
-   * inherits, which is what carries it to the label and description inside. */
-  @media (forced-colors: active) {
-    color: GrayText;
-    border-color: GrayText;
+    /* Offset stays at 0, matching the ring this stands in for */
+    @media (forced-colors: active) {
+      outline: 2px solid Highlight;
+      outline-offset: 0;
+    }
   }
-}
 
-@utility status-pending {
-  @apply pointer-events-none;
-}
+  /*
+   * Nothing sets a ring offset here. The Tailwind form wrote one on the unfocused element, where
+   * it was read by nothing - the rule sets no `box-shadow` - and so had no effect. Under the
+   * package's own slot names the same declaration would be read by whatever ring the component
+   * underneath draws, and it would win on layer order: an invalid field would grow a 3px gap
+   * around a ring that has nothing to do with being invalid.
+   */
+  .invalid-field-ring {
+    /* Unfocused: show 1px outline */
+    outline-width: 1px;
+    outline-color: var(--danger);
+    --rp-outline-style: solid;
+    outline-style: solid;
 
-/* === Forced Colors (Windows High Contrast Mode) === */
+    /* Focused: show 2px ring in danger color, remove outline */
+    &:focus,
+    &:focus-visible,
+    &[data-focused="true"],
+    &[data-focus-visible="true"],
+    &:focus-within,
+    &[data-focus-within="true"] {
+      --rp-ring:
+        var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width) var(--rp-ring-offset-color),
+        var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+          var(--rp-ring-color, currentcolor);
+      box-shadow: var(--rp-ring), var(--rp-shadow);
+      --rp-ring-color: var(--danger);
+      --rp-ring-offset-width: 0px;
 
-/*
- * Restates "selected" for Forced Colors Mode.
- *
- * The mode replaces every author colour with the user's palette, so a state carried only by
- * `background-color` - a selected tag, calendar day, table row - collapses into its neighbours
- * and the selection becomes invisible. `Highlight` / `HighlightText` is the pair the platform
- * reserves for a selected control and is exempt from the override, so restating the state
- * with it survives.
- *
- * Only for elements whose selected state is a background and nothing else. Where selection
- * also shows as a glyph or a moved thumb, the component's own `forced-colors` block handles
- * it, because those parts need colours of their own.
- *
- * Apply it as a statement of its own, never folded into another `@apply` list: Tailwind sorts
- * the utilities in one list and hoists the nested at-rule above the plain declarations, where
- * the very `background-color` this is meant to override then wins.
- */
-@utility forced-selected {
-  @media (forced-colors: active) {
-    /* Chromium paints a `Canvas`-coloured backplate behind the text of any element that has
-     * one, so that text over an image stays legible. It goes on top of the element's own
-     * background, which means a `Highlight` fill with `HighlightText` on it renders as a
-     * solid plate with invisible text - the label disappears completely. Opting the element
-     * out of adjustment is what suppresses the backplate; the colours below are system
-     * colours either way, so the user's palette is still what gets used. */
-    forced-color-adjust: none;
-    background-color: Highlight;
-    border-color: Highlight;
-    color: HighlightText;
+      /* The unfocused outline above survives forced colors, but the ring marking focus does
+       * not - widen and recolour the outline instead, or a focused invalid field is
+       * indistinguishable from an unfocused one. The danger colour is not the loss it looks
+       * like: forced colors overrides it either way, and the error message carries it. */
+      @media (forced-colors: active) {
+        outline-width: 2px;
+        outline-color: Highlight;
+      }
+    }
   }
-}
 
-/* === Scrollbars (standards-only; apply per scroll slot in component CSS) === */
-@utility scrollbar {
-  scrollbar-width: var(--scrollbar-width);
-  scrollbar-color: var(--scrollbar-color);
-  scrollbar-gutter: var(--scrollbar-gutter);
-}
+  /* === Statuses === */
+  .status-focused {
+    --rp-ring:
+      var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width) var(--rp-ring-offset-color),
+      var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+        var(--rp-ring-color, currentcolor);
+    box-shadow: var(--rp-ring), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-ring-offset-color: var(--background);
+    --rp-outline-style: none;
+    outline-style: none;
+    --rp-ring-offset-width: var(--ring-offset-width);
 
-@utility scrollbar-thin {
-  scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
-  scrollbar-gutter: auto;
-}
+    @media (forced-colors: active) {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
+  }
 
-@utility scrollbar-default {
-  scrollbar-width: auto;
-  scrollbar-color: auto;
-  scrollbar-gutter: auto;
-}
+  .status-focused-field {
+    --rp-ring:
+      var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width) var(--rp-ring-offset-color),
+      var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+        var(--rp-ring-color, currentcolor);
+    box-shadow: var(--rp-ring), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-outline-style: none;
+    outline-style: none;
+    --rp-ring-offset-width: 0px;
 
-/* Direct properties only — does not inherit none to nested scroll slots */
-@utility scrollbar-none {
-  scrollbar-width: none;
-  scrollbar-color: auto;
-  scrollbar-gutter: auto;
-  -ms-overflow-style: none;
-}
+    @media (forced-colors: active) {
+      outline: 2px solid Highlight;
+      outline-offset: 0;
+    }
+  }
 
-/* === Field metrics === */
-/*
- * One line of a field, at each size. The size scale is the control scale: 32px, 36px, 40px, the
- * same three heights a button stands at, so a field and a button of the same size line up.
- *
- * The padding is what carries it rather than a height, because a field is content-driven - some
- * shells grow (a group around a textarea, a multi-select trigger wrapping its chips) and a height
- * would fight them. The shell states its own floor: `min-h-8` / `min-h-9` / `min-h-10` where it may
- * grow, `h-8` / `h-9` / `h-10` where it may not.
- *
- * The padding also changes at `sm` where the type does. 16px type below that breakpoint is what
- * stops mobile Safari zooming the page on focus, and 16px sets a 24px line where 14px sets a 20px
- * one - so the padding gives back the 4px difference and the height comes out the same either way.
- * `lg` keeps 16px throughout, as the large button does.
- */
-@utility field-line-sm {
-  @apply py-1 text-base sm:py-1.5 sm:text-sm;
-}
+  .status-invalid-field {
+    outline-width: 1px;
+    outline-color: var(--danger);
+    --rp-outline-style: solid;
+    outline-style: solid;
 
-@utility field-line-md {
-  @apply py-1.5 text-base sm:py-2 sm:text-sm;
-}
+    &:focus,
+    &:focus-visible,
+    &[data-focused="true"],
+    &[data-focus-visible="true"],
+    &:focus-within,
+    &[data-focus-within="true"] {
+      --rp-ring:
+        var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width) var(--rp-ring-offset-color),
+        var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+          var(--rp-ring-color, currentcolor);
+      box-shadow: var(--rp-ring), var(--rp-shadow);
+      --rp-ring-color: var(--danger);
+      --rp-ring-offset-width: 0px;
 
-@utility field-line-lg {
-  @apply py-2 text-base;
+      @media (forced-colors: active) {
+        outline-width: 2px;
+        outline-color: Highlight;
+      }
+    }
+  }
+
+  .status-disabled {
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+
+    /* Forced colors leaves `opacity` alone, so the element still reads as dimmed without this.
+     * `GrayText` is the signal the platform actually uses for a disabled control, and it
+     * inherits, which is what carries it to the label and description inside. */
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
+  }
+
+  .status-pending {
+    pointer-events: none;
+  }
+
+  /* === Forced Colors (Windows High Contrast Mode) === */
+
+  /*
+   * Restates "selected" for Forced Colors Mode.
+   *
+   * The mode replaces every author colour with the user's palette, so a state carried only by
+   * `background-color` - a selected tag, calendar day, table row - collapses into its neighbours
+   * and the selection becomes invisible. `Highlight` / `HighlightText` is the pair the platform
+   * reserves for a selected control and is exempt from the override, so restating the state
+   * with it survives.
+   *
+   * Only for elements whose selected state is a background and nothing else. Where selection
+   * also shows as a glyph or a moved thumb, the component's own `forced-colors` block handles
+   * it, because those parts need colours of their own.
+   */
+  .forced-selected {
+    @media (forced-colors: active) {
+      /* Chromium paints a `Canvas`-coloured backplate behind the text of any element that has
+       * one, so that text over an image stays legible. It goes on top of the element's own
+       * background, which means a `Highlight` fill with `HighlightText` on it renders as a
+       * solid plate with invisible text - the label disappears completely. Opting the element
+       * out of adjustment is what suppresses the backplate; the colours below are system
+       * colours either way, so the user's palette is still what gets used. */
+      forced-color-adjust: none;
+      background-color: Highlight;
+      border-color: Highlight;
+      color: HighlightText;
+    }
+  }
+
+  /* === Scrollbars (standards-only; apply per scroll slot in component CSS) === */
+  .scrollbar {
+    scrollbar-width: var(--scrollbar-width);
+    scrollbar-color: var(--scrollbar-color);
+    scrollbar-gutter: var(--scrollbar-gutter);
+  }
+
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    scrollbar-gutter: auto;
+  }
+
+  .scrollbar-default {
+    scrollbar-width: auto;
+    scrollbar-color: auto;
+    scrollbar-gutter: auto;
+  }
+
+  /* Direct properties only — does not inherit none to nested scroll slots */
+  .scrollbar-none {
+    scrollbar-width: none;
+    scrollbar-color: auto;
+    scrollbar-gutter: auto;
+    -ms-overflow-style: none;
+  }
+
+  /* === Field metrics === */
+  /*
+   * One line of a field, at each size. The size scale is the control scale: 32px, 36px, 40px, the
+   * same three heights a button stands at, so a field and a button of the same size line up.
+   *
+   * The padding is what carries it rather than a height, because a field is content-driven - some
+   * shells grow (a group around a textarea, a multi-select trigger wrapping its chips) and a height
+   * would fight them. The shell states its own floor: `min-h-8` / `min-h-9` / `min-h-10` where it may
+   * grow, `h-8` / `h-9` / `h-10` where it may not.
+   *
+   * The padding also changes at `sm` where the type does. 16px type below that breakpoint is what
+   * stops mobile Safari zooming the page on focus, and 16px sets a 24px line where 14px sets a 20px
+   * one - so the padding gives back the 4px difference and the height comes out the same either way.
+   * `lg` keeps 16px throughout, as the large button does.
+   */
+  .field-line-sm {
+    padding-block: var(--spacing);
+    font-size: var(--text-base);
+    line-height: var(--rp-leading, var(--text-base--line-height));
+
+    @media (width >= 40rem) {
+      padding-block: calc(var(--spacing) * 1.5);
+      font-size: var(--text-sm);
+      line-height: var(--rp-leading, var(--text-sm--line-height));
+    }
+  }
+
+  .field-line-md {
+    padding-block: calc(var(--spacing) * 1.5);
+    font-size: var(--text-base);
+    line-height: var(--rp-leading, var(--text-base--line-height));
+
+    @media (width >= 40rem) {
+      padding-block: calc(var(--spacing) * 2);
+      font-size: var(--text-sm);
+      line-height: var(--rp-leading, var(--text-sm--line-height));
+    }
+  }
+
+  .field-line-lg {
+    padding-block: calc(var(--spacing) * 2);
+    font-size: var(--text-base);
+    line-height: var(--rp-leading, var(--text-base--line-height));
+  }
 }

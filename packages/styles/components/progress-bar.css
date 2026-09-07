@@ -222,7 +222,7 @@
     }
 
     /* Travelling toward the inline end is what reads as progress; in RTL that is the other way. */
-    &:dir(rtl)::after {
+    &:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *)::after {
       animation-direction: reverse;
     }
   }

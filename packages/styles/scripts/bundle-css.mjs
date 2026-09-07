@@ -4,67 +4,92 @@
  * Shared with `packages/ropav`, whose entry is this package's plus its own override layer, so
  * both published packages offer the same artifact built the same way. Reached from there by
  * resolving this package's `package.json`; it never runs from a tarball, only from the repo.
+ *
+ * The entries are plain CSS, so this only has to follow the `@import` graph, lower what the
+ * browser floor does not have, and minify. That is Lightning CSS's whole job.
  */
 /* eslint-disable no-console */
-import { execFileSync } from "child_process";
-import { mkdtemp, readFile, rm, writeFile } from "fs/promises";
+import { readFile, writeFile } from "fs/promises";
 import { createRequire } from "module";
-import { tmpdir } from "os";
 import path from "path";
 import { fileURLToPath } from "url";
 
+import { bundleAsync, Features } from "lightningcss";
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const stylesRoot = path.resolve(__dirname, "..");
-const require = createRequire(import.meta.url);
 
 /**
- * The classes the stylesheet offers by name rather than through a component, read from where
- * they are defined so the safelist below cannot drift from them.
+ * The browser floor, stated rather than queried.
+ *
+ * Lightning CSS reads a target as `major << 16 | minor << 8`. A browserslist query would put the
+ * floor at the mercy of a data update: the same source would start emitting different CSS on a
+ * lockfile bump, and the one thing a floor has to do is not move on its own.
  */
-async function authoringUtilities() {
-  const source = await readFile(path.join(stylesRoot, "utilities/index.css"), "utf8");
-  const names = [...source.matchAll(/^@utility ([a-z-]+)/gm)].map(([, name]) => name);
+const version = (major, minor = 0) => (major << 16) | (minor << 8);
 
-  if (names.length === 0) throw new Error("No @utility definitions found in utilities/index.css");
-
-  return names;
-}
-
-function cliPath() {
-  const manifest = require.resolve("@tailwindcss/cli/package.json");
-
-  return path.resolve(path.dirname(manifest), require(manifest).bin.tailwindcss);
-}
+const TARGETS = { chrome: version(111), firefox: version(128), safari: version(16, 4) };
 
 /**
- * Two things have to be forced here, or the utilities layer fills with whatever class-shaped
- * words the sources happen to contain — `block`, `container`, `truncate`, and in `packages/ropav`
- * every utility its stories name.
+ * Nesting is lowered whatever the targets say. The floor above already forces it — relaxed
+ * nesting, where a nested selector needs no `&`, is younger than every one of these versions —
+ * but the source is written in it throughout and a raised floor should not silently start
+ * shipping it.
  *
- * Automatic source detection roots at the working directory, so the compile runs from an empty
- * one. That leaves nothing detected at all, which is why the classes that *are* offered by name
- * then have to be asked for explicitly.
+ * `light-dark()` is left alone, and has to be. Lowering it makes Lightning CSS write a pair of
+ * `--lightningcss-*` custom properties into every rule that mentions `color-scheme`, which is
+ * both a size no one asked for and a set of names this package would then be declaring.
  *
- * The safelist lives in a wrapper written beside the entry rather than in the entry itself: the
- * entry ships, and a `@source` directive in it would reach into the consumer's own build.
+ * `:dir()` is left alone for a worse reason: it lowers to a list of nineteen `:lang()` checks,
+ * which is a different selector. A paragraph marked `lang="ar"` inside `dir="ltr"` would match,
+ * and `dir="rtl"` with no language at all would not. Every `:dir()` in the source names the
+ * `[dir]` attribute beside it inside a `:where()`, so a browser that does not know the
+ * pseudo-class drops that one branch and keeps matching on the attribute.
  */
+const INCLUDE = Features.Nesting;
+const EXCLUDE = Features.LightDark | Features.DirSelector;
+
+/**
+ * `@import` targets, resolved the way a bundler resolves them rather than as paths.
+ *
+ * Only `packages/ropav`'s entry needs this: it imports `@ropav/styles` by name, and the answer
+ * is whatever the `style` condition in that package's `exports` names — the same condition a
+ * consumer's build reads, so the artifact is built through the map it is published behind.
+ */
+const resolver = {
+  read: (file) => readFile(file, "utf8"),
+
+  resolve(specifier, from) {
+    if (specifier.startsWith(".") || path.isAbsolute(specifier)) {
+      return path.resolve(path.dirname(from), specifier);
+    }
+
+    const parts = specifier.split("/");
+    const name = parts.splice(0, specifier.startsWith("@") ? 2 : 1).join("/");
+    const subpath = parts.length > 0 ? `./${parts.join("/")}` : ".";
+
+    const require = createRequire(from);
+    const manifest = require.resolve(`${name}/package.json`);
+    const entry = require(manifest).exports?.[subpath];
+    const target = typeof entry === "string" ? entry : (entry?.style ?? entry?.default);
+
+    if (!target) throw new Error(`\`${specifier}\` names no stylesheet (imported by ${from})`);
+
+    return path.resolve(path.dirname(manifest), target);
+  },
+};
+
 export async function bundleCss({ entry, out }) {
-  const wrapper = path.join(path.dirname(entry), ".bundle.css");
-  const scratch = await mkdtemp(path.join(tmpdir(), "ropav-bundle-"));
-  const safelist = (await authoringUtilities()).join(" ");
+  const { code } = await bundleAsync({
+    exclude: EXCLUDE,
+    filename: entry,
+    include: INCLUDE,
+    minify: true,
+    resolver,
+    targets: TARGETS,
+  });
 
-  try {
-    await writeFile(
-      wrapper,
-      `@source inline("${safelist}");\n\n@import "./${path.basename(entry)}";\n`,
-    );
+  await writeFile(out, code);
 
-    execFileSync(process.execPath, [cliPath(), "-i", wrapper, "-o", out, "--minify"], {
-      cwd: scratch,
-      stdio: "inherit",
-    });
-  } finally {
-    await rm(wrapper, { force: true });
-    await rm(scratch, { force: true, recursive: true });
-  }
+  console.log(`✓ ${path.relative(stylesRoot, out)} — ${code.length} bytes`);
 }

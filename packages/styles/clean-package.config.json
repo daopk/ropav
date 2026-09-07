@@ -27,6 +27,18 @@
         "style": "./dist/tailwind.css",
         "default": "./dist/tailwind.css"
       },
+      "./animations.css": {
+        "style": "./dist/animations.css",
+        "default": "./dist/animations.css"
+      },
+      "./motion.css": {
+        "style": "./dist/motion.css",
+        "default": "./dist/motion.css"
+      },
+      "./slots.css": {
+        "style": "./dist/slots.css",
+        "default": "./dist/slots.css"
+      },
       "./bundled.css": "./dist/ropav.min.css",
       "./components/*": {
         "types": "./dist/components/*/index.d.ts",

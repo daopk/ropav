@@ -1,6 +1,18 @@
-/* Without the preflight: VitePress ships its own reset in `@layer __vitepress_base`, and a
- * second one would fight it. */
-@import "ropav/styles/no-preflight";
+/*
+ * Tailwind itself, which this site runs for its own sake: the demos are written in utility
+ * classes. It used to arrive through `ropav/styles`, which imported it - and a consumer got a
+ * whole utility layer as a side effect of importing a component library's stylesheet. That is
+ * what stopped, so the app that wants Tailwind now asks for it.
+ */
+@import "tailwindcss";
+
+/* The library. Its reset is scoped to the `rp-` prefix, so it no longer has anything to argue
+ * about with the one VitePress ships in `@layer __vitepress_base`. */
+@import "ropav/styles";
+
+/* The library's tokens as Tailwind's extension point, so a demo can write `text-muted`. Going
+ * away in 0.10.0; read the token directly - `var(--muted)` - in anything written after that. */
+@import "ropav/styles/tailwind";
 
 /* Every bundled theme, so the palette can be switched. An app imports only the ones it
  * offers. Relative because the granular subpaths only exist in the published tarball. */

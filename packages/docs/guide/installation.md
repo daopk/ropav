@@ -5,8 +5,8 @@ description: The package, the stylesheet, and how to import less of it.
 
 # Installation
 
-Ropav needs Vue 3.6 or newer — Vapor Mode is what it is built on. Tailwind CSS 4 is needed only
-by one of the two ways to take the stylesheet, and the other one needs no build step at all.
+Ropav needs Vue 3.6 or newer — Vapor Mode is what it is built on. The stylesheet needs nothing:
+it is plain CSS, whichever of the two ways below you take it.
 
 ::: code-group
 
@@ -28,11 +28,12 @@ yarn add ropav
 
 ## The stylesheet
 
-Two ways in. They render the same components; what differs is whether anything has to compile.
+Two ways in. They render the same components; what differs is whether anything resolves the
+imports for you.
 
 ### Compiled, no build step
 
-One finished file — every rule resolved, nothing left to process. Take it from your CSS:
+One finished file — every import followed, every rule resolved. Take it from your CSS:
 
 ```css
 @import "ropav/styles/bundled.css";
@@ -60,39 +61,24 @@ The bundled themes are finished CSS too, so a second `<link>` is all another pal
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ropav/styles/dist/themes/netflix.css" />
 ```
 
-### Source, compiled by your own Tailwind
+### Source, through your bundler
 
-If your app already runs Tailwind CSS 4, take the entry instead. Your build resolves it, and you
-get to drop the components you never import.
+Take the entry instead and you get to drop the components you never import. It is a list of
+`@import` statements, so anything that follows them resolves it — Vite, webpack, Parcel, a
+Tailwind build, `@import` in the browser.
 
 ```css
-@import "tailwindcss";
 @import "ropav/styles";
 ```
 
-::: warning It fails quietly
-These entries are `@import` statements, not CSS. Without a Tailwind 4 toolchain the import still
-succeeds and the app renders unstyled — nothing errors. If your components come out looking like
-bare HTML, this is why; take the compiled file above.
-:::
+## Two lines your page owes
 
-### If your app already resets
+The components carry a reset of their own, scoped to the `rp-` prefix: the box model, the borders
+and the form controls inside a Ropav component are set up whichever entry you took, and nothing
+outside one is touched.
 
-`ropav/styles` includes Tailwind's preflight, which resets the whole page. An app that already
-ships a reset — or that runs its own Tailwind build, which brings one — wants the other entry:
-
-```css
-@import "ropav/styles/no-preflight";
-```
-
-The components look after themselves either way. They carry a reset of their own, scoped to the
-prefix, so the box model, the borders and the form controls inside a Ropav component are the same
-under both entries — and nothing outside one is touched.
-
-::: tip Two lines your page still owes
-The scoped reset stops at the component, so it cannot set the page's `font-family` or
-`line-height` — those live on `html` and belong to you. Any ordinary reset already sets them; if
-yours does not, the components inherit whatever the browser defaults to, which is a serif.
+That scope is also the limit. A rule that stops at the component cannot set the page's
+`font-family` or `line-height` — those live on `html` and belong to you.
 
 ```css
 html {
@@ -100,6 +86,16 @@ html {
   line-height: 1.5;
 }
 ```
+
+Any ordinary reset already sets them, and so does a Tailwind build. If nothing on your page does,
+the components inherit whatever the browser defaults to, which is a serif.
+
+::: tip Upgrading from 0.8
+`ropav/styles` used to include Tailwind's preflight, which reset your whole page, and
+`ropav/styles/no-preflight` was the entry for apps that would rather it did not. There is one
+stylesheet now and it resets nothing outside a component; `no-preflight` is an alias for it, and
+goes away in 0.10.0. If your page was relying on the preflight for the two lines above, this is
+where they went.
 :::
 
 ### If you write Tailwind classes against these tokens
@@ -130,20 +126,33 @@ Read one directly instead. It works with any toolchain and with none:
 
 ## Importing only what you need
 
-Also the Tailwind path. If you ship only a handful of components, take their CSS one file at a
-time instead of the whole entry:
+If you ship only a handful of components, take their CSS one file at a time instead of the whole
+entry. These are subpaths of `@ropav/styles` rather than of `ropav`, so install it yourself as
+well — a package manager that does not flatten `node_modules` will not resolve a dependency's
+dependency. Everything the components stand on comes first, once:
 
 ```css
-@import "tailwindcss";
+@import "@ropav/styles/base/reset.css";
+@import "@ropav/styles/base/base.css" layer(base);
+@import "@ropav/styles/base/scrollbar.css" layer(base);
+@import "@ropav/styles/motion.css";
+@import "@ropav/styles/slots.css";
+@import "@ropav/styles/animations.css";
+@import "@ropav/styles/themes/default";
+@import "@ropav/styles/themes/shared/tokens.css";
 
 @import "@ropav/styles/components/button.css" layer(components);
 @import "@ropav/styles/components/chip.css" layer(components);
-@import "@ropav/styles/themes/shared/theme.css";
-@import "@ropav/styles/themes/default";
 ```
 
-The layer wrapper is not optional — component rules have to land in `components` for a utility you
-pass through `class` to win on layer order.
+None of the first block is optional, and leaving one out fails quietly rather than loudly:
+`slots.css` registers the custom properties a rule composes a shadow or a transform through, and
+an unregistered one takes its whole declaration down to the property's initial value — a border
+sized `1px` in the source rendering as no border at all. `motion.css` is the switch that reduced
+motion turns off; `tokens.css` holds every size, weight and curve a rule names.
+
+The layer wrapper on the components is not optional either — a component rule has to land in
+`components` for a utility you pass through `class` to win on layer order.
 
 The JavaScript side is already per-component: every component has its own subpath, so a bundler
 drops what you never import.
@@ -164,6 +173,6 @@ import { Button } from "ropav";
 </template>
 ```
 
-If it renders as a plain browser button, the stylesheet never arrived — either it is not imported,
-or it is one of the source entries and nothing compiled it. If it renders styled but in the wrong
-colours, a theme is loaded and the palette is not: check `data-theme`.
+If it renders as a plain browser button, the stylesheet never arrived — check that it is imported.
+If it renders styled but in the wrong colours, a theme is loaded and the palette is not: check
+`data-theme`. If it renders styled but in a serif, the two lines above are missing.

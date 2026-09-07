@@ -1,0 +1,17 @@
+/*
+ * Tailwind, for the test suite's own markup.
+ *
+ * A fixture sizes a scroll region with `h-[120px]` and lays a table out with `flex gap-2`, in
+ * thirty-odd files. Those utilities used to arrive through the library's stylesheet, which
+ * imported Tailwind — so the suite was running on a utility layer it got as a side effect of the
+ * thing it was testing. That is exactly what stopped: an app that wants Tailwind asks for it, and
+ * this test app wants it.
+ *
+ * It also brings the preflight back to this document, which is what keeps the suite measuring
+ * what it has always measured. The library's own reset is scoped to the `rp-` prefix and cannot
+ * set the page's font or line height; a real page supplies them, from its own reset or from a
+ * Tailwind build like this one. The tests that assert the scoped reset on its own mount an
+ * iframe carrying nothing but the stylesheet — see `styles/migration/reset.browser.test.ts`.
+ */
+
+@import "tailwindcss";

@@ -8,11 +8,12 @@
  * makes the whole declaration invalid at computed-value time — `border-style:
  * var(--rp-border-style)` silently becomes `none`, and the border it was sizing disappears.
  *
- * This file was generated for as long as there was something to generate it from: the codemod
- * classified the slots off the `@apply` corpus, and wrote whichever ones both ends of belonged to
- * this package. That corpus is gone — expanding it is what removed it — and a run over what
- * survives classifies only the handful of slots those statements happen to name. So the set is
- * maintained here now, and shrinks by hand as each composed group is dissolved.
+ * The set is maintained by hand, and shrinks as each composed group is dissolved. It was
+ * generated for as long as there was something to generate it from — the slots were classified
+ * off the `@apply` corpus that named them — and expanding that corpus is what removed it.
+ * `slot-registration.test.ts` in `ropav` is what holds the file to the rules that read it, in
+ * both directions: a bare read with nothing behind it fails, and so does a registration nobody
+ * reads.
  */
 
 @property --rp-shadow {

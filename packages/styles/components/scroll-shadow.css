@@ -83,7 +83,7 @@
   &[data-left-scroll="true"] {
     --scroll-linear-gradient: 270deg, #000 calc(100% - var(--scroll-shadow-size)), transparent;
 
-    &:dir(rtl) {
+    &:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) {
       --scroll-linear-gradient: 90deg, #000 calc(100% - var(--scroll-shadow-size)), transparent;
     }
   }
@@ -91,7 +91,7 @@
   &[data-right-scroll="true"] {
     --scroll-linear-gradient: 90deg, #000 calc(100% - var(--scroll-shadow-size)), transparent;
 
-    &:dir(rtl) {
+    &:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) {
       --scroll-linear-gradient: 270deg, #000 calc(100% - var(--scroll-shadow-size)), transparent;
     }
   }

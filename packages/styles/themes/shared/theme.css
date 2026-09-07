@@ -1,3 +1,12 @@
+/**
+ * The theme tokens, mapped onto Tailwind's namespaces so that a Tailwind build turns them into
+ * utilities - @see https://tailwindcss.com/docs/theme.
+ *
+ * The stylesheet no longer reads any of this. Every name a rule spells directly is declared in
+ * `tokens.css` as a plain custom property, by something that stays; this block exists only for an
+ * app that writes `bg-accent` against these tokens, and is reached only through `tailwind.css`,
+ * which is going away in 0.10.0 and takes this with it.
+ */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -158,27 +167,4 @@
 
   /* Linear */
   --ease-linear: linear;
-
-  /* Animations */
-  --animate-spin-fast: spin 0.75s linear infinite;
-  --animate-skeleton: rp-skeleton 2s linear infinite;
-  --animate-caret-blink: rp-caret-blink 1.2s ease-out infinite;
-
-  @keyframes rp-skeleton {
-    100% {
-      transform: translateX(200%);
-    }
-  }
-
-  @keyframes rp-caret-blink {
-    0%,
-    70%,
-    100% {
-      opacity: 1;
-    }
-    20%,
-    50% {
-      opacity: 0;
-    }
-  }
 }
