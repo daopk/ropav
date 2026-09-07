@@ -11,7 +11,7 @@ Three tiers, narrowing as they go.
 `--muted`), interactive and status colours (`--accent`, `--success`, `--warning`, `--danger`, each
 with a `-foreground` and a derived `-hover` and `-soft`), form fields (`--field-background`,
 `--field-border`, `--field-radius`, …), layout knobs (`--spacing`, `--border-width`, `--radius`,
-`--ring-offset-width`, `--cursor-interactive`), the scrollbar set, and the shadows.
+`--rp-focus-ring-offset`, `--cursor-interactive`), the scrollbar set, and the shadows.
 
 **Derived values** — the `--radius-xs` … `--radius-4xl` scale and the easing curves — are computed
 from those.

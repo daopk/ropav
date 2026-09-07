@@ -31,7 +31,7 @@
     --disabled-opacity: 0.5;
 
     /* Ring offset - Used for focus ring */
-    --ring-offset-width: 2px;
+    --rp-focus-ring-offset: 2px;
 
     /* Cursor */
     --cursor-interactive: pointer;

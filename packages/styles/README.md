@@ -250,7 +250,7 @@ A theme only needs to carry colours. Everything keyed on neither the palette nor
 Base colors (`--background`, `--surface`, `--overlay`, `--muted`), interactive and status colors
 (`--accent`, `--success`, `--warning`, `--danger`, each with a `-foreground` and a derived `-hover` and
 `-soft`), form fields (`--field-background`, `--field-border`, `--field-radius`, …), layout knobs
-(`--spacing`, `--border-width`, `--radius`, `--ring-offset-width`, `--cursor-interactive`), the
+(`--spacing`, `--border-width`, `--radius`, `--rp-focus-ring-offset`, `--cursor-interactive`), the
 scrollbar set, and shadows.
 
 **`themes/default.css` is the source of truth — read it rather than a list in a README**, which goes

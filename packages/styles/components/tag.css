@@ -86,7 +86,7 @@
   --rp-ring-offset-color: var(--background);
   --rp-outline-style: none;
   outline-style: none;
-  --rp-ring-offset-width: var(--ring-offset-width);
+  --rp-ring-offset-width: var(--rp-focus-ring-offset);
   @media (forced-colors: active) {
     outline: 2px solid Highlight;
     outline-offset: 2px;

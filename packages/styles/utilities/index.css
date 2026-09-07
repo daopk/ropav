@@ -21,7 +21,9 @@
    * A ring is two shadows in one slot — the gap in the page's colour over the ring in its own —
    * so that a rule setting a ring and a rule setting a drop shadow can each name one contribution
    * without restating the other. `--rp-ring-offset-width` is the separation; the theme's
-   * `--ring-offset-width` is what it reads here, which is what makes the offset themeable.
+   * `--rp-focus-ring-offset` is what it reads here, which is what makes the offset themeable.
+   * Both carry the prefix, so which of the two is the slot is this sentence and not the spelling:
+   * the slot is registered in `slots.css`, the token is declared by a theme.
    */
   .focus-ring {
     --rp-ring:
@@ -33,7 +35,7 @@
     --rp-ring-offset-color: var(--background);
     --rp-outline-style: none;
     outline-style: none;
-    --rp-ring-offset-width: var(--ring-offset-width);
+    --rp-ring-offset-width: var(--rp-focus-ring-offset);
 
     @media (forced-colors: active) {
       outline: 2px solid Highlight;
@@ -111,7 +113,7 @@
     --rp-ring-offset-color: var(--background);
     --rp-outline-style: none;
     outline-style: none;
-    --rp-ring-offset-width: var(--ring-offset-width);
+    --rp-ring-offset-width: var(--rp-focus-ring-offset);
 
     @media (forced-colors: active) {
       outline: 2px solid Highlight;
