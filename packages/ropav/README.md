@@ -1,8 +1,8 @@
 # Ropav
 
 A Vue 3 component library built on [Vue Vapor](https://github.com/vuejs/core-vapor), styled by
-[`@ropav/styles`](https://www.npmjs.com/package/@ropav/styles) and Tailwind CSS v4. Published on
-npm as [`ropav`](https://www.npmjs.com/package/ropav).
+[`@ropav/styles`](https://www.npmjs.com/package/@ropav/styles). Published on npm as
+[`ropav`](https://www.npmjs.com/package/ropav).
 
 **[Documentation](https://ropav.netlify.app)** · [Components](https://ropav.netlify.app/components/)
 · [Theming](https://ropav.netlify.app/theming/) · [Storybook](https://ropav-storybook.netlify.app)

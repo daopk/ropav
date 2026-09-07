@@ -74,8 +74,7 @@ Tailwind build, `@import` in the browser.
 ## Two lines your page owes
 
 The components carry a reset of their own, scoped to the `rp-` prefix: the box model, the borders
-and the form controls inside a Ropav component are set up whichever entry you took, and nothing
-outside one is touched.
+and the form controls inside a Ropav component are set up, and nothing outside one is touched.
 
 That scope is also the limit. A rule that stops at the component cannot set the page's
 `font-family` or `line-height` — those live on `html` and belong to you.
@@ -89,13 +88,6 @@ html {
 
 Any ordinary reset already sets them, and so does a Tailwind build. If nothing on your page does,
 the components inherit whatever the browser defaults to, which is a serif.
-
-::: tip Upgrading from 0.8
-`ropav/styles` used to include Tailwind's preflight, which reset your whole page, and
-`ropav/styles/no-preflight` was the entry for apps that would rather it did not. There is one
-stylesheet now and it resets nothing outside a component. If your page was relying on the
-preflight for the two lines above, this is where they went.
-:::
 
 ## Reading a token
 
@@ -124,17 +116,6 @@ multiples of it, so a `data-theme` that sets its own `--radius` moves all of the
 ```
 
 [Theming](/theming/) lists the names.
-
-::: tip Upgrading from 0.9
-These tokens were also reachable as Tailwind utilities — `bg-accent`, `text-muted`,
-`rounded-component` — through an entry named `ropav/styles/tailwind`. That entry has gone. The
-bracketed form above is what replaces it, and it needs nothing from this package to work.
-
-That entry also redefined Tailwind's `dark:` to follow `.dark` and `[data-theme="dark"]`. It no
-longer does, and Tailwind's own `dark:` follows the operating system instead — so an app with a
-theme toggle that writes `dark:` utilities has one thing to put back. The release note carries
-the variant to copy.
-:::
 
 ## Importing only what you need
 
