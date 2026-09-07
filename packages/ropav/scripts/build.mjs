@@ -27,7 +27,12 @@ async function buildStyles() {
   console.log("🎨 Creating styles export...");
 
   // Both entries share the override block, so it ships alongside them.
-  for (const file of ["styles.css", "styles-no-preflight.css", "styles-overrides.css"]) {
+  for (const file of [
+    "styles.css",
+    "styles-no-preflight.css",
+    "styles-overrides.css",
+    "styles-tailwind.css",
+  ]) {
     await cp(path.join(rootDir, "src", file), path.join(distDir, file));
   }
 

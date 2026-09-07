@@ -23,6 +23,10 @@
         "style": "./dist/no-preflight.css",
         "default": "./dist/no-preflight.css"
       },
+      "./tailwind": {
+        "style": "./dist/tailwind.css",
+        "default": "./dist/tailwind.css"
+      },
       "./bundled.css": "./dist/ropav.min.css",
       "./components/*": {
         "types": "./dist/components/*/index.d.ts",

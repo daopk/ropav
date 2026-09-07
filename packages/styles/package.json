@@ -45,6 +45,10 @@
       "style": "./no-preflight.css",
       "default": "./no-preflight.css"
     },
+    "./tailwind": {
+      "style": "./tailwind.css",
+      "default": "./tailwind.css"
+    },
     "./components/*": {
       "types": "./src/components/*/index.ts",
       "import": "./src/components/*/index.ts",

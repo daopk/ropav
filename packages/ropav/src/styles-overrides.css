@@ -10,6 +10,6 @@
    * squares them up without overriding the fixed width an icon-only button relies on.
    */
   .rp-button-group--vertical .rp-button {
-    @apply min-w-full;
+    min-width: 100%;
   }
 }

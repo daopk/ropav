@@ -1,0 +1,3 @@
+/* The theme as Tailwind's extension point, for an app keeping `bg-accent`. Going away in 0.10.0 —
+ * see the file it imports. Carries no component rules: take it *beside* `ropav/styles`. */
+@import "@ropav/styles/tailwind";

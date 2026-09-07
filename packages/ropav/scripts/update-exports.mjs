@@ -53,6 +53,12 @@ export function buildExports(components) {
       style: "./dist/styles-no-preflight.css",
       default: "./dist/styles-no-preflight.css",
     },
+    // Tailwind's extension point, kept reachable for one release. Named after the vendor on
+    // purpose — see the stylesheet — and removed in 0.10.0 along with the file it imports.
+    "./styles/tailwind": {
+      style: "./dist/styles-tailwind.css",
+      default: "./dist/styles-tailwind.css",
+    },
     // The compiled stylesheet, for a consumer with no build step to resolve the entries above.
     "./styles/bundled.css": "./dist/ropav.min.css",
   };

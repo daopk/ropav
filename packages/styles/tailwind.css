@@ -1,0 +1,21 @@
+/*
+ * The theme, as Tailwind's extension point — the entry to import if you want `bg-accent`,
+ * `text-muted`, `rounded-component` and the rest of the utility surface this package used to
+ * hand out as a side effect of being built with Tailwind.
+ *
+ * The name says the vendor on purpose. Everything else here has stopped naming one, and this file
+ * is the exception because it *is* the interop: it exists so that an app already writing Tailwind
+ * classes against these tokens has a way to keep doing it through one release rather than none.
+ *
+ * ┌─────────────────────────────────────────────────────────────────────────────────────────┐
+ * │  Going away in 0.10.0. The name is the notice: it sits in your import line, and there is │
+ * │  no version of this package where it is the recommended way to reach a token. Read one   │
+ * │  directly instead — `var(--accent)`, `var(--muted)` — which works with any toolchain and │
+ * │  with none.                                                                              │
+ * └─────────────────────────────────────────────────────────────────────────────────────────┘
+ *
+ * The block itself is shared with the main entry for now. When the main entry stops carrying it,
+ * this file is the only thing left importing it, and deleting this file deletes both.
+ */
+
+@import "./themes/shared/theme.css";

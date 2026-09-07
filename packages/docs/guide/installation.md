@@ -102,6 +102,32 @@ html {
 ```
 :::
 
+### If you write Tailwind classes against these tokens
+
+`bg-accent`, `text-muted`, `rounded-component` and the rest exist because this package was built
+with Tailwind and its theme leaked out as utilities. That is ending. One entry keeps them reachable
+in the meantime, beside the stylesheet rather than instead of it:
+
+```css
+@import "ropav/styles";
+@import "ropav/styles/tailwind";
+```
+
+::: warning Named after the vendor, and going in 0.10.0
+Every other entry has stopped naming a toolchain. This one names it because the name is the
+notice — it sits in your import line, and there is no release where it is the recommended way to
+reach a token.
+
+Read one directly instead. It works with any toolchain and with none:
+
+```css
+.thing {
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+}
+```
+:::
+
 ## Importing only what you need
 
 Also the Tailwind path. If you ship only a handful of components, take their CSS one file at a

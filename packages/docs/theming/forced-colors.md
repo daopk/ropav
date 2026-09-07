@@ -25,18 +25,26 @@ its own. `status-disabled` picks up `GrayText` the same way.
 ## Selection carried only by a background
 
 The override flattens a `background-color` into its surroundings. Where selection is *just* a
-background — a tag, a calendar day, a table row — apply `forced-selected`, **as an `@apply`
-statement of its own**:
+background — a tag, a calendar day, a table row — restate the state in system colours:
 
 ```css
 .thing[data-selected="true"] {
-  @apply bg-accent text-accent-foreground;
-  @apply forced-selected;
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+
+  @media (forced-colors: active) {
+    forced-color-adjust: none;
+    background-color: Highlight;
+    border-color: Highlight;
+    color: HighlightText;
+  }
 }
 ```
 
-Folded into the line above it, Tailwind sorts the list and hoists the nested media query over the
-plain declarations, and the `background-color` it exists to override wins instead.
+All four lines earn their place. `Highlight` and `HighlightText` are the pair the platform reserves
+for a selected control; `border-color` joins them because a border left in an author colour is
+repainted to the user's text colour and reads as an edge you never drew. The one that looks least
+necessary is `forced-color-adjust` — see [the backplate](#the-backplate-which-getcomputedstyle-cannot-see).
 
 Where selection also moves a thumb or shows a glyph, the component writes its own `forced-colors`
 block, because those parts need colours of their own.
@@ -62,9 +70,9 @@ text over an image stays legible. It lands on top of that element's own backgrou
 `Highlight` fill carrying `HighlightText` renders as a solid plate with the label invisible inside
 it. Every colour is correct and the component is unreadable.
 
-`forced-color-adjust: none` suppresses the backplate. `forced-selected` already carries it;
-anything hand-rolling the same pairing needs it too, including the case where the fill sits on a
-different element than the text.
+`forced-color-adjust: none` suppresses the backplate. Anything pairing a `Highlight` fill with
+`HighlightText` needs it, including the case where the fill sits on a different element than the
+text.
 
 ::: danger Only alongside explicit system colours
 On its own, `forced-color-adjust: none` just hands the author's palette back — which is the

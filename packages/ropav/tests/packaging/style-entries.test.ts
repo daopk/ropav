@@ -91,4 +91,24 @@ describe("@ropav/styles style subpaths", () => {
 
     expect(missing).toEqual([]);
   });
+
+  /*
+   * The map in `package.json` and the one `clean-package` swaps in at publish are two lists, and
+   * only the second one ships. A subpath added to the first alone resolves all the way through
+   * development and through every test that reads the repo, and is simply absent from the
+   * installed package — the same shape of failure as the entry that pointed at a file the build
+   * never emitted, arriving from the other direction.
+   *
+   * Only one way round: the published map carries extra granular subpaths on purpose, because the
+   * directories behind them exist only in the tarball.
+   */
+  it("publishes every subpath the source map offers", () => {
+    const source = readJson(path.join(stylesRoot, "package.json")).exports as Record<
+      string,
+      unknown
+    >;
+    const dropped = Object.keys(source).filter((subpath) => !(subpath in exports));
+
+    expect(dropped).toEqual([]);
+  });
 });

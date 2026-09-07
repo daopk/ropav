@@ -403,10 +403,6 @@
     }
   }
 
-  /* &[data-selection-start="true"]:has(+ [data-selection-end="true"]) {
-    @apply rounded-full;
-  } */
-
   &[data-selection-start="true"]:not([data-outside-month="true"]) {
     border-start-start-radius: var(--range-calendar-day-radius);
     border-end-start-radius: var(--range-calendar-day-radius);
