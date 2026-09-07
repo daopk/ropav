@@ -11,7 +11,7 @@
  * what it has always measured. The library's own reset is scoped to the `rp-` prefix and cannot
  * set the page's font or line height; a real page supplies them, from its own reset or from a
  * Tailwind build like this one. The tests that assert the scoped reset on its own mount an
- * iframe carrying nothing but the stylesheet — see `styles/migration/reset.browser.test.ts`.
+ * iframe carrying nothing but the stylesheet — see `styles/reset.browser.test.ts`.
  */
 
 @import "tailwindcss";

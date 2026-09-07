@@ -20,10 +20,9 @@
  * render these components in the browser's default serif. That is the headline of the release,
  * not a footnote.
  *
- * Every declaration below is here because removing the reset was measured to change it — see
- * `packages/ropav/tests/styles/migration/preflight.browser.test.ts`, which mounts every rule
- * under both entries and compares. The counts that justified each group are in that test's report,
- * not repeated here, because they move.
+ * Every declaration below is here because removing the reset was measured to change it. That
+ * comparison mounted every rule under the two entries that existed then, so it cannot be re-run;
+ * the scope is what stays checked, in `packages/ropav/tests/styles/reset.browser.test.ts`.
  */
 
 @layer base {

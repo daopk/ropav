@@ -62,7 +62,7 @@ for (const file of fs.readdirSync(rootDir)) {
 }
 
 // Copy all CSS files from these directories
-const directories = ["base", "components", "themes", "utilities", "variants"];
+const directories = ["base", "components", "themes", "utilities"];
 
 for (const dir of directories) {
   copyCssDirectory(dir);
