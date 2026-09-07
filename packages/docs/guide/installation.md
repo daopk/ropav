@@ -78,12 +78,29 @@ bare HTML, this is why; take the compiled file above.
 
 ### If your app already resets
 
-`ropav/styles` includes Tailwind's preflight. An app that already ships a reset — or that runs its
-own Tailwind build — wants the other entry, which is identical in every other way:
+`ropav/styles` includes Tailwind's preflight, which resets the whole page. An app that already
+ships a reset — or that runs its own Tailwind build, which brings one — wants the other entry:
 
 ```css
 @import "ropav/styles/no-preflight";
 ```
+
+The components look after themselves either way. They carry a reset of their own, scoped to the
+prefix, so the box model, the borders and the form controls inside a Ropav component are the same
+under both entries — and nothing outside one is touched.
+
+::: tip Two lines your page still owes
+The scoped reset stops at the component, so it cannot set the page's `font-family` or
+`line-height` — those live on `html` and belong to you. Any ordinary reset already sets them; if
+yours does not, the components inherit whatever the browser defaults to, which is a serif.
+
+```css
+html {
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+}
+```
+:::
 
 ## Importing only what you need
 

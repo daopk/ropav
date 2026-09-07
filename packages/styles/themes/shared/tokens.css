@@ -1,12 +1,16 @@
 /**
  * The tokens the stylesheet reads with a plain `var()`, declared as plain custom properties.
  *
- * Everything here is also declared by `theme.css`, and that is the point. That block is a
+ * Most of these are also declared by `theme.css`, and that is the point. That block is a
  * `@theme`, which is Tailwind's extension point: the names in it exist because Tailwind emits
  * them, and they stop existing the moment it leaves the build. Most of the block is only ever
- * read through a utility, so expanding the utilities is enough — but these eight are read
- * directly, by rules that name them in `transition-timing-function`, `border-width` and
- * `box-shadow`, and a directly-read name has to be declared by something that is staying.
+ * read through a utility, so expanding the utilities is enough — but the names here are read
+ * directly, by rules that spell them in `transition-timing-function`, `border-width`,
+ * `box-shadow` and `font-family`, and a directly-read name has to be declared by something that
+ * is staying.
+ *
+ * The font stacks are the exception to the duplication: `theme.css` never declared them, and they
+ * would have gone out with Tailwind's own theme unnoticed.
  *
  * The values match what `@theme` emits today, to the digit, so this file changes nothing on its
  * own. It goes from duplicate to sole declaration when the `@theme` block is deleted.
@@ -18,6 +22,20 @@
 
 @layer theme {
   :root {
+    /*
+     * The two font stacks, which `theme.css` does *not* declare — they have only ever come from
+     * Tailwind's own theme, so deleting this package's `@theme` block would not have replaced
+     * them. `.rp-kbd` and the prose rules read them by name with no fallback, and a name with
+     * nothing behind it takes its whole declaration down: the type would fall back to the
+     * browser's default rather than to the surrounding text.
+     */
+    --font-sans:
+      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial,
+      sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-mono:
+      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+      monospace;
+
     /* Tailwind's own default curve, and the one the components reach for most. */
     --ease-out: cubic-bezier(0, 0, 0.2, 1);
 

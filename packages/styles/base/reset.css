@@ -1,0 +1,148 @@
+/**
+ * The reset, reaching this package's own components and stopping there.
+ *
+ * What it replaces reached the whole page: `*` for the box model, `html` for the typography. That
+ * is the right bargain for an app's own stylesheet and the wrong one for a component library,
+ * which arrives in someone else's page and should not restyle the parts of it that are not ours.
+ *
+ * The scope is the class prefix, anchored at the start of the attribute or at a word boundary
+ * inside it, so `.corp-header` is not swept up by a suffix match. It is written with `:where()`,
+ * which contributes no specificity — the whole selector weighs exactly what the bare `*` it
+ * replaces weighed, so every rule that used to win against the reset still does.
+ *
+ * **Inside a component, nothing changes.** Host markup passed into a slot is inside one, so it
+ * keeps being reset exactly as it is today; only the page around the component stops being
+ * touched. That is deliberate: a rule that fires on some children of a slot and not others would
+ * be a worse thing to explain than either extreme.
+ *
+ * What is *not* here is the pair that has nowhere to live: `font-family` and `line-height` were
+ * set on `html`, and a scoped reset cannot reach it. An app carrying no reset of its own will
+ * render these components in the browser's default serif. That is the headline of the release,
+ * not a footnote.
+ *
+ * Every declaration below is here because removing the reset was measured to change it — see
+ * `packages/ropav/tests/styles/migration/preflight.browser.test.ts`, which mounts every rule
+ * under both entries and compares. The counts that justified each group are in that test's report,
+ * not repeated here, because they move.
+ */
+
+@layer base {
+  :where([class^="rp-"], [class*=" rp-"]) {
+    /*
+     * Inherited, so stating them on the component root carries them to everything inside it. The
+     * two that are missing from this list are missing on purpose; see above.
+     */
+    tab-size: 4;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+
+    /*
+     * `border: 0 solid` rather than `border: 0`. Style is the load-bearing half: the components
+     * size a border with `border-width` alone and let the reset supply `solid`, so a reset that
+     * leaves style at `none` erases every border in the library while every `border-width` in the
+     * source goes on saying `1px`.
+     */
+    &,
+    & *,
+    &::before,
+    &::after,
+    & *::before,
+    & *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      border: 0 solid;
+    }
+
+    &:is(img, svg, video, canvas, audio, iframe, embed, object),
+    & :is(img, svg, video, canvas, audio, iframe, embed, object) {
+      display: block;
+      vertical-align: middle;
+    }
+
+    &:is(img, video),
+    & :is(img, video) {
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* A control does not inherit type from its ancestors on its own. */
+    &:is(button, input, select, optgroup, textarea),
+    & :is(button, input, select, optgroup, textarea) {
+      font: inherit;
+      font-feature-settings: inherit;
+      font-variation-settings: inherit;
+      letter-spacing: inherit;
+      color: inherit;
+      border-radius: 0;
+      background-color: transparent;
+      opacity: 1;
+    }
+
+    &:is(button, input:is([type="button"], [type="reset"], [type="submit"])),
+    & :is(button, input:is([type="button"], [type="reset"], [type="submit"])) {
+      appearance: button;
+    }
+
+    &:is(textarea),
+    & :is(textarea) {
+      resize: vertical;
+    }
+
+    &:is(h1, h2, h3, h4, h5, h6),
+    & :is(h1, h2, h3, h4, h5, h6) {
+      font-size: inherit;
+      font-weight: inherit;
+    }
+
+    &:is(a),
+    & :is(a) {
+      color: inherit;
+      text-decoration: inherit;
+    }
+
+    &:is(ol, ul, menu),
+    & :is(ol, ul, menu) {
+      list-style: none;
+    }
+
+    &:is(table),
+    & :is(table) {
+      text-indent: 0;
+      border-color: inherit;
+      border-collapse: collapse;
+    }
+
+    &:is(summary),
+    & :is(summary) {
+      display: list-item;
+    }
+
+    /* A rule is a border, not a box: without this it keeps the two-pixel groove of 1995. */
+    &:is(hr),
+    & :is(hr) {
+      height: 0;
+      color: inherit;
+      border-top-width: 1px;
+    }
+
+    /*
+     * Firefox dims the placeholder on its own, and the components pick the colour themselves —
+     * the browser default is a proportion of the text colour, which is not a decision a theme
+     * should be handing to the browser.
+     */
+    &::placeholder,
+    & *::placeholder {
+      opacity: 1;
+      color: var(--field-placeholder, var(--muted));
+    }
+  }
+
+  /*
+   * The one rule that cannot be scoped and should not be: `hidden` is a promise the HTML makes,
+   * and a component whose host hides it has to stay hidden. Unprefixed on purpose.
+   */
+  [hidden]:where(:not([hidden="until-found"])) {
+    display: none !important;
+  }
+}

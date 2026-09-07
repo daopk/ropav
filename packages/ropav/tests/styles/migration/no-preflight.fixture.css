@@ -1,0 +1,20 @@
+/*
+ * The other half of `preflight.browser.test.ts`: what an app that already resets its own page
+ * gets, which is the audience `no-preflight.css` is written for.
+ *
+ * The two declarations on `html` below are the reset such an app is assumed to have. They are
+ * here rather than in the package because they are the two the scoped reset cannot carry — a
+ * component root can hold neither the page's font nor its line height without also taking them
+ * away from the host. Standing them up here is what lets the comparison ask its real question:
+ * given a page that has done its part, does the entry without Tailwind's reset render the
+ * components identically?
+ */
+@import "@ropav/styles/no-preflight";
+@import "../../../src/styles-overrides.css";
+
+html {
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial,
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  line-height: 1.5;
+}

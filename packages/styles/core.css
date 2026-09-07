@@ -2,7 +2,9 @@
  * `index.css` and by `no-preflight.css`, and not an entry of its own — the two entries
  * differ only in whether they pull in Tailwind's preflight. */
 
-/* Base styles */
+/* Base styles. The reset comes first: it is what everything below is written on top of, and it
+ * layers itself so that it lands whether or not Tailwind's page-wide one is also present. */
+@import "./base/reset.css";
 @import "./base/base.css" layer(base);
 @import "./base/scrollbar.css" layer(base);
 
