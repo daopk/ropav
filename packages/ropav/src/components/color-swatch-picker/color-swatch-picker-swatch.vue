@@ -5,14 +5,10 @@ import { computed } from "vue";
 
 import { useColorSwatch } from "../../composables/use-color-swatch";
 
-import {
-  useColorSwatchPickerContext,
-  useColorSwatchPickerItemContext,
-} from "./color-swatch-picker.context";
+import { useColorSwatchPickerItemContext } from "./color-swatch-picker.context";
 
 const props = defineProps<ColorSwatchPickerSwatchProps>();
 
-const { slots } = useColorSwatchPickerContext();
 const item = useColorSwatchPickerItemContext();
 
 const swatch = useColorSwatch({
@@ -40,7 +36,7 @@ const style = computed(() => swatch.style.value);
 <template>
   <div
     v-bind="swatch.attrs.value"
-    :class="slots.swatch({ class: props.class })"
+    :class="['rp-color-swatch-picker__swatch', props.class]"
     data-slot="color-swatch-picker-swatch"
     :style="style"
   />

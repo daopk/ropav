@@ -5,13 +5,9 @@ import { computed } from "vue";
 
 import { useFieldIdsContext } from "../../composables/use-field-ids";
 
-import { useDrawerContext } from "./drawer.context";
-
 const props = defineProps<DrawerHeadingProps>();
 
 defineSlots<{ default?: () => unknown }>();
-
-const { slots } = useDrawerContext();
 
 // The heading takes the id the dialog points `aria-labelledby` at, which is how a drawer is named by
 // what it says rather than by the button that opened it.
@@ -25,12 +21,15 @@ const id = fieldIds?.claimHeadingId();
  * starts one level below the page title rather than continuing the page's outline.
  */
 const tag = computed(() => `h${props.level ?? 2}`);
-
-const styles = computed(() => slots.value.heading({ class: props.class }));
 </script>
 
 <template>
-  <component :is="tag" :id="id" :class="styles" data-slot="drawer-heading">
+  <component
+    :is="tag"
+    :id="id"
+    :class="['rp-drawer__heading', props.class]"
+    data-slot="drawer-heading"
+  >
     <slot />
   </component>
 </template>

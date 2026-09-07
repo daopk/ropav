@@ -10,10 +10,7 @@ import { computed, shallowRef } from "vue";
 import { useFocusWithin, useInteractionStates } from "../../composables/use-interaction-states";
 import { dataAttr } from "../../utils/assertion";
 
-import {
-  provideColorInputGroupContext,
-  useColorInputGroupControlContext,
-} from "./color-input-group.context";
+import { useColorInputGroupControlContext } from "./color-input-group.context";
 
 // Three-state props declare an explicit `undefined` default so they can still fall through to
 // the field. Cast to `false` they would read as the caller claiming that state, and the group
@@ -46,8 +43,6 @@ const resolvedIsInvalid = computed(() => props.isInvalid ?? control?.isInvalid.v
 const slots = computed(() =>
   colorInputGroupVariants({ fullWidth: props.fullWidth, size: props.size, variant: props.variant }),
 );
-
-provideColorInputGroupContext({ slots });
 
 const styles = computed(() => slots.value.base({ class: props.class }));
 

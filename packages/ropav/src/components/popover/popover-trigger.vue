@@ -8,18 +8,12 @@ import { useInteractionStates } from "../../composables/use-interaction-states";
 import { dataAttr } from "../../utils/assertion";
 import { FOCUSABLE_SELECTOR } from "../../utils/focus";
 
-import { usePopoverContext } from "./popover.context";
-
 const props = defineProps<PopoverTriggerProps>();
 
 defineSlots<{ default?: () => unknown }>();
 
-const { slots } = usePopoverContext();
-
 // Supplied by the popover root, which is what makes this a trigger rather than a plain box.
 const responder = usePressResponder();
-
-const styles = computed(() => slots.value.trigger({ class: props.class }));
 
 // Yielded whenever the slot already brought something focusable: wrapping a real control in
 // `role="button"` nests one interactive element inside another. The responder's attributes go with
@@ -62,7 +56,7 @@ const wrapperAttrs = computed(() =>
 <template>
   <div
     :ref="setElement"
-    :class="styles"
+    :class="['rp-popover__trigger', props.class]"
     :data-focus-visible="dataAttr(isFocusVisible)"
     :data-pressed="dataAttr(responder?.isPressed.value)"
     data-slot="popover-trigger"

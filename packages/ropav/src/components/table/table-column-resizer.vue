@@ -8,18 +8,12 @@ import { useId } from "../../composables/use-id";
 import { useInteractionStates } from "../../composables/use-interaction-states";
 import { useMove } from "../../composables/use-move";
 import { dataAttr } from "../../utils/assertion";
-import { composeSlotClassName } from "../../utils/compose";
 import { visuallyHiddenStyle } from "../../utils/visually-hidden";
 
-import {
-  useTableColumnContext,
-  useTableColumnLayoutContext,
-  useTableContext,
-} from "./table.context";
+import { useTableColumnContext, useTableColumnLayoutContext } from "./table.context";
 
 const props = defineProps<TableColumnResizerProps>();
 
-const { slots } = useTableContext();
 const { columnKey, headerId } = useTableColumnContext();
 const resizable = useTableColumnLayoutContext();
 
@@ -178,7 +172,7 @@ const onChange = (event: Event) => {
 
 <template>
   <div
-    :class="composeSlotClassName(slots.columnResizer, props.class)"
+    :class="['rp-table__column-resizer', props.class]"
     :data-focus-visible="dataAttr(states.isFocusVisible.value)"
     :data-focused="dataAttr(states.isFocused.value)"
     :data-hovered="dataAttr(states.isHovered.value)"

@@ -25,13 +25,6 @@ export type {
 } from "./input-group.types";
 
 /* -------------------------------------------------------------------------------------------------
- * Context
- * -----------------------------------------------------------------------------------------------*/
-export { provideInputGroupContext, useInputGroupContext } from "./input-group.context";
-
-export type { InputGroupContext } from "./input-group.context";
-
-/* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
 export { inputGroupVariants } from "@ropav/styles";

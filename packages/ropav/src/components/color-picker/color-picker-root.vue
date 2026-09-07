@@ -11,7 +11,7 @@ import { useDialogTrigger } from "../../composables/use-dialog-trigger";
 import { useOverlayTriggerState } from "../../composables/use-overlay-trigger-state";
 import { provideOverlayTargetContext } from "../overlay";
 
-import { provideColorPickerContext, provideColorValueContext } from "./color-picker.context";
+import { provideColorValueContext } from "./color-picker.context";
 
 // `isOpen` declares an explicit `undefined` default, which is what distinguishes an uncontrolled
 // picker from one a caller is holding closed.
@@ -49,8 +49,6 @@ const trigger = useDialogTrigger({}, overlay);
 // The trigger is whatever pressable sits inside, matching the popover layer: React wraps the
 // picker's contents in a `DialogTrigger`, which hands the press down the same way.
 providePressResponder(trigger.responder);
-
-provideColorPickerContext({ slots: computed(() => colorPickerVariants()) });
 
 /**
  * The one context every colour component under here reads.

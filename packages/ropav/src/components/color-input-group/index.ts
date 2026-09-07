@@ -25,14 +25,11 @@ export type {
  * Context
  * -----------------------------------------------------------------------------------------------*/
 export {
-  provideColorInputGroupContext,
   provideColorInputGroupControlContext,
-  useColorInputGroupContext,
   useColorInputGroupControlContext,
 } from "./color-input-group.context";
 
 export type {
-  ColorInputGroupContext,
   ColorInputGroupControl,
   ColorInputGroupControlHandlers,
 } from "./color-input-group.context";

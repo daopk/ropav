@@ -8,8 +8,6 @@ import { useTextFieldControlContext } from "../../composables/use-text-field";
 import { dataAttr } from "../../utils/assertion";
 import { setFormValue } from "../../utils/form-value";
 
-import { useSearchFieldContext } from "./search-field.context";
-
 const props = defineProps<SearchFieldInputProps>();
 
 const emit = defineEmits<{
@@ -17,7 +15,6 @@ const emit = defineEmits<{
   "update:value": [value: string];
 }>();
 
-const { slots } = useSearchFieldContext();
 const control = useTextFieldControlContext();
 
 const element = shallowRef<HTMLInputElement | null>(null);
@@ -26,8 +23,6 @@ const setElement = (next: unknown) => {
   element.value = next instanceof HTMLInputElement ? next : null;
   control?.registerElement(element.value);
 };
-
-const styles = computed(() => slots.value.input({ class: props.class }));
 
 // A prop set here wins over what the field supplies, which is how React merges context props
 // too. Spreading the field's bag blindly would undo it: the bag carries every key it knows
@@ -108,7 +103,7 @@ const onBlur = (event: FocusEvent) => {
 <template>
   <input
     :ref="setElement"
-    :class="styles"
+    :class="['rp-search-field__input', props.class]"
     :data-disabled="dataAttr(control?.isDisabled.value)"
     :data-focus-visible="dataAttr(interaction.isFocusVisible.value)"
     :data-focused="dataAttr(interaction.isFocused.value)"

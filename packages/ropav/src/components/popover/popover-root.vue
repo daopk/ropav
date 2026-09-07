@@ -1,15 +1,12 @@
 <script setup lang="ts" vapor>
 import type { PopoverRootProps } from "./popover.types";
 
-import { popoverVariants } from "@ropav/styles";
 import { computed } from "vue";
 
 import { providePressResponder } from "../../composables/press-responder";
 import { useDialogTrigger } from "../../composables/use-dialog-trigger";
 import { useOverlayTriggerState } from "../../composables/use-overlay-trigger-state";
 import { provideOverlayTargetContext } from "../overlay";
-
-import { providePopoverContext } from "./popover.context";
 
 // `isOpen` declares an explicit `undefined` default, which is what distinguishes an uncontrolled
 // popover from one a caller is holding closed.
@@ -37,8 +34,6 @@ const trigger = useDialogTrigger({}, state);
 // than built into a trigger component: `<Popover><Button/></Popover>` is the common case, and
 // `PopoverTrigger` exists for markup that is not pressable on its own.
 providePressResponder(trigger.responder);
-
-providePopoverContext({ slots: computed(() => popoverVariants()) });
 
 provideOverlayTargetContext({
   // A dialog has no direction to carry into it, unlike a menu opened with an arrow key.

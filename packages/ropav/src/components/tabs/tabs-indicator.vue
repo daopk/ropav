@@ -5,13 +5,11 @@ import { shallowRef } from "vue";
 
 import { useSharedElement, useSharedElementScope } from "../../composables/use-shared-element";
 import { dataAttr } from "../../utils/assertion";
-import { composeSlotClassName } from "../../utils/compose";
 
-import { useTabsContext, useTabsTabContext } from "./tabs.context";
+import { useTabsTabContext } from "./tabs.context";
 
 const props = defineProps<TabsIndicatorProps>();
 
-const { slots } = useTabsContext();
 const { isSelected } = useTabsTabContext();
 
 const element = shallowRef<HTMLElement | null>(null);
@@ -34,7 +32,7 @@ const { isEntering, isExiting, isPresent } = useSharedElement({
     v-if="isPresent"
     ref="element"
     aria-hidden="true"
-    :class="composeSlotClassName(slots.tabIndicator, props.class)"
+    :class="['rp-tabs__indicator', props.class]"
     :data-entering="dataAttr(isEntering)"
     :data-exiting="dataAttr(isExiting)"
     data-slot="tabs-indicator"

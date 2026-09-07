@@ -16,22 +16,9 @@ import type {
   UseTableCollectionReturn,
 } from "./use-table-collection";
 import type { TableColumnSize, UseTableColumnLayoutReturn } from "./use-table-column-layout";
-import type { tableVariants } from "@ropav/styles";
 import type { ComputedRef } from "vue";
 
 import { createContext } from "../../utils/create-context";
-
-export interface TableContext {
-  slots: ComputedRef<ReturnType<typeof tableVariants>>;
-}
-
-/**
- * Strict: every part reads its class from here, so a part outside a table would render
- * unstyled markup that still claims a table role.
- */
-export const [useTableContext, provideTableContext] = createContext<TableContext>({
-  name: "TableContext",
-});
 
 export interface TableGridContext {
   collection: UseTableCollectionReturn;

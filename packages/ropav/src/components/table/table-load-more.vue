@@ -3,11 +3,10 @@ import type { TableLoadMoreProps } from "./table.types";
 
 import { computed, onUnmounted, shallowRef, watch } from "vue";
 
-import { composeSlotClassName } from "../../utils/compose";
 import { getScrollParent } from "../../utils/focus";
 
 import TableVirtualizerItem from "./table-virtualizer-item.vue";
-import { useTableContext, useTableGridContext, useTableVirtualizerContext } from "./table.context";
+import { useTableGridContext, useTableVirtualizerContext } from "./table.context";
 
 const props = withDefaults(defineProps<TableLoadMoreProps>(), {
   isLoading: undefined,
@@ -18,7 +17,6 @@ const emit = defineEmits<{ loadMore: [] }>();
 
 defineSlots<{ default?: () => unknown }>();
 
-const { slots } = useTableContext();
 const { collection } = useTableGridContext();
 
 const sentinel = shallowRef<HTMLElement | null>(null);
@@ -113,7 +111,7 @@ onUnmounted(disconnect);
       :is="virtualizer ? 'div' : 'tr'"
       v-if="props.isLoading"
       aria-level="1"
-      :class="composeSlotClassName(slots.loadMore, props.class)"
+      :class="['rp-table__load-more', props.class]"
       data-level="1"
       data-slot="table-load-more"
       role="row"

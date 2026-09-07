@@ -1,24 +1,16 @@
 <script setup lang="ts" vapor>
 import type { AlertDialogTriggerProps } from "./alert-dialog.types";
 
-import { computed } from "vue";
-
 import { composePressResponder, usePressResponder } from "../../composables/press-responder";
 import { useInteractionStates } from "../../composables/use-interaction-states";
 import { dataAttr } from "../../utils/assertion";
-
-import { useAlertDialogContext } from "./alert-dialog.context";
 
 const props = defineProps<AlertDialogTriggerProps>();
 
 defineSlots<{ default?: () => unknown }>();
 
-const { slots } = useAlertDialogContext();
-
 // Supplied by the root, which is what makes this a trigger rather than a plain box.
 const responder = usePressResponder();
-
-const styles = computed(() => slots.value.trigger({ class: props.class }));
 
 const setElement = (element: unknown) => {
   responder?.registerElement((element as HTMLElement | null) ?? null);
@@ -39,7 +31,7 @@ const press = composePressResponder(responder);
 <template>
   <div
     :ref="setElement"
-    :class="styles"
+    :class="['rp-alert-dialog__trigger', props.class]"
     :data-focus-visible="dataAttr(isFocusVisible)"
     :data-pressed="dataAttr(responder?.isPressed.value)"
     data-slot="alert-dialog-trigger"

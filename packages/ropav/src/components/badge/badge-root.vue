@@ -7,7 +7,6 @@ import { computed } from "vue";
 import { composeSlotClassName } from "../../utils/compose";
 
 import BadgeAutoLabel from "./badge-auto-label";
-import { provideBadgeContext } from "./badge.context";
 
 const props = defineProps<BadgeRootProps>();
 
@@ -21,8 +20,6 @@ const slots = computed(() =>
     variant: props.variant,
   }),
 );
-
-provideBadgeContext({ slots });
 </script>
 
 <template>

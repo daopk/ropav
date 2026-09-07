@@ -5,15 +5,13 @@ import { computed, shallowRef, watch } from "vue";
 
 import { useInteractionStates } from "../../composables/use-interaction-states";
 import { dataAttr } from "../../utils/assertion";
-import { composeSlotClassName } from "../../utils/compose";
 
-import { useAccordionContext, useAccordionItemContext } from "./accordion.context";
+import { useAccordionItemContext } from "./accordion.context";
 
 const props = defineProps<AccordionTriggerProps>();
 
 defineSlots<{ default?: () => unknown }>();
 
-const { slots } = useAccordionContext();
 const { isDisabled, isExpanded, onTriggerKeydown, panelId, registerTrigger, toggle, triggerId } =
   useAccordionItemContext();
 
@@ -61,7 +59,7 @@ watch(
     :ref="setTriggerEl"
     :aria-controls="panelId"
     :aria-expanded="isExpanded"
-    :class="composeSlotClassName(slots.trigger, props.class)"
+    :class="['rp-accordion__trigger', props.class]"
     :data-disabled="dataAttr(isDisabled)"
     :data-focus-visible="dataAttr(isFocusVisible)"
     :data-focused="dataAttr(isFocused)"

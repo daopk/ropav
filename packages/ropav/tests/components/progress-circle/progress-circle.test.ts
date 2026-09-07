@@ -201,14 +201,26 @@ describe("ProgressCircle", () => {
     unmount();
   });
 
-  it.each([ProgressCircleTrack, ProgressCircleTrackCircle, ProgressCircleFillCircle])(
-    "rejects a compound part rendered outside the root",
-    (component) => {
-      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+  it("rejects a compound part rendered outside the root", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
 
-      expect(() => renderVapor(component)).toThrow(/`ProgressCircleContext` was consumed outside/);
+    expect(() => renderVapor(ProgressCircleFillCircle)).toThrow(
+      /`ProgressCircleContext` was consumed outside/,
+    );
 
-      warn.mockRestore();
-    },
-  );
+    warn.mockRestore();
+  });
+
+  // The fill above reads the circle's state. These two read nothing, so they carry their class
+  // rather than asking the root for it, and stand alone unchanged.
+  it.each([
+    [ProgressCircleTrack, "progress-circle-track", "rp-progress-circle__track"],
+    [ProgressCircleTrackCircle, "progress-circle-track-circle", "rp-progress-circle__track-circle"],
+  ])("renders a track part outside the root", (component, name, className) => {
+    const { container, unmount } = renderVapor(component);
+
+    expect(part(container, name)).toHaveClass(className);
+
+    unmount();
+  });
 });

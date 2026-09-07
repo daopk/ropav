@@ -13,7 +13,6 @@ import { isDirectoryDropItem, isFileDropItem } from "../../utils/dnd-types";
 import { visuallyHiddenStyle } from "../../utils/visually-hidden";
 
 import { isDragRefused, isFileAccepted, parseAccept } from "./drop-zone.accept";
-import { provideDropZoneContext } from "./drop-zone.context";
 
 const props = defineProps<DropZoneRootProps>();
 
@@ -152,8 +151,6 @@ const describedBy = computed(() => {
 });
 
 const styles = computed(() => dropZoneVariants());
-
-provideDropZoneContext({ slots: styles });
 </script>
 
 <template>

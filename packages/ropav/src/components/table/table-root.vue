@@ -4,15 +4,11 @@ import type { TableRootProps } from "./table.types";
 import { tableVariants } from "@ropav/styles";
 import { computed } from "vue";
 
-import { provideTableContext } from "./table.context";
-
 const props = defineProps<TableRootProps>();
 
 defineSlots<{ default?: () => unknown }>();
 
 const slots = computed(() => tableVariants({ variant: props.variant }));
-
-provideTableContext({ slots });
 </script>
 
 <template>

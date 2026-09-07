@@ -1,24 +1,16 @@
 <script setup lang="ts" vapor>
 import type { ColorPickerTriggerProps } from "./color-picker.types";
 
-import { computed } from "vue";
-
 import { composePressResponder, usePressResponder } from "../../composables/press-responder";
 import { useInteractionStates } from "../../composables/use-interaction-states";
 import { dataAttr } from "../../utils/assertion";
-
-import { useColorPickerContext } from "./color-picker.context";
 
 const props = withDefaults(defineProps<ColorPickerTriggerProps>(), { type: "button" });
 
 defineSlots<{ default?: () => unknown }>();
 
-const { slots } = useColorPickerContext();
-
 // Supplied by the picker root, which is what makes this a dialog trigger rather than a button.
 const responder = usePressResponder();
-
-const styles = computed(() => slots.value.trigger({ class: props.class }));
 
 const setElement = (element: unknown) => {
   responder?.registerElement((element as HTMLElement | null) ?? null);
@@ -41,7 +33,7 @@ const press = composePressResponder(responder);
 <template>
   <button
     :ref="setElement"
-    :class="styles"
+    :class="['rp-color-picker__trigger', props.class]"
     :data-focus-visible="dataAttr(isFocusVisible)"
     :data-pressed="dataAttr(responder?.isPressed.value)"
     data-slot="color-picker-trigger"

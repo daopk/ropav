@@ -3,16 +3,14 @@ import type { ToastIndicatorProps } from "./toast.types";
 
 import { computed } from "vue";
 
-import { composeSlotClassName } from "../../utils/compose";
 import { DangerIcon, InfoIcon, SuccessIcon, WarningIcon } from "../icons";
 
-import { useToastItemContext, useToastRegionContext } from "./toast.context";
+import { useToastItemContext } from "./toast.context";
 
 const props = defineProps<ToastIndicatorProps>();
 
 defineSlots<{ default?: () => unknown }>();
 
-const { slots } = useToastRegionContext();
 const item = useToastItemContext();
 
 const variant = computed(() => props.variant ?? item.variant.value);
@@ -33,7 +31,7 @@ const defaultIcon = computed(() => {
 </script>
 
 <template>
-  <div :class="composeSlotClassName(slots.indicator, props.class)" data-slot="toast-indicator">
+  <div :class="['rp-toast__indicator', props.class]" data-slot="toast-indicator">
     <slot>
       <component :is="defaultIcon" data-slot="toast-default-icon" />
     </slot>

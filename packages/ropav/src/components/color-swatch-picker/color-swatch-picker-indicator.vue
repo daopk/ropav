@@ -8,16 +8,12 @@ import { computed } from "vue";
 
 import { dataAttr } from "../../utils/assertion";
 
-import {
-  useColorSwatchPickerContext,
-  useColorSwatchPickerItemContext,
-} from "./color-swatch-picker.context";
+import { useColorSwatchPickerItemContext } from "./color-swatch-picker.context";
 
 const props = defineProps<ColorSwatchPickerIndicatorProps>();
 
 defineSlots<{ default?: (props: ColorSwatchPickerIndicatorSlotProps) => unknown }>();
 
-const { slots } = useColorSwatchPickerContext();
 const item = useColorSwatchPickerItemContext();
 
 /**
@@ -43,7 +39,7 @@ const isLightColor = computed(() => {
 <template>
   <span
     aria-hidden="true"
-    :class="slots.indicator({ class: props.class })"
+    :class="['rp-color-swatch-picker__indicator', props.class]"
     :data-light-color="dataAttr(isLightColor)"
     data-slot="color-swatch-picker-indicator"
   >

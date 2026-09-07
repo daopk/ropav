@@ -9,8 +9,6 @@ import { useTextFieldControlContext } from "../../composables/use-text-field";
 import { dataAttr } from "../../utils/assertion";
 import { useTextFieldContext } from "../textfield/textfield.context";
 
-import { provideInputGroupContext } from "./input-group.context";
-
 // Three-state props declare an explicit `undefined` default so they can still fall through to
 // the field. Cast to `false` they would read as the caller claiming that state, and the group
 // could never pick up the disabled or invalid state of the field it sits in.
@@ -49,8 +47,6 @@ const slots = computed(() =>
     variant: resolvedVariant.value,
   }),
 );
-
-provideInputGroupContext({ slots });
 
 const styles = computed(() => slots.value.base({ class: props.class }));
 

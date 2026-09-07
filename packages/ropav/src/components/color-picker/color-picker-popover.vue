@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
 import type { ColorPickerPopoverProps } from "./color-picker.types";
 
-import { computed } from "vue";
+import { computed, normalizeClass } from "vue";
 
 import { OverlayPopover, createOverlaySlotContexts, provideOverlaySlotContexts } from "../overlay";
 import { provideSurfaceContext } from "../surface";
 
-import { useColorPickerContext } from "./color-picker.context";
-
 // `shouldFlip` and `isKeyboardDismissDisabled` declare an explicit `undefined` default so an absent
 // prop stays absent rather than reading as an explicit `false`.
+// The receiver declares `class` as a string prop, so the list is joined here rather than by the
+// template compiler, which only does that for a class landing on an element.
 const props = withDefaults(defineProps<ColorPickerPopoverProps>(), {
   isKeyboardDismissDisabled: undefined,
   placement: "bottom left",
@@ -17,8 +17,6 @@ const props = withDefaults(defineProps<ColorPickerPopoverProps>(), {
 });
 
 defineSlots<{ default?: () => unknown }>();
-
-const { slots } = useColorPickerContext();
 
 /**
  * Owned here rather than by the overlay itself.
@@ -33,13 +31,11 @@ provideOverlaySlotContexts(contexts);
 // Everything inside sits on an overlay rather than on the page and picks its colours from that:
 // same as React, which wraps the popover in a default surface.
 provideSurfaceContext({ variant: computed(() => "default" as const) });
-
-const styles = computed(() => slots.value.popover({ class: props.class }));
 </script>
 
 <template>
   <OverlayPopover
-    :class="styles"
+    :class="normalizeClass(['rp-color-picker__popover', props.class])"
     :container-padding="props.containerPadding"
     :cross-offset="props.crossOffset"
     data-slot="color-picker-popover"

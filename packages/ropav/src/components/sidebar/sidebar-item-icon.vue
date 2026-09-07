@@ -1,15 +1,9 @@
 <script setup lang="ts" vapor>
 import type { SidebarItemIconProps } from "./sidebar.types";
 
-import { composeSlotClassName } from "../../utils/compose";
-
-import { useSidebarContext } from "./sidebar.context";
-
 const props = defineProps<SidebarItemIconProps>();
 
 defineSlots<{ default?: () => unknown }>();
-
-const { slots } = useSidebarContext();
 
 /*
  * `aria-hidden` because the icon repeats what the label already says, and a collapsed sidebar
@@ -20,7 +14,7 @@ const { slots } = useSidebarContext();
 <template>
   <span
     aria-hidden="true"
-    :class="composeSlotClassName(slots.itemIcon, props.class)"
+    :class="['rp-sidebar__item-icon', props.class]"
     data-slot="sidebar-item-icon"
   >
     <slot />

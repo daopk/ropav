@@ -4,12 +4,11 @@ import type { TableDropIndicatorProps } from "./table.types";
 import { computed, shallowRef } from "vue";
 
 import { dataAttr } from "../../utils/assertion";
-import { composeSlotClassName } from "../../utils/compose";
 import { visuallyHiddenStyle } from "../../utils/visually-hidden";
 import { useVirtualizerStateContext } from "../virtualizer/virtualizer.context";
 
 import TableVirtualizerItem from "./table-virtualizer-item.vue";
-import { useTableContext, useTableGridContext, useTableVirtualizerContext } from "./table.context";
+import { useTableGridContext, useTableVirtualizerContext } from "./table.context";
 
 /**
  * The position a drop would land in, as a row a screen reader can reach.
@@ -28,7 +27,6 @@ import { useTableContext, useTableGridContext, useTableVirtualizerContext } from
  */
 const props = defineProps<TableDropIndicatorProps>();
 
-const { slots } = useTableContext();
 const { columnCount, dragAndDropHooks, dropState } = useTableGridContext();
 const virtualizer = useTableVirtualizerContext();
 const virtualizerState = useVirtualizerStateContext();
@@ -94,7 +92,7 @@ const parentLayoutInfo = computed(() =>
     <component
       :is="virtualizer ? 'div' : 'tr'"
       :aria-level="level"
-      :class="composeSlotClassName(slots.dropIndicator, props.class)"
+      :class="['rp-table__drop-indicator', props.class]"
       :data-drop-target="dataAttr(isDropTarget)"
       data-slot="table-drop-indicator"
       role="row"

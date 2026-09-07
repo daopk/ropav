@@ -8,13 +8,9 @@ import { composePressResponder, usePressResponder } from "../../composables/pres
 import { useInteractionStates } from "../../composables/use-interaction-states";
 import { dataAttr } from "../../utils/assertion";
 
-import { useDrawerContext } from "./drawer.context";
-
 const props = defineProps<DrawerTriggerProps>();
 
 defineSlots<{ default?: () => unknown }>();
-
-const { slots } = useDrawerContext();
 
 // Supplied by the root, which is what makes this a trigger rather than a plain button.
 const responder = usePressResponder();
@@ -22,8 +18,6 @@ const responder = usePressResponder();
 // Hover and focus can be handed down separately — a tooltip wrapped around this button watches it
 // without the button having to know.
 const focusResponder = useFocusResponder();
-
-const styles = computed(() => slots.value.trigger({ class: props.class }));
 
 const setElement = (element: unknown) => {
   const next = (element as HTMLElement | null) ?? null;
@@ -87,7 +81,7 @@ const press = composePressResponder(responder, {
 <template>
   <button
     :ref="setElement"
-    :class="styles"
+    :class="['rp-drawer__trigger', props.class]"
     :data-disabled="dataAttr(props.isDisabled)"
     :data-focus-visible="dataAttr(isFocusVisible)"
     :data-focused="dataAttr(isFocused)"

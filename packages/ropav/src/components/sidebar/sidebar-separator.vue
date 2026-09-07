@@ -1,14 +1,13 @@
 <script setup lang="ts" vapor>
 import type { SidebarSeparatorProps } from "./sidebar.types";
 
-import { composeSlotClassName } from "../../utils/compose";
+import { normalizeClass } from "vue";
+
 import SeparatorRoot from "../separator/separator-root.vue";
 
-import { useSidebarContext } from "./sidebar.context";
-
+// The receiver declares `class` as a string prop, so the list is joined here rather than by the
+// template compiler, which only does that for a class landing on an element.
 const props = defineProps<SidebarSeparatorProps>();
-
-const { slots } = useSidebarContext();
 
 /*
  * The library's own rule, spaced for the nav. It keeps the separator's own full width, which
@@ -18,5 +17,5 @@ const { slots } = useSidebarContext();
 </script>
 
 <template>
-  <SeparatorRoot :class="composeSlotClassName(slots.separator, props.class)" />
+  <SeparatorRoot :class="normalizeClass(['rp-sidebar__separator', props.class])" />
 </template>

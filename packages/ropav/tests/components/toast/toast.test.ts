@@ -466,8 +466,10 @@ describe("Toast", () => {
   });
 
   describe("context", () => {
+    // The region used to gate this because the part read its class from there. The part carries
+    // its own class now, so what is left to be missing is the toast it belongs to.
     it("refuses to render a part outside a provider", () => {
-      expect(() => renderVapor(ToastContent)).toThrow(/`ToastRegionContext` was consumed outside/);
+      expect(() => renderVapor(ToastContent)).toThrow(/`ToastItemContext` was consumed outside/);
     });
 
     it("refuses to render a part outside a toast", async () => {

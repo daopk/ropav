@@ -1,23 +1,15 @@
 <script setup lang="ts" vapor>
 import type { DropdownTriggerProps } from "./dropdown.types";
 
-import { computed } from "vue";
-
 import { composePressResponder, usePressResponder } from "../../composables/press-responder";
 import { dataAttr } from "../../utils/assertion";
-
-import { useDropdownContext } from "./dropdown.context";
 
 const props = withDefaults(defineProps<DropdownTriggerProps>(), { type: "button" });
 
 defineSlots<{ default?: () => unknown }>();
 
-const { slots } = useDropdownContext();
-
 // Supplied by the dropdown root, which is what makes this a menu trigger rather than a button.
 const responder = usePressResponder();
-
-const styles = computed(() => slots.value.trigger({ class: props.class }));
 
 const setElement = (element: unknown) => {
   responder?.registerElement((element as HTMLElement | null) ?? null);
@@ -37,7 +29,7 @@ const press = composePressResponder(responder);
 <template>
   <button
     :ref="setElement"
-    :class="styles"
+    :class="['rp-dropdown__trigger', props.class]"
     :data-pressed="dataAttr(responder?.isPressed.value)"
     data-slot="dropdown-trigger"
     tabindex="0"

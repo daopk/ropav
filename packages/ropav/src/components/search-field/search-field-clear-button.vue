@@ -1,19 +1,15 @@
 <script setup lang="ts" vapor>
 import type { SearchFieldClearButtonProps } from "./search-field.types";
 
-import { computed } from "vue";
+import { normalizeClass } from "vue";
 
 import { CloseButton } from "../close-button";
 
-import { useSearchFieldContext } from "./search-field.context";
-
+// The receiver declares `class` as a string prop, so the list is joined here rather than by the
+// template compiler, which only does that for a class landing on an element.
 const props = defineProps<SearchFieldClearButtonProps>();
 
 defineSlots<{ default?: () => unknown }>();
-
-const { slots } = useSearchFieldContext();
-
-const styles = computed(() => slots.value.clearButton({ class: props.class }));
 
 /**
  * `slot="clear"` is a live CSS contract, not a leftover of React Aria's slot system: the
@@ -29,7 +25,11 @@ const clearSlot = { slot: "clear" };
 </script>
 
 <template>
-  <CloseButton :class="styles" data-slot="search-field-clear-button" v-bind="clearSlot">
+  <CloseButton
+    :class="normalizeClass(['rp-search-field__clear-button', props.class])"
+    data-slot="search-field-clear-button"
+    v-bind="clearSlot"
+  >
     <slot />
   </CloseButton>
 </template>

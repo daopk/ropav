@@ -8,18 +8,12 @@ import { useInteractionStates } from "../../composables/use-interaction-states";
 import { dataAttr } from "../../utils/assertion";
 import { FOCUSABLE_SELECTOR } from "../../utils/focus";
 
-import { useTooltipContext } from "./tooltip.context";
-
 const props = defineProps<TooltipTriggerProps>();
 
 defineSlots<{ default?: () => unknown }>();
 
-const { slots } = useTooltipContext();
-
 // Supplied by the tooltip root, which is what makes this a trigger rather than a plain box.
 const responder = useFocusResponder();
-
-const styles = computed(() => slots.value.trigger({ class: props.class }));
 
 // Yielded whenever the slot already brought something focusable: wrapping a real control in
 // `role="button"` nests one interactive element inside another. The responder's attributes go with
@@ -67,7 +61,7 @@ const wrapperAttrs = computed(() =>
 <template>
   <div
     :ref="setElement"
-    :class="styles"
+    :class="['rp-tooltip__trigger', props.class]"
     :data-focus-visible="dataAttr(states.isFocusVisible.value)"
     :data-hovered="dataAttr(states.isHovered.value)"
     data-slot="tooltip-trigger"

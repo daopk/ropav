@@ -7,14 +7,12 @@ import { useDescription } from "../../composables/use-description";
 import { useId } from "../../composables/use-id";
 import { useInteractionStates } from "../../composables/use-interaction-states";
 import { dataAttr } from "../../utils/assertion";
-import { composeSlotClassName } from "../../utils/compose";
 import { getCollectionTextValue } from "../../utils/text-value";
 
 import TableVirtualizerItem from "./table-virtualizer-item.vue";
 import {
   provideTableColumnContext,
   useTableColumnLayoutContext,
-  useTableContext,
   useTableGridContext,
   useTableVirtualizerContext,
 } from "./table.context";
@@ -24,7 +22,6 @@ const props = defineProps<TableColumnProps>();
 
 defineSlots<{ default?: (props: TableColumnSlotProps) => unknown }>();
 
-const { slots } = useTableContext();
 const { collection, collectionId, keyboard, sort, sortDescriptor, tableId } = useTableGridContext();
 
 // Falls back to a generated key so a column without an `id` still has a stable identity — the
@@ -168,7 +165,7 @@ const onKeydown = (event: KeyboardEvent) => {
       :aria-colindex="ariaColIndex"
       :aria-describedby="describedBy"
       :aria-sort="ariaSort"
-      :class="composeSlotClassName(slots.column, props.class)"
+      :class="['rp-table__column', props.class]"
       :data-allows-sorting="dataAttr(allowsSorting)"
       :data-collection="collectionId"
       :data-focus-visible="dataAttr(states.isFocusVisible.value)"

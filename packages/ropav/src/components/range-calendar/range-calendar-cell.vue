@@ -10,13 +10,10 @@ import { useInteractionStates } from "../../composables/use-interaction-states";
 import { dataAttr } from "../../utils/assertion";
 import { useCalendarGridContext, useCalendarStateContext } from "../calendar/calendar.context";
 
-import { useRangeCalendarContext } from "./range-calendar.context";
-
 const props = defineProps<RangeCalendarCellProps>();
 
 defineSlots<{ default?: (props: RangeCalendarCellSlotProps) => unknown }>();
 
-const { slots } = useRangeCalendarContext();
 const { calendar, state } = useCalendarStateContext();
 const { startDate } = useCalendarGridContext();
 
@@ -70,11 +67,6 @@ const ends = computed(() => {
   };
 });
 
-const styles = computed(() => slots.value.cell({ class: props.class }));
-
-// The caller's `class` lands on the cell, so the box inside it takes none.
-const buttonStyles = computed(() => slots.value.cellButton());
-
 const slotProps = computed<RangeCalendarCellSlotProps>(() => ({
   date: props.date,
   formattedDate: cell.formattedDate.value,
@@ -98,7 +90,7 @@ const slotProps = computed<RangeCalendarCellSlotProps>(() => ({
   <td v-bind="cell.cellAttrs.value">
     <div
       ref="element"
-      :class="styles"
+      :class="['rp-range-calendar__cell', props.class]"
       :data-disabled="dataAttr(cell.isDisabled.value)"
       :data-focus-visible="dataAttr(isFocusVisible)"
       :data-focused="dataAttr(cell.isFocused.value)"
@@ -148,7 +140,7 @@ const slotProps = computed<RangeCalendarCellSlotProps>(() => ({
       @pointerup="cell.handlers.onPointerup"
     >
       <span
-        :class="buttonStyles"
+        class="rp-range-calendar__cell-button"
         :data-disabled="dataAttr(cell.isDisabled.value)"
         :data-hovered="dataAttr(interaction.isHovered.value)"
         :data-pressed="dataAttr(cell.isPressed.value)"

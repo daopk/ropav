@@ -1,22 +1,20 @@
 <script setup lang="ts" vapor>
 import type { DropdownPopoverProps } from "./dropdown.types";
 
-import { computed } from "vue";
+import { normalizeClass } from "vue";
 
 import { OverlayPopover, createOverlaySlotContexts, provideOverlaySlotContexts } from "../overlay";
 
-import { useDropdownContext } from "./dropdown.context";
-
 // `isKeyboardDismissDisabled` and `shouldFlip` declare an explicit `undefined` default so an absent
 // prop stays absent rather than reading as an explicit `false`.
+// The receiver declares `class` as a string prop, so the list is joined here rather than by the
+// template compiler, which only does that for a class landing on an element.
 const props = withDefaults(defineProps<DropdownPopoverProps>(), {
   isKeyboardDismissDisabled: undefined,
   shouldFlip: undefined,
 });
 
 defineSlots<{ default?: () => unknown }>();
-
-const { slots } = useDropdownContext();
 
 /**
  * Owned here rather than by the overlay itself.
@@ -29,14 +27,12 @@ const { slots } = useDropdownContext();
 const contexts = createOverlaySlotContexts();
 
 provideOverlaySlotContexts(contexts);
-
-const styles = computed(() => slots.value.popover({ class: props.class }));
 </script>
 
 <template>
   <OverlayPopover
     :arrow-boundary-offset="props.arrowBoundaryOffset"
-    :class="styles"
+    :class="normalizeClass(['rp-dropdown__popover', props.class])"
     :container-padding="props.containerPadding"
     :cross-offset="props.crossOffset"
     data-slot="dropdown-popover"

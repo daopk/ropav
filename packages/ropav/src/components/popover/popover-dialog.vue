@@ -6,13 +6,10 @@ import { computed, onScopeDispose, shallowRef, watch } from "vue";
 import { provideFieldIdsContext, useFieldIds } from "../../composables/use-field-ids";
 import { useOverlayScopeContext, useOverlayTargetContext } from "../overlay";
 
-import { usePopoverContext } from "./popover.context";
-
 const props = defineProps<PopoverDialogProps>();
 
 defineSlots<{ default?: (props: { close: () => void }) => unknown }>();
 
-const { slots } = usePopoverContext();
 const target = useOverlayTargetContext();
 const scope = useOverlayScopeContext();
 
@@ -48,8 +45,6 @@ provideFieldIdsContext(context);
  */
 const labelledBy = computed(() => headingId.value ?? target.labelledBy.value);
 
-const styles = computed(() => slots.value.dialog({ class: props.class }));
-
 const setElement = (next: unknown) => {
   element.value = (next as HTMLElement | null) ?? null;
 };
@@ -78,7 +73,7 @@ watch(
     :id="scope?.dialogId.value"
     :ref="setElement"
     :aria-labelledby="labelledBy"
-    :class="styles"
+    :class="['rp-popover__dialog', props.class]"
     data-slot="popover-dialog"
     role="dialog"
     tabindex="-1"

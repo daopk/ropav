@@ -2,16 +2,14 @@
 import type { AccordionIndicatorProps } from "./accordion.types";
 
 import { dataAttr } from "../../utils/assertion";
-import { composeSlotClassName } from "../../utils/compose";
 import { IconChevronDown } from "../icons";
 
-import { useAccordionContext, useAccordionItemContext } from "./accordion.context";
+import { useAccordionItemContext } from "./accordion.context";
 
 const props = defineProps<AccordionIndicatorProps>();
 
 defineSlots<{ default?: () => unknown }>();
 
-const { slots } = useAccordionContext();
 const { isExpanded } = useAccordionItemContext();
 
 /*
@@ -23,7 +21,7 @@ const { isExpanded } = useAccordionItemContext();
 
 <template>
   <span
-    :class="composeSlotClassName(slots.indicator, props.class)"
+    :class="['rp-accordion__indicator', props.class]"
     :data-expanded="dataAttr(isExpanded)"
     data-slot="accordion-indicator"
   >

@@ -6,14 +6,9 @@ import { computed, shallowRef } from "vue";
 import { useInteractionStates } from "../../composables/use-interaction-states";
 import { dataAttr } from "../../utils/assertion";
 
-import {
-  useColorInputGroupContext,
-  useColorInputGroupControlContext,
-} from "./color-input-group.context";
+import { useColorInputGroupControlContext } from "./color-input-group.context";
 
 const props = defineProps<ColorInputGroupInputProps>();
-
-const { slots } = useColorInputGroupContext();
 
 // Optional: a group can hold a control without a field around it, exactly as in React.
 const control = useColorInputGroupControlContext();
@@ -24,8 +19,6 @@ const setElement = (next: unknown) => {
   element.value = next instanceof HTMLInputElement ? next : null;
   control?.registerElement(element.value);
 };
-
-const styles = computed(() => slots.value.input({ class: props.class }));
 
 // A prop set here wins over what the field supplies, which is how React merges context props
 // too. Spreading the field's bag blindly would undo it: the bag carries every key it knows
@@ -63,7 +56,7 @@ const onPaste = (event: ClipboardEvent) => {
 <template>
   <input
     :ref="setElement"
-    :class="styles"
+    :class="['rp-color-input-group__input', props.class]"
     :data-disabled="dataAttr(control?.isDisabled.value)"
     :data-focus-visible="dataAttr(interaction.isFocusVisible.value)"
     :data-focused="dataAttr(interaction.isFocused.value)"

@@ -1,22 +1,6 @@
-import type { colorInputGroupVariants } from "@ropav/styles";
 import type { ComputedRef } from "vue";
 
 import { createContext } from "../../utils/create-context";
-
-export interface ColorInputGroupContext {
-  /** Slot classes the parts pull their own class from. */
-  slots: ComputedRef<ReturnType<typeof colorInputGroupVariants>>;
-}
-
-/**
- * Carries the resolved slot functions from the group down to its parts, so each part gets the
- * variant the group settled on without having to resolve it a second time.
- *
- * Strict: a prefix or a control with the group's class on it but no group around it would be
- * styled for a shell that is not there.
- */
-export const [useColorInputGroupContext, provideColorInputGroupContext] =
-  createContext<ColorInputGroupContext>({ name: "ColorInputGroupContext" });
 
 /**
  * Listeners the control wires one by one with `@event`.

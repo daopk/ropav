@@ -1,15 +1,7 @@
 <script setup lang="ts" vapor>
 import type { DrawerHandleProps } from "./drawer.types";
 
-import { computed } from "vue";
-
-import { useDrawerContext } from "./drawer.context";
-
 const props = defineProps<DrawerHandleProps>();
-
-const { slots } = useDrawerContext();
-
-const styles = computed(() => slots.value.handle({ class: props.class }));
 
 /**
  * No content slot, deliberately.
@@ -25,7 +17,7 @@ const styles = computed(() => slots.value.handle({ class: props.class }));
 </script>
 
 <template>
-  <div aria-hidden="true" :class="styles" data-slot="drawer-handle">
+  <div aria-hidden="true" :class="['rp-drawer__handle', props.class]" data-slot="drawer-handle">
     <div data-slot="drawer-handle-bar" />
   </div>
 </template>

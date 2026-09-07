@@ -8,21 +8,15 @@ import { dataAttr } from "../../utils/assertion";
 import { useCalendarStateContext } from "../calendar/calendar.context";
 import { IconChevronLeft, IconChevronRight } from "../icons";
 
-import { useRangeCalendarContext } from "./range-calendar.context";
-
 const props = withDefaults(defineProps<RangeCalendarNavButtonProps>(), { slot: "next" });
 
 defineSlots<{ default?: () => unknown }>();
 
-const { slots } = useRangeCalendarContext();
 const { calendar } = useCalendarStateContext();
 
 const button = computed(() =>
   props.slot === "previous" ? calendar.prevButton : calendar.nextButton,
 );
-
-const styles = computed(() => slots.value.navButton({ class: props.class }));
-const iconStyles = computed(() => slots.value.navButtonIcon());
 
 // The stylesheet keys hover and press on data attributes as well as on the pseudo-classes, so the
 // states have to be reported from here too.
@@ -59,7 +53,7 @@ const attrs = computed(() => ({
 
 <template>
   <button
-    :class="styles"
+    :class="['rp-range-calendar__nav-button', props.class]"
     :data-disabled="dataAttr(button.isDisabled.value)"
     :data-focus-visible="dataAttr(interaction.isFocusVisible.value)"
     :data-hovered="dataAttr(interaction.isHovered.value)"
@@ -79,10 +73,14 @@ const attrs = computed(() => ({
     <slot>
       <IconChevronLeft
         v-if="props.slot === 'previous'"
-        :class="iconStyles"
+        class="rp-range-calendar__nav-button-icon"
         data-slot="range-calendar-nav-button-icon"
       />
-      <IconChevronRight v-else :class="iconStyles" data-slot="range-calendar-nav-button-icon" />
+      <IconChevronRight
+        v-else
+        class="rp-range-calendar__nav-button-icon"
+        data-slot="range-calendar-nav-button-icon"
+      />
     </slot>
   </button>
 </template>

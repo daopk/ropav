@@ -18,7 +18,6 @@ import { useTypeahead } from "../../composables/use-typeahead";
 import { useVirtualizer } from "../../composables/use-virtualizer";
 import { useVirtualizerScroll } from "../../composables/use-virtualizer-scroll";
 import { dataAttr } from "../../utils/assertion";
-import { composeSlotClassName } from "../../utils/compose";
 import { TreeDropTargetDelegate } from "../../utils/dnd-tree-drop-target-delegate";
 import { announce } from "../../utils/live-announcer";
 import { Size } from "../../utils/virtualizer-geometry";
@@ -33,7 +32,6 @@ import {
   provideTableColumnLayoutContext,
   provideTableGridContext,
   provideTableVirtualizerContext,
-  useTableContext,
   useTableResizableContainerContext,
 } from "./table.context";
 import { useGridKeyboard } from "./use-grid-keyboard";
@@ -57,8 +55,6 @@ const emit = defineEmits<{
 }>();
 
 defineSlots<{ default?: () => unknown }>();
-
-const { slots } = useTableContext();
 
 const tableId = useId();
 const collectionId = useId();
@@ -553,7 +549,7 @@ const tableStyle = computed(() => {
     :aria-describedby="describedBy"
     :aria-multiselectable="selection.selectionMode.value === 'multiple' ? true : undefined"
     :aria-rowcount="isVirtualized ? collection.rows.size.value + 1 : undefined"
-    :class="composeSlotClassName(slots.content, props.class)"
+    :class="['rp-table__content', props.class]"
     :data-allows-dragging="dataAttr(dragState != null)"
     :data-collection="collectionId"
     :data-drop-target="dataAttr(isRootDropTarget)"

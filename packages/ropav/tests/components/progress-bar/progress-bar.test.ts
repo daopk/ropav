@@ -181,7 +181,7 @@ describe("ProgressBar", () => {
     unmount();
   });
 
-  it.each([ProgressBarOutput, ProgressBarTrack, ProgressBarFill])(
+  it.each([ProgressBarOutput, ProgressBarFill])(
     "rejects a compound part rendered outside the root",
     (component) => {
       const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
@@ -191,4 +191,14 @@ describe("ProgressBar", () => {
       warn.mockRestore();
     },
   );
+
+  // The two above read the bar's state. The track reads nothing, so it carries its class
+  // rather than asking the root for it, and stands alone unchanged.
+  it("renders the track outside the root", () => {
+    const { container, unmount } = renderVapor(ProgressBarTrack);
+
+    expect(part(container, "progress-bar-track")).toHaveClass("rp-progress-bar__track");
+
+    unmount();
+  });
 });

@@ -1,14 +1,14 @@
 <script setup lang="ts" vapor>
 import type { PopoverContentProps } from "./popover.types";
 
-import { computed } from "vue";
+import { normalizeClass } from "vue";
 
 import { OverlayPopover, createOverlaySlotContexts, provideOverlaySlotContexts } from "../overlay";
 
-import { usePopoverContext } from "./popover.context";
-
 // The three-state booleans declare an explicit `undefined` default so an absent prop stays absent
 // rather than reading as an explicit `false`.
+// The receiver declares `class` as a string prop, so the list is joined here rather than by the
+// template compiler, which only does that for a class landing on an element.
 const props = withDefaults(defineProps<PopoverContentProps>(), {
   isEntering: undefined,
   isExiting: undefined,
@@ -19,8 +19,6 @@ const props = withDefaults(defineProps<PopoverContentProps>(), {
 });
 
 defineSlots<{ default?: () => unknown }>();
-
-const { slots } = usePopoverContext();
 
 /**
  * Owned here rather than by the overlay itself.
@@ -33,14 +31,12 @@ const { slots } = usePopoverContext();
 const contexts = createOverlaySlotContexts();
 
 provideOverlaySlotContexts(contexts);
-
-const styles = computed(() => slots.value.base({ class: props.class }));
 </script>
 
 <template>
   <OverlayPopover
     :arrow-boundary-offset="props.arrowBoundaryOffset"
-    :class="styles"
+    :class="normalizeClass(['rp-popover', props.class])"
     :container-padding="props.containerPadding"
     :cross-offset="props.crossOffset"
     :is-entering="props.isEntering"

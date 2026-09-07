@@ -1,21 +1,7 @@
 import type { Color } from "../../utils/color-types";
-import type { colorPickerVariants } from "@ropav/styles";
 import type { ComputedRef } from "vue";
 
 import { createContext } from "../../utils/create-context";
-
-export interface ColorPickerContext {
-  /** Slot classes the parts pull their own class from. */
-  slots: ComputedRef<ReturnType<typeof colorPickerVariants>>;
-}
-
-/**
- * Strict: a trigger or a popover with the picker's classes on it but no picker around it would
- * open nothing.
- */
-export const [useColorPickerContext, provideColorPickerContext] = createContext<ColorPickerContext>(
-  { name: "ColorPickerContext" },
-);
 
 export interface ColorValueContext {
   /** The colour the picker holds. */

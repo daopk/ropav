@@ -81,10 +81,14 @@ describe("Kbd", () => {
   });
 
   describe("context", () => {
-    it("refuses to render a part outside a root", () => {
-      // The parts take their classes from the root's slots rather than recomputing them, so
-      // standing alone is a mistake worth failing loudly on rather than rendering unstyled.
-      expect(() => renderVapor(KbdAbbr, { props: { keyValue: "command" } })).toThrow(/KbdContext/);
+    it("renders a part outside a root", () => {
+      // The parts carry their own classes now, so there is no root to be missing: standing alone
+      // renders the same markup it does nested, rather than failing on an absent provider.
+      const { container, unmount } = renderVapor(KbdAbbr, { props: { keyValue: "command" } });
+
+      expect(container.querySelector("abbr")).toHaveClass("rp-kbd__abbr");
+
+      unmount();
     });
   });
 });

@@ -1,5 +1,5 @@
 import { renderVapor } from "@ropav/testing/helpers/vue";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { nextTick, reactive } from "vue";
 
 import { BadgeLabel } from "@/components/badge";
@@ -165,12 +165,12 @@ describe("Badge", () => {
   });
 
   describe("context", () => {
-    it("throws when a label renders outside a badge root", () => {
-      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    it("renders a label on its own, which carries its class rather than reading one", () => {
+      const { container, unmount } = renderVapor(BadgeLabel);
 
-      expect(() => renderVapor(BadgeLabel)).toThrow(/`BadgeContext` was consumed outside/);
+      expect(slot(container, "badge-label")).toHaveClass("rp-badge__label");
 
-      warn.mockRestore();
+      unmount();
     });
   });
 });

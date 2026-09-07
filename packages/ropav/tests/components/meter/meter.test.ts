@@ -196,7 +196,7 @@ describe("Meter", () => {
     unmount();
   });
 
-  it.each([MeterOutput, MeterTrack, MeterFill])(
+  it.each([MeterOutput, MeterFill])(
     "rejects a compound part rendered outside the root",
     (component) => {
       const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
@@ -206,4 +206,14 @@ describe("Meter", () => {
       warn.mockRestore();
     },
   );
+
+  // The two above read the meter's state. The track reads nothing, so it carries its class
+  // rather than asking the root for it, and stands alone unchanged.
+  it("renders the track outside the root", () => {
+    const { container, unmount } = renderVapor(MeterTrack);
+
+    expect(part(container, "meter-track")).toHaveClass("rp-meter__track");
+
+    unmount();
+  });
 });

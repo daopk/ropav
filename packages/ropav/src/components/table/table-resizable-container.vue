@@ -5,9 +5,7 @@ import type { TableColumnSize } from "./use-table-column-layout";
 
 import { computed, onMounted, onUnmounted, shallowRef } from "vue";
 
-import { composeSlotClassName } from "../../utils/compose";
-
-import { provideTableResizableContainerContext, useTableContext } from "./table.context";
+import { provideTableResizableContainerContext } from "./table.context";
 
 const props = defineProps<TableResizableContainerProps>();
 
@@ -18,8 +16,6 @@ const emit = defineEmits<{
 }>();
 
 defineSlots<{ default?: () => unknown }>();
-
-const { slots } = useTableContext();
 
 const element = shallowRef<HTMLElement | null>(null);
 const width = shallowRef(0);
@@ -59,7 +55,7 @@ provideTableResizableContainerContext({
 <template>
   <div
     ref="element"
-    :class="composeSlotClassName(slots.resizableContainer, props.class)"
+    :class="['rp-table__resizable-container', props.class]"
     data-slot="table-resizable-container"
   >
     <slot />

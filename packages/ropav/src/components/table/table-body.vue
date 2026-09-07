@@ -5,11 +5,10 @@ import type { TableBodyProps, TableBodySlotProps } from "./table.types";
 import { computed, onMounted, shallowRef, watch } from "vue";
 
 import { dataAttr } from "../../utils/assertion";
-import { composeSlotClassName } from "../../utils/compose";
 
 import TableDropIndicator from "./table-drop-indicator.vue";
 import TableVirtualizerItem from "./table-virtualizer-item.vue";
-import { useTableContext, useTableGridContext, useTableVirtualizerContext } from "./table.context";
+import { useTableGridContext, useTableVirtualizerContext } from "./table.context";
 
 const props = defineProps<TableBodyProps<T>>();
 
@@ -19,7 +18,6 @@ defineSlots<{
   loader?: () => unknown;
 }>();
 
-const { slots } = useTableContext();
 const { collection, dropState } = useTableGridContext();
 
 const virtualizer = useTableVirtualizerContext();
@@ -104,7 +102,7 @@ const lastRowKey = computed(() => collection.rows.getLastKey());
   <TableVirtualizerItem :layout-info="layoutInfo">
     <component
       :is="virtualizer ? 'div' : 'tbody'"
-      :class="composeSlotClassName(slots.body, props.class)"
+      :class="['rp-table__body', props.class]"
       :data-empty="dataAttr(isEmpty)"
       data-slot="table-body"
       role="rowgroup"

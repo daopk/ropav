@@ -1,12 +1,12 @@
 <script setup lang="ts" vapor>
 import type { ToastActionButtonProps } from "./toast.types";
 
-import { computed } from "vue";
+import { normalizeClass } from "vue";
 
 import ButtonRoot from "../button/button-root.vue";
 
-import { useToastRegionContext } from "./toast.context";
-
+// The receiver declares `class` as a string prop, so the list is joined here rather than by the
+// template compiler, which only does that for a class landing on an element.
 const props = withDefaults(defineProps<ToastActionButtonProps>(), {
   fullWidth: undefined,
   isDisabled: undefined,
@@ -17,15 +17,11 @@ const props = withDefaults(defineProps<ToastActionButtonProps>(), {
 const emit = defineEmits<{ click: [event: MouseEvent] }>();
 
 defineSlots<{ default?: () => unknown }>();
-
-const { slots } = useToastRegionContext();
-
-const styles = computed(() => slots.value.action({ class: props.class }));
 </script>
 
 <template>
   <ButtonRoot
-    :class="styles"
+    :class="normalizeClass(['rp-toast__action', props.class])"
     data-slot="toast-action-button"
     :full-width="props.fullWidth"
     :is-disabled="props.isDisabled"

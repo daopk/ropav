@@ -12,8 +12,6 @@ import { openLink } from "../../utils/open-link";
 import { useFieldsetContext } from "../fieldset/fieldset.context";
 import { useRouterContext } from "../router-provider/router-provider.context";
 
-import { provideLinkContext } from "./link.context";
-
 // Every prop whose type *includes* `boolean` declares an explicit `undefined` default. Vue casts
 // an absent boolean to `false`, and a union containing boolean is enough for that to happen — the
 // cast value then reaches the DOM, so every link would carry `aria-current="false"` claiming it is
@@ -38,8 +36,6 @@ const router = useRouterContext();
 const resolvedIsDisabled = computed(() => Boolean(props.isDisabled ?? fieldset?.isDisabled.value));
 
 const slots = computed(() => linkVariants());
-
-provideLinkContext({ slots });
 
 const styles = computed(() => slots.value.base({ class: props.class }));
 

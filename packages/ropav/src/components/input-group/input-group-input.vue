@@ -8,16 +8,12 @@ import { useTextFieldControlContext } from "../../composables/use-text-field";
 import { dataAttr } from "../../utils/assertion";
 import { setFormValue } from "../../utils/form-value";
 
-import { useInputGroupContext } from "./input-group.context";
-
 const props = defineProps<InputGroupInputProps>();
 
 const emit = defineEmits<{
   change: [value: string];
   "update:value": [value: string];
 }>();
-
-const { slots } = useInputGroupContext();
 
 // Optional: a group can hold a control without a field around it, exactly as in React.
 const control = useTextFieldControlContext();
@@ -28,8 +24,6 @@ const setElement = (next: unknown) => {
   element.value = next instanceof HTMLInputElement ? next : null;
   control?.registerElement(element.value);
 };
-
-const styles = computed(() => slots.value.input({ class: props.class }));
 
 // A prop set here wins over what the field supplies, which is how React merges context props
 // too. Spreading the field's bag blindly would undo it: the bag carries every key it knows
@@ -110,7 +104,7 @@ const onBlur = (event: FocusEvent) => {
 <template>
   <input
     :ref="setElement"
-    :class="styles"
+    :class="['rp-input-group__input', props.class]"
     :data-disabled="dataAttr(control?.isDisabled.value)"
     :data-focus-visible="dataAttr(interaction.isFocusVisible.value)"
     :data-focused="dataAttr(interaction.isFocused.value)"

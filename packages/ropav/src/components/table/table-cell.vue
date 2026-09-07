@@ -6,12 +6,10 @@ import { computed, shallowRef, watch } from "vue";
 import { useId } from "../../composables/use-id";
 import { useInteractionStates } from "../../composables/use-interaction-states";
 import { dataAttr } from "../../utils/assertion";
-import { composeSlotClassName } from "../../utils/compose";
 import { getCollectionTextValue } from "../../utils/text-value";
 import { useVirtualizerItem } from "../virtualizer/use-virtualizer-item";
 
 import {
-  useTableContext,
   useTableGridContext,
   useTableRowContext,
   useTableVirtualizerContext,
@@ -22,7 +20,6 @@ const props = defineProps<TableCellProps>();
 
 defineSlots<{ default?: (props: TableCellSlotProps) => unknown }>();
 
-const { slots } = useTableContext();
 const { collection, collectionId, keyboard, selection, tableId, treeColumn } =
   useTableGridContext();
 const { cells, claimCellIndex, hasChildRows, isExpanded, level, rowKey } = useTableRowContext();
@@ -127,7 +124,7 @@ const placement = virtualizer
     :id="cellId"
     ref="element"
     :aria-colindex="virtualizer && index >= 0 ? index + 1 : undefined"
-    :class="composeSlotClassName(slots.cell, props.class)"
+    :class="['rp-table__cell', props.class]"
     :data-collection="collectionId"
     :data-column-index="index < 0 ? undefined : index"
     :data-disabled="dataAttr(isDisabled)"

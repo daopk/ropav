@@ -1,5 +1,5 @@
 import { renderVapor } from "@ropav/testing/helpers/vue";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { nextTick, reactive } from "vue";
 
 import { CardHeader } from "@/components/card";
@@ -166,12 +166,12 @@ describe("Card", () => {
   });
 
   describe("context", () => {
-    it("throws when a part renders outside the root", () => {
-      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    it("renders a part on its own, which carries its class rather than reading one", () => {
+      const { container, unmount } = renderVapor(CardHeader);
 
-      expect(() => renderVapor(CardHeader)).toThrow(/`CardContext` was consumed outside/);
+      expect(slot(container, "card-header")).toHaveClass("rp-card__header");
 
-      warn.mockRestore();
+      unmount();
     });
   });
 });

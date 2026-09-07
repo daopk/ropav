@@ -179,17 +179,26 @@ describe("Alert", () => {
   });
 
   describe("context", () => {
-    it.each([
-      ["Indicator", AlertIndicator],
-      ["Content", AlertContent],
-      ["Title", AlertTitle],
-      ["Description", AlertDescription],
-    ])("rejects %s rendered outside the root", (_name, component) => {
+    it("rejects Indicator rendered outside the root", () => {
       const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
 
-      expect(() => renderVapor(component)).toThrow(/`AlertContext` was consumed outside/);
+      expect(() => renderVapor(AlertIndicator)).toThrow(/`AlertContext` was consumed outside/);
 
       warn.mockRestore();
+    });
+
+    // The indicator above still reads the alert's `status`. These three read nothing, so they
+    // carry their class rather than asking the root for it, and stand alone unchanged.
+    it.each([
+      ["Content", AlertContent, "alert-content", "rp-alert__content"],
+      ["Title", AlertTitle, "alert-title", "rp-alert__title"],
+      ["Description", AlertDescription, "alert-description", "rp-alert__description"],
+    ])("renders %s outside the root", (_name, component, name, className) => {
+      const { container, unmount } = renderVapor(component);
+
+      expect(slot(container, name)).toHaveClass(className);
+
+      unmount();
     });
   });
 });

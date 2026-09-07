@@ -3,16 +3,12 @@ import type { TableHeaderProps, TableHeaderSlotProps } from "./table.types";
 
 import { computed } from "vue";
 
-import { composeSlotClassName } from "../../utils/compose";
-
 import TableVirtualizerItem from "./table-virtualizer-item.vue";
-import { useTableContext, useTableGridContext, useTableVirtualizerContext } from "./table.context";
+import { useTableGridContext, useTableVirtualizerContext } from "./table.context";
 
 const props = defineProps<TableHeaderProps>();
 
 defineSlots<{ default?: (props: TableHeaderSlotProps) => unknown }>();
-
-const { slots } = useTableContext();
 
 // React Aria's `useTableOptions().allowsDragging`, handed to the slot rather than to a hook:
 // the header renders an extra leading column for the drag handles, and repeating the condition
@@ -38,7 +34,7 @@ const layoutInfo = computed(() =>
   <TableVirtualizerItem :layout-info="layoutInfo">
     <component
       :is="virtualizer ? 'div' : 'thead'"
-      :class="composeSlotClassName(slots.header, props.class)"
+      :class="['rp-table__header', props.class]"
       data-slot="table-header"
       role="rowgroup"
     >

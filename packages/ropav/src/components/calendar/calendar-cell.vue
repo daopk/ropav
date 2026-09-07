@@ -8,17 +8,12 @@ import { useCalendarCell } from "../../composables/use-calendar-cell";
 import { useInteractionStates } from "../../composables/use-interaction-states";
 import { dataAttr } from "../../utils/assertion";
 
-import {
-  useCalendarContext,
-  useCalendarGridContext,
-  useCalendarStateContext,
-} from "./calendar.context";
+import { useCalendarGridContext, useCalendarStateContext } from "./calendar.context";
 
 const props = defineProps<CalendarCellProps>();
 
 defineSlots<{ default?: (props: CalendarCellSlotProps) => unknown }>();
 
-const { slots } = useCalendarContext();
 const { calendar, state } = useCalendarStateContext();
 const { startDate } = useCalendarGridContext();
 
@@ -53,8 +48,6 @@ const interaction = useInteractionStates({
 // A ring only when the cell is the focused one: the browser's own focus can lag a page change.
 const isFocusVisible = computed(() => interaction.isFocusVisible.value && cell.isFocused.value);
 
-const styles = computed(() => slots.value.cell({ class: props.class }));
-
 const slotProps = computed<CalendarCellSlotProps>(() => ({
   date: props.date,
   formattedDate: cell.formattedDate.value,
@@ -76,7 +69,7 @@ const slotProps = computed<CalendarCellSlotProps>(() => ({
   <td v-bind="cell.cellAttrs.value">
     <div
       ref="element"
-      :class="styles"
+      :class="['rp-calendar__cell', props.class]"
       :data-disabled="dataAttr(cell.isDisabled.value)"
       :data-focus-visible="dataAttr(isFocusVisible)"
       :data-focused="dataAttr(cell.isFocused.value)"

@@ -6,15 +6,11 @@ import { computed } from "vue";
 
 import { provideSurfaceContext, useSurfaceContext } from "../surface";
 
-import { provideCardContext } from "./card.context";
-
 const props = withDefaults(defineProps<CardRootProps>(), { variant: "default" });
 
 defineSlots<{ default?: () => unknown }>();
 
 const slots = computed(() => cardVariants({ variant: props.variant }));
-
-provideCardContext({ slots });
 
 // Only resolves to an ancestor, since `inject` cannot see the component's own `provide`.
 const ancestorSurface = useSurfaceContext();

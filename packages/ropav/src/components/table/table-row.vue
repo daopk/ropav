@@ -9,13 +9,11 @@ import { computed, shallowRef, watch } from "vue";
 import { useId } from "../../composables/use-id";
 import { useInteractionStates } from "../../composables/use-interaction-states";
 import { dataAttr } from "../../utils/assertion";
-import { composeSlotClassName } from "../../utils/compose";
 import { visuallyHiddenStyle } from "../../utils/visually-hidden";
 import { useVirtualizerItem } from "../virtualizer/use-virtualizer-item";
 
 import {
   provideTableRowContext,
-  useTableContext,
   useTableGridContext,
   useTableVirtualizerContext,
 } from "./table.context";
@@ -25,7 +23,6 @@ const props = defineProps<TableRowProps>();
 
 defineSlots<{ default?: (props: TableRowSlotProps) => unknown }>();
 
-const { slots } = useTableContext();
 const {
   collection,
   collectionId,
@@ -295,7 +292,7 @@ const onClick = (event: MouseEvent) => {
     :aria-rowindex="ariaRowIndex"
     :aria-selected="selectionMode === 'none' ? undefined : isSelected"
     :aria-setsize="isTree ? position.setsize : undefined"
-    :class="composeSlotClassName(slots.row, props.class)"
+    :class="['rp-table__row', props.class]"
     :data-collection="collectionId"
     :data-disabled="dataAttr(isDisabled)"
     :data-dragging="dataAttr(isDragging)"

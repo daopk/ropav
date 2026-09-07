@@ -1,5 +1,5 @@
 import { renderVapor } from "@ropav/testing/helpers/vue";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { nextTick, reactive } from "vue";
 
 import { ChipLabel } from "@/components/chip";
@@ -143,12 +143,12 @@ describe("Chip", () => {
   });
 
   describe("context", () => {
-    it("throws when the label renders outside the root", () => {
-      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    it("renders the label on its own, which carries its class rather than reading one", () => {
+      const { container, unmount } = renderVapor(ChipLabel);
 
-      expect(() => renderVapor(ChipLabel)).toThrow(/`ChipContext` was consumed outside/);
+      expect(slot(container, "chip-label")).toHaveClass("rp-chip__label");
 
-      warn.mockRestore();
+      unmount();
     });
   });
 });

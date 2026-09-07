@@ -13,10 +13,6 @@ export type {
   DropZoneTriggerProps,
 } from "./drop-zone.types";
 
-export { useDropZoneContext, provideDropZoneContext } from "./drop-zone.context";
-
-export type { DropZoneContext } from "./drop-zone.context";
-
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
