@@ -85,7 +85,7 @@ the tokens are not optional, and leaving one out fails quietly rather than loudl
 ```
 
 > `./bundled.css` and the pattern subpaths — `./components/*.css`, `./base`, `./base/*.css`, `./themes/*`,
-> `./themes/*.css`, `./utilities`, `./variants` — exist **only in the published tarball**;
+> `./themes/*.css`, `./utilities` — exist **only in the published tarball**;
 > `clean-package.config.json` writes them into `exports` at `prepack` time. Inside the workspace, import the
 > files from `packages/styles/` by relative path instead.
 
@@ -105,8 +105,6 @@ Every component also has its own subpath so bundlers can drop the rest:
 ```
 packages/styles/
 ├── index.css              # Entry point — declares layer order, then imports everything below
-├── no-preflight.css       # Alias for index.css, kept for 0.8 imports; removed in 0.10.0
-├── tailwind.css           # The Tailwind interop entry; removed in 0.10.0
 ├── motion.css             # `--rp-motion`, the switch every animated declaration reads
 ├── slots.css              # `@property` registrations the component rules compose through
 ├── animations.css         # Every keyframe, names being document-global
@@ -120,10 +118,8 @@ packages/styles/
 │   ├── sky.css … rabbit.css  # Ten more themes — generated, do not edit
 │   ├── all.css            # Every bundled theme, for docs and playgrounds
 │   └── shared/
-│       ├── tokens.css     # Every token a rule spells directly — type scale, weights, curves
-│       └── theme.css      # @theme block, for Tailwind interop only — see tailwind.css
+│       └── tokens.css     # Every token a rule spells directly — type scale, weights, curves
 ├── utilities/index.css    # The classes offered by name rather than through a component
-├── variants/index.css     # @custom-variant definitions, for Tailwind interop only
 ├── scripts/themes/        # Build-time theme generator — not published
 └── src/                   # TypeScript: tv() variants + shared utility class strings
 ```
@@ -258,8 +254,12 @@ Base colors (`--background`, `--surface`, `--overlay`, `--muted`), interactive a
 scrollbar set, and shadows.
 
 **`themes/default.css` is the source of truth — read it rather than a list in a README**, which goes
-stale the moment a token moves. `themes/shared/theme.css` holds what is derived from those tokens: the
-`--radius-xs` … `--radius-4xl` scale and the easing curves.
+stale the moment a token moves. `themes/shared/tokens.css` holds the rest of what a rule can name
+directly: the type scale, the weights and the easing curves.
+
+There is no `--radius-*` scale to read. A step is a multiple written where it is used —
+`calc(var(--radius) * 3)` — so a `data-theme` setting its own `--radius` moves every corner at once,
+which a scale declared on `:root` could not do.
 
 ### State colors
 
@@ -343,8 +343,8 @@ ancestor that answered is the one that counts.
 
 The attribute sets `--rp-motion` — see `motion.css` — and every animated declaration leads with
 `var(--rp-motion)`, which substitutes nothing when motion is allowed and invalidates the whole
-declaration when it is not. The `motion-reduce` / `motion-safe` variants are Tailwind's own
-concept and live behind `tailwind.css` with the rest of the interop.
+declaration when it is not. Tailwind's own `motion-reduce` / `motion-safe`
+variants read the media query directly and know nothing about the attribute.
 
 ### Forced colors
 

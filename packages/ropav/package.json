@@ -41,14 +41,6 @@
     "./styles": {
       "style": "./src/styles.css",
       "default": "./src/styles.css"
-    },
-    "./styles/no-preflight": {
-      "style": "./src/styles-no-preflight.css",
-      "default": "./src/styles-no-preflight.css"
-    },
-    "./styles/tailwind": {
-      "style": "./src/styles-tailwind.css",
-      "default": "./src/styles-tailwind.css"
     }
   },
   "publishConfig": {

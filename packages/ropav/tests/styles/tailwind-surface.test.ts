@@ -4,8 +4,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 
 /**
- * Everything that still needs Tailwind to compile it is behind one entry, and that entry is
- * reached by nothing the stylesheet imports.
+ * Nothing in either published package needs Tailwind to compile it.
  *
  * The failure this guards against has already shipped once. `@ropav/styles` named an entry made
  * of `@import` statements as its stylesheet, so an app without a Tailwind 4 toolchain resolved it,
@@ -14,24 +13,18 @@ import { describe, expect, it } from "vitest";
  * begins with `tailwindcss` is on this list too, not only the at-rules: it is the shape the real
  * breakage took.
  *
- * The list was a ledger that shrank through the migration, a file at a time. What is left is not
- * debt: it is the interop entry's own two files, which exist so that an app writing `bg-accent`
- * against these tokens keeps working through one release. `tailwind.css` is the only thing that
- * imports them, which is the second test below and the more important half — an entry the
- * stylesheet does not pull in is one that 0.10.0 can delete by deleting the file.
+ * This was a ledger that shrank through the migration, a file at a time, and 0.10.0 emptied it by
+ * deleting the interop entry and the two files behind it. An empty expectation is not a spent
+ * test — it is the strongest this one has ever been, and the only state in which the sentence at
+ * the top is simply true. Anything reintroducing an at-rule only a Tailwind build understands
+ * fails here rather than in an app that has no such build.
  */
 
 const STYLES = path.resolve(import.meta.dirname, "../../../styles");
 const ROPAV = path.resolve(import.meta.dirname, "../../src");
 
-/** What is left, and nothing else. Names are as a reader would grep for them. */
-const NEEDS_TAILWIND: Record<string, string[]> = {
-  "styles/themes/shared/theme.css": ["@theme"],
-  "styles/variants/index.css": ["@custom-variant ×3"],
-};
-
-/** The entry those two are behind, and the only file allowed to name them. */
-const INTEROP = "styles/tailwind.css";
+/** Empty, and it stays empty. */
+const NEEDS_TAILWIND: Record<string, string[]> = {};
 
 /*
  * Not anchored to the start of a line. These files are hand-formatted, so an at-rule is on its own
@@ -58,15 +51,9 @@ const stylesheets = (root: string, label: string) =>
  */
 const live = (css: string) => css.replace(/\/\*[\s\S]*?\*\//g, (block) => " ".repeat(block.length));
 
-const ANY_IMPORT = /@import\s+["']([^"']+)["']/g;
-
 const sources = [...stylesheets(STYLES, "styles"), ...stylesheets(ROPAV, "ropav")];
-/** Absolute path back to the name the report uses, so a resolved import can be named. */
-const named = new Map(sources.map(([name, file]) => [file, name]));
 
 const found: Record<string, string[]> = {};
-/** Which stylesheets `@import` each of the listed ones. */
-const importedBy = new Map<string, string[]>(Object.keys(NEEDS_TAILWIND).map((n) => [n, []]));
 
 for (const [name, file] of sources) {
   const css = live(readFileSync(file, "utf8"));
@@ -77,36 +64,27 @@ for (const [name, file] of sources) {
   for (const [, rule] of css.matchAll(AT_RULE)) note(`@${rule}`);
   for (const [, specifier] of css.matchAll(TAILWIND_IMPORT)) note(`@import "${specifier}"`);
 
-  for (const match of css.matchAll(ANY_IMPORT)) {
-    const specifier = match[1]!;
-
-    if (!specifier.startsWith(".")) continue;
-
-    const target = named.get(path.resolve(path.dirname(file), specifier));
-
-    if (target && importedBy.has(target)) importedBy.get(target)!.push(name);
-  }
-
   if (counted.size === 0) continue;
 
   found[name] = [...counted].sort().map(([hit, times]) => (times > 1 ? `${hit} ×${times}` : hit));
 }
 
 describe("the published stylesheets", () => {
-  it("need Tailwind only in the interop entry's own two files", () => {
-    expect(found).toEqual(NEEDS_TAILWIND);
+  /*
+   * What the expectation above is worth depends entirely on this one. An empty report is also
+   * what a walk that reached no files produces, and a filter that quietly matches nothing is not
+   * hypothetical — one here once excluded every path by matching a dot-segment that turned out to
+   * be in the checkout's own directory name, and the suite stayed green while measuring nothing.
+   *
+   * A floor rather than an exact count: files come and go, and the number is here to tell "read
+   * the whole package" apart from "read nothing", not to be maintained.
+   */
+  it("were read at all", () => {
+    expect(sources.length).toBeGreaterThan(80);
   });
 
-  /*
-   * The half that makes the first one mean something. Two files that need a Tailwind build are
-   * harmless while nothing the stylesheet loads reaches them, and are the shipped bug of Đợt A
-   * the moment one does — `index.css` importing `theme.css` again would put a `@theme` back into
-   * the file an app with no toolchain loads, and it would render as an empty block.
-   */
-  it("reach those two from the interop entry and nowhere else", () => {
-    expect(Object.fromEntries(importedBy)).toEqual(
-      Object.fromEntries(Object.keys(NEEDS_TAILWIND).map((name) => [name, [INTEROP]])),
-    );
+  it("need Tailwind nowhere", () => {
+    expect(found).toEqual(NEEDS_TAILWIND);
   });
 });
 

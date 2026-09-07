@@ -26,13 +26,8 @@ async function build() {
 async function buildStyles() {
   console.log("🎨 Creating styles export...");
 
-  // Both entries share the override block, so it ships alongside them.
-  for (const file of [
-    "styles.css",
-    "styles-no-preflight.css",
-    "styles-overrides.css",
-    "styles-tailwind.css",
-  ]) {
+  // The entry imports the override block, so it ships alongside it.
+  for (const file of ["styles.css", "styles-overrides.css"]) {
     await cp(path.join(rootDir, "src", file), path.join(distDir, file));
   }
 
@@ -40,7 +35,7 @@ async function buildStyles() {
 }
 
 /**
- * The three files above are `@import` statements; a browser cannot follow the first of them,
+ * The entry above is a pair of `@import` statements; a browser cannot follow the first of them,
  * which names a package. This is the same stylesheet with everything resolved, for an app with
  * no build step to do the resolving.
  *

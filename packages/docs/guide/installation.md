@@ -93,28 +93,14 @@ the components inherit whatever the browser defaults to, which is a serif.
 ::: tip Upgrading from 0.8
 `ropav/styles` used to include Tailwind's preflight, which reset your whole page, and
 `ropav/styles/no-preflight` was the entry for apps that would rather it did not. There is one
-stylesheet now and it resets nothing outside a component; `no-preflight` is an alias for it, and
-goes away in 0.10.0. If your page was relying on the preflight for the two lines above, this is
-where they went.
+stylesheet now and it resets nothing outside a component. If your page was relying on the
+preflight for the two lines above, this is where they went.
 :::
 
-### If you write Tailwind classes against these tokens
+## Reading a token
 
-`bg-accent`, `text-muted`, `rounded-component` and the rest exist because this package was built
-with Tailwind and its theme leaked out as utilities. That is ending. One entry keeps them reachable
-in the meantime, beside the stylesheet rather than instead of it:
-
-```css
-@import "ropav/styles";
-@import "ropav/styles/tailwind";
-```
-
-::: warning Named after the vendor, and going in 0.10.0
-Every other entry has stopped naming a toolchain. This one names it because the name is the
-notice — it sits in your import line, and there is no release where it is the recommended way to
-reach a token.
-
-Read one directly instead. It works with any toolchain and with none:
+Every colour, radius and curve this package paints with is a custom property, and reading one
+takes no toolchain at all:
 
 ```css
 .thing {
@@ -122,6 +108,32 @@ Read one directly instead. It works with any toolchain and with none:
   color: var(--accent-foreground);
 }
 ```
+
+The same names work inline in a Tailwind build, where the square brackets are what say "this
+value, not a name from my theme":
+
+```html
+<p class="bg-[var(--accent)] text-[var(--accent-foreground)]">…</p>
+```
+
+The radius scale is the one place to read twice. `--radius` is the scale, and the steps are
+multiples of it, so a `data-theme` that sets its own `--radius` moves all of them at once:
+
+```html
+<div class="rounded-[calc(var(--radius)*3)]">…</div>
+```
+
+[Theming](/theming/) lists the names.
+
+::: tip Upgrading from 0.9
+Until 0.10.0 these tokens were also reachable as Tailwind utilities — `bg-accent`, `text-muted`,
+`rounded-component` — through an entry named `ropav/styles/tailwind`. That entry has gone. The
+bracketed form above is what replaces it, and it needs nothing from this package to work.
+
+That entry also redefined Tailwind's `dark:` to follow `.dark` and `[data-theme="dark"]`. It no
+longer does, and Tailwind's own `dark:` follows the operating system instead — so an app with a
+theme toggle that writes `dark:` utilities has one thing to put back. The 0.10.0 release note
+carries the variant to copy.
 :::
 
 ## Importing only what you need

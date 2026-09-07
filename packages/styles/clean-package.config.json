@@ -19,14 +19,6 @@
         "style": "./dist/index.css",
         "default": "./dist/index.css"
       },
-      "./no-preflight": {
-        "style": "./dist/no-preflight.css",
-        "default": "./dist/no-preflight.css"
-      },
-      "./tailwind": {
-        "style": "./dist/tailwind.css",
-        "default": "./dist/tailwind.css"
-      },
       "./animations.css": {
         "style": "./dist/animations.css",
         "default": "./dist/animations.css"
@@ -51,7 +43,6 @@
       "./themes/*": "./dist/themes/*.css",
       "./themes/*.css": "./dist/themes/*.css",
       "./utilities": "./dist/utilities/index.css",
-      "./variants": "./dist/variants/index.css",
       "./package.json": "./package.json"
     }
   },

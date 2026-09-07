@@ -40,14 +40,6 @@
       "style": "./index.css",
       "default": "./index.css"
     },
-    "./no-preflight": {
-      "style": "./no-preflight.css",
-      "default": "./no-preflight.css"
-    },
-    "./tailwind": {
-      "style": "./tailwind.css",
-      "default": "./tailwind.css"
-    },
     "./animations.css": {
       "style": "./animations.css",
       "default": "./animations.css"

@@ -44,12 +44,8 @@ describe("ropav style subpaths", () => {
     expect(exports["./styles/bundled.css"]).toBe("./dist/ropav.min.css");
   });
 
-  it("keeps the source entries", () => {
+  it("keeps the source entry", () => {
     expect(targets(exports["./styles"])).toEqual(["./dist/styles.css", "./dist/styles.css"]);
-    expect(targets(exports["./styles/no-preflight"])).toEqual([
-      "./dist/styles-no-preflight.css",
-      "./dist/styles-no-preflight.css",
-    ]);
   });
 
   it.skipIf(!built)("names only stylesheets the build emits", () => {
