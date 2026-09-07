@@ -11,7 +11,7 @@ const shortcuts = [
 <template>
   <dl class="flex flex-col gap-2 text-sm">
     <div v-for="shortcut in shortcuts" :key="shortcut.action" class="flex items-center gap-3">
-      <dt class="w-16 text-muted">{{ shortcut.action }}</dt>
+      <dt class="text-muted w-16">{{ shortcut.action }}</dt>
       <dd>
         <Kbd>
           <KbdAbbr v-for="key in shortcut.keys" :key="key" :key-value="key" />

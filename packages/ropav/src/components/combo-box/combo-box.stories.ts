@@ -562,7 +562,7 @@ export const Controlled: Story = {
             ${fieldTemplate("Animal (controlled)")}
             ${popoverTemplate}
           </ComboBox>
-          <p class="text-sm text-muted">Selected: {{ selectedName }}</p>
+          <p class="text-sm text-[var(--muted)]">Selected: {{ selectedName }}</p>
         </div>
       `,
     };
@@ -594,7 +594,7 @@ export const ControlledInputValue: Story = {
             ${fieldTemplate("Search (controlled input)", "Type to search...")}
             ${popoverTemplate}
           </ComboBox>
-          <p class="text-sm text-muted">Input value: {{ inputValue || "(empty)" }}</p>
+          <p class="text-sm text-[var(--muted)]">Input value: {{ inputValue || "(empty)" }}</p>
         </div>
       `,
     };
@@ -679,7 +679,7 @@ export const AsynchronousLoading: Story = {
               <ListBoxLoadMoreItem :is-loading="isLoading" @load-more="onLoadMore">
                 <div class="flex items-center justify-center gap-2 py-2">
                   <Spinner size="sm" />
-                  <span class="text-sm text-muted">Loading more...</span>
+                  <span class="text-sm text-[var(--muted)]">Loading more...</span>
                 </div>
               </ListBoxLoadMoreItem>
             </ListBox>
@@ -762,7 +762,7 @@ export const MenuTrigger: Story = {
     template: `
       <div class="flex flex-col gap-8">
         <div class="flex flex-col gap-2">
-          <p class="text-sm font-medium text-muted">Focus (default)</p>
+          <p class="text-sm font-medium text-[var(--muted)]">Focus (default)</p>
           <ComboBox
             v-slot="{items: matches}"
             class="w-[256px]"
@@ -776,7 +776,7 @@ export const MenuTrigger: Story = {
           </ComboBox>
         </div>
         <div class="flex flex-col gap-2">
-          <p class="text-sm font-medium text-muted">Input</p>
+          <p class="text-sm font-medium text-[var(--muted)]">Input</p>
           <ComboBox
             v-slot="{items: matches}"
             class="w-[256px]"
@@ -790,7 +790,7 @@ export const MenuTrigger: Story = {
           </ComboBox>
         </div>
         <div class="flex flex-col gap-2">
-          <p class="text-sm font-medium text-muted">Manual</p>
+          <p class="text-sm font-medium text-[var(--muted)]">Manual</p>
           <ComboBox
             v-slot="{items: matches}"
             class="w-[256px]"
@@ -871,7 +871,7 @@ export const MultipleSelectionControlled: Story = {
               </ListBox>
             </ComboBoxPopover>
           </ComboBox>
-          <p class="text-sm text-muted">Selected: {{ summary }}</p>
+          <p class="text-sm text-[var(--muted)]">Selected: {{ summary }}</p>
         </div>
       `,
     };
@@ -894,7 +894,7 @@ export const MultipleSelectionWithTags: Story = {
         ${fieldTemplate("Favorite Animals")}
         <ComboBoxValue class="flex flex-wrap gap-2">
           <template #default="{isPlaceholder, selectedItems}">
-            <span v-if="isPlaceholder" class="text-sm text-muted">No animals selected</span>
+            <span v-if="isPlaceholder" class="text-sm text-[var(--muted)]">No animals selected</span>
             <Chip v-for="item in selectedItems" :key="item.key" variant="soft">
               <ChipLabel>{{ item.textValue }}</ChipLabel>
             </Chip>

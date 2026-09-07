@@ -28,7 +28,7 @@ const navigate = (href: string) => {
         </Link>
       </nav>
 
-      <p class="text-sm text-muted">
+      <p class="text-muted text-sm">
         Route: <code>{{ path }}</code> — no reload, and no router in the library.
       </p>
     </div>

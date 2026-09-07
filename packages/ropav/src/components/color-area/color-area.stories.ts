@@ -83,7 +83,7 @@ export const Controlled: Story = {
         <ColorArea :value="color" @change="onChange">
           <ColorAreaThumb />
         </ColorArea>
-        <p class="w-full min-w-[300px] text-sm text-muted">
+        <p class="w-full min-w-[300px] text-sm text-[var(--muted)]">
           Current color: <span class="font-medium">{{ color.toString("hsl") }}</span>
         </p>
       </div>
@@ -98,19 +98,19 @@ export const ColorChannels: Story = {
     template: `
       <div class="flex flex-col gap-8">
         <div class="flex flex-col gap-2">
-          <p class="text-sm font-medium text-muted">HSB: Saturation vs Brightness (default)</p>
+          <p class="text-sm font-medium text-[var(--muted)]">HSB: Saturation vs Brightness (default)</p>
           <ColorArea default-value="hsl(30, 100%, 50%)">
             <ColorAreaThumb />
           </ColorArea>
         </div>
         <div class="flex flex-col gap-2">
-          <p class="text-sm font-medium text-muted">RGB: Red vs Green</p>
+          <p class="text-sm font-medium text-[var(--muted)]">RGB: Red vs Green</p>
           <ColorArea default-value="rgb(255, 100, 50)" x-channel="red" y-channel="green">
             <ColorAreaThumb />
           </ColorArea>
         </div>
         <div class="flex flex-col gap-2">
-          <p class="text-sm font-medium text-muted">RGB: Blue vs Green</p>
+          <p class="text-sm font-medium text-[var(--muted)]">RGB: Blue vs Green</p>
           <ColorArea default-value="rgb(50, 100, 255)" x-channel="blue" y-channel="green">
             <ColorAreaThumb />
           </ColorArea>
@@ -152,7 +152,7 @@ export const WithColorPreview: Story = {
           <ColorSwatch :color="color.toString('css')" size="lg" />
           <div class="flex flex-col gap-0.5">
             <span class="text-sm font-medium">{{ color.toString("hsl") }}</span>
-            <span class="text-xs text-muted">{{ color.toString("hex") }}</span>
+            <span class="text-xs text-[var(--muted)]">{{ color.toString("hex") }}</span>
           </div>
         </div>
       </div>

@@ -50,7 +50,7 @@ const zoneStory =
         <DropZone v-bind="args" @select="onSelect">
           <p>{{ prompt }}, or <DropZoneTrigger>browse</DropZoneTrigger></p>
         </DropZone>
-        <p v-if="taken.length" class="text-sm text-muted">Took: {{ taken.join(", ") }}</p>
+        <p v-if="taken.length" class="text-sm text-[var(--muted)]">Took: {{ taken.join(", ") }}</p>
       </div>
     `,
   });
@@ -95,7 +95,7 @@ export const Accept: Story = {
             <p v-else>Drop images here, or <DropZoneTrigger>browse</DropZoneTrigger></p>
           </template>
         </DropZone>
-        <p v-if="taken.length" class="text-sm text-muted">Took: {{ taken.join(", ") }}</p>
+        <p v-if="taken.length" class="text-sm text-[var(--muted)]">Took: {{ taken.join(", ") }}</p>
       </div>
     `,
   }),

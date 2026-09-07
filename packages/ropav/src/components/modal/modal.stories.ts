@@ -85,7 +85,7 @@ export const Default: Story = {
             <ModalDialog class="sm:max-w-[360px]">
               <ModalCloseTrigger />
               <ModalHeader>
-                <ModalIcon class="bg-default text-foreground">
+                <ModalIcon class="bg-[var(--default)] text-[var(--foreground)]">
                   <IconRocket class="size-5" />
                 </ModalIcon>
                 <ModalHeading>Welcome to Ropav</ModalHeading>
@@ -120,7 +120,7 @@ export const Placements: Story = {
               <ModalDialog class="sm:max-w-[360px]">
                 <ModalCloseTrigger />
                 <ModalHeader>
-                  <ModalIcon class="bg-default text-foreground">
+                  <ModalIcon class="bg-[var(--default)] text-[var(--foreground)]">
                     <IconRocket class="size-5" />
                   </ModalIcon>
                   <ModalHeading>
@@ -158,7 +158,7 @@ export const BackdropVariants: Story = {
               <ModalDialog class="sm:max-w-[360px]">
                 <ModalCloseTrigger />
                 <ModalHeader>
-                  <ModalIcon class="bg-default text-foreground">
+                  <ModalIcon class="bg-[var(--default)] text-[var(--foreground)]">
                     <IconRocket class="size-5" />
                   </ModalIcon>
                   <ModalHeading>
@@ -197,7 +197,7 @@ export const Sizes: Story = {
               <ModalDialog>
                 <ModalCloseTrigger />
                 <ModalHeader>
-                  <ModalIcon class="bg-default text-foreground">
+                  <ModalIcon class="bg-[var(--default)] text-[var(--foreground)]">
                     <IconRocket class="size-5" />
                   </ModalIcon>
                   <ModalHeading>Size: {{ size.charAt(0).toUpperCase() + size.slice(1) }}</ModalHeading>
@@ -246,7 +246,7 @@ export const CustomBackdrop: Story = {
           <ModalContainer>
             <ModalDialog class="sm:max-w-[360px]">
               <ModalHeader class="items-center text-center">
-                <ModalIcon class="bg-accent-soft text-accent-soft-foreground">
+                <ModalIcon class="bg-[var(--accent-soft)] text-[var(--accent-soft-foreground)]">
                   <IconSparkles class="size-5" />
                 </ModalIcon>
                 <ModalHeading>Premium Backdrop</ModalHeading>
@@ -279,7 +279,7 @@ export const DismissBehavior: Story = {
       <div class="flex max-w-sm flex-col gap-6">
         <div class="flex flex-col gap-2">
           <h3 class="text-lg font-semibold">isDismissable</h3>
-          <p class="text-sm text-muted">
+          <p class="text-sm text-[var(--muted)]">
             Controls whether the modal can be dismissed by clicking the overlay backdrop. Defaults
             to <code>true</code>. Set to <code>false</code> to require explicit close action.
           </p>
@@ -290,11 +290,11 @@ export const DismissBehavior: Story = {
                 <ModalDialog class="sm:max-w-[360px]">
                   <ModalCloseTrigger />
                   <ModalHeader>
-                    <ModalIcon class="bg-default text-foreground">
+                    <ModalIcon class="bg-[var(--default)] text-[var(--foreground)]">
                       <IconCircleInfo class="size-5" />
                     </ModalIcon>
                     <ModalHeading>isDismissable = false</ModalHeading>
-                    <p class="text-sm leading-5 text-muted">
+                    <p class="text-sm leading-5 text-[var(--muted)]">
                       Clicking the backdrop won't close this modal
                     </p>
                   </ModalHeader>
@@ -315,7 +315,7 @@ export const DismissBehavior: Story = {
 
         <div class="flex flex-col gap-2">
           <h3 class="text-lg font-semibold">isKeyboardDismissDisabled</h3>
-          <p class="text-sm text-muted">
+          <p class="text-sm text-[var(--muted)]">
             Controls whether the ESC key can dismiss the modal. When set to <code>true</code>, the
             ESC key will be disabled and users must use explicit close actions.
           </p>
@@ -326,11 +326,11 @@ export const DismissBehavior: Story = {
                 <ModalDialog class="sm:max-w-[360px]">
                   <ModalCloseTrigger />
                   <ModalHeader>
-                    <ModalIcon class="bg-default text-foreground">
+                    <ModalIcon class="bg-[var(--default)] text-[var(--foreground)]">
                       <IconCircleInfo class="size-5" />
                     </ModalIcon>
                     <ModalHeading>isKeyboardDismissDisabled = true</ModalHeading>
-                    <p class="text-sm leading-5 text-muted">ESC key is disabled</p>
+                    <p class="text-sm leading-5 text-[var(--muted)]">ESC key is disabled</p>
                   </ModalHeader>
                   <ModalBody>
                     <p>
@@ -358,7 +358,7 @@ export const CloseMethods: Story = {
       <div class="flex max-w-2xl flex-col gap-8">
         <div class="flex flex-col gap-2">
           <h3 class="text-lg font-semibold">Using ModalClose</h3>
-          <p class="text-sm text-muted">
+          <p class="text-sm text-[var(--muted)]">
             The simplest way to close a modal. Wrap any Button in <code>ModalClose</code> and it
             closes the modal when pressed, keeping its own handler as well.
           </p>
@@ -368,7 +368,7 @@ export const CloseMethods: Story = {
               <ModalContainer>
                 <ModalDialog class="sm:max-w-[360px]">
                   <ModalHeader>
-                    <ModalIcon class="bg-accent-soft text-accent-soft-foreground">
+                    <ModalIcon class="bg-[var(--accent-soft)] text-[var(--accent-soft-foreground)]">
                       <IconCircleInfo class="size-5" />
                     </ModalIcon>
                     <ModalHeading>Using ModalClose</ModalHeading>
@@ -391,7 +391,7 @@ export const CloseMethods: Story = {
 
         <div class="flex flex-col gap-2">
           <h3 class="text-lg font-semibold">Using the Dialog's scoped slot</h3>
-          <p class="text-sm text-muted">
+          <p class="text-sm text-[var(--muted)]">
             Take the <code>close</code> function from the Dialog's scoped slot. This gives full
             control over when and how to close, so custom logic can run first.
           </p>
@@ -401,7 +401,7 @@ export const CloseMethods: Story = {
               <ModalContainer>
                 <ModalDialog v-slot="{ close }" class="sm:max-w-[360px]">
                   <ModalHeader>
-                    <ModalIcon class="bg-success-soft text-success-soft-foreground">
+                    <ModalIcon class="bg-[var(--success-soft)] text-[var(--success-soft-foreground)]">
                       <IconCircleCheck class="size-5" />
                     </ModalIcon>
                     <ModalHeading>Using the Dialog's scoped slot</ModalHeading>
@@ -462,7 +462,7 @@ export const ScrollComparison: Story = {
                   <ModalHeading>
                     Scroll: {{ scroll.charAt(0).toUpperCase() + scroll.slice(1) }}
                   </ModalHeading>
-                  <p class="text-sm leading-5 text-muted">
+                  <p class="text-sm leading-5 text-[var(--muted)]">
                     Compare scroll behaviors - inside keeps content scrollable within the modal,
                     outside allows page scrolling
                   </p>
@@ -502,15 +502,15 @@ export const Controlled: Story = {
     template: `
       <div class="flex max-w-md flex-col gap-8">
         <div class="flex flex-col gap-3">
-          <h3 class="text-lg font-semibold text-foreground">With a ref</h3>
-          <p class="text-sm leading-relaxed text-pretty text-muted">
-            Control the modal with a plain <code class="text-foreground">shallowRef</code> for
+          <h3 class="text-lg font-semibold text-[var(--foreground)]">With a ref</h3>
+          <p class="text-sm leading-relaxed text-pretty text-[var(--muted)]">
+            Control the modal with a plain <code class="text-[var(--foreground)]">shallowRef</code> for
             simple state management. Perfect for basic use cases.
           </p>
-          <div class="flex flex-col items-start gap-3 rounded-2xl bg-surface p-4 shadow-sm">
-            <p class="text-xs text-muted">
+          <div class="flex flex-col items-start gap-3 rounded-[calc(var(--radius)*2)] bg-[var(--surface)] p-4 shadow-sm">
+            <p class="text-xs text-[var(--muted)]">
               Status:
-              <span class="font-mono font-medium text-foreground">
+              <span class="font-mono font-medium text-[var(--foreground)]">
                 {{ isOpen ? "open" : "closed" }}
               </span>
             </p>
@@ -526,7 +526,7 @@ export const Controlled: Story = {
                 <ModalDialog class="sm:max-w-[360px]">
                   <ModalCloseTrigger />
                   <ModalHeader>
-                    <ModalIcon class="bg-accent-soft text-accent-soft-foreground">
+                    <ModalIcon class="bg-[var(--accent-soft)] text-[var(--accent-soft-foreground)]">
                       <IconCircleCheck class="size-5" />
                     </ModalIcon>
                     <ModalHeading>Controlled with a ref</ModalHeading>
@@ -548,15 +548,15 @@ export const Controlled: Story = {
         </div>
 
         <div class="flex flex-col gap-3">
-          <h3 class="text-lg font-semibold text-foreground">With useOverlayTriggerState()</h3>
-          <p class="text-sm leading-relaxed text-pretty text-muted">
-            Use the <code class="text-foreground">useOverlayTriggerState</code> composable for a
+          <h3 class="text-lg font-semibold text-[var(--foreground)]">With useOverlayTriggerState()</h3>
+          <p class="text-sm leading-relaxed text-pretty text-[var(--muted)]">
+            Use the <code class="text-[var(--foreground)]">useOverlayTriggerState</code> composable for a
             cleaner API with <code>open()</code>, <code>close()</code> and <code>toggle()</code>.
           </p>
-          <div class="flex flex-col items-start gap-3 rounded-2xl bg-surface p-4 shadow-sm">
-            <p class="text-xs text-muted">
+          <div class="flex flex-col items-start gap-3 rounded-[calc(var(--radius)*2)] bg-[var(--surface)] p-4 shadow-sm">
+            <p class="text-xs text-[var(--muted)]">
               Status:
-              <span class="font-mono font-medium text-foreground">
+              <span class="font-mono font-medium text-[var(--foreground)]">
                 {{ state.isOpen.value ? "open" : "closed" }}
               </span>
             </p>
@@ -572,7 +572,7 @@ export const Controlled: Story = {
                 <ModalDialog class="sm:max-w-[360px]">
                   <ModalCloseTrigger />
                   <ModalHeader>
-                    <ModalIcon class="bg-success-soft text-success-soft-foreground">
+                    <ModalIcon class="bg-[var(--success-soft)] text-[var(--success-soft-foreground)]">
                       <IconCircleCheck class="size-5" />
                     </ModalIcon>
                     <ModalHeading>Controlled with useOverlayTriggerState()</ModalHeading>
@@ -609,11 +609,11 @@ export const WithForm: Story = {
             <ModalDialog class="sm:max-w-md">
               <ModalCloseTrigger />
               <ModalHeader>
-                <ModalIcon class="bg-accent-soft text-accent-soft-foreground">
+                <ModalIcon class="bg-[var(--accent-soft)] text-[var(--accent-soft-foreground)]">
                   <IconEnvelope class="size-5" />
                 </ModalIcon>
                 <ModalHeading>Contact Us</ModalHeading>
-                <p class="mt-1.5 text-sm leading-5 text-muted">
+                <p class="mt-1.5 text-sm leading-5 text-[var(--muted)]">
                   Fill out the form below and we'll get back to you. The modal adapts automatically
                   when the keyboard appears on mobile.
                 </p>
@@ -662,16 +662,16 @@ export const CustomTrigger: Story = {
     template: `
       <Modal>
         <ModalTrigger
-          class="group flex items-center gap-3 rounded-2xl bg-surface p-4 shadow-xs select-none hover:bg-surface-secondary"
+          class="group flex items-center gap-3 rounded-[calc(var(--radius)*2)] bg-[var(--surface)] p-4 shadow-xs select-none hover:bg-[var(--surface-secondary)]"
         >
           <div
-            class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent-soft-foreground"
+            class="flex size-12 shrink-0 items-center justify-center rounded-[calc(var(--radius)*1.5)] bg-[var(--accent-soft)] text-[var(--accent-soft-foreground)]"
           >
             <IconGear class="size-6" />
           </div>
           <div class="flex flex-1 flex-col gap-0.5">
             <p class="text-sm font-semibold">Settings</p>
-            <p class="text-xs text-muted">Manage your preferences</p>
+            <p class="text-xs text-[var(--muted)]">Manage your preferences</p>
           </div>
         </ModalTrigger>
         <ModalBackdrop>
@@ -679,7 +679,7 @@ export const CustomTrigger: Story = {
             <ModalDialog class="sm:max-w-[360px]">
               <ModalCloseTrigger />
               <ModalHeader>
-                <ModalIcon class="bg-accent-soft text-accent-soft-foreground">
+                <ModalIcon class="bg-[var(--accent-soft)] text-[var(--accent-soft-foreground)]">
                   <IconGear class="size-5" />
                 </ModalIcon>
                 <ModalHeading>Settings</ModalHeading>
@@ -769,7 +769,7 @@ export const CustomAnimations: Story = {
               <ModalDialog class="sm:max-w-[360px]">
                 <ModalCloseTrigger />
                 <ModalHeader>
-                  <ModalIcon class="bg-default text-foreground">
+                  <ModalIcon class="bg-[var(--default)] text-[var(--foreground)]">
                     <IconSparkles v-if="animation.icon === 'sparkles'" class="size-5" />
                     <IconArrowUpFromLine v-else class="size-5" />
                   </ModalIcon>
@@ -809,14 +809,14 @@ export const CustomPortal: Story = {
           <p class="text-sm">
             Render modals inside a custom container instead of <code>document.body</code>
           </p>
-          <p class="text-sm text-muted">
+          <p class="text-sm text-[var(--muted)]">
             Apply <code class="rounded px-1 py-0.5 text-xs">transform: translateZ(0)</code> to the
             container to create a new stacking context.
           </p>
         </div>
         <div
           :ref="setPortal"
-          class="relative flex h-[380px] items-center justify-center overflow-hidden rounded bg-muted/20"
+          class="relative flex h-[380px] items-center justify-center overflow-hidden rounded bg-[var(--muted)]/20"
           style="transform: translate(0)"
         >
           <Modal v-if="portalContainer">
@@ -829,17 +829,17 @@ export const CustomPortal: Story = {
                     <ModalHeading>Custom Portal</ModalHeading>
                   </ModalHeader>
                   <ModalBody>
-                    <p class="text-sm text-muted">
+                    <p class="text-sm text-[var(--muted)]">
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
                       incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
                       nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                     </p>
-                    <p class="text-sm text-muted">
+                    <p class="text-sm text-[var(--muted)]">
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
                       incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
                       nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                     </p>
-                    <p class="text-sm text-muted">
+                    <p class="text-sm text-[var(--muted)]">
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
                       incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
                       nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.

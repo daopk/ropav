@@ -4,7 +4,7 @@ import { ColorArea, ColorAreaThumb } from "ropav";
 
 <template>
   <div class="flex flex-col gap-2">
-    <p class="text-sm text-muted">Saturation × brightness</p>
+    <p class="text-muted text-sm">Saturation × brightness</p>
     <ColorArea
       aria-label="Saturation and brightness"
       class="w-56"
@@ -15,7 +15,7 @@ import { ColorArea, ColorAreaThumb } from "ropav";
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-sm text-muted">Red × green</p>
+    <p class="text-muted text-sm">Red × green</p>
     <ColorArea
       aria-label="Red and green"
       class="w-56"

@@ -33,7 +33,7 @@ const sections = [
         </Button>
       </DisclosureHeading>
       <DisclosureContent>
-        <DisclosureBody class="p-3 text-sm text-muted">{{ section.body }}</DisclosureBody>
+        <DisclosureBody class="text-muted p-3 text-sm">{{ section.body }}</DisclosureBody>
       </DisclosureContent>
     </Disclosure>
   </DisclosureGroup>

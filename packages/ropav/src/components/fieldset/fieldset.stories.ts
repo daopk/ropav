@@ -99,7 +99,7 @@ export const Default: Story = {
             </Button>
             <Button type="reset" variant="tertiary">Cancel</Button>
           </FieldsetActions>
-          <p v-if="submitted" class="text-sm text-muted">Form submitted — {{ submitted }}</p>
+          <p v-if="submitted" class="text-sm text-[var(--muted)]">Form submitted — {{ submitted }}</p>
         </Fieldset>
       </Form>
     `,

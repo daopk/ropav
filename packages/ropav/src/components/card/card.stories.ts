@@ -116,19 +116,19 @@ export const Variants: Story = {
         },
         {
           body: "The default card variant for most use cases",
-          description: "Standard card appearance (bg-surface)",
+          description: "Standard card appearance (--surface)",
           title: "Default",
           variant: "default",
         },
         {
           body: "Use to draw moderate attention",
-          description: "Medium prominence (bg-surface-secondary)",
+          description: "Medium prominence (--surface-secondary)",
           title: "Secondary",
           variant: "secondary",
         },
         {
           body: "Use for primary or featured content",
-          description: "Higher prominence (bg-surface-tertiary)",
+          description: "Higher prominence (--surface-tertiary)",
           title: "Tertiary",
           variant: "tertiary",
         },
@@ -163,7 +163,7 @@ export const Horizontal: Story = {
       <Card class="w-full items-stretch md:flex-row" v-bind="args">
         <img
           alt="Porsche 911 Golden Edition"
-          class="pointer-events-none aspect-square w-full rounded-3xl object-cover select-none md:max-w-[136px]"
+          class="pointer-events-none aspect-square w-full rounded-[calc(var(--radius)*3)] object-cover select-none md:max-w-[136px]"
           loading="lazy"
           :src="src"
         />
@@ -179,11 +179,11 @@ export const Horizontal: Story = {
             <div class="flex flex-col">
               <span
                 aria-label="Price: 36,799 US dollars"
-                class="text-sm font-medium text-foreground"
+                class="text-sm font-medium text-[var(--foreground)]"
               >
                 $36,799
               </span>
-              <span aria-label="Available stock: 11 units" class="text-xs text-muted">
+              <span aria-label="Available stock: 11 units" class="text-xs text-[var(--muted)]">
                 11 available
               </span>
             </div>
@@ -235,7 +235,7 @@ export const WithAvatar: Story = {
         >
           <img
             :alt="community.alt"
-            class="pointer-events-none aspect-square w-14 rounded-2xl object-cover select-none"
+            class="pointer-events-none aspect-square w-14 rounded-[calc(var(--radius)*2)] object-cover select-none"
             loading="lazy"
             :src="community.cover"
           />
@@ -267,7 +267,7 @@ export const WithImages: Story = {
       <div class="flex w-full items-center justify-center">
         <div class="grid w-full max-w-2xl grid-cols-12 gap-4 p-4">
           <Card class="col-span-12 flex h-auto min-h-[152px] flex-col sm:flex-row" v-bind="args">
-            <div class="relative h-[140px] w-full shrink-0 overflow-hidden rounded-2xl sm:h-[120px] sm:w-[120px]">
+            <div class="relative h-[140px] w-full shrink-0 overflow-hidden rounded-[calc(var(--radius)*2)] sm:h-[120px] sm:w-[120px]">
               <img
                 alt="Cherries"
                 class="pointer-events-none absolute inset-0 h-full w-full scale-125 object-cover select-none"
@@ -286,8 +286,8 @@ export const WithImages: Story = {
               </CardHeader>
               <CardFooter class="mt-auto flex w-full flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div class="flex flex-col">
-                  <span class="text-sm font-medium text-foreground">Only 10 spots</span>
-                  <span class="text-xs text-muted">Submission ends Oct 10.</span>
+                  <span class="text-sm font-medium text-[var(--foreground)]">Only 10 spots</span>
+                  <span class="text-xs text-[var(--muted)]">Submission ends Oct 10.</span>
                 </div>
                 <Button class="w-full sm:w-auto">Apply Now</Button>
               </CardFooter>
@@ -307,7 +307,7 @@ export const WithImages: Story = {
                     role="img"
                   />
                   <div class="flex flex-col gap-1">
-                    <span class="text-xs font-medium text-muted uppercase">PAYMENT</span>
+                    <span class="text-xs font-medium text-[var(--muted)] uppercase">PAYMENT</span>
                     <CardTitle class="pe-8 text-sm sm:text-base">
                       You can now withdraw on crypto
                     </CardTitle>
@@ -327,46 +327,46 @@ export const WithImages: Story = {
               <div class="col-span-12 grid grid-cols-12 gap-4">
                 <Card class="col-span-12 gap-2 sm:col-span-6">
                   <CardHeader>
-                    <Avatar class="size-[56px] rounded-xl">
+                    <Avatar class="size-[56px] rounded-[calc(var(--radius)*1.5)]">
                       <AvatarImage alt="Demo 1" :src="photoSrc('demo1', 112, 112)" />
                       <AvatarFallback>JK</AvatarFallback>
                     </Avatar>
                   </CardHeader>
                   <CardContent class="mt-1">
                     <p class="text-sm leading-4 font-medium">Indie Hackers</p>
-                    <p class="text-xs text-muted">148 members</p>
+                    <p class="text-xs text-[var(--muted)]">148 members</p>
                   </CardContent>
                   <CardFooter class="flex items-center gap-2">
                     <Avatar class="size-4">
                       <AvatarImage alt="John" :src="avatarSrc('red', 64)" />
                       <AvatarFallback>JK</AvatarFallback>
                     </Avatar>
-                    <p class="text-xs text-muted">By John</p>
+                    <p class="text-xs text-[var(--muted)]">By John</p>
                   </CardFooter>
                 </Card>
                 <Card class="col-span-12 gap-2 sm:col-span-6">
                   <CardHeader>
-                    <Avatar class="size-[56px] rounded-xl">
+                    <Avatar class="size-[56px] rounded-[calc(var(--radius)*1.5)]">
                       <AvatarImage alt="Demo 2" :src="photoSrc('demo2', 112, 112)" />
                       <AvatarFallback>AB</AvatarFallback>
                     </Avatar>
                   </CardHeader>
                   <CardContent class="mt-1">
                     <p class="text-sm leading-4 font-medium">AI Builders</p>
-                    <p class="text-xs text-muted">362 members</p>
+                    <p class="text-xs text-[var(--muted)]">362 members</p>
                   </CardContent>
                   <CardFooter class="flex items-center gap-2">
                     <Avatar class="size-4">
                       <AvatarImage alt="John" :src="avatarSrc('blue', 64)" />
                       <AvatarFallback>M</AvatarFallback>
                     </Avatar>
-                    <p class="text-xs text-muted">By Martha</p>
+                    <p class="text-xs text-[var(--muted)]">By Martha</p>
                   </CardFooter>
                 </Card>
               </div>
             </div>
 
-            <Card class="col-span-12 min-h-[200px] rounded-3xl lg:col-span-6" v-bind="args">
+            <Card class="col-span-12 min-h-[200px] rounded-[calc(var(--radius)*3)] lg:col-span-6" v-bind="args">
               <img
                 alt="NEO Home Robot"
                 aria-hidden="true"
@@ -438,7 +438,7 @@ export const WithImages: Story = {
               <Card class="flex flex-row gap-3 p-1" variant="transparent">
                 <img
                   alt="Futuristic Robot"
-                  class="aspect-square h-16 w-16 shrink-0 rounded-xl object-cover select-none sm:h-20 sm:w-20"
+                  class="aspect-square h-16 w-16 shrink-0 rounded-[calc(var(--radius)*1.5)] object-cover select-none sm:h-20 sm:w-20"
                   loading="lazy"
                   :src="photoSrc('robot1', 200, 200)"
                 />
@@ -450,7 +450,7 @@ export const WithImages: Story = {
               <Card class="flex flex-row gap-3 p-1" variant="transparent">
                 <img
                   alt="Avocado"
-                  class="aspect-square h-16 w-16 shrink-0 rounded-xl object-cover select-none sm:h-20 sm:w-20"
+                  class="aspect-square h-16 w-16 shrink-0 rounded-[calc(var(--radius)*1.5)] object-cover select-none sm:h-20 sm:w-20"
                   loading="lazy"
                   :src="photoSrc('avocado', 200, 200)"
                 />
@@ -462,7 +462,7 @@ export const WithImages: Story = {
               <Card class="flex flex-row gap-3 p-1" variant="transparent">
                 <img
                   alt="Sound Electro event"
-                  class="aspect-square h-16 w-16 shrink-0 rounded-xl object-cover select-none sm:h-20 sm:w-20"
+                  class="aspect-square h-16 w-16 shrink-0 rounded-[calc(var(--radius)*1.5)] object-cover select-none sm:h-20 sm:w-20"
                   loading="lazy"
                   :src="photoSrc('oranges', 200, 200)"
                 />
@@ -518,7 +518,7 @@ export const WithForm: Story = {
           <CardFooter class="mt-4 flex flex-col gap-2">
             <Button class="w-full" type="submit">Sign In</Button>
             <Link class="text-center text-sm" href="#">Forgot password?</Link>
-            <p v-if="submitted !== null" class="text-sm text-muted">
+            <p v-if="submitted !== null" class="text-sm text-[var(--muted)]">
               Form submitted — {{ submitted }}
             </p>
           </CardFooter>

@@ -355,7 +355,7 @@ const DEFAULT_TEMPLATE = `
               <TableCell class="font-medium">
                 <div class="flex items-center gap-2">#{{ user.id }}
                   <Button aria-label="Copy" is-icon-only size="sm" variant="ghost">
-                    <IconCopy class="size-4 text-muted" />
+                    <IconCopy class="size-4 text-[var(--muted)]" />
                   </Button>
                 </div>
               </TableCell>
@@ -367,7 +367,7 @@ const DEFAULT_TEMPLATE = `
                   </Avatar>
                   <div class="flex flex-col">
                     <span class="text-xs">{{ user.name }}</span>
-                    <span class="text-xs text-muted">{{ user.email }}</span>
+                    <span class="text-xs text-[var(--muted)]">{{ user.email }}</span>
                   </div>
                 </div>
               </TableCell>
@@ -619,7 +619,7 @@ export const AsyncLoading: Story = {
         <Table :variant="variant">
           <TableScrollContainer class="h-[280px] overflow-y-auto">
             <TableContent aria-label="Async loading" class="min-w-[600px]">
-              <TableHeader class="sticky top-0 z-10 bg-surface-secondary">
+              <TableHeader class="sticky top-0 z-10 bg-[var(--surface-secondary)]">
                 <TableColumn
                   v-for="column of columns"
                   :id="column.id"
@@ -765,7 +765,7 @@ export const ExpandableRows: Story = {
                       <TableExpandTrigger v-if="hasChildRows && isTreeColumn">
                         <Button aria-label="Expand row" is-icon-only size="sm" variant="ghost">
                           <IconChevronRight
-                            class="size-4 text-muted transition-transform duration-150"
+                            class="size-4 text-[var(--muted)] transition-transform duration-150"
                             :class="isExpanded ? 'rotate-90' : 'rtl:rotate-180'"
                           />
                         </Button>
@@ -974,8 +974,8 @@ export const EmptyStateDemo: Story = {
                   <EmptyState
                     class="flex h-full w-full flex-col items-center justify-center gap-4 text-center"
                   >
-                    <IconTray class="size-6 text-muted" />
-                    <span class="text-sm text-muted">No results found</span>
+                    <IconTray class="size-6 text-[var(--muted)]" />
+                    <span class="text-sm text-[var(--muted)]">No results found</span>
                   </EmptyState>
                 </template>
               </TableBody>

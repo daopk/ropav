@@ -33,9 +33,9 @@ describe("Surface", () => {
     });
 
     it("merges a caller class", () => {
-      const { surface } = renderSurface({ class: "rounded-3xl" });
+      const { surface } = renderSurface({ class: "rounded-[calc(var(--radius)*3)]" });
 
-      expect(surface).toHaveClass("rp-surface", "rounded-3xl");
+      expect(surface).toHaveClass("rp-surface", "rounded-[calc(var(--radius)*3)]");
     });
   });
 

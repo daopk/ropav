@@ -278,7 +278,7 @@ describe("forced colors mode (browser)", () => {
     );
 
     // The knob reads against the bare track on one side and the fill on the other, so it is
-    // the ring that has to survive - `shadow-field` is a box-shadow and does not.
+    // the ring that has to survive - `shadow-[var(--field-shadow)]` is a box-shadow and does not.
     expect(knob.outlineStyle).not.toBe("none");
     expect(knob.backgroundColor).toBe(systemColor("Canvas"));
     // The wrapper matches the fill normally; opaque here it would punch a hole through it.

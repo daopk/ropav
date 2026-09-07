@@ -135,7 +135,7 @@ export const Default: Story = {
           ${AREA}
           <ColorSlider channel="hue" class="gap-1 px-1" color-space="hsb">
             <Label>Hue</Label>
-            <ColorSliderOutput class="text-muted" />
+            <ColorSliderOutput class="text-[var(--muted)]" />
             <ColorSliderTrack>
               <ColorSliderThumb />
             </ColorSliderTrack>
@@ -201,7 +201,7 @@ export const Controlled: Story = {
             </ColorField>
           </ColorPickerPopover>
         </ColorPicker>
-        <p class="w-60 text-sm text-muted">
+        <p class="w-60 text-sm text-[var(--muted)]">
           Selected: <span class="font-medium">{{ color.toString("hex") }}</span>
         </p>
       </div>
@@ -223,7 +223,7 @@ export const WithSwatches: Story = {
           ${AREA}
           <ColorSlider aria-label="Hue slider" channel="hue" class="gap-1 px-1" color-space="hsb">
             <Label>Hue</Label>
-            <ColorSliderOutput class="text-muted" />
+            <ColorSliderOutput class="text-[var(--muted)]" />
             <ColorSliderTrack>
               <ColorSliderThumb />
             </ColorSliderTrack>
@@ -264,7 +264,7 @@ export const WidthFields: Story = {
           ${AREA}
           <ColorSlider channel="hue" class="gap-1 px-1" color-space="hsb">
             <Label>Hue</Label>
-            <ColorSliderOutput class="text-muted" />
+            <ColorSliderOutput class="text-[var(--muted)]" />
             <ColorSliderTrack>
               <ColorSliderThumb />
             </ColorSliderTrack>
@@ -356,7 +356,7 @@ export const WithSliders: Story = {
               :color-space="colorSpace"
             >
               <Label>{{ channel }}</Label>
-              <ColorSliderOutput class="text-muted" />
+              <ColorSliderOutput class="text-[var(--muted)]" />
               <ColorSliderTrack>
                 <ColorSliderThumb />
               </ColorSliderTrack>

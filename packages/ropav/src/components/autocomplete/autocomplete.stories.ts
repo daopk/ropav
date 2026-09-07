@@ -467,11 +467,11 @@ export const WithOnClearCallback: Story = {
             </AutocompleteTrigger>
             ${popoverTemplate("Search animals...")}
           </Autocomplete>
-          <div class="space-y-2 rounded-xl border border-border p-4">
+          <div class="space-y-2 rounded-[calc(var(--radius)*1.5)] border border-[var(--border)] p-4">
             <p class="text-sm font-medium">Clear event info:</p>
-            <div class="space-y-1 text-sm text-muted">
+            <div class="space-y-1 text-sm text-[var(--muted)]">
               <p>Clear button clicked: {{ clearCount }} time(s)</p>
-              <p v-if="selectedName" class="text-success">
+              <p v-if="selectedName" class="text-[var(--success)]">
                 Currently selected: <strong>{{ selectedName }}</strong>
               </p>
               <p v-else>No selection (click clear to see the event)</p>
@@ -693,7 +693,7 @@ export const FullWidth: Story = {
       // `full-width` is written as a bare attribute on purpose: the `:full-width="true"` form
       // stays green even when the prop is declared in a way that never casts an empty attribute.
       template: `
-        <Surface class="w-[380px] space-y-4 rounded-3xl p-6">
+        <Surface class="w-[380px] space-y-4 rounded-[calc(var(--radius)*3)] p-6">
           <Autocomplete
             full-width
             :item-text-value="byName"
@@ -1077,7 +1077,7 @@ export const Controlled: Story = {
             </AutocompleteTrigger>
             ${popoverTemplate("Search states...")}
           </Autocomplete>
-          <p class="text-sm text-muted">Selected: {{ selectedName }}</p>
+          <p class="text-sm text-[var(--muted)]">Selected: {{ selectedName }}</p>
         </div>
       `,
     };
@@ -1119,7 +1119,7 @@ export const ControlledOpenState: Story = {
             ${popoverTemplate("Search states...")}
           </Autocomplete>
           <Button @click="toggle">{{ isOpen ? "Close" : "Open" }} Autocomplete</Button>
-          <p class="text-sm text-muted">Autocomplete is {{ isOpen ? "open" : "closed" }}</p>
+          <p class="text-sm text-[var(--muted)]">Autocomplete is {{ isOpen ? "open" : "closed" }}</p>
         </div>
       `,
     };
@@ -1592,7 +1592,7 @@ export const LocationSearch: Story = {
                     :key="city.id"
                     :text-value="city.name"
                   >
-                    <IconMapPin class="size-4 shrink-0 text-muted" />
+                    <IconMapPin class="size-4 shrink-0 text-[var(--muted)]" />
                     <div class="flex flex-col">
                       <Label>{{ city.name }}</Label>
                       <Description>{{ city.country }}</Description>

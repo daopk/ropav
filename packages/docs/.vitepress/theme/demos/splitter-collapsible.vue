@@ -5,7 +5,7 @@ import { Splitter, SplitterHandle, SplitterPanel } from "ropav";
 <template>
   <Splitter
     aria-label="Collapsible sidebar"
-    class="h-56 w-full max-w-lg overflow-hidden rounded-xl border border-border"
+    class="border-border h-56 w-full max-w-lg overflow-hidden rounded-xl border"
   >
     <SplitterPanel
       class="grid h-full place-items-center text-sm"

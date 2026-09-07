@@ -15,6 +15,6 @@ const onSelect = (files: File[]) => {
       <p>Drop files here, or <DropZoneTrigger>browse</DropZoneTrigger></p>
     </DropZone>
 
-    <p v-if="taken.length" class="text-sm text-muted">Took: {{ taken.join(", ") }}</p>
+    <p v-if="taken.length" class="text-muted text-sm">Took: {{ taken.join(", ") }}</p>
   </div>
 </template>

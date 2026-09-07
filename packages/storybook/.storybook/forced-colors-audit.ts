@@ -172,9 +172,23 @@ const stopMotion = () => {
 const settle = () =>
   new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
+/**
+ * A class that says this element paints a variant: a modifier (`rp-button--primary`), or one of
+ * the slots a story retunes an overlay with (`[--rp-enter-scale:0.9]`).
+ *
+ * The test was `[class*="--"]`, which reads the two hyphens of *any* custom property as a
+ * modifier. That held while a custom property only ever appeared in a class that set one; a
+ * utility naming a token - `bg-[var(--surface)]` - matches it too, and swept every decorative box
+ * in every story into the audit, where a story's plain grey panel has no state to lose and fails
+ * for not having one. Where the `--` sits is what tells the two apart.
+ */
+const VARIANT = /^rp-[a-z0-9-]*--|(?:^|:)\[--rp-/;
+
 export const forcedColorsAudit = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
   const stateful = [...canvasElement.querySelectorAll(STATE_SELECTOR)];
-  const varied = [...canvasElement.querySelectorAll("[class*='--']")];
+  const varied = [...canvasElement.querySelectorAll("[class]")].filter((element) =>
+    [...element.classList].some((name) => VARIANT.test(name)),
+  );
   const targets = [...new Set([...stateful, ...varied])];
 
   if (targets.length === 0) return;

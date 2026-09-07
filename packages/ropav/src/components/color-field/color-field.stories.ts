@@ -279,7 +279,7 @@ export const ChannelEditing: Story = {
     },
     template: `
       <div class="flex flex-col gap-4">
-        <p class="text-sm text-muted">Edit individual HSL channels:</p>
+        <p class="text-sm text-[var(--muted)]">Edit individual HSL channels:</p>
         <div class="flex gap-4">
           <ColorField
             channel="hue"
@@ -306,7 +306,7 @@ export const ChannelEditing: Story = {
             <ColorFieldGroup>
               <ColorFieldInput />
               <ColorFieldSuffix>
-                <span class="text-sm text-muted">%</span>
+                <span class="text-sm text-[var(--muted)]">%</span>
               </ColorFieldSuffix>
             </ColorFieldGroup>
           </ColorField>
@@ -322,7 +322,7 @@ export const ChannelEditing: Story = {
             <ColorFieldGroup>
               <ColorFieldInput />
               <ColorFieldSuffix>
-                <span class="text-sm text-muted">%</span>
+                <span class="text-sm text-[var(--muted)]">%</span>
               </ColorFieldSuffix>
             </ColorFieldGroup>
           </ColorField>
@@ -346,7 +346,7 @@ export const RGBChannels: Story = {
     },
     template: `
       <div class="flex flex-col gap-4">
-        <p class="text-sm text-muted">Edit individual RGB channels:</p>
+        <p class="text-sm text-[var(--muted)]">Edit individual RGB channels:</p>
         <div class="flex gap-4">
           <ColorField
             channel="red"

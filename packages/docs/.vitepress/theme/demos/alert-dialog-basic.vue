@@ -27,7 +27,7 @@ import {
           </AlertDialogHeader>
 
           <AlertDialogBody>
-            <p class="text-sm text-muted">Everything in it goes with it. This cannot be undone.</p>
+            <p class="text-muted text-sm">Everything in it goes with it. This cannot be undone.</p>
           </AlertDialogBody>
 
           <AlertDialogFooter>

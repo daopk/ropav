@@ -83,7 +83,7 @@ export const Default: Story = {
       showSuccess: () =>
         toast.success("You have upgraded your plan", {
           actionProps: {
-            class: "bg-success text-success-foreground",
+            class: "bg-[var(--success)] text-[var(--success-foreground)]",
             label: "Billing",
             onPress: noop,
           },
@@ -92,7 +92,7 @@ export const Default: Story = {
       showWarning: () =>
         toast.warning("You have no credits left", {
           actionProps: {
-            class: "bg-warning text-warning-foreground",
+            class: "bg-[var(--warning)] text-[var(--warning-foreground)]",
             label: "Upgrade",
             onPress: noop,
           },
@@ -103,14 +103,14 @@ export const Default: Story = {
       <div class="flex h-full max-w-xl flex-col items-center justify-center">
         <ToastProvider placement="bottom" />
         <div class="flex w-full flex-wrap items-center justify-center gap-4">
-          <Button class="text-muted" size="sm" variant="tertiary" @click="showDefault">
+          <Button class="text-[var(--muted)]" size="sm" variant="tertiary" @click="showDefault">
             Default toast
           </Button>
           <Button size="sm" variant="secondary" @click="showAccent">Accent toast</Button>
-          <Button class="text-success" size="sm" variant="tertiary" @click="showSuccess">
+          <Button class="text-[var(--success)]" size="sm" variant="tertiary" @click="showSuccess">
             Success toast
           </Button>
-          <Button class="text-warning" size="sm" variant="tertiary" @click="showWarning">
+          <Button class="text-[var(--warning)]" size="sm" variant="tertiary" @click="showWarning">
             Warning toast
           </Button>
           <Button size="sm" variant="danger-soft" @click="showDanger">Danger toast</Button>
@@ -387,15 +387,15 @@ export const WithCallbacks: Story = {
               Clear
             </Button>
           </div>
-          <div class="min-h-[120px] space-y-2 rounded-lg border border-border bg-surface p-4">
-            <p v-if="closedHistory.length === 0" class="text-sm text-muted">
+          <div class="min-h-[120px] space-y-2 rounded-[calc(var(--radius)*1)] border border-[var(--border)] bg-[var(--surface)] p-4">
+            <p v-if="closedHistory.length === 0" class="text-sm text-[var(--muted)]">
               No toasts closed yet. Try closing one above!
             </p>
             <div
               v-for="(item, index) in closedHistory"
               v-else
               :key="item.time + '-' + index"
-              class="flex items-start justify-between gap-3 rounded-md border border-border bg-default px-3 py-2 text-sm"
+              class="flex items-start justify-between gap-3 rounded-[calc(var(--radius)*0.75)] border border-[var(--border)] bg-[var(--default)] px-3 py-2 text-sm"
               :style="{
                 animation: 'var(--rp-motion) rp-enter 200ms ' + (index * 50) + 'ms backwards',
                 '--rp-enter-opacity': 0,
@@ -404,10 +404,10 @@ export const WithCallbacks: Story = {
             >
               <div class="flex-1">
                 <span class="font-medium">{{ item.message }}</span>
-                <span class="ms-2 text-xs text-muted">({{ item.time }})</span>
+                <span class="ms-2 text-xs text-[var(--muted)]">({{ item.time }})</span>
               </div>
               <div
-                class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-success/10 text-success"
+                class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--success)]/10 text-[var(--success)]"
               >
                 <svg class="size-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                   <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
@@ -441,12 +441,12 @@ export const CustomToast: Story = {
     template: `
       <div class="flex h-full max-w-xl flex-col items-center justify-center">
         <ToastProvider v-slot="{toast: item}" placement="bottom" :queue="customQueue">
-          <Toast class="rounded-xl border border-border" :toast="item" :variant="item.content.variant">
+          <Toast class="rounded-[calc(var(--radius)*1.5)] border border-[var(--border)]" :toast="item" :variant="item.content.variant">
             <ToastContent>
               <div class="flex items-center gap-2">
-                <ToastIndicator class="text-accent" :variant="item.content.variant" />
+                <ToastIndicator class="text-[var(--accent)]" :variant="item.content.variant" />
                 <div class="flex flex-col pe-6">
-                  <ToastTitle v-if="item.content.title" class="text-accent">
+                  <ToastTitle v-if="item.content.title" class="text-[var(--accent)]">
                     {{ item.content.title }}
                   </ToastTitle>
                   <ToastDescription v-if="item.content.description">
@@ -518,7 +518,7 @@ export const CustomQueue: Story = {
         </div>
         <ToastProvider placement="bottom end" :queue="successQueue" />
         <div class="flex justify-center gap-2">
-          <Button class="text-success" size="sm" variant="secondary" @click="addSuccess">
+          <Button class="text-[var(--success)]" size="sm" variant="secondary" @click="addSuccess">
             Add success (max 1)
           </Button>
         </div>

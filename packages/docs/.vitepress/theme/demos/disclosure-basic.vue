@@ -18,7 +18,7 @@ import {
       </Button>
     </DisclosureHeading>
     <DisclosureContent>
-      <DisclosureBody class="p-3 text-sm text-muted">
+      <DisclosureBody class="text-muted p-3 text-sm">
         Every component, its stylesheet, and the types that go with them.
       </DisclosureBody>
     </DisclosureContent>

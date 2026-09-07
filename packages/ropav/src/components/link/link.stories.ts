@@ -107,7 +107,7 @@ export const UnderlineVariants: Story = {
     template: `
       <div class="flex flex-col gap-6">
         <div class="flex flex-col gap-2">
-          <p class="text-sm text-muted">Default hover underline</p>
+          <p class="text-sm text-[var(--muted)]">Default hover underline</p>
           <Link href="#">
             Hover to see the underline
             <LinkIcon />
@@ -115,7 +115,7 @@ export const UnderlineVariants: Story = {
         </div>
 
         <div class="flex flex-col gap-2">
-          <p class="text-sm text-muted">Always visible underline</p>
+          <p class="text-sm text-[var(--muted)]">Always visible underline</p>
           <Link class="underline" href="#">
             Underline always visible
             <LinkIcon />
@@ -123,7 +123,7 @@ export const UnderlineVariants: Story = {
         </div>
 
         <div class="flex flex-col gap-2">
-          <p class="text-sm text-muted">No underline</p>
+          <p class="text-sm text-[var(--muted)]">No underline</p>
           <Link class="no-underline" href="#">
             Link without any underline
             <LinkIcon />
@@ -131,7 +131,7 @@ export const UnderlineVariants: Story = {
         </div>
 
         <div class="flex flex-col gap-2">
-          <p class="text-sm text-muted">Changing the underline offset</p>
+          <p class="text-sm text-[var(--muted)]">Changing the underline offset</p>
           <div class="flex flex-col gap-3">
             <Link class="underline-offset-1" href="#">
               Offset 1 (1px space)
@@ -191,12 +191,12 @@ export const Routing: Story = {
             </Link>
           </nav>
 
-          <p class="text-sm text-muted">
+          <p class="text-sm text-[var(--muted)]">
             Route: <code>{{ path }}</code> — no reload, and no vue-router in the library.
           </p>
 
           <div class="flex flex-col gap-2">
-            <p class="text-sm text-muted">The browser keeps these:</p>
+            <p class="text-sm text-[var(--muted)]">The browser keeps these:</p>
             <div class="flex items-center gap-4">
               <Link
                 href="https://github.com/daopk/ropav"

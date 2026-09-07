@@ -63,7 +63,7 @@ export const CurrentColor: Story = {
   render: () => ({
     components,
     template: `
-      <div class="flex items-center gap-2 text-muted">
+      <div class="flex items-center gap-2 text-[var(--muted)]">
         <Spinner color="current" size="sm" />
         <span class="text-sm">Inherits the surrounding text color</span>
       </div>

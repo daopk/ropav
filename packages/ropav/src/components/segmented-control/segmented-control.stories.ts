@@ -229,7 +229,7 @@ export const Controlled: Story = {
             <SegmentedControlIndicator />
           </SegmentedControlItem>
         </SegmentedControl>
-        <p class="text-sm text-muted">Selected: {{ selectedKey }}</p>
+        <p class="text-sm text-[var(--muted)]">Selected: {{ selectedKey }}</p>
       </div>
     `,
   }),

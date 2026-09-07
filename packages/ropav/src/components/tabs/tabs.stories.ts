@@ -328,11 +328,11 @@ export const WithCustomStyle: Story = {
           <TabsListContainer>
             <TabsList
               aria-label="Options"
-              class="w-fit *:h-6 *:w-fit *:px-3 *:text-sm *:font-normal *:data-[selected=true]:text-accent-foreground"
+              class="w-fit *:h-6 *:w-fit *:px-3 *:text-sm *:font-normal *:data-[selected=true]:text-[var(--accent-foreground)]"
             >
               <TabsTab v-for="item in items" :id="item.id" :key="item.id">
                 {{ item.label }}
-                <TabsIndicator class="bg-accent" />
+                <TabsIndicator class="bg-[var(--accent)]" />
               </TabsTab>
             </TabsList>
           </TabsListContainer>
@@ -505,14 +505,14 @@ export const Showcase1: Story = {
               v-for="level in levels"
               :key="level.id"
               :aria-hidden="selectedZoom !== level.id"
-              class="absolute start-1/2 top-1/2 origin-center -translate-x-1/2 -translate-y-1/2 scale-75 text-[21px] font-medium text-foreground opacity-0 transition-[scale,opacity] duration-[300ms] ease-[cubic-bezier(0.33,1,0.68,1)] data-[selected=true]:scale-100 data-[selected=true]:opacity-100 data-[selected=true]:delay-200"
+              class="absolute start-1/2 top-1/2 origin-center -translate-x-1/2 -translate-y-1/2 scale-75 text-[21px] font-medium text-[var(--foreground)] opacity-0 transition-[scale,opacity] duration-[300ms] ease-[cubic-bezier(0.33,1,0.68,1)] data-[selected=true]:scale-100 data-[selected=true]:opacity-100 data-[selected=true]:delay-200"
               :class="{'sr-only': selectedZoom !== level.id}"
               :data-selected="selectedZoom === level.id"
             >
               {{ level.factor }}
             </p>
           </div>
-          <footer class="mt-4 w-full px-4 text-center text-xs text-muted/30 sm:text-sm">
+          <footer class="mt-4 w-full px-4 text-center text-xs text-[var(--muted)]/30 sm:text-sm">
             <a href="https://www.apple.com/iphone-17-pro/" rel="noopener noreferrer" target="_blank">
               Showcase based on Apple's iPhone 17 Pro camera zoom showcase
             </a>

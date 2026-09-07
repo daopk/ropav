@@ -210,7 +210,7 @@ export const SingleWithCustomIndicator: Story = {
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        class="text-accent"
+                        class="text-[var(--accent)]"
                         clip-rule="evenodd"
                         d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14m3.1-8.55a.75.75 0 1 0-1.2-.9L7.419 8.858L6.03 7.47a.75.75 0 0 0-1.06 1.06l2 2a.75.75 0 0 0 1.13-.08z"
                         fill="currentColor"
@@ -412,7 +412,7 @@ export const WithIcons: Story = {
         <DropdownPopover>
           <DropdownMenu>
             <DropdownItem id="new-file" text-value="New file">
-              <IconSquarePlus class="size-4 shrink-0 text-muted" />
+              <IconSquarePlus class="size-4 shrink-0 text-[var(--muted)]" />
               <Label>New file</Label>
               <Kbd class="ms-auto" variant="light">
                 <KbdAbbr key-value="command" />
@@ -420,7 +420,7 @@ export const WithIcons: Story = {
               </Kbd>
             </DropdownItem>
             <DropdownItem id="open-file" text-value="Open file">
-              <IconFolderOpen class="size-4 shrink-0 text-muted" />
+              <IconFolderOpen class="size-4 shrink-0 text-[var(--muted)]" />
               <Label>Open file</Label>
               <Kbd class="ms-auto" variant="light">
                 <KbdAbbr key-value="command" />
@@ -428,7 +428,7 @@ export const WithIcons: Story = {
               </Kbd>
             </DropdownItem>
             <DropdownItem id="save-file" text-value="Save file">
-              <IconFloppyDisk class="size-4 shrink-0 text-muted" />
+              <IconFloppyDisk class="size-4 shrink-0 text-[var(--muted)]" />
               <Label>Save file</Label>
               <Kbd class="ms-auto" variant="light">
                 <KbdAbbr key-value="command" />
@@ -436,7 +436,7 @@ export const WithIcons: Story = {
               </Kbd>
             </DropdownItem>
             <DropdownItem id="delete-file" text-value="Delete file" variant="danger">
-              <IconTrashBin class="size-4 shrink-0 text-danger" />
+              <IconTrashBin class="size-4 shrink-0 text-[var(--danger)]" />
               <Label>Delete file</Label>
               <Kbd class="ms-auto" variant="light">
                 <KbdAbbr key-value="command" />
@@ -496,7 +496,7 @@ export const WithDescriptions: Story = {
               :text-value="action.label"
             >
               <div class="flex h-8 items-start justify-center pt-px">
-                <component :is="action.icon" class="size-4 shrink-0 text-muted" />
+                <component :is="action.icon" class="size-4 shrink-0 text-[var(--muted)]" />
               </div>
               <div class="flex flex-col">
                 <Label>{{ action.label }}</Label>
@@ -509,7 +509,7 @@ export const WithDescriptions: Story = {
             </DropdownItem>
             <DropdownItem id="delete-file" text-value="Delete file" variant="danger">
               <div class="flex h-8 items-start justify-center pt-px">
-                <IconTrashBin class="size-4 shrink-0 text-danger" />
+                <IconTrashBin class="size-4 shrink-0 text-[var(--danger)]" />
               </div>
               <div class="flex flex-col">
                 <Label>Delete file</Label>
@@ -547,7 +547,7 @@ export const WithSections: Story = {
               <Header>Actions</Header>
               <DropdownItem id="new-file" text-value="New file">
                 <div class="flex h-8 items-start justify-center pt-px">
-                  <IconSquarePlus class="size-4 shrink-0 text-muted" />
+                  <IconSquarePlus class="size-4 shrink-0 text-[var(--muted)]" />
                 </div>
                 <div class="flex flex-col">
                   <Label>New file</Label>
@@ -560,7 +560,7 @@ export const WithSections: Story = {
               </DropdownItem>
               <DropdownItem id="edit-file" text-value="Edit file">
                 <div class="flex h-8 items-start justify-center pt-px">
-                  <IconPencil class="size-4 shrink-0 text-muted" />
+                  <IconPencil class="size-4 shrink-0 text-[var(--muted)]" />
                 </div>
                 <div class="flex flex-col">
                   <Label>Edit file</Label>
@@ -577,7 +577,7 @@ export const WithSections: Story = {
               <Header>Danger zone</Header>
               <DropdownItem id="delete-file" text-value="Delete file" variant="danger">
                 <div class="flex h-8 items-start justify-center pt-px">
-                  <IconTrashBin class="size-4 shrink-0 text-danger" />
+                  <IconTrashBin class="size-4 shrink-0 text-[var(--danger)]" />
                 </div>
                 <div class="flex flex-col">
                   <Label>Delete file</Label>
@@ -612,7 +612,7 @@ export const WithDisabledItems: Story = {
               <Header>Actions</Header>
               <DropdownItem id="new-file" text-value="New file">
                 <div class="flex h-8 items-start justify-center pt-px">
-                  <IconSquarePlus class="size-4 shrink-0 text-muted" />
+                  <IconSquarePlus class="size-4 shrink-0 text-[var(--muted)]" />
                 </div>
                 <div class="flex flex-col">
                   <Label>New file</Label>
@@ -625,7 +625,7 @@ export const WithDisabledItems: Story = {
               </DropdownItem>
               <DropdownItem id="edit-file" text-value="Edit file">
                 <div class="flex h-8 items-start justify-center pt-px">
-                  <IconPencil class="size-4 shrink-0 text-muted" />
+                  <IconPencil class="size-4 shrink-0 text-[var(--muted)]" />
                 </div>
                 <div class="flex flex-col">
                   <Label>Edit file</Label>
@@ -642,7 +642,7 @@ export const WithDisabledItems: Story = {
               <Header>Danger zone</Header>
               <DropdownItem id="delete-file" text-value="Delete file" variant="danger">
                 <div class="flex h-8 items-start justify-center pt-px">
-                  <IconTrashBin class="size-4 shrink-0 text-danger" />
+                  <IconTrashBin class="size-4 shrink-0 text-[var(--danger)]" />
                 </div>
                 <div class="flex flex-col">
                   <Label>Delete file</Label>
@@ -741,7 +741,7 @@ export const WithCustomSubmenuIndicator: Story = {
               <DropdownItem id="share" text-value="Share">
                 <Label>More options</Label>
                 <DropdownSubmenuIndicator>
-                  <IconArrowRight class="size-3.5 text-muted" />
+                  <IconArrowRight class="size-3.5 text-[var(--muted)]" />
                 </DropdownSubmenuIndicator>
               </DropdownItem>
               <DropdownPopover>
@@ -757,7 +757,7 @@ export const WithCustomSubmenuIndicator: Story = {
                       <Label>Email</Label>
                       <DropdownSubmenuIndicator>
                         <svg
-                          class="size-3.5 text-muted"
+                          class="size-3.5 text-[var(--muted)]"
                           fill="none"
                           stroke="currentColor"
                           stroke-linecap="round"
@@ -841,7 +841,7 @@ export const Controlled: Story = {
               </DropdownMenu>
             </DropdownPopover>
           </Dropdown>
-          <p class="text-sm text-muted">Selected: {{ summary }}</p>
+          <p class="text-sm text-[var(--muted)]">Selected: {{ summary }}</p>
         </div>
       `,
     };
@@ -854,7 +854,7 @@ export const ControlledOpenState: Story = {
     setup: () => ({ actions: FILE_ACTIONS, isOpen: shallowRef(false) }),
     template: `
       <div class="min-w-sm space-y-4">
-        <p class="text-sm text-muted">
+        <p class="text-sm text-[var(--muted)]">
           Dropdown is: <strong>{{ isOpen ? "open" : "closed" }}</strong>
         </p>
         <Dropdown v-model:is-open="isOpen">
@@ -903,7 +903,7 @@ export const CustomTrigger: Story = {
               </Avatar>
               <div class="flex flex-col gap-0">
                 <p class="text-sm leading-5 font-medium">Jane Doe</p>
-                <p class="text-xs leading-none text-muted">jane@example.com</p>
+                <p class="text-xs leading-none text-[var(--muted)]">jane@example.com</p>
               </div>
             </div>
           </div>
@@ -917,19 +917,19 @@ export const CustomTrigger: Story = {
             <DropdownItem id="settings" text-value="Settings">
               <div class="flex w-full items-center justify-between gap-2">
                 <Label>Settings</Label>
-                <IconGear class="size-3.5 text-muted" />
+                <IconGear class="size-3.5 text-[var(--muted)]" />
               </div>
             </DropdownItem>
             <DropdownItem id="new-project" text-value="New project">
               <div class="flex w-full items-center justify-between gap-2">
                 <Label>Create Team</Label>
-                <IconPersons class="size-3.5 text-muted" />
+                <IconPersons class="size-3.5 text-[var(--muted)]" />
               </div>
             </DropdownItem>
             <DropdownItem id="logout" text-value="Logout" variant="danger">
               <div class="flex w-full items-center justify-between gap-2">
                 <Label>Log Out</Label>
-                <IconArrowRightFromSquare class="size-3.5 text-danger" />
+                <IconArrowRightFromSquare class="size-3.5 text-[var(--danger)]" />
               </div>
             </DropdownItem>
           </DropdownMenu>

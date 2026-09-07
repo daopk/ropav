@@ -159,7 +159,7 @@ export const Variants: Story = {
       <div class="flex flex-col gap-8">
         <template v-for="(size, index) in sizes" :key="size">
           <div class="flex flex-col gap-4">
-            <h3 class="text-sm font-semibold text-muted capitalize">{{ size }}</h3>
+            <h3 class="text-sm font-semibold text-[var(--muted)] capitalize">{{ size }}</h3>
             <div class="flex items-center gap-3">
               <div class="w-24 shrink-0" />
               <div
@@ -168,12 +168,12 @@ export const Variants: Story = {
                 class="flex shrink-0 items-center justify-center"
                 style="width: 130px"
               >
-                <span class="text-xs text-muted capitalize">{{ color }}</span>
+                <span class="text-xs text-[var(--muted)] capitalize">{{ color }}</span>
               </div>
             </div>
             <div class="flex flex-col gap-3">
               <div v-for="variant in variants" :key="variant" class="flex items-center gap-3">
-                <div class="w-24 shrink-0 text-sm text-muted capitalize">{{ variant }}</div>
+                <div class="w-24 shrink-0 text-sm text-[var(--muted)] capitalize">{{ variant }}</div>
                 <div
                   v-for="color in colors"
                   :key="color"

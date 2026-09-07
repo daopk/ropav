@@ -255,7 +255,7 @@ export const Controlled: Story = {
         </div>
         <div class="mt-3 flex w-[350px] items-center gap-3">
           <ColorSwatch :color="color" size="lg" />
-          <p class="text-sm text-muted">
+          <p class="text-sm text-[var(--muted)]">
             Current color: <span class="font-mono">{{ color.toString("hsl") }}</span>
           </p>
         </div>

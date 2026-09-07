@@ -77,7 +77,7 @@ export const Sizes: Story = {
     template: `
       <div class="flex flex-col gap-8">
         <div v-for="size in sizes" :key="size" class="flex flex-col gap-2">
-          <span class="text-sm font-medium text-muted capitalize">{{ size }}</span>
+          <span class="text-sm font-medium text-[var(--muted)] capitalize">{{ size }}</span>
           <ColorSwatchPicker :size="size">${SWATCHES}</ColorSwatchPicker>
         </div>
       </div>
@@ -92,7 +92,7 @@ export const Variants: Story = {
     template: `
       <div class="flex flex-col gap-8">
         <div v-for="variant in variants" :key="variant" class="flex flex-col gap-2">
-          <span class="text-sm font-medium text-muted capitalize">{{ variant }}</span>
+          <span class="text-sm font-medium text-[var(--muted)] capitalize">{{ variant }}</span>
           <ColorSwatchPicker :variant="variant">${SWATCHES}</ColorSwatchPicker>
         </div>
       </div>
@@ -107,7 +107,7 @@ export const Layouts: Story = {
     template: `
       <div class="flex flex-col gap-8">
         <div v-for="layout in layouts" :key="layout" class="flex flex-col gap-2">
-          <span class="text-sm font-medium text-muted capitalize">{{ layout }}</span>
+          <span class="text-sm font-medium text-[var(--muted)] capitalize">{{ layout }}</span>
           <ColorSwatchPicker :layout="layout">${SWATCHES}</ColorSwatchPicker>
         </div>
       </div>
@@ -126,9 +126,9 @@ export const AllVariants: Story = {
     template: `
       <div class="flex gap-16">
         <div v-for="variant in variants" :key="variant" class="flex flex-col gap-6">
-          <span class="text-sm font-semibold text-muted capitalize">{{ variant }}</span>
+          <span class="text-sm font-semibold text-[var(--muted)] capitalize">{{ variant }}</span>
           <div v-for="size in sizes" :key="size" class="flex items-center gap-4">
-            <span class="w-8 text-sm text-muted">{{ size }}</span>
+            <span class="w-8 text-sm text-[var(--muted)]">{{ size }}</span>
             <ColorSwatchPicker :size="size" :variant="variant">${SWATCHES}</ColorSwatchPicker>
           </div>
         </div>
@@ -152,7 +152,7 @@ export const Controlled: Story = {
     template: `
       <div class="flex flex-col gap-4">
         <ColorSwatchPicker :value="value" @change="onChange">${SWATCHES}</ColorSwatchPicker>
-        <p class="text-sm text-muted">
+        <p class="text-sm text-[var(--muted)]">
           Selected: <span class="font-medium">{{ value.toString("hex") }}</span>
         </p>
       </div>

@@ -531,7 +531,7 @@ export const Invalid: Story = {
           ${header}
           ${grid}
         </RangeCalendar>
-        <p v-if="isInvalid" class="text-sm text-danger">Maximum stay duration is 1 week</p>
+        <p v-if="isInvalid" class="text-sm text-[var(--danger)]">Maximum stay duration is 1 week</p>
         <Description v-else class="text-center">Select a stay of up to 7 days</Description>
       </div>
     `,
@@ -928,12 +928,12 @@ export const BookingCalendar: Story = {
           </RangeCalendarGrid>
         </RangeCalendar>
         <div class="flex flex-col gap-2 text-center">
-          <div class="flex items-center justify-center gap-4 text-xs text-muted">
+          <div class="flex items-center justify-center gap-4 text-xs text-[var(--muted)]">
             <span class="flex items-center gap-1">
-              <span class="size-2 rounded-full bg-muted" /> Blocked dates
+              <span class="size-2 rounded-full bg-[var(--muted)]" /> Blocked dates
             </span>
             <span class="flex items-center gap-1">
-              <span class="size-2 rounded-full bg-default" /> Weekend/Unavailable
+              <span class="size-2 rounded-full bg-[var(--default)]" /> Weekend/Unavailable
             </span>
           </div>
           <Button v-if="summary" size="sm" variant="primary">Book {{ summary }}</Button>

@@ -144,7 +144,7 @@ export const Form: Story = {
           </Switch>
         </SwitchGroup>
         <Button class="mt-4" size="sm" type="submit" variant="primary">Submit</Button>
-        <p v-if="submitted.length" class="text-sm text-muted">
+        <p v-if="submitted.length" class="text-sm text-[var(--muted)]">
           Submitted with: {{ submitted.join(", ") }}
         </p>
       </form>

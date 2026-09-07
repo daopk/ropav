@@ -154,11 +154,11 @@ export const FullWidth: Story = {
           <Label>Date</Label>
           <DateFieldGroup>
             <DateFieldPrefix>
-              <IconCalendar class="size-4 text-muted" />
+              <IconCalendar class="size-4 text-[var(--muted)]" />
             </DateFieldPrefix>
             ${input}
             <DateFieldSuffix>
-              <IconChevronDown class="size-4 text-muted" />
+              <IconChevronDown class="size-4 text-[var(--muted)]" />
             </DateFieldSuffix>
           </DateFieldGroup>
         </DateField>
@@ -314,7 +314,7 @@ export const WithPrefixIcon: Story = {
         <Label>Date</Label>
         <DateFieldGroup>
           <DateFieldPrefix>
-            <IconCalendar class="size-4 text-muted" />
+            <IconCalendar class="size-4 text-[var(--muted)]" />
           </DateFieldPrefix>
           ${input}
         </DateFieldGroup>
@@ -332,7 +332,7 @@ export const WithSuffixIcon: Story = {
         <DateFieldGroup>
           ${input}
           <DateFieldSuffix>
-            <IconCalendar class="size-4 text-muted" />
+            <IconCalendar class="size-4 text-[var(--muted)]" />
           </DateFieldSuffix>
         </DateFieldGroup>
       </DateField>
@@ -348,11 +348,11 @@ export const WithPrefixAndSuffix: Story = {
         <Label>Date</Label>
         <DateFieldGroup>
           <DateFieldPrefix>
-            <IconCalendar class="size-4 text-muted" />
+            <IconCalendar class="size-4 text-[var(--muted)]" />
           </DateFieldPrefix>
           ${input}
           <DateFieldSuffix>
-            <IconChevronDown class="size-4 text-muted" />
+            <IconChevronDown class="size-4 text-[var(--muted)]" />
           </DateFieldSuffix>
         </DateFieldGroup>
         <Description>Enter a date</Description>
@@ -400,7 +400,7 @@ export const FormExample: Story = {
           <Label>Appointment date</Label>
           <DateFieldGroup>
             <DateFieldPrefix>
-              <IconCalendar class="size-4 text-muted" />
+              <IconCalendar class="size-4 text-[var(--muted)]" />
             </DateFieldPrefix>
             ${input}
           </DateFieldGroup>
@@ -462,7 +462,7 @@ export const Granularity: Story = {
             <Label>Granularity</Label>
             <Tooltip :delay="0">
               <TooltipTrigger aria-label="Granularity information">
-                <IconCircleQuestion class="size-4 text-muted" />
+                <IconCircleQuestion class="size-4 text-[var(--muted)]" />
               </TooltipTrigger>
               <TooltipContent placement="bottom start">
                 <p>
@@ -515,7 +515,7 @@ export const AllVariations: Story = {
             <Label>Date</Label>
             <DateFieldGroup>
               <DateFieldPrefix>
-                <IconCalendar class="size-4 text-muted" />
+                <IconCalendar class="size-4 text-[var(--muted)]" />
               </DateFieldPrefix>
               ${input}
             </DateFieldGroup>
@@ -527,7 +527,7 @@ export const AllVariations: Story = {
             <DateFieldGroup>
               ${input}
               <DateFieldSuffix>
-                <IconCalendar class="size-4 text-muted" />
+                <IconCalendar class="size-4 text-[var(--muted)]" />
               </DateFieldSuffix>
             </DateFieldGroup>
             <Description>Enter a date</Description>
@@ -537,11 +537,11 @@ export const AllVariations: Story = {
             <Label>Date</Label>
             <DateFieldGroup>
               <DateFieldPrefix>
-                <IconCalendar class="size-4 text-muted" />
+                <IconCalendar class="size-4 text-[var(--muted)]" />
               </DateFieldPrefix>
               ${input}
               <DateFieldSuffix>
-                <IconChevronDown class="size-4 text-muted" />
+                <IconChevronDown class="size-4 text-[var(--muted)]" />
               </DateFieldSuffix>
             </DateFieldGroup>
             <Description>Enter a date</Description>

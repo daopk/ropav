@@ -276,15 +276,15 @@ export const NavigationDrawer: Story = {
                   <button
                     v-for="item in navItems"
                     :key="item.label"
-                    class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-foreground transition-colors hover:bg-default"
+                    class="flex items-center gap-3 rounded-[calc(var(--radius)*1.5)] px-3 py-2.5 text-sm text-[var(--foreground)] transition-colors hover:bg-[var(--default)]"
                     type="button"
                   >
-                    <IconHouse v-if="item.icon === 'house'" class="size-5 text-muted" />
-                    <IconMagnifier v-else-if="item.icon === 'magnifier'" class="size-5 text-muted" />
-                    <IconBell v-else-if="item.icon === 'bell'" class="size-5 text-muted" />
-                    <IconEnvelope v-else-if="item.icon === 'envelope'" class="size-5 text-muted" />
-                    <IconPerson v-else-if="item.icon === 'person'" class="size-5 text-muted" />
-                    <IconGear v-else class="size-5 text-muted" />
+                    <IconHouse v-if="item.icon === 'house'" class="size-5 text-[var(--muted)]" />
+                    <IconMagnifier v-else-if="item.icon === 'magnifier'" class="size-5 text-[var(--muted)]" />
+                    <IconBell v-else-if="item.icon === 'bell'" class="size-5 text-[var(--muted)]" />
+                    <IconEnvelope v-else-if="item.icon === 'envelope'" class="size-5 text-[var(--muted)]" />
+                    <IconPerson v-else-if="item.icon === 'person'" class="size-5 text-[var(--muted)]" />
+                    <IconGear v-else class="size-5 text-[var(--muted)]" />
                     {{ item.label }}
                   </button>
                 </nav>
@@ -341,9 +341,9 @@ export const Controlled: Story = {
       <div class="flex flex-col gap-4">
         <div class="flex items-center gap-3">
           <Button variant="secondary" @click="isOpen = true">Open Drawer</Button>
-          <p class="text-sm text-muted">
+          <p class="text-sm text-[var(--muted)]">
             Status:
-            <span class="font-mono font-medium text-foreground">
+            <span class="font-mono font-medium text-[var(--foreground)]">
               {{ isOpen ? "open" : "closed" }}
             </span>
           </p>

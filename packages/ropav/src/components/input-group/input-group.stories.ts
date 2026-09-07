@@ -84,7 +84,7 @@ export const Default: Story = {
         <Label>Email address</Label>
         <InputGroup>
           <InputGroupPrefix>
-            <IconEnvelope class="size-4 text-muted" />
+            <IconEnvelope class="size-4 text-[var(--muted)]" />
           </InputGroupPrefix>
           <InputGroupInput class="w-[280px]" placeholder="name@email.com" />
         </InputGroup>
@@ -102,7 +102,7 @@ export const Variants: Story = {
           <Label>Primary variant</Label>
           <InputGroup variant="primary">
             <InputGroupPrefix>
-              <IconEnvelope class="size-4 text-muted" />
+              <IconEnvelope class="size-4 text-[var(--muted)]" />
             </InputGroupPrefix>
             <InputGroupInput placeholder="name@email.com" />
           </InputGroup>
@@ -111,7 +111,7 @@ export const Variants: Story = {
           <Label>Secondary variant</Label>
           <InputGroup variant="secondary">
             <InputGroupPrefix>
-              <IconEnvelope class="size-4 text-muted" />
+              <IconEnvelope class="size-4 text-[var(--muted)]" />
             </InputGroupPrefix>
             <InputGroupInput placeholder="name@email.com" />
           </InputGroup>
@@ -137,7 +137,7 @@ export const Sizes: Story = {
           <Label>Size {{ size }}</Label>
           <InputGroup>
             <InputGroupPrefix>
-              <IconEnvelope class="size-4 text-muted" />
+              <IconEnvelope class="size-4 text-[var(--muted)]" />
             </InputGroupPrefix>
             <InputGroupInput placeholder="name@email.com" />
           </InputGroup>
@@ -156,7 +156,7 @@ export const FullWidth: Story = {
           <Label>Email address</Label>
           <InputGroup full-width>
             <InputGroupPrefix>
-              <IconEnvelope class="size-4 text-muted" />
+              <IconEnvelope class="size-4 text-[var(--muted)]" />
             </InputGroupPrefix>
             <InputGroupInput placeholder="name@email.com" />
           </InputGroup>
@@ -166,7 +166,7 @@ export const FullWidth: Story = {
           <InputGroup full-width>
             <InputGroupInput placeholder="Enter password" type="password" />
             <InputGroupSuffix>
-              <IconEye class="size-4 text-muted" />
+              <IconEye class="size-4 text-[var(--muted)]" />
             </InputGroupSuffix>
           </InputGroup>
         </TextField>
@@ -183,7 +183,7 @@ export const WithPrefixIcon: Story = {
         <Label>Email address</Label>
         <InputGroup>
           <InputGroupPrefix>
-            <IconEnvelope class="size-4 text-muted" />
+            <IconEnvelope class="size-4 text-[var(--muted)]" />
           </InputGroupPrefix>
           <InputGroupInput class="w-[280px]" placeholder="name@email.com" />
         </InputGroup>
@@ -202,7 +202,7 @@ export const WithSuffixIcon: Story = {
         <InputGroup>
           <InputGroupInput class="w-[280px]" placeholder="name@email.com" />
           <InputGroupSuffix>
-            <IconEnvelope class="size-4 text-muted" />
+            <IconEnvelope class="size-4 text-[var(--muted)]" />
           </InputGroupSuffix>
         </InputGroup>
         <Description>We don't send spam</Description>
@@ -266,7 +266,7 @@ export const WithIconPrefixAndTextSuffix: Story = {
         <Label>Website</Label>
         <InputGroup>
           <InputGroupPrefix>
-            <IconGlobe class="size-4 text-muted" />
+            <IconGlobe class="size-4 text-[var(--muted)]" />
           </InputGroupPrefix>
           <InputGroupInput class="w-[280px]" />
           <InputGroupSuffix>.com</InputGroupSuffix>
@@ -303,7 +303,7 @@ export const WithIconPrefixAndCopySuffix: Story = {
         <Label>Website</Label>
         <InputGroup>
           <InputGroupPrefix>
-            <IconGlobe class="size-4 text-muted" />
+            <IconGlobe class="size-4 text-[var(--muted)]" />
           </InputGroupPrefix>
           <InputGroupInput class="w-[280px]" />
           <InputGroupSuffix class="pe-0">
@@ -412,7 +412,7 @@ export const Required: Story = {
           <Label>Email address</Label>
           <InputGroup>
             <InputGroupPrefix>
-              <IconEnvelope class="size-4 text-muted" />
+              <IconEnvelope class="size-4 text-[var(--muted)]" />
             </InputGroupPrefix>
             <InputGroupInput class="w-[280px]" placeholder="name@email.com" />
           </InputGroup>
@@ -440,7 +440,7 @@ export const Invalid: Story = {
           <Label>Email address</Label>
           <InputGroup>
             <InputGroupPrefix>
-              <IconEnvelope class="size-4 text-muted" />
+              <IconEnvelope class="size-4 text-[var(--muted)]" />
             </InputGroupPrefix>
             <InputGroupInput class="w-[280px]" placeholder="name@email.com" />
           </InputGroup>
@@ -469,7 +469,7 @@ export const Disabled: Story = {
           <Label>Email address</Label>
           <InputGroup>
             <InputGroupPrefix>
-              <IconEnvelope class="size-4 text-muted" />
+              <IconEnvelope class="size-4 text-[var(--muted)]" />
             </InputGroupPrefix>
             <InputGroupInput class="w-[280px]" />
           </InputGroup>
@@ -509,7 +509,7 @@ export const WithTextArea: Story = {
     },
     template: `
       <TextField full-width aria-label="Prompt input" class="flex w-sm flex-col sm:w-lg" name="prompt">
-        <InputGroup full-width class="flex flex-col gap-2 rounded-3xl py-2">
+        <InputGroup full-width class="flex flex-col gap-2 rounded-[calc(var(--radius)*3)] py-2">
           <InputGroupPrefix class="px-3 py-0">
             <Button aria-label="Add context" size="sm" variant="outline">
               <IconAt />
@@ -562,7 +562,7 @@ export const WithTextArea: Story = {
                 </Button>
                 <TooltipContent class="flex items-center gap-1">
                   <p class="text-xs">Send</p>
-                  <Kbd class="h-4 rounded-sm px-1">
+                  <Kbd class="h-4 rounded-[calc(var(--radius)*0.5)] px-1">
                     <KbdAbbr key-value="enter" />
                   </Kbd>
                 </TooltipContent>
@@ -585,7 +585,7 @@ export const AllVariations: Story = {
             <Label>Email address *</Label>
             <InputGroup>
               <InputGroupPrefix>
-                <IconEnvelope class="size-4 text-muted" />
+                <IconEnvelope class="size-4 text-[var(--muted)]" />
               </InputGroupPrefix>
               <InputGroupInput class="w-[280px]" placeholder="name@email.com" />
             </InputGroup>
@@ -597,7 +597,7 @@ export const AllVariations: Story = {
             <InputGroup>
               <InputGroupInput class="w-[280px]" placeholder="name@email.com" />
               <InputGroupSuffix>
-                <IconEnvelope class="size-4 text-muted" />
+                <IconEnvelope class="size-4 text-[var(--muted)]" />
               </InputGroupSuffix>
             </InputGroup>
             <Description>We don't send spam</Description>
@@ -633,7 +633,7 @@ export const AllVariations: Story = {
             <Label>Website</Label>
             <InputGroup>
               <InputGroupPrefix>
-                <IconGlobe class="size-4 text-muted" />
+                <IconGlobe class="size-4 text-[var(--muted)]" />
               </InputGroupPrefix>
               <InputGroupInput class="w-[280px]" />
               <InputGroupSuffix>.com</InputGroupSuffix>
@@ -656,7 +656,7 @@ export const AllVariations: Story = {
             <Label>Website</Label>
             <InputGroup>
               <InputGroupPrefix>
-                <IconGlobe class="size-4 text-muted" />
+                <IconGlobe class="size-4 text-[var(--muted)]" />
               </InputGroupPrefix>
               <InputGroupInput class="w-[280px]" />
               <InputGroupSuffix class="pe-0">

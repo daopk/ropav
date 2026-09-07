@@ -73,11 +73,11 @@ const components = {
 /** The page beside the nav, so every story shows the sidebar against something. */
 const page = `
   <SidebarInset>
-    <div class="flex items-center gap-3 border-b border-separator/50 p-4">
+    <div class="flex items-center gap-3 border-b border-[var(--separator)]/50 p-4">
       <SidebarTrigger />
       <span class="text-sm font-medium">Inbox</span>
     </div>
-    <div class="p-4 text-small text-muted">Page content</div>
+    <div class="p-4 text-small text-[var(--muted)]">Page content</div>
   </SidebarInset>
 `;
 
@@ -85,7 +85,7 @@ const page = `
 const nav = `
   <SidebarHeader v-slot="{ isCollapsed }">
     <span class="flex h-8 items-center gap-2 px-1.5 text-sm font-semibold">
-      <span class="flex size-5 shrink-0 items-center justify-center rounded-sm bg-accent text-xs text-accent-foreground">A</span>
+      <span class="flex size-5 shrink-0 items-center justify-center rounded-[calc(var(--radius)*0.5)] bg-[var(--accent)] text-xs text-[var(--accent-foreground)]">A</span>
       <span v-if="!isCollapsed" class="truncate">Acme</span>
     </span>
   </SidebarHeader>
@@ -99,7 +99,7 @@ const nav = `
       <SidebarItem href="#">
         <SidebarItemIcon><IconEnvelope /></SidebarItemIcon>
         <SidebarItemLabel>Inbox</SidebarItemLabel>
-        <SidebarItemTrailing><span class="text-xs text-muted">12</span></SidebarItemTrailing>
+        <SidebarItemTrailing><span class="text-xs text-[var(--muted)]">12</span></SidebarItemTrailing>
       </SidebarItem>
       <SidebarItem href="#">
         <SidebarItemIcon><IconMagnifier /></SidebarItemIcon>
@@ -148,7 +148,7 @@ const meta: StoryMeta = {
   decorators: [
     () => ({
       template:
-        '<div class="h-[32rem] w-[52rem] max-w-full overflow-hidden rounded-lg border border-separator/50"><story /></div>',
+        '<div class="h-[32rem] w-[52rem] max-w-full overflow-hidden rounded-[calc(var(--radius)*1)] border border-[var(--separator)]/50"><story /></div>',
     }),
   ],
   parameters: {
@@ -165,7 +165,7 @@ type Story = StoryObj<typeof meta>;
  * these variants exist to show is only visible against a page. It also gives the forced-colors
  * sweep something to measure the card's outline against. */
 const onPage = () => ({
-  template: '<div class="size-full bg-background"><story /></div>',
+  template: '<div class="size-full bg-[var(--background)]"><story /></div>',
 });
 
 export const Default: Story = {
@@ -372,7 +372,7 @@ export const NestedItems: Story = {
         <SidebarPanel>
           <SidebarHeader v-slot="{ isCollapsed }">
             <span class="flex h-8 items-center gap-2 px-1.5 text-sm font-semibold">
-              <span class="flex size-5 shrink-0 items-center justify-center rounded-sm bg-accent text-xs text-accent-foreground">R</span>
+              <span class="flex size-5 shrink-0 items-center justify-center rounded-[calc(var(--radius)*0.5)] bg-[var(--accent)] text-xs text-[var(--accent-foreground)]">R</span>
               <span v-if="!isCollapsed" class="truncate">Ropav</span>
             </span>
           </SidebarHeader>
@@ -418,7 +418,7 @@ export const NestedItems: Story = {
               <SidebarItem href="#">
                 <SidebarItemIcon><IconPersons /></SidebarItemIcon>
                 <SidebarItemLabel>Team</SidebarItemLabel>
-                <SidebarItemTrailing><span class="text-xs text-muted">3</span></SidebarItemTrailing>
+                <SidebarItemTrailing><span class="text-xs text-[var(--muted)]">3</span></SidebarItemTrailing>
               </SidebarItem>
             </SidebarGroup>
           </SidebarContent>

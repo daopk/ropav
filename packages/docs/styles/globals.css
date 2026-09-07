@@ -10,9 +10,29 @@
  * about with the one VitePress ships in `@layer __vitepress_base`. */
 @import "ropav/styles";
 
-/* The library's tokens as Tailwind's extension point, so a demo can write `text-muted`. Going
- * away in 0.10.0; read the token directly - `var(--muted)` - in anything written after that. */
-@import "ropav/styles/tailwind";
+/*
+ * `dark:`, keyed to the theme rather than to the OS.
+ *
+ * Tailwind's own `dark` is `prefers-color-scheme`, and VitePress switches appearance by putting
+ * `.dark` on the root — so without this a `dark:` utility answers the operating system while
+ * every colour around it answers the site's own toggle. The library used to define this and no
+ * longer does; an app that wants it declares it, which is what this is. `[data-theme="dark"]` is
+ * in the list because the demos are the same sources Storybook renders, where that is the switch.
+ *
+ * No `prefers-color-scheme` fallback: the token layer in `themes/` keys off these same selectors
+ * and has no media query of its own, so a fallback would flip the utilities while the colours
+ * stayed light.
+ */
+@custom-variant dark {
+  &:is(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+    @slot;
+
+    &::before,
+    &::after {
+      @slot;
+    }
+  }
+}
 
 /* Every bundled theme, so the palette can be switched. An app imports only the ones it
  * offers. Relative because the granular subpaths only exist in the published tarball. */

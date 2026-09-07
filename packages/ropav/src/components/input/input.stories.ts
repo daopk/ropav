@@ -59,7 +59,7 @@ export const FullWidth: Story = {
     template: `
       <div class="w-[400px] space-y-3">
         <Input full-width placeholder="Full width input" />
-        <div class="flex h-[180px] items-center justify-center rounded-3xl bg-surface p-4">
+        <div class="flex h-[180px] items-center justify-center rounded-[calc(var(--radius)*3)] bg-[var(--surface)] p-4">
           <Surface class="w-full">
             <Input full-width placeholder="Full width input on surface" variant="secondary" />
           </Surface>
@@ -75,33 +75,33 @@ export const OnSurfaces: Story = {
     template: `
       <div class="flex flex-col gap-8">
         <div class="flex flex-col gap-2">
-          <p class="text-sm font-medium text-muted">Default Surface</p>
-          <Surface class="flex min-w-[320px] flex-col gap-3 rounded-3xl p-6" variant="default">
+          <p class="text-sm font-medium text-[var(--muted)]">Default Surface</p>
+          <Surface class="flex min-w-[320px] flex-col gap-3 rounded-[calc(var(--radius)*3)] p-6" variant="default">
             <Input class="w-full" placeholder="Your name" variant="primary" />
             <Input class="w-full" placeholder="Your name" variant="secondary" />
           </Surface>
         </div>
 
         <div class="flex flex-col gap-2">
-          <p class="text-sm font-medium text-muted">Secondary Surface</p>
-          <Surface class="flex min-w-[320px] flex-col gap-3 rounded-3xl p-6" variant="secondary">
+          <p class="text-sm font-medium text-[var(--muted)]">Secondary Surface</p>
+          <Surface class="flex min-w-[320px] flex-col gap-3 rounded-[calc(var(--radius)*3)] p-6" variant="secondary">
             <Input class="w-full" placeholder="Your name" variant="primary" />
             <Input class="w-full" placeholder="Your name" variant="secondary" />
           </Surface>
         </div>
 
         <div class="flex flex-col gap-2">
-          <p class="text-sm font-medium text-muted">Tertiary Surface</p>
-          <Surface class="flex min-w-[320px] flex-col gap-3 rounded-3xl p-6" variant="tertiary">
+          <p class="text-sm font-medium text-[var(--muted)]">Tertiary Surface</p>
+          <Surface class="flex min-w-[320px] flex-col gap-3 rounded-[calc(var(--radius)*3)] p-6" variant="tertiary">
             <Input class="w-full" placeholder="Your name" variant="primary" />
             <Input class="w-full" placeholder="Your name" variant="secondary" />
           </Surface>
         </div>
 
         <div class="flex flex-col gap-2">
-          <p class="text-sm font-medium text-muted">Transparent Surface</p>
+          <p class="text-sm font-medium text-[var(--muted)]">Transparent Surface</p>
           <Surface
-            class="flex min-w-[320px] flex-col gap-3 rounded-3xl border p-6"
+            class="flex min-w-[320px] flex-col gap-3 rounded-[calc(var(--radius)*3)] border p-6"
             variant="transparent"
           >
             <Input class="w-full" placeholder="Your name" variant="primary" />

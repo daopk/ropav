@@ -147,7 +147,7 @@ export const Variants: Story = {
     template: `
       <div class="flex flex-col gap-8 px-4">
         <div class="flex flex-col gap-2">
-          <p class="text-sm font-medium text-muted">Primary variant</p>
+          <p class="text-sm font-medium text-[var(--muted)]">Primary variant</p>
           <RadioGroup default-value="option1" name="primary-plan" variant="primary">
             <Radio value="option1">
               <RadioContent>
@@ -170,7 +170,7 @@ export const Variants: Story = {
           </RadioGroup>
         </div>
         <div class="flex flex-col gap-2">
-          <p class="text-sm font-medium text-muted">Secondary variant</p>
+          <p class="text-sm font-medium text-[var(--muted)]">Secondary variant</p>
           <RadioGroup default-value="option1" name="secondary-plan" variant="secondary">
             <Radio value="option1">
               <RadioContent>
@@ -241,7 +241,7 @@ export const WithCustomIndicator: Story = {
               <RadioControl>
                 <RadioIndicator>
                   <template #default="{isSelected}">
-                    <span v-if="isSelected" class="text-xs leading-none text-background">✓</span>
+                    <span v-if="isSelected" class="text-xs leading-none text-[var(--background)]">✓</span>
                   </template>
                 </RadioIndicator>
               </RadioControl>
@@ -295,7 +295,7 @@ export const Validation: Story = {
           <FieldError>Choose a subscription before continuing.</FieldError>
         </RadioGroup>
         <Button type="submit">Submit</Button>
-        <p v-if="submitted !== null" class="text-sm text-muted" data-testid="submitted">
+        <p v-if="submitted !== null" class="text-sm text-[var(--muted)]" data-testid="submitted">
           Your chosen plan is: {{ submitted }}
         </p>
       </Form>
@@ -317,7 +317,7 @@ export const Controlled: Story = {
           <Label>Subscription plan</Label>
           ${subscriptionPlans}
         </RadioGroup>
-        <p class="mt-2 text-sm text-muted">
+        <p class="mt-2 text-sm text-[var(--muted)]">
           Selected plan: <span class="font-medium">{{ value }}</span>
         </p>
       </div>
@@ -344,7 +344,7 @@ export const Uncontrolled: Story = {
           <Label>Subscription plan</Label>
           ${subscriptionPlans}
         </RadioGroup>
-        <p class="mt-2 text-sm text-muted">
+        <p class="mt-2 text-sm text-[var(--muted)]">
           Last chosen plan: <span class="font-medium">{{ selection }}</span>
         </p>
       </div>
@@ -401,7 +401,7 @@ export const DeliveryAndPaymentExample: Story = {
             <div class="grid gap-x-4 md:grid-cols-3">
               <Radio v-for="option in deliveryOptions" :key="option.value" :value="option.value">
                 <RadioContent
-                  class="group relative flex w-full flex-col gap-6 rounded-xl bg-surface-tertiary px-5 py-4 transition-all data-[selected=true]:border-accent data-[selected=true]:bg-accent/10 data-[focus-visible=true]:bg-accent/10"
+                  class="group relative flex w-full flex-col gap-6 rounded-[calc(var(--radius)*1.5)] bg-[var(--surface-tertiary)] px-5 py-4 transition-all data-[selected=true]:border-[var(--accent)] data-[selected=true]:bg-[var(--accent)]/10 data-[focus-visible=true]:bg-[var(--accent)]/10"
                 >
                   <RadioControl class="absolute end-4 top-3 size-5">
                     <RadioIndicator />
@@ -424,12 +424,12 @@ export const DeliveryAndPaymentExample: Story = {
             <div class="grid gap-x-4 md:grid-cols-2">
               <Radio v-for="option in paymentOptions" :key="option.value" :value="option.value">
                 <RadioContent
-                  class="group relative flex w-full flex-row items-start justify-start gap-4 rounded-xl bg-surface-tertiary px-5 py-4 transition-all data-[selected=true]:bg-accent/10"
+                  class="group relative flex w-full flex-row items-start justify-start gap-4 rounded-[calc(var(--radius)*1.5)] bg-[var(--surface-tertiary)] px-5 py-4 transition-all data-[selected=true]:bg-[var(--accent)]/10"
                 >
                   <RadioControl class="absolute end-4 top-3 size-5">
                     <RadioIndicator />
                   </RadioControl>
-                  <component :is="option.icon" class="size-6 text-accent" />
+                  <component :is="option.icon" class="size-6 text-[var(--accent)]" />
                   <div class="flex flex-col gap-1">
                     <span>{{ option.title }}</span>
                     <Description>{{ option.description }}</Description>

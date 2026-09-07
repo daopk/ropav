@@ -28,7 +28,7 @@ const placements = ["bottom", "right"] as const;
             <DrawerHeading>Filters</DrawerHeading>
           </DrawerHeader>
           <DrawerBody>
-            <p class="text-sm text-muted">
+            <p class="text-muted text-sm">
               The handle is draggable, so the drawer can be dismissed by flicking it away.
             </p>
           </DrawerBody>

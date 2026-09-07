@@ -415,7 +415,7 @@ export const FormExample: Story = {
           </template>
           <template v-else>Search</template>
         </Button>
-        <p v-if="submitted" class="text-sm text-muted">Search submitted: {{ submitted }}</p>
+        <p v-if="submitted" class="text-sm text-[var(--muted)]">Search submitted: {{ submitted }}</p>
       </Form>
     `,
   }),

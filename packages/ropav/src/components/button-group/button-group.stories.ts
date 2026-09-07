@@ -103,7 +103,7 @@ export const Sizes: Story = {
     template: `
       <div class="flex flex-col gap-6">
         <div v-for="item in sizes" :key="item.size" class="flex flex-col gap-2">
-          <p class="text-sm text-muted">{{ item.label }}</p>
+          <p class="text-sm text-[var(--muted)]">{{ item.label }}</p>
           <ButtonGroup :size="item.size">
             <Button>First</Button>
             <Button>
@@ -176,7 +176,7 @@ export const Variants: Story = {
     template: `
       <div class="flex flex-col gap-6">
         <div v-for="item in variants" :key="item.variant" class="flex flex-col gap-2">
-          <p class="text-sm text-muted">{{ item.label }}</p>
+          <p class="text-sm text-[var(--muted)]">{{ item.label }}</p>
           <ButtonGroup :variant="item.variant">
             <Button>First</Button>
             <Button>
@@ -232,7 +232,7 @@ export const Disabled: Story = {
     template: `
       <div class="flex flex-col gap-6">
         <div class="flex flex-col gap-2">
-          <p class="text-sm text-muted">All buttons disabled</p>
+          <p class="text-sm text-[var(--muted)]">All buttons disabled</p>
           <ButtonGroup is-disabled>
             <Button>First</Button>
             <Button>
@@ -246,7 +246,7 @@ export const Disabled: Story = {
           </ButtonGroup>
         </div>
         <div class="flex flex-col gap-2">
-          <p class="text-sm text-muted">Group disabled, but one button overrides</p>
+          <p class="text-sm text-[var(--muted)]">Group disabled, but one button overrides</p>
           <ButtonGroup is-disabled>
             <Button>First</Button>
             <Button>
@@ -270,7 +270,7 @@ export const WithIcons: Story = {
     template: `
       <div class="flex flex-col gap-6">
         <div class="flex flex-col gap-2">
-          <p class="text-sm text-muted">With icons</p>
+          <p class="text-sm text-[var(--muted)]">With icons</p>
           <ButtonGroup variant="secondary">
             <Button>
               <IconGlobe />
@@ -289,7 +289,7 @@ export const WithIcons: Story = {
           </ButtonGroup>
         </div>
         <div class="flex flex-col gap-2">
-          <p class="text-sm text-muted">Icon only buttons</p>
+          <p class="text-sm text-[var(--muted)]">Icon only buttons</p>
           <ButtonGroup variant="tertiary">
             <Button aria-label="Search" is-icon-only>
               <IconGlobe />
@@ -378,7 +378,7 @@ export const Examples: Story = {
     template: `
       <div class="flex flex-col items-start gap-8">
         <div class="flex flex-col gap-2">
-          <p class="text-sm text-muted">Single button with dropdown</p>
+          <p class="text-sm text-[var(--muted)]">Single button with dropdown</p>
           <ButtonGroup>
             <Button>Merge pull request</Button>
             <Dropdown>
@@ -404,7 +404,7 @@ export const Examples: Story = {
           </ButtonGroup>
         </div>
         <div class="flex flex-col gap-2">
-          <p class="text-sm text-muted">Individual buttons</p>
+          <p class="text-sm text-[var(--muted)]">Individual buttons</p>
           <div class="flex gap-2">
             <ButtonGroup variant="tertiary">
               <Button>
@@ -460,7 +460,7 @@ export const Examples: Story = {
         </div>
 
         <div class="flex flex-col gap-2">
-          <p class="text-sm text-muted">Previous/Next navigation</p>
+          <p class="text-sm text-[var(--muted)]">Previous/Next navigation</p>
           <ButtonGroup variant="tertiary">
             <Button>
               <IconChevronLeft />
@@ -475,7 +475,7 @@ export const Examples: Story = {
         </div>
 
         <div class="flex flex-col gap-2">
-          <p class="text-sm text-muted">Content selection</p>
+          <p class="text-sm text-[var(--muted)]">Content selection</p>
           <ButtonGroup variant="tertiary">
             <Button>
               <IconPicture />
@@ -494,7 +494,7 @@ export const Examples: Story = {
         </div>
 
         <div class="flex flex-col gap-2">
-          <p class="text-sm text-muted">Text alignment</p>
+          <p class="text-sm text-[var(--muted)]">Text alignment</p>
           <ButtonGroup variant="tertiary">
             <Button>Left</Button>
             <Button>
@@ -509,7 +509,7 @@ export const Examples: Story = {
         </div>
 
         <div class="flex flex-col gap-2">
-          <p class="text-sm text-muted">Icon-only alignment</p>
+          <p class="text-sm text-[var(--muted)]">Icon-only alignment</p>
           <ButtonGroup variant="tertiary">
             <Button aria-label="Align left" is-icon-only>
               <IconTextAlignLeft />

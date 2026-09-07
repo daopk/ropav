@@ -137,7 +137,7 @@ export const CustomStyle: Story = {
     template: `
       <div class="flex flex-col gap-6">
         <div class="flex flex-col gap-2">
-          <h3 class="text-sm font-semibold text-muted">Custom Border</h3>
+          <h3 class="text-sm font-semibold text-[var(--muted)]">Custom Border</h3>
           <div class="flex items-center gap-3">
             <ColorSwatch
               v-for="color in colors"
@@ -149,7 +149,7 @@ export const CustomStyle: Story = {
           </div>
         </div>
         <div class="flex flex-col gap-2">
-          <h3 class="text-sm font-semibold text-muted">Custom Shadow</h3>
+          <h3 class="text-sm font-semibold text-[var(--muted)]">Custom Shadow</h3>
           <div class="flex items-center gap-3">
             <ColorSwatch
               v-for="color in colors"
@@ -161,7 +161,7 @@ export const CustomStyle: Story = {
           </div>
         </div>
         <div class="flex flex-col gap-2">
-          <h3 class="text-sm font-semibold text-muted">Outline Style</h3>
+          <h3 class="text-sm font-semibold text-[var(--muted)]">Outline Style</h3>
           <div class="flex items-center gap-3">
             <ColorSwatch
               v-for="color in colors"
@@ -189,10 +189,10 @@ export const AllVariants: Story = {
     template: `
       <div class="flex flex-col gap-6">
         <div v-for="shape in shapes" :key="shape" class="flex flex-col gap-3">
-          <h3 class="text-sm font-semibold text-muted capitalize">{{ shape }}</h3>
+          <h3 class="text-sm font-semibold text-[var(--muted)] capitalize">{{ shape }}</h3>
           <div class="flex flex-col gap-3">
             <div v-for="size in sizes" :key="size" class="flex items-center gap-3">
-              <div class="w-12 text-sm text-muted">{{ size }}</div>
+              <div class="w-12 text-sm text-[var(--muted)]">{{ size }}</div>
               <ColorSwatch
                 v-for="color in colors"
                 :key="color"

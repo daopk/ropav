@@ -72,7 +72,7 @@ export const Variants: Story = {
     template: `
       <div class="flex flex-col gap-4">
         <div class="flex flex-col gap-2">
-          <p class="text-sm font-medium text-muted">Default</p>
+          <p class="text-sm font-medium text-[var(--muted)]">Default</p>
           <div class="flex gap-3">
             <ToggleButton :is-disabled="args.isDisabled" :size="args.size">
               <IconHeart />
@@ -85,7 +85,7 @@ export const Variants: Story = {
           </div>
         </div>
         <div class="flex flex-col gap-2">
-          <p class="text-sm font-medium text-muted">Ghost</p>
+          <p class="text-sm font-medium text-[var(--muted)]">Ghost</p>
           <div class="flex gap-3">
             <ToggleButton :is-disabled="args.isDisabled" :size="args.size" variant="ghost">
               <IconHeart />
@@ -188,7 +188,7 @@ export const Controlled: Story = {
             </template>
           </ToggleButton>
         </div>
-        <p class="text-sm text-muted">
+        <p class="text-sm text-[var(--muted)]">
           Status: <span class="font-medium">{{ isSelected ? 'Selected' : 'Not selected' }}</span>
         </p>
       </div>

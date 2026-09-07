@@ -9,9 +9,29 @@
 /* The stylesheet the library ships, not `@ropav/styles` directly - it carries rules on top. */
 @import "ropav/styles";
 
-/* The library's tokens as Tailwind's extension point, so a story can write `bg-accent`. Going
- * away in 0.10.0; read the token directly - `var(--accent)` - in anything written after that. */
-@import "ropav/styles/tailwind";
+/*
+ * `dark:`, keyed to the theme rather than to the OS.
+ *
+ * Tailwind's own `dark` is `prefers-color-scheme`, and the toolbar here switches themes by
+ * attribute — so without this a `dark:` utility answers the operating system while every colour
+ * around it answers the toolbar. The library used to define this and no longer does; an app that
+ * wants it declares it, which is what this is. `.dark` is in the list because VitePress puts that
+ * class on the root and the docs site scans the same story sources.
+ *
+ * No `prefers-color-scheme` fallback: the token layer in `themes/` keys off these same selectors
+ * and has no media query of its own, so a fallback would flip the utilities while the colours
+ * stayed light.
+ */
+@custom-variant dark {
+  &:is(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+    @slot;
+
+    &::before,
+    &::after {
+      @slot;
+    }
+  }
+}
 
 /* Every bundled theme, so the toolbar can switch between them. An app imports only the ones
  * it offers. Relative because the granular subpaths only exist in the published tarball. */

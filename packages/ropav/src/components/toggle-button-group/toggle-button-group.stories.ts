@@ -107,7 +107,7 @@ export const Sizes: Story = {
     template: `
       <div class="flex flex-col gap-6">
         <div v-for="item in sizes" :key="item.size" class="flex flex-col gap-2">
-          <p class="text-sm text-muted">{{ item.label }}</p>
+          <p class="text-sm text-[var(--muted)]">{{ item.label }}</p>
           <ToggleButtonGroup selection-mode="multiple" :size="item.size">
             <ToggleButton aria-label="Bold" id="bold" is-icon-only>
               <IconBold />
@@ -134,7 +134,7 @@ export const Orientation: Story = {
     template: `
       <div class="flex items-start gap-8">
         <div v-for="orientation in orientations" :key="orientation" class="flex flex-col gap-2">
-          <p class="text-sm text-muted">{{ orientation }}</p>
+          <p class="text-sm text-[var(--muted)]">{{ orientation }}</p>
           <ToggleButtonGroup :orientation="orientation" selection-mode="multiple">
             <ToggleButton aria-label="Bold" id="bold" is-icon-only>
               <IconBold />
@@ -160,7 +160,7 @@ export const AttachedVsDetached: Story = {
     template: `
       <div class="flex flex-col gap-6">
         <div class="flex flex-col gap-2">
-          <p class="text-sm text-muted">Attached (default)</p>
+          <p class="text-sm text-[var(--muted)]">Attached (default)</p>
           <ToggleButtonGroup selection-mode="multiple">
             <ToggleButton aria-label="Bold" id="bold" is-icon-only>
               <IconBold />
@@ -180,7 +180,7 @@ export const AttachedVsDetached: Story = {
           </ToggleButtonGroup>
         </div>
         <div class="flex flex-col gap-2">
-          <p class="text-sm text-muted">Detached</p>
+          <p class="text-sm text-[var(--muted)]">Detached</p>
           <ToggleButtonGroup is-detached selection-mode="multiple">
             <ToggleButton aria-label="Bold" id="bold" is-icon-only>
               <IconBold />
@@ -230,7 +230,7 @@ export const SelectionMode: Story = {
     template: `
       <div class="flex flex-col gap-6">
         <div class="flex flex-col gap-2">
-          <p class="text-sm text-muted">Single selection</p>
+          <p class="text-sm text-[var(--muted)]">Single selection</p>
           <ToggleButtonGroup :default-selected-keys="['center']" selection-mode="single">
             <ToggleButton id="left">
               <IconTextAlignLeft />
@@ -249,7 +249,7 @@ export const SelectionMode: Story = {
           </ToggleButtonGroup>
         </div>
         <div class="flex flex-col gap-2">
-          <p class="text-sm text-muted">Multiple selection</p>
+          <p class="text-sm text-[var(--muted)]">Multiple selection</p>
           <ToggleButtonGroup
             :default-selected-keys="['bold', 'underline']"
             selection-mode="multiple"
@@ -307,7 +307,7 @@ export const Controlled: Story = {
             <IconStrikethrough />
           </ToggleButton>
         </ToggleButtonGroup>
-        <p class="text-sm text-muted">
+        <p class="text-sm text-[var(--muted)]">
           Selected:
           <span class="font-medium">
             {{ selectedKeys.size > 0 ? [...selectedKeys].join(', ') : 'None' }}
@@ -324,7 +324,7 @@ export const Disabled: Story = {
     template: `
       <div class="flex flex-col gap-6">
         <div class="flex flex-col gap-2">
-          <p class="text-sm text-muted">All buttons disabled</p>
+          <p class="text-sm text-[var(--muted)]">All buttons disabled</p>
           <ToggleButtonGroup is-disabled selection-mode="multiple">
             <ToggleButton aria-label="Bold" id="bold" is-icon-only>
               <IconBold />
@@ -340,7 +340,7 @@ export const Disabled: Story = {
           </ToggleButtonGroup>
         </div>
         <div class="flex flex-col gap-2">
-          <p class="text-sm text-muted">Individual button disabled</p>
+          <p class="text-sm text-[var(--muted)]">Individual button disabled</p>
           <ToggleButtonGroup selection-mode="multiple">
             <ToggleButton aria-label="Bold" id="bold" is-icon-only>
               <IconBold />
@@ -428,7 +428,7 @@ export const Examples: Story = {
     template: `
       <div class="flex flex-col items-start gap-8">
         <div class="flex flex-col gap-2">
-          <p class="text-sm text-muted">Text formatting toolbar</p>
+          <p class="text-sm text-[var(--muted)]">Text formatting toolbar</p>
           <div class="flex gap-2">
             <ToggleButtonGroup
               :selected-keys="formatting"
@@ -473,7 +473,7 @@ export const Examples: Story = {
         </div>
 
         <div class="flex flex-col gap-2">
-          <p class="text-sm text-muted">View mode switcher</p>
+          <p class="text-sm text-[var(--muted)]">View mode switcher</p>
           <ToggleButtonGroup
             :default-selected-keys="['grid']"
             disallow-empty-selection
@@ -495,7 +495,7 @@ export const Examples: Story = {
         </div>
 
         <div class="flex flex-col gap-2">
-          <p class="text-sm text-muted">Vertical toolbar</p>
+          <p class="text-sm text-[var(--muted)]">Vertical toolbar</p>
           <ToggleButtonGroup orientation="vertical" selection-mode="multiple">
             <ToggleButton aria-label="Bold" id="bold" is-icon-only>
               <IconBold />

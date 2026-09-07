@@ -107,11 +107,11 @@ export const FullWidth: Story = {
           <Label>Time</Label>
           <TimeFieldGroup full-width>
             <TimeFieldPrefix>
-              <IconClock class="size-4 text-muted" />
+              <IconClock class="size-4 text-[var(--muted)]" />
             </TimeFieldPrefix>
             ${input}
             <TimeFieldSuffix>
-              <IconChevronDown class="size-4 text-muted" />
+              <IconChevronDown class="size-4 text-[var(--muted)]" />
             </TimeFieldSuffix>
           </TimeFieldGroup>
         </TimeField>
@@ -281,7 +281,7 @@ export const WithPrefixIcon: Story = {
         <Label>Time</Label>
         <TimeFieldGroup>
           <TimeFieldPrefix>
-            <IconClock class="size-4 text-muted" />
+            <IconClock class="size-4 text-[var(--muted)]" />
           </TimeFieldPrefix>
           ${input}
         </TimeFieldGroup>
@@ -299,7 +299,7 @@ export const WithSuffixIcon: Story = {
         <TimeFieldGroup>
           ${input}
           <TimeFieldSuffix>
-            <IconClock class="size-4 text-muted" />
+            <IconClock class="size-4 text-[var(--muted)]" />
           </TimeFieldSuffix>
         </TimeFieldGroup>
       </TimeField>
@@ -315,11 +315,11 @@ export const WithPrefixAndSuffix: Story = {
         <Label>Time</Label>
         <TimeFieldGroup>
           <TimeFieldPrefix>
-            <IconClock class="size-4 text-muted" />
+            <IconClock class="size-4 text-[var(--muted)]" />
           </TimeFieldPrefix>
           ${input}
           <TimeFieldSuffix>
-            <IconChevronDown class="size-4 text-muted" />
+            <IconChevronDown class="size-4 text-[var(--muted)]" />
           </TimeFieldSuffix>
         </TimeFieldGroup>
         <Description>Enter a time</Description>
@@ -373,7 +373,7 @@ export const FormExample: Story = {
           <Label>Appointment time</Label>
           <TimeFieldGroup>
             <TimeFieldPrefix>
-              <IconClock class="size-4 text-muted" />
+              <IconClock class="size-4 text-[var(--muted)]" />
             </TimeFieldPrefix>
             ${input}
           </TimeFieldGroup>
@@ -404,7 +404,7 @@ export const AllVariations: Story = {
             <Label>Time</Label>
             <TimeFieldGroup>
               <TimeFieldPrefix>
-                <IconClock class="size-4 text-muted" />
+                <IconClock class="size-4 text-[var(--muted)]" />
               </TimeFieldPrefix>
               ${input}
             </TimeFieldGroup>
@@ -416,7 +416,7 @@ export const AllVariations: Story = {
             <TimeFieldGroup>
               ${input}
               <TimeFieldSuffix>
-                <IconClock class="size-4 text-muted" />
+                <IconClock class="size-4 text-[var(--muted)]" />
               </TimeFieldSuffix>
             </TimeFieldGroup>
             <Description>Enter a time</Description>
@@ -426,11 +426,11 @@ export const AllVariations: Story = {
             <Label>Time</Label>
             <TimeFieldGroup>
               <TimeFieldPrefix>
-                <IconClock class="size-4 text-muted" />
+                <IconClock class="size-4 text-[var(--muted)]" />
               </TimeFieldPrefix>
               ${input}
               <TimeFieldSuffix>
-                <IconChevronDown class="size-4 text-muted" />
+                <IconChevronDown class="size-4 text-[var(--muted)]" />
               </TimeFieldSuffix>
             </TimeFieldGroup>
             <Description>Enter a time</Description>

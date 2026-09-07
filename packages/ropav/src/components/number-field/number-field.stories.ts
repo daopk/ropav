@@ -501,7 +501,7 @@ export const WithChevrons: Story = {
         <Label>Number field with chevrons</Label>
         <NumberFieldGroup class="flex">
           <NumberFieldInput class="flex-1" />
-          <div class="flex h-full flex-col border-s border-field-placeholder/15">
+          <div class="flex h-full flex-col border-s border-[var(--field-placeholder,var(--muted))]/15">
             <NumberFieldIncrementButton
               class="flex h-1/2 w-6 items-center justify-center rounded-none border-0 pt-0.5 text-sm"
             >
@@ -610,7 +610,7 @@ export const FormExample: Story = {
           </template>
           <template v-else>Place Order</template>
         </Button>
-        <p v-if="submitted" class="text-sm text-muted">Order submitted — {{ submitted }}</p>
+        <p v-if="submitted" class="text-sm text-[var(--muted)]">Order submitted — {{ submitted }}</p>
       </Form>
     `,
   }),

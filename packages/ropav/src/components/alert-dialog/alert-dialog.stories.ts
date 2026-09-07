@@ -99,7 +99,7 @@ export const Statuses: Story = {
         {
           body: "You'll need to sign in again to access your account. Any unsaved changes will be lost.",
           cancel: "Stay Signed In",
-          classNames: "bg-accent-soft text-accent-soft-foreground",
+          classNames: "bg-[var(--accent-soft)] text-[var(--accent-soft-foreground)]",
           confirm: "Sign Out",
           header: "Sign out of your account?",
           status: "accent",
@@ -108,7 +108,7 @@ export const Statuses: Story = {
         {
           body: "This will mark the task as complete and notify all team members. The task will be moved to your completed list.",
           cancel: "Not Yet",
-          classNames: "bg-success-soft text-success-soft-foreground",
+          classNames: "bg-[var(--success-soft)] text-[var(--success-soft-foreground)]",
           confirm: "Mark Complete",
           header: "Complete this task?",
           status: "success",
@@ -117,7 +117,7 @@ export const Statuses: Story = {
         {
           body: "You have unsaved changes that will be permanently lost. Are you sure you want to discard them?",
           cancel: "Keep Editing",
-          classNames: "bg-warning-soft text-warning-soft-foreground",
+          classNames: "bg-[var(--warning-soft)] text-[var(--warning-soft-foreground)]",
           confirm: "Discard",
           header: "Discard unsaved changes?",
           status: "warning",
@@ -126,7 +126,7 @@ export const Statuses: Story = {
         {
           body: "This will permanently delete your account and remove all your data from our servers. This action is irreversible.",
           cancel: "Cancel",
-          classNames: "bg-danger-soft text-danger-soft-foreground",
+          classNames: "bg-[var(--danger-soft)] text-[var(--danger-soft-foreground)]",
           confirm: "Delete Account",
           header: "Delete your account?",
           status: "danger",
@@ -227,7 +227,7 @@ export const Sizes: Story = {
               <AlertDialogDialog>
                 <AlertDialogCloseTrigger />
                 <AlertDialogHeader>
-                  <AlertDialogIcon class="bg-default text-foreground">
+                  <AlertDialogIcon class="bg-[var(--default)] text-[var(--foreground)]">
                     <IconRocket class="size-5" />
                   </AlertDialogIcon>
                   <AlertDialogHeading>
@@ -386,7 +386,7 @@ export const DismissBehavior: Story = {
       <div class="flex max-w-sm flex-col gap-6">
         <div class="flex flex-col gap-2">
           <h3 class="text-lg font-semibold">isDismissable</h3>
-          <p class="text-sm text-muted">
+          <p class="text-sm text-[var(--muted)]">
             Controls whether the alert dialog can be dismissed by clicking the overlay backdrop.
             Alert dialogs typically require explicit action, so this defaults to
             <code>false</code>. Set to <code>true</code> for less critical confirmations.
@@ -402,7 +402,7 @@ export const DismissBehavior: Story = {
                       <IconCircleInfo class="size-5" />
                     </AlertDialogIcon>
                     <AlertDialogHeading>isDismissable = false</AlertDialogHeading>
-                    <p class="text-sm leading-5 text-muted">
+                    <p class="text-sm leading-5 text-[var(--muted)]">
                       Clicking the backdrop won't close this alert dialog
                     </p>
                   </AlertDialogHeader>
@@ -424,7 +424,7 @@ export const DismissBehavior: Story = {
 
         <div class="flex flex-col gap-2">
           <h3 class="text-lg font-semibold">isKeyboardDismissDisabled</h3>
-          <p class="text-sm text-muted">
+          <p class="text-sm text-[var(--muted)]">
             Controls whether the ESC key can dismiss the alert dialog. Alert dialogs typically
             require explicit action, so this defaults to <code>true</code>. When set to
             <code>false</code>, the ESC key will be enabled.
@@ -440,7 +440,7 @@ export const DismissBehavior: Story = {
                       <IconCircleInfo class="size-5" />
                     </AlertDialogIcon>
                     <AlertDialogHeading>isKeyboardDismissDisabled = true</AlertDialogHeading>
-                    <p class="text-sm leading-5 text-muted">ESC key is disabled</p>
+                    <p class="text-sm leading-5 text-[var(--muted)]">ESC key is disabled</p>
                   </AlertDialogHeader>
                   <AlertDialogBody>
                     <p>
@@ -469,7 +469,7 @@ export const CloseMethods: Story = {
       <div class="flex max-w-2xl flex-col gap-8">
         <div class="flex flex-col gap-2">
           <h3 class="text-lg font-semibold">Using AlertDialogClose</h3>
-          <p class="text-sm text-muted">
+          <p class="text-sm text-[var(--muted)]">
             The simplest way to close a dialog. Wrap any Button in
             <code>AlertDialogClose</code>. When clicked, it will automatically close the dialog.
           </p>
@@ -500,7 +500,7 @@ export const CloseMethods: Story = {
 
         <div class="flex flex-col gap-2">
           <h3 class="text-lg font-semibold">Using the Dialog's slot</h3>
-          <p class="text-sm text-muted">
+          <p class="text-sm text-[var(--muted)]">
             Take <code>close</code> from the dialog's own slot. This gives you full control over
             when and how to close the dialog, allowing you to add custom logic before closing.
           </p>
@@ -552,16 +552,16 @@ export const Controlled: Story = {
     template: `
       <div class="flex max-w-md flex-col gap-8">
         <div class="flex flex-col gap-3">
-          <h3 class="text-lg font-semibold text-foreground">With a ref</h3>
-          <p class="text-sm leading-relaxed text-pretty text-muted">
-            Control the alert dialog with a plain <code class="text-foreground">ref</code> for
+          <h3 class="text-lg font-semibold text-[var(--foreground)]">With a ref</h3>
+          <p class="text-sm leading-relaxed text-pretty text-[var(--muted)]">
+            Control the alert dialog with a plain <code class="text-[var(--foreground)]">ref</code> for
             simple state management. Perfect for basic use cases.
           </p>
-          <div class="flex flex-col items-start gap-3 rounded-2xl bg-surface p-4 shadow-sm">
+          <div class="flex flex-col items-start gap-3 rounded-[calc(var(--radius)*2)] bg-[var(--surface)] p-4 shadow-sm">
             <div class="flex w-full items-center justify-between">
-              <p class="text-xs text-muted">
+              <p class="text-xs text-[var(--muted)]">
                 Status:
-                <span class="font-mono font-medium text-foreground">
+                <span class="font-mono font-medium text-[var(--foreground)]">
                   {{ isOpen ? "open" : "closed" }}
                 </span>
               </p>
@@ -599,17 +599,17 @@ export const Controlled: Story = {
         </div>
 
         <div class="flex flex-col gap-3">
-          <h3 class="text-lg font-semibold text-foreground">With useOverlayTriggerState()</h3>
-          <p class="text-sm leading-relaxed text-pretty text-muted">
-            Use the <code class="text-foreground">useOverlayTriggerState</code> composable for a
+          <h3 class="text-lg font-semibold text-[var(--foreground)]">With useOverlayTriggerState()</h3>
+          <p class="text-sm leading-relaxed text-pretty text-[var(--muted)]">
+            Use the <code class="text-[var(--foreground)]">useOverlayTriggerState</code> composable for a
             cleaner API with convenient methods like <code>open()</code>, <code>close()</code> and
             <code>toggle()</code>.
           </p>
-          <div class="flex flex-col items-start gap-3 rounded-2xl bg-surface p-4 shadow-sm">
+          <div class="flex flex-col items-start gap-3 rounded-[calc(var(--radius)*2)] bg-[var(--surface)] p-4 shadow-sm">
             <div class="flex w-full items-center justify-between">
-              <p class="text-xs text-muted">
+              <p class="text-xs text-[var(--muted)]">
                 Status:
-                <span class="font-mono font-medium text-foreground">
+                <span class="font-mono font-medium text-[var(--foreground)]">
                   {{ state.isOpen.value ? "open" : "closed" }}
                 </span>
               </p>
@@ -659,16 +659,16 @@ export const CustomTrigger: Story = {
     template: `
       <AlertDialog>
         <AlertDialogTrigger
-          class="group flex items-center gap-3 rounded-2xl bg-surface p-4 shadow-xs select-none hover:bg-surface-secondary"
+          class="group flex items-center gap-3 rounded-[calc(var(--radius)*2)] bg-[var(--surface)] p-4 shadow-xs select-none hover:bg-[var(--surface-secondary)]"
         >
           <div
-            class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-danger-soft text-danger-soft-foreground"
+            class="flex size-12 shrink-0 items-center justify-center rounded-[calc(var(--radius)*1.5)] bg-[var(--danger-soft)] text-[var(--danger-soft-foreground)]"
           >
             <IconTrashBin class="size-6" />
           </div>
           <div class="flex flex-1 flex-col gap-0.5">
             <p class="text-sm font-semibold">Delete Item</p>
-            <p class="text-xs text-muted">Permanently remove this item</p>
+            <p class="text-xs text-[var(--muted)]">Permanently remove this item</p>
           </div>
         </AlertDialogTrigger>
         <AlertDialogBackdrop>
@@ -803,14 +803,14 @@ export const CustomPortal: Story = {
           <p class="text-sm">
             Render alert dialogs inside a custom container instead of <code>document.body</code>
           </p>
-          <p class="text-sm text-muted">
+          <p class="text-sm text-[var(--muted)]">
             Apply <code class="rounded px-1 py-0.5 text-xs">transform: translateZ(0)</code> to the
             container to create a new stacking context.
           </p>
         </div>
         <div
           :ref="setPortal"
-          class="relative flex h-[380px] items-center justify-center overflow-hidden rounded bg-muted/20"
+          class="relative flex h-[380px] items-center justify-center overflow-hidden rounded bg-[var(--muted)]/20"
           style="transform: translate(0)"
         >
           <AlertDialog v-if="portalContainer">
@@ -824,17 +824,17 @@ export const CustomPortal: Story = {
                     <AlertDialogHeading>Custom Portal</AlertDialogHeading>
                   </AlertDialogHeader>
                   <AlertDialogBody>
-                    <p class="text-sm text-muted">
+                    <p class="text-sm text-[var(--muted)]">
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
                       incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
                       nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                     </p>
-                    <p class="text-sm text-muted">
+                    <p class="text-sm text-[var(--muted)]">
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
                       incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
                       nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                     </p>
-                    <p class="text-sm text-muted">
+                    <p class="text-sm text-[var(--muted)]">
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
                       incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
                       nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.

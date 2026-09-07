@@ -100,7 +100,7 @@ export const WithTrigger: Story = {
       <div class="flex items-center gap-3">
         <Tooltip :delay="0">
           <TooltipTrigger aria-label="Tooltip trigger">
-            <div class="rounded-full bg-accent-soft p-2">
+            <div class="rounded-full bg-[var(--accent-soft)] p-2">
               <IconCircleInfo />
             </div>
           </TooltipTrigger>

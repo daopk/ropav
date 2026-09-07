@@ -141,7 +141,7 @@ export const WithCustomContent: Story = {
               </Avatar>
               <div class="flex flex-col gap-0">
                 <p class="text-sm leading-5 font-medium">Zoe</p>
-                <p class="text-xs leading-none text-muted">zoe@ropav.com</p>
+                <p class="text-xs leading-none text-[var(--muted)]">zoe@ropav.com</p>
               </div>
             </div>
           </PopoverTrigger>
@@ -156,7 +156,7 @@ export const WithCustomContent: Story = {
                     </Avatar>
                     <div class="flex h-full flex-col items-start justify-center">
                       <span class="text-sm font-medium">Zoey Lang</span>
-                      <span class="text-sm leading-4 font-normal tracking-tight text-muted">
+                      <span class="text-sm leading-4 font-normal tracking-tight text-[var(--muted)]">
                         @zoe
                       </span>
                     </div>
@@ -180,11 +180,11 @@ export const WithCustomContent: Story = {
               <div class="flex gap-3">
                 <div class="flex gap-1">
                   <p class="text-sm font-semibold">4</p>
-                  <p class="text-sm text-muted">Following</p>
+                  <p class="text-sm text-[var(--muted)]">Following</p>
                 </div>
                 <div class="flex gap-1">
                   <p class="text-sm font-semibold">97.1K</p>
-                  <p class="text-sm text-muted">Followers</p>
+                  <p class="text-sm text-[var(--muted)]">Followers</p>
                 </div>
               </div>
             </PopoverDialog>
@@ -202,7 +202,7 @@ export const SpringAnimation: Story = {
     template: `
       <div class="flex flex-col items-center gap-8 p-8">
         <h1 class="text-xl font-semibold">Popover with Spring Animation</h1>
-        <p class="text-sm text-muted">
+        <p class="text-sm text-[var(--muted)]">
           The popover now uses a spring easing function for a more dynamic feel
         </p>
 
@@ -216,18 +216,18 @@ export const SpringAnimation: Story = {
               <PopoverDialog>
                 <PopoverArrow />
                 <PopoverHeading>Spring Animation 🎉</PopoverHeading>
-                <p class="mt-2 text-sm text-muted">
+                <p class="mt-2 text-sm text-[var(--muted)]">
                   Notice the subtle bounce effect when the popover appears and disappears.
                 </p>
-                <p class="mt-4 text-xs text-muted">Easing: cubic-bezier(0.36, 1.66, 0.04, 1)</p>
+                <p class="mt-4 text-xs text-[var(--muted)]">Easing: cubic-bezier(0.36, 1.66, 0.04, 1)</p>
               </PopoverDialog>
             </PopoverContent>
           </Popover>
         </div>
 
-        <div class="space-y-1 text-center text-xs text-muted">
+        <div class="space-y-1 text-center text-xs text-[var(--muted)]">
           <p>Animation classes applied:</p>
-          <code class="rounded bg-surface px-2 py-1 text-xs">
+          <code class="rounded bg-[var(--surface)] px-2 py-1 text-xs">
             data-[entering]:[--rp-enter-scale:0.9] data-[entering]:[--rp-enter-opacity:0]
             data-[entering]:[--rp-ease:cubic-bezier(0.36,1.66,0.04,1)]
             data-[entering]:[--rp-duration:600ms]
@@ -250,14 +250,14 @@ export const CardWithHelptext: Story = {
             <Popover>
               <PopoverTrigger>
                 <Button aria-label="Help" is-icon-only size="sm" variant="ghost">
-                  <IconCircleInfo class="text-muted" />
+                  <IconCircleInfo class="text-[var(--muted)]" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent v-bind="args" class="max-w-[200px]" placement="right">
                 <PopoverDialog>
                   <PopoverArrow />
                   <PopoverHeading>Help Information</PopoverHeading>
-                  <p class="text-sm text-muted">
+                  <p class="text-sm text-[var(--muted)]">
                     This is a helptext popover that appears on top of the card surface. It provides
                     additional context or information about the card title.
                   </p>
