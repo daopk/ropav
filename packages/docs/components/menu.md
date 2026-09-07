@@ -30,7 +30,7 @@ a [Separator](/components/separator) between sections draws the line.
 </Demo>
 
 `variant="danger"` on an item is the one place colour does work in a menu — and it still needs the
-word "Delete" beside it.
+word "Delete" beside it. The `Label` in the demo is for the type, not the colour.
 
 ## When a menu holds a choice
 

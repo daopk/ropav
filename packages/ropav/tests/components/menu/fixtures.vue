@@ -5,6 +5,7 @@ import type { CollectionSelection } from "@/composables/use-selection-manager";
 
 import { EmptyState } from "@/components/empty-state";
 import { Header } from "@/components/header";
+import { Label } from "@/components/label";
 import { Menu } from "@/components/menu";
 import { MenuItem } from "@/components/menu-item";
 import { MenuSection } from "@/components/menu-section";
@@ -60,15 +61,23 @@ defineEmits<{
         :id="item.id"
         :is-disabled="item.isDisabled"
         :text-value="item.textValue"
+        :variant="item.variant"
       >
-        {{ item.label }}
+        <Label v-if="props.withLabel">{{ item.label }}</Label>
+        <template v-else>{{ item.label }}</template>
       </MenuItem>
     </MenuSection>
     <template v-else>
       <template v-for="(item, index) of props.items" :key="item.id">
         <Separator v-if="props.withSeparator && index > 0" />
-        <MenuItem :id="item.id" :is-disabled="item.isDisabled" :text-value="item.textValue">
-          {{ item.label }}
+        <MenuItem
+          :id="item.id"
+          :is-disabled="item.isDisabled"
+          :text-value="item.textValue"
+          :variant="item.variant"
+        >
+          <Label v-if="props.withLabel">{{ item.label }}</Label>
+          <template v-else>{{ item.label }}</template>
         </MenuItem>
       </template>
     </template>

@@ -240,10 +240,13 @@
 
 /* Danger variant */
 .rp-menu-item--danger {
+  color: var(--danger);
+
   .rp-menu-item__indicator {
     color: var(--danger);
   }
 
+  /* A label declares a colour on itself, so it does not inherit the one above. */
   [data-slot="label"] {
     color: var(--danger);
   }

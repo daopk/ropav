@@ -1,12 +1,14 @@
 import type { CollectionKey } from "@/composables/use-collection";
 import type { FocusStrategy } from "@/composables/use-overlay-trigger-state";
 import type { SelectionMode } from "@/composables/use-selection-manager";
+import type { MenuItemVariants } from "@ropav/styles";
 
 export interface MenuFixtureItem {
   id: string;
   label: string;
   isDisabled?: boolean;
   textValue?: string;
+  variant?: MenuItemVariants["variant"];
 }
 
 export interface MenuFixtureProps {
@@ -30,4 +32,6 @@ export interface MenuFixtureProps {
   withSection?: boolean;
   /** Puts a separator between the items, which the menu re-homes as a `div`. */
   withSeparator?: boolean;
+  /** Wraps each item's text in a `Label`, the composition the docs demo uses. */
+  withLabel?: boolean;
 }
