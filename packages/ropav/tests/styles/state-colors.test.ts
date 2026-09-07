@@ -1,6 +1,10 @@
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 
+import {
+  CONFIGURATION_ATTRIBUTES,
+  STATE_ATTRIBUTES,
+} from "@ropav/testing/helpers/component-attributes";
 import { describe, expect, it } from "vitest";
 
 /**
@@ -43,17 +47,40 @@ const reachable = (value: string) =>
   value.includes("var(--") || (DEFERS_TO_CALLER.test(value) && !LITERAL_COLOUR.test(value));
 
 /**
- * `data-*` that pick an arrangement or a variant rather than an interaction state. Everything else
- * counts as state, so a state ropav adds later is caught by default rather than missed.
+ * `data-*` that pick an arrangement or a variant rather than an interaction state.
+ *
+ * A named list rather than "everything else", now that the names are shared with the Storybook
+ * sweep — and a list of either kind can go stale, so the one below is what stops it: an attribute
+ * a rule uses and neither list claims fails, instead of falling to whichever side happens to be
+ * the default. That matters most where this is heading, since writing a variant as an attribute
+ * introduces its names all at once.
  */
-const CONFIGURATION =
-  /\[data-(slot|orientation|placement|side|direction|layout|level|type|theme|vibrant-palette|reduce-motion|selection-mode|collection|key|light-color|default-icon|hide-separator|allows-sorting|has-submenu|has-child-items|entering|exiting|collapsed|[a-z-]*scroll)[\]=]/g;
+const CONFIGURATION = new RegExp(
+  String.raw`\[data-(${CONFIGURATION_ATTRIBUTES.join("|")})[\]=]`,
+  "g",
+);
+
+/** Every `data-*` a rule selects on, which between the two lists has to be all of them. */
+const attributesUsed = () => {
+  const dir = path.join(STYLES, "components");
+  const used = new Set<string>();
+
+  for (const file of readdirSync(dir).filter((name) => name.endsWith(".css"))) {
+    for (const [, name] of readFileSync(path.join(dir, file), "utf8").matchAll(
+      /\[data-([a-z0-9-]+)[\]=]/g,
+    )) {
+      used.add(name!);
+    }
+  }
+
+  return used;
+};
 
 const STATE_PSEUDO =
   /:(hover|active|focus-visible|focus|focus-within|disabled|checked|indeterminate|invalid|placeholder-shown)\b/;
 
 const isStateSelector = (selector: string) => {
-  const withoutConfiguration = selector.replace(CONFIGURATION, "");
+  const withoutConfiguration = selector.replaceAll(CONFIGURATION, "");
 
   return (
     STATE_PSEUDO.test(withoutConfiguration) ||
@@ -217,6 +244,19 @@ describe("state colours go through a custom property", () => {
       .map(([file, count]) => `${file}: ${count}, ledgered at ${KNOWN_DEBT[file]}`);
 
     expect(over).toEqual([]);
+  });
+
+  it("classifies every attribute the components select on, as one thing or the other", () => {
+    const classified = new Set<string>([...STATE_ATTRIBUTES, ...CONFIGURATION_ATTRIBUTES]);
+    const unclassified = [...attributesUsed()].filter((name) => !classified.has(name)).sort();
+
+    expect(unclassified, "add these to `@ropav/testing/helpers/component-attributes`").toEqual([]);
+  });
+
+  it("claims no attribute for both lists, since the two answer opposite questions", () => {
+    const state = new Set<string>(STATE_ATTRIBUTES);
+
+    expect(CONFIGURATION_ATTRIBUTES.filter((name) => state.has(name))).toEqual([]);
   });
 
   it("carries no stale ledger entry", () => {

@@ -1,3 +1,4 @@
+import { VARIANT_ATTRIBUTES } from "@ropav/testing/helpers/component-attributes";
 import { cdp } from "vitest/browser";
 
 /**
@@ -184,10 +185,24 @@ const settle = () =>
  */
 const VARIANT = /^rp-[a-z0-9-]*--|(?:^|:)\[--rp-/;
 
+/**
+ * The same thing said as an attribute, which is what a modifier becomes when it stops being a
+ * class.
+ *
+ * Read alongside the class test rather than in place of it: a component whose variant has moved
+ * carries no `--` class at all, and a sweep that only knows the old spelling would find nothing on
+ * it and report nothing wrong — the quietest way an audit can stop being one. The names come from
+ * the same list `state-colors.test.ts` reads, so neither sweep can drift away from the stylesheet
+ * on its own.
+ */
+const VARIANT_SELECTOR = VARIANT_ATTRIBUTES.map((name) => `[data-${name}]`).join(",");
+
 export const forcedColorsAudit = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
   const stateful = [...canvasElement.querySelectorAll(STATE_SELECTOR)];
-  const varied = [...canvasElement.querySelectorAll("[class]")].filter((element) =>
-    [...element.classList].some((name) => VARIANT.test(name)),
+  const varied = [...canvasElement.querySelectorAll(`[class],${VARIANT_SELECTOR}`)].filter(
+    (element) =>
+      element.matches(VARIANT_SELECTOR) ||
+      [...element.classList].some((name) => VARIANT.test(name)),
   );
   const targets = [...new Set([...stateful, ...varied])];
 

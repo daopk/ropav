@@ -141,7 +141,7 @@ const closingParen = (text: string, open: number): number => {
 };
 
 /** The index of each top-level combinator in a complex selector, with the character at it. */
-const topLevelCombinators = (selector: string): { at: number; char: string }[] => {
+export const topLevelCombinators = (selector: string): { at: number; char: string }[] => {
   const found: { at: number; char: string }[] = [];
   let depth = 0;
   let quote: string | null = null;
