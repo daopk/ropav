@@ -89,6 +89,99 @@ describe("the published stylesheets", () => {
 });
 
 /**
+ * The same sentence, about the other half of what ships.
+ *
+ * The stylesheets were the whole of this check for as long as CSS was the only place a utility
+ * could hide. It was not: `@ropav/styles` exported three constants made of `focus-visible:ring-*`
+ * and `disabled:opacity-[var(--disabled-opacity)]` from its root, for a package that compiles no
+ * Tailwind — a consumer importing one got a string that named nothing. Nobody called them, which
+ * is the only reason it never showed.
+ *
+ * Two shapes are read here. A string literal carrying a variant prefix or an arbitrary bracket is
+ * the first, and it is what those three were. The second is narrower and stronger: every class a
+ * template actually writes has to be one the package defines. That is the one that catches a
+ * completion accepted inside component source — `class="p-0"` on the mobile sidebar's dialog and
+ * `class="sr-only"` on its heading, both of which resolved to nothing in an app with no build, and
+ * between them left a drawer that kept the padding it meant to drop and read its accessible name
+ * out as visible copy.
+ *
+ * Stories are excluded from both. Storybook runs Tailwind for its own sake and says so.
+ */
+
+const SOURCE_ROOTS = [
+  ["styles", path.resolve(import.meta.dirname, "../../../styles/src")],
+  ["ropav", ROPAV],
+] as const;
+
+/** A variant prefix, which nothing but a Tailwind build gives meaning to. */
+const UTILITY_VARIANT =
+  /(?:^|\s)(?:group-|peer-)?(?:hover|focus|focus-visible|focus-within|active|disabled|aria-disabled|checked|dark|rtl|ltr|sm|md|lg|xl|2xl|first|last|odd|even|motion-safe|motion-reduce|print):[a-z[]/;
+
+/** An arbitrary value (`text-[var(--muted)]`) or an arbitrary property (`[--button-bg:red]`). */
+const UTILITY_ARBITRARY = /[\w)\]]-\[|(?:^|\s)\[--[a-z-]+:/;
+
+const STRING_LITERAL = /"([^"\\\n]*)"|'([^'\\\n]*)'|`([^`\\]*)`/g;
+
+/** A literal `class` attribute. A bound one is an expression, and its strings are read above. */
+const CLASS_ATTRIBUTE = /(?<![:@\w-])class="([^"{}]*)"/g;
+
+const sourceFiles = SOURCE_ROOTS.flatMap(([label, root]) =>
+  readdirSync(root, { recursive: true, withFileTypes: true })
+    .filter((entry) => entry.isFile() && /\.(ts|vue)$/.test(entry.name))
+    .filter((entry) => !entry.name.endsWith(".stories.ts"))
+    .map((entry) => path.join(entry.parentPath, entry.name))
+    .filter((file) => !file.includes("node_modules"))
+    .map((file) => [`${label}/${path.relative(root, file)}`, file] as const),
+).sort();
+
+/** Every class name the two packages' stylesheets define, which is what a template may name. */
+const shipped = new Set(
+  [...stylesheets(STYLES, "styles"), ...stylesheets(ROPAV, "ropav")].flatMap(([, file]) =>
+    [...live(readFileSync(file, "utf8")).matchAll(/\.(-?[_a-zA-Z][\w-]*)/g)].map(
+      ([, name]) => name!,
+    ),
+  ),
+);
+
+describe("the published sources", () => {
+  it("were read at all", () => {
+    expect(sourceFiles.length).toBeGreaterThan(400);
+    expect(shipped.size).toBeGreaterThan(500);
+  });
+
+  it("name no utility a Tailwind build would have to compile", () => {
+    const naming = sourceFiles.flatMap(([name, file]) =>
+      readFileSync(file, "utf8")
+        .split("\n")
+        .flatMap((line, index) =>
+          [...line.matchAll(STRING_LITERAL)]
+            .map((match) => match[1] ?? match[2] ?? match[3] ?? "")
+            .filter((value) => UTILITY_VARIANT.test(value) || UTILITY_ARBITRARY.test(value))
+            .map((value) => `${name}:${index + 1}: ${value}`),
+        ),
+    );
+
+    expect(naming).toEqual([]);
+  });
+
+  it("name only classes the package ships", () => {
+    const unresolved = sourceFiles.flatMap(([name, file]) =>
+      readFileSync(file, "utf8")
+        .split("\n")
+        .flatMap((line, index) =>
+          [...line.matchAll(CLASS_ATTRIBUTE)]
+            .flatMap((match) => match[1]!.split(/\s+/))
+            .filter(Boolean)
+            .filter((token) => !shipped.has(token))
+            .map((token) => `${name}:${index + 1}: ${token}`),
+        ),
+    );
+
+    expect(unresolved).toEqual([]);
+  });
+});
+
+/**
  * The docs are held to the finished standard rather than the ledger, because a reader copies what
  * they see and a reader is not on the migration's timetable.
  *
@@ -123,11 +216,77 @@ const copyable = (source: string): string[] => [
   ...[...source.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)].map((match) => match[1]!),
 ];
 
+/**
+ * A custom property written as a class — `class="[--button-bg-hover:var(--success)]"` — was how
+ * every page taught the one mechanism this library offers for retuning a state. It is a class name
+ * and nothing else to a reader with no build to compile it: no error, no colour, no clue.
+ *
+ * Narrow on purpose. An arbitrary *value* — `bg-[var(--accent)]` — stays legal, because
+ * `guide/installation.md` shows it deliberately and labels it as the Tailwind spelling of reading
+ * a token. It is the arbitrary *property* that has no meaning outside one build and a strictly
+ * better replacement inside every other: the `style` attribute, which needs none.
+ */
+const ARBITRARY_PROPERTY = /\[--[a-z][\w-]*\s*:/g;
+
+/**
+ * The demos are the part of the docs a reader actually copies - the page transcludes each one's
+ * source - so they are held to the same standard as a fenced block, and more strictly: a demo is
+ * a working file, and a utility in one compiles only because this site happens to run Tailwind for
+ * its own chrome. Every one of them is written in the tokens now, which is what a reader can take.
+ */
+const demos = readdirSync(path.join(DOCS, ".vitepress/theme/demos"), { withFileTypes: true })
+  .filter((entry) => entry.isFile() && entry.name.endsWith(".vue"))
+  .map((entry) => path.join(entry.parentPath, entry.name))
+  .sort();
+
+/** A literal `class` attribute, ignoring bound ones - those are expressions, not class lists. */
+const DEMO_CLASS = /(?<![:@\w-])class="([^"{}]*)"/g;
+
+describe("the demos", () => {
+  it("were read at all", () => {
+    expect(demos.length).toBeGreaterThan(60);
+  });
+
+  it("name no class a build has to compile", () => {
+    const naming = demos.flatMap((file) => {
+      const source = readFileSync(file, "utf8");
+      // Anywhere in the block, not just where a selector starts: a rule reaching a tag the docs'
+      // prose revert also claims has to be written through an ancestor, `.stack .note`.
+      const style = /<style[^>]*>([\s\S]*?)<\/style>/.exec(source)?.[1] ?? "";
+      const declared = new Set([...style.matchAll(/\.([a-zA-Z][\w-]*)/g)].map(([, name]) => name!));
+
+      return [...source.matchAll(DEMO_CLASS)]
+        .flatMap((match) => match[1]!.split(/\s+/))
+        .filter(Boolean)
+        .filter((token) => !token.startsWith("rp-") && !declared.has(token))
+        .map((token) => `${path.basename(file)}: ${token}`);
+    });
+
+    expect([...new Set(naming)]).toEqual([]);
+  });
+});
+
 describe("the documentation", () => {
+  it("was read at all", () => {
+    expect(pages.length).toBeGreaterThan(60);
+  });
+
   it("teaches no authoring API that needs Tailwind to exist", () => {
     const teaching = pages.flatMap((file) => {
       const hits = copyable(readFileSync(file, "utf8")).flatMap((block) =>
         [...live(block).matchAll(AT_RULE)].map(([, rule]) => `@${rule}`),
+      );
+
+      return [...new Set(hits)].map((hit) => `${path.relative(DOCS, file)}: ${hit}`);
+    });
+
+    expect(teaching).toEqual([]);
+  });
+
+  it("sets a custom property with the attribute rather than with a class", () => {
+    const teaching = pages.flatMap((file) => {
+      const hits = copyable(readFileSync(file, "utf8")).flatMap((block) =>
+        [...block.matchAll(ARBITRARY_PROPERTY)].map(([hit]) => hit),
       );
 
       return [...new Set(hits)].map((hit) => `${path.relative(DOCS, file)}: ${hit}`);
