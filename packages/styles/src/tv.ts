@@ -6,7 +6,13 @@
  * `components` layer and utilities in the later `utilities` one. Concatenation is the whole job.
  */
 
-type ClassValue = ClassValue[] | string | false | null | undefined;
+/**
+ * Exported because the declarations name it. A recipe's emitted type is structural, so a type the
+ * module keeps to itself has to be written out in full there instead of referenced — and this one
+ * refers to itself, so writing it out runs to the depth limit and ends in `any`. Every recipe's
+ * `.d.ts` carried twelve nested copies of it and gave up at the bottom. The keyword is the fix.
+ */
+export type ClassValue = ClassValue[] | string | false | null | undefined;
 
 type Props = Record<string, unknown>;
 
