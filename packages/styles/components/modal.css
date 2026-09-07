@@ -7,24 +7,62 @@
  * Element: trigger - the element that opens the modal
  */
 .rp-modal__trigger {
-  @apply inline-block cursor-(--cursor-interactive);
+  display: inline-block;
+  cursor: var(--cursor-interactive);
 
   transition:
     transform 250ms var(--ease-out-quart),
     background-color 150ms var(--ease-smooth),
     box-shadow 150ms var(--ease-out);
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   /* Focus state */
   &:focus-visible:not(:focus),
   &[data-focus-visible="true"] {
-    @apply status-focused;
+    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+      var(--rp-ring-color, currentcolor);
+    box-shadow:
+      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-ring-offset-width: 0px;
+    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+      var(--rp-ring-offset-color);
+    --rp-ring-offset-color: var(--background);
+    --rp-outline-style: none;
+    outline-style: none;
+    --rp-ring-offset-width: var(--ring-offset-width);
+    @media (forced-colors: active) {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
   }
 
   /* Disabled state */
   &:disabled,
   &[aria-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
   }
 
   /* Active/pressed state */
@@ -38,24 +76,61 @@
  * Element: backdrop - the overlay behind the dialog
  */
 .rp-modal__backdrop {
-  @apply fixed inset-0 z-50;
-  @apply flex flex-row items-center justify-center;
-  @apply h-(--visual-viewport-height) w-full;
+  position: fixed;
+  inset: 0px;
+  z-index: 50;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: var(--visual-viewport-height);
+  width: 100%;
 
   /* Entering animation */
   &[data-entering="true"] {
-    @apply animate-in duration-150 ease-out fade-in-0;
+    animation: enter var(--tw-animation-duration, var(--tw-duration, 0.15s)) var(--tw-ease, ease)
+      var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
+      var(--tw-animation-direction, normal) var(--tw-animation-fill-mode, none);
+    --tw-duration: 150ms;
+    transition-duration: 150ms;
+    --tw-ease: var(--ease-out);
+    transition-timing-function: var(--ease-out);
+    --tw-enter-opacity: calc(0/100);
+    --tw-enter-opacity: 0;
   }
 
   /* Exiting animation */
   &[data-exiting="true"] {
-    @apply animate-out duration-100 ease-out fade-out-0;
+    animation: exit var(--tw-animation-duration, var(--tw-duration, 0.15s)) var(--tw-ease, ease)
+      var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
+      var(--tw-animation-direction, normal) var(--tw-animation-fill-mode, none);
+    --tw-duration: 100ms;
+    transition-duration: 100ms;
+    --tw-ease: var(--ease-out);
+    transition-timing-function: var(--ease-out);
+    --tw-exit-opacity: calc(0/100);
+    --tw-exit-opacity: 0;
   }
 
   &[data-exiting="true"],
   &[data-entering="true"] {
-    @apply will-change-[opacity];
-    @apply motion-reduce:animate-none;
+    will-change: opacity;
+    &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+      animation: none;
+      &::before,
+      &::after {
+        animation: none;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+        animation: none;
+        &::before,
+        &::after {
+          animation: none;
+        }
+      }
+    }
   }
 }
 
@@ -63,64 +138,119 @@
  * Modifier: backdrop--transparent
  */
 .rp-modal__backdrop--transparent {
-  @apply bg-transparent;
+  background-color: transparent;
 }
 
 /**
  * Modifier: backdrop--opaque
  */
 .rp-modal__backdrop--opaque {
-  @apply bg-backdrop;
+  background-color: var(--backdrop);
 }
 
 /**
  * Modifier: backdrop--blur
  */
 .rp-modal__backdrop--blur {
-  @apply bg-backdrop backdrop-blur-md;
+  background-color: var(--backdrop);
+  --rp-backdrop-blur: blur(var(--blur-md));
+  -webkit-backdrop-filter: var(--rp-backdrop-blur,) var(--rp-backdrop-brightness,)
+    var(--rp-backdrop-contrast,) var(--rp-backdrop-grayscale,) var(--rp-backdrop-hue-rotate,)
+    var(--rp-backdrop-invert,) var(--rp-backdrop-opacity,) var(--rp-backdrop-saturate,)
+    var(--rp-backdrop-sepia,);
+  backdrop-filter: var(--rp-backdrop-blur,) var(--rp-backdrop-brightness,)
+    var(--rp-backdrop-contrast,) var(--rp-backdrop-grayscale,) var(--rp-backdrop-hue-rotate,)
+    var(--rp-backdrop-invert,) var(--rp-backdrop-opacity,) var(--rp-backdrop-saturate,)
+    var(--rp-backdrop-sepia,);
 }
 
 /**
  * Element: container - the positioning wrapper for the modal
  */
 .rp-modal__container {
-  @apply flex flex-col items-center;
-  @apply h-(--visual-viewport-height) w-full min-w-0 flex-1;
-  @apply p-4;
-  @apply sm:w-fit sm:p-10;
-  @apply pointer-events-none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: var(--visual-viewport-height);
+  width: 100%;
+  min-width: 0px;
+  flex: 1;
+  padding: calc(var(--spacing) * 4);
+  @media (width >= 40rem) {
+    width: fit-content;
+    padding: calc(var(--spacing) * 10);
+  }
+  pointer-events: none;
 
   /* Entering animation */
   &[data-entering="true"] {
-    @apply animate-in duration-250 ease-out-quad fade-in-0 zoom-in-105;
+    animation: enter var(--tw-animation-duration, var(--tw-duration, 0.15s)) var(--tw-ease, ease)
+      var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
+      var(--tw-animation-direction, normal) var(--tw-animation-fill-mode, none);
+    --tw-duration: 250ms;
+    transition-duration: 250ms;
+    --tw-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --tw-enter-opacity: calc(0/100);
+    --tw-enter-opacity: 0;
+    --tw-enter-scale: calc(105*1%);
 
     &[data-placement="auto"] {
-      @apply slide-in-from-bottom-1;
-      @apply sm:slide-in-from-bottom-0;
+      --tw-enter-translate-y: calc(1*var(--spacing));
+      @media (width >= 40rem) {
+        --tw-enter-translate-y: calc(0*var(--spacing));
+        --tw-enter-translate-y: calc(0*100%);
+      }
     }
 
     &[data-placement="top"] {
-      @apply slide-in-from-top-1;
+      --tw-enter-translate-y: calc(1*var(--spacing)*-1);
     }
 
     &[data-placement="center"] {
-      @apply slide-in-from-top-0;
+      --tw-enter-translate-y: calc(0*var(--spacing)*-1);
+      --tw-enter-translate-y: calc(0*-100%);
     }
 
     &[data-placement="bottom"] {
-      @apply slide-in-from-bottom-1;
+      --tw-enter-translate-y: calc(1*var(--spacing));
     }
   }
 
   /* Exiting animation */
   &[data-exiting="true"] {
-    @apply animate-out duration-100 ease-out-quad fade-out-0 zoom-out-95;
+    animation: exit var(--tw-animation-duration, var(--tw-duration, 0.15s)) var(--tw-ease, ease)
+      var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
+      var(--tw-animation-direction, normal) var(--tw-animation-fill-mode, none);
+    --tw-duration: 100ms;
+    transition-duration: 100ms;
+    --tw-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --tw-exit-opacity: calc(0/100);
+    --tw-exit-opacity: 0;
+    --tw-exit-scale: calc(95*1%);
+    --tw-exit-scale: 0.95;
   }
 
   &[data-exiting="true"],
   &[data-entering="true"] {
-    @apply will-change-[opacity,transform];
-    @apply motion-reduce:animate-none;
+    will-change: opacity, transform;
+    &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+      animation: none;
+      &::before,
+      &::after {
+        animation: none;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+        animation: none;
+        &::before,
+        &::after {
+          animation: none;
+        }
+      }
+    }
   }
 }
 
@@ -132,11 +262,17 @@
  * The backdrop owns the scrolling instead.
  */
 .rp-modal__container--scroll-outside {
-  @apply h-auto min-h-(--visual-viewport-height) overflow-y-visible;
+  height: auto;
+  min-height: var(--visual-viewport-height);
+  overflow-y: visible;
 }
 
 .rp-modal__backdrop:has(.rp-modal__container--scroll-outside) {
-  @apply scrollbar items-start overflow-y-auto;
+  scrollbar-width: var(--scrollbar-width);
+  scrollbar-color: var(--scrollbar-color);
+  scrollbar-gutter: var(--scrollbar-gutter);
+  align-items: flex-start;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -144,17 +280,27 @@
  * Modifier: container--full
  */
 .rp-modal__container--full {
-  @apply p-0 sm:p-0;
+  padding: 0px;
+  @media (width >= 40rem) {
+    padding: 0px;
+  }
 
   /* Entering animation */
   &[data-entering="true"] {
-    @apply slide-in-from-bottom-0 zoom-in-100;
-    @apply sm:slide-in-from-bottom-0;
+    --tw-enter-translate-y: calc(0*var(--spacing));
+    --tw-enter-translate-y: calc(0*100%);
+    --tw-enter-scale: calc(100*1%);
+    --tw-enter-scale: 1;
+    @media (width >= 40rem) {
+      --tw-enter-translate-y: calc(0*var(--spacing));
+      --tw-enter-translate-y: calc(0*100%);
+    }
   }
 
   /* Exiting animation */
   &[data-exiting="true"] {
-    @apply zoom-out-100;
+    --tw-exit-scale: calc(100*1%);
+    --tw-exit-scale: 1;
   }
 }
 
@@ -162,28 +308,38 @@
  * Element: dialog - the content container for the modal
  */
 .rp-modal__dialog {
-  @apply relative;
-  @apply flex w-full flex-col;
-  @apply bg-overlay shadow-overlay outline-none;
+  position: relative;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  background-color: var(--overlay);
+  --rp-shadow: var(--overlay-shadow);
+  box-shadow:
+    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+    var(--rp-ring-shadow), var(--rp-shadow);
+  --rp-outline-style: none;
+  outline-style: none;
   border-radius: min(32px, var(--component-radius));
-  @apply p-6;
-  @apply pointer-events-auto;
+  padding: calc(var(--spacing) * 6);
+  pointer-events: auto;
 
   &[data-placement="auto"] {
-    @apply mt-auto;
-    @apply sm:my-auto;
+    margin-top: auto;
+    @media (width >= 40rem) {
+      margin-block: auto;
+    }
   }
 
   &[data-placement="center"] {
-    @apply my-auto;
+    margin-block: auto;
   }
 
   &[data-placement="bottom"] {
-    @apply mt-auto;
+    margin-top: auto;
   }
 
   &[data-placement="top"] {
-    @apply mt-0;
+    margin-top: 0px;
   }
 }
 
@@ -191,70 +347,83 @@
  * Modifier: dialog--scroll-inside
  */
 .rp-modal__dialog--scroll-inside {
-  @apply max-h-full min-h-0 overflow-clip;
+  max-height: 100%;
+  min-height: 0px;
+  overflow: clip;
 }
 
 /**
  * Modifier: dialog--scroll-outside
  */
 .rp-modal__dialog--scroll-outside {
-  @apply h-auto;
-  @apply min-h-0 shrink-0;
+  height: auto;
+  min-height: 0px;
+  flex-shrink: 0;
 }
 
 /**
  * Modifier: dialog--xs
  */
 .rp-modal__dialog--xs {
-  @apply max-w-xs;
+  max-width: var(--container-xs);
 }
 
 /**
  * Modifier: dialog--sm
  */
 .rp-modal__dialog--sm {
-  @apply max-w-sm;
+  max-width: var(--container-sm);
 }
 
 /**
  * Modifier: dialog--md
  */
 .rp-modal__dialog--md {
-  @apply max-w-md;
+  max-width: var(--container-md);
 }
 
 /**
  * Modifier: dialog--lg
  */
 .rp-modal__dialog--lg {
-  @apply max-w-lg;
+  max-width: var(--container-lg);
 }
 
 /**
  * Modifier: dialog--cover
  */
 .rp-modal__dialog--cover {
-  @apply h-full min-h-full w-full;
+  height: 100%;
+  min-height: 100%;
+  width: 100%;
 }
 
 /**
  * Modifier: dialog--full
  */
 .rp-modal__dialog--full {
-  @apply h-full min-h-full w-full;
-  @apply rounded-none shadow-none;
+  height: 100%;
+  min-height: 100%;
+  width: 100%;
+  border-radius: 0;
+  --rp-shadow: 0 0 #0000;
+  box-shadow:
+    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+    var(--rp-ring-shadow), var(--rp-shadow);
 }
 
 /**
  * Element: header - the top section with the title
  */
 .rp-modal__header {
-  @apply flex flex-col gap-3;
-  @apply mb-0;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing) * 3);
+  margin-bottom: 0px;
 
   /* When header contains icon, use flex-col layout with gap */
   & > .rp-modal__icon {
-    @apply mb-0;
+    margin-bottom: 0px;
   }
 }
 
@@ -262,33 +431,54 @@
  * Element: heading - the main title text
  */
 .rp-modal__heading {
-  @apply align-middle;
-  @apply text-base font-medium text-foreground;
+  vertical-align: middle;
+  font-size: var(--text-base);
+  line-height: var(--rp-leading, var(--text-base--line-height));
+  font-weight: var(--font-weight-medium);
+  color: var(--foreground);
 }
 
 /**
  * Element: icon - the optional icon indicator
  */
 .rp-modal__icon {
-  @apply flex items-center justify-center;
-  @apply size-10 shrink-0;
-  @apply rounded-3xl select-none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(var(--spacing) * 10);
+  height: calc(var(--spacing) * 10);
+  flex-shrink: 0;
+  border-radius: calc(var(--radius) * 3);
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 /**
  * Element: body - the main content area
  */
 .rp-modal__body {
-  @apply min-h-0 flex-1;
-  @apply text-sm leading-[1.43] text-muted;
-  @apply -m-[3px] my-0 overflow-visible p-[3px];
+  min-height: 0px;
+  flex: 1;
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  --rp-leading: 1.43;
+  line-height: 1.43;
+  color: var(--muted);
+  margin: calc(3px * -1);
+  margin-block: 0px;
+  overflow: visible;
+  padding: 3px;
 }
 
 /**
  * Modifier: body--scroll-inside
  */
 .rp-modal__body--scroll-inside {
-  @apply scrollbar overflow-y-auto overscroll-contain;
+  scrollbar-width: var(--scrollbar-width);
+  scrollbar-color: var(--scrollbar-color);
+  scrollbar-gutter: var(--scrollbar-gutter);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -296,35 +486,41 @@
  * Modifier: body--scroll-outside
  */
 .rp-modal__body--scroll-outside {
-  @apply overflow-y-visible;
+  overflow-y: visible;
 }
 
 /**
  * Element: footer - the bottom action section
  */
 .rp-modal__footer {
-  @apply flex flex-row items-center justify-end gap-2;
-  @apply mt-0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: calc(var(--spacing) * 2);
+  margin-top: 0px;
 }
 
 /**
  * Element: close-trigger - the optional x icon button to close the modal
  */
 .rp-modal__close-trigger {
-  @apply absolute end-4 top-4;
+  position: absolute;
+  inset-inline-end: calc(var(--spacing) * 4);
+  top: calc(var(--spacing) * 4);
 }
 
 /**
  * Elements Spacing
  */
 .rp-modal__header + .rp-modal__body {
-  @apply mt-2;
+  margin-top: calc(var(--spacing) * 2);
 }
 
 .rp-modal__header + .rp-modal__footer {
-  @apply mt-5;
+  margin-top: calc(var(--spacing) * 5);
 }
 
 .rp-modal__body + .rp-modal__footer {
-  @apply mt-5;
+  margin-top: calc(var(--spacing) * 5);
 }

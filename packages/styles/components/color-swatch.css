@@ -1,6 +1,10 @@
 /* Base color-swatch styles */
 .rp-color-swatch {
-  @apply relative box-border size-8 shrink-0;
+  position: relative;
+  box-sizing: border-box;
+  width: calc(var(--spacing) * 8);
+  height: calc(var(--spacing) * 8);
+  flex-shrink: 0;
 
   /* Checkered background pattern for transparency */
   background:
@@ -13,7 +17,7 @@
 
 /* Shape variants */
 .rp-color-swatch--circle {
-  @apply rounded-2xl;
+  border-radius: calc(var(--radius) * 2);
 }
 
 .rp-color-swatch--square {
@@ -22,18 +26,20 @@
 
 /* Size variants */
 .rp-color-swatch--xs {
-  @apply size-4;
+  width: calc(var(--spacing) * 4);
+  height: calc(var(--spacing) * 4);
 
   &.rp-color-swatch--circle {
-    @apply rounded-lg;
+    border-radius: calc(var(--radius) * 1);
   }
 }
 
 .rp-color-swatch--sm {
-  @apply size-6;
+  width: calc(var(--spacing) * 6);
+  height: calc(var(--spacing) * 6);
 
   &.rp-color-swatch--circle {
-    @apply rounded-xl;
+    border-radius: calc(var(--radius) * 1.5);
   }
 }
 
@@ -42,17 +48,19 @@
 }
 
 .rp-color-swatch--lg {
-  @apply size-9;
+  width: calc(var(--spacing) * 9);
+  height: calc(var(--spacing) * 9);
 
   &.rp-color-swatch--circle {
-    @apply rounded-3xl;
+    border-radius: calc(var(--radius) * 3);
   }
 }
 
 .rp-color-swatch--xl {
-  @apply size-10;
+  width: calc(var(--spacing) * 10);
+  height: calc(var(--spacing) * 10);
 
   &.rp-color-swatch--circle {
-    @apply rounded-3xl;
+    border-radius: calc(var(--radius) * 3);
   }
 }

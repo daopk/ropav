@@ -9,11 +9,18 @@
  * where it has the specificity to win, since this file is imported after that one.
  */
 .rp-menu {
-  @apply relative flex w-full flex-col gap-1 overflow-clip p-1;
+  position: relative;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: var(--spacing);
+  overflow: clip;
+  padding: var(--spacing);
 
   /* This makes the separator take up 94% of the width and be centered */
   [data-slot="separator"] {
-    @apply ms-[3%] w-[94%];
+    margin-inline-start: 3%;
+    width: 94%;
   }
 }
 
@@ -24,14 +31,17 @@
 /* A row is as tall as a field of the same size, so a collection standing beside one lines up. */
 .rp-menu--sm {
   [data-slot="menu-item"] {
-    @apply min-h-8 py-1;
+    min-height: calc(var(--spacing) * 8);
+    padding-block: var(--spacing);
   }
 }
 
 .rp-menu--lg {
-  @apply text-base;
+  font-size: var(--text-base);
+  line-height: var(--rp-leading, var(--text-base--line-height));
 
   [data-slot="menu-item"] {
-    @apply min-h-10 py-2;
+    min-height: calc(var(--spacing) * 10);
+    padding-block: calc(var(--spacing) * 2);
   }
 }

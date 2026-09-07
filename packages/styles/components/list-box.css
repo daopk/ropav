@@ -3,7 +3,10 @@
    ========================================================================== */
 
 .rp-list-box {
-  @apply relative w-full overflow-clip p-1;
+  position: relative;
+  width: 100%;
+  overflow: clip;
+  padding: var(--spacing);
 
   /**
    * Spacing between direct children.
@@ -15,12 +18,13 @@
    * scrollbar sizing during virtualized scroll.
    */
   & > * + * {
-    @apply mt-1;
+    margin-top: var(--spacing);
   }
 
   /* This makes the horizontal separator take up 94% of the width and be centered */
   [data-slot="separator"][data-orientation="horizontal"] {
-    @apply ms-[3%] w-[94%];
+    margin-inline-start: 3%;
+    width: 94%;
   }
 }
 
@@ -81,14 +85,17 @@
 /* A row is as tall as a field of the same size, so a collection standing beside one lines up. */
 .rp-list-box--sm {
   [data-slot="list-box-item"] {
-    @apply min-h-8 py-1;
+    min-height: calc(var(--spacing) * 8);
+    padding-block: var(--spacing);
   }
 }
 
 .rp-list-box--lg {
-  @apply text-base;
+  font-size: var(--text-base);
+  line-height: var(--rp-leading, var(--text-base--line-height));
 
   [data-slot="list-box-item"] {
-    @apply min-h-10 py-2;
+    min-height: calc(var(--spacing) * 10);
+    padding-block: calc(var(--spacing) * 2);
   }
 }

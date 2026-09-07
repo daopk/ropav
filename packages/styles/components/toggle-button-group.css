@@ -4,7 +4,12 @@
 
 /* Base styles */
 .rp-toggle-button-group {
-  @apply inline-flex h-auto w-fit items-center justify-center gap-0;
+  display: inline-flex;
+  height: auto;
+  width: fit-content;
+  align-items: center;
+  justify-content: center;
+  gap: 0px;
 }
 
 /* ==========================================================================
@@ -12,11 +17,11 @@
    ========================================================================== */
 
 .rp-toggle-button-group--horizontal {
-  @apply flex-row;
+  flex-direction: row;
 }
 
 .rp-toggle-button-group--vertical {
-  @apply flex-col;
+  flex-direction: column;
 }
 
 /* ==========================================================================
@@ -24,7 +29,7 @@
    ========================================================================== */
 
 .rp-toggle-button-group--full-width {
-  @apply w-full;
+  width: 100%;
 }
 
 /* ==========================================================================
@@ -33,37 +38,41 @@
 
 /* Remove border radius from all toggle buttons in attached group */
 .rp-toggle-button-group .rp-toggle-button {
-  @apply rounded-none;
+  border-radius: 0;
 }
 
 /* Apply border radius to first button (start edge) */
 .rp-toggle-button-group--horizontal .rp-toggle-button:first-child {
-  @apply rounded-s-component;
+  border-start-start-radius: var(--component-radius, calc(var(--radius) * 3));
+  border-end-start-radius: var(--component-radius, calc(var(--radius) * 3));
 }
 
 /* Apply border radius to last button (end edge) */
 .rp-toggle-button-group--horizontal .rp-toggle-button:last-child {
-  @apply rounded-e-component;
+  border-start-end-radius: var(--component-radius, calc(var(--radius) * 3));
+  border-end-end-radius: var(--component-radius, calc(var(--radius) * 3));
 }
 
 /* If only one button, apply both rounded edges */
 .rp-toggle-button-group--horizontal .rp-toggle-button:first-child:last-child {
-  @apply rounded-component;
+  border-radius: var(--component-radius, calc(var(--radius) * 3));
 }
 
 /* Apply border radius to first button (top edge) in vertical */
 .rp-toggle-button-group--vertical .rp-toggle-button:first-child {
-  @apply rounded-t-component;
+  border-top-left-radius: var(--component-radius, calc(var(--radius) * 3));
+  border-top-right-radius: var(--component-radius, calc(var(--radius) * 3));
 }
 
 /* Apply border radius to last button (bottom edge) in vertical */
 .rp-toggle-button-group--vertical .rp-toggle-button:last-child {
-  @apply rounded-b-component;
+  border-bottom-right-radius: var(--component-radius, calc(var(--radius) * 3));
+  border-bottom-left-radius: var(--component-radius, calc(var(--radius) * 3));
 }
 
 /* If only one button in vertical, apply all rounded edges */
 .rp-toggle-button-group--vertical .rp-toggle-button:first-child:last-child {
-  @apply rounded-component;
+  border-radius: var(--component-radius, calc(var(--radius) * 3));
 }
 
 /* Remove scale transform on active/pressed state for buttons in group */
@@ -75,13 +84,13 @@
 /* Override focus ring to use inset style so it stays within button bounds */
 .rp-toggle-button-group .rp-toggle-button:focus-visible:not(:focus),
 .rp-toggle-button-group .rp-toggle-button[data-focus-visible="true"] {
-  --tw-ring-offset-width: 0px;
-  @apply ring-inset;
+  --rp-ring-offset-width: 0px;
+  --rp-ring-inset: inset;
 }
 
 /* Full width: stretch each toggle button */
 .rp-toggle-button-group--full-width .rp-toggle-button {
-  @apply flex-1;
+  flex: 1;
 }
 
 /* ==========================================================================
@@ -89,12 +98,29 @@
    ========================================================================== */
 
 .rp-toggle-button-group__separator {
-  @apply rounded-sm bg-current opacity-15;
+  border-radius: calc(var(--radius) * 0.5);
+  background-color: currentcolor;
+  opacity: 15%;
   position: absolute;
   pointer-events: none;
 
   transition: opacity 150ms var(--ease-smooth);
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   /* Horizontal orientation - vertical divider */
   .rp-toggle-button-group--horizontal & {
@@ -118,12 +144,12 @@
    ========================================================================== */
 
 .rp-toggle-button-group--detached {
-  @apply gap-1;
+  gap: var(--spacing);
 }
 
 /* Restore border radius in detached mode */
 .rp-toggle-button-group--detached .rp-toggle-button {
-  @apply rounded-component;
+  border-radius: var(--component-radius, calc(var(--radius) * 3));
 }
 
 /* Hide separators in detached mode */

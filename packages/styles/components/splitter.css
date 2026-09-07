@@ -13,15 +13,18 @@
  */
 
 .rp-splitter {
-  @apply isolate flex h-full w-full;
+  isolation: isolate;
+  display: flex;
+  height: 100%;
+  width: 100%;
 }
 
 .rp-splitter--horizontal {
-  @apply flex-row;
+  flex-direction: row;
 }
 
 .rp-splitter--vertical {
-  @apply flex-col;
+  flex-direction: column;
 }
 
 /* A flex item's automatic minimum is its content, so without `min-w-0`/`min-h-0` a panel holding
@@ -32,7 +35,11 @@
  * an inline `flex-basis` alone would leave this `flex-grow: 1` in place and the panel would grow
  * straight back past the size it was given. */
 .rp-splitter__panel {
-  @apply relative min-h-0 min-w-0 flex-1 overflow-hidden;
+  position: relative;
+  min-height: 0px;
+  min-width: 0px;
+  flex: 1;
+  overflow: hidden;
 }
 
 /* The flex item is the gutter and paints nothing itself. The line you see is `::after`, absolutely
@@ -73,18 +80,49 @@
   --splitter-grip-bg-hover: var(--accent);
   --splitter-grip-bg-dragging: var(--splitter-grip-bg-hover);
 
-  @apply relative z-10 flex shrink-0 grow-0 items-center justify-center self-stretch;
-  @apply bg-transparent outline-none select-none no-highlight;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-shrink: 0;
+  flex-grow: 0;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  background-color: transparent;
+  --rp-outline-style: none;
+  outline-style: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 
   /* The gesture is ours; the browser must not also pan or scroll from a drag on this. */
-  @apply touch-none;
+  touch-action: none;
 
   /* On the host, not in `::after` where the transition lives: the variant reaches a pseudo-element
    * from its originating element, and appending its condition after `::after` matches nothing. */
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   &::after {
-    @apply pointer-events-none absolute rounded-sm content-[''];
+    pointer-events: none;
+    position: absolute;
+    border-radius: calc(var(--radius) * 0.5);
+    --rp-content: "";
+    content: var(--rp-content);
 
     background-color: var(--splitter-line);
 
@@ -144,11 +182,33 @@
 
   &:focus-visible,
   &[data-focus-visible="true"] {
-    @apply status-focused;
+    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+      var(--rp-ring-color, currentcolor);
+    box-shadow:
+      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-ring-offset-width: 0px;
+    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+      var(--rp-ring-offset-color);
+    --rp-ring-offset-color: var(--background);
+    --rp-outline-style: none;
+    outline-style: none;
+    --rp-ring-offset-width: var(--ring-offset-width);
+    @media (forced-colors: active) {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
   }
 
   &[data-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
 
     /* `status-disabled` reaches `color` and `border-color`, and neither the line nor the grip is
      * either of those. */
@@ -167,7 +227,9 @@
  * at both ends of its track — and a bordered target would render as two solid blocks flanking every
  * divider. `inset` has no such behaviour, so this needs no forced-colors rule of its own. */
 .rp-splitter__handle-target {
-  @apply absolute inset-0 bg-transparent;
+  position: absolute;
+  inset: 0px;
+  background-color: transparent;
 }
 
 /* The visible grab affordance, and only that — the gesture belongs to the handle, the hit area to
@@ -178,7 +240,9 @@
  * Sized from custom properties rather than utilities so a theme can retune the pill without
  * restating both axes in both orientations. */
 .rp-splitter__handle-grip {
-  @apply pointer-events-none absolute rounded-full;
+  pointer-events: none;
+  position: absolute;
+  border-radius: calc(infinity * 1px);
 
   background-color: var(--splitter-grip-bg);
 
@@ -189,7 +253,22 @@
   }
 
   transition: background-color 150ms var(--ease-out);
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 }
 
 .rp-splitter__handle-grip--horizontal {
@@ -204,12 +283,12 @@
 
 /* A horizontal group puts its panels side by side, so the divider is a vertical line. */
 .rp-splitter__handle--horizontal {
-  @apply cursor-col-resize;
+  cursor: col-resize;
 
   inline-size: var(--splitter-gutter);
 
   &::after {
-    @apply inset-y-0;
+    inset-block: 0px;
 
     inline-size: var(--splitter-gutter);
   }
@@ -227,12 +306,12 @@
 
 /* A vertical group stacks its panels, so the divider is a horizontal line. */
 .rp-splitter__handle--vertical {
-  @apply cursor-row-resize;
+  cursor: row-resize;
 
   block-size: var(--splitter-gutter);
 
   &::after {
-    @apply inset-x-0;
+    inset-inline: 0px;
 
     block-size: var(--splitter-gutter);
   }

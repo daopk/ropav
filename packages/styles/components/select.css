@@ -1,21 +1,50 @@
 /* Select styles */
 .rp-select {
-  @apply flex flex-col gap-1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing);
 
   &[data-invalid="true"],
   &[aria-invalid="true"] {
     [data-slot="description"] {
-      @apply hidden;
+      display: none;
     }
   }
 
   [data-slot="label"] {
-    @apply w-fit;
+    width: fit-content;
   }
 }
 
 .rp-select__trigger {
-  @apply relative isolate inline-flex min-h-9 rounded-field border px-3 field-line-md text-field-foreground shadow-field outline-none select-none no-highlight;
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  min-height: calc(var(--spacing) * 9);
+  border-radius: var(--field-radius, calc(var(--radius) * 0.75));
+  border-style: var(--rp-border-style);
+  border-width: 1px;
+  padding-inline: calc(var(--spacing) * 3);
+  padding-block: calc(var(--spacing) * 1.5);
+  font-size: var(--text-base);
+  line-height: var(--rp-leading, var(--text-base--line-height));
+  @media (width >= 40rem) {
+    padding-block: calc(var(--spacing) * 2);
+  }
+  @media (width >= 40rem) {
+    font-size: var(--text-sm);
+    line-height: var(--rp-leading, var(--text-sm--line-height));
+  }
+  color: var(--field-foreground, var(--foreground));
+  --rp-shadow: var(--field-shadow);
+  box-shadow:
+    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+    var(--rp-ring-shadow), var(--rp-shadow);
+  --rp-outline-style: none;
+  outline-style: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 
   /* The fill, per state. The `--secondary` variant re-points these and declares nothing else. */
   --select-trigger-bg: var(--field-background, var(--default));
@@ -37,7 +66,22 @@
     background-color 150ms var(--ease-smooth),
     border-color 150ms var(--ease-smooth),
     box-shadow 150ms var(--ease-out);
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   /* Cursor */
   cursor: var(--cursor-interactive);
@@ -47,7 +91,7 @@
 
   /* Add inline-end padding when indicator is present */
   &:has(.rp-select__indicator) {
-    @apply pe-7;
+    padding-inline-end: calc(var(--spacing) * 7);
   }
 
   /* Hover state */
@@ -62,7 +106,23 @@
   /* Focus visible state */
   &:focus-visible:not(:focus),
   &[data-focus-visible="true"] {
-    @apply status-focused;
+    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+      var(--rp-ring-color, currentcolor);
+    box-shadow:
+      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-ring-offset-width: 0px;
+    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+      var(--rp-ring-offset-color);
+    --rp-ring-offset-color: var(--background);
+    --rp-outline-style: none;
+    outline-style: none;
+    --rp-ring-offset-width: var(--ring-offset-width);
+    @media (forced-colors: active) {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
     border-color: var(--field-border-focus);
     background-color: var(--select-trigger-bg-focus);
   }
@@ -75,7 +135,33 @@
   /* Invalid state */
   .rp-select[data-invalid="true"] &,
   .rp-select[aria-invalid="true"] & {
-    @apply status-invalid-field;
+    outline-style: var(--rp-outline-style);
+    outline-width: 1px;
+    outline-color: var(--danger);
+    --rp-outline-style: solid;
+    outline-style: solid;
+    --rp-ring-offset-width: 3px;
+    &:focus,
+    &:focus-visible,
+    &[data-focused="true"],
+    &[data-focus-visible="true"],
+    &:focus-within,
+    &[data-focus-within="true"] {
+      --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+        var(--rp-ring-color, currentcolor);
+      box-shadow:
+        var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+        var(--rp-ring-shadow), var(--rp-shadow);
+      --rp-ring-color: var(--danger);
+      --rp-ring-offset-width: 0px;
+      --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+        var(--rp-ring-offset-color);
+      --rp-ring-offset-width: 0px;
+      @media (forced-colors: active) {
+        outline-width: 2px;
+        outline-color: Highlight;
+      }
+    }
     background-color: var(--select-trigger-bg-focus);
   }
 
@@ -83,7 +169,13 @@
   &:disabled,
   &[data-disabled="true"],
   &[aria-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
   }
 }
 
@@ -93,7 +185,10 @@
 }
 
 .rp-select--secondary .rp-select__trigger {
-  @apply shadow-none;
+  --rp-shadow: 0 0 #0000;
+  box-shadow:
+    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+    var(--rp-ring-shadow), var(--rp-shadow);
 
   --select-trigger-bg: var(--default);
   --select-trigger-bg-hover: var(--default-hover);
@@ -101,7 +196,9 @@
 }
 
 .rp-select__value {
-  @apply flex-1 text-start wrap-break-word;
+  flex: 1;
+  text-align: start;
+  overflow-wrap: break-word;
 
   --select-value-fg: currentcolor;
   --select-value-fg-placeholder: var(--field-placeholder, var(--muted));
@@ -114,64 +211,135 @@
 
   /* Removes the list-box-item indicator element from the select value*/
   [data-slot="list-box-item-indicator"] {
-    @apply hidden;
+    display: none;
   }
 }
 
 .rp-select__indicator {
-  @apply absolute inset-y-0 end-2 my-auto flex shrink-0 items-center justify-center text-field-placeholder transition duration-150;
+  position: absolute;
+  inset-block: 0px;
+  inset-inline-end: calc(var(--spacing) * 2);
+  margin-block: auto;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  color: var(--field-placeholder, var(--muted));
+  transition-property:
+    color,
+    background-color,
+    border-color,
+    outline-color,
+    text-decoration-color,
+    fill,
+    stroke,
+    --rp-gradient-from,
+    --rp-gradient-via,
+    --rp-gradient-to,
+    opacity,
+    box-shadow,
+    transform,
+    translate,
+    scale,
+    rotate,
+    filter,
+    -webkit-backdrop-filter,
+    backdrop-filter,
+    display,
+    content-visibility,
+    overlay,
+    pointer-events;
+  transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+  transition-duration: var(--tw-duration, var(--default-transition-duration));
+  --tw-duration: 150ms;
+  transition-duration: 150ms;
 
   &[data-open="true"] {
-    @apply rotate-180;
+    rotate: 180deg;
   }
 
   &[data-slot="select-default-indicator"] {
-    @apply size-4;
+    width: calc(var(--spacing) * 4);
+    height: calc(var(--spacing) * 4);
   }
 }
 
 /* Similar to popover content styles */
 .rp-select__popover {
-  @apply min-w-(--trigger-width) origin-(--trigger-anchor-point) scroll-py-1 scrollbar overflow-y-auto overscroll-contain bg-overlay p-0 text-sm;
+  min-width: var(--trigger-width);
+  transform-origin: var(--trigger-anchor-point);
+  scroll-padding-block: var(--spacing);
+  scrollbar-width: var(--scrollbar-width);
+  scrollbar-color: var(--scrollbar-color);
+  scrollbar-gutter: var(--scrollbar-gutter);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background-color: var(--overlay);
+  padding: 0px;
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
   border-radius: min(32px, var(--component-radius));
   box-shadow: var(--shadow-overlay);
 
   /* Focus state */
   &:focus-visible:not(:focus),
   &[data-focus-visible="true"] {
-    @apply outline-none;
+    --rp-outline-style: none;
+    outline-style: none;
   }
 
   /* Entering animations */
   &[data-entering="true"] {
-    @apply animate-in duration-150 ease-smooth fade-in-0 zoom-in-95;
+    animation: enter var(--tw-animation-duration, var(--tw-duration, 0.15s)) var(--tw-ease, ease)
+      var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
+      var(--tw-animation-direction, normal) var(--tw-animation-fill-mode, none);
+    --tw-duration: 150ms;
+    transition-duration: 150ms;
+    --tw-ease: ease;
+    transition-timing-function: ease;
+    --tw-enter-opacity: calc(0/100);
+    --tw-enter-opacity: 0;
+    --tw-enter-scale: calc(95*1%);
+    --tw-enter-scale: 0.95;
 
     /* Placement-specific translations */
     &[data-placement="top"] {
-      @apply slide-in-from-bottom-1;
+      --tw-enter-translate-y: calc(1*var(--spacing));
     }
 
     &[data-placement="bottom"] {
-      @apply slide-in-from-top-1;
+      --tw-enter-translate-y: calc(1*var(--spacing)*-1);
     }
 
     &[data-placement="left"] {
-      @apply slide-in-from-right-1;
+      --tw-enter-translate-x: calc(1*var(--spacing));
     }
 
     &[data-placement="right"] {
-      @apply slide-in-from-left-1;
+      --tw-enter-translate-x: calc(1*var(--spacing)*-1);
     }
   }
 
   /* Exiting animations */
   &[data-exiting="true"] {
-    @apply animate-out duration-100 ease-smooth zoom-out-95 fade-out;
+    animation: exit var(--tw-animation-duration, var(--tw-duration, 0.15s)) var(--tw-ease, ease)
+      var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
+      var(--tw-animation-direction, normal) var(--tw-animation-fill-mode, none);
+    --tw-duration: 100ms;
+    transition-duration: 100ms;
+    --tw-ease: ease;
+    transition-timing-function: ease;
+    --tw-exit-scale: calc(95*1%);
+    --tw-exit-scale: 0.95;
+    --tw-exit-opacity: 0;
   }
 
   &[data-exiting="true"],
   &[data-entering="true"] {
-    @apply transition-[opacity,transform] will-change-[opacity,transform];
+    transition-property: opacity, transform;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
+    will-change: opacity, transform;
   }
 
   /* Arrow styling */
@@ -194,11 +362,13 @@
 
   /* Listbox styles */
   [data-slot="list-box"] {
-    @apply p-1.5 outline-none;
+    padding: calc(var(--spacing) * 1.5);
+    --rp-outline-style: none;
+    outline-style: none;
   }
 
   [data-slot="list-box-item"] {
-    @apply px-2.5;
+    padding-inline: calc(var(--spacing) * 2.5);
   }
 
   /* As the popover closes fast in single-select mode, the default item indicator transition is not even visible - so we disable it only for single-select */
@@ -206,7 +376,7 @@
   [data-slot="list-box"]:not([aria-multiselectable="true"])
     [data-slot="list-box-item-indicator"]
     [data-slot="list-box-item-indicator--checkmark"] {
-    @apply transition-none;
+    transition-property: none;
   }
 }
 
@@ -217,32 +387,48 @@
 /* The trigger's own metrics, and the option rows in a popover that is portalled out of this tree -
  * which is why the popover carries its own size class rather than being reached from the base. */
 .rp-select--sm .rp-select__trigger {
-  @apply min-h-8 field-line-sm;
+  min-height: calc(var(--spacing) * 8);
+  padding-block: var(--spacing);
+  font-size: var(--text-base);
+  line-height: var(--rp-leading, var(--text-base--line-height));
+  @media (width >= 40rem) {
+    padding-block: calc(var(--spacing) * 1.5);
+  }
+  @media (width >= 40rem) {
+    font-size: var(--text-sm);
+    line-height: var(--rp-leading, var(--text-sm--line-height));
+  }
 }
 
 .rp-select--lg .rp-select__trigger {
-  @apply min-h-10 field-line-lg;
+  min-height: calc(var(--spacing) * 10);
+  padding-block: calc(var(--spacing) * 2);
+  font-size: var(--text-base);
+  line-height: var(--rp-leading, var(--text-base--line-height));
 }
 
 .rp-select__popover--sm {
   [data-slot="list-box-item"] {
-    @apply min-h-8 py-1;
+    min-height: calc(var(--spacing) * 8);
+    padding-block: var(--spacing);
   }
 }
 
 .rp-select__popover--lg {
-  @apply text-base;
+  font-size: var(--text-base);
+  line-height: var(--rp-leading, var(--text-base--line-height));
 
   [data-slot="list-box-item"] {
-    @apply min-h-10 py-2;
+    min-height: calc(var(--spacing) * 10);
+    padding-block: calc(var(--spacing) * 2);
   }
 }
 
 /* Full width modifier */
 .rp-select--full-width {
-  @apply w-full;
+  width: 100%;
 }
 
 .rp-select__trigger--full-width {
-  @apply w-full;
+  width: 100%;
 }

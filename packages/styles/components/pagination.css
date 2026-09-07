@@ -4,27 +4,67 @@
 
 /* Base styles */
 .rp-pagination {
-  @apply flex w-full flex-col items-center justify-between gap-4 sm:flex-row;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(var(--spacing) * 4);
+  @media (width >= 40rem) {
+    flex-direction: row;
+  }
 }
 
 /* Summary - left side info container */
 .rp-pagination__summary {
-  @apply flex items-center gap-2 self-start text-sm text-muted sm:self-center;
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing) * 2);
+  align-self: flex-start;
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  color: var(--muted);
+  @media (width >= 40rem) {
+    align-self: center;
+  }
 }
 
 /* Content - container for pagination items */
 .rp-pagination__content {
-  @apply flex items-center gap-1 self-start sm:self-center;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing);
+  align-self: flex-start;
+  @media (width >= 40rem) {
+    align-self: center;
+  }
 }
 
 /* Item - list item wrapper */
 .rp-pagination__item {
-  @apply inline-flex;
+  display: inline-flex;
 }
 
 /* Link - page number button (ghost button style) */
 .rp-pagination__link {
-  @apply relative isolate inline-flex size-8 origin-center items-center justify-center rounded-component text-sm font-medium whitespace-nowrap outline-none select-none no-highlight;
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  width: calc(var(--spacing) * 8);
+  height: calc(var(--spacing) * 8);
+  transform-origin: center;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--component-radius, calc(var(--radius) * 3));
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+  --rp-outline-style: none;
+  outline-style: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 
   cursor: var(--cursor-interactive);
 
@@ -32,7 +72,24 @@
     transform 250ms var(--ease-smooth),
     background-color 100ms var(--ease-out),
     box-shadow 100ms var(--ease-out);
-  @apply transform-gpu motion-reduce:transition-none;
+  transform: translateZ(0) var(--rp-rotate-x,) var(--rp-rotate-y,) var(--rp-rotate-z,)
+    var(--rp-skew-x,) var(--rp-skew-y,);
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   /* Ghost button tokens */
   --pagination-link-bg: transparent;
@@ -46,13 +103,35 @@
   /* Focus state */
   &:focus-visible,
   &[data-focus-visible="true"] {
-    @apply status-focused;
+    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+      var(--rp-ring-color, currentcolor);
+    box-shadow:
+      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-ring-offset-width: 0px;
+    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+      var(--rp-ring-offset-color);
+    --rp-ring-offset-color: var(--background);
+    --rp-outline-style: none;
+    outline-style: none;
+    --rp-ring-offset-width: var(--ring-offset-width);
+    @media (forced-colors: active) {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
   }
 
   /* Disabled state */
   &:disabled,
   &[aria-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
   }
 
   /* Hover state */
@@ -78,22 +157,40 @@
 
     /* The active page is a background and nothing else, and an inactive link is transparent -
      * forced colors flattens the first onto the page and leaves the pair identical. */
-    @apply forced-selected;
+    @media (forced-colors: active) {
+      forced-color-adjust: none;
+      background-color: Highlight;
+      border-color: Highlight;
+      color: HighlightText;
+    }
   }
 }
 
 /* Ellipsis */
 .rp-pagination__ellipsis {
-  @apply inline-flex size-8 items-center justify-center text-sm text-muted select-none;
+  display: inline-flex;
+  width: calc(var(--spacing) * 8);
+  height: calc(var(--spacing) * 8);
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  color: var(--muted);
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 /* Navigation buttons (Previous / Next) */
 .rp-pagination__link--nav {
-  @apply w-auto gap-1.5 px-2.5;
+  width: auto;
+  gap: calc(var(--spacing) * 1.5);
+  padding-inline: calc(var(--spacing) * 2.5);
 
   & [data-slot="pagination-previous-icon"],
   & [data-slot="pagination-next-icon"] {
-    @apply rtl:rotate-180;
+    &:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) {
+      rotate: 180deg;
+    }
   }
 }
 
@@ -103,7 +200,10 @@
 
 .rp-pagination--sm {
   .rp-pagination__link {
-    @apply size-7 text-xs;
+    width: calc(var(--spacing) * 7);
+    height: calc(var(--spacing) * 7);
+    font-size: var(--text-xs);
+    line-height: var(--rp-leading, var(--text-xs--line-height));
 
     &:active,
     &[data-pressed="true"] {
@@ -112,15 +212,20 @@
   }
 
   .rp-pagination__link--nav {
-    @apply w-auto px-2;
+    width: auto;
+    padding-inline: calc(var(--spacing) * 2);
   }
 
   .rp-pagination__ellipsis {
-    @apply size-7 text-xs;
+    width: calc(var(--spacing) * 7);
+    height: calc(var(--spacing) * 7);
+    font-size: var(--text-xs);
+    line-height: var(--rp-leading, var(--text-xs--line-height));
   }
 
   .rp-pagination__summary {
-    @apply text-xs;
+    font-size: var(--text-xs);
+    line-height: var(--rp-leading, var(--text-xs--line-height));
   }
 }
 
@@ -130,7 +235,10 @@
 
 .rp-pagination--lg {
   .rp-pagination__link {
-    @apply size-9 text-base;
+    width: calc(var(--spacing) * 9);
+    height: calc(var(--spacing) * 9);
+    font-size: var(--text-base);
+    line-height: var(--rp-leading, var(--text-base--line-height));
 
     &:active,
     &[data-pressed="true"] {
@@ -139,14 +247,19 @@
   }
 
   .rp-pagination__link--nav {
-    @apply w-auto px-3;
+    width: auto;
+    padding-inline: calc(var(--spacing) * 3);
   }
 
   .rp-pagination__ellipsis {
-    @apply size-9 text-base;
+    width: calc(var(--spacing) * 9);
+    height: calc(var(--spacing) * 9);
+    font-size: var(--text-base);
+    line-height: var(--rp-leading, var(--text-base--line-height));
   }
 
   .rp-pagination__summary {
-    @apply text-base;
+    font-size: var(--text-base);
+    line-height: var(--rp-leading, var(--text-base--line-height));
   }
 }

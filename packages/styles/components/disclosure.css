@@ -1,40 +1,110 @@
 /* Base disclosure styles */
 .rp-disclosure {
-  @apply relative;
+  position: relative;
 }
 
 .rp-accordion__heading {
-  @apply flex;
+  display: flex;
 }
 
 .rp-disclosure__trigger {
   cursor: var(--cursor-interactive);
-  @apply inline-block no-highlight;
+  display: inline-block;
+  -webkit-tap-highlight-color: transparent;
 
   /* Focus state */
   &:focus-visible:not(:focus),
   &[data-focus-visible="true"] {
-    @apply status-focused;
+    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+      var(--rp-ring-color, currentcolor);
+    box-shadow:
+      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-ring-offset-width: 0px;
+    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+      var(--rp-ring-offset-color);
+    --rp-ring-offset-color: var(--background);
+    --rp-outline-style: none;
+    outline-style: none;
+    --rp-ring-offset-width: var(--ring-offset-width);
+    @media (forced-colors: active) {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
   }
 
   /* Disabled state */
   &:disabled,
   &[aria-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
   }
 }
 
 .rp-disclosure__indicator {
-  @apply ms-auto size-4 shrink-0 text-inherit;
+  margin-inline-start: auto;
+  width: calc(var(--spacing) * 4);
+  height: calc(var(--spacing) * 4);
+  flex-shrink: 0;
+  color: inherit;
 
   /**
    * Transitions
    */
-  @apply transition duration-250 motion-reduce:transition-none;
+  transition-property:
+    color,
+    background-color,
+    border-color,
+    outline-color,
+    text-decoration-color,
+    fill,
+    stroke,
+    --rp-gradient-from,
+    --rp-gradient-via,
+    --rp-gradient-to,
+    opacity,
+    box-shadow,
+    transform,
+    translate,
+    scale,
+    rotate,
+    filter,
+    -webkit-backdrop-filter,
+    backdrop-filter,
+    display,
+    content-visibility,
+    overlay,
+    pointer-events;
+  transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+  transition-duration: var(--tw-duration, var(--default-transition-duration));
+  --tw-duration: 250ms;
+  transition-duration: 250ms;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   /* Expanded state for indicator rotation */
   &[data-expanded="true"] {
-    @apply -rotate-180;
+    rotate: calc(180deg * -1);
   }
 }
 
@@ -46,7 +116,22 @@
   transition:
     height 200ms var(--ease-out-quad),
     opacity 200ms var(--ease-out);
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   &[data-expanded="true"] {
     will-change: height, opacity;
@@ -55,5 +140,5 @@
 }
 
 .rp-disclosure__body {
-  @apply p-2;
+  padding: calc(var(--spacing) * 2);
 }

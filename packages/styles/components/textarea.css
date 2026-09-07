@@ -1,6 +1,29 @@
 /* use textarea instead of text-area to avoid conflict with Tailwind `text-` prefix */
 .rp-textarea {
-  @apply rounded-field border px-3 field-line-md text-field-foreground shadow-field outline-none placeholder:text-field-placeholder;
+  border-radius: var(--field-radius, calc(var(--radius) * 0.75));
+  border-style: var(--rp-border-style);
+  border-width: 1px;
+  padding-inline: calc(var(--spacing) * 3);
+  padding-block: calc(var(--spacing) * 1.5);
+  font-size: var(--text-base);
+  line-height: var(--rp-leading, var(--text-base--line-height));
+  @media (width >= 40rem) {
+    padding-block: calc(var(--spacing) * 2);
+  }
+  @media (width >= 40rem) {
+    font-size: var(--text-sm);
+    line-height: var(--rp-leading, var(--text-sm--line-height));
+  }
+  color: var(--field-foreground, var(--foreground));
+  --rp-shadow: var(--field-shadow);
+  box-shadow:
+    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+    var(--rp-ring-shadow), var(--rp-shadow);
+  --rp-outline-style: none;
+  outline-style: none;
+  &::placeholder {
+    color: var(--field-placeholder, var(--muted));
+  }
 
   /* The fill, per state. The `--secondary` variant re-points these and declares nothing else. */
   --textarea-bg: var(--field-background, var(--default));
@@ -28,7 +51,22 @@
     background-color 150ms var(--ease-smooth),
     border-color 150ms var(--ease-smooth),
     box-shadow 150ms var(--ease-out);
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   @media (hover: hover) {
     &:hover:not(:focus):not(:focus-visible),
@@ -41,7 +79,21 @@
   /* Focus state */
   &:focus,
   &[data-focused="true"] {
-    @apply status-focused-field;
+    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+      var(--rp-ring-color, currentcolor);
+    box-shadow:
+      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+      var(--rp-ring-offset-color);
+    --rp-outline-style: none;
+    outline-style: none;
+    --rp-ring-offset-width: 0px;
+    @media (forced-colors: active) {
+      outline: 2px solid Highlight;
+      outline-offset: 0;
+    }
     border-color: var(--field-border-focus);
     background-color: var(--textarea-bg-focus);
   }
@@ -52,7 +104,33 @@
   }
 
   &[data-invalid="true"] {
-    @apply status-invalid-field;
+    outline-style: var(--rp-outline-style);
+    outline-width: 1px;
+    outline-color: var(--danger);
+    --rp-outline-style: solid;
+    outline-style: solid;
+    --rp-ring-offset-width: 3px;
+    &:focus,
+    &:focus-visible,
+    &[data-focused="true"],
+    &[data-focus-visible="true"],
+    &:focus-within,
+    &[data-focus-within="true"] {
+      --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+        var(--rp-ring-color, currentcolor);
+      box-shadow:
+        var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+        var(--rp-ring-shadow), var(--rp-shadow);
+      --rp-ring-color: var(--danger);
+      --rp-ring-offset-width: 0px;
+      --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+        var(--rp-ring-offset-color);
+      --rp-ring-offset-width: 0px;
+      @media (forced-colors: active) {
+        outline-width: 2px;
+        outline-color: Highlight;
+      }
+    }
     background-color: var(--textarea-bg-focus);
   }
 
@@ -60,7 +138,13 @@
   &:disabled,
   &[data-disabled="true"],
   &[aria-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
   }
 }
 
@@ -70,7 +154,10 @@
 }
 
 .rp-textarea--secondary {
-  @apply shadow-none;
+  --rp-shadow: 0 0 #0000;
+  box-shadow:
+    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+    var(--rp-ring-shadow), var(--rp-shadow);
 
   --textarea-bg: var(--default);
   --textarea-bg-hover: var(--default-hover);
@@ -79,7 +166,7 @@
 
 /* Full width modifier */
 .rp-textarea--full-width {
-  @apply w-full;
+  width: 100%;
 }
 
 /* ==========================================================================
@@ -87,9 +174,20 @@
    ========================================================================== */
 
 .rp-textarea--sm {
-  @apply field-line-sm;
+  padding-block: var(--spacing);
+  font-size: var(--text-base);
+  line-height: var(--rp-leading, var(--text-base--line-height));
+  @media (width >= 40rem) {
+    padding-block: calc(var(--spacing) * 1.5);
+  }
+  @media (width >= 40rem) {
+    font-size: var(--text-sm);
+    line-height: var(--rp-leading, var(--text-sm--line-height));
+  }
 }
 
 .rp-textarea--lg {
-  @apply field-line-lg;
+  padding-block: calc(var(--spacing) * 2);
+  font-size: var(--text-base);
+  line-height: var(--rp-leading, var(--text-base--line-height));
 }

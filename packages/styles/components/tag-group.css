@@ -1,15 +1,21 @@
 /* Base styles */
 .rp-tag-group {
-  @apply relative flex flex-col gap-1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing);
 }
 
 .rp-tag-group__list {
-  @apply relative flex flex-wrap gap-1.5;
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--spacing) * 1.5);
 }
 
 .rp-tag-group [slot="description"],
 .rp-tag-group [data-slot="description"],
 .rp-tag-group [slot="errorMessage"],
 .rp-tag-group [data-slot="error-message"] {
-  @apply p-1;
+  padding: var(--spacing);
 }

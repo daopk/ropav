@@ -3,81 +3,179 @@
    ========================================================================== */
 
 .rp-date-picker {
-  @apply inline-flex flex-col gap-1;
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--spacing);
 
   .rp-date-input-group__suffix,
   .rp-date-input-group__prefix {
-    @apply pointer-events-auto;
+    pointer-events: auto;
   }
 }
 
 .rp-date-picker__trigger {
-  @apply inline-flex w-full items-center rounded-field p-1 text-sm no-highlight;
+  display: inline-flex;
+  width: 100%;
+  align-items: center;
+  border-radius: var(--field-radius, calc(var(--radius) * 0.75));
+  padding: var(--spacing);
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  -webkit-tap-highlight-color: transparent;
 
   cursor: var(--cursor-interactive);
 
   transition: box-shadow 150ms var(--ease-out);
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   &:focus-visible:not(:focus),
   &[data-focus-visible="true"] {
-    @apply status-focused;
+    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+      var(--rp-ring-color, currentcolor);
+    box-shadow:
+      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-ring-offset-width: 0px;
+    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+      var(--rp-ring-offset-color);
+    --rp-ring-offset-color: var(--background);
+    --rp-outline-style: none;
+    outline-style: none;
+    --rp-ring-offset-width: var(--ring-offset-width);
+    @media (forced-colors: active) {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
   }
 
   &:disabled,
   &[data-disabled="true"],
   &[aria-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
   }
 }
 
 .rp-date-picker__trigger-indicator {
-  @apply inline-flex size-4 items-center justify-center text-field-placeholder;
+  display: inline-flex;
+  width: calc(var(--spacing) * 4);
+  height: calc(var(--spacing) * 4);
+  align-items: center;
+  justify-content: center;
+  color: var(--field-placeholder, var(--muted));
 }
 
 .rp-date-picker__popover {
-  @apply w-fit origin-(--trigger-anchor-point) scrollbar-none overflow-y-auto overscroll-contain bg-overlay p-3;
-  @apply motion-reduce:transition-none;
+  width: fit-content;
+  transform-origin: var(--trigger-anchor-point);
+  scrollbar-color: auto;
+  scrollbar-gutter: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background-color: var(--overlay);
+  padding: calc(var(--spacing) * 3);
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   box-shadow: var(--shadow-overlay);
   border-radius: min(32px, var(--component-radius));
 
   &:focus-visible:not(:focus),
   &[data-focus-visible="true"] {
-    @apply outline-none;
+    --rp-outline-style: none;
+    outline-style: none;
   }
 
   &[data-entering="true"] {
-    @apply animate-in duration-150 ease-smooth fade-in-0 zoom-in-95;
+    animation: enter var(--tw-animation-duration, var(--tw-duration, 0.15s)) var(--tw-ease, ease)
+      var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
+      var(--tw-animation-direction, normal) var(--tw-animation-fill-mode, none);
+    --tw-duration: 150ms;
+    transition-duration: 150ms;
+    --tw-ease: ease;
+    transition-timing-function: ease;
+    --tw-enter-opacity: calc(0/100);
+    --tw-enter-opacity: 0;
+    --tw-enter-scale: calc(95*1%);
+    --tw-enter-scale: 0.95;
 
     &[data-placement^="top"] {
-      @apply slide-in-from-bottom-1;
+      --tw-enter-translate-y: calc(1*var(--spacing));
     }
 
     &[data-placement^="bottom"] {
-      @apply slide-in-from-top-1;
+      --tw-enter-translate-y: calc(1*var(--spacing)*-1);
     }
 
     &[data-placement^="left"] {
-      @apply slide-in-from-right-1;
+      --tw-enter-translate-x: calc(1*var(--spacing));
     }
 
     &[data-placement^="right"] {
-      @apply slide-in-from-left-1;
+      --tw-enter-translate-x: calc(1*var(--spacing)*-1);
     }
   }
 
   &[data-exiting="true"] {
-    @apply animate-out duration-100 ease-smooth zoom-out-95 fade-out;
+    animation: exit var(--tw-animation-duration, var(--tw-duration, 0.15s)) var(--tw-ease, ease)
+      var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
+      var(--tw-animation-direction, normal) var(--tw-animation-fill-mode, none);
+    --tw-duration: 100ms;
+    transition-duration: 100ms;
+    --tw-ease: ease;
+    transition-timing-function: ease;
+    --tw-exit-scale: calc(95*1%);
+    --tw-exit-scale: 0.95;
+    --tw-exit-opacity: 0;
   }
 
   &[data-exiting="true"],
   &[data-entering="true"] {
-    @apply transition-[opacity,transform] will-change-[opacity,transform];
+    transition-property: opacity, transform;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
+    will-change: opacity, transform;
   }
 }
 
 .rp-date-picker__popover .rp-calendar__nav-button-icon,
 .rp-date-picker__popover .rp-range-calendar__nav-button-icon {
-  @apply rotate-0;
+  rotate: 0deg;
 }

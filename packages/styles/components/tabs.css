@@ -1,72 +1,134 @@
 /* Base tabs component */
 .rp-tabs {
-  @apply flex gap-2;
+  display: flex;
+  gap: calc(var(--spacing) * 2);
 
   /* Orientation styles */
   &[data-orientation="horizontal"] {
-    @apply flex-col;
+    flex-direction: column;
   }
 
   &[data-orientation="vertical"] {
-    @apply flex-row;
+    flex-direction: row;
   }
 }
 
 /* Tab list container */
 .rp-tabs__list-container {
-  @apply relative bg-default;
+  position: relative;
+  background-color: var(--default);
 
   border-radius: min(32px, var(--component-radius));
 
   /* Vertical scroller fills the container height so overflow detection
      engages when the wrapper height is constrained (e.g. h-[240px]) */
   > .rp-tabs__list-container__scroller[data-orientation="vertical"] {
-    @apply h-full;
+    height: 100%;
   }
 
   /* Overflow chevron buttons */
   > .rp-tabs__list-container__scroll-prev,
   > .rp-tabs__list-container__scroll-next {
-    @apply absolute z-2 hidden size-4 cursor-(--cursor-interactive) items-center justify-center rounded-full border-0 bg-transparent p-0 text-foreground outline-none;
+    position: absolute;
+    z-index: 2;
+    display: none;
+    width: calc(var(--spacing) * 4);
+    height: calc(var(--spacing) * 4);
+    cursor: var(--cursor-interactive);
+    align-items: center;
+    justify-content: center;
+    border-radius: calc(infinity * 1px);
+    border-style: var(--rp-border-style);
+    border-width: 0px;
+    background-color: transparent;
+    padding: 0px;
+    color: var(--foreground);
+    --rp-outline-style: none;
+    outline-style: none;
 
     transition: opacity 150ms var(--ease-smooth);
-    @apply motion-reduce:transition-none;
+    &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+        transition-property: none;
+        &::before,
+        &::after {
+          transition-property: none;
+        }
+      }
+    }
 
     @media (hover: hover) {
       &:hover {
-        @apply opacity-70;
+        opacity: 70%;
       }
     }
 
     &:focus-visible {
-      @apply status-focused;
+      --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+        var(--rp-ring-color, currentcolor);
+      box-shadow:
+        var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+        var(--rp-ring-shadow), var(--rp-shadow);
+      --rp-ring-color: var(--focus);
+      --rp-ring-offset-width: 0px;
+      --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+        var(--rp-ring-offset-color);
+      --rp-ring-offset-color: var(--background);
+      --rp-outline-style: none;
+      outline-style: none;
+      --rp-ring-offset-width: var(--ring-offset-width);
+      @media (forced-colors: active) {
+        outline: 2px solid Highlight;
+        outline-offset: 2px;
+      }
     }
   }
 
   /* Chevron position - horizontal orientation */
   &:has([data-orientation="horizontal"]) {
     > .rp-tabs__list-container__scroll-prev {
-      @apply start-1 top-1/2 -translate-y-1/2;
+      inset-inline-start: calc(var(--spacing) * 1);
+      top: calc(1 / 2 * 100%);
+      --rp-translate-y: calc(calc(1 / 2 * 100%) * -1);
+      translate: var(--rp-translate-x) var(--rp-translate-y);
     }
 
     > .rp-tabs__list-container__scroll-next {
-      @apply end-1 top-1/2 -translate-y-1/2;
+      inset-inline-end: calc(var(--spacing) * 1);
+      top: calc(1 / 2 * 100%);
+      --rp-translate-y: calc(calc(1 / 2 * 100%) * -1);
+      translate: var(--rp-translate-x) var(--rp-translate-y);
     }
 
     > .rp-tabs__list-container__scroll-prev,
     > .rp-tabs__list-container__scroll-next {
-      @apply rtl:rotate-180;
+      &:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) {
+        rotate: 180deg;
+      }
     }
   }
 
   /* Chevron position - vertical orientation */
   &:has([data-orientation="vertical"]) {
     > .rp-tabs__list-container__scroll-prev {
-      @apply top-1 left-1/2 -translate-x-1/2;
+      top: var(--spacing);
+      left: calc(1 / 2 * 100%);
+      --rp-translate-x: calc(calc(1 / 2 * 100%) * -1);
+      translate: var(--rp-translate-x) var(--rp-translate-y);
     }
 
     > .rp-tabs__list-container__scroll-next {
-      @apply bottom-1 left-1/2 -translate-x-1/2;
+      bottom: var(--spacing);
+      left: calc(1 / 2 * 100%);
+      --rp-translate-x: calc(calc(1 / 2 * 100%) * -1);
+      translate: var(--rp-translate-x) var(--rp-translate-y);
     }
   }
 
@@ -80,7 +142,7 @@
       )
     )
     > .rp-tabs__list-container__scroll-prev {
-    @apply inline-flex;
+    display: inline-flex;
   }
 
   &:has(
@@ -92,32 +154,50 @@
       )
     )
     > .rp-tabs__list-container__scroll-next {
-    @apply inline-flex;
+    display: inline-flex;
   }
 }
 
 /* Tab list */
 .rp-tabs__list {
-  @apply inline-flex p-1;
+  display: inline-flex;
+  padding: var(--spacing);
 
   /* Horizontal orientation - grow with content so ScrollShadow can detect overflow */
   &[data-orientation="horizontal"] {
-    @apply w-max min-w-full flex-row;
+    width: max-content;
+    min-width: 100%;
+    flex-direction: row;
   }
 
   /* Vertical orientation */
   &[data-orientation="vertical"] {
-    @apply flex-col gap-1;
+    flex-direction: column;
+    gap: var(--spacing);
 
     .rp-tabs__tab {
-      @apply min-w-20;
+      min-width: calc(var(--spacing) * 20);
     }
   }
 }
 
 /* Individual tab */
 .rp-tabs__tab {
-  @apply relative flex h-8 w-full items-center justify-center rounded-component px-4 text-center text-sm font-medium outline-none no-highlight;
+  position: relative;
+  display: flex;
+  height: calc(var(--spacing) * 8);
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--component-radius, calc(var(--radius) * 3));
+  padding-inline: calc(var(--spacing) * 4);
+  text-align: center;
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  font-weight: var(--font-weight-medium);
+  --rp-outline-style: none;
+  outline-style: none;
+  -webkit-tap-highlight-color: transparent;
 
   --tabs-tab-fg: var(--muted);
   --tabs-tab-fg-selected: var(--segment-foreground);
@@ -132,7 +212,22 @@
     background-color 150ms var(--ease-smooth),
     box-shadow 150ms var(--ease-out),
     opacity 150ms var(--ease-smooth);
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   /* Selected state */
   &[data-selected="true"] {
@@ -149,7 +244,7 @@
     /* Hide separator on the selected tab and the one following it */
     .rp-tabs__separator,
     & + .rp-tabs__tab .rp-tabs__separator {
-      @apply opacity-0;
+      opacity: 0%;
     }
   }
 
@@ -157,64 +252,129 @@
   &:disabled,
   &[data-disabled="true"],
   &[aria-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
   }
 
   /* Hover states - both approaches for compatibility */
   @media (hover: hover) {
     &:not([data-selected="true"]):not([data-disabled="true"]):hover,
     &[data-hovered="true"]:not([data-selected="true"]):not([data-disabled="true"]) {
-      @apply opacity-70;
+      opacity: 70%;
     }
   }
 
   /* Focus states - comprehensive fallback */
   &:focus-visible:not(:focus),
   &[data-focus-visible="true"] {
-    @apply status-focused;
+    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+      var(--rp-ring-color, currentcolor);
+    box-shadow:
+      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-ring-offset-width: 0px;
+    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+      var(--rp-ring-offset-color);
+    --rp-ring-offset-color: var(--background);
+    --rp-outline-style: none;
+    outline-style: none;
+    --rp-ring-offset-width: var(--ring-offset-width);
+    @media (forced-colors: active) {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
   }
 }
 
 /* Tab separator */
 .rp-tabs__separator {
-  @apply pointer-events-none absolute rounded-sm bg-muted/25;
+  pointer-events: none;
+  position: absolute;
+  border-radius: calc(var(--radius) * 0.5);
+  background-color: var(--muted);
+  @supports (color: color-mix(in lab, red, red)) {
+    background-color: color-mix(in oklab, var(--muted) 25%, transparent);
+  }
 
   transition: opacity 150ms var(--ease-smooth);
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   /* Horizontal tabs - vertical separator */
   .rp-tabs__list[data-orientation="horizontal"] & {
-    @apply start-0 top-1/4 h-1/2 w-px;
+    inset-inline-start: calc(var(--spacing) * 0);
+    top: calc(1 / 4 * 100%);
+    height: calc(1 / 2 * 100%);
+    width: 1px;
   }
 
   /* Vertical tabs - horizontal separator */
   .rp-tabs__list[data-orientation="vertical"] & {
-    @apply start-[5%] top-0 h-px w-[90%];
+    inset-inline-start: 5%;
+    top: 0px;
+    height: 1px;
+    width: 90%;
   }
 }
 
 /* Tab panel */
 .rp-tabs__panel {
-  @apply w-full p-2 outline-none;
+  width: 100%;
+  padding: calc(var(--spacing) * 2);
+  --rp-outline-style: none;
+  outline-style: none;
 
   /* Exiting animations */
   &[data-exiting="true"] {
-    @apply absolute start-0 top-0 w-full;
+    position: absolute;
+    inset-inline-start: calc(var(--spacing) * 0);
+    top: 0px;
+    width: 100%;
   }
 
   /* Orientation spacing */
   &[data-orientation="horizontal"] {
-    @apply mt-4;
+    margin-top: calc(var(--spacing) * 4);
   }
 
   &[data-orientation="vertical"] {
-    @apply ms-4;
+    margin-inline-start: calc(var(--spacing) * 4);
   }
 }
 
 /* Tab indicator - React Aria's SelectionIndicator */
 .rp-tabs__indicator {
-  @apply absolute start-0 top-0 size-full rounded-component bg-segment shadow-surface;
+  position: absolute;
+  inset-inline-start: calc(var(--spacing) * 0);
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--component-radius, calc(var(--radius) * 3));
+  background-color: var(--segment);
+  --rp-shadow: var(--surface-shadow);
+  box-shadow:
+    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+    var(--rp-ring-shadow), var(--rp-shadow);
 
   z-index: -1;
 
@@ -228,7 +388,22 @@
   transition-duration: 250ms;
   transition-property: translate, width, height;
   transition-timing-function: var(--ease-out-fluid);
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 }
 
 /* ==========================================================================
@@ -239,25 +414,26 @@
   /* Container - flat, no pill. Underline on container (not list) so it stays
      stable when the inner list scrolls horizontally inside the ScrollShadow. */
   > .rp-tabs__list-container {
-    @apply rounded-none bg-transparent;
+    border-radius: 0;
+    background-color: transparent;
 
     /* Tab list - remove padding */
     .rp-tabs__list {
-      @apply p-0;
+      padding: 0px;
     }
 
     /* Hide separators in secondary variant */
     .rp-tabs__separator {
-      @apply hidden;
+      display: none;
     }
 
     /* Tab - adjust for secondary variant */
     .rp-tabs__tab {
-      @apply rounded-none;
+      border-radius: 0;
 
       /* Selected state - use text-foreground */
       &[data-selected="true"] {
-        @apply text-foreground;
+        color: var(--foreground);
 
         /* Here the indicator is a line under the tab rather than a pill behind it, so the
          * label keeps the ordinary text colour instead of the base variant's
@@ -270,7 +446,12 @@
 
     /* Tab indicator - line style */
     .rp-tabs__indicator {
-      @apply rounded-none bg-accent shadow-none;
+      border-radius: 0;
+      background-color: var(--accent);
+      --rp-shadow: 0 0 #0000;
+      box-shadow:
+        var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+        var(--rp-ring-shadow), var(--rp-shadow);
 
       /* `bg-accent` outranks the base rule's forced-colors fallback and is itself flattened
        * to `Canvas`, so the underline has to be restated here or it disappears. */
@@ -282,19 +463,28 @@
 
   /* Horizontal orientation - bottom border + bottom line indicator */
   &[data-orientation="horizontal"] > .rp-tabs__list-container {
-    @apply border-b border-border;
+    border-bottom-style: var(--rp-border-style);
+    border-bottom-width: 1px;
+    border-color: var(--border);
 
     .rp-tabs__indicator {
-      @apply top-auto bottom-0 h-0.5;
+      top: auto;
+      bottom: 0px;
+      height: calc(var(--spacing) * 0.5);
     }
   }
 
   /* Vertical orientation - left border + left line indicator */
   &[data-orientation="vertical"] > .rp-tabs__list-container {
-    @apply border-s border-border;
+    border-inline-start-style: var(--rp-border-style);
+    border-inline-start-width: 1px;
+    border-color: var(--border);
 
     .rp-tabs__indicator {
-      @apply start-0 top-0 h-full w-0.5;
+      inset-inline-start: calc(var(--spacing) * 0);
+      top: 0px;
+      height: 100%;
+      width: calc(var(--spacing) * 0.5);
     }
   }
 }

@@ -4,7 +4,9 @@
 
 /* Base styles */
 .rp-progress-bar {
-  @apply grid w-full gap-1;
+  display: grid;
+  width: 100%;
+  gap: var(--spacing);
   grid-template-areas:
     "label output"
     "track track";
@@ -20,26 +22,36 @@
   --progress-bar-stripe-size: 1rem;
 
   [data-slot="label"] {
-    @apply w-fit text-sm font-medium;
+    width: fit-content;
+    font-size: var(--text-sm);
+    line-height: var(--rp-leading, var(--text-sm--line-height));
+    font-weight: var(--font-weight-medium);
 
     grid-area: label;
   }
 
   .rp-progress-bar__output {
-    @apply text-sm font-medium tabular-nums;
+    font-size: var(--text-sm);
+    line-height: var(--rp-leading, var(--text-sm--line-height));
+    font-weight: var(--font-weight-medium);
+    --rp-numeric-spacing: tabular-nums;
+    font-variant-numeric: var(--rp-ordinal,) var(--rp-slashed-zero,) var(--rp-numeric-figure,)
+      var(--rp-numeric-spacing,) var(--rp-numeric-fraction,);
 
     grid-area: output;
   }
 
   .rp-progress-bar__track {
-    @apply relative overflow-hidden bg-default;
+    position: relative;
+    overflow: hidden;
+    background-color: var(--default);
 
     border-radius: min(32px, var(--component-radius));
 
     grid-area: track;
 
     /* Default height (matches --md) */
-    @apply h-2;
+    height: calc(var(--spacing) * 2);
 
     /* Track and fill are both plain backgrounds, so forced colors flattens the pair onto the
      * page and the whole bar stops rendering. */
@@ -51,7 +63,10 @@
   }
 
   .rp-progress-bar__fill {
-    @apply absolute start-0 top-0 h-full;
+    position: absolute;
+    inset-inline-start: calc(var(--spacing) * 0);
+    top: 0px;
+    height: 100%;
 
     border-radius: min(32px, var(--component-radius));
 
@@ -62,17 +77,47 @@
     }
 
     transition: width 300ms var(--ease-out);
-    @apply motion-reduce:transition-none;
+    &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+        transition-property: none;
+        &::before,
+        &::after {
+          transition-property: none;
+        }
+      }
+    }
   }
 
   /* Indeterminate state - when no aria-valuenow is set */
   &:not([aria-valuenow]) {
     .rp-progress-bar__fill {
-      @apply w-2/5;
+      width: calc(2 / 5 * 100%);
 
       animation: rp-progress-bar-indeterminate 1.5s cubic-bezier(0.65, 0, 0.35, 1) infinite;
 
-      @apply motion-reduce:animate-none;
+      &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+        animation: none;
+        &::before,
+        &::after {
+          animation: none;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+          animation: none;
+          &::before,
+          &::after {
+            animation: none;
+          }
+        }
+      }
     }
   }
 
@@ -80,10 +125,16 @@
   &:disabled,
   &[data-disabled="true"],
   &[aria-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
 
     [data-slot="label"] {
-      @apply opacity-100;
+      opacity: 100%;
     }
   }
 }
@@ -111,7 +162,7 @@
   --progress-bar-stripe-size: 0.5rem;
 
   .rp-progress-bar__track {
-    @apply h-1;
+    height: var(--spacing);
   }
 }
 
@@ -123,7 +174,7 @@
   --progress-bar-stripe-size: 1.25rem;
 
   .rp-progress-bar__track {
-    @apply h-3;
+    height: calc(var(--spacing) * 3);
   }
 }
 
@@ -163,7 +214,10 @@
 .rp-progress-bar--striped,
 .rp-progress-bar--animated {
   .rp-progress-bar__fill::after {
-    @apply absolute inset-0 content-[''];
+    position: absolute;
+    inset: 0px;
+    --rp-content: "";
+    content: var(--rp-content);
 
     border-radius: inherit;
 
@@ -194,7 +248,22 @@
      * slot, and written under the pseudo-element instead its ancestor condition would land after
      * the pseudo-element and compile to an empty `:is()`. Stopped this way the band stays put
      * rather than disappearing, which is `--striped`. */
-    @apply motion-reduce:animate-none;
+    &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+      animation: none;
+      &::before,
+      &::after {
+        animation: none;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+        animation: none;
+        &::before,
+        &::after {
+          animation: none;
+        }
+      }
+    }
 
     &::after {
       animation: rp-progress-bar-stripes 1s linear infinite;

@@ -1,21 +1,38 @@
 /* Number field styles */
 .rp-number-field {
-  @apply flex flex-col gap-1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing);
 
   &[data-invalid="true"],
   &[aria-invalid="true"] {
     [data-slot="description"] {
-      @apply hidden;
+      display: none;
     }
   }
 
   [data-slot="label"] {
-    @apply w-fit;
+    width: fit-content;
   }
 }
 
 .rp-number-field__group {
-  @apply grid h-9 items-center overflow-hidden rounded-field border text-sm text-field-foreground shadow-field outline-none;
+  display: grid;
+  height: calc(var(--spacing) * 9);
+  align-items: center;
+  overflow: hidden;
+  border-radius: var(--field-radius, calc(var(--radius) * 0.75));
+  border-style: var(--rp-border-style);
+  border-width: 1px;
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  color: var(--field-foreground, var(--foreground));
+  --rp-shadow: var(--field-shadow);
+  box-shadow:
+    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+    var(--rp-ring-shadow), var(--rp-shadow);
+  --rp-outline-style: none;
+  outline-style: none;
 
   /* The fill, per state. The `--secondary` variant re-points these and declares nothing else. */
   --number-field-group-bg: var(--field-background, var(--default));
@@ -51,7 +68,22 @@
     background-color 150ms var(--ease-smooth),
     border-color 150ms var(--ease-smooth),
     box-shadow 150ms var(--ease-out);
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   /* Hover state */
   @media (hover: hover) {
@@ -65,14 +97,54 @@
   /* Focus within state */
   &[data-focus-within="true"],
   &:focus-within {
-    @apply status-focused-field;
+    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+      var(--rp-ring-color, currentcolor);
+    box-shadow:
+      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+      var(--rp-ring-offset-color);
+    --rp-outline-style: none;
+    outline-style: none;
+    --rp-ring-offset-width: 0px;
+    @media (forced-colors: active) {
+      outline: 2px solid Highlight;
+      outline-offset: 0;
+    }
     border-color: var(--field-border-focus);
     background-color: var(--number-field-group-bg-focus);
   }
 
   /* Invalid state */
   &[data-invalid="true"] {
-    @apply status-invalid-field;
+    outline-style: var(--rp-outline-style);
+    outline-width: 1px;
+    outline-color: var(--danger);
+    --rp-outline-style: solid;
+    outline-style: solid;
+    --rp-ring-offset-width: 3px;
+    &:focus,
+    &:focus-visible,
+    &[data-focused="true"],
+    &[data-focus-visible="true"],
+    &:focus-within,
+    &[data-focus-within="true"] {
+      --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+        var(--rp-ring-color, currentcolor);
+      box-shadow:
+        var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+        var(--rp-ring-shadow), var(--rp-shadow);
+      --rp-ring-color: var(--danger);
+      --rp-ring-offset-width: 0px;
+      --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+        var(--rp-ring-offset-color);
+      --rp-ring-offset-width: 0px;
+      @media (forced-colors: active) {
+        outline-width: 2px;
+        outline-color: Highlight;
+      }
+    }
     background-color: var(--number-field-group-bg-focus);
     border-color: var(--field-border-invalid);
   }
@@ -80,7 +152,13 @@
   /* Disabled state */
   &[data-disabled="true"],
   &[aria-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
   }
 
   /**
@@ -100,22 +178,49 @@
 }
 
 .rp-number-field__input {
-  @apply min-w-0 rounded-none border-0 bg-transparent px-3 field-line-md tabular-nums shadow-none outline-none;
+  min-width: 0px;
+  border-radius: 0;
+  border-style: var(--rp-border-style);
+  border-width: 0px;
+  background-color: transparent;
+  padding-inline: calc(var(--spacing) * 3);
+  padding-block: calc(var(--spacing) * 1.5);
+  font-size: var(--text-base);
+  line-height: var(--rp-leading, var(--text-base--line-height));
+  @media (width >= 40rem) {
+    padding-block: calc(var(--spacing) * 2);
+  }
+  @media (width >= 40rem) {
+    font-size: var(--text-sm);
+    line-height: var(--rp-leading, var(--text-sm--line-height));
+  }
+  --rp-numeric-spacing: tabular-nums;
+  font-variant-numeric: var(--rp-ordinal,) var(--rp-slashed-zero,) var(--rp-numeric-figure,)
+    var(--rp-numeric-spacing,) var(--rp-numeric-fraction,);
+  --rp-shadow: 0 0 #0000;
+  box-shadow:
+    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+    var(--rp-ring-shadow), var(--rp-shadow);
+  --rp-outline-style: none;
+  outline-style: none;
 
   /* Remove border radius on left side when decrement button is present */
   .rp-number-field__group:has([slot="decrement"]) & {
-    @apply rounded-s-none;
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
   }
 
   /* Remove border radius on right side when increment button is present */
   .rp-number-field__group:has([slot="increment"]) & {
-    @apply rounded-e-none;
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
   }
 
   /* Focus state - handled by group */
   &:focus,
   &:focus-visible {
-    @apply outline-none;
+    --rp-outline-style: none;
+    outline-style: none;
   }
 
   /**
@@ -140,7 +245,15 @@
 
 .rp-number-field__increment-button,
 .rp-number-field__decrement-button {
-  @apply flex h-full w-10 items-center justify-center rounded-none text-field-foreground outline-none;
+  display: flex;
+  height: 100%;
+  width: calc(var(--spacing) * 10);
+  align-items: center;
+  justify-content: center;
+  border-radius: 0;
+  color: var(--field-foreground, var(--foreground));
+  --rp-outline-style: none;
+  outline-style: none;
 
   --number-field-button-bg: transparent;
   --number-field-button-bg-pressed: color-mix(
@@ -157,7 +270,22 @@
   transition:
     background-color 150ms var(--ease-smooth),
     border-color 150ms var(--ease-smooth);
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   /* Cursor */
   cursor: var(--cursor-interactive);
@@ -183,22 +311,47 @@
   &:disabled,
   &[data-disabled="true"],
   &[aria-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
   }
 
   /* Icon styling */
   [data-slot="number-field-increment-button-icon"],
   [data-slot="number-field-decrement-button-icon"] {
-    @apply size-4;
+    width: calc(var(--spacing) * 4);
+    height: calc(var(--spacing) * 4);
   }
 }
 
 .rp-number-field__increment-button {
-  @apply rounded-s-none rounded-e-field border-s border-field-placeholder/15;
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+  border-start-end-radius: var(--field-radius, calc(var(--radius) * 0.75));
+  border-end-end-radius: var(--field-radius, calc(var(--radius) * 0.75));
+  border-inline-start-style: var(--rp-border-style);
+  border-inline-start-width: 1px;
+  border-color: var(--field-placeholder, var(--muted));
+  @supports (color: color-mix(in lab, red, red)) {
+    border-color: color-mix(in oklab, var(--field-placeholder, var(--muted)) 15%, transparent);
+  }
 }
 
 .rp-number-field__decrement-button {
-  @apply rounded-s-field rounded-e-none border-e border-field-placeholder/15;
+  border-start-start-radius: var(--field-radius, calc(var(--radius) * 0.75));
+  border-end-start-radius: var(--field-radius, calc(var(--radius) * 0.75));
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+  border-inline-end-style: var(--rp-border-style);
+  border-inline-end-width: 1px;
+  border-color: var(--field-placeholder, var(--muted));
+  @supports (color: color-mix(in lab, red, red)) {
+    border-color: color-mix(in oklab, var(--field-placeholder, var(--muted)) 15%, transparent);
+  }
 }
 
 /* Variant property definitions */
@@ -207,24 +360,27 @@
 }
 
 .rp-number-field--secondary .rp-number-field__group {
-  @apply shadow-none;
+  --rp-shadow: 0 0 #0000;
+  box-shadow:
+    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+    var(--rp-ring-shadow), var(--rp-shadow);
 
   --number-field-group-bg: var(--default);
   --number-field-group-bg-hover: var(--default-hover);
   --number-field-group-bg-focus: var(--default);
 
   [data-slot="number-field-input"] {
-    @apply bg-transparent;
+    background-color: transparent;
   }
 }
 
 /* Full width modifier */
 .rp-number-field--full-width {
-  @apply w-full;
+  width: 100%;
 }
 
 .rp-number-field__group--full-width {
-  @apply w-full;
+  width: 100%;
 }
 
 /* ==========================================================================
@@ -234,7 +390,7 @@
 /* The stepper column stays 4px wider than the field is tall, as it is at `md`. */
 .rp-number-field--sm {
   .rp-number-field__group {
-    @apply h-8;
+    height: calc(var(--spacing) * 8);
 
     &:has([slot="decrement"]) {
       grid-template-columns: 36px 1fr;
@@ -250,18 +406,27 @@
   }
 
   .rp-number-field__input {
-    @apply field-line-sm;
+    padding-block: var(--spacing);
+    font-size: var(--text-base);
+    line-height: var(--rp-leading, var(--text-base--line-height));
+    @media (width >= 40rem) {
+      padding-block: calc(var(--spacing) * 1.5);
+    }
+    @media (width >= 40rem) {
+      font-size: var(--text-sm);
+      line-height: var(--rp-leading, var(--text-sm--line-height));
+    }
   }
 
   .rp-number-field__increment-button,
   .rp-number-field__decrement-button {
-    @apply w-9;
+    width: calc(var(--spacing) * 9);
   }
 }
 
 .rp-number-field--lg {
   .rp-number-field__group {
-    @apply h-10;
+    height: calc(var(--spacing) * 10);
 
     &:has([slot="decrement"]) {
       grid-template-columns: 44px 1fr;
@@ -277,11 +442,13 @@
   }
 
   .rp-number-field__input {
-    @apply field-line-lg;
+    padding-block: calc(var(--spacing) * 2);
+    font-size: var(--text-base);
+    line-height: var(--rp-leading, var(--text-base--line-height));
   }
 
   .rp-number-field__increment-button,
   .rp-number-field__decrement-button {
-    @apply w-11;
+    width: calc(var(--spacing) * 11);
   }
 }

@@ -43,8 +43,15 @@ const terminated = (css) => (/[;}]\s*$/.test(css) ? css : `${css};`);
  *
  * `expandedFor` returns the CSS a list stands for, or null to leave that statement alone — which
  * is how a utility that is staying as a class of its own opts out.
+ *
+ * `renameSlots` then goes over whatever the author wrote by hand. Two components override the
+ * focus ring by declaring `--tw-ring-offset-width: 0px` on its own, with nothing beside it: the
+ * declaration that reads the slot lives in the `@apply` above. Renaming only the generated half
+ * leaves the override writing a name nobody reads any more, and the ring silently grows by its
+ * offset — a change no diff of the compiled declarations can see, because the same normalisation
+ * that lets the two sides be compared is what erases the difference.
  */
-export const rewrite = (source, statements, expandedFor) => {
+export const rewrite = (source, statements, expandedFor, renameSlots) => {
   let out = source;
   let replaced = 0;
 
@@ -60,5 +67,5 @@ export const rewrite = (source, statements, expandedFor) => {
     replaced++;
   }
 
-  return { css: out, replaced };
+  return { css: renameSlots(out), replaced };
 };

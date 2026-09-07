@@ -3,5 +3,8 @@
    ========================================================================== */
 
 .rp-menu-section {
-  @apply flex flex-col items-start gap-0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0px;
 }

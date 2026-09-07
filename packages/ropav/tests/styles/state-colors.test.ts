@@ -24,58 +24,23 @@ import { describe, expect, it } from "vitest";
 
 const STYLES = path.resolve(import.meta.dirname, "../../../styles");
 
-/** Colour utility suffixes, taken from the theme's own `--color-*` namespace. */
-const colorNames = new Set([
-  ...readFileSync(path.join(STYLES, "themes/shared/theme.css"), "utf8")
-    .matchAll(/--color-([a-z0-9-]+):/g)
-    .map((match) => match[1]),
-  "transparent",
-  "current",
-  "inherit",
-  "black",
-  "white",
-]);
-
-const COLOR_UTILITY =
-  /^(bg|text|border|ring|fill|stroke|outline|shadow|decoration|caret|placeholder|accent|from|to|via)-(.+)$/;
-
-/** Which property each utility prefix paints, so paints on the same one can be counted together. */
-const PAINTS: Record<string, string> = {
-  accent: "accent-color",
-  bg: "background-color",
-  border: "border-color",
-  caret: "caret-color",
-  decoration: "text-decoration-color",
-  fill: "fill",
-  from: "background-image",
-  outline: "outline-color",
-  placeholder: "color",
-  ring: "box-shadow",
-  shadow: "box-shadow",
-  stroke: "stroke",
-  text: "color",
-  to: "background-image",
-  via: "background-image",
-};
-
 const COLOR_PROPERTY =
   /^(color|background|background-color|border(-[a-z]+)?-color|fill|stroke|outline-color|text-decoration-color|box-shadow)$/;
 
 /**
- * Utilities that hold the colour centrally, so a component reaching for one declares none of its
- * own — `utilities/index.css` is the single place those are retuned.
+ * A value with no colour of its own is not a colour a caller can be locked out of.
+ *
+ * `currentcolor` and `inherit` are the caller's own colour arriving by another route, and
+ * `transparent` is the absence of paint — the autofill suppression every text field carries is
+ * `0 0 0 1000px transparent inset`, and there is no theme in which it should be anything else.
+ * The literal check is what keeps `color-mix(in oklab, transparent 50%, #f00)` out of the
+ * exemption.
  */
-const DELEGATED = new Set([
-  "focus-field-ring",
-  "focus-ring",
-  "forced-selected",
-  "invalid-field-ring",
-  "status-disabled",
-  "status-focused",
-  "status-focused-field",
-  "status-invalid-field",
-  "status-pending",
-]);
+const LITERAL_COLOUR = /#[0-9a-f]{3,8}\b|\b(?:rgba?|hsla?|oklch|oklab|lab|lch|color)\(/i;
+const DEFERS_TO_CALLER = /\b(?:currentcolor|inherit|transparent)\b/i;
+
+const reachable = (value: string) =>
+  value.includes("var(--") || (DEFERS_TO_CALLER.test(value) && !LITERAL_COLOUR.test(value));
 
 /**
  * `data-*` that pick an arrangement or a variant rather than an interaction state. Everything else
@@ -189,46 +154,13 @@ const allPaints = () => {
         state: blocks.some(isStateSelector),
       };
 
-      if (line.startsWith("@apply")) {
-        for (const utility of line
-          .replace(/^@apply\s+/, "")
-          .replace(/;$/, "")
-          .split(/\s+/)) {
-          // Drop any variant prefix, the `!` and an opacity modifier — `hover:bg-default/50!`.
-          const variants = utility.replace(/!$/, "");
-          const [bare = ""] = (variants.split(":").pop() ?? "").split("/");
-
-          if (DELEGATED.has(bare)) continue;
-
-          const parts = COLOR_UTILITY.exec(bare);
-          const prefix = parts?.[1];
-          const suffix = parts?.[2];
-
-          if (!prefix || !suffix) continue;
-          if (!colorNames.has(suffix) && !suffix.startsWith("[")) continue;
-
-          // `after:bg-*` paints the pseudo-element, which is a different box from the element.
-          const pseudo = /(?:^|:)(before|after):/.exec(variants);
-
-          paints.push({
-            ...shared,
-            part: shared.part + (pseudo ? `::${pseudo[1]}` : ""),
-            property: PAINTS[prefix]!,
-            viaProperty: suffix.includes("var(--"),
-            what: bare,
-          });
-        }
-
-        continue;
-      }
-
       const [, property, value] = /^([a-z-]+)\s*:\s*(.+);$/.exec(line) ?? [];
 
       if (property && value && COLOR_PROPERTY.test(property)) {
         paints.push({
           ...shared,
           property: property.replace(/^border-[a-z]+-color$/, "border-color"),
-          viaProperty: value.includes("var(--"),
+          viaProperty: reachable(value),
           what: line,
         });
       }

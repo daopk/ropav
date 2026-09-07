@@ -39,18 +39,21 @@
   --sidebar-rail-line-hover: var(--accent);
   --sidebar-rail-line-dragging: var(--sidebar-rail-line-hover);
 
-  @apply isolate flex h-full w-full;
+  isolation: isolate;
+  display: flex;
+  height: 100%;
+  width: 100%;
 }
 
 /* Reversing the row rather than reordering the parts: the shell's children are written panel,
  * rail, inset in that order whichever side the sidebar is on, so the rail stays between the two
  * either way and a caller's markup does not change with the prop. */
 .rp-sidebar--left {
-  @apply flex-row;
+  flex-direction: row;
 }
 
 .rp-sidebar--right {
-  @apply flex-row-reverse;
+  flex-direction: row-reverse;
 }
 
 /* ==========================================================================
@@ -61,12 +64,35 @@
  * content, so a long nav list would push the panel past the viewport instead of scrolling inside
  * `.rp-sidebar__content`. */
 .rp-sidebar__panel {
-  @apply relative flex min-h-0 shrink-0 grow-0 flex-col overflow-hidden bg-surface text-surface-foreground;
+  position: relative;
+  display: flex;
+  min-height: 0px;
+  flex-shrink: 0;
+  flex-grow: 0;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: var(--surface);
+  color: var(--surface-foreground);
 
   inline-size: var(--sidebar-width);
 
   transition: inline-size 200ms var(--ease-out);
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 }
 
 /* Under the pointer the panel follows it exactly. Easing towards each frame's width instead makes
@@ -85,18 +111,30 @@
 /* The separating line is a border rather than a background, so it is one of the few things Forced
  * Colors Mode recolours instead of flattening — no restatement needed here. */
 .rp-sidebar__panel--left {
-  @apply border-e border-separator/50;
+  border-inline-end-style: var(--rp-border-style);
+  border-inline-end-width: 1px;
+  border-color: var(--separator);
+  @supports (color: color-mix(in lab, red, red)) {
+    border-color: color-mix(in oklab, var(--separator) 50%, transparent);
+  }
 }
 
 .rp-sidebar__panel--right {
-  @apply border-s border-separator/50;
+  border-inline-start-style: var(--rp-border-style);
+  border-inline-start-width: 1px;
+  border-color: var(--separator);
+  @supports (color: color-mix(in lab, red, red)) {
+    border-color: color-mix(in oklab, var(--separator) 50%, transparent);
+  }
 }
 
 /* Neither fill nor line: the panel has stopped being a surface, and the inset beside it is the one
  * that paints. After the side modifiers, whose border this has to beat at equal specificity, and
  * before `--drawer`, which stays last for the reason given there. */
 .rp-sidebar__panel--bare {
-  @apply border-0 bg-transparent;
+  border-style: var(--rp-border-style);
+  border-width: 0px;
+  background-color: transparent;
 }
 
 /* The panel as a card of its own, standing off the page on every side. A whole border rather than
@@ -107,7 +145,16 @@
  * this variant quiets the line: a hairline inside it would be a second answer to the same question.
  */
 .rp-sidebar__panel--floating {
-  @apply border border-separator/50 shadow-surface;
+  border-style: var(--rp-border-style);
+  border-width: 1px;
+  border-color: var(--separator);
+  @supports (color: color-mix(in lab, red, red)) {
+    border-color: color-mix(in oklab, var(--separator) 50%, transparent);
+  }
+  --rp-shadow: var(--surface-shadow);
+  box-shadow:
+    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+    var(--rp-ring-shadow), var(--rp-shadow);
 
   margin: var(--sidebar-card-gap);
   border-radius: var(--sidebar-card-radius);
@@ -127,7 +174,9 @@
  * sweep honest — it reads this panel as one that painted a surface and then lost it to the mode,
  * where in truth there was never anything on screen to lose. */
 .rp-sidebar__panel--offcanvas[data-collapsed="true"] {
-  @apply border-0 bg-transparent;
+  border-style: var(--rp-border-style);
+  border-width: 0px;
+  background-color: transparent;
 
   inline-size: 0;
   /* And the standing-off a card variant asks for, which on a box no longer there is a gap held
@@ -145,7 +194,11 @@
  * Last of the panel's modifiers, so it beats the widths and the card geometry above at equal
  * specificity. */
 .rp-sidebar__panel--drawer {
-  @apply size-full border-0 bg-transparent;
+  width: 100%;
+  height: 100%;
+  border-style: var(--rp-border-style);
+  border-width: 0px;
+  background-color: transparent;
 
   inline-size: auto;
   margin: 0;
@@ -158,7 +211,11 @@
    ========================================================================== */
 
 .rp-sidebar__header {
-  @apply flex shrink-0 flex-col gap-2 p-2;
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  gap: calc(var(--spacing) * 2);
+  padding: calc(var(--spacing) * 2);
 }
 
 /* The scroll region. `overflow-x-hidden` because the panel narrows around its contents during the
@@ -169,7 +226,14 @@
  * would land on item after item with its focus ring faded out. The padding moves that landing
  * point clear of the fade. Sized from the same property the fade is, so retuning one moves both. */
 .rp-sidebar__content {
-  @apply flex min-h-0 flex-1 flex-col gap-1 overflow-x-hidden overflow-y-auto p-2;
+  display: flex;
+  min-height: 0px;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--spacing);
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: calc(var(--spacing) * 2);
 
   scroll-padding-block: var(--scroll-shadow-size, 0px);
 }
@@ -178,7 +242,9 @@
  * Navigation, so `.rp-scroll-shadow--vertical`'s `scrollbar` wins at equal specificity and the nav
  * would grow a full-width scrollbar the moment it became a shadow container. */
 .rp-sidebar__content.rp-scroll-shadow {
-  @apply scrollbar-thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  scrollbar-gutter: auto;
+  scrollbar-width: thin;
 
   /* The fade is a `mask-image` over the rows, which in Forced Colors Mode means system-coloured
    * text dissolving into the background. That mode is chosen by people who need the opposite of
@@ -191,7 +257,11 @@
 }
 
 .rp-sidebar__footer {
-  @apply flex shrink-0 flex-col gap-2 p-2;
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  gap: calc(var(--spacing) * 2);
+  padding: calc(var(--spacing) * 2);
 }
 
 /* ==========================================================================
@@ -199,19 +269,42 @@
    ========================================================================== */
 
 .rp-sidebar__group {
-  @apply flex w-full min-w-0 flex-col gap-0.5;
+  display: flex;
+  width: 100%;
+  min-width: 0px;
+  flex-direction: column;
+  gap: calc(var(--spacing) * 0.5);
 }
 
 /* Matches `.rp-header`, which is the same muted label above the same kind of list. */
 .rp-sidebar__group-label {
-  @apply w-full truncate px-2 pt-1.5 pb-1 text-start text-xs font-medium text-muted;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-inline: calc(var(--spacing) * 2);
+  padding-top: calc(var(--spacing) * 1.5);
+  padding-bottom: var(--spacing);
+  text-align: start;
+  font-size: var(--text-xs);
+  line-height: var(--rp-leading, var(--text-xs--line-height));
+  font-weight: var(--font-weight-medium);
+  color: var(--muted);
 }
 
 /* `sr-only` rather than `hidden`: the label is what tells a screen reader which group an item
  * belongs to, and a collapsed sidebar is still being read. Taking it out of flow also takes it out
  * of the group's `gap`, so the icons close up rather than leaving a hole where the label was. */
 .rp-sidebar__group-label[data-collapsed="true"] {
-  @apply sr-only;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border-width: 0;
 }
 
 /* Spacing only, and no width of its own. `separator.css` is imported under Layout, after this file
@@ -220,7 +313,7 @@
  * class string. It needs no taking back: the rule runs the width of the content's padding box,
  * which is exactly the box every item beside it already fills. */
 .rp-sidebar__separator {
-  @apply my-1;
+  margin-block: var(--spacing);
 }
 
 /* ==========================================================================
@@ -228,7 +321,23 @@
    ========================================================================== */
 
 .rp-sidebar__item {
-  @apply relative flex min-h-9 w-full min-w-0 items-center justify-start gap-2 rounded-component px-2 text-sm font-medium no-underline outline-none no-highlight;
+  position: relative;
+  display: flex;
+  min-height: calc(var(--spacing) * 9);
+  width: 100%;
+  min-width: 0px;
+  align-items: center;
+  justify-content: flex-start;
+  gap: calc(var(--spacing) * 2);
+  border-radius: var(--component-radius, calc(var(--radius) * 3));
+  padding-inline: calc(var(--spacing) * 2);
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  font-weight: var(--font-weight-medium);
+  text-decoration-line: none;
+  --rp-outline-style: none;
+  outline-style: none;
+  -webkit-tap-highlight-color: transparent;
 
   /* The row's fill and label, per state. A caller retuning the resting pair used to flatten the
    * current page's along with it, since one declaration cannot tell the states apart. */
@@ -248,7 +357,22 @@
   transition:
     background-color 150ms var(--ease-out),
     color 150ms var(--ease-out);
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   /* Hover state */
   @media (hover: hover) {
@@ -261,7 +385,23 @@
   /* Focus visible state (keyboard focus only) */
   &:focus-visible,
   &[data-focus-visible="true"] {
-    @apply status-focused;
+    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+      var(--rp-ring-color, currentcolor);
+    box-shadow:
+      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-ring-offset-width: 0px;
+    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+      var(--rp-ring-offset-color);
+    --rp-ring-offset-color: var(--background);
+    --rp-outline-style: none;
+    outline-style: none;
+    --rp-ring-offset-width: var(--ring-offset-width);
+    @media (forced-colors: active) {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
   }
 
   /* Pressed state */
@@ -277,52 +417,86 @@
     background-color: var(--sidebar-item-bg-current);
     color: var(--sidebar-item-fg-current);
 
-    @apply forced-selected;
+    @media (forced-colors: active) {
+      forced-color-adjust: none;
+      background-color: Highlight;
+      border-color: Highlight;
+      color: HighlightText;
+    }
   }
 
   /* Disabled state */
   &[data-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
   }
 
   /* Collapsed to the rail there is only the icon left to place, so it takes the centre and gives
    * up the padding that was holding a label beside it. */
   &[data-collapsed="true"] {
-    @apply justify-center px-0;
+    justify-content: center;
+    padding-inline: 0px;
   }
 }
 
 .rp-sidebar__item-icon {
-  @apply flex size-4 shrink-0 items-center justify-center;
+  display: flex;
+  width: calc(var(--spacing) * 4);
+  height: calc(var(--spacing) * 4);
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
 
   svg {
-    @apply size-4;
+    width: calc(var(--spacing) * 4);
+    height: calc(var(--spacing) * 4);
   }
 }
 
 .rp-sidebar__item-label {
-  @apply min-w-0 flex-1 truncate text-start;
+  min-width: 0px;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: start;
 }
 
 /* Hidden the same way the group label is, and for the same reason — this *is* the item's
  * accessible name. */
 .rp-sidebar__item-label[data-collapsed="true"] {
-  @apply sr-only;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border-width: 0;
 }
 
 .rp-sidebar__item-trailing {
-  @apply flex shrink-0 items-center;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
 }
 
 .rp-sidebar__item-trailing[data-collapsed="true"] {
-  @apply hidden;
+  display: none;
 }
 
 /* The tooltip's own trigger is `inline-block`, and inside the nav's column that would shrink the
  * item it wraps down to its contents. An item is a full-width row and has to stay one whether or
  * not it has a tooltip hanging off it. */
 .rp-sidebar__item-tooltip {
-  @apply block w-full;
+  display: block;
+  width: 100%;
 }
 
 /* ==========================================================================
@@ -337,22 +511,73 @@
  * state points the way the rows will come from. `rtl` turns it the other way for the same reason
  * it is `ms-auto` and not `ml-auto`. */
 .rp-sidebar__item-indicator {
-  @apply ms-auto size-3.5 shrink-0 -rotate-90 text-muted rtl:rotate-90;
+  margin-inline-start: auto;
+  width: calc(var(--spacing) * 3.5);
+  height: calc(var(--spacing) * 3.5);
+  flex-shrink: 0;
+  rotate: calc(90deg * -1);
+  color: var(--muted);
+  &:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) {
+    rotate: 90deg;
+  }
 
   /**
    * Transitions
    */
-  @apply transition duration-250 motion-reduce:transition-none;
+  transition-property:
+    color,
+    background-color,
+    border-color,
+    outline-color,
+    text-decoration-color,
+    fill,
+    stroke,
+    --rp-gradient-from,
+    --rp-gradient-via,
+    --rp-gradient-to,
+    opacity,
+    box-shadow,
+    transform,
+    translate,
+    scale,
+    rotate,
+    filter,
+    -webkit-backdrop-filter,
+    backdrop-filter,
+    display,
+    content-visibility,
+    overlay,
+    pointer-events;
+  transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+  transition-duration: var(--tw-duration, var(--default-transition-duration));
+  --tw-duration: 250ms;
+  transition-duration: 250ms;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   &[data-expanded="true"] {
-    @apply rotate-0;
+    rotate: 0deg;
   }
 }
 
 /* Nothing left to point at once the sidebar is a rail: the children are not rendered there at all,
  * and a chevron promising something that never opens is worse than no chevron. */
 .rp-sidebar__item-indicator[data-collapsed="true"] {
-  @apply hidden;
+  display: none;
 }
 
 /* The rows under a nav item, indented and gathered by a line down the gutter they share. One border
@@ -364,7 +589,13 @@
    * line with it instead of leaving it a few pixels off. */
   --sidebar-sub-indent: calc(var(--spacing) * 2 + calc(var(--spacing) * 4) / 2);
 
-  @apply flex min-w-0 flex-col gap-0.5 border-s border-separator;
+  display: flex;
+  min-width: 0px;
+  flex-direction: column;
+  gap: calc(var(--spacing) * 0.5);
+  border-inline-start-style: var(--rp-border-style);
+  border-inline-start-width: 1px;
+  border-color: var(--separator);
 
   margin-inline-start: var(--sidebar-sub-indent);
   padding-inline-start: calc(var(--spacing) * 2);
@@ -394,7 +625,22 @@
   transition:
     height 200ms var(--ease-out-quad),
     opacity 200ms var(--ease-out);
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   &[data-expanded="true"] {
     will-change: height, opacity;
@@ -405,7 +651,8 @@
 /* A child row carries no icon, so it gives up the gap that was holding one and drops to the weight
  * of what it is — a destination under a heading rather than another heading. */
 .rp-sidebar__item--sub {
-  @apply gap-0 font-normal;
+  gap: 0px;
+  font-weight: var(--font-weight-normal);
 }
 
 /* ==========================================================================
@@ -415,7 +662,13 @@
 /* `min-w-0` for the reason `.rp-splitter__panel` documents: without it a wide table inside the inset
  * sets a floor under the whole shell and the sidebar can never be given its width back. */
 .rp-sidebar__inset {
-  @apply relative flex min-w-0 flex-1 flex-col overflow-hidden bg-background;
+  position: relative;
+  display: flex;
+  min-width: 0px;
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: var(--background);
 }
 
 /* The page beside a bare panel, and now the thing that paints. `--surface` rather than the base
@@ -428,7 +681,12 @@
  * takes the same inset outline every container that paints takes, offset inwards so nothing moves
  * and the radius above still holds it. */
 .rp-sidebar__inset--card {
-  @apply bg-surface text-surface-foreground shadow-surface;
+  background-color: var(--surface);
+  color: var(--surface-foreground);
+  --rp-shadow: var(--surface-shadow);
+  box-shadow:
+    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+    var(--rp-ring-shadow), var(--rp-shadow);
 
   margin: var(--sidebar-card-gap);
   border-radius: var(--sidebar-card-radius);
@@ -447,21 +705,53 @@
  * nothing, so the line can thicken on hover without the gutter changing width and shifting the
  * whole page by a pixel. */
 .rp-sidebar__rail {
-  @apply relative z-10 flex shrink-0 grow-0 items-center justify-center self-stretch;
-  @apply bg-transparent outline-none select-none no-highlight;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-shrink: 0;
+  flex-grow: 0;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  background-color: transparent;
+  --rp-outline-style: none;
+  outline-style: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 
   /* The gesture is ours; the browser must not also pan or scroll from a drag on this. */
-  @apply touch-none;
+  touch-action: none;
 
   inline-size: var(--sidebar-rail-gutter);
   cursor: var(--cursor-interactive);
 
   /* On the host, not in `::after` where the transition lives: the variant reaches a pseudo-element
    * from its originating element, and appending its condition after `::after` matches nothing. */
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   &::after {
-    @apply pointer-events-none absolute inset-y-0 rounded-sm content-[''];
+    pointer-events: none;
+    position: absolute;
+    inset-block: 0px;
+    border-radius: calc(var(--radius) * 0.5);
+    --rp-content: "";
+    content: var(--rp-content);
 
     background-color: var(--sidebar-rail-line);
     inline-size: var(--sidebar-rail-gutter);
@@ -511,11 +801,33 @@
 
   &:focus-visible,
   &[data-focus-visible="true"] {
-    @apply status-focused;
+    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+      var(--rp-ring-color, currentcolor);
+    box-shadow:
+      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-ring-offset-width: 0px;
+    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+      var(--rp-ring-offset-color);
+    --rp-ring-offset-color: var(--background);
+    --rp-outline-style: none;
+    outline-style: none;
+    --rp-ring-offset-width: var(--ring-offset-width);
+    @media (forced-colors: active) {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
   }
 
   &[data-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
 
     /* `status-disabled` reaches `color` and `border-color`, and the line is neither. */
     &::after {
@@ -529,7 +841,7 @@
 /* Only a rail that resizes says so with the cursor. One that merely toggles is a button, and
  * `--cursor-interactive` on the base rule already covers it. */
 .rp-sidebar__rail--resizable {
-  @apply cursor-col-resize;
+  cursor: col-resize;
 }
 
 /* Nothing left for the line to divide once something else is drawing that division — a card's own
@@ -556,7 +868,9 @@
  * transparent border, because Forced Colors Mode turns a transparent border-color opaque and every
  * rail would render as a solid block. */
 .rp-sidebar__rail-target {
-  @apply absolute inset-0 bg-transparent;
+  position: absolute;
+  inset: 0px;
+  background-color: transparent;
 
   inset-inline: calc((var(--sidebar-rail-target) - var(--sidebar-rail-gutter)) / -2);
 }
@@ -566,7 +880,18 @@
    ========================================================================== */
 
 .rp-sidebar__trigger {
-  @apply inline-flex size-8 shrink-0 items-center justify-center rounded-component outline-none select-none no-highlight;
+  display: inline-flex;
+  width: calc(var(--spacing) * 8);
+  height: calc(var(--spacing) * 8);
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--component-radius, calc(var(--radius) * 3));
+  --rp-outline-style: none;
+  outline-style: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 
   --sidebar-trigger-bg: transparent;
   --sidebar-trigger-bg-hover: var(--state-layer);
@@ -582,10 +907,26 @@
   transition:
     background-color 150ms var(--ease-out),
     color 150ms var(--ease-out);
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   svg {
-    @apply size-4;
+    width: calc(var(--spacing) * 4);
+    height: calc(var(--spacing) * 4);
   }
 
   /* Hover state */
@@ -600,11 +941,33 @@
   /* Focus visible state (keyboard focus only) */
   &:focus-visible,
   &[data-focus-visible="true"] {
-    @apply status-focused;
+    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+      var(--rp-ring-color, currentcolor);
+    box-shadow:
+      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-ring-offset-width: 0px;
+    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+      var(--rp-ring-offset-color);
+    --rp-ring-offset-color: var(--background);
+    --rp-outline-style: none;
+    outline-style: none;
+    --rp-ring-offset-width: var(--ring-offset-width);
+    @media (forced-colors: active) {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
   }
 
   /* Disabled state */
   &[data-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
   }
 }

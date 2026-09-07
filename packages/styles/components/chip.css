@@ -1,6 +1,17 @@
 /* Base styles */
 .rp-chip {
-  @apply inline-flex w-fit shrink-0 items-center gap-0.5 px-2 py-0.5 text-xs leading-5 font-medium;
+  display: inline-flex;
+  width: fit-content;
+  flex-shrink: 0;
+  align-items: center;
+  gap: calc(var(--spacing) * 0.5);
+  padding-inline: calc(var(--spacing) * 2);
+  padding-block: calc(var(--spacing) * 0.5);
+  font-size: var(--text-xs);
+  line-height: var(--rp-leading, var(--text-xs--line-height));
+  --rp-leading: calc(var(--spacing) * 5);
+  line-height: calc(var(--spacing) * 5);
+  font-weight: var(--font-weight-medium);
 
   border-radius: min(32px, var(--component-radius));
 
@@ -26,7 +37,7 @@
 }
 
 .rp-chip__label {
-  @apply px-0.5;
+  padding-inline: calc(var(--spacing) * 0.5);
 }
 
 /* Color variants - set foreground color */
@@ -72,15 +83,23 @@
 
 /* Size variants */
 .rp-chip--sm {
-  @apply px-1 py-0 text-xs;
+  padding-inline: var(--spacing);
+  padding-block: 0px;
+  font-size: var(--text-xs);
+  line-height: var(--rp-leading, var(--text-xs--line-height));
 }
 
 .rp-chip--md {
-  @apply text-xs;
+  font-size: var(--text-xs);
+  line-height: var(--rp-leading, var(--text-xs--line-height));
 }
 
 .rp-chip--lg {
-  @apply px-3 py-1 text-sm font-medium;
+  padding-inline: calc(var(--spacing) * 3);
+  padding-block: var(--spacing);
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  font-weight: var(--font-weight-medium);
 }
 
 /* ====================== */

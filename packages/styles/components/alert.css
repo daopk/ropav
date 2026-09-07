@@ -2,7 +2,19 @@
 
 /* Base alert styles */
 .rp-alert {
-  @apply flex w-full flex-row items-start justify-start gap-4 bg-surface px-4 py-3 shadow-surface;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: calc(var(--spacing) * 4);
+  background-color: var(--surface);
+  padding-inline: calc(var(--spacing) * 4);
+  padding-block: calc(var(--spacing) * 3);
+  --rp-shadow: var(--surface-shadow);
+  box-shadow:
+    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+    var(--rp-ring-shadow), var(--rp-shadow);
 
   /* Forced Colors Mode flattens the fill onto the page and strips the shadow, so the container
    * stops having any shape - its contents just sit loose on the page. An outline rather than a
@@ -16,62 +28,79 @@
 
 /* Alert elements */
 .rp-alert__content {
-  @apply flex h-full grow flex-col items-start;
+  display: flex;
+  height: 100%;
+  flex-grow: 1;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .rp-alert__indicator {
-  @apply flex items-center justify-center p-1 select-none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing);
+  -webkit-user-select: none;
+  user-select: none;
 
   [data-slot="alert-default-icon"] {
-    @apply box-content size-4;
+    box-sizing: content-box;
+    width: calc(var(--spacing) * 4);
+    height: calc(var(--spacing) * 4);
   }
 }
 
 .rp-alert__title {
-  @apply text-sm leading-6 font-medium;
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  --rp-leading: calc(var(--spacing) * 6);
+  line-height: calc(var(--spacing) * 6);
+  font-weight: var(--font-weight-medium);
 }
 
 .rp-alert__description {
-  @apply text-sm text-muted;
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  color: var(--muted);
 }
 
 /* Variant modifiers */
 .rp-alert--default .rp-alert__indicator {
-  @apply text-foreground;
+  color: var(--foreground);
 }
 
 .rp-alert--default .rp-alert__title {
-  @apply text-foreground;
+  color: var(--foreground);
 }
 
 .rp-alert--accent .rp-alert__indicator {
-  @apply text-accent-soft-foreground;
+  color: var(--accent-soft-foreground);
 }
 
 .rp-alert--accent .rp-alert__title {
-  @apply text-accent-soft-foreground;
+  color: var(--accent-soft-foreground);
 }
 
 .rp-alert--success .rp-alert__indicator {
-  @apply text-success-soft-foreground;
+  color: var(--success-soft-foreground);
 }
 
 .rp-alert--success .rp-alert__title {
-  @apply text-success-soft-foreground;
+  color: var(--success-soft-foreground);
 }
 
 .rp-alert--warning .rp-alert__indicator {
-  @apply text-warning-soft-foreground;
+  color: var(--warning-soft-foreground);
 }
 
 .rp-alert--warning .rp-alert__title {
-  @apply text-warning-soft-foreground;
+  color: var(--warning-soft-foreground);
 }
 
 .rp-alert--danger .rp-alert__indicator {
-  @apply text-danger-soft-foreground;
+  color: var(--danger-soft-foreground);
 }
 
 .rp-alert--danger .rp-alert__title {
-  @apply text-danger-soft-foreground;
+  color: var(--danger-soft-foreground);
 }

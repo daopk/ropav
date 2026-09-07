@@ -1,7 +1,9 @@
 /* Base label styles */
 .rp-label {
   /* Base styling */
-  @apply text-sm font-medium;
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  font-weight: var(--font-weight-medium);
 
   --label-fg: var(--foreground);
   --label-fg-invalid: var(--danger);
@@ -18,12 +20,23 @@
 [data-required="true"]:not([role="group"]):not([role="radiogroup"]):not([role="checkboxgroup"])
   > .rp-label,
 [data-required="true"]:not([data-slot="radio"]):not([data-slot="checkbox"]) > .rp-label {
-  @apply after:ms-0.5 after:text-danger after:content-['*'];
+  &::after {
+    margin-inline-start: calc(var(--spacing) * 0.5);
+    color: var(--danger);
+    --rp-content: "*";
+    content: var(--rp-content);
+  }
 }
 
 .rp-label--disabled,
 [data-disabled="true"] .rp-label {
-  @apply status-disabled;
+  opacity: var(--disabled-opacity);
+  cursor: var(--cursor-disabled);
+  pointer-events: none;
+  @media (forced-colors: active) {
+    color: GrayText;
+    border-color: GrayText;
+  }
 }
 
 .rp-label--invalid,

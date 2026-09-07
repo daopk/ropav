@@ -13,11 +13,18 @@
  * edges sits at the viewport's edges however far the content has been scrolled along either axis.
  * The component gives it the viewport's width. */
 .rp-virtualizer__scrollbar {
-  @apply sticky start-0 top-0 z-2 h-0;
+  position: sticky;
+  inset-inline-start: calc(var(--spacing) * 0);
+  top: 0px;
+  z-index: 2;
+  height: 0px;
 }
 
 .rp-virtualizer__scrollbar-track {
-  @apply absolute touch-none select-none;
+  position: absolute;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
   background-color: var(--scrollbar-track);
 
   /* The content wrapper drops pointers mid-scroll so a fast scroll does not hover every row it
@@ -25,16 +32,18 @@
   pointer-events: auto;
 
   &[data-orientation="vertical"] {
-    @apply end-0 top-0;
+    inset-inline-end: calc(var(--spacing) * 0);
+    top: 0px;
   }
 
   &[data-orientation="horizontal"] {
-    @apply start-0;
+    inset-inline-start: calc(var(--spacing) * 0);
   }
 }
 
 .rp-virtualizer__scrollbar-thumb {
-  @apply absolute rounded-full;
+  position: absolute;
+  border-radius: calc(infinity * 1px);
 
   /* The thumb's fill, per state. Three states paint it and one declaration cannot tell them
    * apart, so each reads its own. Both lit values are an alpha rather than a neutral, so the

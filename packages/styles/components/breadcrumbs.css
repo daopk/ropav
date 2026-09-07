@@ -1,10 +1,19 @@
 /* Base breadcrumbs container */
 .rp-breadcrumbs {
-  @apply flex items-center;
+  display: flex;
+  align-items: center;
 
   /* Breadcrumb link */
   .rp-breadcrumbs__link {
-    @apply relative px-0.5 text-sm leading-5 font-medium no-underline opacity-100;
+    position: relative;
+    padding-inline: calc(var(--spacing) * 0.5);
+    font-size: var(--text-sm);
+    line-height: var(--rp-leading, var(--text-sm--line-height));
+    --rp-leading: calc(var(--spacing) * 5);
+    line-height: calc(var(--spacing) * 5);
+    font-weight: var(--font-weight-medium);
+    text-decoration-line: none;
+    opacity: 100%;
 
     --breadcrumbs-link-fg: var(--muted);
     --breadcrumbs-link-fg-current: var(--link);
@@ -13,11 +22,11 @@
 
     &:hover,
     &[data-hovered="true"] {
-      @apply underline;
+      text-decoration-line: underline;
     }
 
     &[data-current="true"] {
-      @apply opacity-100;
+      opacity: 100%;
 
       color: var(--breadcrumbs-link-fg-current);
     }
@@ -25,11 +34,21 @@
 
   /* Breadcrumb item wrapper */
   .rp-breadcrumbs__item {
-    @apply flex shrink-0 items-center justify-center gap-0.5 px-0.5;
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    gap: calc(var(--spacing) * 0.5);
+    padding-inline: calc(var(--spacing) * 0.5);
   }
 
   /* Separator icon */
   .rp-breadcrumbs__separator {
-    @apply size-3 text-muted rtl:rotate-180;
+    width: calc(var(--spacing) * 3);
+    height: calc(var(--spacing) * 3);
+    color: var(--muted);
+    &:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) {
+      rotate: 180deg;
+    }
   }
 }

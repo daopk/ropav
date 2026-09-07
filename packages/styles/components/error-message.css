@@ -1,9 +1,28 @@
 /* Base error message styles */
 .rp-error-message {
-  @apply h-auto text-xs wrap-break-word text-danger;
+  height: auto;
+  font-size: var(--text-xs);
+  line-height: var(--rp-leading, var(--text-xs--line-height));
+  overflow-wrap: break-word;
+  color: var(--danger);
 
   transition:
     opacity 150ms var(--ease-out),
     height 350ms var(--ease-smooth);
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 }

@@ -1,41 +1,68 @@
 .rp-typography {
-  @apply text-foreground;
+  color: var(--foreground);
 }
 
 .rp-typography-prose {
-  @apply text-foreground;
+  color: var(--foreground);
 }
 
 .rp-typography-prose h1 {
-  @apply text-4xl font-semibold tracking-tight;
+  font-size: var(--text-4xl);
+  line-height: var(--rp-leading, var(--text-4xl--line-height));
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--tracking-tight);
 }
 
 .rp-typography-prose h2 {
-  @apply text-3xl font-semibold tracking-tight;
+  font-size: var(--text-3xl);
+  line-height: var(--rp-leading, var(--text-3xl--line-height));
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--tracking-tight);
 }
 
 .rp-typography-prose h3 {
-  @apply text-2xl font-semibold tracking-tight;
+  font-size: var(--text-2xl);
+  line-height: var(--rp-leading, var(--text-2xl--line-height));
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--tracking-tight);
 }
 
 .rp-typography-prose h4 {
-  @apply text-xl font-semibold tracking-tight;
+  font-size: var(--text-xl);
+  line-height: var(--rp-leading, var(--text-xl--line-height));
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--tracking-tight);
 }
 
 .rp-typography-prose h5 {
-  @apply text-lg font-semibold tracking-tight;
+  font-size: var(--text-lg);
+  line-height: var(--rp-leading, var(--text-lg--line-height));
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--tracking-tight);
 }
 
 .rp-typography-prose h6 {
-  @apply text-base font-semibold tracking-tight;
+  font-size: var(--text-base);
+  line-height: var(--rp-leading, var(--text-base--line-height));
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--tracking-tight);
 }
 
 .rp-typography-prose p {
-  @apply text-base leading-7;
+  font-size: var(--text-base);
+  line-height: var(--rp-leading, var(--text-base--line-height));
+  --rp-leading: calc(var(--spacing) * 7);
+  line-height: calc(var(--spacing) * 7);
 }
 
 .rp-typography-prose code {
-  @apply bg-default px-1.5 py-0.5 font-mono text-sm text-foreground;
+  background-color: var(--default);
+  padding-inline: calc(var(--spacing) * 1.5);
+  padding-block: calc(var(--spacing) * 0.5);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  color: var(--foreground);
 
   border-radius: min(32px, var(--component-radius));
 
@@ -48,31 +75,66 @@
 }
 
 .rp-typography-prose a {
-  @apply font-medium text-link underline underline-offset-4;
+  font-weight: var(--font-weight-medium);
+  color: var(--link);
+  text-decoration-line: underline;
+  text-underline-offset: 4px;
 }
 
 .rp-typography-prose blockquote {
-  @apply mt-4 border-s-4 border-border ps-4 text-muted italic;
+  margin-top: calc(var(--spacing) * 4);
+  border-inline-start-style: var(--rp-border-style);
+  border-inline-start-width: 4px;
+  border-color: var(--border);
+  padding-inline-start: calc(var(--spacing) * 4);
+  color: var(--muted);
+  font-style: italic;
 }
 
 .rp-typography-prose ul {
-  @apply my-4 list-disc space-y-2 ps-6;
+  margin-block: calc(var(--spacing) * 4);
+  list-style-type: disc;
+  :where(& > :not(:last-child)) {
+    --rp-space-y-reverse: 0;
+    margin-block-start: calc(calc(var(--spacing) * 2) * var(--rp-space-y-reverse));
+    margin-block-end: calc(calc(var(--spacing) * 2) * calc(1 - var(--rp-space-y-reverse)));
+  }
+  padding-inline-start: calc(var(--spacing) * 6);
 }
 
 .rp-typography-prose ol {
-  @apply my-4 list-decimal space-y-2 ps-6;
+  margin-block: calc(var(--spacing) * 4);
+  list-style-type: decimal;
+  :where(& > :not(:last-child)) {
+    --rp-space-y-reverse: 0;
+    margin-block-start: calc(calc(var(--spacing) * 2) * var(--rp-space-y-reverse));
+    margin-block-end: calc(calc(var(--spacing) * 2) * calc(1 - var(--rp-space-y-reverse)));
+  }
+  padding-inline-start: calc(var(--spacing) * 6);
 }
 
 .rp-typography-prose li {
-  @apply text-base leading-7;
+  font-size: var(--text-base);
+  line-height: var(--rp-leading, var(--text-base--line-height));
+  --rp-leading: calc(var(--spacing) * 7);
+  line-height: calc(var(--spacing) * 7);
 }
 
 .rp-typography-prose hr {
-  @apply my-8 border-separator;
+  margin-block: calc(var(--spacing) * 8);
+  border-color: var(--separator);
 }
 
 .rp-typography-prose pre {
-  @apply my-4 overflow-x-auto bg-default p-4 font-mono text-sm leading-relaxed;
+  margin-block: calc(var(--spacing) * 4);
+  overflow-x: auto;
+  background-color: var(--default);
+  padding: calc(var(--spacing) * 4);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  --rp-leading: var(--leading-relaxed);
+  line-height: var(--leading-relaxed);
 
   border-radius: min(32px, var(--component-radius));
 
@@ -85,57 +147,91 @@
 }
 
 .rp-typography-prose strong {
-  @apply font-semibold text-foreground;
+  font-weight: var(--font-weight-semibold);
+  color: var(--foreground);
 }
 
 .rp-typography-prose em {
-  @apply italic;
+  font-style: italic;
 }
 
 .rp-typography-prose img {
-  @apply my-4;
+  margin-block: calc(var(--spacing) * 4);
 
   border-radius: min(32px, var(--component-radius));
 }
 
 .rp-typography--h1 {
-  @apply text-4xl font-semibold tracking-tight;
+  font-size: var(--text-4xl);
+  line-height: var(--rp-leading, var(--text-4xl--line-height));
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--tracking-tight);
 }
 
 .rp-typography--h2 {
-  @apply text-3xl font-semibold tracking-tight;
+  font-size: var(--text-3xl);
+  line-height: var(--rp-leading, var(--text-3xl--line-height));
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--tracking-tight);
 }
 
 .rp-typography--h3 {
-  @apply text-2xl font-semibold tracking-tight;
+  font-size: var(--text-2xl);
+  line-height: var(--rp-leading, var(--text-2xl--line-height));
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--tracking-tight);
 }
 
 .rp-typography--h4 {
-  @apply text-xl font-semibold tracking-tight;
+  font-size: var(--text-xl);
+  line-height: var(--rp-leading, var(--text-xl--line-height));
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--tracking-tight);
 }
 
 .rp-typography--h5 {
-  @apply text-lg font-semibold tracking-tight;
+  font-size: var(--text-lg);
+  line-height: var(--rp-leading, var(--text-lg--line-height));
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--tracking-tight);
 }
 
 .rp-typography--h6 {
-  @apply text-base font-semibold tracking-tight;
+  font-size: var(--text-base);
+  line-height: var(--rp-leading, var(--text-base--line-height));
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--tracking-tight);
 }
 
 .rp-typography--body {
-  @apply text-base leading-7;
+  font-size: var(--text-base);
+  line-height: var(--rp-leading, var(--text-base--line-height));
+  --rp-leading: calc(var(--spacing) * 7);
+  line-height: calc(var(--spacing) * 7);
 }
 
 .rp-typography--body-sm {
-  @apply text-sm leading-6;
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  --rp-leading: calc(var(--spacing) * 6);
+  line-height: calc(var(--spacing) * 6);
 }
 
 .rp-typography--body-xs {
-  @apply text-xs leading-5;
+  font-size: var(--text-xs);
+  line-height: var(--rp-leading, var(--text-xs--line-height));
+  --rp-leading: calc(var(--spacing) * 5);
+  line-height: calc(var(--spacing) * 5);
 }
 
 .rp-typography--code {
-  @apply bg-default px-1.5 py-0.5 font-mono text-sm text-foreground;
+  background-color: var(--default);
+  padding-inline: calc(var(--spacing) * 1.5);
+  padding-block: calc(var(--spacing) * 0.5);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  color: var(--foreground);
 
   border-radius: min(32px, var(--component-radius));
 
@@ -148,45 +244,48 @@
 }
 
 .rp-typography--align-start {
-  @apply text-start;
+  text-align: start;
 }
 
 .rp-typography--align-center {
-  @apply text-center;
+  text-align: center;
 }
 
 .rp-typography--align-end {
-  @apply text-end;
+  text-align: end;
 }
 
 .rp-typography--align-justify {
-  @apply text-justify;
+  text-align: justify;
 }
 
 .rp-typography--color-default {
-  @apply text-foreground;
+  color: var(--foreground);
 }
 
 .rp-typography--color-muted {
-  @apply text-muted;
+  color: var(--muted);
 }
 
 .rp-typography--truncate {
-  @apply block truncate;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .rp-typography--weight-normal {
-  @apply font-normal;
+  font-weight: var(--font-weight-normal);
 }
 
 .rp-typography--weight-medium {
-  @apply font-medium;
+  font-weight: var(--font-weight-medium);
 }
 
 .rp-typography--weight-semibold {
-  @apply font-semibold;
+  font-weight: var(--font-weight-semibold);
 }
 
 .rp-typography--weight-bold {
-  @apply font-bold;
+  font-weight: var(--font-weight-bold);
 }

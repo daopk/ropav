@@ -1,6 +1,17 @@
 /* Base link styles */
 .rp-link {
-  @apply relative inline-flex h-fit w-fit items-center rounded-xl font-medium text-link no-underline decoration-[1.5px] underline-offset-4 no-highlight;
+  position: relative;
+  display: inline-flex;
+  height: fit-content;
+  width: fit-content;
+  align-items: center;
+  border-radius: calc(var(--radius) * 1.5);
+  font-weight: var(--font-weight-medium);
+  color: var(--link);
+  text-decoration-line: none;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 4px;
+  -webkit-tap-highlight-color: transparent;
 
   --link-decoration: var(--separator-tertiary);
   --link-decoration-hover: color-mix(in oklab, var(--muted) 50%, transparent);
@@ -13,7 +24,22 @@
     background-color 150ms var(--ease-smooth),
     box-shadow 150ms var(--ease-out),
     opacity 100ms var(--ease-out);
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   /* Cursor */
   cursor: var(--cursor-interactive);
@@ -22,12 +48,12 @@
   @media (hover: hover) {
     &:hover,
     &[data-hovered="true"] {
-      @apply underline;
+      text-decoration-line: underline;
 
       text-decoration-color: var(--link-decoration-hover);
 
       .rp-link__icon {
-        @apply opacity-100;
+        opacity: 100%;
       }
     }
   }
@@ -35,47 +61,95 @@
   /* Pressed state */
   &:active,
   &[data-pressed="true"] {
-    @apply underline;
+    text-decoration-line: underline;
 
     text-decoration-color: var(--link-decoration-pressed);
 
     .rp-link__icon {
-      @apply opacity-100;
+      opacity: 100%;
     }
   }
 
   /* Focus state */
   &:focus-visible:not(:focus),
   &[data-focus-visible="true"] {
-    @apply status-focused;
+    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+      var(--rp-ring-color, currentcolor);
+    box-shadow:
+      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-ring-offset-width: 0px;
+    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+      var(--rp-ring-offset-color);
+    --rp-ring-offset-color: var(--background);
+    --rp-outline-style: none;
+    outline-style: none;
+    --rp-ring-offset-width: var(--ring-offset-width);
+    @media (forced-colors: active) {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
 
     .rp-link__icon {
-      @apply opacity-100;
+      opacity: 100%;
     }
   }
 
   /* Disabled state */
   &[aria-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
   }
 
   .rp-link__icon {
-    @apply pointer-events-none inline-flex size-[0.75em] shrink-0 items-center justify-center text-current opacity-60;
+    pointer-events: none;
+    display: inline-flex;
+    width: 0.75em;
+    height: 0.75em;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    color: currentcolor;
+    opacity: 60%;
 
     transition: opacity 150ms var(--ease-out);
-    @apply motion-reduce:transition-none;
+    &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+        transition-property: none;
+        &::before,
+        &::after {
+          transition-property: none;
+        }
+      }
+    }
 
     & svg {
-      @apply transform-gpu;
+      transform: translateZ(0) var(--rp-rotate-x,) var(--rp-rotate-y,) var(--rp-rotate-z,)
+        var(--rp-skew-x,) var(--rp-skew-y,);
     }
   }
 
   .rp-link__icon[data-default-icon="true"] {
-    @apply ms-1 pb-1.5;
+    margin-inline-start: var(--spacing);
+    padding-bottom: calc(var(--spacing) * 1.5);
   }
 
   /* Handle Link with Button Variants */
   &.rp-button {
-    @apply gap-0 no-underline;
+    gap: 0px;
+    text-decoration-line: none;
   }
 }

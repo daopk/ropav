@@ -1,6 +1,15 @@
 /* Base avatar styles */
 .rp-avatar {
-  @apply relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-3xl bg-default;
+  position: relative;
+  display: flex;
+  width: calc(var(--spacing) * 10);
+  height: calc(var(--spacing) * 10);
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: calc(var(--radius) * 3);
+  background-color: var(--default);
 
   /* Forced Colors Mode flattens the fill onto the page, so a fallback avatar is initials sitting
    * loose on the page with no shape around them. The edge goes here rather than on the fallback:
@@ -14,22 +23,56 @@
 
 /* Avatar fallback element */
 .rp-avatar__fallback {
-  @apply flex size-full items-center justify-center bg-default text-sm font-medium;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--default);
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  font-weight: var(--font-weight-medium);
 }
 
 /* Avatar image element */
 .rp-avatar__image {
-  @apply absolute inset-0 aspect-square size-full;
+  position: absolute;
+  inset: 0px;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  height: 100%;
 
   /**
    * Transitions
    */
-  @apply transition-opacity duration-250 motion-reduce:transition-none;
+  transition-property: opacity;
+  transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+  transition-duration: var(--tw-duration, var(--default-transition-duration));
+  --tw-duration: 250ms;
+  transition-duration: 250ms;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 }
 
 /* Size modifiers */
 .rp-avatar--sm {
-  @apply size-8 rounded-2xl;
+  width: calc(var(--spacing) * 8);
+  height: calc(var(--spacing) * 8);
+  border-radius: calc(var(--radius) * 2);
 }
 
 .rp-avatar--md {
@@ -37,55 +80,63 @@
 }
 
 .rp-avatar--lg {
-  @apply size-12 rounded-3xl;
+  width: calc(var(--spacing) * 12);
+  height: calc(var(--spacing) * 12);
+  border-radius: calc(var(--radius) * 3);
 
   .rp-avatar__fallback {
-    @apply text-base;
+    font-size: var(--text-base);
+    line-height: var(--rp-leading, var(--text-base--line-height));
   }
 }
 
 /* Color modifiers for fallback */
 .rp-avatar__fallback--accent {
-  @apply text-accent-soft-foreground;
+  color: var(--accent-soft-foreground);
 }
 
 .rp-avatar__fallback--default {
-  @apply text-default-soft-foreground;
+  color: var(--default-soft-foreground);
 }
 
 .rp-avatar__fallback--success {
-  @apply text-success-soft-foreground;
+  color: var(--success-soft-foreground);
 }
 
 .rp-avatar__fallback--warning {
-  @apply text-warning-soft-foreground;
+  color: var(--warning-soft-foreground);
 }
 
 .rp-avatar__fallback--danger {
-  @apply text-danger-soft-foreground;
+  color: var(--danger-soft-foreground);
 }
 
 /* Variant modifiers */
 .rp-avatar--soft {
-  @apply bg-transparent;
+  background-color: transparent;
 }
 
 .rp-avatar--soft .rp-avatar__fallback--accent {
-  @apply bg-accent-soft text-accent-soft-foreground;
+  background-color: var(--accent-soft);
+  color: var(--accent-soft-foreground);
 }
 
 .rp-avatar--soft .rp-avatar__fallback--success {
-  @apply bg-success-soft text-success-soft-foreground;
+  background-color: var(--success-soft);
+  color: var(--success-soft-foreground);
 }
 
 .rp-avatar--soft .rp-avatar__fallback--warning {
-  @apply bg-warning-soft text-warning-soft-foreground;
+  background-color: var(--warning-soft);
+  color: var(--warning-soft-foreground);
 }
 
 .rp-avatar--soft .rp-avatar__fallback--default {
-  @apply bg-default-soft text-default-soft-foreground;
+  background-color: var(--default-soft);
+  color: var(--default-soft-foreground);
 }
 
 .rp-avatar--soft .rp-avatar__fallback--danger {
-  @apply bg-danger-soft text-danger-soft-foreground;
+  background-color: var(--danger-soft);
+  color: var(--danger-soft-foreground);
 }

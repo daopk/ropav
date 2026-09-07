@@ -4,7 +4,10 @@
 
 /* Base styles */
 .rp-color-swatch-picker {
-  @apply flex flex-wrap items-center gap-2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(var(--spacing) * 2);
 }
 
 /* ==========================================================================
@@ -12,7 +15,19 @@
    ========================================================================== */
 
 .rp-color-swatch-picker__item {
-  @apply relative flex size-8 items-center justify-center rounded-2xl border-2 border-transparent outline-none no-highlight;
+  position: relative;
+  display: flex;
+  width: calc(var(--spacing) * 8);
+  height: calc(var(--spacing) * 8);
+  align-items: center;
+  justify-content: center;
+  border-radius: calc(var(--radius) * 2);
+  border-style: var(--rp-border-style);
+  border-width: 2px;
+  border-color: transparent;
+  --rp-outline-style: none;
+  outline-style: none;
+  -webkit-tap-highlight-color: transparent;
 
   /* The unselected border is transparent purely to hold the ring's width, and forced colors turns
    * a transparent border-color opaque - so every swatch drew the same border and the selected one
@@ -27,17 +42,56 @@
   transition:
     border-color 100ms var(--ease-out),
     box-shadow 100ms var(--ease-out);
-  @apply transform-gpu motion-reduce:transition-none;
+  transform: translateZ(0) var(--rp-rotate-x,) var(--rp-rotate-y,) var(--rp-rotate-z,)
+    var(--rp-skew-x,) var(--rp-skew-y,);
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   /* Focus state */
   &:focus-visible,
   &[data-focus-visible="true"] {
-    @apply status-focused;
+    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+      var(--rp-ring-color, currentcolor);
+    box-shadow:
+      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-ring-offset-width: 0px;
+    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+      var(--rp-ring-offset-color);
+    --rp-ring-offset-color: var(--background);
+    --rp-outline-style: none;
+    outline-style: none;
+    --rp-ring-offset-width: var(--ring-offset-width);
+    @media (forced-colors: active) {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
   }
 
   /* Disabled state */
   &[data-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
   }
 
   /* Selected state */
@@ -60,12 +114,31 @@
    ========================================================================== */
 
 .rp-color-swatch-picker__swatch {
-  @apply block size-full;
+  display: block;
+  width: 100%;
+  height: 100%;
 
   /* Inherit border-radius from item */
   border-radius: inherit;
   transition: transform 100ms var(--ease-out);
-  @apply transform-gpu motion-reduce:transition-none;
+  transform: translateZ(0) var(--rp-rotate-x,) var(--rp-rotate-y,) var(--rp-rotate-z,)
+    var(--rp-skew-x,) var(--rp-skew-y,);
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   @media (hover: hover) {
     &:hover {
@@ -79,11 +152,19 @@
    ========================================================================== */
 
 .rp-color-swatch-picker__indicator {
-  @apply pointer-events-none absolute inset-0 z-10 flex items-center justify-center;
+  pointer-events: none;
+  position: absolute;
+  inset: 0px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   /* Checkmark SVG styles - default to white for dark backgrounds */
   & > * {
-    @apply size-1/3 text-white;
+    width: calc(1 / 3 * 100%);
+    height: calc(1 / 3 * 100%);
+    color: var(--color-white);
 
     /* Start scaled down - use translateZ(0) for GPU acceleration */
     transform: scale(0) translateZ(0);
@@ -92,12 +173,27 @@
      * Transitions
      */
     transition: transform 150ms var(--ease-out);
-    @apply motion-reduce:transition-none;
+    &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+        transition-property: none;
+        &::before,
+        &::after {
+          transition-property: none;
+        }
+      }
+    }
   }
 
   /* Use black checkmark on light backgrounds */
   &[data-light-color="true"] & > * {
-    @apply text-black;
+    color: var(--color-black);
   }
 
   /* Scale up when parent item is selected */
@@ -115,7 +211,7 @@
 }
 
 .rp-color-swatch-picker--stack {
-  @apply flex-col;
+  flex-direction: column;
 }
 
 /* ==========================================================================
@@ -124,13 +220,21 @@
 
 .rp-color-swatch-picker--xs {
   .rp-color-swatch-picker__item {
-    @apply size-4 rounded-lg border;
+    width: calc(var(--spacing) * 4);
+    height: calc(var(--spacing) * 4);
+    border-radius: calc(var(--radius) * 1);
+    border-style: var(--rp-border-style);
+    border-width: 1px;
   }
 }
 
 .rp-color-swatch-picker--sm {
   .rp-color-swatch-picker__item {
-    @apply size-6 rounded-xl border-2;
+    width: calc(var(--spacing) * 6);
+    height: calc(var(--spacing) * 6);
+    border-radius: calc(var(--radius) * 1.5);
+    border-style: var(--rp-border-style);
+    border-width: 2px;
   }
 }
 
@@ -142,13 +246,21 @@
 
 .rp-color-swatch-picker--lg {
   .rp-color-swatch-picker__item {
-    @apply size-9 rounded-3xl border-3;
+    width: calc(var(--spacing) * 9);
+    height: calc(var(--spacing) * 9);
+    border-radius: calc(var(--radius) * 3);
+    border-style: var(--rp-border-style);
+    border-width: 3px;
   }
 }
 
 .rp-color-swatch-picker--xl {
   .rp-color-swatch-picker__item {
-    @apply size-10 rounded-3xl border-3;
+    width: calc(var(--spacing) * 10);
+    height: calc(var(--spacing) * 10);
+    border-radius: calc(var(--radius) * 3);
+    border-style: var(--rp-border-style);
+    border-width: 3px;
   }
 }
 

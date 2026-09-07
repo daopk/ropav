@@ -1,6 +1,27 @@
 /* Base styles */
 .rp-kbd {
-  @apply inline-flex h-6 items-center space-x-0.5 bg-default px-2 text-center font-sans text-sm font-medium whitespace-nowrap text-muted rtl:space-x-reverse;
+  display: inline-flex;
+  height: calc(var(--spacing) * 6);
+  align-items: center;
+  :where(& > :not(:last-child)) {
+    --rp-space-x-reverse: 0;
+    margin-inline-start: calc(calc(var(--spacing) * 0.5) * var(--rp-space-x-reverse));
+    margin-inline-end: calc(calc(var(--spacing) * 0.5) * calc(1 - var(--rp-space-x-reverse)));
+  }
+  background-color: var(--default);
+  padding-inline: calc(var(--spacing) * 2);
+  text-align: center;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+  color: var(--muted);
+  &:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) {
+    :where(& > :not(:last-child)) {
+      --rp-space-x-reverse: 1;
+    }
+  }
 
   border-radius: min(32px, var(--component-radius));
   word-spacing: -0.25rem;
@@ -25,5 +46,5 @@
 
 /* Variant styles */
 .rp-kbd--light {
-  @apply bg-transparent;
+  background-color: transparent;
 }

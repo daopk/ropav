@@ -2,8 +2,18 @@
 
 /* Toast Region - Container for all toasts */
 .rp-toast-region {
-  @apply pointer-events-none fixed z-50 outline-none;
-  @apply w-[calc(100vw-2rem)] sm:w-auto sm:min-w-(--toast-width);
+  pointer-events: none;
+  position: fixed;
+  z-index: 50;
+  --rp-outline-style: none;
+  outline-style: none;
+  width: calc(100vw - 2rem);
+  @media (width >= 40rem) {
+    width: auto;
+  }
+  @media (width >= 40rem) {
+    min-width: var(--toast-width);
+  }
 
   display: block;
 }
@@ -11,33 +21,46 @@
 /* Placement variants - Bottom */
 .rp-toast-region--bottom {
   /* left-1/2 + -translate-x-1/2 centers in both LTR and RTL (translate is physical) */
-  @apply bottom-4 left-1/2 -translate-x-1/2;
+  bottom: calc(var(--spacing) * 4);
+  left: calc(1 / 2 * 100%);
+  --rp-translate-x: calc(calc(1 / 2 * 100%) * -1);
+  translate: var(--rp-translate-x) var(--rp-translate-y);
 }
 
 .rp-toast-region--bottom-start {
-  @apply start-4 bottom-4;
+  inset-inline-start: calc(var(--spacing) * 4);
+  bottom: calc(var(--spacing) * 4);
 }
 
 .rp-toast-region--bottom-end {
-  @apply end-4 bottom-4;
+  inset-inline-end: calc(var(--spacing) * 4);
+  bottom: calc(var(--spacing) * 4);
 }
 
 /* Placement variants - Top */
 .rp-toast-region--top {
   /* left-1/2 + -translate-x-1/2 centers in both LTR and RTL (translate is physical) */
-  @apply top-4 left-1/2 -translate-x-1/2;
+  top: calc(var(--spacing) * 4);
+  left: calc(1 / 2 * 100%);
+  --rp-translate-x: calc(calc(1 / 2 * 100%) * -1);
+  translate: var(--rp-translate-x) var(--rp-translate-y);
 }
 
 .rp-toast-region--top-start {
-  @apply start-4 top-4;
+  inset-inline-start: calc(var(--spacing) * 4);
+  top: calc(var(--spacing) * 4);
 }
 
 .rp-toast-region--top-end {
-  @apply end-4 top-4;
+  inset-inline-end: calc(var(--spacing) * 4);
+  top: calc(var(--spacing) * 4);
 }
 
 .rp-toast-region:focus-visible {
-  @apply outline-2 outline-offset-2 outline-focus;
+  outline-style: var(--rp-outline-style);
+  outline-width: 2px;
+  outline-offset: 2px;
+  outline-color: var(--focus);
 }
 
 /* Base toast styles */
@@ -46,7 +69,19 @@
   inset-inline-start: 0;
   inset-inline-end: 0;
 
-  @apply pointer-events-auto flex flex-row items-start justify-start gap-1.5 bg-surface px-4 py-3 shadow-overlay;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: calc(var(--spacing) * 1.5);
+  background-color: var(--surface);
+  padding-inline: calc(var(--spacing) * 4);
+  padding-block: calc(var(--spacing) * 3);
+  --rp-shadow: var(--overlay-shadow);
+  box-shadow:
+    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+    var(--rp-ring-shadow), var(--rp-shadow);
   border-radius: min(32px, var(--component-radius));
 }
 
@@ -63,23 +98,29 @@
 }
 
 .rp-toast:not([data-frontmost="true"]) {
-  @apply pointer-events-none;
+  pointer-events: none;
 
   height: var(--front-height);
   overflow: hidden;
 
   .rp-toast__close-button {
-    @apply pointer-events-none opacity-0;
+    pointer-events: none;
+    opacity: 0%;
     outline: none;
   }
 }
 
 .rp-toast[data-hidden="true"] {
-  @apply pointer-events-none flex opacity-0;
+  pointer-events: none;
+  display: flex;
+  opacity: 0%;
 }
 
 .rp-toast:focus-visible {
-  @apply outline-2 outline-offset-2 outline-focus;
+  outline-style: var(--rp-outline-style);
+  outline-width: 2px;
+  outline-offset: 2px;
+  outline-color: var(--focus);
 }
 
 /* Toast placements + view transitions */
@@ -97,47 +138,105 @@
 
 /* Toast content */
 .rp-toast__content {
-  @apply flex h-full grow flex-col items-start self-center;
+  display: flex;
+  height: 100%;
+  flex-grow: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: center;
 }
 
 /* Toast indicator */
 .rp-toast__indicator {
-  @apply flex shrink-0 items-center justify-center p-1 text-overlay-foreground select-none;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing);
+  color: var(--overlay-foreground);
+  -webkit-user-select: none;
+  user-select: none;
 
   [data-slot="toast-default-icon"] {
-    @apply box-content size-4;
+    box-sizing: content-box;
+    width: calc(var(--spacing) * 4);
+    height: calc(var(--spacing) * 4);
   }
 
   /* Spinner styles override for toast */
   [data-slot="spinner"] {
-    @apply size-4;
+    width: calc(var(--spacing) * 4);
+    height: calc(var(--spacing) * 4);
   }
 
   [data-slot="spinner-icon"] {
-    @apply size-4;
+    width: calc(var(--spacing) * 4);
+    height: calc(var(--spacing) * 4);
   }
 }
 
 /* Toast title */
 .rp-toast__title {
-  @apply text-sm leading-5 font-medium text-overlay-foreground;
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  --rp-leading: calc(var(--spacing) * 5);
+  line-height: calc(var(--spacing) * 5);
+  font-weight: var(--font-weight-medium);
+  color: var(--overlay-foreground);
 }
 
 /* Toast description */
 .rp-toast__description {
-  @apply text-sm text-muted;
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  color: var(--muted);
 }
 
 /* Toast close button */
 .rp-toast__close-button {
-  @apply pointer-events-none absolute -end-1 -top-1 size-5 border-border bg-default opacity-0 sm:border sm:bg-overlay;
+  pointer-events: none;
+  position: absolute;
+  inset-inline-end: calc(var(--spacing) * -1);
+  top: calc(var(--spacing) * -1);
+  width: calc(var(--spacing) * 5);
+  height: calc(var(--spacing) * 5);
+  border-color: var(--border);
+  background-color: var(--default);
+  opacity: 0%;
+  @media (width >= 40rem) {
+    border-style: var(--rp-border-style);
+    border-width: 1px;
+  }
+  @media (width >= 40rem) {
+    background-color: var(--overlay);
+  }
 
   --toast-close-button-bg-hover: var(--default);
   transition: opacity 150ms var(--ease-smooth);
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
   /* Overrides close button default icon size from 16px to 12px */
   [data-slot="close-button-icon"] {
-    @apply size-3.5 sm:size-3;
+    width: calc(var(--spacing) * 3.5);
+    height: calc(var(--spacing) * 3.5);
+    @media (width >= 40rem) {
+      width: calc(var(--spacing) * 3);
+      height: calc(var(--spacing) * 3);
+    }
   }
 
   /* Overrides close button hover state */
@@ -151,41 +250,45 @@
 
 /* Only show close button on hover for frontmost toast */
 .rp-toast[data-frontmost="true"]:hover .rp-toast__close-button {
-  @apply pointer-events-auto opacity-100;
+  pointer-events: auto;
+  opacity: 100%;
 }
 
 /* Toast action button */
 .rp-toast__action {
-  @apply mt-2 sm:mt-0;
+  margin-top: calc(var(--spacing) * 2);
+  @media (width >= 40rem) {
+    margin-top: 0px;
+  }
 }
 
 /* Variant modifiers */
 .rp-toast--accent .rp-toast__title {
-  @apply text-accent-soft-foreground;
+  color: var(--accent-soft-foreground);
 }
 
 .rp-toast--success .rp-toast__title {
-  @apply text-success-soft-foreground;
+  color: var(--success-soft-foreground);
 }
 
 .rp-toast--success .rp-toast__indicator {
-  @apply text-success-soft-foreground;
+  color: var(--success-soft-foreground);
 }
 
 .rp-toast--warning .rp-toast__title {
-  @apply text-warning-soft-foreground;
+  color: var(--warning-soft-foreground);
 }
 
 .rp-toast--warning .rp-toast__indicator {
-  @apply text-warning-soft-foreground;
+  color: var(--warning-soft-foreground);
 }
 
 .rp-toast--danger .rp-toast__title {
-  @apply text-danger-soft-foreground;
+  color: var(--danger-soft-foreground);
 }
 
 .rp-toast--danger .rp-toast__indicator {
-  @apply text-danger-soft-foreground;
+  color: var(--danger-soft-foreground);
 }
 
 /* View transition animations */

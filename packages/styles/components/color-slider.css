@@ -4,7 +4,9 @@
 
 /* Base styles */
 .rp-color-slider {
-  @apply grid w-full gap-1;
+  display: grid;
+  width: 100%;
+  gap: var(--spacing);
 
   grid-template-areas:
     "label output"
@@ -41,19 +43,27 @@
   }
 
   [data-slot="label"] {
-    @apply w-fit text-sm font-medium;
+    width: fit-content;
+    font-size: var(--text-sm);
+    line-height: var(--rp-leading, var(--text-sm--line-height));
+    font-weight: var(--font-weight-medium);
 
     grid-area: label;
   }
 
   .rp-color-slider__output {
-    @apply text-sm font-medium tabular-nums;
+    font-size: var(--text-sm);
+    line-height: var(--rp-leading, var(--text-sm--line-height));
+    font-weight: var(--font-weight-medium);
+    --rp-numeric-spacing: tabular-nums;
+    font-variant-numeric: var(--rp-ordinal,) var(--rp-slashed-zero,) var(--rp-numeric-figure,)
+      var(--rp-numeric-spacing,) var(--rp-numeric-fraction,);
 
     grid-area: output;
   }
 
   .rp-color-slider__track {
-    @apply relative;
+    position: relative;
 
     border-radius: min(32px, var(--component-radius));
 
@@ -70,12 +80,23 @@
 
   .rp-color-slider__thumb {
     /* Flex container for centering */
-    @apply absolute flex cursor-grab items-center justify-center no-highlight;
+    position: absolute;
+    display: flex;
+    cursor: grab;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: transparent;
 
     border-radius: min(32px, var(--component-radius));
 
     /* Border to create white ring around the thumb */
-    @apply border-3 border-white shadow-overlay;
+    border-style: var(--rp-border-style);
+    border-width: 3px;
+    border-color: var(--color-white);
+    --rp-shadow: var(--overlay-shadow);
+    box-shadow:
+      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+      var(--rp-ring-shadow), var(--rp-shadow);
 
     /* Ensure thumb is above edge caps */
     z-index: 1;
@@ -83,21 +104,54 @@
     transition:
       transform 250ms var(--ease-out),
       box-shadow 150ms var(--ease-out);
-    @apply motion-reduce:transition-none;
+    &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+        transition-property: none;
+        &::before,
+        &::after {
+          transition-property: none;
+        }
+      }
+    }
 
     /* Dragging state - cursor changes and thumb scales down */
     &[data-dragging="true"] {
-      @apply cursor-grabbing;
+      cursor: grabbing;
     }
 
     /* Focus state - show focus ring */
     &[data-focus-visible="true"] {
-      @apply z-10 status-focused;
+      z-index: 10;
+      --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+        var(--rp-ring-color, currentcolor);
+      box-shadow:
+        var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+        var(--rp-ring-shadow), var(--rp-shadow);
+      --rp-ring-color: var(--focus);
+      --rp-ring-offset-width: 0px;
+      --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+        var(--rp-ring-offset-color);
+      --rp-ring-offset-color: var(--background);
+      --rp-outline-style: none;
+      outline-style: none;
+      --rp-ring-offset-width: var(--ring-offset-width);
+      @media (forced-colors: active) {
+        outline: 2px solid Highlight;
+        outline-offset: 2px;
+      }
     }
 
     /* Disabled state */
     &[data-disabled="true"] {
-      @apply cursor-default bg-default;
+      cursor: default;
+      background-color: var(--default);
     }
   }
 
@@ -105,10 +159,16 @@
   &:disabled,
   &[data-disabled="true"],
   &[aria-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
 
     [data-slot="label"] {
-      @apply opacity-100;
+      opacity: 100%;
     }
   }
 
@@ -117,7 +177,9 @@
     flex-direction: column;
 
     .rp-color-slider__track {
-      @apply h-5 justify-self-center rounded-none;
+      height: calc(var(--spacing) * 5);
+      justify-self: center;
+      border-radius: 0;
       width: calc(100% - 1.25rem);
 
       /* Default border for visibility against similar backgrounds */
@@ -128,7 +190,8 @@
       /* Edge caps for horizontal orientation */
       &::before,
       &::after {
-        @apply top-0 h-full;
+        top: 0px;
+        height: 100%;
         width: 0.625rem; /* Half thumb width + 2px gap */
       }
 
@@ -158,13 +221,16 @@
     }
 
     .rp-color-slider__thumb {
-      @apply top-1/2 size-4;
+      top: calc(1 / 2 * 100%);
+      width: calc(var(--spacing) * 4);
+      height: calc(var(--spacing) * 4);
     }
   }
 
   /* Vertical orientation */
   &[data-orientation="vertical"] {
-    @apply h-full gap-2;
+    height: 100%;
+    gap: calc(var(--spacing) * 2);
 
     flex-direction: row;
     grid-template-areas:
@@ -208,7 +274,9 @@
     }
 
     .rp-color-slider__track {
-      @apply w-5 justify-self-center rounded-none;
+      width: calc(var(--spacing) * 5);
+      justify-self: center;
+      border-radius: 0;
       height: calc(100% - 1.25rem);
 
       /* Left and right borders for vertical track */
@@ -219,7 +287,8 @@
       /* Edge caps for vertical orientation */
       &::before,
       &::after {
-        @apply start-0 w-full;
+        inset-inline-start: calc(var(--spacing) * 0);
+        width: 100%;
         height: 0.625rem; /* Half thumb height + 2px gap */
       }
 
@@ -252,7 +321,9 @@
 
     .rp-color-slider__thumb {
       /* Cross-axis centering; React Aria applies a physical translateX(-50%), so keep left-1/2 for RTL correctness */
-      @apply left-1/2 size-4;
+      left: calc(1 / 2 * 100%);
+      width: calc(var(--spacing) * 4);
+      height: calc(var(--spacing) * 4);
     }
   }
 }

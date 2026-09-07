@@ -1,7 +1,8 @@
 .rp-checkbox-group {
-  @apply flex flex-col;
+  display: flex;
+  flex-direction: column;
 
   [data-slot="checkbox"] {
-    @apply mt-4;
+    margin-top: calc(var(--spacing) * 4);
   }
 }

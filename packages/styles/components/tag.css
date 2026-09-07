@@ -2,7 +2,14 @@
 .rp-tag {
   --optical-offset: 0.031em;
 
-  @apply relative inline-flex items-center gap-1 font-medium select-none no-highlight;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing);
+  font-weight: var(--font-weight-medium);
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 
   border-radius: min(32px, var(--component-radius));
 
@@ -23,7 +30,25 @@
     opacity 100ms var(--ease-smooth),
     background-color 100ms var(--ease-smooth),
     box-shadow 100ms var(--ease-out);
-  @apply origin-center transform-gpu motion-reduce:transition-none;
+  transform-origin: center;
+  transform: translateZ(0) var(--rp-rotate-x,) var(--rp-rotate-y,) var(--rp-rotate-z,)
+    var(--rp-skew-x,) var(--rp-skew-y,);
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   /* Cursor */
   cursor: var(--cursor-interactive);
@@ -46,18 +71,45 @@
 
   /* SVG icon styling */
   & svg {
-    @apply pointer-events-none size-3 shrink-0 self-center text-current;
+    pointer-events: none;
+    width: calc(var(--spacing) * 3);
+    height: calc(var(--spacing) * 3);
+    flex-shrink: 0;
+    align-self: center;
+    color: currentcolor;
   }
 }
 
 /* Disabled state */
 .rp-tag:is([data-disabled="true"], [aria-disabled="true"]) {
-  @apply status-disabled;
+  opacity: var(--disabled-opacity);
+  cursor: var(--cursor-disabled);
+  pointer-events: none;
+  @media (forced-colors: active) {
+    color: GrayText;
+    border-color: GrayText;
+  }
 }
 
 /* Focus visible state (keyboard focus only) */
 .rp-tag:is(:focus-visible, [data-focus-visible]) {
-  @apply status-focused;
+  --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+    var(--rp-ring-color, currentcolor);
+  box-shadow:
+    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+    var(--rp-ring-shadow), var(--rp-shadow);
+  --rp-ring-color: var(--focus);
+  --rp-ring-offset-width: 0px;
+  --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+    var(--rp-ring-offset-color);
+  --rp-ring-offset-color: var(--background);
+  --rp-outline-style: none;
+  outline-style: none;
+  --rp-ring-offset-width: var(--ring-offset-width);
+  @media (forced-colors: active) {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
 }
 
 /* Pressed/Active state */
@@ -69,7 +121,12 @@
   background-color: var(--tag-bg-selected);
   color: var(--tag-fg-selected);
 
-  @apply forced-selected;
+  @media (forced-colors: active) {
+    forced-color-adjust: none;
+    background-color: Highlight;
+    border-color: Highlight;
+    color: HighlightText;
+  }
 
   /* Selected + Hover state */
   @media (hover: hover) {
@@ -81,15 +138,24 @@
 
 /* Size */
 .rp-tag--sm {
-  @apply px-2 py-0.5 text-xs;
+  padding-inline: calc(var(--spacing) * 2);
+  padding-block: calc(var(--spacing) * 0.5);
+  font-size: var(--text-xs);
+  line-height: var(--rp-leading, var(--text-xs--line-height));
 }
 
 .rp-tag--md {
-  @apply px-2 py-1 text-xs;
+  padding-inline: calc(var(--spacing) * 2);
+  padding-block: var(--spacing);
+  font-size: var(--text-xs);
+  line-height: var(--rp-leading, var(--text-xs--line-height));
 }
 
 .rp-tag--lg {
-  @apply px-2.5 py-1.5 text-sm;
+  padding-inline: calc(var(--spacing) * 2.5);
+  padding-block: calc(var(--spacing) * 1.5);
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
 }
 
 /* Variant */
@@ -107,10 +173,16 @@
 
 /* Remove Button  */
 .rp-tag__remove-button {
-  @apply size-3 text-inherit;
+  width: calc(var(--spacing) * 3);
+  height: calc(var(--spacing) * 3);
+  color: inherit;
 
   /* SVG icon styling */
   & svg {
-    @apply size-[inherit] shrink-0 self-center text-current;
+    width: inherit;
+    height: inherit;
+    flex-shrink: 0;
+    align-self: center;
+    color: currentcolor;
   }
 }

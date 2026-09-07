@@ -4,7 +4,11 @@
 
 /* Base styles */
 .rp-color-area {
-  @apply relative w-full max-w-56 shrink-0 no-highlight;
+  position: relative;
+  width: 100%;
+  max-width: calc(var(--spacing) * 56);
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
 
   border-radius: min(32px, var(--component-radius));
 
@@ -19,7 +23,13 @@
 
   /* Disabled state */
   &[data-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
   }
 }
 
@@ -31,7 +41,10 @@
   /* Dot pattern overlay using radial gradient */
   &::after {
     content: "";
-    @apply pointer-events-none absolute inset-0 rounded-[inherit];
+    pointer-events: none;
+    position: absolute;
+    inset: 0px;
+    border-radius: inherit;
 
     background-image: radial-gradient(circle, rgba(255, 255, 255, 0.2) 1px, transparent 1px);
     background-size: 8px 8px;
@@ -43,7 +56,9 @@
    ========================================================================== */
 
 .rp-color-area__thumb {
-  @apply size-4 will-change-[width,height];
+  width: calc(var(--spacing) * 4);
+  height: calc(var(--spacing) * 4);
+  will-change: width, height;
 
   border-radius: min(32px, var(--component-radius));
 
@@ -61,20 +76,58 @@
   transition:
     width 150ms var(--ease-out),
     height 150ms var(--ease-out);
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   /* Focus state */
   &[data-focus-visible="true"] {
-    @apply status-focused;
+    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+      var(--rp-ring-color, currentcolor);
+    box-shadow:
+      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-ring-offset-width: 0px;
+    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+      var(--rp-ring-offset-color);
+    --rp-ring-offset-color: var(--background);
+    --rp-outline-style: none;
+    outline-style: none;
+    --rp-ring-offset-width: var(--ring-offset-width);
+    @media (forced-colors: active) {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
   }
 
   /* Dragging state */
   &[data-dragging="true"] {
-    @apply size-5;
+    width: calc(var(--spacing) * 5);
+    height: calc(var(--spacing) * 5);
   }
 
   /* Disabled state */
   &[data-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
   }
 }

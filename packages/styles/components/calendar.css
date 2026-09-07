@@ -9,7 +9,8 @@
  * Base Calendar Styles
  * -------------------------------------------------------------------------- */
 .rp-calendar {
-  @apply w-63 max-w-63;
+  width: calc(var(--spacing) * 63);
+  max-width: calc(var(--spacing) * 63);
 
   container-type: inline-size;
 }
@@ -18,14 +19,22 @@
 .rp-calendar--week-view {
   .rp-calendar__cell {
     /* Keep cells circular on the 7-column grid; only filled cells take space. */
-    @apply aspect-square size-auto w-full place-self-center;
+    aspect-ratio: 1 / 1;
+    width: auto;
+    height: auto;
+    width: 100%;
+    place-self: center;
   }
 }
 
 /* Day view – visibleDuration={{ days: n }} */
 .rp-calendar--day-view {
   .rp-calendar__cell {
-    @apply aspect-square size-auto w-full place-self-center;
+    aspect-ratio: 1 / 1;
+    width: auto;
+    height: auto;
+    width: 100%;
+    place-self: center;
   }
 
   /*
@@ -40,7 +49,7 @@
   .rp-calendar__grid-header {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    @apply w-full;
+    width: 100%;
 
     & > tr {
       display: contents;
@@ -50,14 +59,15 @@
   .rp-calendar__grid-body {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    @apply mt-1 w-full;
+    margin-top: var(--spacing);
+    width: 100%;
 
     & > tr {
       display: contents;
     }
 
     & > tr:first-child > td {
-      @apply mt-0;
+      margin-top: 0px;
     }
   }
 }
@@ -66,21 +76,34 @@
  * Calendar Header
  * -------------------------------------------------------------------------- */
 .rp-calendar__header {
-  @apply flex items-center justify-between px-0.5 pb-4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: calc(var(--spacing) * 0.5);
+  padding-bottom: calc(var(--spacing) * 4);
 
   &:has(.rp-calendar-year-picker__trigger[data-open="true"]) {
     .rp-calendar__nav-button {
-      @apply pointer-events-none opacity-0;
+      pointer-events: none;
+      opacity: 0%;
     }
   }
 }
 
 .rp-calendar__heading {
-  @apply flex-1 text-sm font-medium;
+  flex: 1;
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  font-weight: var(--font-weight-medium);
 }
 
 .rp-calendar__nav-button {
-  @apply flex size-6 items-center justify-center text-accent-soft-foreground;
+  display: flex;
+  width: calc(var(--spacing) * 6);
+  height: calc(var(--spacing) * 6);
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-soft-foreground);
 
   border-radius: min(32px, var(--component-radius));
 
@@ -91,7 +114,24 @@
     background-color 100ms var(--ease-out),
     box-shadow 100ms var(--ease-out),
     opacity 150ms var(--ease-out);
-  @apply transform-gpu motion-reduce:transition-none;
+  transform: translateZ(0) var(--rp-rotate-x,) var(--rp-rotate-y,) var(--rp-rotate-z,)
+    var(--rp-skew-x,) var(--rp-skew-y,);
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   cursor: var(--cursor-interactive);
 
@@ -99,7 +139,7 @@
   @media (hover: hover) {
     &:hover,
     &[data-hovered="true"] {
-      @apply bg-state-layer;
+      background-color: var(--state-layer);
     }
   }
 
@@ -112,18 +152,44 @@
   /* Focus state */
   &:focus-visible,
   &[data-focus-visible="true"] {
-    @apply status-focused;
+    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+      var(--rp-ring-color, currentcolor);
+    box-shadow:
+      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-ring-offset-width: 0px;
+    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+      var(--rp-ring-offset-color);
+    --rp-ring-offset-color: var(--background);
+    --rp-outline-style: none;
+    outline-style: none;
+    --rp-ring-offset-width: var(--ring-offset-width);
+    @media (forced-colors: active) {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
   }
 
   /* Disabled state */
   &:disabled,
   &[data-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
   }
 }
 
 .rp-calendar__nav-button-icon {
-  @apply size-4 rtl:rotate-180;
+  width: calc(var(--spacing) * 4);
+  height: calc(var(--spacing) * 4);
+  &:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) {
+    rotate: 180deg;
+  }
 }
 
 /* -----------------------------------------------------------------------------
@@ -133,11 +199,11 @@
   /* Override table display with CSS Grid for easier customization */
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  @apply w-full;
+  width: 100%;
 
   &[aria-readonly="true"] {
     .rp-calendar__cell {
-      @apply pointer-events-none;
+      pointer-events: none;
     }
   }
 }
@@ -161,7 +227,7 @@
 
   /* Add top spacing between header and first body row */
   & > tr:first-child > td {
-    @apply mt-1;
+    margin-top: var(--spacing);
   }
 }
 
@@ -173,7 +239,14 @@
 
 .rp-calendar__header-cell {
   /* Header cell (th - weekday names) styles */
-  @apply flex items-center justify-center pb-2 text-xs font-medium text-muted;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: calc(var(--spacing) * 2);
+  font-size: var(--text-xs);
+  line-height: var(--rp-leading, var(--text-xs--line-height));
+  font-weight: var(--font-weight-medium);
+  color: var(--muted);
 }
 
 /* -----------------------------------------------------------------------------
@@ -181,7 +254,20 @@
  * -------------------------------------------------------------------------- */
 .rp-calendar__cell {
   /* Cell (td) wrapper styles - margins now work with grid layout */
-  @apply relative flex aspect-square size-full items-center justify-center text-center text-sm font-medium outline-none no-highlight;
+  position: relative;
+  display: flex;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  font-weight: var(--font-weight-medium);
+  --rp-outline-style: none;
+  outline-style: none;
+  -webkit-tap-highlight-color: transparent;
 
   border-radius: min(32px, var(--component-radius));
 
@@ -208,14 +294,47 @@
   transition:
     transform 250ms var(--ease-out),
     box-shadow 100ms var(--ease-out);
-  @apply transform-gpu motion-reduce:transition-none;
+  transform: translateZ(0) var(--rp-rotate-x,) var(--rp-rotate-y,) var(--rp-rotate-z,)
+    var(--rp-skew-x,) var(--rp-skew-y,);
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   cursor: var(--cursor-interactive);
 
   /* Focus state */
   &:focus-visible:not(:focus),
   &[data-focus-visible="true"] {
-    @apply status-focused;
+    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+      var(--rp-ring-color, currentcolor);
+    box-shadow:
+      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-ring-offset-width: 0px;
+    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+      var(--rp-ring-offset-color);
+    --rp-ring-offset-color: var(--background);
+    --rp-outline-style: none;
+    outline-style: none;
+    --rp-ring-offset-width: var(--ring-offset-width);
+    @media (forced-colors: active) {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
   }
 
   /* Today indicator */
@@ -243,7 +362,12 @@
     background-color: var(--calendar-cell-bg-selected);
     color: var(--calendar-cell-fg-selected);
 
-    @apply forced-selected;
+    @media (forced-colors: active) {
+      forced-color-adjust: none;
+      background-color: Highlight;
+      border-color: Highlight;
+      color: HighlightText;
+    }
   }
 
   /* Pressed state */
@@ -267,7 +391,7 @@
 
   /* Outside month (previous/next month days) */
   &[data-outside-month="true"] {
-    @apply opacity-50;
+    opacity: 50%;
 
     color: var(--calendar-cell-fg-outside-month);
   }
@@ -278,13 +402,25 @@
 
   /* Unavailable dates */
   &[data-unavailable="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
   }
 
   /* Disabled state */
   &:disabled:not([data-outside-month="true"]),
   &[data-disabled="true"]:not([data-outside-month="true"]) {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
 
     text-decoration: line-through;
   }
@@ -292,7 +428,14 @@
 
 /* Cell indicator - small dot at bottom center of cell */
 .rp-calendar__cell-indicator {
-  @apply absolute bottom-1 left-1/2 size-[3px] -translate-x-1/2 rounded-xs;
+  position: absolute;
+  bottom: var(--spacing);
+  left: calc(1 / 2 * 100%);
+  width: 3px;
+  height: 3px;
+  --rp-translate-x: calc(calc(1 / 2 * 100%) * -1);
+  translate: var(--rp-translate-x) var(--rp-translate-y);
+  border-radius: calc(var(--radius) * 0.25);
 
   --calendar-cell-indicator-bg: var(--muted);
   --calendar-cell-indicator-bg-selected: var(--accent-foreground);

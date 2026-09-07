@@ -3,18 +3,35 @@
    ========================================================================== */
 
 .rp-checkbox {
-  @apply flex flex-col items-start gap-1 outline-none no-highlight;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing);
+  --rp-outline-style: none;
+  outline-style: none;
+  -webkit-tap-highlight-color: transparent;
 
   cursor: var(--cursor-interactive);
 
   /* Field-level help text (siblings of the button), indented to align under the label */
   & > [data-slot="description"],
   & > [data-slot="field-error"] {
-    @apply w-full min-w-0 cursor-default ps-7 text-xs text-wrap wrap-break-word text-muted select-none;
+    width: 100%;
+    min-width: 0px;
+    cursor: default;
+    padding-inline-start: calc(var(--spacing) * 7);
+    font-size: var(--text-xs);
+    line-height: var(--rp-leading, var(--text-xs--line-height));
+    text-wrap: wrap;
+    overflow-wrap: break-word;
+    color: var(--muted);
+    -webkit-user-select: none;
+    user-select: none;
   }
 
   [data-slot="label"] {
-    @apply select-none;
+    -webkit-user-select: none;
+    user-select: none;
   }
 
   .rp-checkbox__content [data-slot="label"] {
@@ -23,11 +40,23 @@
 
   /* Disabled state */
   &[data-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
 
     [data-slot="description"],
     [data-slot="field-error"] {
-      @apply status-disabled;
+      opacity: var(--disabled-opacity);
+      cursor: var(--cursor-disabled);
+      pointer-events: none;
+      @media (forced-colors: active) {
+        color: GrayText;
+        border-color: GrayText;
+      }
     }
   }
 
@@ -41,14 +70,36 @@
 
   /* Checkmark SVG indicator */
   [data-slot="checkbox-default-indicator--checkmark"] {
-    @apply size-2.5 stroke-[2.5px];
+    width: calc(var(--spacing) * 2.5);
+    height: calc(var(--spacing) * 2.5);
+    stroke-width: 2.5px;
 
     color: var(--checkbox-control-fg-checked);
 
     /**
      * Transitions
      */
-    @apply transition-all duration-200 motion-reduce:transition-none;
+    transition-property: all;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
+    --tw-duration: 200ms;
+    transition-duration: 200ms;
+    &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+        transition-property: none;
+        &::before,
+        &::after {
+          transition-property: none;
+        }
+      }
+    }
   }
 
   &[data-selected="true"] [data-slot="checkbox-default-indicator--checkmark"] {
@@ -66,7 +117,8 @@
   /* Indeterminate line indicator */
   &[data-indeterminate="true"] {
     [data-slot="checkbox-default-indicator--indeterminate"] {
-      @apply size-3;
+      width: calc(var(--spacing) * 3);
+      height: calc(var(--spacing) * 3);
     }
   }
 
@@ -84,7 +136,24 @@
    ========================================================================== */
 
 .rp-checkbox__control {
-  @apply relative inline-flex size-4 shrink-0 items-center justify-center overflow-hidden border [border-width:var(--border-width-field)] shadow-field outline-none no-highlight;
+  position: relative;
+  display: inline-flex;
+  width: calc(var(--spacing) * 4);
+  height: calc(var(--spacing) * 4);
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-style: var(--rp-border-style);
+  border-width: 1px;
+  border-width: var(--border-width-field);
+  --rp-shadow: var(--field-shadow);
+  box-shadow:
+    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+    var(--rp-ring-shadow), var(--rp-shadow);
+  --rp-outline-style: none;
+  outline-style: none;
+  -webkit-tap-highlight-color: transparent;
 
   /* The cap is what keeps the box reading square at 16px: the field radius is set for a 36px
    * control, and worn whole here it looks twice as round as the field beside it. */
@@ -114,13 +183,38 @@
     background-color 200ms var(--ease-out),
     border-color 200ms var(--ease-out),
     transform 100ms var(--ease-out);
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   cursor: var(--cursor-interactive);
 
   /* Background indicator pseudo-element */
   &::before {
-    @apply pointer-events-none absolute inset-0 z-0 origin-center scale-70 opacity-0 content-[''];
+    pointer-events: none;
+    position: absolute;
+    inset: 0px;
+    z-index: 0;
+    transform-origin: center;
+    --rp-scale-x: 70%;
+    --rp-scale-y: 70%;
+    scale: var(--rp-scale-x) var(--rp-scale-y);
+    opacity: 0%;
+    --rp-content: "";
+    content: var(--rp-content);
 
     border-radius: inherit;
 
@@ -137,7 +231,23 @@
   .rp-checkbox:focus-visible &,
   .rp-checkbox:has([data-slot="checkbox-content"][data-focus-visible="true"]) &,
   .rp-checkbox [data-slot="checkbox-content"][data-focus-visible="true"] & {
-    @apply status-focused;
+    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+      var(--rp-ring-color, currentcolor);
+    box-shadow:
+      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-ring-offset-width: 0px;
+    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+      var(--rp-ring-offset-color);
+    --rp-ring-offset-color: var(--background);
+    --rp-outline-style: none;
+    outline-style: none;
+    --rp-ring-offset-width: var(--ring-offset-width);
+    @media (forced-colors: active) {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
   }
 
   /* Hover */
@@ -165,7 +275,10 @@
     color: var(--checkbox-control-fg-checked);
 
     &::before {
-      @apply scale-100 opacity-100;
+      --rp-scale-x: 100%;
+      --rp-scale-y: 100%;
+      scale: var(--rp-scale-x) var(--rp-scale-y);
+      opacity: 100%;
     }
   }
 
@@ -193,7 +306,33 @@
       [data-indeterminate="true"]
     )
     & {
-    @apply status-invalid-field;
+    outline-style: var(--rp-outline-style);
+    outline-width: 1px;
+    outline-color: var(--danger);
+    --rp-outline-style: solid;
+    outline-style: solid;
+    --rp-ring-offset-width: 3px;
+    &:focus,
+    &:focus-visible,
+    &[data-focused="true"],
+    &[data-focus-visible="true"],
+    &:focus-within,
+    &[data-focus-within="true"] {
+      --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+        var(--rp-ring-color, currentcolor);
+      box-shadow:
+        var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+        var(--rp-ring-shadow), var(--rp-shadow);
+      --rp-ring-color: var(--danger);
+      --rp-ring-offset-width: 0px;
+      --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+        var(--rp-ring-offset-color);
+      --rp-ring-offset-width: 0px;
+      @media (forced-colors: active) {
+        outline-width: 2px;
+        outline-color: Highlight;
+      }
+    }
   }
 
   /* Invalid + Selected */
@@ -206,7 +345,10 @@
     color: var(--checkbox-control-fg-invalid);
 
     &::before {
-      @apply scale-100 opacity-100;
+      --rp-scale-x: 100%;
+      --rp-scale-y: 100%;
+      scale: var(--rp-scale-x) var(--rp-scale-y);
+      opacity: 100%;
 
       background-color: var(--checkbox-control-fill-invalid);
     }
@@ -225,10 +367,19 @@
    ========================================================================== */
 
 .rp-checkbox__indicator {
-  @apply relative z-10 flex size-3 items-center justify-center;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  width: calc(var(--spacing) * 3);
+  height: calc(var(--spacing) * 3);
+  align-items: center;
+  justify-content: center;
 
   & svg {
-    @apply size-full transform-gpu;
+    width: 100%;
+    height: 100%;
+    transform: translateZ(0) var(--rp-rotate-x,) var(--rp-rotate-y,) var(--rp-rotate-z,)
+      var(--rp-skew-x,) var(--rp-skew-y,);
   }
 }
 
@@ -237,7 +388,13 @@
    ========================================================================== */
 
 .rp-checkbox--disabled {
-  @apply status-disabled;
+  opacity: var(--disabled-opacity);
+  cursor: var(--cursor-disabled);
+  pointer-events: none;
+  @media (forced-colors: active) {
+    color: GrayText;
+    border-color: GrayText;
+  }
 }
 
 /* ==========================================================================
@@ -249,7 +406,10 @@
 }
 
 .rp-checkbox--secondary .rp-checkbox__control {
-  @apply shadow-none;
+  --rp-shadow: 0 0 #0000;
+  box-shadow:
+    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+    var(--rp-ring-shadow), var(--rp-shadow);
 
   /* No border and no shadow leave the fill as the only thing drawing this box, so a flat neutral
    * erases it against any surface of the same lightness — a hovered table row is exactly that.
@@ -259,5 +419,18 @@
 
 /* Checkbox content — the clickable label (control + label text) */
 .rp-checkbox__content {
-  @apply relative inline-flex cursor-[inherit] items-center gap-3 text-sm font-medium text-foreground outline-none select-none no-highlight;
+  position: relative;
+  display: inline-flex;
+  cursor: inherit;
+  align-items: center;
+  gap: calc(var(--spacing) * 3);
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  font-weight: var(--font-weight-medium);
+  color: var(--foreground);
+  --rp-outline-style: none;
+  outline-style: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }

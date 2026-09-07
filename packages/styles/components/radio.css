@@ -11,12 +11,19 @@
    ========================================================================== */
 
 .rp-radio {
-  @apply flex flex-col items-start gap-1 outline-none no-highlight;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing);
+  --rp-outline-style: none;
+  outline-style: none;
+  -webkit-tap-highlight-color: transparent;
 
   cursor: var(--cursor-interactive);
 
   [data-slot="label"] {
-    @apply select-none;
+    -webkit-user-select: none;
+    user-select: none;
   }
 
   .rp-radio__content [data-slot="label"] {
@@ -26,25 +33,60 @@
   /* Field-level help text (siblings of the button), indented to align under the label */
   & > [data-slot="description"],
   & > [data-slot="field-error"] {
-    @apply w-full min-w-0 cursor-default ps-7 text-xs text-wrap wrap-break-word text-muted select-none;
+    width: 100%;
+    min-width: 0px;
+    cursor: default;
+    padding-inline-start: calc(var(--spacing) * 7);
+    font-size: var(--text-xs);
+    line-height: var(--rp-leading, var(--text-xs--line-height));
+    text-wrap: wrap;
+    overflow-wrap: break-word;
+    color: var(--muted);
+    -webkit-user-select: none;
+    user-select: none;
   }
 
   /* Disabled state */
   &:disabled,
   &[data-disabled="true"],
   &[aria-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
 
     [data-slot="description"],
     [data-slot="field-error"] {
-      @apply status-disabled;
+      opacity: var(--disabled-opacity);
+      cursor: var(--cursor-disabled);
+      pointer-events: none;
+      @media (forced-colors: active) {
+        color: GrayText;
+        border-color: GrayText;
+      }
     }
   }
 }
 
 /* Radio content — the clickable label (control + label text) */
 .rp-radio__content {
-  @apply relative inline-flex cursor-[inherit] items-center gap-3 text-sm font-medium text-foreground outline-none select-none no-highlight;
+  position: relative;
+  display: inline-flex;
+  cursor: inherit;
+  align-items: center;
+  gap: calc(var(--spacing) * 3);
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  font-weight: var(--font-weight-medium);
+  color: var(--foreground);
+  --rp-outline-style: none;
+  outline-style: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* ==========================================================================
@@ -52,13 +94,47 @@
    ========================================================================== */
 
 .rp-radio__control {
-  @apply relative inline-flex size-4 shrink-0 items-center justify-center rounded-lg border [border-width:var(--border-width-field)] border-field-border bg-field shadow-field outline-none no-highlight;
+  position: relative;
+  display: inline-flex;
+  width: calc(var(--spacing) * 4);
+  height: calc(var(--spacing) * 4);
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: calc(var(--radius) * 1);
+  border-style: var(--rp-border-style);
+  border-width: 1px;
+  border-width: var(--border-width-field);
+  border-color: var(--field-border, var(--border));
+  background-color: var(--field-background, var(--default));
+  --rp-shadow: var(--field-shadow);
+  box-shadow:
+    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+    var(--rp-ring-shadow), var(--rp-shadow);
+  --rp-outline-style: none;
+  outline-style: none;
+  -webkit-tap-highlight-color: transparent;
 
   transition:
     background-color 200ms var(--ease-out),
     border-color 200ms var(--ease-out),
     transform 100ms var(--ease-out);
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   cursor: var(--cursor-interactive);
 
@@ -66,13 +142,29 @@
   /* Focus */
   .rp-radio:has([data-slot="radio-content"][data-focus-visible="true"]) &,
   .rp-radio [data-slot="radio-content"][data-focus-visible="true"] & {
-    @apply status-focused;
+    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+      var(--rp-ring-color, currentcolor);
+    box-shadow:
+      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-ring-offset-width: 0px;
+    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+      var(--rp-ring-offset-color);
+    --rp-ring-offset-color: var(--background);
+    --rp-outline-style: none;
+    outline-style: none;
+    --rp-ring-offset-width: var(--ring-offset-width);
+    @media (forced-colors: active) {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
   }
 
   /* Hover */
   .rp-radio:has([data-slot="radio-content"][data-hovered="true"]) &,
   .rp-radio [data-slot="radio-content"][data-hovered="true"] & {
-    @apply border-field-border-hover;
+    border-color: var(--field-border-hover);
   }
 
   /* Hover - only when not selected */
@@ -81,14 +173,16 @@
     )
     & {
     .rp-radio__indicator:empty::before {
-      @apply bg-field-hover;
+      background-color: var(--field-hover);
     }
   }
 
   /* Pressed */
   .rp-radio:has([data-slot="radio-content"][data-pressed="true"]) &,
   .rp-radio [data-slot="radio-content"][data-pressed="true"] & {
-    @apply scale-95;
+    --rp-scale-x: 95%;
+    --rp-scale-y: 95%;
+    scale: var(--rp-scale-x) var(--rp-scale-y);
   }
 
   /* Selection states */
@@ -96,21 +190,48 @@
   .rp-radio[data-selected] &,
   .rp-radio:has([data-slot="radio-content"][aria-checked="true"]) &,
   .rp-radio:has(input:checked) & {
-    @apply border-transparent bg-accent;
+    border-color: transparent;
+    background-color: var(--accent);
   }
 
   /* Selected + Pressed */
   .rp-radio[data-selected]:has([data-slot="radio-content"][data-pressed="true"]) &,
   .rp-radio:has([data-slot="radio-content"][data-pressed="true"][aria-checked="true"]) &,
   .rp-radio:has(input:checked):has([data-slot="radio-content"][data-pressed="true"]) & {
-    @apply bg-accent-hover;
+    background-color: var(--accent-hover);
   }
 
   /* Validation states */
   /* Invalid */
   .rp-radio[data-invalid="true"] &,
   .rp-radio[aria-invalid="true"] & {
-    @apply status-invalid-field;
+    outline-style: var(--rp-outline-style);
+    outline-width: 1px;
+    outline-color: var(--danger);
+    --rp-outline-style: solid;
+    outline-style: solid;
+    --rp-ring-offset-width: 3px;
+    &:focus,
+    &:focus-visible,
+    &[data-focused="true"],
+    &[data-focus-visible="true"],
+    &:focus-within,
+    &[data-focus-within="true"] {
+      --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+        var(--rp-ring-color, currentcolor);
+      box-shadow:
+        var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+        var(--rp-ring-shadow), var(--rp-shadow);
+      --rp-ring-color: var(--danger);
+      --rp-ring-offset-width: 0px;
+      --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+        var(--rp-ring-offset-color);
+      --rp-ring-offset-width: 0px;
+      @media (forced-colors: active) {
+        outline-width: 2px;
+        outline-color: Highlight;
+      }
+    }
   }
 
   /* Invalid + Selected */
@@ -118,7 +239,33 @@
   .rp-radio[aria-invalid="true"][data-selected] &,
   .rp-radio[data-invalid="true"]:has(input:checked) &,
   .rp-radio[aria-invalid="true"]:has(input:checked) & {
-    @apply status-invalid-field;
+    outline-style: var(--rp-outline-style);
+    outline-width: 1px;
+    outline-color: var(--danger);
+    --rp-outline-style: solid;
+    outline-style: solid;
+    --rp-ring-offset-width: 3px;
+    &:focus,
+    &:focus-visible,
+    &[data-focused="true"],
+    &[data-focus-visible="true"],
+    &:focus-within,
+    &[data-focus-within="true"] {
+      --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+        var(--rp-ring-color, currentcolor);
+      box-shadow:
+        var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+        var(--rp-ring-shadow), var(--rp-shadow);
+      --rp-ring-color: var(--danger);
+      --rp-ring-offset-width: 0px;
+      --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+        var(--rp-ring-offset-color);
+      --rp-ring-offset-width: 0px;
+      @media (forced-colors: active) {
+        outline-width: 2px;
+        outline-color: Highlight;
+      }
+    }
   }
 }
 
@@ -127,7 +274,11 @@
    ========================================================================== */
 
 .rp-radio__indicator {
-  @apply absolute inset-0 flex items-center justify-center;
+  position: absolute;
+  inset: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   pointer-events: none;
 
@@ -135,7 +286,22 @@
    * pseudo-element from its originating element, and appending its condition after `::before`
    * matches nothing. `:empty` because without it this ties with that rule and loses on order. */
   &:empty {
-    @apply motion-reduce:transition-none;
+    &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+        transition-property: none;
+        &::before,
+        &::after {
+          transition-property: none;
+        }
+      }
+    }
   }
 }
 
@@ -143,7 +309,8 @@
    (e.g., custom icon). When custom content is present, these default dot styles are not applied. */
 .rp-radio__indicator:empty::before {
   content: "";
-  @apply rounded-lg bg-field;
+  border-radius: calc(var(--radius) * 1);
+  background-color: var(--field-background, var(--default));
 
   width: 100%;
   height: 100%;
@@ -158,7 +325,7 @@
 .rp-radio[data-selected] .rp-radio__indicator:empty::before,
 .rp-radio:has([data-slot="radio-content"][aria-checked="true"]) .rp-radio__indicator:empty::before,
 .rp-radio:has(input:checked) .rp-radio__indicator:empty::before {
-  @apply bg-accent-foreground;
+  background-color: var(--accent-foreground);
   scale: 0.4286; /* 6px */
 
   /* Forced Colors Mode paints the control and this dot the same `Canvas`, which leaves a
@@ -184,5 +351,11 @@
    ========================================================================== */
 
 .rp-radio--disabled {
-  @apply status-disabled;
+  opacity: var(--disabled-opacity);
+  cursor: var(--cursor-disabled);
+  pointer-events: none;
+  @media (forced-colors: active) {
+    color: GrayText;
+    border-color: GrayText;
+  }
 }

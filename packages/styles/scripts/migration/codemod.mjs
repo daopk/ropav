@@ -24,7 +24,7 @@ import {
   stylesheets,
   stylesRoot,
 } from "./corpus.mjs";
-import { normalise, propertyBlocks } from "./normalise.mjs";
+import { normalise, propertyBlocks, renameSlots } from "./normalise.mjs";
 import { compileCss, expandApplyLists } from "./oracle.mjs";
 import { compare } from "./verify.mjs";
 import { rewrite } from "./writer.mjs";
@@ -115,11 +115,16 @@ const main = () => {
 
   for (const [file, source] of original) {
     const statements = applyStatements(source);
-    const result = rewrite(source, statements, (list) => {
-      const held = list.split(/\s+/).every((token) => keep.has(token));
+    const result = rewrite(
+      source,
+      statements,
+      (list) => {
+        const held = list.split(/\s+/).every((token) => keep.has(token));
 
-      return held ? null : normalise(expanded.get(list), table);
-    });
+        return held ? null : normalise(expanded.get(list), table);
+      },
+      (css) => renameSlots(css, table),
+    );
 
     writeFileSync(file, result.css);
     replaced += result.replaced;

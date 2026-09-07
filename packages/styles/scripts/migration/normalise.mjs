@@ -54,6 +54,15 @@ export const normalise = (css, { defer = new Set(), drop }) =>
   );
 
 /**
+ * The table's rename, applied to CSS a person wrote rather than to an expansion.
+ *
+ * Two components override the focus ring by declaring `--tw-ring-offset-width: 0px` on its own,
+ * with nothing beside it — the declaration that reads the slot came from the `@apply` above.
+ * Renaming only the generated half leaves the override writing a name nobody reads.
+ */
+export const renameSlots = (css, { defer = new Set() } = {}) => renamed(css, defer);
+
+/**
  * The `@property` blocks the renamed slots need, taken from the ones Tailwind ships.
  *
  * Only the renamed ones. A deferred slot still answers to its old name, which Tailwind is still

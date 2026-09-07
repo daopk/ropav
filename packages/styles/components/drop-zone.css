@@ -1,7 +1,20 @@
 /* Drop zone component styles */
 
 .rp-drop-zone {
-  @apply relative flex w-full flex-col items-center justify-center gap-2 rounded-component p-6 text-center text-sm outline-none;
+  position: relative;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--spacing) * 2);
+  border-radius: var(--component-radius, calc(var(--radius) * 3));
+  padding: calc(var(--spacing) * 6);
+  text-align: center;
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  --rp-outline-style: none;
+  outline-style: none;
 
   /* The dashed edge is this component's whole affordance, so it is painted from `--border`
    * rather than `--field-border`: the default theme sets that to `transparent` with a width of
@@ -18,7 +31,22 @@
   transition:
     background-color 150ms var(--ease-smooth),
     border-color 150ms var(--ease-smooth);
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   @media (hover: hover) {
     &:hover,
@@ -29,7 +57,23 @@
 
   /* The ring is painted for the hidden file input inside, which is what a keyboard focuses. */
   &[data-focus-visible="true"] {
-    @apply status-focused;
+    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+      var(--rp-ring-color, currentcolor);
+    box-shadow:
+      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-ring-offset-width: 0px;
+    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+      var(--rp-ring-offset-color);
+    --rp-ring-offset-color: var(--background);
+    --rp-outline-style: none;
+    outline-style: none;
+    --rp-ring-offset-width: var(--ring-offset-width);
+    @media (forced-colors: active) {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
   }
 
   /* A drag the zone would take. Both the line and the fill move, because the fill alone is a
@@ -67,12 +111,22 @@
   }
 
   &[data-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
   }
 }
 
 .rp-drop-zone__trigger {
-  @apply rounded-field underline underline-offset-2 outline-none;
+  border-radius: var(--field-radius, calc(var(--radius) * 0.75));
+  text-decoration-line: underline;
+  text-underline-offset: 2px;
+  --rp-outline-style: none;
+  outline-style: none;
 
   cursor: var(--cursor-interactive);
 }

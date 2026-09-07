@@ -3,5 +3,13 @@
    ========================================================================== */
 
 .rp-header {
-  @apply w-full px-2 pt-1.5 pb-1 text-start text-xs font-medium text-muted;
+  width: 100%;
+  padding-inline: calc(var(--spacing) * 2);
+  padding-top: calc(var(--spacing) * 1.5);
+  padding-bottom: var(--spacing);
+  text-align: start;
+  font-size: var(--text-xs);
+  line-height: var(--rp-leading, var(--text-xs--line-height));
+  font-weight: var(--font-weight-medium);
+  color: var(--muted);
 }

@@ -1,6 +1,21 @@
 /* Date input group styles */
 .rp-date-input-group {
-  @apply inline-flex h-9 items-center overflow-hidden rounded-field border text-sm text-field-foreground shadow-field outline-none;
+  display: inline-flex;
+  height: calc(var(--spacing) * 9);
+  align-items: center;
+  overflow: hidden;
+  border-radius: var(--field-radius, calc(var(--radius) * 0.75));
+  border-style: var(--rp-border-style);
+  border-width: 1px;
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  color: var(--field-foreground, var(--foreground));
+  --rp-shadow: var(--field-shadow);
+  box-shadow:
+    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+    var(--rp-ring-shadow), var(--rp-shadow);
+  --rp-outline-style: none;
+  outline-style: none;
 
   /* The fill, per state. The `--secondary` variant re-points these and declares nothing else. */
   --date-input-group-bg: var(--field-background, var(--default));
@@ -24,7 +39,22 @@
     background-color 150ms var(--ease-smooth),
     border-color 150ms var(--ease-smooth),
     box-shadow 150ms var(--ease-out);
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   /* Hover state */
   @media (hover: hover) {
@@ -52,12 +82,52 @@
         [data-slot="date-range-picker-trigger"][data-focused="true"]
       )
     ) {
-    @apply status-focused-field;
+    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+      var(--rp-ring-color, currentcolor);
+    box-shadow:
+      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+      var(--rp-ring-offset-color);
+    --rp-outline-style: none;
+    outline-style: none;
+    --rp-ring-offset-width: 0px;
+    @media (forced-colors: active) {
+      outline: 2px solid Highlight;
+      outline-offset: 0;
+    }
   }
 
   /* Invalid state */
   &[data-invalid="true"] {
-    @apply status-invalid-field;
+    outline-style: var(--rp-outline-style);
+    outline-width: 1px;
+    outline-color: var(--danger);
+    --rp-outline-style: solid;
+    outline-style: solid;
+    --rp-ring-offset-width: 3px;
+    &:focus,
+    &:focus-visible,
+    &[data-focused="true"],
+    &[data-focus-visible="true"],
+    &:focus-within,
+    &[data-focus-within="true"] {
+      --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+        var(--rp-ring-color, currentcolor);
+      box-shadow:
+        var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+        var(--rp-ring-shadow), var(--rp-shadow);
+      --rp-ring-color: var(--danger);
+      --rp-ring-offset-width: 0px;
+      --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+        var(--rp-ring-offset-color);
+      --rp-ring-offset-width: 0px;
+      @media (forced-colors: active) {
+        outline-width: 2px;
+        outline-color: Highlight;
+      }
+    }
     background-color: var(--date-input-group-bg-focus);
     border-color: var(--field-border-invalid);
   }
@@ -65,48 +135,97 @@
   /* Disabled state */
   &[data-disabled="true"],
   &[aria-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
   }
 }
 
 .rp-date-input-group__input {
-  @apply flex flex-1 cursor-text items-center gap-px rounded-none border-0 bg-transparent px-3 field-line-md shadow-none outline-none;
+  display: flex;
+  flex: 1;
+  cursor: text;
+  align-items: center;
+  gap: 1px;
+  border-radius: 0;
+  border-style: var(--rp-border-style);
+  border-width: 0px;
+  background-color: transparent;
+  padding-inline: calc(var(--spacing) * 3);
+  padding-block: calc(var(--spacing) * 1.5);
+  font-size: var(--text-base);
+  line-height: var(--rp-leading, var(--text-base--line-height));
+  @media (width >= 40rem) {
+    padding-block: calc(var(--spacing) * 2);
+  }
+  @media (width >= 40rem) {
+    font-size: var(--text-sm);
+    line-height: var(--rp-leading, var(--text-sm--line-height));
+  }
+  --rp-shadow: 0 0 #0000;
+  box-shadow:
+    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+    var(--rp-ring-shadow), var(--rp-shadow);
+  --rp-outline-style: none;
+  outline-style: none;
 
   /* Remove border radius on left side when prefix is present */
   .rp-date-input-group:has([data-slot="date-input-group-prefix"]) & {
-    @apply rounded-s-none ps-2;
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+    padding-inline-start: calc(var(--spacing) * 2);
   }
 
   /* Remove border radius on right side when suffix is present */
   .rp-date-input-group:has([data-slot="date-input-group-suffix"]) & {
-    @apply rounded-e-none pe-2;
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+    padding-inline-end: calc(var(--spacing) * 2);
   }
 
   .rp-date-input-group:has(.rp-date-range-picker__range-separator) & {
     &[slot="start"] {
-      @apply flex-none pe-0;
+      flex: none;
+      padding-inline-end: 0px;
     }
     &[slot="end"] {
-      @apply ps-0;
+      padding-inline-start: 0px;
     }
   }
 
   /* Focus state - handled by group */
   &:focus,
   &:focus-visible {
-    @apply outline-none;
+    --rp-outline-style: none;
+    outline-style: none;
   }
 }
 
 .rp-date-input-group__input-container {
-  @apply flex flex-1 scrollbar-none items-center;
+  display: flex;
+  flex: 1;
+  scrollbar-color: auto;
+  scrollbar-gutter: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  align-items: center;
   width: fit-content;
   overflow-x: auto;
   overflow-y: clip;
 }
 
 .rp-date-input-group__segment {
-  @apply inline-block rounded-md px-0.5 text-end text-nowrap outline-none;
+  display: inline-block;
+  border-radius: calc(var(--radius) * 0.75);
+  padding-inline: calc(var(--spacing) * 0.5);
+  text-align: end;
+  text-wrap: nowrap;
+  --rp-outline-style: none;
+  outline-style: none;
 
   /* The fill and the digits, per state. Five states repaint the text here, so a caller retuning
    * any one of them from a single declaration would take the other four with it. */
@@ -125,7 +244,7 @@
 
   /* Segment separators styling "/" */
   &[data-type="literal"] {
-    @apply p-0;
+    padding: 0px;
 
     color: var(--date-input-group-segment-fg-literal);
   }
@@ -144,7 +263,7 @@
 
   /* Disabled segment */
   &[data-disabled="true"] {
-    @apply opacity-50;
+    opacity: 50%;
   }
 
   /* Invalid segment */
@@ -161,13 +280,22 @@
 }
 
 .rp-date-input-group__prefix {
-  @apply pointer-events-none shrink-0 text-field-placeholder;
-  @apply ms-3 me-0 flex items-center;
+  pointer-events: none;
+  flex-shrink: 0;
+  color: var(--field-placeholder, var(--muted));
+  margin-inline-start: calc(var(--spacing) * 3);
+  margin-inline-end: 0px;
+  display: flex;
+  align-items: center;
 }
 
 .rp-date-input-group__suffix {
-  @apply pointer-events-none shrink-0 text-field-placeholder;
-  @apply me-3 flex items-center;
+  pointer-events: none;
+  flex-shrink: 0;
+  color: var(--field-placeholder, var(--muted));
+  margin-inline-end: calc(var(--spacing) * 3);
+  display: flex;
+  align-items: center;
 }
 
 /* Variant property definitions */
@@ -176,20 +304,23 @@
 }
 
 .rp-date-input-group--secondary {
-  @apply shadow-none;
+  --rp-shadow: 0 0 #0000;
+  box-shadow:
+    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+    var(--rp-ring-shadow), var(--rp-shadow);
 
   --date-input-group-bg: var(--default);
   --date-input-group-bg-hover: var(--default-hover);
   --date-input-group-bg-focus: var(--default);
 
   [data-slot="date-input-group-input"] {
-    @apply bg-transparent;
+    background-color: transparent;
   }
 }
 
 /* Full width modifier */
 .rp-date-input-group--full-width {
-  @apply w-full;
+  width: 100%;
 }
 
 /* ==========================================================================
@@ -197,17 +328,28 @@
    ========================================================================== */
 
 .rp-date-input-group--sm {
-  @apply h-8;
+  height: calc(var(--spacing) * 8);
 
   .rp-date-input-group__input {
-    @apply field-line-sm;
+    padding-block: var(--spacing);
+    font-size: var(--text-base);
+    line-height: var(--rp-leading, var(--text-base--line-height));
+    @media (width >= 40rem) {
+      padding-block: calc(var(--spacing) * 1.5);
+    }
+    @media (width >= 40rem) {
+      font-size: var(--text-sm);
+      line-height: var(--rp-leading, var(--text-sm--line-height));
+    }
   }
 }
 
 .rp-date-input-group--lg {
-  @apply h-10;
+  height: calc(var(--spacing) * 10);
 
   .rp-date-input-group__input {
-    @apply field-line-lg;
+    padding-block: calc(var(--spacing) * 2);
+    font-size: var(--text-base);
+    line-height: var(--rp-leading, var(--text-base--line-height));
   }
 }

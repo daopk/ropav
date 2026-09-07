@@ -1,21 +1,42 @@
 /* Base container */
 .rp-input-otp {
-  @apply relative flex w-full items-center gap-2;
+  position: relative;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: calc(var(--spacing) * 2);
 
   &[data-disabled="true"] {
-    @apply cursor-not-allowed opacity-50;
+    cursor: not-allowed;
+    opacity: 50%;
   }
 }
 
 /* Group - slots separated with gap */
 .rp-input-otp__group {
-  @apply flex min-w-0 items-center gap-2;
+  display: flex;
+  min-width: 0px;
+  align-items: center;
+  gap: calc(var(--spacing) * 2);
 }
 
 /* Individual slot box - fully rounded, standalone */
 .rp-input-otp__slot {
-  @apply relative flex h-10 w-9.5 min-w-0 flex-1 items-center justify-center;
-  @apply border text-field-foreground shadow-field;
+  position: relative;
+  display: flex;
+  height: calc(var(--spacing) * 10);
+  width: calc(var(--spacing) * 9.5);
+  min-width: 0px;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  border-style: var(--rp-border-style);
+  border-width: 1px;
+  color: var(--field-foreground, var(--foreground));
+  --rp-shadow: var(--field-shadow);
+  box-shadow:
+    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+    var(--rp-ring-shadow), var(--rp-shadow);
 
   /* The fill, per state. The `--secondary` variant re-points these and declares nothing else. */
   --input-otp-slot-bg: var(--field-background, var(--default));
@@ -23,7 +44,12 @@
   --input-otp-slot-bg-focus: var(--field-focus);
 
   background-color: var(--input-otp-slot-bg);
-  @apply rounded-field text-sm font-semibold outline-none;
+  border-radius: var(--field-radius, calc(var(--radius) * 0.75));
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  font-weight: var(--font-weight-semibold);
+  --rp-outline-style: none;
+  outline-style: none;
 
   border-width: var(--border-width-field);
   border-color: var(--field-border);
@@ -32,7 +58,22 @@
     background-color 150ms var(--ease-smooth),
     border-color 150ms var(--ease-smooth),
     box-shadow 150ms var(--ease-out);
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   /* Hover */
   @media (hover: hover) {
@@ -45,7 +86,22 @@
 
   /* Active/Focus */
   &[data-active="true"] {
-    @apply z-10 status-focused-field;
+    z-index: 10;
+    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+      var(--rp-ring-color, currentcolor);
+    box-shadow:
+      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+      var(--rp-ring-offset-color);
+    --rp-outline-style: none;
+    outline-style: none;
+    --rp-ring-offset-width: 0px;
+    @media (forced-colors: active) {
+      outline: 2px solid Highlight;
+      outline-offset: 0;
+    }
 
     background-color: var(--input-otp-slot-bg-focus);
   }
@@ -57,33 +113,93 @@
 
   /* Disabled */
   &[data-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
   }
 
   /* Invalid */
   &[data-invalid="true"] {
-    @apply status-invalid-field;
+    outline-style: var(--rp-outline-style);
+    outline-width: 1px;
+    outline-color: var(--danger);
+    --rp-outline-style: solid;
+    outline-style: solid;
+    --rp-ring-offset-width: 3px;
+    &:focus,
+    &:focus-visible,
+    &[data-focused="true"],
+    &[data-focus-visible="true"],
+    &:focus-within,
+    &[data-focus-within="true"] {
+      --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+        var(--rp-ring-color, currentcolor);
+      box-shadow:
+        var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+        var(--rp-ring-shadow), var(--rp-shadow);
+      --rp-ring-color: var(--danger);
+      --rp-ring-offset-width: 0px;
+      --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+        var(--rp-ring-offset-color);
+      --rp-ring-offset-width: 0px;
+      @media (forced-colors: active) {
+        outline-width: 2px;
+        outline-color: Highlight;
+      }
+    }
     background-color: var(--input-otp-slot-bg-focus);
   }
 }
 
 /* Slot value */
 .rp-input-otp__slot-value {
-  @apply text-lg leading-6 tracking-[-0.27px];
+  font-size: var(--text-lg);
+  line-height: var(--rp-leading, var(--text-lg--line-height));
+  --rp-leading: calc(var(--spacing) * 6);
+  line-height: calc(var(--spacing) * 6);
+  letter-spacing: -0.27px;
 
   animation: rp-slot-value-in 250ms var(--ease-smooth) both;
   transform-origin: bottom center;
-  @apply motion-reduce:animate-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    animation: none;
+    &::before,
+    &::after {
+      animation: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      animation: none;
+      &::before,
+      &::after {
+        animation: none;
+      }
+    }
+  }
 }
 
 /* Caret */
 .rp-input-otp__caret {
-  @apply absolute h-4 w-[2px] animate-caret-blink rounded-sm bg-field-placeholder;
+  position: absolute;
+  height: calc(var(--spacing) * 4);
+  width: 2px;
+  animation: rp-caret-blink 1.2s ease-out infinite;
+  border-radius: calc(var(--radius) * 0.5);
+  background-color: var(--field-placeholder, var(--muted));
 }
 
 /* Separator */
 .rp-input-otp__separator {
-  @apply h-[2px] w-[6px] shrink-0 rounded-sm bg-separator;
+  height: 2px;
+  width: 6px;
+  flex-shrink: 0;
+  border-radius: calc(var(--radius) * 0.5);
+  background-color: var(--separator);
 }
 
 /* Variant property definitions */
@@ -92,7 +208,10 @@
 }
 
 .rp-input-otp--secondary .rp-input-otp__slot {
-  @apply shadow-none;
+  --rp-shadow: 0 0 #0000;
+  box-shadow:
+    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+    var(--rp-ring-shadow), var(--rp-shadow);
 
   --input-otp-slot-bg: var(--default);
   --input-otp-slot-bg-hover: var(--default-hover);

@@ -1,4 +1,8 @@
 /* Base description styles */
 .rp-description {
-  @apply text-xs text-wrap wrap-break-word text-muted;
+  font-size: var(--text-xs);
+  line-height: var(--rp-leading, var(--text-xs--line-height));
+  text-wrap: wrap;
+  overflow-wrap: break-word;
+  color: var(--muted);
 }

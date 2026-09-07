@@ -1,30 +1,47 @@
 /* ComboBox styles */
 .rp-combo-box {
-  @apply flex flex-col gap-1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing);
 
   &[data-invalid="true"],
   &[aria-invalid="true"] {
     [data-slot="description"] {
-      @apply hidden;
+      display: none;
     }
   }
 
   [data-slot="label"] {
-    @apply w-fit;
+    width: fit-content;
   }
 
   [data-slot="input"] {
-    @apply min-w-0 flex-1;
+    min-width: 0px;
+    flex: 1;
 
     /* Add inline-end padding when trigger is present */
     &:has(+ .rp-combo-box__trigger) {
-      @apply pe-7;
+      padding-inline-end: calc(var(--spacing) * 7);
     }
 
     /* Focus state (input.css only has focus-visible, but combo-box also needs focus) */
     &:focus,
     &[data-focus] {
-      @apply status-focused-field;
+      --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+        var(--rp-ring-color, currentcolor);
+      box-shadow:
+        var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+        var(--rp-ring-shadow), var(--rp-shadow);
+      --rp-ring-color: var(--focus);
+      --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+        var(--rp-ring-offset-color);
+      --rp-outline-style: none;
+      outline-style: none;
+      --rp-ring-offset-width: 0px;
+      @media (forced-colors: active) {
+        outline: 2px solid Highlight;
+        outline-offset: 0;
+      }
       border-color: var(--field-border-focus);
       background-color: var(--field-focus);
     }
@@ -33,17 +50,31 @@
     &:disabled,
     &[data-disabled],
     &[aria-disabled="true"] {
-      @apply status-disabled;
+      opacity: var(--disabled-opacity);
+      cursor: var(--cursor-disabled);
+      pointer-events: none;
+      @media (forced-colors: active) {
+        color: GrayText;
+        border-color: GrayText;
+      }
     }
   }
 }
 
 .rp-combo-box__input-group {
-  @apply relative isolate inline-flex items-center;
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
 }
 
 .rp-combo-box__value {
-  @apply text-sm wrap-break-word empty:hidden;
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  overflow-wrap: break-word;
+  &:empty {
+    display: none;
+  }
 
   --combo-box-value-fg: var(--field-foreground, var(--foreground));
   --combo-box-value-fg-placeholder: var(--field-placeholder, var(--muted));
@@ -56,15 +87,60 @@
 
   /* Removes the list-box-item indicator element from the combo-box value */
   [data-slot="list-box-item-indicator"] {
-    @apply hidden;
+    display: none;
   }
 }
 
 .rp-combo-box__trigger {
-  @apply absolute end-0 top-1/2 flex h-full shrink-0 -translate-y-1/2 cursor-pointer items-center justify-center pe-2 text-field-placeholder transition duration-150 no-highlight;
+  position: absolute;
+  inset-inline-end: calc(var(--spacing) * 0);
+  top: calc(1 / 2 * 100%);
+  display: flex;
+  height: 100%;
+  flex-shrink: 0;
+  --rp-translate-y: calc(calc(1 / 2 * 100%) * -1);
+  translate: var(--rp-translate-x) var(--rp-translate-y);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  padding-inline-end: calc(var(--spacing) * 2);
+  color: var(--field-placeholder, var(--muted));
+  transition-property:
+    color,
+    background-color,
+    border-color,
+    outline-color,
+    text-decoration-color,
+    fill,
+    stroke,
+    --rp-gradient-from,
+    --rp-gradient-via,
+    --rp-gradient-to,
+    opacity,
+    box-shadow,
+    transform,
+    translate,
+    scale,
+    rotate,
+    filter,
+    -webkit-backdrop-filter,
+    backdrop-filter,
+    display,
+    content-visibility,
+    overlay,
+    pointer-events;
+  transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+  transition-duration: var(--tw-duration, var(--default-transition-duration));
+  --tw-duration: 150ms;
+  transition-duration: 150ms;
+  -webkit-tap-highlight-color: transparent;
 
   /* Remove default button styles */
-  @apply border-none bg-transparent outline-none;
+  --rp-border-style: none;
+  border-style: none;
+  background-color: transparent;
+  --rp-outline-style: none;
+  outline-style: none;
 
   --combo-box-trigger-fg: var(--field-placeholder, var(--muted));
   --combo-box-trigger-fg-hover: var(--field-foreground, var(--foreground));
@@ -82,73 +158,142 @@
   /* Focus visible state */
   &:focus-visible:not(:focus),
   &[data-focus-visible="true"] {
-    @apply rounded ring-2 ring-focus ring-offset-2 ring-offset-background outline-none;
+    border-radius: 0.25rem;
+    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+      var(--rp-ring-color, currentcolor);
+    box-shadow:
+      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-ring-offset-width: 2px;
+    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+      var(--rp-ring-offset-color);
+    --rp-ring-offset-color: var(--background);
+    --rp-outline-style: none;
+    outline-style: none;
   }
 
   /* Pressed state */
   &[data-pressed="true"] {
-    @apply opacity-70;
+    opacity: 70%;
   }
 
   /* Disabled state */
   &:disabled,
   &[data-disabled],
   &[aria-disabled="true"] {
-    @apply cursor-not-allowed opacity-50;
+    cursor: not-allowed;
+    opacity: 50%;
   }
 
   [data-slot="combo-box-trigger-default-icon"] {
-    @apply size-4 transition-transform duration-150 motion-reduce:transition-none;
+    width: calc(var(--spacing) * 4);
+    height: calc(var(--spacing) * 4);
+    transition-property: transform, translate, scale, rotate;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
+    --tw-duration: 150ms;
+    transition-duration: 150ms;
+    &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+        transition-property: none;
+        &::before,
+        &::after {
+          transition-property: none;
+        }
+      }
+    }
   }
 
   /* Rotate icon when trigger is open */
   &[data-open="true"] [data-slot="combo-box-trigger-default-icon"] {
-    @apply rotate-180;
+    rotate: 180deg;
   }
 }
 
 /* Similar to popover content styles */
 .rp-combo-box__popover {
-  @apply min-w-(--trigger-width) origin-(--trigger-anchor-point) scroll-py-1 scrollbar overflow-y-auto overscroll-contain bg-overlay p-0 text-sm;
+  min-width: var(--trigger-width);
+  transform-origin: var(--trigger-anchor-point);
+  scroll-padding-block: var(--spacing);
+  scrollbar-width: var(--scrollbar-width);
+  scrollbar-color: var(--scrollbar-color);
+  scrollbar-gutter: var(--scrollbar-gutter);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background-color: var(--overlay);
+  padding: 0px;
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
   border-radius: min(32px, var(--component-radius));
   box-shadow: var(--shadow-overlay);
 
   /* Focus state */
   &:focus-visible:not(:focus),
   &[data-focus-visible="true"] {
-    @apply outline-none;
+    --rp-outline-style: none;
+    outline-style: none;
   }
 
   /* Entering animations */
   &[data-entering="true"] {
-    @apply animate-in duration-150 ease-smooth fade-in-0 zoom-in-95;
+    animation: enter var(--tw-animation-duration, var(--tw-duration, 0.15s)) var(--tw-ease, ease)
+      var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
+      var(--tw-animation-direction, normal) var(--tw-animation-fill-mode, none);
+    --tw-duration: 150ms;
+    transition-duration: 150ms;
+    --tw-ease: ease;
+    transition-timing-function: ease;
+    --tw-enter-opacity: calc(0/100);
+    --tw-enter-opacity: 0;
+    --tw-enter-scale: calc(95*1%);
+    --tw-enter-scale: 0.95;
 
     /* Placement-specific translations */
     &[data-placement="top"] {
-      @apply slide-in-from-bottom-1;
+      --tw-enter-translate-y: calc(1*var(--spacing));
     }
 
     &[data-placement="bottom"] {
-      @apply slide-in-from-top-1;
+      --tw-enter-translate-y: calc(1*var(--spacing)*-1);
     }
 
     &[data-placement="left"] {
-      @apply slide-in-from-right-1;
+      --tw-enter-translate-x: calc(1*var(--spacing));
     }
 
     &[data-placement="right"] {
-      @apply slide-in-from-left-1;
+      --tw-enter-translate-x: calc(1*var(--spacing)*-1);
     }
   }
 
   /* Exiting animations */
   &[data-exiting="true"] {
-    @apply animate-out duration-100 ease-smooth zoom-out-95 fade-out;
+    animation: exit var(--tw-animation-duration, var(--tw-duration, 0.15s)) var(--tw-ease, ease)
+      var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
+      var(--tw-animation-direction, normal) var(--tw-animation-fill-mode, none);
+    --tw-duration: 100ms;
+    transition-duration: 100ms;
+    --tw-ease: ease;
+    transition-timing-function: ease;
+    --tw-exit-scale: calc(95*1%);
+    --tw-exit-scale: 0.95;
+    --tw-exit-opacity: 0;
   }
 
   &[data-exiting="true"],
   &[data-entering="true"] {
-    @apply transition-[opacity,transform] will-change-[opacity,transform];
+    transition-property: opacity, transform;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
+    will-change: opacity, transform;
   }
 
   /* Arrow styling */
@@ -171,15 +316,17 @@
 
   /* Listbox styles */
   [data-slot="list-box"] {
-    @apply p-1.5 outline-none;
+    padding: calc(var(--spacing) * 1.5);
+    --rp-outline-style: none;
+    outline-style: none;
   }
 
   [data-slot="list-box-item"] {
-    @apply px-2.5;
+    padding-inline: calc(var(--spacing) * 2.5);
 
     /* As the combo-box is single-select, we don't need to animate the checkmark */
     [data-slot="list-box-item-indicator--checkmark"] {
-      @apply transition-none;
+      transition-property: none;
     }
   }
 }
@@ -192,23 +339,26 @@
  * left - reached from the popover's own class, since it is teleported out of this tree. */
 .rp-combo-box__popover--sm {
   [data-slot="list-box-item"] {
-    @apply min-h-8 py-1;
+    min-height: calc(var(--spacing) * 8);
+    padding-block: var(--spacing);
   }
 }
 
 .rp-combo-box__popover--lg {
-  @apply text-base;
+  font-size: var(--text-base);
+  line-height: var(--rp-leading, var(--text-base--line-height));
 
   [data-slot="list-box-item"] {
-    @apply min-h-10 py-2;
+    min-height: calc(var(--spacing) * 10);
+    padding-block: calc(var(--spacing) * 2);
   }
 }
 
 /* Full width modifier */
 .rp-combo-box--full-width {
-  @apply w-full;
+  width: 100%;
 }
 
 .rp-combo-box__input-group--full-width {
-  @apply w-full;
+  width: 100%;
 }

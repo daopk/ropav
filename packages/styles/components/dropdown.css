@@ -3,7 +3,9 @@
    ========================================================================== */
 
 .rp-dropdown {
-  @apply flex flex-col gap-1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing);
 }
 
 .rp-dropdown__trigger {
@@ -15,14 +17,32 @@
    * forced colors for the same reason - the control's edge there is the borrowed class's to draw,
    * and a trigger wearing no such class has none to strip. */
   @media not (forced-colors: active) {
-    @apply outline-none;
+    --rp-outline-style: none;
+    outline-style: none;
   }
 
   transition:
     transform 250ms var(--ease-out-quart),
     background-color 150ms var(--ease-smooth),
     box-shadow 150ms var(--ease-out);
-  @apply transform-gpu motion-reduce:transition-none;
+  transform: translateZ(0) var(--rp-rotate-x,) var(--rp-rotate-y,) var(--rp-rotate-z,)
+    var(--rp-skew-x,) var(--rp-skew-y,);
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   /* Cursor */
   cursor: var(--cursor-interactive);
@@ -30,18 +50,40 @@
   /* Focus state */
   &:focus-visible:not(:focus),
   &[data-focus-visible="true"] {
-    @apply status-focused;
+    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+      var(--rp-ring-color, currentcolor);
+    box-shadow:
+      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-ring-offset-width: 0px;
+    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+      var(--rp-ring-offset-color);
+    --rp-ring-offset-color: var(--background);
+    --rp-outline-style: none;
+    outline-style: none;
+    --rp-ring-offset-width: var(--ring-offset-width);
+    @media (forced-colors: active) {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
   }
 
   /* Disabled state */
   &:disabled,
   &[aria-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
   }
 
   /* Pending state */
   &[data-pending="true"] {
-    @apply status-pending;
+    pointer-events: none;
   }
 
   /* Default active/pressed state - scale transform */
@@ -53,46 +95,84 @@
 
 /* Similar to select popover styles */
 .rp-dropdown__popover {
-  @apply max-w-[48svw] origin-(--trigger-anchor-point) scroll-py-1 scrollbar overflow-y-auto overscroll-contain bg-overlay p-0 text-sm will-change-transform md:min-w-55;
+  max-width: 48svw;
+  transform-origin: var(--trigger-anchor-point);
+  scroll-padding-block: var(--spacing);
+  scrollbar-width: var(--scrollbar-width);
+  scrollbar-color: var(--scrollbar-color);
+  scrollbar-gutter: var(--scrollbar-gutter);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background-color: var(--overlay);
+  padding: 0px;
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  will-change: transform;
+  @media (width >= 48rem) {
+    min-width: calc(var(--spacing) * 55);
+  }
   border-radius: min(32px, var(--component-radius));
   box-shadow: var(--shadow-overlay);
 
   /* Focus state */
   &:focus-visible:not(:focus),
   &[data-focus-visible="true"] {
-    @apply outline-none;
+    --rp-outline-style: none;
+    outline-style: none;
   }
 
   /* Entering animations */
   &[data-entering="true"] {
-    @apply animate-in duration-150 ease-smooth fade-in-0 zoom-in-90;
+    animation: enter var(--tw-animation-duration, var(--tw-duration, 0.15s)) var(--tw-ease, ease)
+      var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
+      var(--tw-animation-direction, normal) var(--tw-animation-fill-mode, none);
+    --tw-duration: 150ms;
+    transition-duration: 150ms;
+    --tw-ease: ease;
+    transition-timing-function: ease;
+    --tw-enter-opacity: calc(0/100);
+    --tw-enter-opacity: 0;
+    --tw-enter-scale: calc(90*1%);
+    --tw-enter-scale: 0.9;
 
     /* Placement-specific translations */
     &[data-placement="top"] {
-      @apply slide-in-from-bottom-1;
+      --tw-enter-translate-y: calc(1*var(--spacing));
     }
 
     &[data-placement="bottom"] {
-      @apply slide-in-from-top-1;
+      --tw-enter-translate-y: calc(1*var(--spacing)*-1);
     }
 
     &[data-placement="left"] {
-      @apply slide-in-from-right-1;
+      --tw-enter-translate-x: calc(1*var(--spacing));
     }
 
     &[data-placement="right"] {
-      @apply slide-in-from-left-1;
+      --tw-enter-translate-x: calc(1*var(--spacing)*-1);
     }
   }
 
   /* Exiting animations */
   &[data-exiting="true"] {
-    @apply animate-out duration-100 ease-smooth zoom-out-95 fade-out;
+    animation: exit var(--tw-animation-duration, var(--tw-duration, 0.15s)) var(--tw-ease, ease)
+      var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
+      var(--tw-animation-direction, normal) var(--tw-animation-fill-mode, none);
+    --tw-duration: 100ms;
+    transition-duration: 100ms;
+    --tw-ease: ease;
+    transition-timing-function: ease;
+    --tw-exit-scale: calc(95*1%);
+    --tw-exit-scale: 0.95;
+    --tw-exit-opacity: 0;
   }
 
   &[data-exiting="true"],
   &[data-entering="true"] {
-    @apply transition-[opacity,transform] will-change-[opacity,transform];
+    transition-property: opacity, transform;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
+    will-change: opacity, transform;
   }
 
   /* Arrow styling */
@@ -117,10 +197,13 @@
    * they sit here rather than on `.rp-dropdown__menu` because `menu.css` is imported after this file
    * and would otherwise win at equal specificity. */
   [data-slot="dropdown-menu"] {
-    @apply gap-0.5 p-1.5 outline-none;
+    gap: calc(var(--spacing) * 0.5);
+    padding: calc(var(--spacing) * 1.5);
+    --rp-outline-style: none;
+    outline-style: none;
   }
 
   [data-slot="menu-item"] {
-    @apply px-2.5;
+    padding-inline: calc(var(--spacing) * 2.5);
   }
 }

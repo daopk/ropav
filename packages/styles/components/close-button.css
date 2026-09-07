@@ -2,7 +2,20 @@
 
 /* Base close button styles */
 .rp-close-button {
-  @apply relative isolate inline-flex h-6 w-6 shrink-0 origin-center items-center justify-center rounded-xl p-1 select-none no-highlight;
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  height: calc(var(--spacing) * 6);
+  width: calc(var(--spacing) * 6);
+  flex-shrink: 0;
+  transform-origin: center;
+  align-items: center;
+  justify-content: center;
+  border-radius: calc(var(--radius) * 1.5);
+  padding: var(--spacing);
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 
   /* Cursor */
   cursor: var(--cursor-interactive);
@@ -12,36 +25,79 @@
     color 150ms var(--ease-out),
     background-color 100ms var(--ease-out),
     box-shadow 150ms var(--ease-out);
-  @apply transform-gpu motion-reduce:transition-none;
+  transform: translateZ(0) var(--rp-rotate-x,) var(--rp-rotate-y,) var(--rp-rotate-z,)
+    var(--rp-skew-x,) var(--rp-skew-y,);
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   /* Focus visible state */
   &:focus-visible:not(:focus),
   &[data-focus-visible="true"] {
-    @apply status-focused;
+    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+      var(--rp-ring-color, currentcolor);
+    box-shadow:
+      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-ring-offset-width: 0px;
+    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+      var(--rp-ring-offset-color);
+    --rp-ring-offset-color: var(--background);
+    --rp-outline-style: none;
+    outline-style: none;
+    --rp-ring-offset-width: var(--ring-offset-width);
+    @media (forced-colors: active) {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
   }
 
   /* Disabled state */
   &:disabled,
   &[aria-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
   }
 
   /* Pending state */
   &[data-pending="true"] {
-    @apply status-pending;
+    pointer-events: none;
   }
 
   /* SVG icon styling*/
   & svg {
-    @apply pointer-events-none;
-    @apply size-4 shrink-0 self-center;
-    @apply -mx-0.5 my-0.5;
+    pointer-events: none;
+    width: calc(var(--spacing) * 4);
+    height: calc(var(--spacing) * 4);
+    flex-shrink: 0;
+    align-self: center;
+    margin-inline: calc(var(--spacing) * -0.5);
+    margin-block: calc(var(--spacing) * 0.5);
   }
 }
 
 /* Variants */
 .rp-close-button--default {
-  @apply text-muted;
+  color: var(--muted);
 
   --close-button-bg: var(--default);
   --close-button-bg-hover: var(--default-hover);

@@ -2,19 +2,30 @@
 
 /* Base separator with default horizontal orientation */
 .rp-separator {
-  @apply shrink-0 rounded-sm border-t-0 border-b-0 bg-separator;
+  flex-shrink: 0;
+  border-radius: calc(var(--radius) * 0.5);
+  border-top-style: var(--rp-border-style);
+  border-top-width: 0px;
+  border-bottom-style: var(--rp-border-style);
+  border-bottom-width: 0px;
+  background-color: var(--separator);
 
   /* Default size - horizontal orientation */
-  @apply h-px w-full;
+  height: 1px;
+  width: 100%;
 }
 
 /* Orientation variants */
 .rp-separator--horizontal {
-  @apply h-px w-full;
+  height: 1px;
+  width: 100%;
 }
 
 .rp-separator--vertical {
-  @apply h-auto min-h-2 w-px self-stretch;
+  height: auto;
+  min-height: calc(var(--spacing) * 2);
+  width: 1px;
+  align-self: stretch;
 }
 
 /* Color variants
@@ -24,7 +35,7 @@
  * each one sets `background-color` after the base rule and would otherwise win. All three land on
  * the same ink - the mode has no second tier to give them. */
 .rp-separator--default {
-  @apply bg-separator;
+  background-color: var(--separator);
 
   @media (forced-colors: active) {
     background-color: CanvasText;
@@ -32,7 +43,7 @@
 }
 
 .rp-separator--secondary {
-  @apply bg-separator-secondary;
+  background-color: var(--separator-secondary);
 
   @media (forced-colors: active) {
     background-color: CanvasText;
@@ -40,7 +51,7 @@
 }
 
 .rp-separator--tertiary {
-  @apply bg-separator-tertiary;
+  background-color: var(--separator-tertiary);
 
   @media (forced-colors: active) {
     background-color: CanvasText;
@@ -48,29 +59,40 @@
 }
 
 .rp-separator__container {
-  @apply flex items-center gap-3;
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing) * 3);
 }
 
 .rp-separator__container--horizontal {
-  @apply w-full flex-row;
+  width: 100%;
+  flex-direction: row;
 }
 
 .rp-separator__container--vertical {
-  @apply h-full flex-col justify-center;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .rp-separator__line {
-  @apply shrink-0 grow;
+  flex-shrink: 0;
+  flex-grow: 1;
 }
 
 .rp-separator__content {
-  @apply inline-flex items-center justify-center text-center whitespace-nowrap text-muted;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--muted);
 }
 
 .rp-separator__content--horizontal {
-  @apply text-center;
+  text-align: center;
 }
 
 .rp-separator__content--vertical {
-  @apply text-center;
+  text-align: center;
 }

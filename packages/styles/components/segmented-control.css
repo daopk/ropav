@@ -8,7 +8,12 @@
    ========================================================================== */
 
 .rp-segmented-control {
-  @apply relative inline-flex w-max items-center bg-default p-1;
+  position: relative;
+  display: inline-flex;
+  width: max-content;
+  align-items: center;
+  background-color: var(--default);
+  padding: var(--spacing);
 
   /* The same corner a button of this size wears, not a larger one stepped out by the padding.
    * The size scale already lines the track up with a button and a field; a corner of its own
@@ -29,7 +34,13 @@
 
   /* Disabled state */
   &[data-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
   }
 }
 
@@ -38,7 +49,30 @@
    ========================================================================== */
 
 .rp-segmented-control__item {
-  @apply relative inline-flex h-7 min-w-0 shrink-0 appearance-none items-center justify-center gap-2 rounded-component border-0 bg-transparent px-3 text-center text-sm font-medium whitespace-nowrap outline-none select-none no-highlight;
+  position: relative;
+  display: inline-flex;
+  height: calc(var(--spacing) * 7);
+  min-width: 0px;
+  flex-shrink: 0;
+  appearance: none;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--spacing) * 2);
+  border-radius: var(--component-radius, calc(var(--radius) * 3));
+  border-style: var(--rp-border-style);
+  border-width: 0px;
+  background-color: transparent;
+  padding-inline: calc(var(--spacing) * 3);
+  text-align: center;
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+  --rp-outline-style: none;
+  outline-style: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 
   --segmented-control-item-fg: var(--muted);
   --segmented-control-item-fg-hover: var(--foreground);
@@ -52,7 +86,22 @@
   transition:
     color 150ms var(--ease-smooth),
     opacity 150ms var(--ease-smooth);
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   /* Selected state */
   &[data-selected="true"] {
@@ -78,25 +127,47 @@
   /* Pressed states - both approaches for compatibility */
   &:not([data-disabled="true"]):active,
   &[data-pressed="true"]:not([data-disabled="true"]) {
-    @apply opacity-70;
+    opacity: 70%;
   }
 
   /* Focus states - comprehensive fallback */
   &:focus-visible:not(:focus),
   &[data-focus-visible="true"] {
-    @apply status-focused;
+    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+      var(--rp-ring-color, currentcolor);
+    box-shadow:
+      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-ring-offset-width: 0px;
+    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+      var(--rp-ring-offset-color);
+    --rp-ring-offset-color: var(--background);
+    --rp-outline-style: none;
+    outline-style: none;
+    --rp-ring-offset-width: var(--ring-offset-width);
+    @media (forced-colors: active) {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
 
     /* Written after the utility, which sets this same property. Inset and offsetless so the ring
      * stays inside the track's padding instead of spilling over its rounded edge - the same
      * correction ToggleButtonGroup makes for an attached row. */
-    --tw-ring-offset-width: 0px;
-    @apply ring-inset;
+    --rp-ring-offset-width: 0px;
+    --rp-ring-inset: inset;
   }
 
   /* Disabled state */
   &:disabled,
   &[data-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
   }
 }
 
@@ -107,14 +178,39 @@
    ========================================================================== */
 
 .rp-segmented-control__separator {
-  @apply pointer-events-none absolute start-0 top-1/4 h-1/2 w-px rounded-sm bg-muted/25;
+  pointer-events: none;
+  position: absolute;
+  inset-inline-start: calc(var(--spacing) * 0);
+  top: calc(1 / 4 * 100%);
+  height: calc(1 / 2 * 100%);
+  width: 1px;
+  border-radius: calc(var(--radius) * 0.5);
+  background-color: var(--muted);
+  @supports (color: color-mix(in lab, red, red)) {
+    background-color: color-mix(in oklab, var(--muted) 25%, transparent);
+  }
 
   transition: opacity 150ms var(--ease-smooth);
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   /* Nothing to divide in front of the first segment. */
   .rp-segmented-control__item:first-child & {
-    @apply opacity-0;
+    opacity: 0%;
   }
 }
 
@@ -124,7 +220,7 @@
 .rp-segmented-control__item[data-selected="true"]
   + .rp-segmented-control__item
   .rp-segmented-control__separator {
-  @apply opacity-0;
+  opacity: 0%;
 }
 
 /* ==========================================================================
@@ -134,7 +230,17 @@
    ========================================================================== */
 
 .rp-segmented-control__indicator {
-  @apply absolute start-0 top-0 size-full rounded-component bg-segment shadow-surface;
+  position: absolute;
+  inset-inline-start: calc(var(--spacing) * 0);
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--component-radius, calc(var(--radius) * 3));
+  background-color: var(--segment);
+  --rp-shadow: var(--surface-shadow);
+  box-shadow:
+    var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+    var(--rp-ring-shadow), var(--rp-shadow);
 
   z-index: -1;
 
@@ -154,7 +260,22 @@
   transition-duration: 250ms;
   transition-property: translate, width, height;
   transition-timing-function: var(--ease-out-fluid);
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 }
 
 /* ==========================================================================
@@ -164,7 +285,10 @@
    ========================================================================== */
 
 .rp-segmented-control--sm .rp-segmented-control__item {
-  @apply h-6 px-2.5 text-xs;
+  height: calc(var(--spacing) * 6);
+  padding-inline: calc(var(--spacing) * 2.5);
+  font-size: var(--text-xs);
+  line-height: var(--rp-leading, var(--text-xs--line-height));
 }
 
 .rp-segmented-control--md {
@@ -172,7 +296,8 @@
 }
 
 .rp-segmented-control--lg .rp-segmented-control__item {
-  @apply h-8 px-4;
+  height: calc(var(--spacing) * 8);
+  padding-inline: calc(var(--spacing) * 4);
 }
 
 /* ==========================================================================
@@ -180,9 +305,10 @@
    ========================================================================== */
 
 .rp-segmented-control--full-width {
-  @apply flex w-full;
+  display: flex;
+  width: 100%;
 
   .rp-segmented-control__item {
-    @apply flex-1;
+    flex: 1;
   }
 }

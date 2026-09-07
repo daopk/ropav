@@ -1,11 +1,38 @@
 /* Field error styles */
 .rp-field-error {
-  @apply h-0 px-1 text-xs wrap-break-word text-danger opacity-0 data-visible:h-auto data-visible:opacity-100;
+  height: 0px;
+  padding-inline: var(--spacing);
+  font-size: var(--text-xs);
+  line-height: var(--rp-leading, var(--text-xs--line-height));
+  overflow-wrap: break-word;
+  color: var(--danger);
+  opacity: 0%;
+  &[data-visible] {
+    height: auto;
+  }
+  &[data-visible] {
+    opacity: 100%;
+  }
 
   transition:
     opacity 150ms var(--ease-out),
     height 350ms var(--ease-smooth);
-  @apply motion-reduce:transition-none;
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 }
 
 /*
@@ -18,6 +45,11 @@
 .rp-switch > [data-slot="field-error"],
 .rp-radio > .rp-field-error,
 .rp-radio > [data-slot="field-error"] {
-  @apply m-0 h-auto min-h-0 p-0 text-muted opacity-100;
+  margin: 0px;
+  height: auto;
+  min-height: 0px;
+  padding: 0px;
+  color: var(--muted);
+  opacity: 100%;
   transition: none;
 }

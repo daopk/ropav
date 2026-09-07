@@ -48,12 +48,16 @@ const copyCssDirectory = (dirName) => {
   }
 };
 
-// Copy the root stylesheets: the two entries plus the core they share
-for (const file of ["index.css", "no-preflight.css", "core.css"]) {
-  const rootFile = path.join(rootDir, file);
-
-  if (!fs.existsSync(rootFile)) continue;
-  fs.copyFileSync(rootFile, path.join(distDir, file));
+/*
+ * The root stylesheets, read off the directory rather than listed.
+ *
+ * A list here was three names long and silently skipped anything missing, so adding a fourth root
+ * file left the entry importing something `dist/` did not have — which surfaces as a resolver
+ * error from inside the bundler, several steps away from the cause.
+ */
+for (const file of fs.readdirSync(rootDir)) {
+  if (!file.endsWith(".css") || file.startsWith(".")) continue;
+  fs.copyFileSync(path.join(rootDir, file), path.join(distDir, file));
   console.log(`✓ Copied: ${file}`);
 }
 

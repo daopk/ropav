@@ -4,13 +4,49 @@
 
 /* Base styles */
 .rp-toggle-button {
-  @apply relative isolate inline-flex h-9 w-fit origin-center items-center justify-center gap-2 rounded-component px-4 text-sm font-medium whitespace-nowrap outline-none select-none no-highlight;
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  height: calc(var(--spacing) * 9);
+  width: fit-content;
+  transform-origin: center;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--spacing) * 2);
+  border-radius: var(--component-radius, calc(var(--radius) * 3));
+  padding-inline: calc(var(--spacing) * 4);
+  font-size: var(--text-sm);
+  line-height: var(--rp-leading, var(--text-sm--line-height));
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+  --rp-outline-style: none;
+  outline-style: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 
   transition:
     transform 250ms var(--ease-smooth),
     background-color 100ms var(--ease-out),
     box-shadow 100ms var(--ease-out);
-  @apply transform-gpu motion-reduce:transition-none;
+  transform: translateZ(0) var(--rp-rotate-x,) var(--rp-rotate-y,) var(--rp-rotate-z,)
+    var(--rp-skew-x,) var(--rp-skew-y,);
+  &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+    transition-property: none;
+    &::before,
+    &::after {
+      transition-property: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+  }
 
   /* Forced Colors Mode flattens the fill onto the page and strips the shadow, leaving a control
    * that reads as bare text. `ButtonBorder` is the keyword the platform uses for a control's
@@ -42,13 +78,35 @@
   /* Focus state */
   &:focus-visible:not(:focus),
   &[data-focus-visible="true"] {
-    @apply status-focused;
+    --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+      var(--rp-ring-color, currentcolor);
+    box-shadow:
+      var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+      var(--rp-ring-shadow), var(--rp-shadow);
+    --rp-ring-color: var(--focus);
+    --rp-ring-offset-width: 0px;
+    --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+      var(--rp-ring-offset-color);
+    --rp-ring-offset-color: var(--background);
+    --rp-outline-style: none;
+    outline-style: none;
+    --rp-ring-offset-width: var(--ring-offset-width);
+    @media (forced-colors: active) {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
   }
 
   /* Disabled state */
   &:disabled,
   &[aria-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
   }
 
   /* Hover */
@@ -70,7 +128,12 @@
   &[data-selected="true"] {
     background-color: var(--toggle-button-bg-selected);
     color: var(--toggle-button-fg-selected);
-    @apply forced-selected;
+    @media (forced-colors: active) {
+      forced-color-adjust: none;
+      background-color: Highlight;
+      border-color: Highlight;
+      color: HighlightText;
+    }
 
     @media (hover: hover) {
       &:hover,
@@ -87,7 +150,13 @@
 
   /* SVG icon styling */
   & svg {
-    @apply pointer-events-none -mx-0.5 my-1 size-4 shrink-0 self-center;
+    pointer-events: none;
+    margin-inline: calc(var(--spacing) * -0.5);
+    margin-block: var(--spacing);
+    width: calc(var(--spacing) * 4);
+    height: calc(var(--spacing) * 4);
+    flex-shrink: 0;
+    align-self: center;
   }
 }
 
@@ -96,7 +165,8 @@
    ========================================================================== */
 
 .rp-toggle-button--sm {
-  @apply h-8 px-3;
+  height: calc(var(--spacing) * 8);
+  padding-inline: calc(var(--spacing) * 3);
 
   &:active,
   &[data-pressed="true"] {
@@ -109,7 +179,9 @@
 }
 
 .rp-toggle-button--lg {
-  @apply h-10 text-base;
+  height: calc(var(--spacing) * 10);
+  font-size: var(--text-base);
+  line-height: var(--rp-leading, var(--text-base--line-height));
 
   &:active,
   &[data-pressed="true"] {
@@ -139,13 +211,14 @@
    ========================================================================== */
 
 .rp-toggle-button--icon-only {
-  @apply w-9 p-0;
+  width: calc(var(--spacing) * 9);
+  padding: 0px;
 }
 
 .rp-toggle-button--icon-only.rp-toggle-button--sm {
-  @apply w-8;
+  width: calc(var(--spacing) * 8);
 }
 
 .rp-toggle-button--icon-only.rp-toggle-button--lg {
-  @apply w-10;
+  width: calc(var(--spacing) * 10);
 }

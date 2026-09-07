@@ -1,23 +1,25 @@
 /* Text field styles */
 /* use textfield instead of text-field to avoid conflict with Tailwind `text-` prefix */
 .rp-textfield {
-  @apply flex flex-col gap-1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing);
 
   &[data-invalid="true"],
   &[aria-invalid="true"] {
     [data-slot="description"] {
-      @apply hidden;
+      display: none;
     }
   }
 }
 
 /* Full width modifier */
 .rp-textfield--full-width {
-  @apply w-full;
+  width: 100%;
 
   /* Automatically make Input full width when TextField is full width */
   [data-slot="input"],
   [data-slot="textarea"] {
-    @apply w-full;
+    width: 100%;
   }
 }

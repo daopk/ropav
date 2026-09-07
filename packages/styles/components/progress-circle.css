@@ -4,7 +4,9 @@
 
 /* Base styles */
 .rp-progress-circle {
-  @apply inline-flex items-center justify-center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
   /* Default color token (accent) */
   --progress-circle-stroke: var(--accent);
@@ -12,7 +14,8 @@
 
   .rp-progress-circle__track {
     /* Default size (matches --md) */
-    @apply size-7;
+    width: calc(var(--spacing) * 7);
+    height: calc(var(--spacing) * 7);
   }
 
   .rp-progress-circle__track-circle {
@@ -35,7 +38,22 @@
     }
 
     transition: stroke-dashoffset 300ms var(--ease-out);
-    @apply motion-reduce:transition-none;
+    &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+        transition-property: none;
+        &::before,
+        &::after {
+          transition-property: none;
+        }
+      }
+    }
   }
 
   /* Indeterminate state - when no aria-valuenow is set */
@@ -43,7 +61,22 @@
     .rp-progress-circle__track {
       animation: rp-progress-circle-spin 1s linear infinite;
 
-      @apply motion-reduce:animate-none;
+      &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+        animation: none;
+        &::before,
+        &::after {
+          animation: none;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+          animation: none;
+          &::before,
+          &::after {
+            animation: none;
+          }
+        }
+      }
     }
   }
 
@@ -51,7 +84,13 @@
   &:disabled,
   &[data-disabled="true"],
   &[aria-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
   }
 }
 
@@ -74,7 +113,8 @@
 
 .rp-progress-circle--sm {
   .rp-progress-circle__track {
-    @apply size-5;
+    width: calc(var(--spacing) * 5);
+    height: calc(var(--spacing) * 5);
   }
 }
 
@@ -84,7 +124,8 @@
 
 .rp-progress-circle--lg {
   .rp-progress-circle__track {
-    @apply size-9;
+    width: calc(var(--spacing) * 9);
+    height: calc(var(--spacing) * 9);
   }
 }
 

@@ -122,7 +122,14 @@ export const renderAll = (cases: Case[], modes: Mode[], doc: Document) => {
        */
       const box = doc.createElement("div");
 
-      box.setAttribute("style", "position:relative;width:1280px;height:720px");
+      /*
+       * `contain: layout` as well as a size, because a size alone does not hold a `position:
+       * fixed` element — that resolves against the viewport, from a static position that moves
+       * whenever the document's height does. Adding or removing rules changes how many cases are
+       * mounted, so a toast region's `top` would report a different number every time the
+       * stylesheet gained or lost one. Containment makes the box their containing block too.
+       */
+      box.setAttribute("style", "position:relative;contain:layout;width:1280px;height:720px");
       box.append(built.root, referenceRoot);
       wrapper.appendChild(box);
       byId.set(item.id, { pseudoElement: built.pseudoElement, reference, target: built.target });

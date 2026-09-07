@@ -1,7 +1,9 @@
 /* Slider styles */
 
 .rp-slider {
-  @apply grid w-full gap-1;
+  display: grid;
+  width: 100%;
+  gap: var(--spacing);
 
   grid-template-areas:
     "label output"
@@ -9,19 +11,28 @@
   grid-template-columns: 1fr auto;
 
   [data-slot="label"] {
-    @apply w-fit text-sm font-medium;
+    width: fit-content;
+    font-size: var(--text-sm);
+    line-height: var(--rp-leading, var(--text-sm--line-height));
+    font-weight: var(--font-weight-medium);
 
     grid-area: label;
   }
 
   .rp-slider__output {
-    @apply text-sm font-medium tabular-nums;
+    font-size: var(--text-sm);
+    line-height: var(--rp-leading, var(--text-sm--line-height));
+    font-weight: var(--font-weight-medium);
+    --rp-numeric-spacing: tabular-nums;
+    font-variant-numeric: var(--rp-ordinal,) var(--rp-slashed-zero,) var(--rp-numeric-figure,)
+      var(--rp-numeric-spacing,) var(--rp-numeric-fraction,);
 
     grid-area: output;
   }
 
   .rp-slider__track {
-    @apply relative bg-default;
+    position: relative;
+    background-color: var(--default);
 
     border-radius: min(32px, var(--component-radius));
 
@@ -38,7 +49,9 @@
   }
 
   .rp-slider__fill {
-    @apply pointer-events-none absolute bg-accent;
+    pointer-events: none;
+    position: absolute;
+    background-color: var(--accent);
 
     /* The only thing showing how far along the value is */
     @media (forced-colors: active) {
@@ -48,7 +61,13 @@
 
   .rp-slider__thumb {
     /* Flex container for centering pseudo-elements */
-    @apply absolute flex cursor-grab items-center justify-center bg-accent no-highlight;
+    position: absolute;
+    display: flex;
+    cursor: grab;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--accent);
+    -webkit-tap-highlight-color: transparent;
 
     border-radius: min(32px, var(--component-radius));
 
@@ -63,11 +82,33 @@
       background-color 250ms var(--ease-smooth),
       transform 250ms var(--ease-out),
       box-shadow 150ms var(--ease-out);
-    @apply motion-reduce:transition-none;
+    &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+      transition-property: none;
+      &::before,
+      &::after {
+        transition-property: none;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+        transition-property: none;
+        &::before,
+        &::after {
+          transition-property: none;
+        }
+      }
+    }
 
     /* after: Visible thumb element */
     &::after {
-      @apply relative z-10 bg-accent-foreground text-black shadow-field;
+      position: relative;
+      z-index: 10;
+      background-color: var(--accent-foreground);
+      color: var(--color-black);
+      --rp-shadow: var(--field-shadow);
+      box-shadow:
+        var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+        var(--rp-ring-shadow), var(--rp-shadow);
       content: "";
 
       border-radius: min(32px, var(--component-radius));
@@ -81,26 +122,70 @@
         outline-offset: -2px;
       }
 
-      @apply origin-center transition-all;
+      transform-origin: center;
+      transition-property: all;
+      transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+      transition-duration: var(--tw-duration, var(--default-transition-duration));
     }
 
     /* Dragging state - cursor changes and thumb scales down */
     &[data-dragging="true"] {
-      @apply cursor-grabbing;
+      cursor: grabbing;
 
       &::after {
-        @apply scale-[0.9] motion-reduce:scale-100;
+        scale: 0.9;
+        &:is([data-reduce-motion="true"], [data-reduce-motion="true"] *) {
+          --rp-scale-x: 100%;
+          --rp-scale-y: 100%;
+          scale: var(--rp-scale-x) var(--rp-scale-y);
+          &::before,
+          &::after {
+            --rp-scale-x: 100%;
+            --rp-scale-y: 100%;
+            scale: var(--rp-scale-x) var(--rp-scale-y);
+          }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          &:not(:is([data-reduce-motion="true"], [data-reduce-motion="true"] *)) {
+            --rp-scale-x: 100%;
+            --rp-scale-y: 100%;
+            scale: var(--rp-scale-x) var(--rp-scale-y);
+            &::before,
+            &::after {
+              --rp-scale-x: 100%;
+              --rp-scale-y: 100%;
+              scale: var(--rp-scale-x) var(--rp-scale-y);
+            }
+          }
+        }
       }
     }
 
     /* Focus state - increase z-index */
     &[data-focus-visible="true"] {
-      @apply z-10 status-focused;
+      z-index: 10;
+      --rp-ring-shadow: var(--rp-ring-inset,) 0 0 0 calc(2px + var(--rp-ring-offset-width))
+        var(--rp-ring-color, currentcolor);
+      box-shadow:
+        var(--rp-inset-shadow), var(--rp-inset-ring-shadow), var(--rp-ring-offset-shadow),
+        var(--rp-ring-shadow), var(--rp-shadow);
+      --rp-ring-color: var(--focus);
+      --rp-ring-offset-width: 0px;
+      --rp-ring-offset-shadow: var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width)
+        var(--rp-ring-offset-color);
+      --rp-ring-offset-color: var(--background);
+      --rp-outline-style: none;
+      outline-style: none;
+      --rp-ring-offset-width: var(--ring-offset-width);
+      @media (forced-colors: active) {
+        outline: 2px solid Highlight;
+        outline-offset: 2px;
+      }
     }
 
     /* Disabled state */
     &[data-disabled="true"] {
-      @apply cursor-default;
+      cursor: default;
     }
   }
 
@@ -108,10 +193,16 @@
   &:disabled,
   &[data-disabled="true"],
   &[aria-disabled="true"] {
-    @apply status-disabled;
+    opacity: var(--disabled-opacity);
+    cursor: var(--cursor-disabled);
+    pointer-events: none;
+    @media (forced-colors: active) {
+      color: GrayText;
+      border-color: GrayText;
+    }
 
     [data-slot="label"] {
-      @apply opacity-100;
+      opacity: 100%;
     }
   }
 
@@ -120,10 +211,13 @@
     flex-direction: column;
 
     .rp-slider__track {
-      @apply h-5 w-full;
+      height: calc(var(--spacing) * 5);
+      width: 100%;
       /* Add transparent borders to provide space for thumb at edges */
       /* Thumb width is 1.5rem (24px), so half is 0.75rem (12px) */
-      @apply border-x-[0.75rem] border-x-transparent;
+      border-inline-style: var(--rp-border-style);
+      border-inline-width: 0.75rem;
+      border-inline-color: transparent;
 
       /* A transparent border-color is one of the few things forced colors turns *opaque*, so
        * without this the two spacers render as solid blocks at either end of the track. */
@@ -133,7 +227,7 @@
       }
 
       &[data-fill-start="true"] {
-        @apply border-s-accent;
+        border-inline-start-color: var(--accent);
 
         /* Carries the fill past the spacer to the end of the bar, so it has to be the fill
          * colour rather than the `Canvas` the base rule neutralises the spacers with. */
@@ -143,7 +237,7 @@
       }
 
       &[data-fill-end="true"] {
-        @apply border-e-accent;
+        border-inline-end-color: var(--accent);
 
         @media (forced-colors: active) {
           border-inline-end-color: Highlight;
@@ -153,11 +247,11 @@
 
     .rp-slider__fill,
     .rp-slider__thumb {
-      @apply h-full;
+      height: 100%;
     }
 
     .rp-slider__thumb {
-      @apply top-1/2;
+      top: calc(1 / 2 * 100%);
 
       /* Thumb width + border width */
       width: calc(1.5rem + 0.25rem);
@@ -171,7 +265,8 @@
 
   /* Vertical orientation */
   &[data-orientation="vertical"] {
-    @apply h-full gap-2;
+    height: 100%;
+    gap: calc(var(--spacing) * 2);
 
     flex-direction: row;
     grid-template-areas:
@@ -190,10 +285,13 @@
     }
 
     .rp-slider__track {
-      @apply h-full w-5;
+      height: 100%;
+      width: calc(var(--spacing) * 5);
       /* Add transparent borders to provide space for thumb at edges */
       /* Thumb height is 1.5rem (24px), so half is 0.75rem (12px) */
-      @apply border-y-[0.75rem] border-y-transparent;
+      border-block-style: var(--rp-border-style);
+      border-block-width: 0.75rem;
+      border-block-color: transparent;
       justify-self: center;
 
       /* Same as the horizontal spacers - opaque without this */
@@ -203,7 +301,7 @@
       }
 
       &[data-fill-start="true"] {
-        @apply border-b-accent;
+        border-bottom-color: var(--accent);
 
         @media (forced-colors: active) {
           border-bottom-color: Highlight;
@@ -211,7 +309,7 @@
       }
 
       &[data-fill-end="true"] {
-        @apply border-t-accent;
+        border-top-color: var(--accent);
 
         @media (forced-colors: active) {
           border-top-color: Highlight;
@@ -221,12 +319,12 @@
 
     .rp-slider__fill,
     .rp-slider__thumb {
-      @apply w-full;
+      width: 100%;
     }
 
     .rp-slider__thumb {
       /* Cross-axis centering; React Aria applies a physical translateX(-50%), so keep left-1/2 for RTL correctness */
-      @apply left-1/2;
+      left: calc(1 / 2 * 100%);
 
       /* Thumb height + border height */
       height: calc(1.5rem + 0.25rem);

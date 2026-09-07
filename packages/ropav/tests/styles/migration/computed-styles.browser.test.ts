@@ -37,25 +37,30 @@ describe("computed styles", () => {
 
     /*
      * Shape first, lines second. A step that moves a thousand values is read by *which properties
-     * moved* and *how many cases* — a truncated list of the alphabetically-first ones says almost
-     * nothing, and the untruncated list does not fit in a terminal.
+     * moved* and *how many cases* — the untruncated list does not fit in a terminal.
+     *
+     * And one example per property rather than the first ten lines: sorted, the first ten are
+     * whatever selector sorts first, which routinely means ten copies of one finding while a
+     * second, different one further down goes unread.
      */
     const properties: Record<string, number> = {};
+    const example: Record<string, string> = {};
     const cases = new Set<string>();
 
     for (const line of lines) {
       cases.add(line.split(" | ")[0]!);
 
-      const prop = /\| ([\w-]+):/.exec(line)?.[1];
+      const prop = /\| ([\w-]+):/.exec(line)?.[1] ?? "(whole rule)";
 
-      if (prop) properties[prop] = (properties[prop] ?? 0) + 1;
+      properties[prop] = (properties[prop] ?? 0) + 1;
+      example[prop] ??= line;
     }
 
     expect({
       cases: cases.size,
       changed: lines.length,
-      first: lines.slice(0, 10),
+      each: Object.values(example).slice(0, 12),
       properties,
-    }).toEqual({ cases: 0, changed: 0, first: [], properties: {} });
+    }).toEqual({ cases: 0, changed: 0, each: [], properties: {} });
   });
 });

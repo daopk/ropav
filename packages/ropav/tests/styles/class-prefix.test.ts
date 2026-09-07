@@ -28,9 +28,8 @@ const componentFiles = readdirSync(COMPONENTS).filter(
   (file) => file.endsWith(".css") && file !== "index.css",
 );
 
-/** Neither a comment nor an `@apply` argument is a place a class selector lives. */
-const selectorsOnly = (css: string) =>
-  css.replace(/\/\*[\s\S]*?\*\//g, "").replace(/@apply[^;]*;/g, "");
+/** A comment is not a place a class selector lives, and every file here is mostly comment. */
+const selectorsOnly = (css: string) => css.replace(/\/\*[\s\S]*?\*\//g, "");
 
 const offenders = (css: string, pattern: RegExp) =>
   [...selectorsOnly(css).matchAll(pattern)]

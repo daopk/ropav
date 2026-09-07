@@ -1,6 +1,6 @@
 /* Base disclosure-group styles */
 .rp-disclosure-group {
-  @apply w-full;
+  width: 100%;
 
   /* Performance optimization - contain layout changes */
   contain: layout style;
