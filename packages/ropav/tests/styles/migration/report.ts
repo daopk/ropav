@@ -13,14 +13,19 @@ import { declaredProperties, MODES, renderAll, styleDelta } from "./render";
 export type Report = Record<string, Record<string, Record<string, string>>>;
 
 /**
- * `--tw-*` is left out on purpose.
+ * The composition slots are left out on purpose, under either name.
  *
- * Those exist only to let one utility compose with the next, and the migration's whole point is
- * that they stop existing. Recording them would make every step a full-file diff and bury the
- * values a component actually resolves to.
+ * `--tw-ring-shadow` and its kin exist only to let one utility compose with the next; the
+ * migration renames them to `--rp-` and later dissolves several groups outright. What matters is
+ * the property they compose *into* — the `box-shadow` an element ends up with — and recording the
+ * slots as well would make a rename read as two thousand regressions while saying nothing the
+ * `box-shadow` line does not already say.
+ *
+ * Every token this package means as a token is unprefixed (`--accent`, `--field-border`), so a
+ * prefixed name is machinery by construction.
  */
 const recorded = (sheets: StyleSheetList) =>
-  declaredProperties(sheets).filter((prop) => !prop.startsWith("--tw-"));
+  declaredProperties(sheets).filter((prop) => !/^--(?:tw|rp)-/.test(prop));
 
 /** Renders every case under every mode and reads back what the browser resolved. */
 export const capture = (doc: Document, view: Window): Report => {

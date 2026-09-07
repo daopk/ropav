@@ -112,7 +112,19 @@ export const renderAll = (cases: Case[], modes: Mode[], doc: Document) => {
 
       while (reference.attributes.length) reference.removeAttribute(reference.attributes[0]!.name);
 
-      wrapper.append(built.root, referenceRoot);
+      /*
+       * A box of its own, at a fixed size.
+       *
+       * Two thousand cases in one column makes every percentage length resolve against the column
+       * — so a rule that changes one element's height moves the reported `block-size` of every
+       * `inset-0` element in the matrix, and a one-line edit reads as hundreds of regressions.
+       * A constant containing block is what makes a case's numbers mean only that case.
+       */
+      const box = doc.createElement("div");
+
+      box.setAttribute("style", "position:relative;width:1280px;height:720px");
+      box.append(built.root, referenceRoot);
+      wrapper.appendChild(box);
       byId.set(item.id, { pseudoElement: built.pseudoElement, reference, target: built.target });
     }
     rendered.set(mode, byId);

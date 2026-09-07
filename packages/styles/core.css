@@ -8,6 +8,10 @@
 @import "./base/base.css" layer(base);
 @import "./base/scrollbar.css" layer(base);
 
+/* The `@property` registrations the component rules compose through. Unlayered, and before the
+ * rules that read them - an unregistered slot makes the declaration reading it invalid. */
+@import "./slots.css";
+
 /* Base component structures (unstyled) */
 @import "./components/index.css" layer(components);
 

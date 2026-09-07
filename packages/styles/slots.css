@@ -1,0 +1,235 @@
+/**
+ * Composition slots — GENERATED, do not edit by hand.
+ *
+ * Run `node scripts/migration/codemod.mjs` to rewrite this file.
+ *
+ * Each of these is read by a declaration that composes several utilities into one property:
+ * a `box-shadow` built from five contributions, a `transform` from six. The registration is
+ * what gives an unset slot a value to resolve to, so a rule that sets one of them does not
+ * have to set the rest.
+ */
+
+@property --rp-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --rp-shadow-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --rp-inset-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --rp-ring-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --rp-ring-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --rp-inset-ring-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --rp-ring-inset {
+  syntax: "*";
+  inherits: false;
+}
+@property --rp-ring-offset-width {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+@property --rp-ring-offset-color {
+  syntax: "*";
+  inherits: false;
+  initial-value: #fff;
+}
+@property --rp-ring-offset-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --rp-content {
+  syntax: "*";
+  initial-value: "";
+  inherits: false;
+}
+@property --rp-leading {
+  syntax: "*";
+  inherits: false;
+}
+@property --rp-border-style {
+  syntax: "*";
+  inherits: false;
+  initial-value: solid;
+}
+@property --rp-translate-x {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+@property --rp-translate-y {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+@property --rp-scale-x {
+  syntax: "*";
+  inherits: false;
+  initial-value: 1;
+}
+@property --rp-scale-y {
+  syntax: "*";
+  inherits: false;
+  initial-value: 1;
+}
+@property --rp-ordinal {
+  syntax: "*";
+  inherits: false;
+}
+@property --rp-slashed-zero {
+  syntax: "*";
+  inherits: false;
+}
+@property --rp-numeric-figure {
+  syntax: "*";
+  inherits: false;
+}
+@property --rp-numeric-spacing {
+  syntax: "*";
+  inherits: false;
+}
+@property --rp-numeric-fraction {
+  syntax: "*";
+  inherits: false;
+}
+@property --rp-outline-style {
+  syntax: "*";
+  inherits: false;
+  initial-value: solid;
+}
+@property --rp-border-spacing-x {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0;
+}
+@property --rp-border-spacing-y {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0;
+}
+@property --rp-rotate-x {
+  syntax: "*";
+  inherits: false;
+}
+@property --rp-rotate-y {
+  syntax: "*";
+  inherits: false;
+}
+@property --rp-rotate-z {
+  syntax: "*";
+  inherits: false;
+}
+@property --rp-skew-x {
+  syntax: "*";
+  inherits: false;
+}
+@property --rp-skew-y {
+  syntax: "*";
+  inherits: false;
+}
+@property --rp-gradient-position {
+  syntax: "*";
+  inherits: false;
+}
+@property --rp-gradient-from {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #0000;
+}
+@property --rp-gradient-via {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #0000;
+}
+@property --rp-gradient-to {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #0000;
+}
+@property --rp-gradient-stops {
+  syntax: "*";
+  inherits: false;
+}
+@property --rp-gradient-via-stops {
+  syntax: "*";
+  inherits: false;
+}
+@property --rp-gradient-from-position {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+@property --rp-gradient-via-position {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 50%;
+}
+@property --rp-gradient-to-position {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+@property --rp-space-y-reverse {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+@property --rp-backdrop-blur {
+  syntax: "*";
+  inherits: false;
+}
+@property --rp-backdrop-brightness {
+  syntax: "*";
+  inherits: false;
+}
+@property --rp-backdrop-contrast {
+  syntax: "*";
+  inherits: false;
+}
+@property --rp-backdrop-grayscale {
+  syntax: "*";
+  inherits: false;
+}
+@property --rp-backdrop-hue-rotate {
+  syntax: "*";
+  inherits: false;
+}
+@property --rp-backdrop-invert {
+  syntax: "*";
+  inherits: false;
+}
+@property --rp-backdrop-opacity {
+  syntax: "*";
+  inherits: false;
+}
+@property --rp-backdrop-saturate {
+  syntax: "*";
+  inherits: false;
+}
+@property --rp-backdrop-sepia {
+  syntax: "*";
+  inherits: false;
+}
+@property --rp-space-x-reverse {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
