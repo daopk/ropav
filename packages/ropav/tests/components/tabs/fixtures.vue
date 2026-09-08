@@ -2,6 +2,7 @@
 import type { TabsProps } from "@/components/tabs";
 import type { CollectionKey } from "@/composables/use-collection";
 
+import { Chip, ChipLabel } from "@/components/chip";
 import {
   TabsIndicator,
   TabsList,
@@ -27,7 +28,9 @@ const props = withDefaults(
   defineProps<
     TabsProps & {
       items?: TabsFixtureItem[];
+      withChip?: boolean;
       withContainer?: boolean;
+      withIcon?: boolean;
       withSeparator?: boolean;
       withPanels?: boolean;
       forceMountPanels?: boolean;
@@ -44,7 +47,9 @@ const props = withDefaults(
     keyboardActivation: undefined,
     orientation: undefined,
     variant: undefined,
+    withChip: undefined,
     withContainer: true,
+    withIcon: undefined,
     withPanels: true,
     withSeparator: undefined,
   },
@@ -74,7 +79,19 @@ const props = withDefaults(
           :is-disabled="item.isDisabled"
         >
           <TabsSeparator v-if="props.withSeparator" />
+          <!-- Drawn at `1em`, which is 14px at the tab's font size, so the stylesheet is what has
+               to produce 16 and the assertion has something of its own to read. -->
+          <svg
+            v-if="props.withIcon"
+            aria-hidden="true"
+            height="1em"
+            viewBox="0 0 16 16"
+            width="1em"
+          >
+            <circle cx="8" cy="8" fill="currentColor" r="6" />
+          </svg>
           {{ item.label }}
+          <Chip v-if="props.withChip" size="sm" variant="soft"><ChipLabel>12</ChipLabel></Chip>
           <TabsIndicator />
         </TabsTab>
       </TabsList>

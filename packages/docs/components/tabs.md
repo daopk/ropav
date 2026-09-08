@@ -22,6 +22,9 @@ import { Tabs, TabsList, TabsPanel, TabsTab } from "ropav";
 `TabsIndicator` goes inside each tab rather than beside the list, so the marker travels with the
 tab it belongs to.
 
+An icon before the label and a [Chip](/components/chip) after it go straight into the `TabsTab`:
+it lays them out on one line and sizes the icon, and the count joins the name the tab reads out.
+
 <Demo title="tabs-basic.vue">
 <DemoTabsBasic />
 

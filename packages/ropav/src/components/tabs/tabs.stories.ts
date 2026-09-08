@@ -2,6 +2,17 @@ import type { StoryMeta } from "../../utils/story-meta";
 import type { StoryObj } from "@storybook/vue3-vite";
 
 import { shallowRef } from "vue";
+import IconBug from "~icons/gravity-ui/bug";
+import IconChartColumn from "~icons/gravity-ui/chart-column";
+import IconCodePullRequest from "~icons/gravity-ui/code-pull-request";
+import IconComments from "~icons/gravity-ui/comments";
+import IconFileText from "~icons/gravity-ui/file-text";
+import IconHouse from "~icons/gravity-ui/house";
+import IconLayoutCells from "~icons/gravity-ui/layout-cells";
+import IconLayoutList from "~icons/gravity-ui/layout-list";
+import IconPicture from "~icons/gravity-ui/picture";
+
+import { Chip, ChipLabel } from "../chip";
 
 import {
   Tabs,
@@ -20,6 +31,17 @@ import {
  * in application code `<TabsTab>` inside an SFC is fine.
  */
 const components = {
+  Chip,
+  ChipLabel,
+  IconBug,
+  IconChartColumn,
+  IconCodePullRequest,
+  IconComments,
+  IconFileText,
+  IconHouse,
+  IconLayoutCells,
+  IconLayoutList,
+  IconPicture,
   Tabs,
   TabsIndicator,
   TabsList,
@@ -370,6 +392,173 @@ export const WithSeparator: Story = {
             <p>{{ item.body }}</p>
           </TabsPanel>
         </Tabs>
+      </div>
+    `,
+  }),
+};
+
+const NAV_ITEMS = [
+  { icon: "IconHouse", id: "overview", label: "Overview" },
+  { icon: "IconChartColumn", id: "analytics", label: "Analytics" },
+  { icon: "IconFileText", id: "reports", label: "Reports" },
+];
+
+/**
+ * An icon goes in the tab beside the label, in the order it should read. The tab spaces the two
+ * and sizes the icon, so there is no wrapper here and nothing to size at the call site.
+ */
+export const WithIcons: Story = {
+  render: (args) => ({
+    components,
+    setup: () => ({ args, items: NAV_ITEMS }),
+    template: `
+      <div class="w-[600px]">
+        <Tabs
+          :is-disabled="args.isDisabled"
+          :keyboard-activation="args.keyboardActivation"
+          :orientation="args.orientation"
+          :variant="args.variant"
+        >
+          <TabsListContainer>
+            <TabsList aria-label="Options">
+              <TabsTab v-for="item in items" :id="item.id" :key="item.id">
+                <component :is="item.icon" />
+                {{ item.label }}
+                <TabsIndicator />
+              </TabsTab>
+            </TabsList>
+          </TabsListContainer>
+          <TabsPanel v-for="item in items" :id="item.id" :key="item.id" class="pt-4">
+            <p>{{ item.label }} panel content.</p>
+          </TabsPanel>
+        </Tabs>
+      </div>
+    `,
+  }),
+};
+
+const LAYOUT_ITEMS = [
+  { icon: "IconLayoutList", id: "list", label: "List" },
+  { icon: "IconLayoutCells", id: "grid", label: "Grid" },
+  { icon: "IconPicture", id: "gallery", label: "Gallery" },
+];
+
+/**
+ * With no text to read, each tab has to name itself. The inline padding comes in as well: the
+ * four it is written for surrounds a label, and a lone glyph does not need that much room.
+ */
+export const IconOnly: Story = {
+  render: (args) => ({
+    components,
+    setup: () => ({ args, items: LAYOUT_ITEMS }),
+    template: `
+      <Tabs
+        :is-disabled="args.isDisabled"
+        :keyboard-activation="args.keyboardActivation"
+        :variant="args.variant"
+      >
+        <TabsListContainer>
+          <TabsList aria-label="Layout">
+            <TabsTab
+              v-for="item in items"
+              :id="item.id"
+              :key="item.id"
+              :aria-label="item.label"
+              class="px-3"
+            >
+              <component :is="item.icon" />
+              <TabsIndicator />
+            </TabsTab>
+          </TabsList>
+        </TabsListContainer>
+      </Tabs>
+    `,
+  }),
+};
+
+const REPO_ITEMS = [
+  { count: 24, icon: "IconBug", id: "issues", label: "Issues" },
+  { count: 6, icon: "IconCodePullRequest", id: "pulls", label: "Pull requests" },
+  { count: 12, icon: "IconComments", id: "discussions", label: "Discussions" },
+];
+
+/**
+ * A count beside the label, in each shape the tabs come in. The chip answers to its own props
+ * rather than to the tab, so the same markup reads against the pill, under the line and down a
+ * column — and the count joins the name the tab reads out, which is what a count is for.
+ *
+ * The secondary deck starts on its middle tab so the chip can be seen both on the marker and off
+ * it.
+ */
+export const WithChip: Story = {
+  render: (args) => ({
+    components,
+    setup: () => ({ args, items: REPO_ITEMS }),
+    template: `
+      <div class="flex w-[600px] flex-col gap-8">
+        <div class="flex flex-col gap-2">
+          <p class="text-sm text-[var(--rp-muted)]">Primary</p>
+          <Tabs
+            :is-disabled="args.isDisabled"
+            :keyboard-activation="args.keyboardActivation"
+          >
+            <TabsListContainer>
+              <TabsList aria-label="Repository">
+                <TabsTab v-for="item in items" :id="item.id" :key="item.id">
+                  <component :is="item.icon" />
+                  {{ item.label }}
+                  <Chip color="accent" size="sm" variant="soft">
+                    <ChipLabel>{{ item.count }}</ChipLabel>
+                  </Chip>
+                  <TabsIndicator />
+                </TabsTab>
+              </TabsList>
+            </TabsListContainer>
+          </Tabs>
+        </div>
+        <div class="flex flex-col gap-2">
+          <p class="text-sm text-[var(--rp-muted)]">Secondary</p>
+          <Tabs
+            default-selected-key="pulls"
+            :is-disabled="args.isDisabled"
+            :keyboard-activation="args.keyboardActivation"
+            variant="secondary"
+          >
+            <TabsListContainer>
+              <TabsList aria-label="Repository, secondary">
+                <TabsTab v-for="item in items" :id="item.id" :key="item.id">
+                  <component :is="item.icon" />
+                  {{ item.label }}
+                  <Chip color="accent" size="sm" variant="soft">
+                    <ChipLabel>{{ item.count }}</ChipLabel>
+                  </Chip>
+                  <TabsIndicator />
+                </TabsTab>
+              </TabsList>
+            </TabsListContainer>
+          </Tabs>
+        </div>
+        <div class="flex flex-col gap-2">
+          <p class="text-sm text-[var(--rp-muted)]">Vertical</p>
+          <Tabs
+            :is-disabled="args.isDisabled"
+            :keyboard-activation="args.keyboardActivation"
+            orientation="vertical"
+          >
+            <TabsListContainer>
+              <TabsList aria-label="Repository, vertical">
+                <TabsTab v-for="item in items" :id="item.id" :key="item.id">
+                  <component :is="item.icon" />
+                  {{ item.label }}
+                  <Chip color="accent" size="sm" variant="soft">
+                    <ChipLabel>{{ item.count }}</ChipLabel>
+                  </Chip>
+                  <TabsIndicator />
+                </TabsTab>
+              </TabsList>
+            </TabsListContainer>
+          </Tabs>
+        </div>
       </div>
     `,
   }),

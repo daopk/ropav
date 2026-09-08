@@ -124,6 +124,56 @@ describe("Tabs (browser)", () => {
     });
   });
 
+  describe("a tab holding more than a label", () => {
+    const withParts = { withChip: true, withIcon: true };
+
+    it("lays the icon, the label and the count out on one line", async () => {
+      const { container, unmount } = renderVapor(TabsFixture, { props: withParts });
+
+      await ready();
+
+      const tab = tabsIn(container)[0]!;
+      const icon = tab.querySelector("svg")!;
+      const chip = tab.querySelector<HTMLElement>('[data-slot="chip"]')!;
+      const style = getComputedStyle(tab);
+
+      // The tab owns the box of whatever it was handed: the parts are spaced, the icon is sized
+      // here rather than at whatever it was drawn at, and the row is kept off a second line the
+      // tab has nowhere to put.
+      expect(style.columnGap).toBe("8px");
+      expect(style.whiteSpace).toBe("nowrap");
+      expect(getComputedStyle(icon).width).toBe("16px");
+      expect(getComputedStyle(icon).height).toBe("16px");
+      expect(tab.getBoundingClientRect().height).toBeCloseTo(32, 0);
+
+      // One line, in the order they were written, with the count inside the tab rather than
+      // hanging out of it.
+      expect(chip.getBoundingClientRect().left).toBeGreaterThan(icon.getBoundingClientRect().right);
+      expect(chip.getBoundingClientRect().bottom).toBeLessThanOrEqual(
+        tab.getBoundingClientRect().bottom,
+      );
+
+      unmount();
+    });
+
+    it("selects the tab from a press that lands on the count", async () => {
+      const { container, unmount } = renderVapor(TabsFixture, { props: withParts });
+
+      await ready();
+
+      const analytics = tabsIn(container)[1]!;
+
+      // Nothing the caller puts in the tab is a target of its own — the tab is chosen wherever
+      // the press lands inside it, which is what lets a count sit in there at all.
+      await pressTab(analytics.querySelector<HTMLElement>('[data-slot="chip"]')!);
+      await settle();
+
+      expect(analytics).toHaveAttribute("aria-selected", "true");
+
+      unmount();
+    });
+  });
+
   describe("overflow", () => {
     it("reports the scrollable edges and reveals only the reachable chevron", async () => {
       const { container, unmount } = renderVapor(TabsFixture, {

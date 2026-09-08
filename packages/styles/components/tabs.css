@@ -170,12 +170,14 @@
   width: 100%;
   align-items: center;
   justify-content: center;
+  gap: calc(var(--rp-spacing) * 2);
   border-radius: var(--rp-component-radius, calc(var(--rp-radius) * 3));
   padding-inline: calc(var(--rp-spacing) * 4);
   text-align: center;
   font-size: var(--rp-text-sm);
   line-height: var(--rp-leading, var(--rp-text-sm--line-height));
   font-weight: var(--rp-font-weight-medium);
+  white-space: nowrap;
   --rp-outline-style: none;
   outline-style: none;
   -webkit-tap-highlight-color: transparent;
@@ -204,6 +206,15 @@
     @media (forced-colors: active) {
       forced-color-adjust: none;
       color: HighlightText;
+
+      /* The opt-out is for this tab's own label, and it inherits past it. A part with colours of
+       * its own - a chip counting what the panel holds - would keep the ones the mode was asked
+       * to replace, and a chip that is only a label would paint author text straight onto
+       * `Highlight`. Handed back with no specificity at all, so a part that has already answered
+       * for itself under this mode goes on answering. */
+      :where(& > *) {
+        forced-color-adjust: auto;
+      }
     }
 
     /* Hide separator on the selected tab and the one following it */
@@ -250,6 +261,15 @@
       outline: 2px solid Highlight;
       outline-offset: 2px;
     }
+  }
+
+  /* An icon the tab was handed directly, sized to the label beside it. Matched on the child
+   * combinator rather than by exclusion: a chip brings artwork of its own, drawn to the chip's
+   * scale, and a caller who wraps an icon keeps the size they wrapped it at. */
+  > svg {
+    width: calc(var(--rp-spacing) * 4);
+    height: calc(var(--rp-spacing) * 4);
+    flex-shrink: 0;
   }
 }
 
