@@ -85,8 +85,9 @@ const isDisabled = computed(() => selection.isDisabled(itemKey.value));
 const selectionMode = computed(() => selection.selectionMode.value);
 
 // Only the description slot is wired: the item names itself from its content, exactly as the
-// React build does, so handing out a label id would add an attribute nothing points at.
-const fieldIds = useFieldIds({ slots: ["description"] });
+// React build does, so handing out a label id would add an attribute nothing points at. Nor does
+// an `option` hold a labelable control, so a label inside one renders as a `span`.
+const fieldIds = useFieldIds({ labelElementType: "span", slots: ["description"] });
 
 provideFieldIdsContext(fieldIds.context);
 provideListBoxItemContext({ isSelected, slots });

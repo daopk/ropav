@@ -102,6 +102,46 @@
 }
 
 /* ==========================================================================
+   Two-line list-box item
+   ========================================================================== */
+
+/**
+ * The menu item's two-line layout, for the same reason and with the same contract — see
+ * `menu-item.css`.
+ *
+ * The indicator is not corrected here. This one is trailing rather than leading, and a mark at the
+ * end of a row belongs to the row: centring it on the label's line would put it beside the first
+ * of two lines for no reason.
+ */
+.rp-list-box-item:has(> [data-slot="description"]) {
+  display: grid;
+  gap: 0;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas:
+    "lead label  trail"
+    "lead detail trail";
+
+  > [data-slot="label"] {
+    grid-area: label;
+  }
+
+  > [data-slot="description"] {
+    grid-area: detail;
+  }
+
+  > .rp-kbd {
+    grid-area: trail;
+    margin-inline-start: calc(var(--rp-spacing) * 3);
+  }
+
+  > :not([data-slot="label"], [data-slot="description"], .rp-kbd, .rp-list-box-item__indicator) {
+    grid-column: lead;
+    grid-row: 1 / 2;
+    margin-inline-end: calc(var(--rp-spacing) * 3);
+  }
+}
+
+/* ==========================================================================
    List-box item indicator
    ========================================================================== */
 

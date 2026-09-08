@@ -46,6 +46,17 @@ describe("ListBox", () => {
       expect(items()[0]).toHaveClass("rp-list-box-item");
     });
 
+    it("renders a label inside an option as a span rather than a form control's label", async () => {
+      const { items } = await render();
+
+      const label = items()[0]!.querySelector('[data-slot="label"]')!;
+
+      // A `label` implies a labelable control to point `for` at, and an option is not one — it
+      // names itself from its own content, so there would be nothing for the attribute to carry.
+      expect(label.tagName).toBe("SPAN");
+      expect(label).not.toHaveAttribute("for");
+    });
+
     it("derives an option id from the listbox id and the key", async () => {
       const { items, listbox } = await render();
 

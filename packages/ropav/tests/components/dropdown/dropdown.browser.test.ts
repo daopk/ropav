@@ -765,6 +765,66 @@ describe("Dropdown (browser)", () => {
     });
   });
 
+  /**
+   * An item carrying a description reads as two lines. The row it used to lay out as put the
+   * description beside its own label, which squeezed the label into a column narrow enough to
+   * wrap — a shape no test could see, because jsdom has no layout.
+   */
+  describe("an item with a description", () => {
+    const DESCRIBED = [
+      { description: "Anyone with the link can view", id: "copy-link", label: "Copy link" },
+    ];
+
+    /** The line boxes of an element's own text, which is how the label's wrapping is read. */
+    const lines = (element: Element) => {
+      const range = document.createRange();
+
+      range.selectNodeContents(element);
+
+      return [...range.getClientRects()];
+    };
+
+    it("stacks the description under the label rather than beside it", async () => {
+      const result = render({ items: DESCRIBED });
+
+      const popover = await open(result);
+      const item = popover.querySelector('[data-slot="menu-item"]')!;
+      const label = item.querySelector('[data-slot="label"]')!;
+      const description = item.querySelector('[data-slot="description"]')!;
+
+      expect(measure(description).top).toBeGreaterThanOrEqual(measure(label).bottom - 1);
+      // Both start at the item's content edge, so the label is not indented past the one-line
+      // items around it and the description is not indented past its own label.
+      expect(measure(description).left).toBeCloseTo(measure(label).left, 0);
+      // Laid out as a row the label was squeezed into a column narrow enough to wrap.
+      expect(lines(label)).toHaveLength(1);
+
+      await dismiss(result);
+      result.unmount();
+    });
+
+    it("keeps the indicator on the label's line", async () => {
+      const result = render({ items: DESCRIBED, withIndicator: true });
+
+      const popover = await open(result);
+      const item = popover.querySelector('[data-slot="menu-item"]')!;
+      const label = item.querySelector('[data-slot="label"]')!;
+      const indicator = item.querySelector('[data-slot="menu-item-indicator"]')!;
+      const indicatorRect = measure(indicator);
+      const line = lines(label)[0]!;
+
+      const centre = indicatorRect.top + indicatorRect.height / 2;
+
+      // Centred on the whole item it lands in the gutter between the two lines, marking neither.
+      expect(centre).toBeGreaterThan(line.top);
+      expect(centre).toBeLessThan(line.bottom);
+      expect(Math.abs(centre - (line.top + line.height / 2))).toBeLessThan(1);
+
+      await dismiss(result);
+      result.unmount();
+    });
+  });
+
   describe("accessibility", () => {
     it("has no axe violations", async () => {
       const result = render({ withHeader: true, withSection: true });

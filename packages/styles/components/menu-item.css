@@ -127,6 +127,62 @@
 }
 
 /* ==========================================================================
+   Two-line menu item
+   ========================================================================== */
+
+/**
+ * A description that is a direct child means the item reads as two lines, which a row cannot do.
+ * Matched on the child combinator deliberately: a caller who wraps the label and the description
+ * in a box of their own keeps the row, and whatever layout they built inside it.
+ *
+ * Spacing rides on the children rather than on `gap`, because a grid gutter sits between adjacent
+ * tracks whether or not either one holds anything. Inherited, it would indent the label past the
+ * one-line items above it and open a gap beneath it that no caller asked for.
+ *
+ * Every box this file can name is placed, and so is every box it cannot: auto-placement fills
+ * whichever cell it reaches first, which for a lone trailing child is the one on the leading side.
+ * A caller wanting a trailing box that is not a `Kbd` wraps the pair themselves, as before.
+ */
+.rp-menu-item:has(> [data-slot="description"]) {
+  display: grid;
+  gap: 0;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas:
+    "lead label  trail"
+    "lead detail trail";
+
+  > [data-slot="label"] {
+    grid-area: label;
+  }
+
+  > [data-slot="description"] {
+    grid-area: detail;
+  }
+
+  /* A shortcut belongs to the whole action, so it keeps the item's centre and spans both lines. */
+  > .rp-kbd {
+    grid-area: trail;
+    margin-inline-start: calc(var(--rp-spacing) * 3);
+  }
+
+  /* Leading content sits on the label's line rather than between the two, which is what a caller
+   * otherwise has to reach for a wrapper and a top padding to get. */
+  > :not([data-slot="label"], [data-slot="description"], .rp-kbd, .rp-menu-item__indicator) {
+    grid-column: lead;
+    grid-row: 1 / 2;
+    margin-inline-end: calc(var(--rp-spacing) * 3);
+  }
+
+  /* An out-of-flow child with a definite grid position takes that area as its containing block,
+   * so the centring already declared on the indicator resolves against the label's row instead of
+   * the whole item. Written as a range because an `auto` end would run to the padding edge and
+   * leave the centring where it started. The trailing chevron is left alone: it marks the item. */
+  > .rp-menu-item__indicator:not(.rp-menu-item__indicator--submenu) {
+    grid-row: 1 / 2;
+  }
+}
+
+/* ==========================================================================
    Menu item indicator
    ========================================================================== */
 
