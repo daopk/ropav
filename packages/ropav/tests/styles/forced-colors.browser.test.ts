@@ -183,6 +183,35 @@ describe("forced colors mode (browser)", () => {
     );
   });
 
+  it("hands a box inside a selected segment back to the forced palette", () => {
+    // Same inheritance as the selected tab above: the item opts its own label out of the backplate
+    // and every part the caller nested inside it goes along.
+    const tinted = mount(`
+      <div class="rp-segmented-control__item" data-selected="true">Inbox
+        <span class="rp-chip rp-chip--accent rp-chip--soft rp-chip--sm">24</span>
+        <span class="rp-segmented-control__indicator"></span>
+      </div>
+    `);
+    const solid = mount(`
+      <div class="rp-segmented-control__item" data-selected="true">Inbox
+        <span class="rp-chip rp-chip--accent rp-chip--primary rp-chip--sm">24</span>
+      </div>
+    `);
+
+    expect(styleOf(tinted).forcedColorAdjust).toBe("none");
+    expect(styleOf(tinted.querySelector(".rp-chip")!).forcedColorAdjust).toBe("auto");
+
+    // Handed back with no specificity at all, so a part that has already answered for itself goes
+    // on answering: this one's fill is `CanvasText` and its label is what the backplate would
+    // cover.
+    expect(styleOf(solid.querySelector(".rp-chip")!).forcedColorAdjust).toBe("none");
+
+    // And the mark the opt-out was written for is still a system colour behind the label.
+    expect(styleOf(tinted.querySelector(".rp-segmented-control__indicator")!).backgroundColor).toBe(
+      systemColor("Highlight"),
+    );
+  });
+
   it("keeps the switch thumb visible against its track at both ends", () => {
     // The worst case for a background-only state: track and thumb are both flattened to Canvas,
     // so the thumb disappears into the track and the position it slid to shows nothing.

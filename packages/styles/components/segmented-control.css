@@ -97,6 +97,15 @@
     @media (forced-colors: active) {
       forced-color-adjust: none;
       color: HighlightText;
+
+      /* The opt-out is for this item's own label, and it inherits past it. A part with colours of
+       * its own - a chip counting what the segment holds - would keep the ones the mode was asked
+       * to replace, and a chip that is only a label would paint author text straight onto
+       * `Highlight`. Handed back with no specificity at all, so a part that has already answered
+       * for itself under this mode goes on answering. */
+      :where(& > *) {
+        forced-color-adjust: auto;
+      }
     }
   }
 
