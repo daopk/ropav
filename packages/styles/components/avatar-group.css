@@ -1,0 +1,165 @@
+/* ==========================================================================
+   AvatarGroup - lays a set of avatars out, overlapping or spaced
+   ========================================================================== */
+
+/* Base avatar group styles */
+.rp-avatar-group {
+  /* The overlap is a fraction of an avatar, not a fixed distance, so the tuck reads the same at
+   * every size. The group carries the scale rather than reading one off a child: a caller is free
+   * to wrap each avatar in a link, and a custom property set on the avatar would not reach the
+   * wrapper the margin lands on. The group hands its own size down, so the two always agree. */
+  --avatar-group-size: calc(var(--rp-spacing) * 10);
+  --avatar-group-overlap: 0.25;
+
+  /* The ring is the page showing through, cutting each avatar out of the one behind it. Only the
+   * caller knows what is actually behind the group, so this is the value to set on a card, on a
+   * filled surface, or over an image. */
+  --avatar-group-ring-color: var(--rp-background);
+  --avatar-group-ring-width: 2px;
+
+  display: inline-flex;
+  align-items: center;
+
+  /* Inline-level, so without this the group sits on the text baseline and the line box keeps
+   * room for descenders under it — which reads as the group being pushed up inside whatever
+   * padded box it is placed in. */
+  vertical-align: middle;
+
+  /* Matched on descent rather than on the child, so a wrapped avatar still gets its ring. */
+  .rp-avatar {
+    box-shadow: 0 0 0 var(--avatar-group-ring-width) var(--avatar-group-ring-color);
+  }
+
+  /* The flex item is the direct child, which is the wrapper where there is one. */
+  > * + * {
+    margin-inline-start: calc(var(--avatar-group-size) * var(--avatar-group-overlap) * -1);
+  }
+}
+
+/* Overflow count (compound component) */
+.rp-avatar-group__overflow {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ==========================================================================
+   Orientation variants
+   ========================================================================== */
+
+.rp-avatar-group--horizontal {
+  flex-direction: row;
+}
+
+.rp-avatar-group--vertical {
+  flex-direction: column;
+
+  > * + * {
+    margin-inline-start: 0;
+    margin-block-start: calc(var(--avatar-group-size) * var(--avatar-group-overlap) * -1);
+  }
+}
+
+/* ==========================================================================
+   Size modifiers
+   ========================================================================== */
+
+.rp-avatar-group--sm {
+  --avatar-group-size: calc(var(--rp-spacing) * 8);
+}
+
+.rp-avatar-group--md {
+  /* No styles as this is the default size */
+}
+
+.rp-avatar-group--lg {
+  --avatar-group-size: calc(var(--rp-spacing) * 12);
+}
+
+/* ==========================================================================
+   Overlap modifiers
+   ========================================================================== */
+
+.rp-avatar-group--overlap-sm {
+  --avatar-group-overlap: 0.15;
+}
+
+.rp-avatar-group--overlap-md {
+  /* No styles as this is the default overlap */
+}
+
+.rp-avatar-group--overlap-lg {
+  --avatar-group-overlap: 0.4;
+}
+
+/* Spaced rather than stacked. The overlap goes to zero through the property the base rule already
+ * reads, so the margin computes to nothing and no rule has to be undone. Nothing overlaps, so the
+ * cut-out ring would be a plain outline around each avatar, which is not what it is for. */
+.rp-avatar-group--overlap-none {
+  --avatar-group-overlap: 0;
+
+  gap: calc(var(--rp-spacing) * 2);
+
+  .rp-avatar {
+    box-shadow: none;
+  }
+}
+
+/* ==========================================================================
+   Stacking direction
+   ========================================================================== */
+
+/* `front="last"` needs no rule: later siblings paint over earlier ones already. Reversing that
+ * takes a descending ladder, since a stacking order cannot be derived from a sibling's position
+ * in CSS the library can rely on yet. Past the last step the tail falls back to document order,
+ * which a group long enough to need it should have replaced with an overflow count. */
+.rp-avatar-group--front-first > :nth-child(1) {
+  z-index: 10;
+}
+
+.rp-avatar-group--front-first > :nth-child(2) {
+  z-index: 9;
+}
+
+.rp-avatar-group--front-first > :nth-child(3) {
+  z-index: 8;
+}
+
+.rp-avatar-group--front-first > :nth-child(4) {
+  z-index: 7;
+}
+
+.rp-avatar-group--front-first > :nth-child(5) {
+  z-index: 6;
+}
+
+.rp-avatar-group--front-first > :nth-child(6) {
+  z-index: 5;
+}
+
+.rp-avatar-group--front-first > :nth-child(7) {
+  z-index: 4;
+}
+
+.rp-avatar-group--front-first > :nth-child(8) {
+  z-index: 3;
+}
+
+.rp-avatar-group--front-first > :nth-child(9) {
+  z-index: 2;
+}
+
+.rp-avatar-group--front-first > :nth-child(10) {
+  z-index: 1;
+}
+
+/* ==========================================================================
+   Focus
+   ========================================================================== */
+
+/* Raise whichever avatar holds focus so its outward focus ring is not clipped by the next one.
+ * This has to sit after the ladder above and match its specificity, which rules out wrapping the
+ * selector in `:where()`. `:focus-within` covers an avatar wrapped in the focusable element. */
+.rp-avatar-group > :focus-visible,
+.rp-avatar-group > [data-focus-visible="true"],
+.rp-avatar-group > :focus-within {
+  z-index: 20;
+}
