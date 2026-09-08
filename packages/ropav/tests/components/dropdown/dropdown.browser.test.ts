@@ -714,6 +714,57 @@ describe("Dropdown (browser)", () => {
     });
   });
 
+  /**
+   * The trigger the dropdown ships used to render `data-pressed` and nothing else, so the
+   * stylesheet — which keys the ring and the disabled look on these attributes — had nothing to
+   * match. A ring is the half that jsdom cannot see at all.
+   */
+  describe("the trigger's own states", () => {
+    it("draws a focus ring when the keyboard reaches it", async () => {
+      const result = render({ withCustomTrigger: true });
+      const trigger = result.getByRole("button", { name: "Menu" });
+
+      await userEvent.tab();
+      await nextTick();
+
+      expect(document.activeElement).toBe(trigger);
+      expect(trigger).toHaveAttribute("data-focus-visible", "true");
+      // The class strips the UA outline, so the ring is the only indicator left and a missing
+      // one leaves a keyboard user with nothing on screen.
+      expect(getComputedStyle(trigger).boxShadow).not.toBe("none");
+
+      result.unmount();
+    });
+
+    it("reports its own hover alongside the responder's press", async () => {
+      const result = render({ withCustomTrigger: true });
+      const trigger = result.getByRole("button", { name: "Menu" });
+
+      await userEvent.hover(trigger);
+      await nextTick();
+
+      expect(trigger).toHaveAttribute("data-hovered", "true");
+
+      await userEvent.click(trigger);
+      await nextTick();
+
+      expect(trigger).toHaveAttribute("data-pressed", "true");
+
+      await dismiss(result);
+      result.unmount();
+    });
+
+    it("wears the disabled look the stylesheet declares", async () => {
+      const result = render({ isDisabled: true, withCustomTrigger: true });
+      const trigger = result.getByRole("button", { name: "Menu" });
+
+      expect(getComputedStyle(trigger).opacity).not.toBe("1");
+      expect(getComputedStyle(trigger).pointerEvents).toBe("none");
+
+      result.unmount();
+    });
+  });
+
   describe("accessibility", () => {
     it("has no axe violations", async () => {
       const result = render({ withHeader: true, withSection: true });

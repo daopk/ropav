@@ -59,7 +59,11 @@ const setElement = (element: unknown) => {
 // the prop inside the template, which would silently drop the value coming from the group.
 const resolvedFullWidth = computed(() => props.fullWidth ?? group?.fullWidth.value);
 const resolvedIsDisabled = computed(
-  () => props.isDisabled ?? group?.isDisabled.value ?? fieldset?.isDisabled.value,
+  () =>
+    props.isDisabled ??
+    responder?.isDisabled?.value ??
+    group?.isDisabled.value ??
+    fieldset?.isDisabled.value,
 );
 const resolvedSize = computed(() => props.size ?? group?.size.value);
 const resolvedVariant = computed(() => props.variant ?? group?.variant.value);

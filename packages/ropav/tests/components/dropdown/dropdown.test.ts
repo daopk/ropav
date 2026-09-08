@@ -679,6 +679,65 @@ describe("Dropdown", () => {
       result.unmount();
     });
 
+    describe("disabled", () => {
+      it("reaches an ordinary button through the responder", async () => {
+        const result = render({ isDisabled: true });
+        const trigger = result.getByRole("button", { name: "Menu" });
+
+        // The common composition is `<Dropdown><Button/></Dropdown>`, so the state has to arrive
+        // without the button knowing a dropdown is above it.
+        expect(trigger).toHaveAttribute("disabled");
+        expect(trigger).toHaveAttribute("data-disabled", "true");
+        expect(trigger).not.toHaveAttribute("tabindex");
+
+        press(trigger);
+        await settle();
+
+        expect(result.screen.queryByRole("menu")).toBeNull();
+
+        result.unmount();
+      });
+
+      it("reaches the trigger the dropdown ships", async () => {
+        const result = render({ isDisabled: true, withCustomTrigger: true });
+        const trigger = result.getByRole("button", { name: "Menu" });
+
+        expect(trigger).toHaveAttribute("disabled");
+        expect(trigger).toHaveAttribute("data-disabled", "true");
+        expect(trigger).not.toHaveAttribute("tabindex");
+
+        press(trigger);
+        await settle();
+
+        expect(result.screen.queryByRole("menu")).toBeNull();
+
+        result.unmount();
+      });
+
+      it("takes the trigger's own prop over the root's state", () => {
+        const result = render({ triggerIsDisabled: true, withCustomTrigger: true });
+
+        // Disabling the control without closing the menu off, which is the reason the trigger
+        // carries a prop of its own at all. A real press is stopped by the attribute rather than
+        // by the root's guards, so only the attribute is asserted here.
+        expect(result.getByRole("button", { name: "Menu" })).toHaveAttribute("disabled");
+
+        result.unmount();
+      });
+
+      it("leaves the trigger alone when nothing above has an opinion", () => {
+        const result = render({ withCustomTrigger: true });
+        const trigger = result.getByRole("button", { name: "Menu" });
+
+        // A dropdown that never took the prop must report nothing rather than `false`, or it
+        // would answer for a group or a fieldset that did.
+        expect(trigger).not.toHaveAttribute("disabled");
+        expect(trigger).toHaveAttribute("tabindex", "0");
+
+        result.unmount();
+      });
+    });
+
     it("looks pressed for as long as its menu is open", async () => {
       const result = render();
       const trigger = result.getByRole("button", { name: "Menu" });

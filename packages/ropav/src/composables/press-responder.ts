@@ -12,6 +12,12 @@ export interface PressResponder {
   attrs: ComputedRef<Record<string, unknown>>;
   /** Listeners the pressable chains ahead of its own, through {@link composePressResponder}. */
   handlers: ComputedRef<UsePressHandlers>;
+  /**
+   * Whether the pressable should be disabled regardless of its own state. Holds `undefined` when
+   * nothing above has an opinion, which is what lets a pressable resolving this against its own
+   * group or fieldset tell "enabled" apart from "unstated".
+   */
+  isDisabled?: ComputedRef<boolean | undefined>;
   /** Whether the pressable should look pressed regardless of its own state. */
   isPressed: ComputedRef<boolean>;
   /** Reports the pressable's element, which is what the responder acts on and positions against. */

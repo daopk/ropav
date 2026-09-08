@@ -18,6 +18,8 @@ export interface DropdownRootEmits {
 
 export interface DropdownTriggerProps {
   class?: string;
+  /** Disables the trigger. Falls back to the state the dropdown root supplies. */
+  isDisabled?: boolean;
   /** Native button type. @default "button" */
   type?: "button" | "reset" | "submit";
 }

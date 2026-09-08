@@ -187,6 +187,9 @@ export const useMenuTrigger = (
         },
       };
     }),
+    // Deliberately not the coerced `isDisabled` above: a dropdown that never took the prop must
+    // report nothing rather than `false`, or it would answer for a group that did.
+    isDisabled: computed(() => toValue(options.isDisabled)),
     isPressed: press.isPressed,
     registerElement: (next) => {
       element.value = next;

@@ -31,6 +31,10 @@ const props = withDefaults(
     selectedKeys?: Iterable<CollectionKey>;
     trigger?: MenuTriggerType;
     isOpen?: boolean;
+    /** Held on the root, which is what reaches whichever pressable is the trigger. */
+    isDisabled?: boolean;
+    /** Held on the custom trigger itself, which is meant to win over the root's. */
+    triggerIsDisabled?: boolean;
     withHeader?: boolean;
     withIndicator?: boolean;
     withSection?: boolean;
@@ -45,10 +49,12 @@ const props = withDefaults(
   }>(),
   {
     disabledKeys: undefined,
+    isDisabled: undefined,
     isOpen: undefined,
     selectedKeys: undefined,
     selectionMode: undefined,
     trigger: undefined,
+    triggerIsDisabled: undefined,
     withEmptyState: undefined,
     items: (): DropdownFixtureItem[] => [
       { id: "new-file", label: "New file" },
@@ -67,6 +73,7 @@ const emit = defineEmits<{
 
 <template>
   <Dropdown
+    :is-disabled="props.isDisabled"
     :is-open="props.isOpen"
     :trigger="props.trigger"
     @open-change="emit('openChange', $event)"
@@ -78,7 +85,13 @@ const emit = defineEmits<{
     >
       <svg viewBox="0 0 16 16" />
     </DropdownTrigger>
-    <DropdownTrigger v-else-if="props.withCustomTrigger" aria-label="Menu">Actions</DropdownTrigger>
+    <DropdownTrigger
+      v-else-if="props.withCustomTrigger"
+      aria-label="Menu"
+      :is-disabled="props.triggerIsDisabled"
+    >
+      Actions
+    </DropdownTrigger>
     <Button v-else aria-label="Menu" variant="secondary">Actions</Button>
     <DropdownPopover>
       <DropdownMenu

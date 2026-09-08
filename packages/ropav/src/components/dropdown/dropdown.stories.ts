@@ -139,6 +139,42 @@ export const Default: Story = {
   }),
 };
 
+export const Disabled: Story = {
+  render: () => ({
+    components,
+    template: `
+      <div class="flex items-center gap-2">
+        <Dropdown is-disabled>
+          <Button aria-label="Menu" variant="secondary">Actions</Button>
+          <DropdownPopover>
+            <DropdownMenu>
+              <DropdownItem id="new-file" text-value="New file">
+                <Label>New file</Label>
+              </DropdownItem>
+            </DropdownMenu>
+          </DropdownPopover>
+        </Dropdown>
+        <Dropdown is-disabled>
+          <DropdownTrigger
+            aria-label="Menu"
+            class="rp-button rp-button--md rp-button--secondary"
+          >
+            Actions
+          </DropdownTrigger>
+          <DropdownPopover>
+            <DropdownMenu>
+              <DropdownItem id="new-file" text-value="New file">
+                <Label>New file</Label>
+              </DropdownItem>
+            </DropdownMenu>
+          </DropdownPopover>
+        </Dropdown>
+        <Button is-disabled variant="secondary">Plain</Button>
+      </div>
+    `,
+  }),
+};
+
 export const WithSingleSelection: Story = {
   render: () => ({
     components,
