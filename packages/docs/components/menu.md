@@ -19,7 +19,7 @@ Each `MenuItem` needs an `id`, which is what the `action` event carries, and a `
 typeahead where the label is not plain text. `MenuSection` groups items;
 a [Separator](/components/separator) between sections draws the line.
 
-A [Description](/components/description) beside the `Label` makes the item two lines, with a
+A `Description` beside the `Label` makes the item two lines, with a
 leading icon and a trailing [Kbd](/components/kbd) staying on the label's own line — wrap the pair
 yourself if you need a trailing element of another kind.
 
