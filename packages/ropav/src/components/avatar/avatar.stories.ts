@@ -22,22 +22,6 @@ const components = {
   Separator: Separator,
 };
 
-const users = [
-  { id: 1, imageUrl: avatarSrc(3), name: "John" },
-  { id: 2, imageUrl: avatarSrc(5), name: "Kate" },
-  { id: 3, imageUrl: avatarSrc(20), name: "Emily" },
-  { id: 4, imageUrl: avatarSrc(23), name: "Michael" },
-  { id: 5, imageUrl: avatarSrc(16), name: "Olivia" },
-];
-
-const circles = [
-  { id: 1, imageUrl: avatarSrc("red"), name: "R" },
-  { id: 2, imageUrl: avatarSrc("orange"), name: "O" },
-  { id: 3, imageUrl: avatarSrc("green"), name: "G" },
-  { id: 4, imageUrl: avatarSrc("white"), name: "W" },
-  { id: 5, imageUrl: avatarSrc("black"), name: "B" },
-];
-
 const meta: StoryMeta = {
   argTypes: {
     color: {
@@ -178,36 +162,6 @@ export const Fallback: Story = {
             GB
           </AvatarFallback>
         </Avatar>
-      </div>
-    `,
-  }),
-};
-
-/** There is no AvatarGroup: a group is overlap and a ring, which is CSS the caller owns. */
-export const Group: Story = {
-  render: () => ({
-    components,
-    setup: () => ({ circles, users }),
-    template: `
-      <div class="flex flex-col gap-4">
-        <div class="flex items-center justify-center -space-x-2">
-          <Avatar v-for="user in users" :key="user.id" class="ring-2 ring-[var(--rp-background)]">
-            <AvatarImage :src="user.imageUrl" />
-            <AvatarFallback>{{ user.name.charAt(0) }}</AvatarFallback>
-          </Avatar>
-          <Avatar class="ring-2 ring-[var(--rp-background)]">
-            <AvatarFallback class="border-none">+5</AvatarFallback>
-          </Avatar>
-        </div>
-        <div class="flex items-center justify-center -space-x-2">
-          <Avatar v-for="circle in circles" :key="circle.id" class="ring-2 ring-[var(--rp-background)]">
-            <AvatarImage :src="circle.imageUrl" />
-            <AvatarFallback>{{ circle.name }}</AvatarFallback>
-          </Avatar>
-          <Avatar class="ring-2 ring-[var(--rp-background)]">
-            <AvatarFallback class="border-none">+5</AvatarFallback>
-          </Avatar>
-        </div>
       </div>
     `,
   }),

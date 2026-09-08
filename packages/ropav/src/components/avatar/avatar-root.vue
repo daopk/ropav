@@ -5,14 +5,22 @@ import type { AvatarRootProps } from "./avatar.types";
 import { avatarVariants } from "@ropav/styles";
 import { computed, shallowRef } from "vue";
 
+import { useAvatarGroupContext } from "../avatar-group/avatar-group.context";
+
 import { provideAvatarContext } from "./avatar.context";
 
 const props = defineProps<AvatarRootProps>();
 
 defineSlots<{ default?: () => unknown }>();
 
+const group = useAvatarGroupContext();
+
+// Named apart from the prop it resolves: a binding that shadows a prop name is read as the prop
+// inside the template, which would silently drop the size coming from the group.
+const resolvedSize = computed(() => props.size ?? group?.size.value);
+
 const slots = computed(() =>
-  avatarVariants({ color: props.color, size: props.size, variant: props.variant }),
+  avatarVariants({ color: props.color, size: resolvedSize.value, variant: props.variant }),
 );
 
 // Held on the root so the fallback can react to what the image reports.
