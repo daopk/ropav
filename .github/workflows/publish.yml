@@ -1,0 +1,73 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - "v*"
+
+concurrency:
+  group: npm-publish
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Check tag matches package versions
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          VERSION="${TAG#v}"
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo "Tag $TAG is not vX.Y.Z or vX.Y.Z-prerelease"
+            exit 1
+          fi
+          for pkg in packages/ropav/package.json packages/styles/package.json; do
+            PKG_VERSION="$(node -p "require('./${pkg}').version")"
+            if [ "$PKG_VERSION" != "$VERSION" ]; then
+              echo "Tag $TAG does not match ${pkg} version ${PKG_VERSION}"
+              exit 1
+            fi
+          done
+          if [[ "$VERSION" == *-* ]]; then
+            PRERELEASE="${VERSION#*-}"
+            echo "NPM_DIST_TAG=${PRERELEASE%%.*}" >> "$GITHUB_ENV"
+          else
+            echo "NPM_DIST_TAG=latest" >> "$GITHUB_ENV"
+          fi
+          echo "Tag $TAG matches package versions ${VERSION}"
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm --filter @ropav/styles --filter ropav typecheck
+
+      - name: Build
+        run: pnpm --filter @ropav/styles --filter ropav build
+
+      - name: Test (jsdom)
+        run: pnpm --filter ropav test:jsdom
+
+      - name: Publish
+        run: pnpm --filter @ropav/styles --filter ropav publish --tag "$NPM_DIST_TAG" --access public --no-git-checks
