@@ -45,6 +45,21 @@ export const catalogue: Record<string, CatalogueEntry> = {
     },
   },
 
+  "avatar-group": {
+    controls: ["size", "overlap", "front", "orientation"],
+    file: "components/avatar-group/avatar-group-root.vue",
+    node: {
+      children: [
+        { children: [{ children: ["JD"], tag: "AvatarFallback" }], tag: "Avatar" },
+        { children: [{ children: ["KM"], tag: "AvatarFallback" }], tag: "Avatar" },
+        { children: [{ children: ["EW"], tag: "AvatarFallback" }], tag: "Avatar" },
+        { props: { count: 5 }, tag: "AvatarGroupOverflow" },
+      ],
+      root: true,
+      tag: "AvatarGroup",
+    },
+  },
+
   badge: {
     controls: ["variant", "color", "size", "placement"],
     file: "components/badge/badge-root.vue",
@@ -803,7 +818,9 @@ export const optionOrder: Record<string, readonly string[]> = {
   "color-swatch-picker.size": ["xs", "sm", "md", "lg", "xl"],
   "color-swatch-picker.variant": ["circle", "square"],
   "color-swatch.size": ["xs", "sm", "md", "lg", "xl"],
+  front: ["last", "first"],
   layout: ["grid", "stack"],
+  overlap: ["none", "sm", "md", "lg"],
   placement: ["top-right", "top-left", "bottom-right", "bottom-left"],
   selectionMode: ["none", "single", "multiple"],
   "separator.variant": ["default", "secondary", "tertiary"],

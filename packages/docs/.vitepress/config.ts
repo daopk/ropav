@@ -149,7 +149,13 @@ export default defineConfig({
           ],
           text: "Colors",
         },
-        { items: [{ link: "/components/avatar", text: "Avatar" }], text: "Media" },
+        {
+          items: [
+            { link: "/components/avatar", text: "Avatar" },
+            { link: "/components/avatar-group", text: "AvatarGroup" },
+          ],
+          text: "Media",
+        },
         {
           items: [
             { link: "/components/alert", text: "Alert" },

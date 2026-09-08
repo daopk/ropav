@@ -11,6 +11,8 @@ image *not* being there: it is probed before it is rendered, and the fallback ho
 until the image is known to be usable — so the layout never jumps and a broken source never leaves
 a torn icon behind.
 
+[AvatarGroup](/components/avatar-group) stacks a set of them and hands each one its size.
+
 ```ts
 import { Avatar, AvatarFallback, AvatarImage } from "ropav";
 ```
