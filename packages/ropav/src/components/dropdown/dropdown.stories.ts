@@ -531,27 +531,19 @@ export const WithDescriptions: Story = {
               :key="action.id"
               :text-value="action.label"
             >
-              <div class="flex h-8 items-start justify-center pt-px">
-                <component :is="action.icon" class="size-4 shrink-0 text-[var(--rp-muted)]" />
-              </div>
-              <div class="flex flex-col">
-                <Label>{{ action.label }}</Label>
-                <Description>{{ action.description }}</Description>
-              </div>
-              <Kbd class="ms-auto" variant="light">
+              <component :is="action.icon" class="size-4 shrink-0 text-[var(--rp-muted)]" />
+              <Label>{{ action.label }}</Label>
+              <Description>{{ action.description }}</Description>
+              <Kbd variant="light">
                 <KbdAbbr key-value="command" />
                 <KbdContent>{{ action.letter }}</KbdContent>
               </Kbd>
             </DropdownItem>
             <DropdownItem id="delete-file" text-value="Delete file" variant="danger">
-              <div class="flex h-8 items-start justify-center pt-px">
-                <IconTrashBin class="size-4 shrink-0 text-[var(--rp-danger)]" />
-              </div>
-              <div class="flex flex-col">
-                <Label>Delete file</Label>
-                <Description>Move to trash</Description>
-              </div>
-              <Kbd class="ms-auto" variant="light">
+              <IconTrashBin class="size-4 shrink-0 text-[var(--rp-danger)]" />
+              <Label>Delete file</Label>
+              <Description>Move to trash</Description>
+              <Kbd variant="light">
                 <KbdAbbr key-value="command" />
                 <KbdAbbr key-value="shift" />
                 <KbdContent>D</KbdContent>
@@ -582,27 +574,19 @@ export const WithSections: Story = {
             <DropdownSection>
               <Header>Actions</Header>
               <DropdownItem id="new-file" text-value="New file">
-                <div class="flex h-8 items-start justify-center pt-px">
-                  <IconSquarePlus class="size-4 shrink-0 text-[var(--rp-muted)]" />
-                </div>
-                <div class="flex flex-col">
-                  <Label>New file</Label>
-                  <Description>Create a new file</Description>
-                </div>
-                <Kbd class="ms-auto" variant="light">
+                <IconSquarePlus class="size-4 shrink-0 text-[var(--rp-muted)]" />
+                <Label>New file</Label>
+                <Description>Create a new file</Description>
+                <Kbd variant="light">
                   <KbdAbbr key-value="command" />
                   <KbdContent>N</KbdContent>
                 </Kbd>
               </DropdownItem>
               <DropdownItem id="edit-file" text-value="Edit file">
-                <div class="flex h-8 items-start justify-center pt-px">
-                  <IconPencil class="size-4 shrink-0 text-[var(--rp-muted)]" />
-                </div>
-                <div class="flex flex-col">
-                  <Label>Edit file</Label>
-                  <Description>Make changes</Description>
-                </div>
-                <Kbd class="ms-auto" variant="light">
+                <IconPencil class="size-4 shrink-0 text-[var(--rp-muted)]" />
+                <Label>Edit file</Label>
+                <Description>Make changes</Description>
+                <Kbd variant="light">
                   <KbdAbbr key-value="command" />
                   <KbdContent>E</KbdContent>
                 </Kbd>
@@ -612,14 +596,10 @@ export const WithSections: Story = {
             <DropdownSection>
               <Header>Danger zone</Header>
               <DropdownItem id="delete-file" text-value="Delete file" variant="danger">
-                <div class="flex h-8 items-start justify-center pt-px">
-                  <IconTrashBin class="size-4 shrink-0 text-[var(--rp-danger)]" />
-                </div>
-                <div class="flex flex-col">
-                  <Label>Delete file</Label>
-                  <Description>Move to trash</Description>
-                </div>
-                <Kbd class="ms-auto" variant="light">
+                <IconTrashBin class="size-4 shrink-0 text-[var(--rp-danger)]" />
+                <Label>Delete file</Label>
+                <Description>Move to trash</Description>
+                <Kbd variant="light">
                   <KbdAbbr key-value="command" />
                   <KbdAbbr key-value="shift" />
                   <KbdContent>D</KbdContent>
@@ -647,27 +627,19 @@ export const WithDisabledItems: Story = {
             <DropdownSection>
               <Header>Actions</Header>
               <DropdownItem id="new-file" text-value="New file">
-                <div class="flex h-8 items-start justify-center pt-px">
-                  <IconSquarePlus class="size-4 shrink-0 text-[var(--rp-muted)]" />
-                </div>
-                <div class="flex flex-col">
-                  <Label>New file</Label>
-                  <Description>Create a new file</Description>
-                </div>
-                <Kbd class="ms-auto" variant="light">
+                <IconSquarePlus class="size-4 shrink-0 text-[var(--rp-muted)]" />
+                <Label>New file</Label>
+                <Description>Create a new file</Description>
+                <Kbd variant="light">
                   <KbdAbbr key-value="command" />
                   <KbdContent>N</KbdContent>
                 </Kbd>
               </DropdownItem>
               <DropdownItem id="edit-file" text-value="Edit file">
-                <div class="flex h-8 items-start justify-center pt-px">
-                  <IconPencil class="size-4 shrink-0 text-[var(--rp-muted)]" />
-                </div>
-                <div class="flex flex-col">
-                  <Label>Edit file</Label>
-                  <Description>Make changes</Description>
-                </div>
-                <Kbd class="ms-auto" variant="light">
+                <IconPencil class="size-4 shrink-0 text-[var(--rp-muted)]" />
+                <Label>Edit file</Label>
+                <Description>Make changes</Description>
+                <Kbd variant="light">
                   <KbdAbbr key-value="command" />
                   <KbdContent>E</KbdContent>
                 </Kbd>
@@ -677,14 +649,10 @@ export const WithDisabledItems: Story = {
             <DropdownSection>
               <Header>Danger zone</Header>
               <DropdownItem id="delete-file" text-value="Delete file" variant="danger">
-                <div class="flex h-8 items-start justify-center pt-px">
-                  <IconTrashBin class="size-4 shrink-0 text-[var(--rp-danger)]" />
-                </div>
-                <div class="flex flex-col">
-                  <Label>Delete file</Label>
-                  <Description>Move to trash</Description>
-                </div>
-                <Kbd class="ms-auto" variant="light">
+                <IconTrashBin class="size-4 shrink-0 text-[var(--rp-danger)]" />
+                <Label>Delete file</Label>
+                <Description>Move to trash</Description>
+                <Kbd variant="light">
                   <KbdAbbr key-value="command" />
                   <KbdAbbr key-value="shift" />
                   <KbdContent>D</KbdContent>

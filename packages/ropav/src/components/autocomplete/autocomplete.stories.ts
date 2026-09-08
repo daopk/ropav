@@ -1323,10 +1323,8 @@ export const Virtualization: Story = {
                     ${emptyTemplate()}
                     <template #default="{item}">
                       <ListBoxItem :id="item.id" :text-value="item.name">
-                        <div class="flex flex-col">
-                          <Label>{{ item.name }}</Label>
-                          <Description>{{ item.email }}</Description>
-                        </div>
+                        <Label>{{ item.name }}</Label>
+                        <Description>{{ item.email }}</Description>
                         <ListBoxItemIndicator />
                       </ListBoxItem>
                     </template>
@@ -1469,10 +1467,8 @@ export const UserSelection: Story = {
                       <AvatarImage :src="user.avatarUrl" />
                       <AvatarFallback>{{ user.fallback }}</AvatarFallback>
                     </Avatar>
-                    <div class="flex flex-col">
-                      <Label>{{ user.name }}</Label>
-                      <Description>{{ user.email }}</Description>
-                    </div>
+                    <Label>{{ user.name }}</Label>
+                    <Description>{{ user.email }}</Description>
                     <ListBoxItemIndicator />
                   </ListBoxItem>
                 </ListBox>
@@ -1543,10 +1539,8 @@ export const UserSelectionMultiple: Story = {
                       <AvatarImage :src="user.avatarUrl" />
                       <AvatarFallback>{{ user.fallback }}</AvatarFallback>
                     </Avatar>
-                    <div class="flex flex-col">
-                      <Label>{{ user.name }}</Label>
-                      <Description>{{ user.email }}</Description>
-                    </div>
+                    <Label>{{ user.name }}</Label>
+                    <Description>{{ user.email }}</Description>
                     <ListBoxItemIndicator />
                   </ListBoxItem>
                 </ListBox>
@@ -1593,10 +1587,8 @@ export const LocationSearch: Story = {
                     :text-value="city.name"
                   >
                     <IconMapPin class="size-4 shrink-0 text-[var(--rp-muted)]" />
-                    <div class="flex flex-col">
-                      <Label>{{ city.name }}</Label>
-                      <Description>{{ city.country }}</Description>
-                    </div>
+                    <Label>{{ city.name }}</Label>
+                    <Description>{{ city.country }}</Description>
                     <ListBoxItemIndicator />
                   </ListBoxItem>
                 </ListBox>
@@ -1715,10 +1707,8 @@ export const EmailRecipients: Story = {
                     :key="item.id"
                     :text-value="item.email"
                   >
-                    <div class="flex flex-col">
-                      <Label>{{ item.name }}</Label>
-                      <Description>{{ item.email }}</Description>
-                    </div>
+                    <Label>{{ item.name }}</Label>
+                    <Description>{{ item.email }}</Description>
                     <ListBoxItemIndicator />
                   </ListBoxItem>
                 </ListBox>

@@ -87,10 +87,8 @@ const userItems = (withIndicator: boolean) => `
       <AvatarImage :src="avatarUrl(user.color)" />
       <AvatarFallback>{{ user.initial }}</AvatarFallback>
     </Avatar>
-    <div class="flex flex-col">
-      <Label>{{ user.name }}</Label>
-      <Description>{{ user.email }}</Description>
-    </div>
+    <Label>{{ user.name }}</Label>
+    <Description>{{ user.email }}</Description>
     ${withIndicator ? "<ListBoxItemIndicator />" : ""}
   </ListBoxItem>
 `;
@@ -171,14 +169,10 @@ export const WithSections: Story = {
               :id="action.id"
               :text-value="action.title"
             >
-              <div class="flex h-8 items-start justify-center pt-px">
-                <span class="size-4 shrink-0 text-[var(--rp-muted)]" />
-              </div>
-              <div class="flex flex-col">
-                <Label>{{ action.title }}</Label>
-                <Description>{{ action.description }}</Description>
-              </div>
-              <Kbd class="ms-auto" variant="light">
+              <span class="size-4 shrink-0 text-[var(--rp-muted)]" />
+              <Label>{{ action.title }}</Label>
+              <Description>{{ action.description }}</Description>
+              <Kbd variant="light">
                 <KbdAbbr v-for="key in action.keys" :key="key" :key-value="key" />
                 <KbdContent>{{ action.letter }}</KbdContent>
               </Kbd>
@@ -188,14 +182,10 @@ export const WithSections: Story = {
           <ListBoxSection>
             <Header>Danger zone</Header>
             <ListBoxItem id="delete-file" text-value="Delete file" variant="danger">
-              <div class="flex h-8 items-start justify-center pt-px">
-                <span class="size-4 shrink-0 text-[var(--rp-danger)]" />
-              </div>
-              <div class="flex flex-col">
-                <Label>Delete file</Label>
-                <Description>Move to trash</Description>
-              </div>
-              <Kbd class="ms-auto" variant="light">
+              <span class="size-4 shrink-0 text-[var(--rp-danger)]" />
+              <Label>Delete file</Label>
+              <Description>Move to trash</Description>
+              <Kbd variant="light">
                 <KbdAbbr key-value="command" />
                 <KbdAbbr key-value="shift" />
                 <KbdContent>D</KbdContent>
@@ -228,20 +218,16 @@ export const WithDisabledItems: Story = {
               :id="action.id"
               :text-value="action.title"
             >
-              <div class="flex flex-col">
-                <Label>{{ action.title }}</Label>
-                <Description>{{ action.description }}</Description>
-              </div>
+              <Label>{{ action.title }}</Label>
+              <Description>{{ action.description }}</Description>
             </ListBoxItem>
           </ListBoxSection>
           <Separator />
           <ListBoxSection>
             <Header>Danger zone</Header>
             <ListBoxItem id="delete-file" text-value="Delete file" variant="danger">
-              <div class="flex flex-col">
-                <Label>Delete file</Label>
-                <Description>Move to trash</Description>
-              </div>
+              <Label>Delete file</Label>
+              <Description>Move to trash</Description>
             </ListBoxItem>
           </ListBoxSection>
         </ListBox>
@@ -276,10 +262,8 @@ export const CustomCheckIcon: Story = {
               <AvatarImage :src="avatarUrl(user.color)" />
               <AvatarFallback>{{ user.initial }}</AvatarFallback>
             </Avatar>
-            <div class="flex flex-col">
-              <Label>{{ user.name }}</Label>
-              <Description>{{ user.email }}</Description>
-            </div>
+            <Label>{{ user.name }}</Label>
+            <Description>{{ user.email }}</Description>
             <ListBoxItemIndicator v-slot="{isSelected}">
               <span v-if="isSelected" class="text-[var(--rp-accent)]">✓</span>
             </ListBoxItemIndicator>
@@ -390,10 +374,8 @@ export const Virtualization: Story = {
         >
           <template #default="{item}">
             <ListBoxItem :id="item.id" :text-value="item.name">
-              <div class="flex flex-col">
-                <Label>{{ item.name }}</Label>
-                <Description>{{ item.email }}</Description>
-              </div>
+              <Label>{{ item.name }}</Label>
+              <Description>{{ item.email }}</Description>
               <ListBoxItemIndicator />
             </ListBoxItem>
           </template>

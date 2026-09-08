@@ -651,10 +651,8 @@ export const CustomValue: Story = {
                 <AvatarImage :src="user.avatarUrl" />
                 <AvatarFallback>{{ user.fallback }}</AvatarFallback>
               </Avatar>
-              <div class="flex flex-col">
-                <Label>{{ user.name }}</Label>
-                <Description>{{ user.email }}</Description>
-              </div>
+              <Label>{{ user.name }}</Label>
+              <Description>{{ user.email }}</Description>
               <ListBoxItemIndicator />
             </ListBoxItem>
           </ListBox>
@@ -700,10 +698,8 @@ export const CustomValueMultiple: Story = {
                 <AvatarImage :src="user.avatarUrl" />
                 <AvatarFallback>{{ user.fallback }}</AvatarFallback>
               </Avatar>
-              <div class="flex flex-col">
-                <Label>{{ user.name }}</Label>
-                <Description>{{ user.email }}</Description>
-              </div>
+              <Label>{{ user.name }}</Label>
+              <Description>{{ user.email }}</Description>
               <ListBoxItemIndicator />
             </ListBoxItem>
           </ListBox>
