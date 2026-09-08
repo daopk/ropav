@@ -1,0 +1,20 @@
+{
+  "name": "ropav",
+  "install": "bash .cursor/install.sh",
+  "terminals": [
+    {
+      "name": "storybook",
+      "command": "export NVM_DIR=\"$HOME/.nvm\"; . \"$NVM_DIR/nvm.sh\"; nvm use >/dev/null; pnpm dev",
+      "description": "Storybook dev server for every component, on http://127.0.0.1:6006"
+    },
+    {
+      "name": "docs",
+      "command": "export NVM_DIR=\"$HOME/.nvm\"; . \"$NVM_DIR/nvm.sh\"; nvm use >/dev/null; pnpm docs:dev",
+      "description": "VitePress documentation site, on http://127.0.0.1:5174"
+    }
+  ],
+  "ports": [
+    { "name": "storybook", "port": 6006 },
+    { "name": "docs", "port": 5174 }
+  ]
+}
