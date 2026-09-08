@@ -16,7 +16,6 @@
     box-shadow 150ms var(--rp-ease-out);
 
   /* Focus state */
-  &:focus-visible:not(:focus),
   &[data-focus-visible="true"] {
     --rp-ring:
       var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width) var(--rp-ring-offset-color),

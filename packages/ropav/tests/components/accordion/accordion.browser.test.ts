@@ -136,8 +136,7 @@ describe("Accordion (browser)", () => {
     await nextTick();
 
     // Measured rather than inferred from `:focus-visible`: the ring is drawn with `box-shadow`,
-    // and the only rule that reaches it is `[data-focus-visible="true"]` — the
-    // `&:focus-visible:not(:focus)` branch beside it can never match on a real button.
+    // and the only rule that reaches it is `[data-focus-visible="true"]`.
     expect(trigger).toHaveFocus();
     expect(trigger).toHaveAttribute("data-focus-visible", "true");
 

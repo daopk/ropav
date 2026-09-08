@@ -82,7 +82,6 @@
 }
 
 /* Override focus ring to use inset style so it stays within button bounds */
-.rp-toggle-button-group .rp-toggle-button:focus-visible:not(:focus),
 .rp-toggle-button-group .rp-toggle-button[data-focus-visible="true"] {
   --rp-ring-offset-width: 0px;
   --rp-ring-inset: inset;

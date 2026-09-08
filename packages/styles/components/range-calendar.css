@@ -297,7 +297,6 @@
   }
 
   /* Focus state */
-  &:focus-visible:not(:focus),
   &[data-focus-visible="true"] {
     z-index: 2;
 

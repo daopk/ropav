@@ -27,7 +27,6 @@
 
   transition: var(--rp-motion) box-shadow 150ms var(--rp-ease-out);
 
-  &:focus-visible:not(:focus),
   &[data-focus-visible="true"] {
     --rp-ring:
       var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width) var(--rp-ring-offset-color),
@@ -82,7 +81,6 @@
   box-shadow: var(--rp-shadow-overlay);
   border-radius: min(32px, var(--rp-component-radius));
 
-  &:focus-visible:not(:focus),
   &[data-focus-visible="true"] {
     --rp-outline-style: none;
     outline-style: none;

@@ -154,7 +154,6 @@
   }
 
   /* Focus visible state */
-  &:focus-visible:not(:focus),
   &[data-focus-visible="true"] {
     border-radius: 0.25rem;
     --rp-ring:
@@ -216,7 +215,6 @@
   box-shadow: var(--rp-shadow-overlay);
 
   /* Focus state */
-  &:focus-visible:not(:focus),
   &[data-focus-visible="true"] {
     --rp-outline-style: none;
     outline-style: none;

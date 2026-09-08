@@ -32,7 +32,6 @@
   }
 
   /* Focus visible state */
-  &:focus-visible:not(:focus),
   &[data-focus-visible="true"] {
     --rp-ring:
       var(--rp-ring-inset,) 0 0 0 var(--rp-ring-offset-width) var(--rp-ring-offset-color),
@@ -90,7 +89,6 @@
   gap: calc(var(--rp-spacing) * 3);
 
   /* Focus state */
-  &:focus-visible:not(:focus),
   &[data-focus-visible="true"] {
     --rp-outline-style: none;
     outline-style: none;

@@ -128,8 +128,8 @@ describe("Select (browser)", () => {
 
       expect(document.activeElement).toBe(trigger);
 
-      // The pseudo-class branch of this rule is `:focus-visible:not(:focus)`, which nothing ever
-      // satisfies — so the ring exists only if the attribute is emitted.
+      // The rule is reachable through `[data-focus-visible="true"]` alone, so the ring exists
+      // only if the attribute is emitted.
       expect(trigger).toHaveAttribute("data-focus-visible", "true");
 
       await settled(trigger);

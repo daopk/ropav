@@ -387,9 +387,8 @@ describe("Accordion", () => {
 
   describe("interaction states", () => {
     // React builds the trigger on React Aria's `Button`, which renders these. They are not
-    // cosmetic here: `accordion.css` reaches the focus ring only through
-    // `[data-focus-visible="true"]`, since the `&:focus-visible:not(:focus)` branch beside it
-    // can never match on a real button.
+    // cosmetic here: `accordion.css` reaches the focus ring through
+    // `[data-focus-visible="true"]` and nothing else.
     it("reports hover, which the stylesheet keys the trigger background on", async () => {
       const { container, unmount } = renderVapor(AccordionFixture);
       const trigger = triggersIn(container)[0]!;

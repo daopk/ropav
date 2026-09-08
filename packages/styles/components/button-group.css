@@ -69,7 +69,6 @@
 }
 
 /* Raise focused button so its outward focus ring + gap shows above adjacent buttons */
-.rp-button-group .rp-button:focus-visible:not(:focus),
 .rp-button-group .rp-button[data-focus-visible="true"] {
   z-index: 10;
 }
