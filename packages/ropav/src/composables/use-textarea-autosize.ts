@@ -64,6 +64,26 @@ const clear = (element: HTMLTextAreaElement) => {
 };
 
 /**
+ * Content-box width, the same box ResizeObserver reports as `contentRect`.
+ *
+ * `clientWidth` is the padding box minus the scrollbar, so subtracting inline
+ * padding lands on the content box without mixing in the border the way
+ * `getBoundingClientRect` does.
+ */
+const contentWidthOf = (element: HTMLTextAreaElement): number => {
+  const style = getComputedStyle(element);
+
+  return element.clientWidth - px(style.paddingLeft) - px(style.paddingRight);
+};
+
+/** `document.fonts`, or nothing on the server — where `document` itself is missing. */
+const fontFaceSet = (): FontFaceSet | undefined => {
+  if (typeof document === "undefined") return undefined;
+
+  return document.fonts;
+};
+
+/**
  * Size a textarea to its content, clamped to a row range.
  *
  * Measured on the live element rather than a hidden clone: the clone is how `react-textarea-autosize`
@@ -147,14 +167,19 @@ const measure = (
  * `height` as the pointer drags; an observer that stayed attached with autosize off would
  * `clear` that height on every width change and fight the handle.
  *
- * Width is taken from `contentRect`, and the first delivery is only a seed: `contentRect` is
- * the content box, `getBoundingClientRect` is the border box, and seeding one from the other
- * made the loop guard always fail, so every mount paid a second layout. Writing `style.height`
- * is itself a size change, and an observer that did not discriminate width would loop.
+ * Width is taken from `contentRect`, and seeded up front from the same content box
+ * (`clientWidth` minus inline padding). Seeding from `getBoundingClientRect` mixed in the
+ * border, so the loop guard always failed and every mount paid a second layout. Skipping
+ * the first delivery instead ate a real shrink: `sync` after `observe` can make a scrollbar
+ * appear, the first callback reports the narrower width, and treating that as a seed left
+ * wrapped text clipped. Writing `style.height` is itself a size change, and an observer
+ * that did not discriminate width would loop.
  *
  * An inline height also hides height-only metric changes from the observer — a webfont that
  * lands after first paint, or `.rp-textarea`'s `@media (width >= 40rem)` type/padding switch
- * on a fixed-width control. Those go through `document.fonts` and `window` `resize` instead.
+ * on a fixed-width control. Those go through `document.fonts` and `window` `resize`. A
+ * leftover clip (`scrollHeight > clientHeight` while we still have `overflow: hidden`) is
+ * the backstop for used-metric changes that do not move width, such as `--rp-leading`.
  */
 export const useTextareaAutosize = (
   options: UseTextareaAutosizeOptions,
@@ -199,25 +224,35 @@ export const useTextareaAutosize = (
 
     if (typeof window !== "undefined") window.removeEventListener("resize", onMetrics);
 
-    document.fonts?.removeEventListener("loadingdone", onMetrics);
+    fontFaceSet()?.removeEventListener("loadingdone", onMetrics);
   };
 
   const observe = (element: HTMLTextAreaElement) => {
     detach();
 
     if (typeof ResizeObserver !== "undefined") {
+      lastWidth = contentWidthOf(element);
+
       observer = new ResizeObserver((entries) => {
         const width = entries[0]?.contentRect.width;
 
-        if (width === undefined || width === lastWidth) return;
+        if (width === undefined) return;
 
-        const seeded = Number.isNaN(lastWidth);
+        const widthChanged = width !== lastWidth;
 
         lastWidth = width;
 
-        if (seeded) return;
+        if (widthChanged) {
+          sync();
 
-        sync();
+          return;
+        }
+
+        // Used metrics grew inside a pinned box. At the maxRows cap overflow is
+        // already `auto` and the extra scrollHeight is meant to be there.
+        if (element.style.overflowY === "hidden" && element.scrollHeight > element.clientHeight) {
+          sync();
+        }
       });
       observer.observe(element);
     }
@@ -225,7 +260,7 @@ export const useTextareaAutosize = (
     if (typeof window !== "undefined")
       window.addEventListener("resize", onMetrics, { passive: true });
 
-    document.fonts?.addEventListener("loadingdone", onMetrics);
+    fontFaceSet()?.addEventListener("loadingdone", onMetrics);
   };
 
   watch(

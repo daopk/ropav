@@ -219,6 +219,38 @@ describe("TextArea (browser)", () => {
     unmount();
   });
 
+  it("grows again when content overflows a pinned height at the same width", async () => {
+    const { control, unmount } = render({ autosize: true });
+
+    await nextTick();
+
+    control.style.width = "280px";
+    control.value = "one\ntwo\nthree\nfour\nfive";
+    control.dispatchEvent(new Event("input", { bubbles: true }));
+    await nextTick();
+
+    const before = Number.parseFloat(control.style.height);
+
+    control.style.lineHeight = "40px";
+    expect(control.scrollHeight).toBeGreaterThan(control.clientHeight);
+    expect(getComputedStyle(control).overflowY).toBe("hidden");
+
+    // Used metrics changed; the box did not. A padding tweak is a height-only
+    // observer delivery, the way a parent reflow would notify, without a
+    // resize or a font load.
+    const padding = Number.parseFloat(getComputedStyle(control).paddingBottom) || 0;
+
+    control.style.paddingBottom = `${padding + 1}px`;
+    await new Promise<void>((resolve) => {
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+    });
+
+    expect(Number.parseFloat(control.style.height)).toBeGreaterThan(before);
+    expect(control.scrollHeight - control.clientHeight).toBeLessThan(4);
+
+    unmount();
+  });
+
   it("does not steal a scroll-away when layout remasures with the caret at the end", async () => {
     const props = reactive({
       autosize: true,
