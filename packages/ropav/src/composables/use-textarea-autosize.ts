@@ -52,6 +52,7 @@ const positive = (value: number | undefined): number | undefined =>
 const clear = (element: HTMLTextAreaElement) => {
   element.style.height = "";
   element.style.overflowY = "";
+  element.style.scrollPaddingBottom = "";
 };
 
 /**
@@ -78,6 +79,10 @@ const measure = (
   const extras = borderBox ? paddingY + borderY : 0;
   const min = positive(minRows);
   const max = positive(maxRows);
+  const paddingBottom = px(style.paddingBottom);
+  const atEnd =
+    element.selectionStart === element.value.length &&
+    element.selectionEnd === element.value.length;
 
   // So the native rows height matches the floor we are about to measure against, rather
   // than the UA default of two.
@@ -106,6 +111,13 @@ const measure = (
 
   element.style.height = `${height}px`;
   element.style.overflowY = overflowY;
+  // The caret-following scroll stops at the last line, which in a textarea sits on the
+  // padding-box edge — so the last glyphs kiss the border. `scroll-padding` keeps that
+  // inset when the UA scrolls for the caret; pinning `scrollTop` when the caret is at
+  // the end is what actually brings `padding-bottom` into view.
+  element.style.scrollPaddingBottom = overflowY === "auto" ? `${paddingBottom}px` : "";
+
+  if (overflowY === "auto" && atEnd) element.scrollTop = element.scrollHeight;
 };
 
 /**

@@ -151,6 +151,23 @@ describe("TextArea (browser)", () => {
     unmount();
   });
 
+  it("stays scrolled to the end past maxRows, so the last line keeps its padding", async () => {
+    const { control, unmount } = render({ autosize: true, maxRows: 4, minRows: 2 });
+
+    await nextTick();
+
+    control.value = "line\n".repeat(12);
+    control.selectionStart = control.selectionEnd = control.value.length;
+    control.dispatchEvent(new Event("input", { bubbles: true }));
+    await nextTick();
+
+    expect(control.scrollTop + control.clientHeight).toBeGreaterThanOrEqual(
+      control.scrollHeight - 1,
+    );
+
+    unmount();
+  });
+
   it("keeps growing when maxRows is unset, without a scrollbar", async () => {
     const { control, unmount } = render({ autosize: true, minRows: 2 });
 
