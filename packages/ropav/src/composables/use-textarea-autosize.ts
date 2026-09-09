@@ -129,14 +129,20 @@ const measure = (
  * changes go through the watch, which is post-flush so it runs after `setFormValue` has put
  * the pinned text back.
  *
- * Width is observed rather than height. Writing `style.height` is itself a size change, and
- * an observer that did not discriminate would loop.
+ * Width is observed rather than height, and only while autosize is on. Native `resize`
+ * writes inline `width` and `height` as the pointer drags; an observer that stayed attached
+ * with autosize off would `clear` that height on every width change and fight the handle.
+ *
+ * Writing `style.height` is itself a size change, and an observer that did not discriminate
+ * would loop.
  */
 export const useTextareaAutosize = (
   options: UseTextareaAutosizeOptions,
 ): UseTextareaAutosizeReturn => {
   let observer: ResizeObserver | undefined;
   let lastWidth = Number.NaN;
+  /** So turning autosize off does not wipe a height the native resize handle wrote. */
+  let applied = false;
 
   const detach = () => {
     observer?.disconnect();
@@ -148,19 +154,25 @@ export const useTextareaAutosize = (
     const element = toValue(options.element) ?? null;
     const enabled = Boolean(toValue(options.enabled));
 
-    if (!element || !enabled) {
-      if (element) clear(element);
+    if (!element) return;
+
+    if (!enabled) {
+      if (applied) {
+        clear(element);
+        applied = false;
+      }
 
       return;
     }
 
     measure(element, toValue(options.minRows), toValue(options.maxRows));
+    applied = true;
   };
 
-  const observe = (element: HTMLTextAreaElement | null) => {
+  const observe = (element: HTMLTextAreaElement) => {
     detach();
 
-    if (!element || typeof ResizeObserver === "undefined") return;
+    if (typeof ResizeObserver === "undefined") return;
 
     lastWidth = element.getBoundingClientRect().width;
 
@@ -176,9 +188,14 @@ export const useTextareaAutosize = (
   };
 
   watch(
-    () => toValue(options.element) ?? null,
-    (element) => {
-      observe(element);
+    [() => toValue(options.element) ?? null, () => Boolean(toValue(options.enabled))],
+    ([element, enabled]) => {
+      detach();
+
+      if (!element) return;
+
+      if (enabled) observe(element);
+
       sync();
     },
     { flush: "post", immediate: true },
@@ -186,7 +203,6 @@ export const useTextareaAutosize = (
 
   watch(
     [
-      () => toValue(options.enabled),
       () => toValue(options.minRows),
       () => toValue(options.maxRows),
       () => toValue(options.content),

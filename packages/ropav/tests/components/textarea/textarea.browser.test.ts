@@ -132,6 +132,25 @@ describe("TextArea (browser)", () => {
     both.unmount();
   });
 
+  it("does not wipe a native resize height when autosize is off", async () => {
+    const { control, unmount } = render({ resize: "both" });
+
+    await nextTick();
+
+    control.style.width = "280px";
+    control.style.height = "160px";
+    await nextTick();
+
+    control.style.width = "180px";
+    await new Promise<void>((resolve) => {
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+    });
+
+    expect(control.style.height).toBe("160px");
+
+    unmount();
+  });
+
   it("grows with its content until maxRows, then scrolls", async () => {
     const { control, unmount } = render({ autosize: true, maxRows: 4, minRows: 2 });
 
