@@ -6,12 +6,17 @@ import { computed, shallowRef, watch } from "vue";
 
 import { useInteractionStates } from "../../composables/use-interaction-states";
 import { useTextFieldControlContext } from "../../composables/use-text-field";
+import { useTextareaAutosize } from "../../composables/use-textarea-autosize";
 import { dataAttr } from "../../utils/assertion";
 import { setFormValue } from "../../utils/form-value";
 import { useTextFieldContext } from "../textfield/textfield.context";
 
 const props = withDefaults(defineProps<TextAreaRootProps>(), {
+  autosize: undefined,
   fullWidth: undefined,
+  maxRows: undefined,
+  minRows: undefined,
+  resize: undefined,
   variant: undefined,
 });
 
@@ -35,11 +40,16 @@ const setElement = (next: unknown) => {
 
 const resolvedVariant = computed(() => props.variant ?? textField?.variant.value);
 const resolvedSize = computed(() => props.size ?? textField?.size.value);
+// Autosize owns the height, so a resize handle on the same element would be overwritten on
+// the next input. Forced to `none` here rather than in CSS so the modifier class is absent
+// as well, not just the property.
+const resolvedResize = computed(() => (props.autosize ? "none" : props.resize));
 
 const styles = computed(() =>
   textAreaVariants({
     class: props.class,
     fullWidth: props.fullWidth,
+    resize: resolvedResize.value,
     size: resolvedSize.value,
     variant: resolvedVariant.value,
   }),
@@ -53,6 +63,10 @@ const attrs = computed(() => {
 
   if (props.placeholder !== undefined) merged["placeholder"] = props.placeholder;
   if (props.value !== undefined) merged["value"] = props.value;
+  // First paint: without this the native default of two rows shows until the post-flush
+  // measure lands. Fallthrough `rows` still applies when autosize is off, because this key
+  // is only written when minRows is the height the caller asked for.
+  if (props.autosize && props.minRows !== undefined) merged["rows"] = props.minRows;
 
   return merged;
 });
@@ -63,6 +77,17 @@ const interaction = useInteractionStates({ isDisabled: () => control?.isDisabled
 // not moved — which is the whole case worth handling.
 const inputCount = shallowRef(0);
 
+const { sync: syncAutosize } = useTextareaAutosize({
+  // Only the field's text. A `value` prop of our own already remeasures through the watch
+  // below, which has to be the one that does it — it measures after `setFormValue`, where
+  // a watch of its own would land before and size against the text being replaced.
+  content: () => control?.attrs.value["value"],
+  element,
+  enabled: () => props.autosize,
+  maxRows: () => props.maxRows,
+  minRows: () => props.minRows,
+});
+
 // Chained by hand rather than spread: a listener reaching a vapor element through `v-bind` is
 // re-attached on every render and can be dropped mid-dispatch.
 const onInput = (event: Event) => {
@@ -72,6 +97,11 @@ const onInput = (event: Event) => {
 
   emit("change", next);
   emit("update:value", next);
+
+  // The DOM already holds the next text; waiting for a watch would size against the previous
+  // stroke. A pinned `value` is put back after this, and the watch below remeasures then.
+  // `fromInput` is what pins a caret at the end; the watch must not, or a scroll-away is lost.
+  syncAutosize({ fromInput: true });
 
   if (props.value !== undefined) inputCount.value++;
 };
@@ -87,6 +117,7 @@ watch(
     if (pinned === undefined) return;
 
     setFormValue(el, pinned);
+    syncAutosize();
   },
   { flush: "post", immediate: true },
 );

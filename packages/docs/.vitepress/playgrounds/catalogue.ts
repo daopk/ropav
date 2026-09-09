@@ -726,7 +726,7 @@ export const catalogue: Record<string, CatalogueEntry> = {
   },
 
   textarea: {
-    controls: ["variant", "size", "fullWidth"],
+    controls: ["variant", "size", "fullWidth", "autosize", "minRows", "maxRows", "resize"],
     file: "components/textarea/textarea-root.vue",
     node: {
       props: { placeholder: "What changed in this release?" },
@@ -827,6 +827,7 @@ export const optionOrder: Record<string, readonly string[]> = {
   size: ["sm", "md", "lg"],
   status: ["default", "accent", "success", "warning", "danger"],
   "surface.variant": ["default", "secondary", "tertiary", "transparent"],
+  "textarea.resize": ["none", "vertical", "both"],
   // `ghost` is ranked by the shared list, which would otherwise put it ahead of the default.
   "toggle-button.variant": ["default", "ghost"],
   "typography.type": ["h1", "h2", "h3", "h4", "h5", "h6", "body", "body-sm", "body-xs", "code"],

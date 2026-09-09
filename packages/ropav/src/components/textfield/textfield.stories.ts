@@ -100,8 +100,8 @@ export const WithTextArea: Story = {
           <TextArea
             class="w-[280px]"
             placeholder="Share your experience..."
+            resize="vertical"
             :rows="6"
-            style="resize: vertical"
           />
           <Description>Resizable vertically</Description>
         </TextField>

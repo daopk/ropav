@@ -32,6 +32,10 @@
 
   min-height: 38px;
 
+  /* The scoped reset sets `resize: vertical` on every textarea. The default here is none; the
+   * modifier classes below are how a caller opts back in. */
+  resize: none;
+
   border-width: var(--rp-border-width-field);
   border-color: var(--rp-field-border);
 
@@ -141,6 +145,15 @@
 /* Full width modifier */
 .rp-textarea--full-width {
   width: 100%;
+}
+
+/* Resize modifiers. `none` lives on the block, matching the other defaults. */
+.rp-textarea--resize-vertical {
+  resize: vertical;
+}
+
+.rp-textarea--resize-both {
+  resize: both;
 }
 
 /* ==========================================================================

@@ -6,6 +6,7 @@ export const textAreaVariants = tv({
   base: "rp-textarea",
   defaultVariants: {
     fullWidth: false,
+    resize: "none",
     size: "md",
     variant: "primary",
   },
@@ -13,6 +14,11 @@ export const textAreaVariants = tv({
     fullWidth: {
       false: "",
       true: "rp-textarea--full-width",
+    },
+    resize: {
+      both: "rp-textarea--resize-both",
+      none: "",
+      vertical: "rp-textarea--resize-vertical",
     },
     size: {
       lg: "rp-textarea--lg",
