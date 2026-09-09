@@ -6,6 +6,7 @@ import { nextTick, reactive } from "vue";
 
 import { parkPointer } from "../../harness/park-pointer";
 import { pressRealReset } from "../../harness/real-reset";
+import { waitUntil } from "../../harness/wait-until";
 
 import Fixture from "./fixtures.vue";
 
@@ -229,32 +230,23 @@ describe("TextArea (browser)", () => {
     control.dispatchEvent(new Event("input", { bubbles: true }));
     await nextTick();
 
-    const before = Number.parseFloat(control.style.height);
+    const before = control.style.height;
 
     control.style.lineHeight = "40px";
-    await new Promise<void>((resolve) => {
-      let frames = 0;
-      const tick = () => {
-        frames += 1;
-        if (frames >= 6) resolve();
-        else requestAnimationFrame(tick);
-      };
 
-      requestAnimationFrame(tick);
-    });
+    // Nothing notifies for a used metric that leaves the box alone, so the height stays
+    // the one measured for the old metrics and no longer covers the text.
+    expect(control.style.height).toBe(before);
+    expect(control.scrollHeight).toBeGreaterThan(control.clientHeight);
 
-    // The observer does not see a used-metric change. Classic scrollbars may
-    // still remasure because overflow:auto steals width; overlay scrollbars
-    // leave the box pinned. Either way the extra lines have to stay reachable.
+    // Settling on `auto` is what keeps the lines it stopped covering reachable.
     expect(getComputedStyle(control).overflowY).toBe("auto");
 
-    if (Number.parseFloat(control.style.height) === before) {
-      expect(control.scrollHeight).toBeGreaterThan(control.clientHeight);
-      control.scrollTop = control.scrollHeight;
-      expect(control.scrollTop).toBeGreaterThan(0);
-    } else {
-      expect(Number.parseFloat(control.style.height)).toBeGreaterThan(before);
-    }
+    control.scrollTop = control.scrollHeight;
+
+    expect(control.scrollTop + control.clientHeight).toBeGreaterThanOrEqual(
+      control.scrollHeight - 1,
+    );
 
     unmount();
   });
@@ -269,17 +261,17 @@ describe("TextArea (browser)", () => {
     control.dispatchEvent(new Event("input", { bubbles: true }));
     await nextTick();
 
-    expect(getComputedStyle(control).overflowY).toBe("hidden");
+    // Under its cap, so the growth below is the backstop and not the cap letting go.
+    expect(control.scrollHeight - control.clientHeight).toBeLessThan(4);
 
     const before = Number.parseFloat(control.style.height);
     const padding = Number.parseFloat(getComputedStyle(control).paddingBottom) || 0;
 
     control.style.paddingBottom = `${padding + 8}px`;
-    await new Promise<void>((resolve) => {
-      requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
-    });
-
-    expect(Number.parseFloat(control.style.height)).toBeGreaterThan(before);
+    await waitUntil(
+      "the padding change to remeasure",
+      () => Number.parseFloat(control.style.height) > before,
+    );
 
     unmount();
   });
@@ -302,6 +294,8 @@ describe("TextArea (browser)", () => {
     control.scrollTop = 0;
     expect(control.scrollTop).toBe(0);
 
+    // Nothing to wait on: at the cap the remeasure writes the same height back, so only
+    // the scroll it must not touch is observable.
     control.style.width = "160px";
     await new Promise<void>((resolve) => {
       requestAnimationFrame(() => requestAnimationFrame(() => resolve()));

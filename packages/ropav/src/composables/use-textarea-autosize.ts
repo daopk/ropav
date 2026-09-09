@@ -96,13 +96,16 @@ const fontFaceSet = (): FontFaceSet | undefined => {
  *
  * The bottom-pin is input-only. Typing at the end has to bring `padding-bottom` into view;
  * a width, font or row-range remasure must not yank a scroll the user just made.
+ *
+ * @returns Whether `maxRows` clamped the height, which is the one case where a field left
+ * scrolling its own content is doing what it was asked to.
  */
 const measure = (
   element: HTMLTextAreaElement,
   minRows: number | undefined,
   maxRows: number | undefined,
   fromInput: boolean,
-) => {
+): boolean => {
   const style = getComputedStyle(element);
   const paddingY = px(style.paddingTop) + px(style.paddingBottom);
   const borderY = px(style.borderTopWidth) + px(style.borderBottomWidth);
@@ -131,32 +134,34 @@ const measure = (
 
   if (min !== undefined) height = Math.max(height, min * lineHeight + extras);
 
-  // Uncapped fields settle on `auto` so a stale inline height (used line-height
-  // changed, the pinned box never notified the observer) still lets the extra
-  // glyphs scroll into view. Under a maxRows cap the overflow is hidden until
-  // the content actually hits that cap — a 1px rounding gap must not grow a
-  // classic scrollbar on every keystroke.
-  let overflowY = max === undefined ? "auto" : "hidden";
+  let capped = false;
 
   if (max !== undefined) {
     const cap = max * lineHeight + extras;
 
     if (height > cap) {
       height = cap;
-      overflowY = "auto";
+      capped = true;
     }
   }
 
   element.style.height = `${height}px`;
-  element.style.overflowY = overflowY;
+  // `auto` whether or not a cap clamped, so a stale inline height — used line-height
+  // moved and the pinned box never notified the observer — lets the extra glyphs scroll
+  // into view instead of clipping them. A field that exactly fits grows no scrollbar:
+  // the height written above is `scrollHeight` plus the border, so `clientHeight` lands
+  // back on `scrollHeight`.
+  element.style.overflowY = "auto";
   // The caret-following scroll stops at the last line, which in a textarea sits on the
   // padding-box edge — so the last glyphs kiss the border. `scroll-padding` keeps that
   // inset when the UA scrolls for the caret; pinning `scrollTop` when the caret is at
   // the end is what actually brings `padding-bottom` into view.
-  element.style.scrollPaddingBottom = overflowY === "auto" ? `${paddingBottom}px` : "";
+  element.style.scrollPaddingBottom = `${paddingBottom}px`;
 
-  if (fromInput && overflowY === "auto" && atEnd) element.scrollTop = element.scrollHeight;
+  if (fromInput && capped && atEnd) element.scrollTop = element.scrollHeight;
   else element.scrollTop = scrollTop;
+
+  return capped;
 };
 
 /**
@@ -183,11 +188,10 @@ const measure = (
  * An inline height also hides height-only metric changes from the observer — a webfont that
  * lands after first paint, or `.rp-textarea`'s `@media (width >= 40rem)` type/padding switch
  * on a fixed-width control. Those go through `document.fonts` and `window` `resize`. Used
- * metrics that do not move the box (`--rp-leading`, Firefox text-only zoom) never notify;
- * uncapped fields therefore settle with `overflow-y: auto` so a stale height still scrolls
- * rather than clip. A leftover clip under a `maxRows` floor (`scrollHeight > clientHeight`
- * while overflow is still `hidden`) is the observer backstop for same-width box changes
- * such as padding, which do notify.
+ * metrics that do not move the box (`--rp-leading`, Firefox text-only zoom) never notify at
+ * all, which is why every field settles with `overflow-y: auto` — a stale height then
+ * scrolls rather than clips. A leftover clip on a field no cap clamped is the observer
+ * backstop for same-width box changes such as padding, which do notify.
  */
 export const useTextareaAutosize = (
   options: UseTextareaAutosizeOptions,
@@ -196,6 +200,8 @@ export const useTextareaAutosize = (
   let lastWidth = Number.NaN;
   /** So turning autosize off does not wipe a height the native resize handle wrote. */
   let applied = false;
+  /** Whether `maxRows` clamped the last measure, which is when a clip is meant to be there. */
+  let capped = false;
 
   const sync = (syncOptions?: UseTextareaAutosizeSyncOptions) => {
     const element = toValue(options.element) ?? null;
@@ -212,7 +218,7 @@ export const useTextareaAutosize = (
       return;
     }
 
-    measure(
+    capped = measure(
       element,
       toValue(options.minRows),
       toValue(options.maxRows),
@@ -256,12 +262,10 @@ export const useTextareaAutosize = (
           return;
         }
 
-        // Same-width box change (padding) that started clipping a maxRows field
-        // still under its cap. Used-metric changes never reach here: the pinned
-        // height holds the border box still, so this observer does not fire.
-        if (element.style.overflowY === "hidden" && element.scrollHeight > element.clientHeight) {
-          sync();
-        }
+        // Same-width box change (padding) that started clipping a field no cap clamped.
+        // Used-metric changes never reach here: the pinned height holds the border box
+        // still, so this observer does not fire, and `auto` leaves them scrollable.
+        if (!capped && element.scrollHeight > element.clientHeight) sync();
       });
       observer.observe(element);
     }
