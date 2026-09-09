@@ -97,7 +97,8 @@ const onInput = (event: Event) => {
 
   // The DOM already holds the next text; waiting for a watch would size against the previous
   // stroke. A pinned `value` is put back after this, and the watch below remeasures then.
-  syncAutosize();
+  // `fromInput` is what pins a caret at the end; the watch must not, or a scroll-away is lost.
+  syncAutosize({ fromInput: true });
 
   if (props.value !== undefined) inputCount.value++;
 };

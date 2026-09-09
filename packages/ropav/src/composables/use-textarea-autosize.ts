@@ -17,9 +17,17 @@ export interface UseTextareaAutosizeOptions {
   content?: MaybeRefOrGetter<unknown>;
 }
 
+export interface UseTextareaAutosizeSyncOptions {
+  /**
+   * From `input` only. A caret at the end then keeps the last line's padding in view.
+   * Layout remasures omit this so a scroll the user made is not stolen.
+   */
+  fromInput?: boolean;
+}
+
 export interface UseTextareaAutosizeReturn {
   /** Measure now. Needed from `input`, where the DOM already holds the next text. */
-  sync: () => void;
+  sync: (options?: UseTextareaAutosizeSyncOptions) => void;
 }
 
 const px = (value: string): number => {
@@ -65,11 +73,15 @@ const clear = (element: HTMLTextAreaElement) => {
  *
  * `scrollHeight` includes padding and not the border. The reset is `border-box`, so the height
  * that is written has to put the border back or the last line is clipped by that much.
+ *
+ * The bottom-pin is input-only. Typing at the end has to bring `padding-bottom` into view;
+ * a width, font or row-range remasure must not yank a scroll the user just made.
  */
 const measure = (
   element: HTMLTextAreaElement,
   minRows: number | undefined,
   maxRows: number | undefined,
+  fromInput: boolean,
 ) => {
   const style = getComputedStyle(element);
   const paddingY = px(style.paddingTop) + px(style.paddingBottom);
@@ -80,6 +92,7 @@ const measure = (
   const min = positive(minRows);
   const max = positive(maxRows);
   const paddingBottom = px(style.paddingBottom);
+  const scrollTop = element.scrollTop;
   const atEnd =
     element.selectionStart === element.value.length &&
     element.selectionEnd === element.value.length;
@@ -117,7 +130,8 @@ const measure = (
   // the end is what actually brings `padding-bottom` into view.
   element.style.scrollPaddingBottom = overflowY === "auto" ? `${paddingBottom}px` : "";
 
-  if (overflowY === "auto" && atEnd) element.scrollTop = element.scrollHeight;
+  if (fromInput && overflowY === "auto" && atEnd) element.scrollTop = element.scrollHeight;
+  else element.scrollTop = scrollTop;
 };
 
 /**
@@ -129,12 +143,18 @@ const measure = (
  * changes go through the watch, which is post-flush so it runs after `setFormValue` has put
  * the pinned text back.
  *
- * Width is observed rather than height, and only while autosize is on. Native `resize`
- * writes inline `width` and `height` as the pointer drags; an observer that stayed attached
- * with autosize off would `clear` that height on every width change and fight the handle.
+ * Observers attach only while autosize is on. Native `resize` writes inline `width` and
+ * `height` as the pointer drags; an observer that stayed attached with autosize off would
+ * `clear` that height on every width change and fight the handle.
  *
- * Writing `style.height` is itself a size change, and an observer that did not discriminate
- * would loop.
+ * Width is taken from `contentRect`, and the first delivery is only a seed: `contentRect` is
+ * the content box, `getBoundingClientRect` is the border box, and seeding one from the other
+ * made the loop guard always fail, so every mount paid a second layout. Writing `style.height`
+ * is itself a size change, and an observer that did not discriminate width would loop.
+ *
+ * An inline height also hides height-only metric changes from the observer — a webfont that
+ * lands after first paint, or `.rp-textarea`'s `@media (width >= 40rem)` type/padding switch
+ * on a fixed-width control. Those go through `document.fonts` and `window` `resize` instead.
  */
 export const useTextareaAutosize = (
   options: UseTextareaAutosizeOptions,
@@ -144,13 +164,7 @@ export const useTextareaAutosize = (
   /** So turning autosize off does not wipe a height the native resize handle wrote. */
   let applied = false;
 
-  const detach = () => {
-    observer?.disconnect();
-    observer = undefined;
-    lastWidth = Number.NaN;
-  };
-
-  const sync = () => {
+  const sync = (syncOptions?: UseTextareaAutosizeSyncOptions) => {
     const element = toValue(options.element) ?? null;
     const enabled = Boolean(toValue(options.enabled));
 
@@ -165,26 +179,53 @@ export const useTextareaAutosize = (
       return;
     }
 
-    measure(element, toValue(options.minRows), toValue(options.maxRows));
+    measure(
+      element,
+      toValue(options.minRows),
+      toValue(options.maxRows),
+      Boolean(syncOptions?.fromInput),
+    );
     applied = true;
+  };
+
+  const onMetrics = () => {
+    sync();
+  };
+
+  const detach = () => {
+    observer?.disconnect();
+    observer = undefined;
+    lastWidth = Number.NaN;
+
+    if (typeof window !== "undefined") window.removeEventListener("resize", onMetrics);
+
+    document.fonts?.removeEventListener("loadingdone", onMetrics);
   };
 
   const observe = (element: HTMLTextAreaElement) => {
     detach();
 
-    if (typeof ResizeObserver === "undefined") return;
+    if (typeof ResizeObserver !== "undefined") {
+      observer = new ResizeObserver((entries) => {
+        const width = entries[0]?.contentRect.width;
 
-    lastWidth = element.getBoundingClientRect().width;
+        if (width === undefined || width === lastWidth) return;
 
-    observer = new ResizeObserver((entries) => {
-      const width = entries[0]?.contentRect.width;
+        const seeded = Number.isNaN(lastWidth);
 
-      if (width === undefined || width === lastWidth) return;
+        lastWidth = width;
 
-      lastWidth = width;
-      sync();
-    });
-    observer.observe(element);
+        if (seeded) return;
+
+        sync();
+      });
+      observer.observe(element);
+    }
+
+    if (typeof window !== "undefined")
+      window.addEventListener("resize", onMetrics, { passive: true });
+
+    document.fonts?.addEventListener("loadingdone", onMetrics);
   };
 
   watch(
