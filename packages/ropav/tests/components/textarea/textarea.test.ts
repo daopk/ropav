@@ -262,8 +262,10 @@ describe("TextArea", () => {
       unmount();
     });
 
-    it("writes minRows through to the native rows attribute", () => {
+    it("writes minRows through to the native rows attribute", async () => {
       const { control, unmount } = render({ autosize: true, minRows: 5 });
+
+      await nextTick();
 
       expect(control.rows).toBe(5);
 

@@ -76,6 +76,12 @@ const measure = (
   const lineHeight = lineHeightOf(style);
   const borderBox = style.boxSizing === "border-box";
   const extras = borderBox ? paddingY + borderY : 0;
+  const min = positive(minRows);
+  const max = positive(maxRows);
+
+  // So the native rows height matches the floor we are about to measure against, rather
+  // than the UA default of two.
+  if (min !== undefined) element.rows = min;
 
   element.style.height = "auto";
   element.style.overflowY = "hidden";
@@ -84,9 +90,6 @@ const measure = (
 
   if (borderBox) height += borderY;
   else height -= paddingY;
-
-  const min = positive(minRows);
-  const max = positive(maxRows);
 
   if (min !== undefined) height = Math.max(height, min * lineHeight + extras);
 

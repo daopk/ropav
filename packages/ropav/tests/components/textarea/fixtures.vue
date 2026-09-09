@@ -1,6 +1,8 @@
 <script setup lang="ts" vapor>
 import type { TextAreaFixtureProps } from "./fixtures.types";
 
+import { computed } from "vue";
+
 import { TextArea } from "@/components/textarea";
 import { TextField } from "@/components/textfield";
 
@@ -17,6 +19,18 @@ const props = withDefaults(defineProps<TextAreaFixtureProps>(), {
 });
 
 defineEmits<{ change: [value: string]; "update:value": [value: string] }>();
+
+// Only the native attrs that were actually set. Binding `:rows="undefined"` fallthrough
+// would pin the UA default of two and overwrite `minRows` written onto the element.
+const native = computed(() => {
+  const next: Record<string, unknown> = {};
+
+  if (props.disabled !== undefined) next["disabled"] = props.disabled;
+  if (props.required !== undefined) next["required"] = props.required;
+  if (props.rows !== undefined) next["rows"] = props.rows;
+
+  return next;
+});
 </script>
 
 <template>
@@ -30,16 +44,14 @@ defineEmits<{ change: [value: string]; "update:value": [value: string] }>();
       :variant="props.fieldVariant"
     >
       <TextArea
+        v-bind="native"
         :autosize="props.autosize"
         :class="props.class"
-        :disabled="props.disabled"
         :full-width="props.fullWidth"
         :max-rows="props.maxRows"
         :min-rows="props.minRows"
         :placeholder="props.placeholder"
-        :required="props.required"
         :resize="props.resize"
-        :rows="props.rows"
         :value="props.value"
         :variant="props.variant"
         @change="$emit('change', $event)"
@@ -48,16 +60,14 @@ defineEmits<{ change: [value: string]; "update:value": [value: string] }>();
     </TextField>
     <TextArea
       v-else
+      v-bind="native"
       :autosize="props.autosize"
       :class="props.class"
-      :disabled="props.disabled"
       :full-width="props.fullWidth"
       :max-rows="props.maxRows"
       :min-rows="props.minRows"
       :placeholder="props.placeholder"
-      :required="props.required"
       :resize="props.resize"
-      :rows="props.rows"
       :value="props.value"
       :variant="props.variant"
       @change="$emit('change', $event)"
