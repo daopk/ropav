@@ -219,7 +219,7 @@ describe("TextArea (browser)", () => {
     unmount();
   });
 
-  it("grows again when content overflows a pinned height at the same width", async () => {
+  it("keeps overflowing text reachable when used line-height grows at a pinned width", async () => {
     const { control, unmount } = render({ autosize: true });
 
     await nextTick();
@@ -232,21 +232,54 @@ describe("TextArea (browser)", () => {
     const before = Number.parseFloat(control.style.height);
 
     control.style.lineHeight = "40px";
-    expect(control.scrollHeight).toBeGreaterThan(control.clientHeight);
+    await new Promise<void>((resolve) => {
+      let frames = 0;
+      const tick = () => {
+        frames += 1;
+        if (frames >= 6) resolve();
+        else requestAnimationFrame(tick);
+      };
+
+      requestAnimationFrame(tick);
+    });
+
+    // The observer does not see a used-metric change. Classic scrollbars may
+    // still remasure because overflow:auto steals width; overlay scrollbars
+    // leave the box pinned. Either way the extra lines have to stay reachable.
+    expect(getComputedStyle(control).overflowY).toBe("auto");
+
+    if (Number.parseFloat(control.style.height) === before) {
+      expect(control.scrollHeight).toBeGreaterThan(control.clientHeight);
+      control.scrollTop = control.scrollHeight;
+      expect(control.scrollTop).toBeGreaterThan(0);
+    } else {
+      expect(Number.parseFloat(control.style.height)).toBeGreaterThan(before);
+    }
+
+    unmount();
+  });
+
+  it("grows again when padding changes at the same width under maxRows", async () => {
+    const { control, unmount } = render({ autosize: true, maxRows: 20, minRows: 2 });
+
+    await nextTick();
+
+    control.style.width = "280px";
+    control.value = "one\ntwo\nthree\nfour\nfive";
+    control.dispatchEvent(new Event("input", { bubbles: true }));
+    await nextTick();
+
     expect(getComputedStyle(control).overflowY).toBe("hidden");
 
-    // Used metrics changed; the box did not. A padding tweak is a height-only
-    // observer delivery, the way a parent reflow would notify, without a
-    // resize or a font load.
+    const before = Number.parseFloat(control.style.height);
     const padding = Number.parseFloat(getComputedStyle(control).paddingBottom) || 0;
 
-    control.style.paddingBottom = `${padding + 1}px`;
+    control.style.paddingBottom = `${padding + 8}px`;
     await new Promise<void>((resolve) => {
       requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
     });
 
     expect(Number.parseFloat(control.style.height)).toBeGreaterThan(before);
-    expect(control.scrollHeight - control.clientHeight).toBeLessThan(4);
 
     unmount();
   });
@@ -284,7 +317,7 @@ describe("TextArea (browser)", () => {
     result.unmount();
   });
 
-  it("keeps growing when maxRows is unset, without a scrollbar", async () => {
+  it("keeps growing when maxRows is unset", async () => {
     const { control, unmount } = render({ autosize: true, minRows: 2 });
 
     await nextTick();
@@ -296,7 +329,8 @@ describe("TextArea (browser)", () => {
     await nextTick();
 
     expect(control.getBoundingClientRect().height).toBeGreaterThan(empty);
-    expect(getComputedStyle(control).overflowY).toBe("hidden");
+    expect(getComputedStyle(control).overflowY).toBe("auto");
+    expect(control.scrollHeight - control.clientHeight).toBeLessThan(4);
 
     unmount();
   });

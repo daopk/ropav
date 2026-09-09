@@ -131,7 +131,12 @@ const measure = (
 
   if (min !== undefined) height = Math.max(height, min * lineHeight + extras);
 
-  let overflowY = "hidden";
+  // Uncapped fields settle on `auto` so a stale inline height (used line-height
+  // changed, the pinned box never notified the observer) still lets the extra
+  // glyphs scroll into view. Under a maxRows cap the overflow is hidden until
+  // the content actually hits that cap — a 1px rounding gap must not grow a
+  // classic scrollbar on every keystroke.
+  let overflowY = max === undefined ? "auto" : "hidden";
 
   if (max !== undefined) {
     const cap = max * lineHeight + extras;
@@ -177,9 +182,12 @@ const measure = (
  *
  * An inline height also hides height-only metric changes from the observer — a webfont that
  * lands after first paint, or `.rp-textarea`'s `@media (width >= 40rem)` type/padding switch
- * on a fixed-width control. Those go through `document.fonts` and `window` `resize`. A
- * leftover clip (`scrollHeight > clientHeight` while we still have `overflow: hidden`) is
- * the backstop for used-metric changes that do not move width, such as `--rp-leading`.
+ * on a fixed-width control. Those go through `document.fonts` and `window` `resize`. Used
+ * metrics that do not move the box (`--rp-leading`, Firefox text-only zoom) never notify;
+ * uncapped fields therefore settle with `overflow-y: auto` so a stale height still scrolls
+ * rather than clip. A leftover clip under a `maxRows` floor (`scrollHeight > clientHeight`
+ * while overflow is still `hidden`) is the observer backstop for same-width box changes
+ * such as padding, which do notify.
  */
 export const useTextareaAutosize = (
   options: UseTextareaAutosizeOptions,
@@ -248,8 +256,9 @@ export const useTextareaAutosize = (
           return;
         }
 
-        // Used metrics grew inside a pinned box. At the maxRows cap overflow is
-        // already `auto` and the extra scrollHeight is meant to be there.
+        // Same-width box change (padding) that started clipping a maxRows field
+        // still under its cap. Used-metric changes never reach here: the pinned
+        // height holds the border box still, so this observer does not fire.
         if (element.style.overflowY === "hidden" && element.scrollHeight > element.clientHeight) {
           sync();
         }
