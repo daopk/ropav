@@ -35,9 +35,39 @@ field supplies.
 </template>
 </Demo>
 
-Only `value`, `variant`, `size`, `fullWidth` and `placeholder` are declared. Everything else a
-`<textarea>` accepts — `rows`, `maxlength`, `spellcheck`, `autocomplete` — arrives by attribute
-fallthrough and lands on the element.
+Only `value`, `variant`, `size`, `fullWidth`, `placeholder`, `autosize`, `minRows`, `maxRows` and
+`resize` are declared. Everything else a `<textarea>` accepts — `rows`, `maxlength`, `spellcheck`,
+`autocomplete` — arrives by attribute fallthrough and lands on the element.
+
+## Autosize
+
+`autosize` grows the control with what is typed. `minRows` and `maxRows` bound that growth; without
+a max it keeps going. Native resize is forced off while it is on, so the drag handle cannot fight
+the measured height.
+
+<Demo title="textarea-autosize.vue">
+<DemoTextareaAutosize />
+
+<template #code>
+
+<<< @/.vitepress/theme/demos/textarea-autosize.vue
+
+</template>
+</Demo>
+
+## Enable resize
+
+By default, resize is `none`; to enable it, set the `resize` prop to `vertical` or `both`.
+
+<Demo title="textarea-resize.vue">
+<DemoTextareaResize />
+
+<template #code>
+
+<<< @/.vitepress/theme/demos/textarea-resize.vue
+
+</template>
+</Demo>
 
 ## Holding the value
 
