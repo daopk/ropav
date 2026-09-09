@@ -248,7 +248,9 @@ export const useTextareaAutosize = (
       () => toValue(options.maxRows),
       () => toValue(options.content),
     ],
-    sync,
+    () => {
+      sync();
+    },
     { flush: "post" },
   );
 
