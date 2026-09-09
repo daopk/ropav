@@ -195,4 +195,79 @@ describe("TextArea", () => {
       unmount();
     });
   });
+
+  describe("resize", () => {
+    it("carries no resize modifier by default", () => {
+      const { control, unmount } = render();
+
+      expect(control).not.toHaveClass("rp-textarea--resize-vertical");
+      expect(control).not.toHaveClass("rp-textarea--resize-both");
+
+      unmount();
+    });
+
+    it("opts into vertical or both through a modifier class", () => {
+      const vertical = render({ resize: "vertical" });
+
+      expect(vertical.control).toHaveClass("rp-textarea--resize-vertical");
+      vertical.unmount();
+
+      const both = render({ resize: "both" });
+
+      expect(both.control).toHaveClass("rp-textarea--resize-both");
+      both.unmount();
+    });
+
+    it("drops the resize modifier while autosize owns the height", () => {
+      const { control, unmount } = render({ autosize: true, resize: "vertical" });
+
+      expect(control).not.toHaveClass("rp-textarea--resize-vertical");
+
+      unmount();
+    });
+  });
+
+  describe("autosize", () => {
+    it("writes an inline height once it is on", async () => {
+      const { control, unmount } = render({ autosize: true });
+
+      await nextTick();
+
+      expect(control.style.height).toMatch(/px$/);
+
+      unmount();
+    });
+
+    it("rewrites that height after input", async () => {
+      const { control, unmount } = render({ autosize: true });
+
+      await nextTick();
+
+      await type(control, "one\ntwo\nthree\nfour");
+
+      expect(control.style.height).toMatch(/px$/);
+
+      unmount();
+    });
+
+    it("leaves height alone when autosize is off, even with a row range", async () => {
+      const { control, unmount } = render({ maxRows: 8, minRows: 4 });
+
+      await nextTick();
+      await type(control, "typed\nover\nseveral\nlines");
+
+      expect(control.style.height).toBe("");
+      expect(control.style.overflowY).toBe("");
+
+      unmount();
+    });
+
+    it("writes minRows through to the native rows attribute", () => {
+      const { control, unmount } = render({ autosize: true, minRows: 5 });
+
+      expect(control.rows).toBe(5);
+
+      unmount();
+    });
+  });
 });

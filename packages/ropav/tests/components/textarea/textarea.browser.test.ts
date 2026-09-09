@@ -111,4 +111,74 @@ describe("TextArea (browser)", () => {
 
     unmount();
   });
+
+  it("does not let the pointer resize it by default", () => {
+    const { control, unmount } = render();
+
+    expect(getComputedStyle(control).resize).toBe("none");
+
+    unmount();
+  });
+
+  it("opts into vertical or both resize through the resize prop", () => {
+    const vertical = render({ resize: "vertical" });
+
+    expect(getComputedStyle(vertical.control).resize).toBe("vertical");
+    vertical.unmount();
+
+    const both = render({ resize: "both" });
+
+    expect(getComputedStyle(both.control).resize).toBe("both");
+    both.unmount();
+  });
+
+  it("grows with its content until maxRows, then scrolls", async () => {
+    const { control, unmount } = render({ autosize: true, maxRows: 4, minRows: 2 });
+
+    await nextTick();
+
+    const empty = control.getBoundingClientRect().height;
+
+    control.value = "line\n".repeat(12);
+    control.dispatchEvent(new Event("input", { bubbles: true }));
+    await nextTick();
+
+    const capped = control.getBoundingClientRect().height;
+
+    expect(capped).toBeGreaterThan(empty);
+    expect(getComputedStyle(control).overflowY).toBe("auto");
+
+    unmount();
+  });
+
+  it("keeps growing when maxRows is unset, without a scrollbar", async () => {
+    const { control, unmount } = render({ autosize: true, minRows: 2 });
+
+    await nextTick();
+
+    const empty = control.getBoundingClientRect().height;
+
+    control.value = "line\n".repeat(8);
+    control.dispatchEvent(new Event("input", { bubbles: true }));
+    await nextTick();
+
+    expect(control.getBoundingClientRect().height).toBeGreaterThan(empty);
+    expect(getComputedStyle(control).overflowY).toBe("hidden");
+
+    unmount();
+  });
+
+  it("honours minRows on an empty control", async () => {
+    const short = render({ autosize: true, minRows: 2 });
+    const tall = render({ autosize: true, minRows: 6 });
+
+    await nextTick();
+
+    expect(tall.control.getBoundingClientRect().height).toBeGreaterThan(
+      short.control.getBoundingClientRect().height,
+    );
+
+    short.unmount();
+    tall.unmount();
+  });
 });

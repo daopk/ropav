@@ -68,3 +68,36 @@ export const FullWidth: Story = {
     `,
   }),
 };
+
+/** Grows with what is typed, until `maxRows` if one is set. */
+export const Autosize: Story = {
+  render: () => ({
+    components,
+    template: `
+      <div class="flex w-[280px] flex-col gap-3">
+        <TextArea
+          autosize
+          full-width
+          :max-rows="6"
+          :min-rows="2"
+          placeholder="Grows from 2 to 6 rows"
+        />
+        <TextArea autosize full-width :min-rows="3" placeholder="Grows without a cap" />
+      </div>
+    `,
+  }),
+};
+
+/** Off by default. `vertical` or `both` puts the drag handle back. */
+export const Resize: Story = {
+  render: () => ({
+    components,
+    template: `
+      <div class="flex w-[280px] flex-col gap-3">
+        <TextArea full-width placeholder="Resize none (default)" :rows="3" />
+        <TextArea full-width placeholder="Resize vertical" resize="vertical" :rows="3" />
+        <TextArea full-width placeholder="Resize both" resize="both" :rows="3" />
+      </div>
+    `,
+  }),
+};

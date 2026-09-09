@@ -5,9 +5,13 @@ import { TextArea } from "@/components/textarea";
 import { TextField } from "@/components/textfield";
 
 const props = withDefaults(defineProps<TextAreaFixtureProps>(), {
+  autosize: undefined,
   fullWidth: undefined,
   isFieldDisabled: undefined,
   isFieldInvalid: undefined,
+  maxRows: undefined,
+  minRows: undefined,
+  resize: undefined,
   value: undefined,
   variant: undefined,
 });
@@ -26,11 +30,15 @@ defineEmits<{ change: [value: string]; "update:value": [value: string] }>();
       :variant="props.fieldVariant"
     >
       <TextArea
+        :autosize="props.autosize"
         :class="props.class"
         :disabled="props.disabled"
         :full-width="props.fullWidth"
+        :max-rows="props.maxRows"
+        :min-rows="props.minRows"
         :placeholder="props.placeholder"
         :required="props.required"
+        :resize="props.resize"
         :rows="props.rows"
         :value="props.value"
         :variant="props.variant"
@@ -40,11 +48,15 @@ defineEmits<{ change: [value: string]; "update:value": [value: string] }>();
     </TextField>
     <TextArea
       v-else
+      :autosize="props.autosize"
       :class="props.class"
       :disabled="props.disabled"
       :full-width="props.fullWidth"
+      :max-rows="props.maxRows"
+      :min-rows="props.minRows"
       :placeholder="props.placeholder"
       :required="props.required"
+      :resize="props.resize"
       :rows="props.rows"
       :value="props.value"
       :variant="props.variant"
