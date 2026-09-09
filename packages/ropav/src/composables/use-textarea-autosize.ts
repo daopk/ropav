@@ -11,8 +11,9 @@ export interface UseTextareaAutosizeOptions {
   /** Ceiling, in rows. Absent, the control grows without a cap. Ignored when `enabled` is false. */
   maxRows: MaybeRefOrGetter<number | undefined>;
   /**
-   * Extra sources that should remeasure. Reading `element.value` is not reactive, so the
-   * caller passes the text it holds — its own `value` prop, or the surrounding field's.
+   * Text held somewhere the element cannot be read from. Reading `element.value` is not
+   * reactive, so a caller that does not already remeasure when its own text moves passes
+   * the value it holds here.
    */
   content?: MaybeRefOrGetter<unknown>;
 }
@@ -20,7 +21,7 @@ export interface UseTextareaAutosizeOptions {
 export interface UseTextareaAutosizeSyncOptions {
   /**
    * From `input` only. A caret at the end then keeps the last line's padding in view.
-   * Layout remasures omit this so a scroll the user made is not stolen.
+   * Layout remeasures omit this so a scroll the user made is not stolen.
    */
   fromInput?: boolean;
 }
@@ -76,26 +77,19 @@ const contentWidthOf = (element: HTMLTextAreaElement): number => {
   return element.clientWidth - px(style.paddingLeft) - px(style.paddingRight);
 };
 
-/** `document.fonts`, or nothing on the server — where `document` itself is missing. */
-const fontFaceSet = (): FontFaceSet | undefined => {
-  if (typeof document === "undefined") return undefined;
-
-  return document.fonts;
-};
-
 /**
  * Size a textarea to its content, clamped to a row range.
  *
- * Measured on the live element rather than a hidden clone: the clone is how `react-textarea-autosize`
- * (and HeroUI v2) leaked an extra node into the document, and the live element already has the
- * font, the padding and the wrapping width. Height is set to `auto` for the read so a previous
- * inline height cannot pin `scrollHeight` to itself, then written back as a pixel height.
+ * Measured on the live element rather than a hidden clone of it: a clone is a second node in
+ * the document to keep in step, and the live element already has the font, the padding and
+ * the wrapping width. Height is set to `auto` for the read so a previous inline height cannot
+ * pin `scrollHeight` to itself, then written back as a pixel height.
  *
  * `scrollHeight` includes padding and not the border. The reset is `border-box`, so the height
  * that is written has to put the border back or the last line is clipped by that much.
  *
  * The bottom-pin is input-only. Typing at the end has to bring `padding-bottom` into view;
- * a width, font or row-range remasure must not yank a scroll the user just made.
+ * a width, font or row-range remeasure must not yank a scroll the user just made.
  *
  * @returns Whether `maxRows` clamped the height, which is the one case where a field left
  * scrolling its own content is doing what it was asked to.
@@ -169,21 +163,19 @@ const measure = (
  *
  * The caller has to invoke {@link UseTextareaAutosizeReturn.sync} from `input`: reading
  * `element.value` inside a getter is not a reactive dependency, and waiting for a post-flush
- * watch would size against the previous stroke. Controlled values and `minRows` / `maxRows`
- * changes go through the watch, which is post-flush so it runs after `setFormValue` has put
- * the pinned text back.
+ * watch would size against the previous stroke. `minRows`, `maxRows` and {@link
+ * UseTextareaAutosizeOptions.content} go through a post-flush watch instead.
  *
  * Observers attach only while autosize is on. Native `resize` writes inline `width` and
  * `height` as the pointer drags; an observer that stayed attached with autosize off would
  * `clear` that height on every width change and fight the handle.
  *
- * Width is taken from `contentRect`, and seeded up front from the same content box
- * (`clientWidth` minus inline padding). Seeding from `getBoundingClientRect` mixed in the
- * border, so the loop guard always failed and every mount paid a second layout. Skipping
- * the first delivery instead ate a real shrink: `sync` after `observe` can make a scrollbar
- * appear, the first callback reports the narrower width, and treating that as a seed left
- * wrapped text clipped. Writing `style.height` is itself a size change, and an observer
- * that did not discriminate width would loop.
+ * Writing `style.height` is itself a size change, so the observer has to discriminate width
+ * or it would loop. That makes the seed load-bearing: it is read from the same content box
+ * `contentRect` reports, because a seed off by the border makes the first delivery look like
+ * a width change, and skipping that first delivery instead loses a real one — `sync` after
+ * `observe` can make a scrollbar appear, and the callback reporting the narrower width is
+ * the only notice of it.
  *
  * An inline height also hides height-only metric changes from the observer — a webfont that
  * lands after first paint, or `.rp-textarea`'s `@media (width >= 40rem)` type/padding switch
@@ -231,14 +223,18 @@ export const useTextareaAutosize = (
     sync();
   };
 
+  // One guard for both: the server has neither, and nothing has one without the other.
+  const metrics = (bind: "addEventListener" | "removeEventListener") => {
+    if (typeof document === "undefined") return;
+
+    window[bind]("resize", onMetrics);
+    document.fonts?.[bind]("loadingdone", onMetrics);
+  };
+
   const detach = () => {
     observer?.disconnect();
     observer = undefined;
-    lastWidth = Number.NaN;
-
-    if (typeof window !== "undefined") window.removeEventListener("resize", onMetrics);
-
-    fontFaceSet()?.removeEventListener("loadingdone", onMetrics);
+    metrics("removeEventListener");
   };
 
   const observe = (element: HTMLTextAreaElement) => {
@@ -270,10 +266,7 @@ export const useTextareaAutosize = (
       observer.observe(element);
     }
 
-    if (typeof window !== "undefined")
-      window.addEventListener("resize", onMetrics, { passive: true });
-
-    fontFaceSet()?.addEventListener("loadingdone", onMetrics);
+    metrics("addEventListener");
   };
 
   watch(

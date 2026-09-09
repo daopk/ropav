@@ -276,7 +276,7 @@ describe("TextArea (browser)", () => {
     unmount();
   });
 
-  it("does not steal a scroll-away when layout remasures with the caret at the end", async () => {
+  it("does not steal a scroll-away when layout remeasures with the caret at the end", async () => {
     const props = reactive({
       autosize: true,
       maxRows: 4,

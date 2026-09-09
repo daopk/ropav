@@ -78,7 +78,10 @@ const interaction = useInteractionStates({ isDisabled: () => control?.isDisabled
 const inputCount = shallowRef(0);
 
 const { sync: syncAutosize } = useTextareaAutosize({
-  content: () => props.value ?? control?.attrs.value["value"],
+  // Only the field's text. A `value` prop of our own already remeasures through the watch
+  // below, which has to be the one that does it — it measures after `setFormValue`, where
+  // a watch of its own would land before and size against the text being replaced.
+  content: () => control?.attrs.value["value"],
   element,
   enabled: () => props.autosize,
   maxRows: () => props.maxRows,
