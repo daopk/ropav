@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {
   Autocomplete,
+  AutocompleteFilter,
   AutocompleteIndicator,
   AutocompletePopover,
   AutocompleteTrigger,
@@ -9,6 +10,12 @@ import {
   ListBox,
   ListBoxItem,
   ListBoxItemIndicator,
+  SearchField,
+  SearchFieldClearButton,
+  SearchFieldGroup,
+  SearchFieldInput,
+  SearchFieldSearchIcon,
+  useFilter,
 } from "ropav";
 
 const cities = [
@@ -19,6 +26,8 @@ const cities = [
 ];
 
 const byName = (city: { name: string }) => city.name;
+
+const filter = useFilter({ sensitivity: "base" });
 </script>
 
 <template>
@@ -36,12 +45,27 @@ const byName = (city: { name: string }) => city.name;
     </AutocompleteTrigger>
 
     <AutocompletePopover>
-      <ListBox>
-        <ListBoxItem v-for="city in cities" :id="city.id" :key="city.id" :text-value="city.name">
-          {{ city.name }}
-          <ListBoxItemIndicator />
-        </ListBoxItem>
-      </ListBox>
+      <AutocompleteFilter v-slot="{ items: matches }" :filter="filter.contains">
+        <SearchField auto-focus aria-label="Search cities" name="search" variant="secondary">
+          <SearchFieldGroup>
+            <SearchFieldSearchIcon />
+            <SearchFieldInput placeholder="Search…" />
+            <SearchFieldClearButton />
+          </SearchFieldGroup>
+        </SearchField>
+
+        <ListBox>
+          <ListBoxItem
+            v-for="city in matches as typeof cities"
+            :id="city.id"
+            :key="city.id"
+            :text-value="city.name"
+          >
+            {{ city.name }}
+            <ListBoxItemIndicator />
+          </ListBoxItem>
+        </ListBox>
+      </AutocompleteFilter>
     </AutocompletePopover>
   </Autocomplete>
 </template>
