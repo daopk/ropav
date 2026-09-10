@@ -1,4 +1,4 @@
-<script setup lang="ts" vapor generic="T">
+<script setup lang="ts" vapor generic="T = any">
 import type { UseListKeyboardReturn } from "../../composables/use-list-keyboard";
 import type { CollectionSelection } from "../../composables/use-selection-manager";
 import type { AutocompleteFilterProps, AutocompleteFilterSlotProps } from "./autocomplete.types";
@@ -17,6 +17,13 @@ import { createListCollection } from "../../utils/virtualizer-collection";
 import { provideListBoxStateContext } from "../list-box";
 
 import { useAutocompleteContext } from "./autocomplete.context";
+
+/*
+ * `T` falls back rather than being read off a prop, because `items` is the only one carrying it
+ * and the usual caller hands over a `filter` instead. `unknown` would keep no safety it looks
+ * like it is keeping — the narrowed options are the root's own items either way, and a slot the
+ * caller cannot read without asserting a type is one they assert blindly at every use site.
+ */
 
 // `disableAutoFocusFirst` and `disableVirtualFocus` declare an explicit `undefined` default so an
 // absent prop stays absent rather than reading as an explicit `false`.

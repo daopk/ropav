@@ -55,12 +55,7 @@ const filter = useFilter({ sensitivity: "base" });
         </SearchField>
 
         <ListBox>
-          <ListBoxItem
-            v-for="city in matches as typeof cities"
-            :id="city.id"
-            :key="city.id"
-            :text-value="city.name"
-          >
+          <ListBoxItem v-for="city in matches" :id="city.id" :key="city.id" :text-value="city.name">
             {{ city.name }}
             <ListBoxItemIndicator />
           </ListBoxItem>
