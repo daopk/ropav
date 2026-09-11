@@ -29,7 +29,6 @@
     box-shadow 100ms var(--rp-ease-out);
   transform: translateZ(0) var(--rp-rotate-x,) var(--rp-rotate-y,) var(--rp-rotate-z,)
     var(--rp-skew-x,) var(--rp-skew-y,);
-  will-change: transform;
 
   /* Cursor */
   cursor: var(--rp-cursor-interactive);
@@ -90,6 +89,8 @@
   /* Active / pressed */
   &:active,
   &[data-pressed="true"] {
+    /* Here rather than on the base rule: a page of buttons holds one promoted layer each. */
+    will-change: transform;
     background-color: var(--button-bg-pressed);
     transform: scale(0.97);
   }

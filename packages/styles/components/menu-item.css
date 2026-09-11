@@ -22,8 +22,6 @@
     var(--rp-motion) transform 250ms var(--rp-ease-out-quart),
     box-shadow 150ms var(--rp-ease-out);
 
-  will-change: transform;
-
   /* Cursor */
   cursor: var(--rp-cursor-interactive);
 
@@ -83,6 +81,8 @@
   /* Pressed state */
   &:active,
   &[data-pressed="true"] {
+    /* Here rather than on the base rule: a long menu holds one promoted layer per item. */
+    will-change: transform;
     transform: scale(0.98);
   }
 

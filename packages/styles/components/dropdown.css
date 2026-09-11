@@ -87,7 +87,6 @@
   padding: 0px;
   font-size: var(--rp-text-sm);
   line-height: var(--rp-leading, var(--rp-text-sm--line-height));
-  will-change: transform;
   @media (width >= 48rem) {
     min-width: calc(var(--rp-spacing) * 55);
   }
