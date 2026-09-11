@@ -552,15 +552,12 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
 
           return;
         }
-        case "Enter": {
-          if (focused == null || toValue(options.disallowActivation)) return;
-
-          options.onAction?.(focused);
-          event.preventDefault();
-
-          return;
-        }
+        case "Enter":
         case " ": {
+          // Space is the ARIA selection key. Enter is the same when the collection holds a
+          // selection — a focused option has to be choosable with either, which is what a native
+          // listbox and React Aria's `useSelectableItem` both do when the item has no action of
+          // its own. A list of actions (`selectionMode` none) keeps both as `onAction`.
           if (focused == null || toValue(options.disallowActivation)) return;
 
           if (selection.selectionMode.value === "none") options.onAction?.(focused);

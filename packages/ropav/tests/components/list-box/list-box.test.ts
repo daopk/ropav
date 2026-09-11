@@ -218,11 +218,11 @@ describe("ListBox", () => {
       expect(items()[2]).toHaveAttribute("tabindex", "0");
     });
 
-    it("selects the focused item on Space", async () => {
+    it.each(["Enter", " "] as const)("selects the focused item on %s", async (key) => {
       const { items, listbox } = await render({ selectionMode: "single" });
 
       press(listbox, "ArrowDown");
-      press(items()[0]!, " ");
+      press(items()[0]!, key);
       await nextTick();
 
       expect(items()[0]).toHaveAttribute("aria-selected", "true");

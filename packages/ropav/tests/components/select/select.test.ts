@@ -241,6 +241,29 @@ describe("Select", () => {
       expect(value).toHaveTextContent("California");
     });
 
+    it.each(["Enter", " "] as const)(
+      "writes the focused option with %s, closes, and shows it",
+      async (name) => {
+        const onChange = vi.fn();
+        const { listbox, options, trigger, value } = await render({ onChange });
+
+        key(trigger, "ArrowDown");
+        await settle();
+
+        key(options()[0]!, "ArrowDown");
+        await settle();
+
+        expect(options()[1]).toHaveFocus();
+
+        key(options()[1]!, name);
+        await settle();
+
+        expect(onChange).toHaveBeenCalledWith("california");
+        expect(listbox()).toBeNull();
+        expect(value).toHaveTextContent("California");
+      },
+    );
+
     it("stays open in multiple mode and gathers the choices", async () => {
       const onChange = vi.fn();
       const { listbox, options, trigger } = await render({ onChange, selectionMode: "multiple" });
