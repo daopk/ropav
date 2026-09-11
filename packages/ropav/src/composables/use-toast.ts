@@ -98,6 +98,11 @@ export const useToast = (options: UseToastOptions): UseToastReturn => {
     watch(
       () => ({ timeout: toValue(options.timeout), timer: toValue(options.timer) }),
       (next, previous) => {
+        // The same clock on the same delay is the one already counting down. A toast re-rendered
+        // with new content holds a new entry object but the clock it came with, and restarting
+        // that would let a message updated in place outlive anything it was given.
+        if (previous && previous.timer === next.timer && previous.timeout === next.timeout) return;
+
         previous?.timer?.pause();
 
         if (next.timer == null || next.timeout == null) return;

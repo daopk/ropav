@@ -487,6 +487,53 @@ describe("Toast", () => {
 
       expect(region()).not.toBeNull();
     });
+
+    it("leaves a countdown running through an update that does not mention the timeout", async () => {
+      const queue = new ToastQueue();
+
+      render({ queue });
+
+      const key = queue.add({ title: "Uploading" });
+
+      await settle();
+
+      vi.advanceTimersByTime(DEFAULT_TOAST_TIMEOUT - 100);
+      queue.update(key, { title: "Uploading 90%" });
+      await settle();
+
+      // Asserted alive first, so what follows tells a clock still running from a restarted one.
+      expect(region()).not.toBeNull();
+
+      // The clock it arrived with is the one counting: a message replaced in place must not buy
+      // the toast another full life, or a progress loop would keep it on screen for ever.
+      vi.advanceTimersByTime(100);
+      await settle();
+
+      expect(region()).toBeNull();
+    });
+
+    it("holds the clock an update mints under the pointer that is holding the others", async () => {
+      const queue = new ToastQueue();
+
+      render({ queue });
+
+      const key = queue.add({ title: "Saving" }, { timeout: 0 });
+
+      await settle();
+
+      region()!.dispatchEvent(new PointerEvent("pointerenter", { pointerId: 1 }));
+      await settle();
+
+      // Settled in place, so the clock is minted after the pointer arrived and nothing that
+      // paused the stack has ever seen it — and the toast starts it itself on the next render.
+      queue.update(key, { title: "Saved" }, { timeout: DEFAULT_TOAST_TIMEOUT });
+      await settle();
+
+      vi.advanceTimersByTime(DEFAULT_TOAST_TIMEOUT * 3);
+      await settle();
+
+      expect(region()).not.toBeNull();
+    });
   });
 
   describe("custom content", () => {
