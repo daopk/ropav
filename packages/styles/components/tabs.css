@@ -282,12 +282,10 @@
  */
 .rp-tabs--align-start > :is(.rp-tabs__list-container, .rp-tabs__list) .rp-tabs__tab {
   justify-content: flex-start;
-  text-align: start;
 }
 
 .rp-tabs--align-end > :is(.rp-tabs__list-container, .rp-tabs__list) .rp-tabs__tab {
   justify-content: flex-end;
-  text-align: end;
 }
 
 /* Tab separator */
