@@ -119,6 +119,48 @@ describe("TagGroup (browser)", () => {
     unmount();
   });
 
+  /*
+   * The glyph is 12px. Only a real layout can say what the overlay that widens it actually
+   * covers, and whether the smallest size pushes it over the neighbour it sits beside — which
+   * would take that tag's presses and remove the wrong one.
+   */
+  it("gives the remove button a 24px hit area that stays off the next tag", async () => {
+    const onRemove = vi.fn();
+    const { container, tags, unmount } = await render({ onRemove, size: "sm" });
+
+    // The target reaches 2px past the tag, and the first tag sits flush at the top of the page,
+    // so without this the probe above it lands outside the viewport rather than on the overlay.
+    container.style.padding = "40px";
+
+    const [first, second] = tags();
+    const button = first!.querySelector<HTMLElement>('[data-slot="tag-remove-button"]')!;
+
+    const centre = (element: HTMLElement) => {
+      const box = element.getBoundingClientRect();
+
+      return { x: box.left + box.width / 2, y: box.top + box.height / 2 };
+    };
+
+    const glyph = button.getBoundingClientRect();
+    const at = centre(button);
+
+    // Four points at the edges of the 24px target, all outside the 12px glyph.
+    const reach = [
+      [at.x - 11, at.y],
+      [at.x + 11, at.y],
+      [at.x, at.y - 11],
+      [at.x, at.y + 11],
+    ] as const;
+
+    expect({
+      glyph: [Math.round(glyph.width), Math.round(glyph.height)],
+      hits: reach.map(([x, y]) => button.contains(document.elementFromPoint(x, y))),
+      overlapsNeighbour: second!.contains(document.elementFromPoint(at.x + 11, at.y)),
+    }).toEqual({ glyph: [12, 12], hits: [true, true, true, true], overlapsNeighbour: false });
+
+    unmount();
+  });
+
   it("has no accessibility violations as a grid of rows and cells", async () => {
     // A grid with rows and cells is exactly the structure axe checks hardest, so this is where the
     // role nesting earns its keep.

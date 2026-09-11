@@ -153,10 +153,28 @@
 }
 
 /* Remove Button  */
+/*
+ * The glyph is 12px, half the minimum target size, and a tap that misses it lands on the tag
+ * body — which takes the press and removes nothing, so removing a tag by touch takes several
+ * goes. A transparent overlay widens what a finger can land on to the 24px floor without moving
+ * anything: on `--sm` it reaches about 2px past the tag box, which the 6px gap between tags
+ * absorbs, so it never covers a neighbour.
+ */
 .rp-tag__remove-button {
   width: calc(var(--rp-spacing) * 3);
   height: calc(var(--rp-spacing) * 3);
   color: inherit;
+
+  /* The close button is already `position: relative`, so the overlay stays on this button. */
+  &::after {
+    content: "";
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    width: 24px;
+    height: 24px;
+    translate: -50% -50%;
+  }
 
   /* SVG icon styling */
   & svg {
