@@ -36,6 +36,20 @@ mounted first.
 usual arrangement when a page shows toasts in more than one corner — each stack is then
 independent.
 
+`toast.update` replaces a message where it stands, keeping the toast's key and its place in the
+stack, which is how `toast.promise` settles a loading toast into its outcome rather than swapping
+one toast for another. A `timeout` or `onClose` left out of an update is kept.
+
+## Expanding
+
+Pointing at the stack, or moving focus into it, opens it out so every toast stands at its own
+height instead of being clipped to the one in front. It closes again when the pointer and focus
+both leave, or on `Escape`. A single toast has nothing to open out of, and a touch leaves the
+stack closed — a finger has no hover to lose, so an opened stack would have nothing to close it.
+
+`is-expanded` holds the stack open regardless, which is what a visual test wants. Unlike pointing
+at it, that does not pause the timers.
+
 ## Placement
 
 `placement` on the provider decides which corner the stack grows from, and the animation follows
@@ -48,6 +62,9 @@ it: toasts at the top slide down, toasts at the bottom slide up.
   should not be on a timer.
 - Hovering or focusing the stack pauses the timers, so a toast cannot vanish while it is being
   read.
+- <kbd>Alt</kbd> + <kbd>T</kbd> moves focus to the region from anywhere, so the toasts are
+  reachable without tabbing through everything between. `hotkey` changes the combination, and an
+  empty list turns it off.
 
 ## API
 
