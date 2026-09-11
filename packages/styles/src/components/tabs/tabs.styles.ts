@@ -4,6 +4,7 @@ import { tv } from "../../tv";
 
 export const tabsVariants = tv({
   defaultVariants: {
+    align: "center",
     variant: "primary",
   },
   slots: {
@@ -19,6 +20,16 @@ export const tabsVariants = tv({
     tabPanel: "rp-tabs__panel",
   },
   variants: {
+    align: {
+      // The base rule already centres a tab, so the default carries no class.
+      center: {},
+      end: {
+        base: "rp-tabs--align-end",
+      },
+      start: {
+        base: "rp-tabs--align-start",
+      },
+    },
     variant: {
       primary: {},
       secondary: {

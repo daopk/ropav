@@ -663,7 +663,7 @@ export const catalogue: Record<string, CatalogueEntry> = {
   },
 
   tabs: {
-    controls: ["variant", "orientation", "keyboardActivation", "isDisabled"],
+    controls: ["variant", "align", "orientation", "keyboardActivation", "isDisabled"],
     file: "components/tabs/tabs-root.vue",
     node: {
       children: [

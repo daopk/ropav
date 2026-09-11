@@ -273,6 +273,23 @@
   }
 }
 
+/*
+ * Tab content alignment. Centre is the base rule's, so only the two ends are written here.
+ *
+ * Scoped to the direct child holding the list — the list container, or the list itself where a
+ * caller leaves the container out — so a Tabs nested inside a panel keeps its own alignment
+ * instead of taking the outer one's.
+ */
+.rp-tabs--align-start > :is(.rp-tabs__list-container, .rp-tabs__list) .rp-tabs__tab {
+  justify-content: flex-start;
+  text-align: start;
+}
+
+.rp-tabs--align-end > :is(.rp-tabs__list-container, .rp-tabs__list) .rp-tabs__tab {
+  justify-content: flex-end;
+  text-align: end;
+}
+
 /* Tab separator */
 .rp-tabs__separator {
   pointer-events: none;

@@ -53,6 +53,7 @@ const components = {
 
 const meta: StoryMeta = {
   argTypes: {
+    align: { control: { type: "radio" }, options: ["start", "center", "end"] },
     isDisabled: { control: { type: "boolean" } },
     keyboardActivation: { control: { type: "radio" }, options: ["automatic", "manual"] },
     orientation: { control: { type: "radio" }, options: ["horizontal", "vertical"] },
@@ -85,6 +86,7 @@ const overviewTemplate = (extraRootProps = "") => `
     <Tabs
       :is-disabled="args.isDisabled"
       :keyboard-activation="args.keyboardActivation"
+      :align="args.align"
       :orientation="args.orientation"
       :variant="args.variant"${extraRootProps}
     >
@@ -108,6 +110,39 @@ export const Default: Story = {
     components,
     setup: () => ({ args, items: OVERVIEW_ITEMS }),
     template: overviewTemplate(),
+  }),
+};
+
+/**
+ * A tab fills the width its list gives it, so the label sits in the middle of that space by
+ * default. `align` moves it to either end, which is what a vertical deck wants: read as a list of
+ * links, centred labels leave the eye no common edge to run down.
+ */
+export const Aligned: Story = {
+  render: (args) => ({
+    components,
+    setup: () => ({ args, items: OVERVIEW_ITEMS }),
+    template: `
+      <div class="flex w-[600px] flex-col gap-6">
+        <Tabs
+          v-for="align in ['start', 'center', 'end']"
+          :key="align"
+          :align="align"
+          :is-disabled="args.isDisabled"
+          :keyboard-activation="args.keyboardActivation"
+          :variant="args.variant"
+        >
+          <TabsListContainer>
+            <TabsList :aria-label="align">
+              <TabsTab v-for="item in items" :id="item.id" :key="item.id">
+                {{ item.label }}
+                <TabsIndicator />
+              </TabsTab>
+            </TabsList>
+          </TabsListContainer>
+        </Tabs>
+      </div>
+    `,
   }),
 };
 

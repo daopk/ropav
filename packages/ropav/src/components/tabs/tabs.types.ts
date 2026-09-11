@@ -11,6 +11,12 @@ export type TabsKeyboardActivation = "automatic" | "manual";
 
 export interface TabsRootProps {
   class?: string;
+  /**
+   * Where a tab's label and icon sit inside the tab.
+   *
+   * @default "center"
+   */
+  align?: TabsVariants["align"];
   /** The selected tab, when the caller drives it. */
   selectedKey?: CollectionKey;
   /** The initially selected tab. Falls back to the first tab that is not disabled. */

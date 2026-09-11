@@ -19,6 +19,7 @@ import { provideTabsContext } from "./tabs.context";
 // The three-state props declare an explicit `undefined` default, so an absent prop stays absent
 // rather than being cast to `false` and read as a caller's decision.
 const props = withDefaults(defineProps<TabsRootProps>(), {
+  align: undefined,
   isDisabled: undefined,
   keyboardActivation: undefined,
   orientation: undefined,
@@ -36,7 +37,7 @@ const orientation = computed(() => props.orientation ?? "horizontal");
 const keyboardActivation = computed(() => props.keyboardActivation ?? "automatic");
 const isDisabled = computed(() => Boolean(props.isDisabled));
 
-const slots = computed(() => tabsVariants({ variant: props.variant }));
+const slots = computed(() => tabsVariants({ align: props.align, variant: props.variant }));
 
 const state = useTabListState({
   defaultSelectedKey: props.defaultSelectedKey,

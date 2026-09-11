@@ -102,6 +102,17 @@ describe("Tabs", () => {
       );
     });
 
+    it("exposes the alignment modifier, and nothing for the default", async () => {
+      const slot = (container: HTMLElement) =>
+        container.querySelector('[data-slot="tabs"]')!.className;
+
+      expect(slot((await render({ align: "start" })).container)).toContain("rp-tabs--align-start");
+      expect(slot((await render({ align: "end" })).container)).toContain("rp-tabs--align-end");
+      // Centre is what the base rule already does, so it carries no class of its own.
+      expect(slot((await render({ align: "center" })).container)).not.toContain("rp-tabs--align");
+      expect(slot((await render()).container)).not.toContain("rp-tabs--align");
+    });
+
     it("lets a caller's class override the slot's own", async () => {
       const { container } = await render({ class: "p-10" });
 

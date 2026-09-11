@@ -324,6 +324,34 @@ describe("Tabs (browser)", () => {
     });
   });
 
+  /*
+   * The alignment rules reach the tab through the list, so only a mounted tree says whether they
+   * match — and the class landing on the root is not the same claim as the tab moving.
+   */
+  describe("alignment", () => {
+    const justify = async (align?: string) => {
+      const { container, unmount } = renderVapor(TabsFixture, { props: { align } });
+
+      await ready();
+
+      const tab = container.querySelector<HTMLElement>('[data-slot="tabs-tab"]')!;
+      const resolved = getComputedStyle(tab).justifyContent;
+
+      unmount();
+
+      return resolved;
+    };
+
+    it("moves the tab's content to the edge it names", async () => {
+      expect({
+        center: await justify("center"),
+        end: await justify("end"),
+        none: await justify(),
+        start: await justify("start"),
+      }).toEqual({ center: "center", end: "flex-end", none: "center", start: "flex-start" });
+    });
+  });
+
   it("has no accessibility violations", async () => {
     const { container, unmount } = renderVapor(TabsFixture);
 

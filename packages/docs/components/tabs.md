@@ -35,6 +35,11 @@ it lays them out on one line and sizes the icon, and the count joins the name th
 </template>
 </Demo>
 
+## Alignment
+
+A tab fills the width its list gives it, so its label sits in the middle of that space; `align`
+moves the label to either end instead, which is usually what a vertical deck wants.
+
 ## Activation
 
 `keyboard-activation` decides what the arrow keys do. The default follows focus — moving to a tab
