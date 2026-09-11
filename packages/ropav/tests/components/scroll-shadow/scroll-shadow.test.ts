@@ -221,6 +221,29 @@ describe("ScrollShadow", () => {
     unmount();
   });
 
+  /*
+   * The attributes are the whole state the mask is keyed on, so leaving the last set behind
+   * freezes the fade at whatever it was measuring when detection was switched off.
+   */
+  it("takes the measured state off when detection is switched off", async () => {
+    const props = reactive({ isEnabled: true });
+    const { root, unmount } = renderScrollShadow(props);
+
+    setGeometry(root, { clientHeight: 100, scrollHeight: 300 });
+    await nextTick();
+    root.dispatchEvent(new Event("scroll"));
+
+    expect(root).toHaveAttribute("data-bottom-scroll", "true");
+
+    props.isEnabled = false;
+    await nextTick();
+
+    expect(root).not.toHaveAttribute("data-bottom-scroll");
+    expect(root).not.toHaveAttribute("data-top-scroll");
+
+    unmount();
+  });
+
   it("does not report the same measured state twice", async () => {
     const onVisibilityChange = vi.fn();
     const { root, unmount } = renderScrollShadow({ onVisibilityChange });

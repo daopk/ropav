@@ -6,7 +6,7 @@ import { computed, shallowRef, watch } from "vue";
 
 import { focusableIn } from "../../utils/focus";
 
-import { useScrollShadow } from "./use-scroll-shadow";
+import { clearScrollShadowVisibility, useScrollShadow } from "./use-scroll-shadow";
 
 const props = withDefaults(defineProps<ScrollShadowRootProps>(), {
   hideScrollBar: false,
@@ -44,21 +44,12 @@ const styles = computed(() =>
 
 const style = computed(() => [{ "--scroll-shadow-size": `${props.size}px` }, props.style]);
 
-const clearVisibility = (current: HTMLElement) => {
-  delete current.dataset["topScroll"];
-  delete current.dataset["bottomScroll"];
-  delete current.dataset["topBottomScroll"];
-  delete current.dataset["leftScroll"];
-  delete current.dataset["rightScroll"];
-  delete current.dataset["leftRightScroll"];
-};
-
 watch(
   [element, () => props.visibility, () => props.orientation],
   ([current, visibility, orientation]) => {
     if (!current || visibility === "auto") return;
 
-    clearVisibility(current);
+    clearScrollShadowVisibility(current);
 
     if (visibility === "both") {
       current.dataset[orientation === "vertical" ? "topBottomScroll" : "leftRightScroll"] = "true";

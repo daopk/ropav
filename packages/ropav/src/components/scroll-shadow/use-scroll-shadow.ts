@@ -18,6 +18,21 @@ export interface UseScrollShadowReturn {
 }
 
 /**
+ * Take every edge attribute off, so the stylesheet's mask stops applying.
+ *
+ * The attributes are the whole state, and the one place the mask is keyed on, so whoever stops
+ * writing them has to take the last set off too or the fade stays painted at whatever it was.
+ */
+export const clearScrollShadowVisibility = (element: HTMLElement) => {
+  delete element.dataset["topScroll"];
+  delete element.dataset["bottomScroll"];
+  delete element.dataset["topBottomScroll"];
+  delete element.dataset["leftScroll"];
+  delete element.dataset["rightScroll"];
+  delete element.dataset["leftRightScroll"];
+};
+
+/**
  * Detect the scrollable edges around an element and publish them as `data-*` attributes.
  *
  * The callback reads every option lazily, so orientation, offset, enabled state, and
@@ -107,7 +122,20 @@ export const useScrollShadow = (options: UseScrollShadowProps): UseScrollShadowR
       previous = null;
       cancelPendingFrame();
 
-      if (!current || !enabled || mode !== "auto") return;
+      if (!current) return;
+
+      /*
+       * Being switched off has to undo the last measurement. In controlled mode the root owns
+       * the attributes and clearing them here would wipe what it just wrote, so only the
+       * automatic mode's own leftovers go.
+       */
+      if (mode !== "auto") return;
+
+      if (!enabled) {
+        clearScrollShadowVisibility(current);
+
+        return;
+      }
 
       checkOverflow();
       current.addEventListener("scroll", checkOverflow, { passive: true });
