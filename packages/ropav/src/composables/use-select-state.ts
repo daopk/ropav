@@ -209,8 +209,6 @@ export const useSelectState = <T>(options: UseSelectStateOptions<T>): UseSelectS
     controllable.setState(toKeys(next));
   };
 
-  const clearValue = () => setValue(null);
-
   const validation = useFormValidationState<SelectedValue>({
     isInvalid: options.isInvalid,
     name: options.name,
@@ -223,6 +221,14 @@ export const useSelectState = <T>(options: UseSelectStateOptions<T>): UseSelectS
       return Array.isArray(current) && current.length === 0 ? null : current;
     },
   });
+
+  // Committed as well as written, exactly as choosing an option does below: a required field
+  // emptied without a commit goes on displaying the verdict it reached while it still held a
+  // value, and the server error the user has just acted on stays on screen.
+  const clearValue = () => {
+    setValue(null);
+    validation.commitValidation();
+  };
 
   const selection = useSelectionManager({
     collection,
