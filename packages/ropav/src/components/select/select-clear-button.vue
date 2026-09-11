@@ -10,7 +10,7 @@ import { useSelectContext } from "./select.context";
 
 const props = defineProps<SelectClearButtonProps>();
 
-const { isDisabled, onClear, registerClearButton, selectedItems, slots, state } =
+const { isDisabled, onClear, registerClearButton, select, selectedItems, slots, state } =
   useSelectContext();
 
 const styles = computed(() => slots.value.clearButton({ class: props.class }));
@@ -67,6 +67,12 @@ const onClick = (event: MouseEvent) => {
 
   state.clearValue();
   onClear();
+
+  // By hand, because both halves of the trigger's own focusing are gone: the press never reaches
+  // it, while its `mousedown` still runs the `preventDefault` that keeps the browser from
+  // focusing it. Without this the Backspace shortcut this button stands in for has nothing to
+  // land on, and the next Tab starts from the top of the document.
+  select.triggerElement.value?.focus();
 };
 </script>
 
