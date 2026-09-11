@@ -1,5 +1,5 @@
 packages:
-  - "packages/**/**"
+  - "packages/*"
 
 catalog:
   "@tailwindcss/cli": 4.3.3
@@ -9,13 +9,14 @@ catalog:
   "@vitejs/plugin-vue": 6.0.8
   "@vitest/browser": 5.0.0
   "@vitest/browser-playwright": 5.0.0
-  "@vue/compiler-vapor": 3.6.0-rc.7
+  "@vue/compiler-vapor": 3.6.0-rc.8
   lightningcss: 1.33.0
+  playwright: 1.63.0
   tailwindcss: 4.3.3
   typescript: npm:typescript-native-bridge@6.0.3-bridge.16.tsgo.7.0.2
-  vite: 8.2.2
+  vite: 8.3.0
   vitest: 5.0.0
-  vue: 3.6.0-rc.7
+  vue: 3.6.0-rc.8
   vue-component-meta: 3.3.11
   vue-tsc: 3.3.11
 
@@ -25,13 +26,23 @@ overrides:
   # else in the graph asks for a different Vue, so this is a no-op everywhere else.
   vue: "catalog:"
 
-onlyBuiltDependencies:
-  - "@parcel/watcher"
-  - "@swc/core"
-  - "core-js"
-  - "esbuild"
-  - "lmdb"
-  - "msgpackr-extract"
-  - "protobufjs"
-  - "sharp"
-  - "unrs-resolver"
+allowBuilds:
+  "@parcel/watcher": false
+  "@swc/core": false
+  esbuild: false
+  lmdb: false
+  msgpackr-extract: false
+
+minimumReleaseAgeExclude:
+  - "@vue/compiler-core@3.6.0-rc.8"
+  - "@vue/compiler-dom@3.6.0-rc.8"
+  - "@vue/compiler-sfc@3.6.0-rc.8"
+  - "@vue/compiler-ssr@3.6.0-rc.8"
+  - "@vue/compiler-vapor@3.6.0-rc.8"
+  - "@vue/reactivity@3.6.0-rc.8"
+  - "@vue/runtime-core@3.6.0-rc.8"
+  - "@vue/runtime-dom@3.6.0-rc.8"
+  - "@vue/runtime-vapor@3.6.0-rc.8"
+  - "@vue/server-renderer@3.6.0-rc.8"
+  - "@vue/shared@3.6.0-rc.8"
+  - vue@3.6.0-rc.8

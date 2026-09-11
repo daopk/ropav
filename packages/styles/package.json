@@ -82,7 +82,7 @@
     "@types/node": "catalog:",
     "clean-package": "2.2.0",
     "lightningcss": "catalog:",
-    "rolldown": "1.2.7",
+    "rolldown": "1.2.8",
     "tsx": "4.23.13",
     "typescript": "catalog:"
   },

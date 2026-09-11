@@ -38,9 +38,9 @@
     "eslint-plugin-sort-destructure-keys": "3.0.0",
     "eslint-plugin-storybook": "10.6.0",
     "husky": "9.1.7",
-    "lint-staged": "17.4.1",
-    "oxfmt": "0.66.0",
-    "oxlint": "1.81.0",
+    "lint-staged": "17.5.1",
+    "oxfmt": "0.67.0",
+    "oxlint": "1.82.0",
     "oxlint-tsgolint": "7.0.2001",
     "parcel": "2.16.4",
     "postcss": "8.5.28",
@@ -51,7 +51,7 @@
   },
   "engines": {
     "node": ">=22.x",
-    "pnpm": ">=10.x"
+    "pnpm": ">=12.x"
   },
-  "packageManager": "pnpm@10.26.2"
+  "packageManager": "pnpm@12.4.0"
 }

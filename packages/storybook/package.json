@@ -18,7 +18,7 @@
   "devDependencies": {
     "@iconify-json/gravity-ui": "1.2.14",
     "@iconify-json/ic": "1.2.4",
-    "@iconify-json/logos": "1.2.13",
+    "@iconify-json/logos": "1.2.14",
     "@iconify-json/streamline-logos": "1.2.0",
     "@iconify-json/tabler": "1.2.38",
     "@iconify-json/uim": "1.2.3",
@@ -34,7 +34,7 @@
     "@vitest/browser": "catalog:",
     "@vitest/browser-playwright": "catalog:",
     "@vue/compiler-vapor": "catalog:",
-    "playwright": "1.62.1",
+    "playwright": "catalog:",
     "postcss": "8.5.28",
     "storybook": "10.6.0",
     "tailwindcss": "catalog:",
