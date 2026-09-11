@@ -17,19 +17,36 @@ export interface UseScrollShadowReturn {
   checkOverflow: () => void;
 }
 
+/** Every attribute an edge is published as, which together are the whole state. */
+const EDGE_ATTRIBUTES = [
+  "topScroll",
+  "bottomScroll",
+  "topBottomScroll",
+  "leftScroll",
+  "rightScroll",
+  "leftRightScroll",
+] as const;
+
 /**
  * Take every edge attribute off, so the stylesheet's mask stops applying.
  *
  * The attributes are the whole state, and the one place the mask is keyed on, so whoever stops
  * writing them has to take the last set off too or the fade stays painted at whatever it was.
+ *
+ * Reports whether anything was actually removed, so a caller telling the world the fade is gone
+ * only says it when there was one.
  */
-export const clearScrollShadowVisibility = (element: HTMLElement) => {
-  delete element.dataset["topScroll"];
-  delete element.dataset["bottomScroll"];
-  delete element.dataset["topBottomScroll"];
-  delete element.dataset["leftScroll"];
-  delete element.dataset["rightScroll"];
-  delete element.dataset["leftRightScroll"];
+export const clearScrollShadowVisibility = (element: HTMLElement): boolean => {
+  let cleared = false;
+
+  for (const attribute of EDGE_ATTRIBUTES) {
+    if (element.dataset[attribute] === undefined) continue;
+
+    delete element.dataset[attribute];
+    cleared = true;
+  }
+
+  return cleared;
 };
 
 /**
@@ -132,7 +149,9 @@ export const useScrollShadow = (options: UseScrollShadowProps): UseScrollShadowR
       if (mode !== "auto") return;
 
       if (!enabled) {
-        clearScrollShadowVisibility(current);
+        // Reported as well as taken off: every other write pairs the two, and a caller mirroring
+        // the last measurement has nothing else to tell it the fade has gone.
+        if (clearScrollShadowVisibility(current)) options.onVisibilityChange?.("none");
 
         return;
       }
