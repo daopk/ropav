@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it } from "vitest";
 
 // The bundled alternative themes. `setup-styles.ts` only pulls in the default one, which is
 // all a component test needs; these have to be asked for, exactly as a consumer asks for them.
+import "../../../styles/themes/hero.css";
 import "../../../styles/themes/netflix.css";
 import "../../../styles/themes/uber.css";
 
@@ -88,6 +89,42 @@ describe("theme layer (browser)", () => {
     host.appendChild(themed);
 
     expect(token(themed, "--rp-accent")).toBe("oklch(0.9848 0 0)");
+  });
+
+  it("re-derives the default theme's own aliases in a nested dark scope", () => {
+    /*
+     * The same substitution rule as the `color-mix` case above, on the three tokens the default
+     * theme writes as a plain alias. `--rp-field-placeholder: var(--rp-muted)` is declared on
+     * `:root` and therefore resolves against the *light* muted; a dark subtree redeclares
+     * `--rp-muted` but inherits the placeholder already substituted, so every field inside it
+     * keeps a light grey placeholder on a dark field.
+     *
+     * The generated themes state these outright and never had it. Only the two hand-written
+     * themes alias, which is why nothing else here catches it.
+     */
+    const { host } = mount({ class: "dark" });
+    const hero = document.createElement("div");
+
+    hero.setAttribute("data-theme", "hero");
+    host.appendChild(hero);
+
+    const aliases = (element: HTMLElement) => ({
+      placeholder: [token(element, "--rp-field-placeholder"), token(element, "--rp-muted")],
+      secondary: [
+        token(element, "--rp-surface-secondary-foreground"),
+        token(element, "--rp-foreground"),
+      ],
+      tertiary: [
+        token(element, "--rp-surface-tertiary-foreground"),
+        token(element, "--rp-foreground"),
+      ],
+    });
+
+    for (const element of [host, hero]) {
+      for (const [alias, source] of Object.values(aliases(element))) {
+        expect(alias).toBe(source);
+      }
+    }
   });
 
   it("inherits structural tokens from the default theme", () => {

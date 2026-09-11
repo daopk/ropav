@@ -232,8 +232,17 @@
     --rp-surface: oklch(0.2103 0.0059 285.89);
     --rp-surface-foreground: var(--rp-foreground);
 
+    /*
+     * Restated rather than left to the light block's alias. A `var()` is substituted where the
+     * property is declared, so a nested dark scope inherits the colour that alias already
+     * resolved to: near-black text on a near-black surface, and a dark placeholder in a dark
+     * field. The generated themes state every one of these outright for the same reason.
+     */
     --rp-surface-secondary: oklch(0.257 0.0037 286.14);
+    --rp-surface-secondary-foreground: var(--rp-foreground);
+
     --rp-surface-tertiary: oklch(0.2721 0.0024 247.91);
+    --rp-surface-tertiary-foreground: var(--rp-foreground);
 
     /* Overlay: Used for floating/overlay components (tooltips, popovers, modals, menus) - lighter for contrast */
     --rp-overlay: oklch(0.2103 0.0059 285.89);
@@ -251,6 +260,7 @@
     /* Form Fields */
     --rp-field-background: oklch(0.2103 0.0059 285.89);
     --rp-field-foreground: var(--rp-foreground);
+    --rp-field-placeholder: var(--rp-muted);
     --rp-field-shadow: 0 0 0 0 transparent inset; /* placeholder, so ring utilities still compose */
 
     /* Status Colors */
