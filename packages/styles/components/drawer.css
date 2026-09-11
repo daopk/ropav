@@ -69,6 +69,8 @@
   }
 
   &[data-exiting="true"] {
+    /* Non-interactive while it closes, even if the exit animation is cut short. */
+    pointer-events: none;
     opacity: 0;
     transition-duration: var(--rp-motion) 200ms;
     transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
@@ -174,6 +176,12 @@
   outline-style: none;
   padding: calc(var(--rp-spacing) * 6);
   pointer-events: auto;
+
+  /* Handed back while it closes, even if the exit animation is cut short. The state sits on the
+   * backdrop and the content above, so it is read from there. */
+  [data-exiting="true"] & {
+    pointer-events: none;
+  }
 
   --drawer-enter-duration: 250ms;
   --drawer-exit-duration: 200ms;

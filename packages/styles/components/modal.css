@@ -78,6 +78,8 @@
 
   /* Exiting animation */
   &[data-exiting="true"] {
+    /* Non-interactive while it closes, even if the exit animation is cut short. */
+    pointer-events: none;
     animation: var(--rp-motion) rp-exit var(--rp-duration, 0.15s) var(--rp-ease, ease);
     --rp-duration: 100ms;
     transition-duration: var(--rp-motion) 100ms;
@@ -253,6 +255,12 @@
   border-radius: min(32px, var(--rp-component-radius));
   padding: calc(var(--rp-spacing) * 6);
   pointer-events: auto;
+
+  /* Handed back while it closes, even if the exit animation is cut short. The state sits on the
+   * backdrop and the container above, so it is read from there. */
+  [data-exiting="true"] & {
+    pointer-events: none;
+  }
 
   &[data-placement="auto"] {
     margin-top: auto;
