@@ -30,7 +30,7 @@ const setElement = (element: unknown) => {
 
 /** Empties the selection, and only the selection — the text that was typed is left alone. */
 const onClick = () => {
-  state.selection.clearSelection();
+  state.clearValue();
   onClear();
 };
 </script>

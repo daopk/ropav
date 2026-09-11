@@ -85,6 +85,14 @@ export interface UseSelectStateReturn<T> extends MenuTriggerState, FormValidatio
   /** The value a form reset goes back to. */
   defaultValue: ComputedRef<SelectedValue>;
   setValue: (value: SelectedValue) => void;
+  /**
+   * Empties the selection.
+   *
+   * Not `selection.clearSelection()`: a single select sets `disallowEmptySelection`, which is
+   * what stops a press on the chosen option from un-choosing it — and which makes that call a
+   * no-op in the one mode most selects are in.
+   */
+  clearValue: () => void;
   /** The first chosen key, which is the whole value when single. */
   selectedKey: ComputedRef<CollectionKey | null>;
   selectedItems: ComputedRef<SelectedItem<T>[]>;
@@ -201,6 +209,8 @@ export const useSelectState = <T>(options: UseSelectStateOptions<T>): UseSelectS
     controllable.setState(toKeys(next));
   };
 
+  const clearValue = () => setValue(null);
+
   const validation = useFormValidationState<SelectedValue>({
     isInvalid: options.isInvalid,
     name: options.name,
@@ -263,6 +273,7 @@ export const useSelectState = <T>(options: UseSelectStateOptions<T>): UseSelectS
 
   return {
     ...validation,
+    clearValue,
     close: trigger.close,
     collection,
     defaultValue,

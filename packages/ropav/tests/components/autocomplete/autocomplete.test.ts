@@ -461,6 +461,25 @@ describe("Autocomplete", () => {
       expect(onClear).toHaveBeenCalledTimes(1);
     });
 
+    /*
+     * Single mode is the one most autocompletes are in, and it is the one the selection manager
+     * refuses to empty: it carries `disallowEmptySelection` there, which is what stops a press on
+     * the chosen option from un-choosing it. Clearing goes through the value instead.
+     */
+    it("empties a single selection too", async () => {
+      const onChange = vi.fn();
+      const onClear = vi.fn();
+      const result = render({ defaultValue: "cat", onChange, onClear, withClearButton: true });
+
+      result.container
+        .querySelector<HTMLElement>('[data-slot="autocomplete-clear-button"]')!
+        .click();
+      await settle();
+
+      expect(onChange).toHaveBeenCalledWith(null);
+      expect(onClear).toHaveBeenCalledTimes(1);
+    });
+
     it("does not open the popover it sits inside the trigger of", async () => {
       const result = render({
         defaultValue: ["cat"],
