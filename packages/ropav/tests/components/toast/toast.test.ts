@@ -283,7 +283,7 @@ describe("Toast", () => {
       expect(behind).toHaveAttribute("data-index", "1");
     });
 
-    it("offsets and scales each toast by its place in the stack", async () => {
+    it("publishes each toast's place in the stack for the stylesheet to resolve", async () => {
       const queue = new ToastQueue();
 
       render({ gap: 10, queue, scaleFactor: 0.1 });
@@ -294,16 +294,37 @@ describe("Toast", () => {
 
       const [front, behind] = toasts();
 
-      expect(front!.style.translate).toBe("0 0px 0");
-      expect(front!.style.scale).toBe("1");
-      // A bottom stack grows upwards, away from the edge it is pinned to.
-      expect(behind!.style.translate).toBe("0 -10px 0");
-      expect(behind!.style.scale).toBe("0.9");
+      // The offsets travel as inputs rather than as a finished transform, so a change to any of
+      // them retargets the transition the stylesheet is already running.
+      expect(front!.style.getPropertyValue("--offset-collapsed")).toBe("0px");
+      expect(front!.style.getPropertyValue("--scale-collapsed")).toBe("1");
+      expect(behind!.style.getPropertyValue("--offset-collapsed")).toBe("10px");
+      expect(behind!.style.getPropertyValue("--scale-collapsed")).toBe("0.9");
       // The front toast has to paint over the ones behind it.
       expect(Number(front!.style.zIndex)).toBeGreaterThan(Number(behind!.style.zIndex));
     });
 
-    it("offsets a top-placed stack downwards instead", async () => {
+    it("publishes an opened-out offset alongside the collapsed one", async () => {
+      const queue = new ToastQueue();
+
+      render({ gap: 10, queue });
+      queue.add({ title: "First" });
+      await settle();
+      queue.add({ title: "Second" });
+      await settle();
+
+      const [front, behind] = toasts();
+
+      // Both offsets are always published, so opening the stack swaps between two numbers the
+      // stylesheet already holds rather than waiting on a measurement. That the expanded one
+      // clears the whole toast in front is a geometry claim, and jsdom measures every height as
+      // zero — `toast.browser.test.ts` makes it.
+      expect(front!.style.getPropertyValue("--offset-expanded")).toBe("0px");
+      expect(behind!.style.getPropertyValue("--offset-collapsed")).toBe("10px");
+      expect(behind!.style.getPropertyValue("--offset-expanded")).not.toBe("");
+    });
+
+    it("leaves the direction the stack grows in to the stylesheet", async () => {
       const queue = new ToastQueue();
 
       render({ gap: 10, placement: "top", queue });
@@ -312,21 +333,23 @@ describe("Toast", () => {
       queue.add({ title: "Second" });
       await settle();
 
-      expect(toasts()[1]!.style.translate).toBe("0 10px 0");
+      // Both placements publish the same positive offset; only the sign differs, and that is a
+      // property of the placement rather than of the toast.
+      expect(toasts()[1]!.style.getPropertyValue("--offset-collapsed")).toBe("10px");
+      expect(toasts()[1]!.className).toContain("rp-toast--top");
     });
 
-    it("names each toast for the view transition that animates it", async () => {
+    it("marks a toast as arriving on its very first render", async () => {
       const queue = new ToastQueue();
 
       render({ queue });
-      const key = queue.add({ title: "Saved" });
+      queue.add({ title: "Saved" });
+      await nextTick();
+      await nextTick();
 
-      await settle();
-
-      // The generated key is not a valid custom-ident on its own.
-      expect(toasts()[0]!.style.viewTransitionName).toBe(
-        `rp-toast-${key.replace(/[^a-zA-Z0-9]/g, "-")}`,
-      );
+      // A transition needs a style to leave: written after the element exists, the browser would
+      // animate towards the offset rather than away from it.
+      expect(toasts()[0]).toHaveAttribute("data-entering", "true");
     });
 
     it("hides the toasts past the visible limit without dropping them", async () => {
@@ -344,8 +367,6 @@ describe("Toast", () => {
       expect(behind).toHaveAttribute("data-hidden", "true");
       // Still rendered: closing the toast in front of it brings it back.
       expect(behind).toHaveTextContent("First");
-      expect(behind!.style.opacity).toBe("0");
-      expect(behind!.style.pointerEvents).toBe("none");
     });
 
     it("takes the visible limit from the queue when the region does not say", async () => {

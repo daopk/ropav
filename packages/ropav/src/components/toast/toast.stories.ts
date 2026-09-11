@@ -120,6 +120,33 @@ export const Default: Story = {
   }),
 };
 
+/**
+ * The opened-out stack, held open by the prop.
+ *
+ * Ordinarily the stack opens under the pointer, which no headless audit has — so the state that
+ * gives every toast its own height back would never be looked at without a story that forces it.
+ */
+const expandedQueue = new ToastQueue({ maxVisibleToasts: 3 });
+
+export const Expanded: Story = {
+  render: () => ({
+    components,
+    setup: () => {
+      expandedQueue.clear();
+      for (const title of ["Sent to review", "Draft saved", "Uploaded 3 files"]) {
+        expandedQueue.add({ description: `Body of ${title}`, title }, { timeout: 0 });
+      }
+
+      return { expandedQueue };
+    },
+    template: `
+      <div class="flex h-full max-w-xl flex-col items-center justify-center">
+        <ToastProvider is-expanded placement="bottom end" :queue="expandedQueue" />
+      </div>
+    `,
+  }),
+};
+
 /** One queue per placement, so each stack is independent. */
 const placementQueues = Object.fromEntries(
   PLACEMENTS.map((placement) => [placement, new ToastQueue({ maxVisibleToasts: 3 })]),

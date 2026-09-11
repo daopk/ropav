@@ -47,6 +47,7 @@ export type {
 export {
   ToastQueue,
   createToastFunction,
+  createViewTransitionUpdate,
   getQueuedToastCount,
   resetToastQueue,
   toast,

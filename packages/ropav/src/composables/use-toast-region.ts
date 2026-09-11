@@ -1,12 +1,16 @@
 import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import { computed, onScopeDispose, toValue, watch } from "vue";
+import { computed, onScopeDispose, shallowRef, toValue, watch } from "vue";
 
 import { DEFAULT_HOTKEY } from "../components/toast/toast.constants";
 import { toastStrings } from "../i18n/toast";
 import { TOP_LAYER_ATTRIBUTE } from "../utils/top-layer";
 
-import { getInteractionModality, useInteractionStates } from "./use-interaction-states";
+import {
+  getInteractionModality,
+  retainInteractionModality,
+  useInteractionStates,
+} from "./use-interaction-states";
 import { useLocalizedStringFormatter } from "./use-localized-string-formatter";
 
 /** The only thing the region needs to know about a queued toast. */
@@ -19,8 +23,12 @@ export interface UseToastRegionOptions {
   ariaLabel?: MaybeRefOrGetter<string | undefined>;
   /** The region element, which is also what the toasts are looked up inside. */
   elementRef: MaybeRefOrGetter<HTMLElement | null | undefined>;
+  /** How many toasts are on screen and not already leaving. A single toast never expands. */
+  expandableCount?: MaybeRefOrGetter<number>;
   /** Key combination that moves focus to the region. An empty list turns it off. */
   hotkey?: MaybeRefOrGetter<readonly string[] | undefined>;
+  /** Forces the stack open regardless of pointer or focus. */
+  isExpanded?: MaybeRefOrGetter<boolean | undefined>;
   /** Stops every visible toast's clock. */
   onPauseAll: () => void;
   /** Restarts every visible toast's clock. */
@@ -36,10 +44,16 @@ export interface ToastRegionAttrs {
 }
 
 export interface UseToastRegionReturn {
+  /** Whether the stack should be opened out, so every toast shows at its own height. */
+  isExpanded: ComputedRef<boolean>;
   onFocusin: (event: FocusEvent) => void;
   onFocusout: (event: FocusEvent) => void;
+  /** Folds the stack on Escape, and releases the focus that would reopen it. */
+  onKeydown: (event: KeyboardEvent) => void;
   onPointerenter: (event: PointerEvent) => void;
   onPointerleave: () => void;
+  /** Reasserts hover when the stack moves under a cursor that has not itself moved. */
+  onPointermove: (event: PointerEvent) => void;
   regionAttrs: ComputedRef<ToastRegionAttrs>;
 }
 
@@ -98,10 +112,40 @@ export const useToastRegion = (options: UseToastRegionOptions): UseToastRegionRe
 
   const hover = useInteractionStates();
 
-  let isFocusWithin = false;
+  // The modality decides whether focus opens the stack, and it is only answered correctly while
+  // the shared listeners are attached — otherwise it reports however the page was last driven
+  // before the component that cared about it unmounted.
+  onScopeDispose(retainInteractionModality(), true);
+
+  const isFocusWithin = shallowRef(false);
+
+  /** Set by Escape, and cleared by the next thing that would open the stack on purpose. */
+  const isDismissed = shallowRef(false);
+
+  /**
+   * Whether the focus inside the region should hold the stack open.
+   *
+   * Focus arriving by keyboard is someone working through the toasts and wants them all legible.
+   * Focus arriving from a pointer is a side effect of the press, and on a touchscreen it is the
+   * *only* signal there is — a tap would open the stack with nothing left to close it again,
+   * since a finger has no hover to lose.
+   */
+  const isFocusExpanding = shallowRef(false);
+
+  const isExpanded = computed(() => {
+    // One toast has nothing to open out of, and counting the ones already leaving would keep a
+    // stack open around toasts that are on their way out.
+    if ((toValue(options.expandableCount) ?? toValue(options.visibleToasts).length) <= 1) {
+      return false;
+    }
+
+    if (toValue(options.isExpanded) === true) return true;
+
+    return !isDismissed.value && (hover.isHovered.value || isFocusExpanding.value);
+  });
 
   const updateTimers = () => {
-    if (hover.isHovered.value || isFocusWithin) options.onPauseAll();
+    if (hover.isHovered.value || isFocusWithin.value) options.onPauseAll();
     else options.onResumeAll();
   };
 
@@ -115,10 +159,62 @@ export const useToastRegion = (options: UseToastRegionOptions): UseToastRegionRe
    */
   const onPointerenter = (event: PointerEvent) => {
     hover.onPointerenter(event);
+    isDismissed.value = false;
     updateTimers();
   };
 
   const onPointerleave = () => {
+    hover.onPointerleave();
+    isDismissed.value = false;
+    updateTimers();
+  };
+
+  /**
+   * A pointer that has not moved still needs the stack to notice it.
+   *
+   * The stack shifts underneath a resting cursor whenever a toast arrives or leaves, and no
+   * browser re-fires a boundary event for a pointer that stayed where it was — so without this
+   * an opened stack folds the moment the thing being hovered is replaced beneath it.
+   */
+  const onPointermove = (event: PointerEvent) => {
+    if (hover.isHovered.value) return;
+
+    hover.onPointerenter(event);
+    updateTimers();
+  };
+
+  /**
+   * Escape folds the stack.
+   *
+   * Focus is released as well as the flag being set, because the expansion answers focus too: a
+   * region that kept focus would reopen on the next thing that asked it.
+   */
+  const onKeydown = (event: KeyboardEvent) => {
+    if (event.key !== "Escape") return;
+
+    const element = toValue(options.elementRef);
+    const active = typeof document === "undefined" ? null : document.activeElement;
+
+    if (element && active instanceof HTMLElement && element.contains(active)) active.blur();
+
+    hover.onPointerleave();
+    isDismissed.value = true;
+    isFocusExpanding.value = false;
+    updateTimers();
+  };
+
+  /**
+   * No browser fires `pointerleave` when the element under the pointer is removed, and a toast
+   * closing under the cursor is the ordinary case here rather than a corner one. The next event
+   * that says anything is a `pointerover` on something else, which is what this listens for.
+   */
+  const onDocumentPointerover = (event: PointerEvent) => {
+    const element = toValue(options.elementRef);
+
+    if (event.pointerType === "touch") return;
+    if (!element || (event.target instanceof Node && element.contains(event.target))) return;
+    if (!hover.isHovered.value) return;
+
     hover.onPointerleave();
     updateTimers();
   };
@@ -141,8 +237,11 @@ export const useToastRegion = (options: UseToastRegionOptions): UseToastRegionRe
       if (!element || typeof document === "undefined") return;
 
       document.addEventListener("keydown", onDocumentKeydown);
+      // Capture, so it is heard even where something inside stops the event travelling.
+      document.addEventListener("pointerover", onDocumentPointerover, true);
       onCleanup(() => {
         document.removeEventListener("keydown", onDocumentKeydown);
+        document.removeEventListener("pointerover", onDocumentPointerover, true);
       });
     },
     { flush: "post", immediate: true },
@@ -268,8 +367,12 @@ export const useToastRegion = (options: UseToastRegionOptions): UseToastRegionRe
   onScopeDispose(restoreLastFocused, true);
 
   const onFocusin = (event: FocusEvent) => {
-    if (!isFocusWithin) {
-      isFocusWithin = true;
+    // Focus arriving is a deliberate reach for the stack, so it undoes an Escape that folded it.
+    isDismissed.value = false;
+    isFocusExpanding.value = getInteractionModality() === "keyboard";
+
+    if (!isFocusWithin.value) {
+      isFocusWithin.value = true;
       lastFocused = event.relatedTarget instanceof HTMLElement ? event.relatedTarget : null;
       updateTimers();
     }
@@ -305,17 +408,21 @@ export const useToastRegion = (options: UseToastRegionOptions): UseToastRegionRe
       return;
     }
 
-    isFocusWithin = false;
+    isFocusWithin.value = false;
+    isFocusExpanding.value = false;
     lastFocused = null;
     focusedIndex = -1;
     updateTimers();
   };
 
   return {
+    isExpanded,
     onFocusin,
     onFocusout,
+    onKeydown,
     onPointerenter,
     onPointerleave,
+    onPointermove,
     regionAttrs: computed(() => ({
       // Marks the region as a top layer, so it is not hidden from assistive technology when an
       // overlay opens and a press on it does not dismiss that overlay.

@@ -1,12 +1,13 @@
 <script setup lang="ts" vapor>
-import type { ToastProviderProps, ToastProviderSlotProps } from "./toast.types";
+import type { QueuedToast, ToastProviderProps, ToastProviderSlotProps } from "./toast.types";
 import type { CSSProperties } from "vue";
 
 import { toastVariants } from "@ropav/styles";
-import { computed, shallowRef } from "vue";
+import { computed, shallowRef, watch } from "vue";
 
 import { useLocale } from "../../composables/use-locale";
 import { useToastRegion } from "../../composables/use-toast-region";
+import { dataAttr } from "../../utils/assertion";
 import { composeSlotClassName } from "../../utils/compose";
 
 import ToastDefaultContent from "./toast-default-content.vue";
@@ -32,6 +33,35 @@ const queue = computed(() => props.queue ?? toastQueue);
 
 const { visibleToasts } = useToastQueue(queue);
 
+/**
+ * Toasts the queue has let go of that are still on screen playing their exit.
+ *
+ * Held here rather than in the queue because it is a rendering concern: the queue's job ends when
+ * a toast is closed, and a caller reading `visibleToasts` should not be told about one that is
+ * only still there to finish animating.
+ */
+const exiting = shallowRef<QueuedToast[]>([]);
+
+watch(visibleToasts, (next, previous) => {
+  if (!previous) return;
+
+  const live = new Set(next.map((entry) => entry.key));
+  const held = new Set(exiting.value.map((entry) => entry.key));
+  const gone = previous.filter((entry) => !live.has(entry.key) && !held.has(entry.key));
+
+  if (gone.length > 0) exiting.value = [...exiting.value, ...gone];
+
+  // A key that came back — the same toast re-added — is live again and stops exiting.
+  if (exiting.value.some((entry) => live.has(entry.key))) {
+    exiting.value = exiting.value.filter((entry) => !live.has(entry.key));
+  }
+});
+
+const exitingKeys = computed(() => new Set(exiting.value.map((entry) => entry.key)));
+
+/** Exiting toasts sit after the live ones; each one carries the slot it had through its own style. */
+const renderedToasts = computed(() => [...visibleToasts.value, ...exiting.value]);
+
 const element = shallowRef<HTMLElement | null>(null);
 
 const setElement = (next: unknown) => {
@@ -42,6 +72,8 @@ const region = useToastRegion({
   ariaLabel: () => props.ariaLabel,
   elementRef: element,
   hotkey: () => props.hotkey,
+  expandableCount: () => visibleToasts.value.length,
+  isExpanded: () => props.isExpanded,
   onPauseAll: () => queue.value.pauseAll(),
   onResumeAll: () => queue.value.resumeAll(),
   visibleToasts,
@@ -61,13 +93,18 @@ const heights = shallowRef<Record<string, number>>({});
 
 provideToastRegionContext({
   close: (key) => queue.value.close(key),
+  exitingKeys,
   gap: computed(() => props.gap),
   heightsByKey: computed(() => heights.value),
+  isExpanded: region.isExpanded,
   // The queue's own hint is the fallback, so a queue built with a limit does not need it repeated
   // on every region that renders it.
   maxVisibleToasts: computed(
     () => props.maxVisibleToasts ?? queue.value.maxVisibleToasts ?? DEFAULT_MAX_VISIBLE_TOAST,
   ),
+  onExitFinished: (key) => {
+    exiting.value = exiting.value.filter((entry) => entry.key !== key);
+  },
   onToastHeightChange: (key, height) => {
     if (heights.value[key] === height) return;
 
@@ -105,21 +142,24 @@ const CONTENTS_STYLE: CSSProperties = { display: "contents" };
 </script>
 
 <template>
-  <Teleport v-if="visibleToasts.length > 0" :to="target">
+  <Teleport v-if="renderedToasts.length > 0" :to="target">
     <div
       :ref="setElement"
       :class="styles"
+      :data-expanded="dataAttr(region.isExpanded.value)"
       data-slot="toast-region"
       :dir="locale.direction"
       :style="regionStyle"
       v-bind="region.regionAttrs.value"
       @focusin="region.onFocusin"
       @focusout="region.onFocusout"
+      @keydown="region.onKeydown"
       @pointerenter="region.onPointerenter"
       @pointerleave="region.onPointerleave"
+      @pointermove="region.onPointermove"
     >
       <ol :style="CONTENTS_STYLE">
-        <li v-for="entry in visibleToasts" :key="entry.key" :style="CONTENTS_STYLE">
+        <li v-for="entry in renderedToasts" :key="entry.key" :style="CONTENTS_STYLE">
           <slot :is-loading="entry.content?.isLoading ?? false" :toast="entry">
             <ToastDefaultContent :toast="entry" />
           </slot>

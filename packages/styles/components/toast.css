@@ -69,6 +69,27 @@
   inset-inline-start: 0;
   inset-inline-end: 0;
 
+  /*
+   * The stack's motion, held as custom properties so a state change is a value swap rather than a
+   * new animation. They are deliberately unregistered: an unregistered property jumps, and the
+   * browser then retargets the running `transform` transition from wherever it had reached — which
+   * is what lets a toast arriving mid-animation redirect the stack instead of restarting it.
+   */
+  --toast-y: var(--offset-collapsed, 0px);
+  --toast-enter: 0%;
+  --toast-scale: var(--scale-collapsed, 1);
+  --toast-translate-duration: 350ms;
+  --toast-height-duration: 350ms;
+  --toast-opacity-duration: 150ms;
+
+  transform: translateY(calc(var(--dir, 1) * (var(--toast-y) + var(--toast-enter))))
+    scale(var(--toast-scale));
+  height: var(--toast-height, auto);
+  transition:
+    var(--rp-motion) transform var(--toast-translate-duration) var(--rp-ease-out-fluid),
+    height var(--toast-height-duration) var(--rp-ease-out-fluid),
+    opacity var(--toast-opacity-duration) var(--rp-ease-out-fluid);
+
   pointer-events: auto;
   display: flex;
   flex-direction: row;
@@ -86,16 +107,20 @@
 .rp-toast--bottom,
 .rp-toast--bottom-start,
 .rp-toast--bottom-end {
+  --dir: -1;
   bottom: 0;
+  transform-origin: bottom center;
 }
 
 .rp-toast--top,
 .rp-toast--top-start,
 .rp-toast--top-end {
+  --dir: 1;
   top: 0;
+  transform-origin: top center;
 }
 
-.rp-toast:not([data-frontmost="true"]) {
+.rp-toast:not([data-frontmost="true"]):not([data-expanded="true"]) {
   pointer-events: none;
 
   height: var(--front-height);
@@ -106,6 +131,61 @@
     opacity: 0%;
     outline: none;
   }
+}
+
+/* Opened out, every toast is its own height again and answers the pointer on its own account. */
+.rp-toast[data-expanded="true"] {
+  --toast-y: var(--offset-expanded, 0px);
+  --toast-scale: 1;
+  height: var(--toast-height, auto);
+}
+
+/*
+ * The gap between two toasts belongs to the stack, not to the page behind it. Without this the
+ * pointer leaves the region on its way from one toast to the next and the stack folds under it.
+ */
+.rp-toast[data-expanded="true"]::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset-inline: 0;
+}
+
+.rp-toast--bottom[data-expanded="true"]::after,
+.rp-toast--bottom-start[data-expanded="true"]::after,
+.rp-toast--bottom-end[data-expanded="true"]::after {
+  top: calc(-1 * var(--gap, 12px) - 1px);
+  bottom: 0;
+}
+
+.rp-toast--top[data-expanded="true"]::after,
+.rp-toast--top-start[data-expanded="true"]::after,
+.rp-toast--top-end[data-expanded="true"]::after {
+  top: 0;
+  bottom: calc(-1 * var(--gap, 12px) - 1px);
+}
+
+/* Arriving: off the edge the stack is pinned to, and transparent. */
+.rp-toast[data-entering="true"] {
+  --toast-enter: -100%;
+  opacity: 0%;
+}
+
+/* Leaving: the frontmost goes back the way it came, the ones behind it shrink where they stand. */
+.rp-toast[data-exiting="true"] {
+  pointer-events: none;
+  opacity: 0%;
+}
+
+.rp-toast[data-exiting="true"][data-frontmost="true"] {
+  --toast-translate-duration: 250ms;
+  --toast-enter: -100%;
+  --toast-scale: 1;
+}
+
+.rp-toast[data-exiting="true"]:not([data-frontmost="true"]) {
+  --toast-translate-duration: 200ms;
+  --toast-scale: calc(var(--scale-collapsed, 1) * 0.96);
 }
 
 .rp-toast[data-hidden="true"] {
@@ -119,19 +199,6 @@
   outline-width: 2px;
   outline-offset: 2px;
   outline-color: var(--rp-focus);
-}
-
-/* Toast placements + view transitions */
-.rp-toast--bottom,
-.rp-toast--bottom-start,
-.rp-toast--bottom-end {
-  view-transition-class: rp-toast-bottom;
-}
-
-.rp-toast--top,
-.rp-toast--top-start,
-.rp-toast--top-end {
-  view-transition-class: rp-toast-top;
 }
 
 /* Toast content */
@@ -242,8 +309,9 @@
   }
 }
 
-/* Only show close button on hover for frontmost toast */
-.rp-toast[data-frontmost="true"]:hover .rp-toast__close-button {
+/* The close button belongs to whichever toast the pointer is actually on. */
+.rp-toast[data-frontmost="true"]:hover .rp-toast__close-button,
+.rp-toast[data-expanded="true"]:hover .rp-toast__close-button {
   pointer-events: auto;
   opacity: 100%;
 }
@@ -283,66 +351,4 @@
 
 .rp-toast--danger .rp-toast__indicator {
   color: var(--rp-danger-soft-foreground);
-}
-
-/* View transition animations */
-::view-transition-group(.rp-toast-bottom),
-::view-transition-group(.rp-toast-top) {
-}
-
-::view-transition-old(*),
-::view-transition-new(*) {
-  will-change: translate, opacity;
-}
-
-/* Bottom */
-::view-transition-new(.rp-toast-bottom):only-child {
-  animation: var(--rp-motion) rp-toast-slide-bottom-in 350ms;
-}
-
-::view-transition-old(.rp-toast-bottom):only-child {
-  animation: var(--rp-motion) rp-toast-slide-bottom-out 350ms;
-  animation-fill-mode: forwards;
-}
-
-/* Top */
-::view-transition-new(.rp-toast-top):only-child {
-  animation: var(--rp-motion) rp-toast-slide-top-in 350ms;
-}
-
-::view-transition-old(.rp-toast-top):only-child {
-  animation: var(--rp-motion) rp-toast-slide-top-out 350ms;
-  animation-fill-mode: forwards;
-}
-
-/* Keyframes */
-
-/* Bottom */
-@keyframes rp-toast-slide-bottom-in {
-  from {
-    translate: 0 100%;
-    opacity: 0;
-  }
-}
-
-@keyframes rp-toast-slide-bottom-out {
-  to {
-    translate: 0 100%;
-    opacity: 0;
-  }
-}
-
-/* Top */
-@keyframes rp-toast-slide-top-in {
-  from {
-    translate: 0 -100%;
-    opacity: 0;
-  }
-}
-
-@keyframes rp-toast-slide-top-out {
-  to {
-    translate: 0 -100%;
-    opacity: 0;
-  }
 }

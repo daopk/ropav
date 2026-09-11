@@ -4,7 +4,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
-import { ToastQueue } from "@/components/toast";
+import { ToastQueue, createViewTransitionUpdate } from "@/components/toast";
+import { setInteractionModality } from "@/composables/use-interaction-states";
+
+import { settled } from "../../harness/settle";
+import { tap } from "../../harness/tap";
 
 import ToastFixture from "./fixtures.vue";
 
@@ -110,7 +114,9 @@ describe("Toast (browser)", () => {
       await waitForToasts(1);
       queue.add({ title: "Short" });
       await waitForToasts(2);
-      await settle();
+      // The stack animates its own height now, so a reading taken on the next tick is a frame of
+      // the transition rather than the height the stylesheet settles on.
+      await settled(region()!);
 
       const [front, behind] = toasts();
       const frontHeight = front!.offsetHeight;
@@ -139,25 +145,76 @@ describe("Toast (browser)", () => {
     });
   });
 
-  describe("view transitions", () => {
-    it("animates a toast in", async () => {
+  describe("motion", () => {
+    it("arrives from off the edge the stack is pinned to", async () => {
       const queue = new ToastQueue();
 
       render({ queue });
       queue.add({ title: "Saved" });
       await waitForToasts(1);
 
-      // The animation is the stylesheet's, driven by `view-transition-class`; what this pins is
-      // that the toast is named for it, which is the half JS owns.
-      expect(toasts()[0]!.style.viewTransitionName).toMatch(/^rp-toast-/);
-      expect(getComputedStyle(toasts()[0]!).getPropertyValue("view-transition-class").trim()).toBe(
-        "rp-toast-bottom",
-      );
+      const toast = toasts()[0]!;
+
+      // Caught on the first frame: the entering offset has to be the element's first resolved
+      // style, or the browser animates towards it instead of away from it.
+      expect(toast).toHaveAttribute("data-entering", "true");
+      expect(getComputedStyle(toast).transform).not.toBe("none");
+
+      await settled(region()!);
+
+      expect(toast).not.toHaveAttribute("data-entering");
+      // Resting: the frontmost toast sits exactly where the region puts it.
+      expect(getComputedStyle(toast).transform).toMatch(/matrix\(1, 0, 0, 1, 0, 0\)|none/);
+    });
+
+    it("carries the whole stack on one transform, so a change retargets rather than restarts", async () => {
+      const queue = new ToastQueue();
+
+      render({ queue });
+      queue.add({ title: "First" });
+      await waitForToasts(1);
+      queue.add({ title: "Second" });
+      await waitForToasts(2);
+      await settled(region()!);
+
+      const behind = toasts()[1]!;
+      const { transitionProperty } = getComputedStyle(behind);
+
+      // One declaration covering the lot: the state is a custom-property swap, and an
+      // unregistered property jumps so the running transition is retargeted from where it reached.
+      expect(transitionProperty).toContain("transform");
+      expect(transitionProperty).toContain("height");
+      expect(getComputedStyle(behind).transform).not.toBe("none");
+    });
+
+    it("holds a closing toast on screen for its exit, then lets it go", async () => {
+      const queue = new ToastQueue();
+
+      render({ queue });
+
+      const key = queue.add({ title: "Saved" });
+
+      await waitForToasts(1);
+      await settled(region()!);
+
+      queue.close(key);
+      await nextFrame();
+
+      // Still here, and marked as leaving: the queue has let go of it, and what is on screen is
+      // the animation rather than the toast.
+      const leaving = toasts()[0]!;
+
+      expect(leaving).toHaveAttribute("data-exiting", "true");
+      expect(getComputedStyle(leaving).pointerEvents).toBe("none");
+
+      // Waited for rather than timed, so the length of the exit lives in the stylesheet alone.
+      await waitForNoRegion();
     });
 
     it("does not make one region's toasts wait behind another region's backlog", async () => {
-      const first = new ToastQueue();
-      const second = new ToastQueue();
+      // The chain is opt-in now, so this pins what it promises when a caller does opt in.
+      const first = new ToastQueue({ wrapUpdate: createViewTransitionUpdate().wrapUpdate });
+      const second = new ToastQueue({ wrapUpdate: createViewTransitionUpdate().wrapUpdate });
 
       render({ placement: "top start", queue: first });
       render({ placement: "bottom end", queue: second });
@@ -179,6 +236,106 @@ describe("Toast (browser)", () => {
       );
 
       expect(appeared).toBeLessThan(1000);
+    });
+  });
+
+  describe("expanding", () => {
+    const stackOf = async (titles: string[]) => {
+      const queue = new ToastQueue();
+
+      render({ queue });
+
+      for (const title of titles) {
+        const isFirst = titles.indexOf(title) === 0;
+
+        queue.add({
+          // The first one is taller, so being clipped to the front toast is a visible difference
+          // rather than a coincidence of two toasts that happen to match.
+          description: isFirst ? "A description long enough to wrap onto a second line" : "Body",
+          title,
+        });
+        await waitForToasts(titles.indexOf(title) + 1);
+      }
+
+      await settled(region()!);
+
+      return queue;
+    };
+
+    it("opens the stack out so each toast stands at its own height", async () => {
+      await stackOf(["First", "Second"]);
+
+      const [front, behind] = toasts();
+      const collapsedHeight = behind!.offsetHeight;
+
+      await userEvent.hover(front!);
+      await settled(region()!);
+
+      expect(region()).toHaveAttribute("data-expanded", "true");
+      expect(behind).toHaveAttribute("data-expanded", "true");
+
+      // Collapsed it wore the front toast's height; opened out it is its own size again.
+      expect(behind!.offsetHeight).toBeGreaterThan(collapsedHeight);
+      expect(getComputedStyle(behind!).overflow).not.toBe("hidden");
+
+      // And it clears the toast in front of it rather than stepping back by the gap alone.
+      expect(behind!.getBoundingClientRect().bottom).toBeLessThanOrEqual(
+        front!.getBoundingClientRect().top + 1,
+      );
+    });
+
+    it("covers the gap between two toasts, so crossing it never leaves the stack", async () => {
+      await stackOf(["First", "Second"]);
+
+      const [front] = toasts();
+
+      await userEvent.hover(front!);
+      await settled(region()!);
+
+      const [live, behind] = toasts();
+      const gapY = (behind!.getBoundingClientRect().bottom + live!.getBoundingClientRect().top) / 2;
+      const rect = live!.getBoundingClientRect();
+      const hit = document.elementFromPoint(rect.left + rect.width / 2, gapY);
+
+      // The pointer travelling from one toast to the next has to stay inside the region, or the
+      // stack folds underneath it halfway across.
+      expect(region()!.contains(hit)).toBe(true);
+    });
+
+    it("leaves a single toast alone, since it has nothing to open out of", async () => {
+      await stackOf(["Only"]);
+
+      await userEvent.hover(toasts()[0]!);
+      await settled(region()!);
+
+      expect(region()).not.toHaveAttribute("data-expanded");
+    });
+
+    it("stays collapsed under a finger", async () => {
+      await stackOf(["First", "Second"]);
+
+      await tap(toasts()[0]!);
+      await settled(region()!);
+
+      // A touch has no hover to speak of: the stack would open on the tap and stay open with
+      // nothing to close it.
+      expect(region()).not.toHaveAttribute("data-expanded");
+    });
+
+    it("folds again on Escape, and releases the focus that would reopen it", async () => {
+      await stackOf(["First", "Second"]);
+
+      // Stated rather than implied: the stack opens for focus the keyboard moved and not for
+      // focus a press moved, and the preceding cases leave the shared modality on "pointer".
+      setInteractionModality("keyboard");
+      toasts()[0]!.focus();
+      await settled(region()!);
+      expect(region()).toHaveAttribute("data-expanded", "true");
+
+      await userEvent.keyboard("{Escape}");
+      await settled(region()!);
+
+      expect(region()).not.toHaveAttribute("data-expanded");
     });
   });
 

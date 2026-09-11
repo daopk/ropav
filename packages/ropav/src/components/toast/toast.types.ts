@@ -110,6 +110,11 @@ export interface ToastProviderProps {
    */
   hotkey?: readonly string[];
   /**
+   * Holds the stack open regardless of pointer or focus. Deliberately does not pause the clocks:
+   * expansion asked for by the page is not someone reading the toasts.
+   */
+  isExpanded?: boolean;
+  /**
    * How many toasts are drawn at once. Visual only — the rest are faded out, not dropped.
    *
    * Defaults to the queue's own hint, and to 3 when it has none.

@@ -15,10 +15,16 @@ import { createContext } from "../../utils/create-context";
 export interface ToastRegionContext {
   /** Closes one toast by key. */
   close: (key: string) => void;
+  /** Keys still mounted for their exit animation, which have left the queue already. */
+  exitingKeys: ComputedRef<ReadonlySet<string>>;
   gap: ComputedRef<number>;
   /** Every mounted toast's measured height, so a stacked toast can be clipped to the front one. */
   heightsByKey: ComputedRef<Record<string, number>>;
+  /** Whether the stack is opened out, so every toast shows at its own height. */
+  isExpanded: ComputedRef<boolean>;
   maxVisibleToasts: ComputedRef<number>;
+  /** Reported by a toast once its exit animation has finished, so it can be unmounted. */
+  onExitFinished: (key: string) => void;
   onToastHeightChange: (key: string, height: number) => void;
   onToastHeightRemove: (key: string) => void;
   placement: ComputedRef<ToastVariants["placement"]>;

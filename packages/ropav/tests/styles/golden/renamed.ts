@@ -26,8 +26,17 @@ export const RENAMED: Renamed = {
   // than outweighing it. Same declaration, same element measured — only the name is longer.
   '.rp-sidebar__rail--resizable:not([data-disabled="true"])': ".rp-sidebar__rail--resizable",
 
+  // Narrowed rather than moved: a stacked toast wears the front one's height only while the stack
+  // is closed, since opening it is precisely giving each toast its own height back.
+  '.rp-toast:not([data-frontmost="true"]):not([data-expanded="true"])':
+    '.rp-toast:not([data-frontmost="true"])',
+
   // Narrowed rather than moved: the trigger's hover fill now stands down while the clear button
   // inside it is the thing being hovered, so the two do not both light up. Same declarations.
   ':is(.rp-select__trigger):hover:not(:has(.rp-select__clear-button:hover)), :is(.rp-select__trigger)[data-hovered="true"]:not(:has(.rp-select__clear-button:hover))':
     ':is(.rp-select__trigger):hover, :is(.rp-select__trigger)[data-hovered="true"]',
+
+  // The same narrowing, reaching the close button nested inside that rule.
+  ':is(.rp-toast:not([data-frontmost="true"]):not([data-expanded="true"])) .rp-toast__close-button':
+    ':is(.rp-toast:not([data-frontmost="true"])) .rp-toast__close-button',
 };
