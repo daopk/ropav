@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { nextTick } from "vue";
 
 import { settled } from "../../harness/settle";
+import { waitUntil } from "../../harness/wait-until";
 
 import VirtualizedFixture from "./virtualized-fixtures.vue";
 
@@ -37,6 +38,22 @@ const render = async (props: Record<string, unknown> = {}) => {
       listbox.scrollTop = top;
       await settle();
     },
+    /**
+     * Scroll to the end, and keep asking for it until asking stops moving it.
+     *
+     * The height a jump is aimed at is built from estimates: landing measures the rows that
+     * arrive, the content takes its real size, and the end is no longer where the jump aimed. How
+     * many rounds that takes is the size of the estimate's error rather than a constant, so this
+     * converges instead of counting.
+     */
+    scrollToEnd: () =>
+      waitUntil("the end of the collection to stop moving", () => {
+        const before = listbox.scrollTop;
+
+        listbox.scrollTop = listbox.scrollHeight;
+
+        return listbox.scrollTop === before;
+      }),
   };
 };
 
@@ -385,14 +402,14 @@ describe("ListBox virtualization at a hundred thousand rows (browser)", () => {
   }));
 
   it("mounts a screenful and holds it at either end", async () => {
-    const { keys, listbox, scrollTo, unmount } = await render({
+    const { keys, scrollTo, scrollToEnd, unmount } = await render({
       estimatedRowSize: 40,
       items: many,
     });
 
     expect(keys().length).toBeLessThan(30);
 
-    await scrollTo(listbox.scrollHeight - 400);
+    await scrollToEnd();
 
     expect(keys().length).toBeLessThan(30);
     expect(keys()).toContain("user-99999");
