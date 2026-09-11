@@ -45,8 +45,16 @@ onUnmounted(() => {
   unregister = undefined;
 });
 
-/** Keeps the press off the trigger, so clearing does not also open the popover. */
+/**
+ * Keeps the press off the trigger, so clearing does not also open the popover.
+ *
+ * Guarded the same way the click is: with nothing to clear the stylesheet takes this out of the
+ * hit test, and a press swallowed here rather than there would leave a strip of the trigger that
+ * neither clears nor opens.
+ */
 const onPointerdown = (event: PointerEvent) => {
+  if (isDisabled.value || isEmpty.value) return;
+
   event.stopPropagation();
 };
 
