@@ -61,12 +61,12 @@ const focusQuietly = (element: HTMLElement) => {
  *    of the region, because a pointer user who is no longer hovering would otherwise hold every
  *    remaining clock paused by the focus they did not ask for.
  *
- * One narrowing, recorded rather than hidden: upstream also registers the region with a
+ * One narrowing, recorded rather than hidden: react-aria also registers the region with a
  * document-level landmark manager, which is what makes F6 cycle between landmarks. Nothing else
  * in react-aria registers one, so with a single registrant F6 has nowhere to go — the rendered
  * DOM is identical either way, and toasts are still reachable by Tab.
  *
- * One simplification: upstream runs focus-within and raw focus as two channels, because its
+ * One simplification: react-aria runs focus-within and raw focus as two channels, because its
  * focus-within fires once on entry and it needs every change. `focusin` and `focusout` bubble and
  * fire on every change already, so one pair answers both questions.
  */
@@ -230,7 +230,7 @@ export const useToastRegion = (options: UseToastRegionOptions): UseToastRegionRe
     const toast = target instanceof Element ? target.closest<HTMLElement>(TOAST_SELECTOR) : null;
     const element = toValue(options.elementRef);
 
-    // Read off the document now rather than from the list the last change left behind. Upstream
+    // Read off the document now rather than from the list the last change left behind. react-aria
     // reuses that list, which is only ever refreshed by an effect that bails whenever nothing has
     // focus — so the very first focus into the region resolves against an empty list and the
     // recovery below can never run.

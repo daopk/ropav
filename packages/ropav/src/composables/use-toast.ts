@@ -50,7 +50,7 @@ export interface UseToastReturn {
  * region is not rendered has not already spent its life waiting to appear. Unmounting pauses it
  * rather than dropping it, so a toast that comes back has the time it had left.
  *
- * One narrowing against upstream: it also returns a localized `aria-label` for the close button,
+ * One narrowing against react-aria: it also returns a localized `aria-label` for the close button,
  * which nothing can use — `CloseButton` writes its own `aria-label="Close"`, and that hardcoded
  * label wins over the one offered through context.
  */
@@ -62,7 +62,7 @@ export const useToast = (options: UseToastOptions): UseToastReturn => {
   const hasDescription = shallowRef(false);
 
   /**
-   * Upstream resolves this with `useSlotId`, which hands out the id and then withdraws it in a
+   * react-aria resolves this with `useSlotId`, which hands out the id and then withdraws it in a
    * layout effect when no element turns out to carry it. The claim is the same answer asked
    * directly rather than probed off the document, and it is how the rest of this package settles
    * whether an id has an owner.
@@ -81,7 +81,7 @@ export const useToast = (options: UseToastOptions): UseToastReturn => {
    * Withheld for the first tick, then dropped.
    *
    * NVDA does not announce the toast at all without this — the alert has to become visible to the
-   * accessibility tree *after* it exists for the announcement to fire. Upstream carries the same
+   * accessibility tree *after* it exists for the announcement to fire. react-aria carries the same
    * flag and the same reason.
    */
   const isVisible = shallowRef(false);

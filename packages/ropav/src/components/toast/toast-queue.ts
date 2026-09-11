@@ -72,7 +72,7 @@ export class Timer {
  * The order toasts are shown in, and the clocks that close them.
  *
  * Ported from `react-stately`'s `ToastQueue`, merged with the wrapper that normally sits around
- * it. Upstream those are two classes because the wrapper had a primitive to wrap; writing both
+ * it. There those are two classes because the wrapper had a primitive to wrap; writing both
  * here means keeping them apart would be two paths doing one job. What the merge keeps from the
  * wrapper: the default timeout, the serialized view transition, and `maxVisibleToasts` as a hint
  * the region reads rather than a truncation.
