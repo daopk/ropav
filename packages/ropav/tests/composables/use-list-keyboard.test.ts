@@ -580,6 +580,27 @@ describe("useListKeyboard", () => {
       },
     );
 
+    it("acts as well as selects on Enter when a mode is set", () => {
+      const onAction = vi.fn();
+      const { press, selection } = setup({ keyboard: { onAction } });
+
+      press("ArrowDown");
+      press("Enter");
+
+      expect(onAction).toHaveBeenCalledWith("a");
+      expect([...selection.selectedKeys.value]).toEqual(["a"]);
+    });
+
+    it("leaves the action to Enter when Space selects", () => {
+      const onAction = vi.fn();
+      const { press } = setup({ keyboard: { onAction } });
+
+      press("ArrowDown");
+      press(" ");
+
+      expect(onAction).not.toHaveBeenCalled();
+    });
+
     it("leaves Enter and Space alone when the items handle them", () => {
       const onAction = vi.fn();
       const { press, selection } = setup({ keyboard: { disallowActivation: true, onAction } });

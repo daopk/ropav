@@ -59,7 +59,7 @@ export interface UseListKeyboardOptions {
   disallowSelectAll?: MaybeRefOrGetter<boolean | undefined>;
   /** @default "clearSelection" */
   escapeKeyBehavior?: MaybeRefOrGetter<"clearSelection" | "none" | undefined>;
-  /** Called when an item is activated rather than selected. */
+  /** Called when an item is activated: Enter, or a press where there is no selection to make. */
   onAction?: (key: CollectionKey) => void;
   /**
    * Whether focus over the collection is nominal rather than real.
@@ -556,12 +556,17 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
         case " ": {
           // Space is the ARIA selection key. Enter is the same when the collection holds a
           // selection — a focused option has to be choosable with either, which is what a native
-          // listbox and React Aria's `useSelectableItem` both do when the item has no action of
-          // its own. A list of actions (`selectionMode` none) keeps both as `onAction`.
+          // listbox does. A list of actions (`selectionMode` none) has only `onAction` to give.
           if (focused == null || toValue(options.disallowActivation)) return;
 
           if (selection.selectionMode.value === "none") options.onAction?.(focused);
-          else selection.select(focused, { isShiftPressed: event.shiftKey });
+          else {
+            selection.select(focused, { isShiftPressed: event.shiftKey });
+
+            // Enter is the activation key on top of choosing, so a collection that holds a
+            // selection and offers an action still reaches the action.
+            if (event.key === "Enter") options.onAction?.(focused);
+          }
 
           event.preventDefault();
 
