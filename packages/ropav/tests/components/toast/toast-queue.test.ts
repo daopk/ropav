@@ -481,4 +481,35 @@ describe("Timer", () => {
     vi.advanceTimersByTime(1000);
     expect(callback).toHaveBeenCalledTimes(1);
   });
+
+  it("restarts a countdown that was already running", () => {
+    const callback = vi.fn();
+    const timer = new Timer(callback, 1000);
+
+    timer.reset(1000);
+    vi.advanceTimersByTime(900);
+
+    // The whole point of resetting a live clock: what was nearly up now has a full delay again.
+    timer.reset(1000);
+    vi.advanceTimersByTime(999);
+    expect(callback).not.toHaveBeenCalled();
+
+    vi.advanceTimersByTime(1);
+    expect(callback).toHaveBeenCalledTimes(1);
+  });
+
+  it("ignores a resume while it is already running", () => {
+    const callback = vi.fn();
+    const timer = new Timer(callback, 1000);
+
+    timer.reset(1000);
+    vi.advanceTimersByTime(600);
+
+    // Losing hover and losing focus both settle the clocks, and they can arrive one after the
+    // other — a second schedule outlives the first timeout and closes the toast all over again.
+    timer.resume();
+    vi.advanceTimersByTime(5000);
+
+    expect(callback).toHaveBeenCalledTimes(1);
+  });
 });

@@ -34,7 +34,11 @@ export class Timer {
     this.remaining = delay;
   }
 
+  /** Starts the clock again on `delay`, whether or not it was already running. */
   reset(delay: number): void {
+    // Paused first so this always means restart-on-this-delay. Scheduling over a live timeout
+    // would leave the old one pending, and the clock would end on whichever ran out first.
+    this.pause();
     this.remaining = delay;
     this.resume();
   }
@@ -48,7 +52,9 @@ export class Timer {
   }
 
   resume(): void {
-    if (this.remaining <= 0) return;
+    // Already running is not the same as ready to run: a second schedule would orphan the first
+    // timeout, and the clock would then end early on whatever the stale one had left.
+    if (this.timerId != null || this.remaining <= 0) return;
 
     this.startTime = Date.now();
     this.timerId = setTimeout(() => {
