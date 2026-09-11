@@ -396,6 +396,21 @@ describe("Switch", () => {
 
       unmount();
     });
+
+    // The content part is a `label` holding the input, and a `label` nested in one is invalid —
+    // the browser hands the click to the inner one, which stops toggling the switch.
+    it("renders a label nested in its content as a span", async () => {
+      const { container, unmount } = renderSwitch({ withLabel: true });
+
+      await nextTick();
+
+      const label = slot(container, "label");
+
+      expect(label.tagName).toBe("SPAN");
+      expect(label.closest("label")).toBe(slot(container, "switch-content"));
+
+      unmount();
+    });
   });
 
   describe("forms", () => {

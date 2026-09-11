@@ -3,6 +3,7 @@ import type { SwitchFixtureProps } from "./fixtures.types";
 
 import { Description } from "@/components/description";
 import { FieldError } from "@/components/field-error";
+import { Label } from "@/components/label";
 import { Switch, SwitchContent, SwitchControl, SwitchIcon, SwitchThumb } from "@/components/switch";
 
 // Both booleans have to declare an explicit `undefined` default here too, for the same
@@ -40,7 +41,8 @@ defineEmits<{ change: [isSelected: boolean] }>();
           </SwitchIcon>
         </SwitchThumb>
       </SwitchControl>
-      Enable notifications
+      <Label v-if="$props.withLabel">Enable notifications</Label>
+      <template v-else>Enable notifications</template>
     </SwitchContent>
     <Description v-if="$props.withDescription">Allow others to see your profile</Description>
     <FieldError v-if="$props.withCustomError">

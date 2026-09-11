@@ -13,6 +13,7 @@ export interface RadioGroupFixtureProps extends RadioGroupProps {
   withItemFieldError?: boolean;
   /** Renders help text inside the first radio. */
   withItemDescription?: boolean;
+  withItemLabel?: boolean;
   /** Replaces the drawn dot with the caller's own mark. */
   withCustomIndicator?: boolean;
   /** Wraps the group in a form with a submit button. */

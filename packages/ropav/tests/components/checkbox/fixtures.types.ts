@@ -9,4 +9,5 @@ export interface CheckboxFixtureProps extends CheckboxProps {
   withCustomError?: boolean;
   /** Replaces the default tick with the caller's own mark. */
   withCustomIndicator?: boolean;
+  withLabel?: boolean;
 }

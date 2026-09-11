@@ -100,7 +100,12 @@ const validation = group ? group.state.itemValidation : ownValidation;
 // message under every option, so the group keeps it and the item hands out nothing.
 provideFieldErrorContext(group ? null : { validation: validation.displayValidation });
 
-const { context: fieldIds, describedBy } = useFieldIds({ slots: ["description", "errorMessage"] });
+// The content part is itself a `label` wrapping the hidden input, so a `Label` the caller nests
+// inside it renders as a `span`: nested labels are invalid, and the inner one takes the click.
+const { context: fieldIds, describedBy } = useFieldIds({
+  labelElementType: "span",
+  slots: ["description", "errorMessage"],
+});
 
 provideFieldIdsContext(fieldIds);
 

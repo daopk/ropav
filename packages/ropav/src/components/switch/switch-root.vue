@@ -56,7 +56,11 @@ provideFieldErrorContext({ validation: validation.displayValidation });
 
 // Help text nested in the field claims its own id, and the hidden input points
 // `aria-describedby` at whichever ids were actually claimed.
-const { context: fieldIds, describedBy } = useFieldIds({ slots: ["description", "errorMessage"] });
+// See the checkbox: the content part is a `label`, so a nested `Label` renders as a `span`.
+const { context: fieldIds, describedBy } = useFieldIds({
+  labelElementType: "span",
+  slots: ["description", "errorMessage"],
+});
 
 provideFieldIdsContext(fieldIds);
 

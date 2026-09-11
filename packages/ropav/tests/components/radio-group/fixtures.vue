@@ -50,7 +50,8 @@ const items = computed(() => props.items ?? ["basic", "premium", "team"]);
               <svg v-if="props.withCustomIndicator" data-testid="custom-indicator" />
             </RadioIndicator>
           </RadioControl>
-          {{ itemValue }}
+          <Label v-if="props.withItemLabel">{{ itemValue }}</Label>
+          <template v-else>{{ itemValue }}</template>
         </RadioContent>
         <Description v-if="index === 0 && props.withItemDescription">Good for one seat</Description>
         <FieldError v-if="index === 0 && props.withItemFieldError" />

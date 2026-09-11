@@ -9,6 +9,7 @@ import {
 } from "@/components/checkbox";
 import { Description } from "@/components/description";
 import { FieldError } from "@/components/field-error";
+import { Label } from "@/components/label";
 
 // Every boolean that merges with a group, and both three-state props, have to declare an
 // explicit `undefined` default here too: forwarding a `false` that Vue cast from an absent
@@ -52,7 +53,8 @@ defineEmits<{ change: [isSelected: boolean] }>();
           <svg v-if="$props.withCustomIndicator" data-testid="custom-indicator" />
         </CheckboxIndicator>
       </CheckboxControl>
-      I agree to the terms
+      <Label v-if="$props.withLabel">I agree to the terms</Label>
+      <template v-else>I agree to the terms</template>
     </CheckboxContent>
     <Description v-if="$props.withDescription">You can change this later</Description>
     <FieldError v-if="$props.withCustomError">

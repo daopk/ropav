@@ -21,7 +21,11 @@ const styles = computed(() => radioVariants());
 const isSelected = computed(() => state.selectedValue.value === props.value);
 const isDisabled = computed(() => Boolean(props.isDisabled) || state.isDisabled.value);
 
-const { context: fieldIds, describedBy } = useFieldIds({ slots: ["description"] });
+// See the checkbox: the content part is a `label`, so a nested `Label` renders as a `span`.
+const { context: fieldIds, describedBy } = useFieldIds({
+  labelElementType: "span",
+  slots: ["description"],
+});
 
 provideFieldIdsContext(fieldIds);
 

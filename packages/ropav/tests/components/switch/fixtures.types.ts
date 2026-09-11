@@ -5,6 +5,7 @@ export interface SwitchFixtureProps extends SwitchProps {
   withDescription?: boolean;
   /** Renders a custom icon inside the thumb. */
   withIcon?: boolean;
+  withLabel?: boolean;
   /** Renders a `FieldError` as a sibling of the clickable content. */
   withFieldError?: boolean;
   /** Words the error itself instead of showing what validation produced. */

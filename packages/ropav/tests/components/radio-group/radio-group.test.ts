@@ -138,6 +138,21 @@ describe("RadioGroup", () => {
       unmount();
     });
 
+    // A radio's content part is a `label` holding its input, so a label nested in one is invalid
+    // and the browser gives the click to the inner one, which stops selecting the radio.
+    it("renders a label nested in a radio's content as a span", async () => {
+      const { container, contents, unmount } = renderGroup({ withItemLabel: true });
+
+      await nextTick();
+
+      const labels = [...container.querySelectorAll<HTMLElement>("[data-slot='label']")];
+
+      expect(labels.map((label) => label.tagName)).toEqual(["SPAN", "SPAN", "SPAN"]);
+      expect(labels[0]!.closest("label")).toBe(contents()[0]);
+
+      unmount();
+    });
+
     it("claims aria-invalid, which role=radiogroup does support", async () => {
       const { group, unmount } = renderGroup({ isInvalid: true });
 

@@ -386,6 +386,24 @@ describe("Checkbox", () => {
 
       unmount();
     });
+
+    /*
+     * The content part is itself a `label` holding the hidden input. A `label` nested in one is
+     * invalid, and the browser gives the click to the inner one, so the tick stops following the
+     * text that names it.
+     */
+    it("renders a label nested in its content as a span", async () => {
+      const { container, unmount } = renderCheckbox({ withLabel: true });
+
+      await nextTick();
+
+      const label = slot(container, "label");
+
+      expect(label.tagName).toBe("SPAN");
+      expect(label.closest("label")).toBe(slot(container, "checkbox-content"));
+
+      unmount();
+    });
   });
 
   describe("forms", () => {
