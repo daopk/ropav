@@ -6,7 +6,6 @@ import type { ComputedRef } from "vue";
 import { computed, shallowRef } from "vue";
 
 import { useCollection } from "../../composables/use-collection";
-import { isNestedControl } from "../../utils/focus";
 import { createTableCollection } from "../../utils/virtualizer-collection";
 
 /** The least a registry needs from an entry: where it sits in the document. */
@@ -270,12 +269,3 @@ export const tableCellId = (
   rowKey: CollectionKey,
   columnKey: CollectionKey,
 ): string => `${tableId}-${normalizeIdKey(rowKey)}-${normalizeIdKey(columnKey)}`;
-
-/**
- * Whether an event landed on a control inside a cell rather than on a part of the grid.
- *
- * React Aria never has to ask: its press hook stops propagation, so a button or a checkbox in a
- * cell never lets the row or the grid see the interaction. Nothing stops propagation here, so both
- * the row's click handler and the grid's key handler have to recognise the case themselves.
- */
-export const isTableCellControl = (target: EventTarget | null): boolean => isNestedControl(target);

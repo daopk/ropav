@@ -6,9 +6,7 @@ import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
 import { computed, nextTick, shallowRef, toValue, watch } from "vue";
 
-import { focusableIn, getScrollParent, isScrollable } from "../../utils/focus";
-
-import { isTableCellControl } from "./use-table-collection";
+import { focusableIn, getScrollParent, isNestedControl, isScrollable } from "../../utils/focus";
 
 /**
  * Where focus sits in a grid.
@@ -497,7 +495,9 @@ export const useGridKeyboard = (options: UseGridKeyboardOptions): UseGridKeyboar
     if (toValue(options.isDisabled)) return;
     if (!element || !(target instanceof Node) || !element.contains(target)) return;
     // A control inside a cell answers its own keys — a checkbox's Space, a button's Enter.
-    if (isTableCellControl(target)) return;
+    // Nothing here stops propagation the way React Aria's press hook does, so the grid declines
+    // the case itself.
+    if (isNestedControl(target)) return;
 
     const from = focused.value;
     const isModified = event.ctrlKey || event.metaKey;

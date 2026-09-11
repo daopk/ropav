@@ -9,6 +9,7 @@ import { computed, shallowRef, watch } from "vue";
 import { useId } from "../../composables/use-id";
 import { useInteractionStates } from "../../composables/use-interaction-states";
 import { dataAttr } from "../../utils/assertion";
+import { isNestedControl } from "../../utils/focus";
 import { visuallyHiddenStyle } from "../../utils/visually-hidden";
 import { useVirtualizerItem } from "../virtualizer/use-virtualizer-item";
 
@@ -17,7 +18,7 @@ import {
   useTableGridContext,
   useTableVirtualizerContext,
 } from "./table.context";
-import { createTableRegistry, isTableCellControl, tableCellId } from "./use-table-collection";
+import { createTableRegistry, tableCellId } from "./use-table-collection";
 
 const props = defineProps<TableRowProps>();
 
@@ -249,7 +250,7 @@ const ariaRowIndex = computed(() => {
 
 const onClick = (event: MouseEvent) => {
   if (isDisabled.value || selectionMode.value === "none") return;
-  if (isTableCellControl(event.target)) return;
+  if (isNestedControl(event.target)) return;
 
   selection.select(rowKey.value, {
     isCtrlPressed: event.ctrlKey || event.metaKey,
