@@ -10,7 +10,8 @@ import { useSelectContext } from "./select.context";
 
 const props = defineProps<SelectClearButtonProps>();
 
-const { isDisabled, onClear, registerClearButton, slots, state } = useSelectContext();
+const { isDisabled, onClear, registerClearButton, selectedItems, slots, state } =
+  useSelectContext();
 
 const styles = computed(() => slots.value.clearButton({ class: props.class }));
 
@@ -19,8 +20,12 @@ const styles = computed(() => slots.value.clearButton({ class: props.class }));
  *
  * It stays in the DOM either way: appearing and disappearing would reflow the trigger every time
  * a choice was made or undone.
+ *
+ * Read from the chosen items rather than the selected keys, so this agrees with what the trigger
+ * shows: a value naming an option the collection does not hold renders as the placeholder, and a
+ * button offering to clear what the user cannot see is a button offering to clear nothing.
  */
-const isEmpty = computed(() => state.selection.selectedKeys.value.size === 0);
+const isEmpty = computed(() => selectedItems.value.length === 0);
 
 /*
  * A span, not a button. The trigger this sits inside is a `button`, and a button inside a button

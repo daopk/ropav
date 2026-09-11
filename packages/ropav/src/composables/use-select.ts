@@ -176,7 +176,9 @@ export const useSelect = <T>(
       (event.key === "Backspace" || event.key === "Delete") &&
       !state.isOpen.value &&
       options.hasClearButton?.() &&
-      state.selection.selectedKeys.value.size > 0
+      // The chosen items rather than the selected keys, so the shortcut answers for what the
+      // trigger is actually showing.
+      state.selectedItems.value.length > 0
     ) {
       event.preventDefault();
       state.clearValue();
