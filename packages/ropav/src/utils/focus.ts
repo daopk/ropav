@@ -15,6 +15,29 @@ export const FOCUSABLE_SELECTOR = [
 ].join(",");
 
 /**
+ * Whether an event landed on a control nested inside `container` rather than on a part of the
+ * collection it holds.
+ *
+ * A control answers its own keys: the letters typed into a text field in a table cell are its
+ * text, and a button's Enter is its activation. The collection's own parts are told apart by
+ * their `data-collection` marker, since a cell or an option holding the roving tab stop matches
+ * the focusable selector without being content.
+ *
+ * `container` is excluded so a handler bound straight to a control — a select's trigger, which
+ * is itself a button — still counts its own keys as its own.
+ */
+export const isNestedControl = (
+  target: EventTarget | null,
+  container?: EventTarget | null,
+): boolean => {
+  if (!(target instanceof Element)) return false;
+
+  const control = target.closest(FOCUSABLE_SELECTOR);
+
+  return control != null && control !== container && !control.hasAttribute("data-collection");
+};
+
+/**
  * Whether an element is visible enough to take focus.
  *
  * `checkVisibility()` is the only reliable read of this — `offsetParent` is always `null` in

@@ -3,6 +3,8 @@ import type { MaybeRefOrGetter } from "vue";
 
 import { onScopeDispose, toValue } from "vue";
 
+import { isNestedControl } from "../utils/focus";
+
 /** How long a partial search stays live before it is forgotten. */
 const TYPEAHEAD_DEBOUNCE_MS = 1000;
 
@@ -86,6 +88,8 @@ export const useTypeahead = (options: UseTypeaheadOptions): UseTypeaheadReturn =
     if (toValue(options.isDisabled)) return;
     // Only mid-search. A leading Space belongs to whatever the focused item does with it.
     if (search.length === 0 || event.key !== " ") return;
+    // A search left running when focus moved into a control does not get to eat its Space.
+    if (isNestedControl(event.target, event.currentTarget)) return;
 
     event.preventDefault();
     event.stopPropagation();
@@ -113,6 +117,13 @@ export const useTypeahead = (options: UseTypeaheadOptions): UseTypeaheadReturn =
     ) {
       return;
     }
+
+    /*
+     * A control inside the collection answers its own keys. The letters typed into a text field
+     * in a table cell are its text, and swallowing them leaves the field empty with the grid's
+     * focus moved instead — the grid's own key handler already declines the same case.
+     */
+    if (isNestedControl(target, currentTarget)) return;
 
     // Handled on capture instead, so the item's activation still works.
     if (search.length === 0 && character === " ") return;

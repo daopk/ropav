@@ -881,6 +881,22 @@ describe("Table", () => {
       expect(document.activeElement).toBe(checkbox);
       expect(rows[0]).toHaveAttribute("aria-selected", "false");
     });
+
+    /*
+     * The letters are the field's text. Typeahead calls `preventDefault` on a match, so a search
+     * running over the rows would take the character and move the grid's focus instead, leaving
+     * the field empty — the same case as the checkbox above, for the keys a search reads.
+     */
+    it("leaves a letter typed into a field inside a cell alone", async () => {
+      const { rows } = await renderGrid({ withCellInput: true });
+      const field = rows[0]!.querySelector<HTMLInputElement>("input[type='text']")!;
+
+      field.focus();
+      press("j");
+      await nextTick();
+
+      expect(focusName()).toBe("input");
+    });
   });
 
   describe("announcing selection", () => {

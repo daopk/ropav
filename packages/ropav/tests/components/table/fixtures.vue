@@ -48,6 +48,7 @@ const props = withDefaults(
       onLoadMore?: () => void;
       scrollContainerStyle?: Record<string, string>;
       scrollOffset?: number;
+      withCellInput?: boolean;
       withFooter?: boolean;
       withLoadMore?: boolean;
       withSelectionColumn?: boolean;
@@ -76,6 +77,7 @@ const props = withDefaults(
     sortableColumns: undefined,
     users: undefined,
     variant: undefined,
+    withCellInput: undefined,
     withFooter: undefined,
     withSelectionColumn: undefined,
     withSortableHeader: undefined,
@@ -140,7 +142,15 @@ const defaultUsers: TableFixtureUser[] = [
             </TableCell>
             <TableCell>{{ user.name }}</TableCell>
             <TableCell>{{ user.role }}</TableCell>
-            <TableCell>{{ user.email }}</TableCell>
+            <TableCell>
+              <input
+                v-if="props.withCellInput"
+                :aria-label="`Email for ${user.name}`"
+                type="text"
+                :value="user.email"
+              />
+              <template v-else>{{ user.email }}</template>
+            </TableCell>
           </TableRow>
           <TableLoadMore
             v-if="props.withLoadMore"
