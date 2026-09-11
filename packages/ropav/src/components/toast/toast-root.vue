@@ -167,10 +167,17 @@ const style = computed<CSSProperties>(() => {
   const gap = index.value * region.gap.value;
 
   return {
-    "--front-height": `${frontHeight}px`,
+    // Withheld until there is a measurement, so the declaration that reads it falls back to
+    // `auto` rather than pinning a stacked toast to a height of zero.
+    ...(frontHeight ? { "--front-height": `${frontHeight}px` } : null),
     "--offset-collapsed": `${gap}px`,
     "--offset-expanded": `${heightsBefore + gap}px`,
     "--scale-collapsed": `${1 - index.value * scaleFactor.value}`,
+    // Names this toast for a view transition. Nothing here starts one, but a queue handed a
+    // wrapper that does has to capture the toasts one by one — an unnamed toast leaves the
+    // document root as the only captured element, and the whole page cross-fades instead. The key
+    // is not a valid custom-ident on its own.
+    viewTransitionName: `rp-toast-${props.toast.key.replace(/[^a-zA-Z0-9]/g, "-")}`,
     // A toast on its way out is under everything: it is leaving, and nothing behind it should be
     // covered by a ghost while the stack closes up.
     zIndex: isExiting.value ? 0 : visible.length - index.value,

@@ -224,7 +224,10 @@ interface ViewTransition {
  * shows up as dropped frames; both are plainly visible to someone using the thing.
  *
  * It stays because it is the only way to get a genuine cross-fade between two different toasts,
- * and because a caller who wants it should not have to rebuild the chain below.
+ * and because a caller who wants it should not have to rebuild the chain below. Each toast names
+ * itself for the transition through `view-transition-name`, which is what makes the capture
+ * per-toast; without it the document root would be the only captured element and every toast
+ * would cross-fade the whole page.
  *
  * The View Transitions API allows one active transition per document: starting a second while the
  * first is still animating aborts the first, which surfaces as a rejection on `ready`. Each new
