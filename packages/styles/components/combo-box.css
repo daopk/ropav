@@ -250,6 +250,8 @@
 
   /* Exiting animations */
   &[data-exiting="true"] {
+    /* Non-interactive while it closes, even if the exit animation is cut short. */
+    pointer-events: none;
     animation: var(--rp-motion) rp-exit var(--rp-duration, 0.15s) var(--rp-ease, ease);
     --rp-duration: 100ms;
     transition-duration: var(--rp-motion) 100ms;
