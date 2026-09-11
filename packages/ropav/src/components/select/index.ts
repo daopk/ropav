@@ -1,3 +1,4 @@
+import SelectClearButton from "./select-clear-button.vue";
 import SelectIndicator from "./select-indicator.vue";
 import SelectPopover from "./select-popover.vue";
 import SelectRoot from "./select-root.vue";
@@ -7,9 +8,17 @@ import SelectValue from "./select-value.vue";
 /* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export { SelectIndicator, SelectPopover, SelectRoot as Select, SelectTrigger, SelectValue };
+export {
+  SelectClearButton,
+  SelectIndicator,
+  SelectPopover,
+  SelectRoot as Select,
+  SelectTrigger,
+  SelectValue,
+};
 
 export type {
+  SelectClearButtonProps,
   SelectIndicatorProps,
   SelectPopoverProps,
   SelectRootProps as SelectProps,

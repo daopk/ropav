@@ -37,6 +37,12 @@ with a list box inside it, not a different kind of list.
 slot gives you the selected items themselves if you want to render something richer than a
 string.
 
+## Clearing
+
+Add `SelectClearButton` inside the trigger to let a choice be undone. It renders as a `span`,
+because the trigger it sits in is already a button, so the trigger answers <kbd>Backspace</kbd>
+and <kbd>Delete</kbd> on its behalf; the root emits `clear` either way.
+
 ## Placement
 
 `SelectPopover` takes `placement`, `offset` and `shouldFlip`. The default flips the popover to

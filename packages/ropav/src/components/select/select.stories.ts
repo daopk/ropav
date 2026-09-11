@@ -23,6 +23,7 @@ import { Separator } from "../separator";
 import { Spinner } from "../spinner";
 import { TooltipContent, Tooltip, TooltipTrigger } from "../tooltip";
 
+import SelectClearButton from "./select-clear-button.vue";
 import SelectIndicator from "./select-indicator.vue";
 import SelectPopover from "./select-popover.vue";
 import SelectRoot from "./select-root.vue";
@@ -50,6 +51,7 @@ const components = {
   ListBoxLoadMoreItem,
   ListBoxSection: ListBoxSection,
   Select: SelectRoot,
+  SelectClearButton,
   SelectIndicator,
   SelectPopover,
   SelectTrigger,
@@ -223,6 +225,39 @@ export const Default: Story = {
         <Label>State</Label>
         <SelectTrigger>
           <SelectValue />
+          <SelectIndicator />
+        </SelectTrigger>
+        <SelectPopover>
+          <ListBox>${optionsTemplate}</ListBox>
+        </SelectPopover>
+      </Select>
+    `,
+  }),
+};
+
+/**
+ * A clear button empties the selection without opening the list. It is a `span` rather than a
+ * button, because the trigger it sits inside is already one and a button nested in a button is
+ * invalid markup — so ARIA treats it as presentational and it can never take focus. The trigger
+ * answers <kbd>Backspace</kbd> and <kbd>Delete</kbd> instead, which is the keyboard's way in, and
+ * only while a clear button is composed.
+ */
+export const WithClearButton: Story = {
+  render: () => ({
+    components,
+    setup: () => ({ byName, items: STATES }),
+    template: `
+      <Select
+        class="w-[256px]"
+        default-value="california"
+        :item-text-value="byName"
+        :items="items"
+        placeholder="Select one"
+      >
+        <Label>State</Label>
+        <SelectTrigger>
+          <SelectValue />
+          <SelectClearButton />
           <SelectIndicator />
         </SelectTrigger>
         <SelectPopover>

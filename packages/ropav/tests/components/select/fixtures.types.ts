@@ -45,6 +45,9 @@ export interface SelectFixtureProps {
   withCustomValueList?: boolean;
   /** Whether the indicator is given an icon of its own. */
   withCustomIndicator?: boolean;
+  /** Whether a `SelectClearButton` is composed into the trigger. */
+  withClearButton?: boolean;
   onChange?: (value: SelectedValue) => void;
+  onClear?: () => void;
   onOpenChange?: (isOpen: boolean) => void;
 }

@@ -214,6 +214,126 @@ describe("Select", () => {
     });
   });
 
+  describe("the clear button", () => {
+    const clearButton = (root: HTMLElement) =>
+      root.querySelector<HTMLElement>('[data-slot="select-clear-button"]')!;
+
+    it("is absent unless one is composed in", async () => {
+      const { root } = await render();
+
+      expect(root.querySelector('[data-slot="select-clear-button"]')).toBeNull();
+    });
+
+    /*
+     * A span rather than a button, and that is the whole design. The trigger it sits inside is a
+     * `button`, and a button nested in one is invalid markup — the browser closes the outer
+     * element early and what is left is no longer the trigger.
+     */
+    it("renders as a span, hidden from assistive technology", async () => {
+      const { root } = await render({ withClearButton: true });
+
+      expect(clearButton(root).tagName).toBe("SPAN");
+      expect(clearButton(root)).toHaveAttribute("aria-hidden", "true");
+    });
+
+    it("marks itself empty while there is nothing to clear", async () => {
+      const empty = await render({ withClearButton: true });
+
+      expect(clearButton(empty.root)).toHaveAttribute("data-empty", "true");
+
+      const chosen = await render({ defaultValue: "texas", withClearButton: true });
+
+      expect(clearButton(chosen.root)).not.toHaveAttribute("data-empty");
+    });
+
+    it("empties the selection on a press, and says so", async () => {
+      const onClear = vi.fn();
+      const { root, value } = await render({
+        defaultValue: "texas",
+        onClear,
+        withClearButton: true,
+      });
+
+      expect(value).toHaveTextContent("Texas");
+
+      press(clearButton(root));
+      await settle();
+
+      expect(value).toHaveTextContent("Select one");
+      expect(onClear).toHaveBeenCalledOnce();
+    });
+
+    // The press must not reach the trigger, or clearing would open the popover on the way out.
+    it("leaves the popover shut", async () => {
+      const { listbox, root } = await render({ defaultValue: "texas", withClearButton: true });
+
+      press(clearButton(root));
+      await settle();
+
+      expect(listbox()).toBeNull();
+    });
+
+    it("clears nothing while the select is disabled", async () => {
+      const onClear = vi.fn();
+      const { root, value } = await render({
+        defaultValue: "texas",
+        isDisabled: true,
+        onClear,
+        withClearButton: true,
+      });
+
+      press(clearButton(root));
+      await settle();
+
+      expect(value).toHaveTextContent("Texas");
+      expect(onClear).not.toHaveBeenCalled();
+    });
+
+    /*
+     * The keyboard's only way in. ARIA makes a button's children presentational, so the span can
+     * never take focus and never be pressed by a keyboard — the shortcut on the trigger stands in
+     * for it, and is gated on a clear button being composed so a plain select stays as it was.
+     */
+    it.each(["Backspace", "Delete"])("clears on %s from the trigger", async (name) => {
+      const onClear = vi.fn();
+      const { trigger, value } = await render({
+        defaultValue: "texas",
+        onClear,
+        withClearButton: true,
+      });
+
+      key(trigger, name);
+      await settle();
+
+      expect(value).toHaveTextContent("Select one");
+      expect(onClear).toHaveBeenCalledOnce();
+    });
+
+    it("leaves the shortcut alone without a clear button", async () => {
+      const { trigger, value } = await render({ defaultValue: "texas" });
+
+      key(trigger, "Backspace");
+      await settle();
+
+      expect(value).toHaveTextContent("Texas");
+    });
+
+    // Open, Backspace belongs to the listbox's own typeahead.
+    it("leaves the shortcut alone while the popover is open", async () => {
+      const { trigger, value } = await render({
+        defaultOpen: true,
+        defaultValue: "texas",
+        withClearButton: true,
+      });
+
+      await settle();
+      key(trigger, "Backspace");
+      await settle();
+
+      expect(value).toHaveTextContent("Texas");
+    });
+  });
+
   describe("opening and choosing", () => {
     it("opens on a press and lists every option", async () => {
       const { listbox, options, trigger } = await render();

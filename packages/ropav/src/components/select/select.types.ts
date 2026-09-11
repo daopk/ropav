@@ -104,6 +104,10 @@ export interface SelectIndicatorProps {
   class?: string;
 }
 
+export interface SelectClearButtonProps {
+  class?: string;
+}
+
 export interface SelectPopoverProps {
   class?: string;
   /** @default "bottom" */

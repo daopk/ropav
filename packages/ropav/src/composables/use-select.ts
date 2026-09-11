@@ -20,6 +20,13 @@ export interface UseSelectOptions {
   ariaLabelledby?: MaybeRefOrGetter<string | undefined>;
   ariaDescribedby?: MaybeRefOrGetter<string | undefined>;
   onFocusChange?: (isFocused: boolean) => void;
+  /**
+   * Whether a clear button is composed into the select, which is what opens the trigger's
+   * Backspace/Delete shortcut. Read at event time, so registering one never costs a render.
+   */
+  hasClearButton?: () => boolean;
+  /** Empties the selection. Called by the shortcut above. */
+  onClear?: () => void;
 }
 
 /** Attributes the trigger element renders, beside its own class and `data-slot`. */
@@ -155,6 +162,27 @@ export const useSelect = <T>(
 
         return;
       }
+    }
+
+    /*
+     * The only way to clear without a pointer.
+     *
+     * A button's children are presentational to ARIA, so the clear button inside the trigger can
+     * never take focus and never be pressed by a keyboard. The shortcut stands in for it, and is
+     * gated on one being composed so a plain select stays non-clearable. Not while the popover is
+     * open: there Backspace belongs to the listbox's own typeahead.
+     */
+    if (
+      (event.key === "Backspace" || event.key === "Delete") &&
+      !state.isOpen.value &&
+      options.hasClearButton?.() &&
+      state.selection.selectedKeys.value.size > 0
+    ) {
+      event.preventDefault();
+      state.clearValue();
+      options.onClear?.();
+
+      return;
     }
 
     typeahead.onKeydown(event);

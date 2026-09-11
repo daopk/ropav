@@ -76,10 +76,10 @@
     padding-inline-end: calc(var(--rp-spacing) * 7);
   }
 
-  /* Hover state */
+  /* Hover state. Excluded while the clear button is hovered, so the two do not both light up. */
   @media (hover: hover) {
-    &:hover,
-    &[data-hovered="true"] {
+    &:hover:not(:has(.rp-select__clear-button:hover)),
+    &[data-hovered="true"]:not(:has(.rp-select__clear-button:hover)) {
       background-color: var(--select-trigger-bg-hover);
       border-color: var(--rp-field-border-hover);
     }
@@ -185,6 +185,67 @@
   /* Removes the list-box-item indicator element from the select value*/
   [data-slot="list-box-item-indicator"] {
     display: none;
+  }
+}
+
+/*
+ * Clear Button
+ *
+ * In flow at the end of the trigger's content, which is what keeps it clear of the indicator:
+ * the indicator is positioned absolutely and the trigger already reserves its width as padding,
+ * so nothing here has to know where it sits.
+ */
+.rp-select__clear-button {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  height: calc(var(--rp-spacing) * 5);
+  width: calc(var(--rp-spacing) * 5);
+  flex-shrink: 0;
+  align-self: center;
+  align-items: center;
+  justify-content: center;
+  border-radius: calc(var(--rp-radius) * 1.5);
+  padding: var(--rp-spacing);
+  color: var(--rp-muted);
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+
+  --select-clear-button-bg: transparent;
+  --select-clear-button-bg-hover: var(--rp-default-hover);
+
+  background-color: var(--select-clear-button-bg);
+
+  cursor: var(--rp-cursor-interactive);
+
+  transform: translateZ(0) var(--rp-rotate-x,) var(--rp-rotate-y,) var(--rp-rotate-z,)
+    var(--rp-skew-x,) var(--rp-skew-y,);
+  transform-origin: center;
+
+  /* Only while it is visible, so clearing takes it away at once rather than fading it out. */
+  &:not([data-empty="true"]) {
+    transition: var(--rp-motion) opacity 150ms var(--rp-ease-smooth);
+  }
+
+  &[data-empty="true"] {
+    pointer-events: none;
+    opacity: 0%;
+  }
+
+  [data-slot="select-clear-button-icon"] {
+    width: calc(var(--rp-spacing) * 3.5);
+    height: calc(var(--rp-spacing) * 3.5);
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      background-color: var(--select-clear-button-bg-hover);
+    }
+  }
+
+  &:active {
+    scale: 0.93;
   }
 }
 

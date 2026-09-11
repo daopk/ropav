@@ -86,6 +86,38 @@ describe("Select (browser)", () => {
       expect(getComputedStyle(triggerOf(withIndicator)).paddingInlineEnd).toBe("28px");
     });
 
+    /*
+     * The `:has()` exclusion, which jsdom never evaluates. Without it the trigger and the clear
+     * button both light up on the one hover, and the field reads as two controls at once.
+     */
+    it("leaves the trigger unlit while the clear button is hovered", async () => {
+      await parkPointer();
+
+      const result = mount({ defaultValue: "texas", withClearButton: true });
+
+      await nextTick();
+
+      const trigger = triggerOf(result);
+      const clear = result.container.querySelector<HTMLElement>(
+        '[data-slot="select-clear-button"]',
+      )!;
+
+      const resting = getComputedStyle(trigger).backgroundColor;
+
+      await userEvent.hover(trigger);
+      await settled(trigger);
+      const hovered = getComputedStyle(trigger).backgroundColor;
+
+      await userEvent.hover(clear);
+      await settled(trigger);
+      const overClear = getComputedStyle(trigger).backgroundColor;
+
+      expect({ different: hovered !== resting, overClear }).toEqual({
+        different: true,
+        overClear: resting,
+      });
+    });
+
     it("turns the indicator over while the popover is open", async () => {
       const result = mount();
 

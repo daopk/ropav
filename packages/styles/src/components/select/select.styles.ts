@@ -10,6 +10,7 @@ export const selectVariants = tv({
   },
   slots: {
     base: "rp-select",
+    clearButton: "rp-select__clear-button",
     indicator: "rp-select__indicator",
     popover: "rp-select__popover",
     trigger: "rp-select__trigger",

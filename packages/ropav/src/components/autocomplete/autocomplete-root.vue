@@ -158,7 +158,12 @@ provideAutocompleteContext({
  * that part is what {@link provideAutocompleteContext} above carries.
  */
 provideSelectContext({
+  isDisabled,
+  onClear: () => emit("clear"),
   placeholder,
+  // An autocomplete's own clear button is a real button outside the trigger, so it needs no
+  // registration here and the trigger's keyboard shortcut has nothing to open.
+  registerClearButton: () => () => {},
   select,
   selectedItems: state.selectedItems as never,
   selectedText,

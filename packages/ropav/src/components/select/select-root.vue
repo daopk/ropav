@@ -42,6 +42,7 @@ const emit = defineEmits<{
   openChange: [isOpen: boolean];
   "update:isOpen": [isOpen: boolean];
   focusChange: [isFocused: boolean];
+  clear: [];
 }>();
 
 defineSlots<{ default?: (props: SelectRootSlotProps) => unknown }>();
@@ -74,13 +75,33 @@ const state = useSelectState<T>({
   value: () => props.value,
 });
 
+/*
+ * How many clear buttons are mounted, which is what opens the trigger's clear shortcut.
+ *
+ * Counted rather than a flag so unmounting one cannot switch the shortcut off while another is
+ * still mounted, and held outside reactivity because registering is not something to re-render on.
+ */
+let clearButtons = 0;
+
+const registerClearButton = () => {
+  clearButtons += 1;
+
+  return () => {
+    clearButtons -= 1;
+  };
+};
+
+const onClear = () => emit("clear");
+
 const select = useSelect(
   {
     ariaDescribedby: () => props.ariaDescribedby,
     ariaLabel: () => props.ariaLabel,
     ariaLabelledby: () => props.ariaLabelledby,
+    hasClearButton: () => clearButtons > 0,
     isDisabled: () => props.isDisabled,
     isRequired: () => props.isRequired,
+    onClear,
     onFocusChange: (isFocused) => emit("focusChange", isFocused),
   },
   state,
@@ -113,7 +134,10 @@ provideFieldIdsContext(select.fieldIds.context);
 provideFieldErrorContext({ validation: state.displayValidation });
 
 provideSelectContext({
+  isDisabled: computed(() => Boolean(props.isDisabled)),
+  onClear,
   placeholder,
+  registerClearButton,
   select,
   selectedItems: state.selectedItems as never,
   selectedText,

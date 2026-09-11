@@ -15,6 +15,17 @@ export interface SelectContext {
   selectedText: ComputedRef<string>;
   /** What the trigger shows when nothing is chosen, already resolved to the localized default. */
   placeholder: ComputedRef<string>;
+  /** Whether the whole select is disabled, which the clear button has to answer to as well. */
+  isDisabled: ComputedRef<boolean>;
+  /** Called after the selection is emptied, whichever way it was emptied. */
+  onClear: () => void;
+  /**
+   * Registers a mounted clear button and returns the call that unregisters it.
+   *
+   * Counted rather than a flag, so unmounting one cannot switch the trigger's clear shortcut off
+   * while another is still mounted.
+   */
+  registerClearButton: () => () => void;
 }
 
 /**

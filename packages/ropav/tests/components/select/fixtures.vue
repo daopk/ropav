@@ -9,6 +9,7 @@ import { Label } from "@/components/label";
 import { ListBox } from "@/components/list-box";
 import { ListBoxItemIndicator, ListBoxItem } from "@/components/list-box-item";
 import {
+  SelectClearButton,
   SelectIndicator,
   SelectPopover,
   Select,
@@ -43,11 +44,13 @@ const props = withDefaults(defineProps<SelectFixtureProps>(), {
   value: undefined,
   size: undefined,
   variant: undefined,
+  withClearButton: undefined,
 });
 
 const emit = defineEmits<{
   change: [value: SelectedValue];
   openChange: [isOpen: boolean];
+  clear: [];
 }>();
 </script>
 
@@ -72,6 +75,7 @@ const emit = defineEmits<{
     :value="props.value"
     :variant="props.variant"
     @change="emit('change', $event)"
+    @clear="emit('clear')"
     @open-change="emit('openChange', $event)"
   >
     <Label v-if="props.withLabel">State</Label>
@@ -88,6 +92,7 @@ const emit = defineEmits<{
           </span>
         </template>
       </SelectValue>
+      <SelectClearButton v-if="props.withClearButton" />
       <SelectIndicator v-if="props.withCustomIndicator" :class="props.indicatorClass">
         <IconChevronDown data-testid="custom-icon" />
       </SelectIndicator>

@@ -25,4 +25,9 @@ export const RENAMED: Renamed = {
   // The rule did not move, it narrowed: the resize cursor now excludes the disabled rail rather
   // than outweighing it. Same declaration, same element measured — only the name is longer.
   '.rp-sidebar__rail--resizable:not([data-disabled="true"])': ".rp-sidebar__rail--resizable",
+
+  // Narrowed rather than moved: the trigger's hover fill now stands down while the clear button
+  // inside it is the thing being hovered, so the two do not both light up. Same declarations.
+  ':is(.rp-select__trigger):hover:not(:has(.rp-select__clear-button:hover)), :is(.rp-select__trigger)[data-hovered="true"]:not(:has(.rp-select__clear-button:hover))':
+    ':is(.rp-select__trigger):hover, :is(.rp-select__trigger)[data-hovered="true"]',
 };
