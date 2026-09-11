@@ -558,33 +558,47 @@ describe("useListKeyboard", () => {
   });
 
   describe("activation", () => {
-    it("calls onAction on Enter", () => {
+    it.each(["Enter", " "] as const)("selects on %s when a mode is set", (key) => {
+      const { press, selection } = setup();
+
+      press("ArrowDown");
+      press(key);
+
+      expect([...selection.selectedKeys.value]).toEqual(["a"]);
+    });
+
+    it.each(["Enter", " "] as const)(
+      "acts rather than selects on %s when there is no selection",
+      (key) => {
+        const onAction = vi.fn();
+        const { press } = setup({ keyboard: { onAction }, selection: { selectionMode: "none" } });
+
+        press("ArrowDown");
+        press(key);
+
+        expect(onAction).toHaveBeenCalledWith("a");
+      },
+    );
+
+    it("acts as well as selects on Enter when a mode is set", () => {
       const onAction = vi.fn();
-      const { press } = setup({ keyboard: { onAction } });
+      const { press, selection } = setup({ keyboard: { onAction } });
 
       press("ArrowDown");
       press("Enter");
 
       expect(onAction).toHaveBeenCalledWith("a");
-    });
-
-    it("selects on Space when a mode is set", () => {
-      const { press, selection } = setup();
-
-      press("ArrowDown");
-      press(" ");
-
       expect([...selection.selectedKeys.value]).toEqual(["a"]);
     });
 
-    it("acts rather than selects on Space when there is no selection", () => {
+    it("leaves the action to Enter when Space selects", () => {
       const onAction = vi.fn();
-      const { press } = setup({ keyboard: { onAction }, selection: { selectionMode: "none" } });
+      const { press } = setup({ keyboard: { onAction } });
 
       press("ArrowDown");
       press(" ");
 
-      expect(onAction).toHaveBeenCalledWith("a");
+      expect(onAction).not.toHaveBeenCalled();
     });
 
     it("leaves Enter and Space alone when the items handle them", () => {
