@@ -27,6 +27,8 @@
     var(--rp-motion) transform 250ms var(--rp-ease-smooth),
     background-color 100ms var(--rp-ease-out),
     box-shadow 100ms var(--rp-ease-out);
+  /* No `will-change` beside this: the `translateZ` is a 3D transform, which is itself what asks
+   * for the layer, so the hint would promise nothing that is not already promised. */
   transform: translateZ(0) var(--rp-rotate-x,) var(--rp-rotate-y,) var(--rp-rotate-z,)
     var(--rp-skew-x,) var(--rp-skew-y,);
 
@@ -89,8 +91,6 @@
   /* Active / pressed */
   &:active,
   &[data-pressed="true"] {
-    /* Here rather than on the base rule: a page of buttons holds one promoted layer each. */
-    will-change: transform;
     background-color: var(--button-bg-pressed);
     transform: scale(0.97);
   }

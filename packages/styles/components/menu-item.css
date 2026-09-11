@@ -81,8 +81,6 @@
   /* Pressed state */
   &:active,
   &[data-pressed="true"] {
-    /* Here rather than on the base rule: a long menu holds one promoted layer per item. */
-    will-change: transform;
     transform: scale(0.98);
   }
 
@@ -90,6 +88,11 @@
   @media (hover: hover) {
     &:hover,
     &[data-hovered="true"] {
+      /* Here rather than on the base rule, so a long menu promotes the item under the pointer
+       * and not every item at once — and here rather than on the press, which would ask for the
+       * layer in the same frame as the transform that needs it and let it go again while the
+       * release is still animating. */
+      will-change: transform;
       background-color: var(--rp-state-layer);
     }
   }
