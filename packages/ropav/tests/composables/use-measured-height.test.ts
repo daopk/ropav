@@ -17,7 +17,7 @@ class StubObserver {
   disconnected = false;
   observed: Element[] = [];
 
-  constructor(private readonly callback: () => void) {
+  constructor(private readonly callback: (entries: { contentRect: { width: number } }[]) => void) {
     observers.push(this);
   }
 
@@ -25,8 +25,9 @@ class StubObserver {
     this.disconnected = true;
   }
 
-  emit() {
-    this.callback();
+  /** Notifies at a width, since only a change on the inline axis is acted on. */
+  emit(width = 0) {
+    this.callback([{ contentRect: { width } }]);
   }
 
   observe(element: Element) {
@@ -60,6 +61,12 @@ const setHeight = (element: HTMLElement, height: number) => {
     get: () => height,
   });
 };
+
+/** A notification is answered once per frame, so a reading lands a frame after it arrives. */
+const frame = () =>
+  new Promise<void>((resolve) => {
+    requestAnimationFrame(() => resolve());
+  });
 
 describe("useMeasuredHeight", () => {
   afterEach(() => {
@@ -103,7 +110,8 @@ describe("useMeasuredHeight", () => {
     await nextTick();
 
     setHeight(element, 96);
-    observers[0]!.emit();
+    observers[0]!.emit(320);
+    await frame();
 
     expect(value.height.value).toBe(96);
 
@@ -122,13 +130,77 @@ describe("useMeasuredHeight", () => {
 
     watch(value.height, onHeight);
 
-    observers[0]!.emit();
-    observers[0]!.emit();
+    observers[0]!.emit(320);
+    observers[0]!.emit(480);
+    await frame();
     await nextTick();
 
     // Every reader of this drives an inline style on a sibling, so a repeat would be a layout
     // pass for nothing.
     expect(onHeight).not.toHaveBeenCalled();
+
+    stop();
+  });
+
+  it("ignores a resize that only moved the axis it is measuring", async () => {
+    stubResizeObserver();
+
+    const element = elementOfHeight(64);
+    const { stop, value } = read(() => useMeasuredHeight(shallowRef(element)));
+
+    await nextTick();
+
+    // The caller transitions the block axis, and a reading unsets and restores the height — so
+    // answering this would re-measure on every frame of that animation and retarget it.
+    setHeight(element, 96);
+    observers[0]!.emit();
+    await frame();
+
+    expect(value.height.value).toBe(64);
+
+    stop();
+  });
+
+  it("re-measures when the content changes under a height it has already forced", async () => {
+    const element = elementOfHeight(64);
+    const { stop, value } = read(() => useMeasuredHeight(shallowRef(element)));
+
+    await nextTick();
+    expect(value.height.value).toBe(64);
+
+    // A box whose height is already set does not resize when what is inside it does, so a toast
+    // whose content is replaced in place would otherwise keep the height it no longer wants.
+    setHeight(element, 120);
+    element.append(document.createElement("span"));
+    await frame();
+
+    expect(value.height.value).toBe(120);
+
+    stop();
+  });
+
+  it("unsets a forced height before reading, and puts it back", async () => {
+    const element = elementOfHeight(64);
+    const seen: string[] = [];
+
+    Object.defineProperty(element, "scrollHeight", {
+      configurable: true,
+      get: () => {
+        seen.push(element.style.height);
+
+        return 64;
+      },
+    });
+
+    element.style.height = "40px";
+
+    const { stop, value } = read(() => useMeasuredHeight(shallowRef(element)));
+
+    await nextTick();
+
+    expect(seen).toEqual(["auto"]);
+    expect(element.style.height).toBe("40px");
+    expect(value.height.value).toBe(64);
 
     stop();
   });
