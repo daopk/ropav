@@ -89,6 +89,93 @@ describe("useToastRegion", () => {
     });
   });
 
+  describe("hotkey", () => {
+    const press = (init: KeyboardEventInit) =>
+      document.dispatchEvent(
+        new KeyboardEvent("keydown", { bubbles: true, cancelable: true, ...init }),
+      );
+
+    it("moves focus to the region from anywhere in the document", async () => {
+      const { getByTestId } = render({ queue: queueWith(["First"]) });
+
+      await nextTick();
+      expect(getByTestId("region")).not.toHaveFocus();
+
+      press({ altKey: true, code: "KeyT" });
+
+      expect(getByTestId("region")).toHaveFocus();
+    });
+
+    it("claims the combination so the platform does not also act on it", async () => {
+      render({ queue: queueWith(["First"]) });
+      await nextTick();
+
+      const event = new KeyboardEvent("keydown", {
+        altKey: true,
+        bubbles: true,
+        cancelable: true,
+        code: "KeyT",
+      });
+
+      document.dispatchEvent(event);
+
+      // Alt with a letter opens the menu bar on Windows and Linux.
+      expect(event.defaultPrevented).toBe(true);
+    });
+
+    it("stands down for a combination carrying a modifier it did not ask for", async () => {
+      const { getByTestId } = render({ queue: queueWith(["First"]) });
+
+      await nextTick();
+
+      press({ altKey: true, code: "KeyT", ctrlKey: true });
+      expect(getByTestId("region")).not.toHaveFocus();
+
+      press({ code: "KeyT" });
+      expect(getByTestId("region")).not.toHaveFocus();
+
+      press({ altKey: true, code: "KeyY" });
+      expect(getByTestId("region")).not.toHaveFocus();
+    });
+
+    it("answers the combination it was given instead of the default", async () => {
+      const { getByTestId } = render({
+        hotkey: ["ctrlKey", "shiftKey", "KeyN"],
+        queue: queueWith(["First"]),
+      });
+
+      await nextTick();
+
+      press({ altKey: true, code: "KeyT" });
+      expect(getByTestId("region")).not.toHaveFocus();
+
+      press({ code: "KeyN", ctrlKey: true, shiftKey: true });
+      expect(getByTestId("region")).toHaveFocus();
+    });
+
+    it("registers nothing when it is handed an empty combination", async () => {
+      const { getByTestId } = render({ hotkey: [], queue: queueWith(["First"]) });
+
+      await nextTick();
+
+      press({ altKey: true, code: "KeyT" });
+
+      expect(getByTestId("region")).not.toHaveFocus();
+    });
+
+    it("stops answering once the region has gone", async () => {
+      const queue = queueWith(["First"]);
+      const result = render({ queue });
+
+      await nextTick();
+      result.unmount();
+
+      // The region only exists while it holds a toast, so the listener must not outlive it.
+      expect(() => press({ altKey: true, code: "KeyT" })).not.toThrow();
+      expect(document.querySelector('[data-testid="region"]')).toBeNull();
+    });
+  });
+
   describe("pausing", () => {
     beforeEach(() => {
       vi.useFakeTimers();

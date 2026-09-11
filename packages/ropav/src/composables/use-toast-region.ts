@@ -2,6 +2,7 @@ import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
 import { computed, onScopeDispose, toValue, watch } from "vue";
 
+import { DEFAULT_HOTKEY } from "../components/toast/toast.constants";
 import { toastStrings } from "../i18n/toast";
 import { TOP_LAYER_ATTRIBUTE } from "../utils/top-layer";
 
@@ -18,6 +19,8 @@ export interface UseToastRegionOptions {
   ariaLabel?: MaybeRefOrGetter<string | undefined>;
   /** The region element, which is also what the toasts are looked up inside. */
   elementRef: MaybeRefOrGetter<HTMLElement | null | undefined>;
+  /** Key combination that moves focus to the region. An empty list turns it off. */
+  hotkey?: MaybeRefOrGetter<readonly string[] | undefined>;
   /** Stops every visible toast's clock. */
   onPauseAll: () => void;
   /** Restarts every visible toast's clock. */
@@ -47,11 +50,25 @@ const focusQuietly = (element: HTMLElement) => {
   element.focus({ preventScroll: true });
 };
 
+/** The `KeyboardEvent` booleans a hotkey entry can name. Anything else is an `event.code`. */
+const MODIFIERS = ["altKey", "ctrlKey", "metaKey", "shiftKey"] as const;
+
+const matchesHotkey = (event: KeyboardEvent, hotkey: readonly string[]) => {
+  // Every modifier has to agree, including the ones the combination does not name — otherwise
+  // Alt+T would also answer Ctrl+Alt+T, which belongs to whatever the user bound it to.
+  const modifiersAgree = MODIFIERS.every((name) => event[name] === hotkey.includes(name));
+  const keysAgree = hotkey.every(
+    (key) => MODIFIERS.includes(key as (typeof MODIFIERS)[number]) || event.code === key,
+  );
+
+  return modifiersAgree && keysAgree;
+};
+
 /**
  * The behaviour and accessibility wiring of the toast region, ported from react-aria's
  * `useToastRegion`.
  *
- * Three jobs, and they are only in one composable because they share the same state:
+ * Four jobs, and they are only in one composable because they share the same state:
  *
  * 1. **Naming.** A landmark region labelled with how many notifications it holds.
  * 2. **Pausing.** Hover *or* focus anywhere inside stops every visible toast's clock, so a toast
@@ -60,11 +77,17 @@ const focusQuietly = (element: HTMLElement) => {
  *    rather than dropping it on `<body>` — except under a pointer, where focus is pushed back out
  *    of the region, because a pointer user who is no longer hovering would otherwise hold every
  *    remaining clock paused by the focus they did not ask for.
+ * 4. **Reaching it.** A key combination that moves focus to the region from anywhere, because a
+ *    toast is announced where the user is not and tabbing to it means tabbing past everything
+ *    between. The listener is on the document rather than the region: the region is only in the
+ *    DOM while it holds a toast, so a listener of its own could never be the thing that reaches
+ *    it first.
  *
  * One narrowing, recorded rather than hidden: react-aria also registers the region with a
  * document-level landmark manager, which is what makes F6 cycle between landmarks. Nothing else
  * in react-aria registers one, so with a single registrant F6 has nowhere to go — the rendered
- * DOM is identical either way, and toasts are still reachable by Tab.
+ * DOM is identical either way, and toasts are still reachable by Tab. That is an argument about
+ * cycling between landmarks and not about reaching this one, which is why job 4 stands beside it.
  *
  * One simplification: react-aria runs focus-within and raw focus as two channels, because its
  * focus-within fires once on entry and it needs every change. `focusin` and `focusout` bubble and
@@ -99,6 +122,31 @@ export const useToastRegion = (options: UseToastRegionOptions): UseToastRegionRe
     hover.onPointerleave();
     updateTimers();
   };
+
+  const onDocumentKeydown = (event: KeyboardEvent) => {
+    const hotkey = toValue(options.hotkey) ?? DEFAULT_HOTKEY;
+    const element = toValue(options.elementRef);
+
+    if (hotkey.length === 0 || !element || !matchesHotkey(event, hotkey)) return;
+
+    // Claimed rather than let through, because Alt with a letter opens the menu bar on Windows
+    // and Linux and the region would take focus behind it.
+    event.preventDefault();
+    focusQuietly(element);
+  };
+
+  watch(
+    () => toValue(options.elementRef) ?? null,
+    (element, _previous, onCleanup) => {
+      if (!element || typeof document === "undefined") return;
+
+      document.addEventListener("keydown", onDocumentKeydown);
+      onCleanup(() => {
+        document.removeEventListener("keydown", onDocumentKeydown);
+      });
+    },
+    { flush: "post", immediate: true },
+  );
 
   /** The alertdialog elements, as of the last change to the visible toasts. */
   let toastElements: HTMLElement[] = [];

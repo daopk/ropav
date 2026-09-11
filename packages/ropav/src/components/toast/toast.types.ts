@@ -102,6 +102,14 @@ export interface ToastProviderProps {
   /** Pixels between stacked toasts. @default 12 */
   gap?: number;
   /**
+   * Key combination that moves focus to the region, as `KeyboardEvent` modifier names plus an
+   * `event.code`. Modifiers left out have to be up, so `Alt`+`T` does not answer `Ctrl`+`Alt`+`T`.
+   * Pass an empty list to turn it off.
+   *
+   * @default ["altKey", "KeyT"]
+   */
+  hotkey?: readonly string[];
+  /**
    * How many toasts are drawn at once. Visual only — the rest are faded out, not dropped.
    *
    * Defaults to the queue's own hint, and to 3 when it has none.

@@ -13,6 +13,8 @@ export interface ToastHostProps {
 export interface ToastRegionHostProps {
   /** Overrides the generated notification-count label. */
   ariaLabel?: string;
+  /** Key combination that moves focus to the region. */
+  hotkey?: readonly string[];
   onReady?: (api: UseToastRegionReturn) => void;
   queue: ToastQueue;
 }

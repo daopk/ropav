@@ -6,7 +6,10 @@ import { shallowRef } from "vue";
 import { useToastQueue } from "@/components/toast/toast-queue";
 import { useToastRegion } from "@/composables/use-toast-region";
 
-const props = withDefaults(defineProps<ToastRegionHostProps>(), { ariaLabel: undefined });
+const props = withDefaults(defineProps<ToastRegionHostProps>(), {
+  ariaLabel: undefined,
+  hotkey: undefined,
+});
 
 const element = shallowRef<HTMLElement | null>(null);
 
@@ -19,6 +22,7 @@ const { visibleToasts } = useToastQueue(() => props.queue);
 const api = useToastRegion({
   ariaLabel: () => props.ariaLabel,
   elementRef: element,
+  hotkey: () => props.hotkey,
   onPauseAll: () => props.queue.pauseAll(),
   onResumeAll: () => props.queue.resumeAll(),
   visibleToasts,

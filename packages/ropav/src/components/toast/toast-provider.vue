@@ -41,6 +41,7 @@ const setElement = (next: unknown) => {
 const region = useToastRegion({
   ariaLabel: () => props.ariaLabel,
   elementRef: element,
+  hotkey: () => props.hotkey,
   onPauseAll: () => queue.value.pauseAll(),
   onResumeAll: () => queue.value.resumeAll(),
   visibleToasts,
