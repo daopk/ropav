@@ -120,14 +120,14 @@ export const Default: Story = {
   }),
 };
 
+const expandedQueue = new ToastQueue({ maxVisibleToasts: 3 });
+
 /**
  * The opened-out stack, held open by the prop.
  *
  * Ordinarily the stack opens under the pointer, which no headless audit has — so the state that
  * gives every toast its own height back would never be looked at without a story that forces it.
  */
-const expandedQueue = new ToastQueue({ maxVisibleToasts: 3 });
-
 export const Expanded: Story = {
   render: () => ({
     components,

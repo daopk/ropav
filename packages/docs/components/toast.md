@@ -53,7 +53,9 @@ at it, that does not pause the timers.
 ## Placement
 
 `placement` on the provider decides which corner the stack grows from, and the animation follows
-it: toasts at the top slide down, toasts at the bottom slide up.
+it: toasts at the top slide down, toasts at the bottom slide up. The stack animates itself, so
+passing `createViewTransitionUpdate().wrapUpdate` as the queue's `wrapUpdate` is what swaps that
+for a chain of view transitions.
 
 ## Accessibility
 
