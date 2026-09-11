@@ -322,6 +322,20 @@ describe("Toast (browser)", () => {
       expect(region()).not.toHaveAttribute("data-expanded");
     });
 
+    it("opens the stack when the shortcut reaches it", async () => {
+      await stackOf(["First", "Second"]);
+
+      // The pointer has been over the stack in earlier cases, and a modifier chord deliberately
+      // does not move the shared modality — so this is the one keyboard path that has to say so
+      // for itself.
+      setInteractionModality("pointer");
+      await userEvent.keyboard("{Alt>}t{/Alt}");
+      await settled(region()!);
+
+      expect(region()).toHaveFocus();
+      expect(region()).toHaveAttribute("data-expanded", "true");
+    });
+
     it("folds again on Escape, and releases the focus that would reopen it", async () => {
       await stackOf(["First", "Second"]);
 

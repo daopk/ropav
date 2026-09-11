@@ -229,6 +229,12 @@ export const useToastRegion = (options: UseToastRegionOptions): UseToastRegionRe
     // and Linux and the region would take focus behind it.
     event.preventDefault();
     focusQuietly(element);
+
+    // Set after the focus it follows, because `focusin` decides this from the shared modality and
+    // a modifier chord deliberately does not move that — reaching the stack by shortcut would
+    // otherwise focus it without opening it.
+    isDismissed.value = false;
+    isFocusExpanding.value = true;
   };
 
   watch(
