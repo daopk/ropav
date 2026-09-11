@@ -182,6 +182,25 @@ describe("Toast", () => {
       expect(slot("toast-default-icon")).toBeNull();
     });
 
+    it("marks an indicator that replaced another, and leaves the first one unmarked", async () => {
+      const queue = new ToastQueue();
+
+      render({ queue });
+
+      const key = queue.add({ isLoading: true, title: "Saving" });
+
+      await settle();
+
+      // The indicator a toast arrives with is not a replacement, or every toast would animate in.
+      expect(slot("toast-indicator")).not.toHaveAttribute("data-swapped");
+
+      queue.update(key, { isLoading: false, title: "Saved", variant: "success" });
+      await settle();
+
+      expect(slot("toast-indicator")).toHaveAttribute("data-swapped", "true");
+      expect(slot("toast-default-icon")).not.toBeNull();
+    });
+
     it("renders an action button that reports its press", async () => {
       const queue = new ToastQueue();
       const onPress = vi.fn();

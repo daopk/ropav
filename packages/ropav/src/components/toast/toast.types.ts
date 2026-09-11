@@ -141,6 +141,12 @@ export interface ToastContentProps {
 
 export interface ToastIndicatorProps {
   class?: string;
+  /**
+   * Whether this indicator is replacing one the toast was already showing, which the stylesheet
+   * animates. The first indicator a toast renders is not a replacement and must not be marked as
+   * one, or every toast would arrive with its icon animating.
+   */
+  isSwapped?: boolean;
   /** Picks the default icon. Falls back to the toast's own variant. */
   variant?: ToastVariants["variant"];
 }

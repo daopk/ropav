@@ -173,6 +173,18 @@
   }
 }
 
+/* An indicator that replaced one the toast was already showing arrives, rather than appearing. */
+.rp-toast__indicator[data-swapped="true"] > * {
+  animation: var(--rp-motion) rp-toast-indicator-in 200ms var(--rp-ease-out-fluid);
+}
+
+@keyframes rp-toast-indicator-in {
+  from {
+    opacity: 0;
+    scale: 0.92;
+  }
+}
+
 /* Toast title */
 .rp-toast__title {
   font-size: var(--rp-text-sm);

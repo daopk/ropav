@@ -3,6 +3,7 @@ import type { ToastIndicatorProps } from "./toast.types";
 
 import { computed } from "vue";
 
+import { dataAttr } from "../../utils/assertion";
 import { DangerIcon, InfoIcon, SuccessIcon, WarningIcon } from "../icons";
 
 import { useToastItemContext } from "./toast.context";
@@ -31,7 +32,11 @@ const defaultIcon = computed(() => {
 </script>
 
 <template>
-  <div :class="['rp-toast__indicator', props.class]" data-slot="toast-indicator">
+  <div
+    :class="['rp-toast__indicator', props.class]"
+    :data-swapped="dataAttr(props.isSwapped)"
+    data-slot="toast-indicator"
+  >
     <slot>
       <component :is="defaultIcon" data-slot="toast-default-icon" />
     </slot>

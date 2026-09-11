@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type { QueuedToast } from "./toast.types";
 
-import { computed } from "vue";
+import { computed, shallowRef, watch } from "vue";
 
 import { useMediaQuery } from "../../composables/use-media-query";
 import SpinnerRoot from "../spinner/spinner-root.vue";
@@ -25,6 +25,24 @@ const content = computed(() => props.toast.content ?? {});
  */
 const isMobile = useMediaQuery("(max-width: 768px)");
 
+/**
+ * Which of the three indicators is showing. Tracked here rather than inside the indicator because
+ * the three are separate branches: settling a promise toast unmounts the spinner's instance and
+ * mounts a fresh one, which would have no memory of what it replaced.
+ */
+const indicatorKind = computed(() => {
+  if (content.value.isLoading === true) return "loading";
+
+  return content.value.indicator === undefined ? "default" : "custom";
+});
+
+const hasSwappedIndicator = shallowRef(false);
+
+// No `immediate`, so the indicator a toast arrives with is never treated as a replacement.
+watch(indicatorKind, () => {
+  hasSwappedIndicator.value = true;
+});
+
 const action = computed(() => {
   const value = content.value.actionProps;
 
@@ -44,13 +62,21 @@ const actionProps = computed(() => {
 <template>
   <ToastRoot :toast="props.toast" :variant="content.variant">
     <template v-if="content.indicator !== null">
-      <ToastIndicator v-if="content.isLoading === true" :variant="content.variant">
+      <ToastIndicator
+        v-if="content.isLoading === true"
+        :is-swapped="hasSwappedIndicator"
+        :variant="content.variant"
+      >
         <SpinnerRoot color="current" size="sm" />
       </ToastIndicator>
-      <ToastIndicator v-else-if="content.indicator !== undefined" :variant="content.variant">
+      <ToastIndicator
+        v-else-if="content.indicator !== undefined"
+        :is-swapped="hasSwappedIndicator"
+        :variant="content.variant"
+      >
         <ToastRenderable :value="content.indicator" />
       </ToastIndicator>
-      <ToastIndicator v-else :variant="content.variant" />
+      <ToastIndicator v-else :is-swapped="hasSwappedIndicator" :variant="content.variant" />
     </template>
     <ToastContent>
       <ToastTitle v-if="Boolean(content.title)">

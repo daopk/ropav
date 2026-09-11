@@ -118,9 +118,46 @@ export class ToastQueue<T = ToastContentValue> {
       timer: timeout ? new Timer(() => this.close(key), timeout) : undefined,
     });
 
-    this.update("add");
+    this.notify("add");
 
     return key;
+  }
+
+  /**
+   * Replaces a toast's content where it stands, keeping its key and its place in the stack.
+   * Returns `false` for a key the queue no longer holds.
+   *
+   * Options the caller leaves out are kept rather than resolved: a toast asked to stay until
+   * something closes it must not pick up the default life because its message changed. That is
+   * why this reads the keys that are *present* instead of their values — an explicit `undefined`
+   * is a caller clearing a handler, and an absent key is a caller not mentioning one.
+   *
+   * The entry is replaced rather than mutated so the toast re-renders. The list is shallow, so a
+   * toast whose fields changed underneath it is the same object as far as anything watching is
+   * concerned; a new one keyed the same patches the node it already has.
+   */
+  update(key: string, content: T, options: ToastOptions = {}): boolean {
+    const index = this.queue.findIndex((toast) => toast.key === key);
+
+    if (index < 0) return false;
+
+    const previous = this.queue[index]!;
+    const next: QueuedToast<T> = { ...previous, content };
+
+    if ("onClose" in options) next.onClose = options.onClose;
+
+    if ("timeout" in options) {
+      // A fresh clock, because the one it had is the one the toast is already counting down.
+      // Handing the toast a new identity is what makes it start again on the new delay.
+      previous.timer?.pause();
+      next.timeout = options.timeout;
+      next.timer = options.timeout ? new Timer(() => this.close(key), options.timeout) : undefined;
+    }
+
+    this.queue[index] = next;
+    this.notify("add");
+
+    return true;
   }
 
   /** Closes one toast. Notifies even for a key that is no longer held. */
@@ -134,13 +171,13 @@ export class ToastQueue<T = ToastContentValue> {
       this.queue.splice(index, 1);
     }
 
-    this.update("remove");
+    this.notify("remove");
   }
 
   /** Drops every toast at once. Deliberately does not run their `onClose` — nothing closed them. */
   clear(): void {
     this.queue = [];
-    this.update("clear");
+    this.notify("clear");
   }
 
   /** Stops the clocks of the toasts on screen. */
@@ -162,7 +199,7 @@ export class ToastQueue<T = ToastContentValue> {
     };
   }
 
-  private update(action: ToastAction): void {
+  private notify(action: ToastAction): void {
     this.visibleToasts = [...this.queue];
 
     this.wrapUpdate(() => {
@@ -304,6 +341,14 @@ export interface ToastFunction {
   promise: <T>(promise: (() => Promise<T>) | Promise<T>, options: ToastPromiseOptions<T>) => string;
   resumeAll: () => void;
   success: (message: ToastRenderable, options?: Omit<ToastAddOptions, "variant">) => string;
+  /**
+   * Replaces a toast's message where it stands, and adds one if that toast has already gone.
+   * Returns the key either way.
+   *
+   * `timeout` and `onClose` are kept when they are not mentioned; everything else describes the
+   * new content and is replaced.
+   */
+  update: (key: string, message: ToastRenderable, options?: ToastAddOptions) => string;
   warning: (message: ToastRenderable, options?: Omit<ToastAddOptions, "variant">) => string;
 }
 
@@ -321,27 +366,29 @@ const resolve = <T>(
   typeof value === "function" ? (value as (input: T) => ToastRenderable)(input) : value;
 
 export const createToastFunction = (queue: ToastQueue<ToastContentValue>): ToastFunction => {
+  const contentOf = (message: ToastRenderable, options: ToastAddOptions): ToastContentValue => ({
+    actionProps: options.actionProps,
+    description: options.description,
+    indicator: options.indicator,
+    isLoading: options.isLoading,
+    title: message,
+    variant: options.variant ?? "default",
+  });
+
+  // Deferred a frame, so the callback runs after the removal it is reporting has been painted
+  // rather than in the middle of it.
+  const deferred = (onClose: (() => void) | undefined) =>
+    onClose
+      ? () => {
+          requestAnimationFrame(() => onClose());
+        }
+      : undefined;
+
   const add = (message: ToastRenderable, options: ToastAddOptions = {}): string =>
-    queue.add(
-      {
-        actionProps: options.actionProps,
-        description: options.description,
-        indicator: options.indicator,
-        isLoading: options.isLoading,
-        title: message,
-        variant: options.variant ?? "default",
-      },
-      {
-        onClose: options.onClose
-          ? () => {
-              // Deferred a frame, so the callback runs after the removal it is reporting has been
-              // painted rather than in the middle of it.
-              requestAnimationFrame(() => options.onClose?.());
-            }
-          : undefined,
-        timeout: options.timeout,
-      },
-    );
+    queue.add(contentOf(message, options), {
+      onClose: deferred(options.onClose),
+      timeout: options.timeout,
+    });
 
   const withVariant =
     (variant: NonNullable<ToastContentValue["variant"]>) =>
@@ -360,6 +407,21 @@ export const createToastFunction = (queue: ToastQueue<ToastContentValue>): Toast
   toastFn.success = withVariant("success");
   toastFn.warning = withVariant("warning");
 
+  toastFn.update = (key, message, options = {}) => {
+    // Only the keys the caller spelled out travel on, so the queue can tell "leave this alone"
+    // apart from "set this to nothing".
+    const inherited: ToastOptions = {
+      ...("onClose" in options ? { onClose: deferred(options.onClose) } : null),
+      ...("timeout" in options ? { timeout: options.timeout } : null),
+    };
+
+    if (queue.update(key, contentOf(message, options), inherited)) return key;
+
+    // The toast has already gone, and a new one has nothing to inherit — so it resolves the
+    // defaults the way any other addition does.
+    return add(message, options);
+  };
+
   toastFn.promise = <T>(
     promise: (() => Promise<T>) | Promise<T>,
     options: ToastPromiseOptions<T>,
@@ -372,16 +434,27 @@ export const createToastFunction = (queue: ToastQueue<ToastContentValue>): Toast
       { timeout: 0 },
     );
 
-    void pending.then(
-      (data) => {
-        queue.close(loadingKey);
-        toastFn.success(resolve(options.success, data));
-      },
-      (error: Error) => {
-        queue.close(loadingKey);
-        toastFn.danger(resolve(options.error, error));
-      },
-    );
+    // Settled in place rather than closed and re-added, so the message the user is already
+    // reading becomes the outcome instead of being replaced by a second toast. The timeout is
+    // named explicitly: this one was added persistent, and an omitted one would be kept.
+    // Chained rather than a second argument to `then`, so a message factory that throws settles
+    // the toast as a failure too. The loading toast is persistent and is now updated instead of
+    // closed, so anything that escapes here would leave it spinning for good.
+    void pending
+      .then((data) => {
+        toastFn.update(loadingKey, resolve(options.success, data), {
+          isLoading: false,
+          timeout: DEFAULT_TOAST_TIMEOUT,
+          variant: "success",
+        });
+      })
+      .catch((error: Error) => {
+        toastFn.update(loadingKey, resolve(options.error, error), {
+          isLoading: false,
+          timeout: DEFAULT_TOAST_TIMEOUT,
+          variant: "danger",
+        });
+      });
 
     // Returned synchronously, so a caller can close the loading toast itself.
     return loadingKey;

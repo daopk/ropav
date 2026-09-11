@@ -100,6 +100,7 @@ export const CONFIGURATION_ATTRIBUTES = [
   "side",
   "size",
   "slot",
+  "swapped",
   "theme",
   "top-bottom-scroll",
   "top-scroll",

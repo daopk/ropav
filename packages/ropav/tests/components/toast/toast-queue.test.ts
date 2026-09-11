@@ -372,6 +372,106 @@ describe("toast", () => {
     expect(queue.visibleToasts).toHaveLength(0);
   });
 
+  describe("update", () => {
+    it("replaces the message where it stands, keeping the key and the place in the stack", () => {
+      const queue = new ToastQueue();
+      const scoped = createToastFunction(queue);
+
+      const first = scoped("First");
+      const middle = scoped("Middle");
+
+      scoped("Last");
+
+      const before = queue.visibleToasts.findIndex((entry) => entry.key === middle);
+
+      expect(scoped.update(middle, "Changed", { variant: "success" })).toBe(middle);
+
+      const after = queue.visibleToasts.findIndex((entry) => entry.key === middle);
+
+      expect(after).toBe(before);
+      expect(queue.visibleToasts[after]?.content).toMatchObject({
+        title: "Changed",
+        variant: "success",
+      });
+      expect(queue.visibleToasts.map((entry) => entry.key)).toContain(first);
+    });
+
+    it("keeps a countdown the caller did not mention", () => {
+      const queue = new ToastQueue();
+      const scoped = createToastFunction(queue);
+
+      const key = scoped("Working", { timeout: 0 });
+
+      scoped.update(key, "Still working");
+
+      // A toast asked to stay until something closes it must not pick up the default life
+      // because its message changed.
+      expect(queue.visibleToasts[0]?.timeout).toBe(0);
+      expect(queue.visibleToasts[0]?.timer).toBeUndefined();
+    });
+
+    it("restarts the countdown on a timeout it is given", () => {
+      const queue = new ToastQueue();
+      const scoped = createToastFunction(queue);
+
+      const key = scoped("Working", { timeout: 5000 });
+      const original = queue.visibleToasts[0]?.timer;
+
+      scoped.update(key, "Nearly", { timeout: 5000 });
+
+      // A new identity is what tells the mounted toast to start again on this delay.
+      expect(queue.visibleToasts[0]?.timer).toBeDefined();
+      expect(queue.visibleToasts[0]?.timer).not.toBe(original);
+    });
+
+    it("keeps a close handler it is not given, and drops one it is given empty", () => {
+      const queue = new ToastQueue();
+      const scoped = createToastFunction(queue);
+      const onClose = vi.fn();
+
+      const kept = scoped("Kept", { onClose });
+
+      scoped.update(kept, "Still kept");
+      queue.close(kept);
+      expect(queue.visibleToasts).toHaveLength(0);
+
+      const cleared = scoped("Cleared", { onClose });
+
+      scoped.update(cleared, "Now silent", { onClose: undefined });
+      queue.close(cleared);
+
+      // Only the first toast still had a handler to run, and it is deferred a frame.
+      return vi.waitFor(() => {
+        expect(onClose).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    it("adds a toast when the key has already gone", () => {
+      const queue = new ToastQueue();
+      const scoped = createToastFunction(queue);
+
+      const key = scoped.update("_gone", "Arrived late");
+
+      expect(key).not.toBe("_gone");
+      expect(queue.visibleToasts).toHaveLength(1);
+      expect(queue.visibleToasts[0]?.content).toMatchObject({ title: "Arrived late" });
+      expect(queue.visibleToasts[0]?.timeout).toBe(DEFAULT_TOAST_TIMEOUT);
+    });
+
+    it("hands the region a new entry, since nothing watches the fields of the old one", () => {
+      const queue = new ToastQueue();
+      const scoped = createToastFunction(queue);
+
+      const key = scoped("Before");
+      const original = queue.visibleToasts[0];
+
+      scoped.update(key, "After");
+
+      expect(queue.visibleToasts[0]).not.toBe(original);
+      expect(original?.content).toMatchObject({ title: "Before" });
+    });
+  });
+
   describe("promise", () => {
     it("shows a persistent loading toast and returns its key synchronously", () => {
       const queue = new ToastQueue();
@@ -393,7 +493,7 @@ describe("toast", () => {
       const queue = new ToastQueue();
       const scoped = createToastFunction(queue);
 
-      scoped.promise(Promise.resolve(3), {
+      const key = scoped.promise(Promise.resolve(3), {
         error: "Failed",
         loading: "Saving",
         success: (count: number) => `Saved ${count}`,
@@ -406,6 +506,32 @@ describe("toast", () => {
           variant: "success",
         });
       });
+
+      // The same toast settled, rather than one closing and another arriving in its place.
+      expect(queue.visibleToasts[0]?.key).toBe(key);
+      expect(queue.visibleToasts[0]?.content.isLoading).toBe(false);
+    });
+
+    it("starts the countdown the loading toast was added without", async () => {
+      const queue = new ToastQueue();
+      const scoped = createToastFunction(queue);
+
+      const key = scoped.promise(Promise.resolve("ok"), {
+        error: "Failed",
+        loading: "Saving",
+        success: "Saved",
+      });
+
+      expect(queue.visibleToasts[0]?.timeout).toBe(0);
+
+      // Settling has to name the timeout, because a persistent toast keeps what it had.
+      await vi.waitFor(() => {
+        expect(queue.visibleToasts[0]?.content).toMatchObject({ title: "Saved" });
+      });
+
+      expect(queue.visibleToasts[0]?.key).toBe(key);
+      expect(queue.visibleToasts[0]?.timeout).toBe(DEFAULT_TOAST_TIMEOUT);
+      expect(queue.visibleToasts[0]?.timer).toBeDefined();
     });
 
     it("replaces the loading toast with a danger toast built from the error", async () => {
@@ -422,6 +548,26 @@ describe("toast", () => {
         expect(queue.visibleToasts).toHaveLength(1);
         expect(queue.visibleToasts[0]?.content).toMatchObject({
           title: "Failed: nope",
+          variant: "danger",
+        });
+      });
+    });
+
+    it("routes a success factory that throws to the error branch", async () => {
+      const queue = new ToastQueue();
+      const scoped = createToastFunction(queue);
+
+      scoped.promise(Promise.resolve("ok"), {
+        error: (error: Error) => `Failed: ${error.message}`,
+        loading: "Saving",
+        success: () => {
+          throw new Error("render");
+        },
+      });
+
+      await vi.waitFor(() => {
+        expect(queue.visibleToasts[0]?.content).toMatchObject({
+          title: "Failed: render",
           variant: "danger",
         });
       });
