@@ -20,6 +20,15 @@ export const DEFAULT_TOAST_WIDTH = 460;
 export const DEFAULT_TOAST_TIMEOUT = 4000;
 
 /**
+ * Milliseconds after which a closed toast is dropped whether or not it reported its exit.
+ *
+ * Not the length of the exit, which the toast waits out against its own animations. This is the
+ * ceiling for a toast that can never report one — a slot the caller filled with something other
+ * than a `ToastRoot` — so a list of them cannot grow without end.
+ */
+export const EXIT_FALLBACK = 2000;
+
+/**
  * The key combination that moves focus to the toast region.
  *
  * An entry naming one of the `KeyboardEvent` modifier booleans matches that modifier; anything

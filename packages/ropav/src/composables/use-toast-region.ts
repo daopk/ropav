@@ -4,6 +4,7 @@ import { computed, onScopeDispose, shallowRef, toValue, watch } from "vue";
 
 import { DEFAULT_HOTKEY } from "../components/toast/toast.constants";
 import { toastStrings } from "../i18n/toast";
+import { willOpenKeyboard } from "../utils/platform";
 import { TOP_LAYER_ATTRIBUTE } from "../utils/top-layer";
 
 import {
@@ -23,8 +24,6 @@ export interface UseToastRegionOptions {
   ariaLabel?: MaybeRefOrGetter<string | undefined>;
   /** The region element, which is also what the toasts are looked up inside. */
   elementRef: MaybeRefOrGetter<HTMLElement | null | undefined>;
-  /** How many toasts are on screen and not already leaving. A single toast never expands. */
-  expandableCount?: MaybeRefOrGetter<number>;
   /** Key combination that moves focus to the region. An empty list turns it off. */
   hotkey?: MaybeRefOrGetter<readonly string[] | undefined>;
   /** Forces the stack open regardless of pointer or focus. */
@@ -48,8 +47,6 @@ export interface UseToastRegionReturn {
   isExpanded: ComputedRef<boolean>;
   onFocusin: (event: FocusEvent) => void;
   onFocusout: (event: FocusEvent) => void;
-  /** Folds the stack on Escape, and releases the focus that would reopen it. */
-  onKeydown: (event: KeyboardEvent) => void;
   onPointerenter: (event: PointerEvent) => void;
   onPointerleave: () => void;
   /** Reasserts hover when the stack moves under a cursor that has not itself moved. */
@@ -117,7 +114,7 @@ export const useToastRegion = (options: UseToastRegionOptions): UseToastRegionRe
   // before the component that cared about it unmounted.
   onScopeDispose(retainInteractionModality(), true);
 
-  const isFocusWithin = shallowRef(false);
+  let isFocusWithin = false;
 
   /** Set by Escape, and cleared by the next thing that would open the stack on purpose. */
   const isDismissed = shallowRef(false);
@@ -133,11 +130,9 @@ export const useToastRegion = (options: UseToastRegionOptions): UseToastRegionRe
   const isFocusExpanding = shallowRef(false);
 
   const isExpanded = computed(() => {
-    // One toast has nothing to open out of, and counting the ones already leaving would keep a
-    // stack open around toasts that are on their way out.
-    if ((toValue(options.expandableCount) ?? toValue(options.visibleToasts).length) <= 1) {
-      return false;
-    }
+    // One toast has nothing to open out of. The ones already leaving are not in this list, so a
+    // stack is never held open around toasts that are on their way out.
+    if (toValue(options.visibleToasts).length <= 1) return false;
 
     if (toValue(options.isExpanded) === true) return true;
 
@@ -145,9 +140,18 @@ export const useToastRegion = (options: UseToastRegionOptions): UseToastRegionRe
   });
 
   const updateTimers = () => {
-    if (hover.isHovered.value || isFocusWithin.value) options.onPauseAll();
+    if (hover.isHovered.value || isFocusWithin) options.onPauseAll();
     else options.onResumeAll();
   };
+
+  /**
+   * Re-applied whenever the set of clocks changes, and not only when hover or focus moves.
+   *
+   * A toast added or updated while the pointer is on the stack mints a timer that the last
+   * `onPauseAll` could not have reached, and the toast starts that timer itself — so without this
+   * one toast counts down under a pointer that is holding every other toast frozen.
+   */
+  watch(() => toValue(options.visibleToasts), updateTimers, { flush: "post" });
 
   /**
    * Hover has to settle the clocks *in the handler*, not in a watcher on the state it sets.
@@ -188,16 +192,17 @@ export const useToastRegion = (options: UseToastRegionOptions): UseToastRegionRe
    *
    * Focus is released as well as the flag being set, because the expansion answers focus too: a
    * region that kept focus would reopen on the next thing that asked it.
+   *
+   * Hover is deliberately left where it is. The flag folds the stack on its own, and clearing
+   * hover as well would restart every clock under a pointer that has not moved — so the toasts
+   * being read would expire moments after being tidied out of the way.
    */
-  const onKeydown = (event: KeyboardEvent) => {
-    if (event.key !== "Escape") return;
-
+  const dismiss = () => {
     const element = toValue(options.elementRef);
     const active = typeof document === "undefined" ? null : document.activeElement;
 
     if (element && active instanceof HTMLElement && element.contains(active)) active.blur();
 
-    hover.onPointerleave();
     isDismissed.value = true;
     isFocusExpanding.value = false;
     updateTimers();
@@ -220,10 +225,30 @@ export const useToastRegion = (options: UseToastRegionOptions): UseToastRegionRe
   };
 
   const onDocumentKeydown = (event: KeyboardEvent) => {
+    // Heard here rather than on the region, which only receives a key while it already holds
+    // focus — and the stack is usually open because a pointer is on it, with focus left behind on
+    // the page. A stack that could not be folded from where the user is typing is not foldable.
+    if (event.key === "Escape") {
+      dismiss();
+
+      return;
+    }
+
     const hotkey = toValue(options.hotkey) ?? DEFAULT_HOTKEY;
     const element = toValue(options.elementRef);
 
     if (hotkey.length === 0 || !element || !matchesHotkey(event, hotkey)) return;
+
+    // A chord that produces a character belongs to the field it is typed into — Alt with a letter
+    // is one on macOS — so the shortcut stands down rather than swallowing it and taking the
+    // focus out of the field as well.
+    if (event.target instanceof Element && willOpenKeyboard(event.target)) return;
+
+    // One region answers, and it is the first to have claimed the combination. Several regions is
+    // the ordinary arrangement for a page showing toasts in more than one corner, and every one
+    // of them hears this — without the guard they would each preventDefault and each pull focus,
+    // leaving it wherever the last listener happened to be attached.
+    if (event.defaultPrevented) return;
 
     // Claimed rather than let through, because Alt with a letter opens the menu bar on Windows
     // and Linux and the region would take focus behind it.
@@ -242,11 +267,11 @@ export const useToastRegion = (options: UseToastRegionOptions): UseToastRegionRe
     (element, _previous, onCleanup) => {
       if (!element || typeof document === "undefined") return;
 
-      document.addEventListener("keydown", onDocumentKeydown);
-      // Capture, so it is heard even where something inside stops the event travelling.
+      // Capture, so both are heard even where something inside stops the event travelling.
+      document.addEventListener("keydown", onDocumentKeydown, true);
       document.addEventListener("pointerover", onDocumentPointerover, true);
       onCleanup(() => {
-        document.removeEventListener("keydown", onDocumentKeydown);
+        document.removeEventListener("keydown", onDocumentKeydown, true);
         document.removeEventListener("pointerover", onDocumentPointerover, true);
       });
     },
@@ -377,8 +402,8 @@ export const useToastRegion = (options: UseToastRegionOptions): UseToastRegionRe
     isDismissed.value = false;
     isFocusExpanding.value = getInteractionModality() === "keyboard";
 
-    if (!isFocusWithin.value) {
-      isFocusWithin.value = true;
+    if (!isFocusWithin) {
+      isFocusWithin = true;
       lastFocused = event.relatedTarget instanceof HTMLElement ? event.relatedTarget : null;
       updateTimers();
     }
@@ -414,7 +439,7 @@ export const useToastRegion = (options: UseToastRegionOptions): UseToastRegionRe
       return;
     }
 
-    isFocusWithin.value = false;
+    isFocusWithin = false;
     isFocusExpanding.value = false;
     lastFocused = null;
     focusedIndex = -1;
@@ -425,7 +450,6 @@ export const useToastRegion = (options: UseToastRegionOptions): UseToastRegionRe
     isExpanded,
     onFocusin,
     onFocusout,
-    onKeydown,
     onPointerenter,
     onPointerleave,
     onPointermove,

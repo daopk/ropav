@@ -3,7 +3,7 @@ import type { QueuedToast, ToastProviderProps, ToastProviderSlotProps } from "./
 import type { CSSProperties } from "vue";
 
 import { toastVariants } from "@ropav/styles";
-import { computed, shallowRef, watch } from "vue";
+import { computed, onScopeDispose, shallowRef, watch } from "vue";
 
 import { useLocale } from "../../composables/use-locale";
 import { useToastRegion } from "../../composables/use-toast-region";
@@ -17,6 +17,7 @@ import {
   DEFAULT_MAX_VISIBLE_TOAST,
   DEFAULT_SCALE_FACTOR,
   DEFAULT_TOAST_WIDTH,
+  EXIT_FALLBACK,
 } from "./toast.constants";
 import { provideToastRegionContext } from "./toast.context";
 
@@ -42,19 +43,44 @@ const { visibleToasts } = useToastQueue(queue);
  */
 const exiting = shallowRef<QueuedToast[]>([]);
 
+/**
+ * Timeouts that let a held toast go even if it never reports its exit.
+ *
+ * A backstop rather than the length of the animation, which the toast itself waits out: the
+ * provider's slot is the caller's to fill, and a slot that renders its own markup instead of a
+ * `ToastRoot` has nothing that would ever report. Without this, every closed toast would stay in
+ * the list for the life of the page.
+ */
+const exitFallbacks = new Map<string, ReturnType<typeof setTimeout>>();
+
+const release = (key: string) => {
+  clearTimeout(exitFallbacks.get(key));
+  exitFallbacks.delete(key);
+  exiting.value = exiting.value.filter((entry) => entry.key !== key);
+};
+
 watch(visibleToasts, (next, previous) => {
   if (!previous) return;
 
   const live = new Set(next.map((entry) => entry.key));
-  const held = new Set(exiting.value.map((entry) => entry.key));
-  const gone = previous.filter((entry) => !live.has(entry.key) && !held.has(entry.key));
+  const gone = previous.filter((entry) => !live.has(entry.key));
 
-  if (gone.length > 0) exiting.value = [...exiting.value, ...gone];
+  if (gone.length === 0) return;
 
-  // A key that came back — the same toast re-added — is live again and stops exiting.
-  if (exiting.value.some((entry) => live.has(entry.key))) {
-    exiting.value = exiting.value.filter((entry) => !live.has(entry.key));
+  exiting.value = [...exiting.value, ...gone];
+
+  for (const entry of gone) {
+    exitFallbacks.set(
+      entry.key,
+      setTimeout(() => release(entry.key), EXIT_FALLBACK),
+    );
   }
+});
+
+onScopeDispose(() => {
+  for (const timeout of exitFallbacks.values()) clearTimeout(timeout);
+
+  exitFallbacks.clear();
 });
 
 const exitingKeys = computed(() => new Set(exiting.value.map((entry) => entry.key)));
@@ -72,7 +98,6 @@ const region = useToastRegion({
   ariaLabel: () => props.ariaLabel,
   elementRef: element,
   hotkey: () => props.hotkey,
-  expandableCount: () => visibleToasts.value.length,
   isExpanded: () => props.isExpanded,
   onPauseAll: () => queue.value.pauseAll(),
   onResumeAll: () => queue.value.resumeAll(),
@@ -102,9 +127,7 @@ provideToastRegionContext({
   maxVisibleToasts: computed(
     () => props.maxVisibleToasts ?? queue.value.maxVisibleToasts ?? DEFAULT_MAX_VISIBLE_TOAST,
   ),
-  onExitFinished: (key) => {
-    exiting.value = exiting.value.filter((entry) => entry.key !== key);
-  },
+  onExitFinished: release,
   onToastHeightChange: (key, height) => {
     if (heights.value[key] === height) return;
 
@@ -153,7 +176,6 @@ const CONTENTS_STYLE: CSSProperties = { display: "contents" };
       v-bind="region.regionAttrs.value"
       @focusin="region.onFocusin"
       @focusout="region.onFocusout"
-      @keydown="region.onKeydown"
       @pointerenter="region.onPointerenter"
       @pointerleave="region.onPointerleave"
       @pointermove="region.onPointermove"
