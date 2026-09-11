@@ -104,5 +104,23 @@
      */
     --rp-border-width-field: var(--rp-field-border-width, var(--rp-border-width));
     --rp-shadow-overlay: var(--rp-overlay-shadow);
+
+    /*
+     * The one stacking level every portalled overlay sits on, and the only place it is written.
+     *
+     * A popover-level overlay — a dropdown, a tooltip, a select's list — is positioned from
+     * JavaScript and carries its z-index as an inline style, which no stylesheet rule can
+     * outrank. So the modal-level surfaces, which can only declare theirs in CSS, have to match
+     * that level rather than sit under it. Equal values leave the portal mount order to decide,
+     * which is what is wanted in both directions: a modal opened from a dropdown covers the
+     * closing dropdown, and a select opened inside a modal still renders above the modal.
+     *
+     * Here rather than in a theme for the same reason as the two colours above: the stacking
+     * order of the overlays is not something a palette has an opinion about.
+     */
+    --rp-z-index-overlay: 100000;
+
+    /* A toast stays reachable while a modal-level overlay is open. */
+    --rp-z-index-toast: calc(var(--rp-z-index-overlay) + 1);
   }
 }

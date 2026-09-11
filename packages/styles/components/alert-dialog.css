@@ -58,7 +58,7 @@
 .rp-alert-dialog__backdrop {
   position: fixed;
   inset: 0px;
-  z-index: 50;
+  z-index: var(--rp-z-index-overlay);
   display: flex;
   flex-direction: row;
   align-items: center;

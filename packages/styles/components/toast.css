@@ -4,7 +4,7 @@
 .rp-toast-region {
   pointer-events: none;
   position: fixed;
-  z-index: 50;
+  z-index: var(--rp-z-index-toast);
   --rp-outline-style: none;
   outline-style: none;
   width: calc(100vw - 2rem);

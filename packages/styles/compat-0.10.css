@@ -117,5 +117,7 @@
     --warning-soft-foreground: var(--rp-warning-soft-foreground);
     --warning-soft-hover: var(--rp-warning-soft-hover);
     --white: var(--rp-white);
+    --z-index-overlay: var(--rp-z-index-overlay);
+    --z-index-toast: var(--rp-z-index-toast);
   }
 }

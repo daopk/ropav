@@ -58,7 +58,7 @@
 .rp-drawer__backdrop {
   position: fixed;
   inset: 0px;
-  z-index: 50;
+  z-index: var(--rp-z-index-overlay);
   height: var(--visual-viewport-height);
   width: 100%;
   opacity: 1;
@@ -121,7 +121,7 @@
   pointer-events: none;
   position: fixed;
   inset: 0px;
-  z-index: 50;
+  z-index: var(--rp-z-index-overlay);
   display: flex;
   height: var(--visual-viewport-height);
   width: 100%;

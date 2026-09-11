@@ -61,8 +61,11 @@ export interface UseOverlayPositionReturn {
   updatePosition: () => void;
 }
 
-/** Overlays sit above the page; matched to what the React build renders. */
-const OVERLAY_Z_INDEX = 100000;
+/**
+ * Overlays sit above the page. The value lives in the stylesheet so the modal-level surfaces,
+ * which can only declare theirs in CSS, resolve to the same level as this inline one.
+ */
+const OVERLAY_Z_INDEX = "var(--rp-z-index-overlay)";
 
 /** Whether an element or one of its descendants holds focus. */
 const isFocusWithin = (element: Element) => {
@@ -349,14 +352,14 @@ export const useOverlayPosition = (
           "max-height": "100vh",
           position: "fixed",
           top: "0px",
-          "z-index": String(OVERLAY_Z_INDEX),
+          "z-index": OVERLAY_Z_INDEX,
         };
       }
 
       const style: Record<string, string> = {
         "max-height": `${resolved.maxHeight}px`,
         position: "absolute",
-        "z-index": String(OVERLAY_Z_INDEX),
+        "z-index": OVERLAY_Z_INDEX,
       };
 
       for (const [key, value] of Object.entries(resolved.position)) {
