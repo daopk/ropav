@@ -165,15 +165,16 @@
   height: calc(var(--rp-spacing) * 3);
   color: inherit;
 
-  /* The close button is already `position: relative`, so the overlay stays on this button. */
+  /*
+   * The close button is already `position: relative`, so the overlay stays on this button. Sized
+   * by insets alone rather than centred with a translate: `translate` is physical and an
+   * `inset-inline-start` is not, so the two disagree under RTL and the target lands beside the
+   * button instead of over it.
+   */
   &::after {
     content: "";
     position: absolute;
-    inset-block-start: 50%;
-    inset-inline-start: 50%;
-    width: 24px;
-    height: 24px;
-    translate: -50% -50%;
+    inset: calc(50% - 12px);
   }
 
   /* SVG icon styling */
