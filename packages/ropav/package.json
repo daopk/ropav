@@ -24,6 +24,7 @@
     "directory": "packages/ropav"
   },
   "files": [
+    "AGENTS.md",
     "dist"
   ],
   "type": "module",

@@ -9,6 +9,8 @@ export interface ApiPart {
   /** The name the package exports it under, not the file's. */
   name: string;
   props: readonly ApiProp[];
+  /** The part every other one in the family has to sit inside. */
+  root?: true;
   slots: readonly ApiSlot[];
 }
 

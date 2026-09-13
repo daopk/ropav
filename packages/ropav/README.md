@@ -5,7 +5,11 @@ A Vue 3 component library built on [Vue Vapor](https://github.com/vuejs/core-vap
 [`ropav`](https://www.npmjs.com/package/ropav).
 
 **[Documentation](https://ropav.netlify.app)** · [Components](https://ropav.netlify.app/components/)
-· [Theming](https://ropav.netlify.app/theming/) · [Storybook](https://ropav-storybook.netlify.app)
+· [Patterns](https://ropav.netlify.app/patterns/) · [Theming](https://ropav.netlify.app/theming/)
+· [Storybook](https://ropav-storybook.netlify.app)
+
+Writing this with a coding agent: point it at [`AGENTS.md`](./AGENTS.md), which ships in the
+package, or at [llms-full.txt](https://ropav.netlify.app/llms-full.txt) for every component at once.
 
 > Ropav is a port of [HeroUI v3](https://github.com/heroui-inc/heroui) to Vue Vapor: the style layer is
 > vendored from `@heroui/styles@3.2.4`, the behaviour layer is re-implemented from React Aria.

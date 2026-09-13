@@ -17,6 +17,9 @@ export const SRC = join(ROPAV, "src");
 export const DOCS = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 export const OUT_DIR = join(DOCS, ".vitepress", "generated");
 
+/** Where the built site answers, for the absolute links a file fetched out of context needs. */
+export const SITE = "https://ropav.netlify.app";
+
 /** A prop the library declares, rather than one carried in from the DOM's own attributes. */
 export const isAuthored = (prop: PropertyMeta): boolean =>
   prop.getDeclarations().some((declaration) => declaration.file.startsWith(SRC));
@@ -26,6 +29,14 @@ export const HEADER = `/**
  *
  * Run \`pnpm generate\`, or let \`predev\` / \`prebuild\` do it.
  */`;
+
+/** The site's static root, served from `/`. Not source, so it never goes near the formatter. */
+export const emitPublic = (name: string, source: string): void => {
+  const dir = join(DOCS, "public");
+
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(join(dir, name), source);
+};
 
 export const emit = (name: string, source: string): void => {
   mkdirSync(OUT_DIR, { recursive: true });

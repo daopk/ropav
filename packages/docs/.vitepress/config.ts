@@ -2,13 +2,13 @@ import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vitepress";
 
 import { playgroundBlock } from "./markdown/playground-block.ts";
+import { SITE } from "./scripts/shared.ts";
 import { colorReplacements } from "./theme/playground/code-theme.ts";
 
 /**
  * Puts the stored palette on `<html>` before the first paint, so a reader who chose one does
  * not watch the default flash past. Mirrors the appearance class VitePress restores itself.
  */
-const SITE = "https://ropav.netlify.app";
 const STORYBOOK = "https://ropav-storybook.netlify.app";
 
 const PALETTE_BOOT = `;(() => {
@@ -23,7 +23,11 @@ export default defineConfig({
   cleanUrls: true,
   description:
     "Accessible Vue components built with Vapor Mode — keyboard, focus and screen-reader behaviour included, themeable down to a single state.",
-  head: [["script", { id: "check-palette" }, PALETTE_BOOT]],
+  head: [
+    ["script", { id: "check-palette" }, PALETTE_BOOT],
+    // Findable from any page, not only from the root a crawler happens to land on.
+    ["link", { href: "/llms.txt", rel: "alternate", type: "text/plain" }],
+  ],
 
   // One constant drives the build and the browser, so a repainted block matches its neighbours.
   markdown: { colorReplacements, config: playgroundBlock },

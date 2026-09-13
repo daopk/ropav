@@ -42,7 +42,7 @@ const families = (): string[] => {
  * report the internals too — a select ships a hidden native select that nothing exports — and
  * the barrel is also where a part's public name is decided (`SelectRoot as Select`).
  */
-const parts = (family: string): { file: string; name: string }[] => {
+export const parts = (family: string): { file: string; name: string; root: boolean }[] => {
   const path = join(SRC, "components", family, "index.ts");
   const source = ts.createSourceFile(
     path,
@@ -63,6 +63,25 @@ const parts = (family: string): { file: string; name: string }[] => {
       sfc.set(statement.importClause.name.text, statement.moduleSpecifier.text);
     }
 
+    /*
+     * The other spelling: a family that never imports its parts first re-exports each SFC's
+     * default straight out of the barrel. `virtualizer` and `icons` are written that way.
+     */
+    if (
+      ts.isExportDeclaration(statement) &&
+      statement.moduleSpecifier &&
+      ts.isStringLiteral(statement.moduleSpecifier) &&
+      statement.moduleSpecifier.text.endsWith(".vue") &&
+      statement.exportClause &&
+      ts.isNamedExports(statement.exportClause)
+    ) {
+      const file = statement.moduleSpecifier.text;
+
+      for (const element of statement.exportClause.elements) {
+        found.push({ file: join("components", family, file), name: element.name.text });
+      }
+    }
+
     // A re-export carries a module specifier; only the local one renames what this file imported.
     if (ts.isExportDeclaration(statement) && !statement.moduleSpecifier && statement.exportClause) {
       if (!ts.isNamedExports(statement.exportClause)) continue;
@@ -77,11 +96,17 @@ const parts = (family: string): { file: string; name: string }[] => {
   }
 
   // The root first, then the parts alphabetically — the order a page introduces them in.
-  return found.sort((a, b) => {
+  found.sort((a, b) => {
     const rootness = Number(b.file.endsWith("-root.vue")) - Number(a.file.endsWith("-root.vue"));
 
     return rootness || a.name.localeCompare(b.name);
   });
+
+  // A lone part is its own root. Three families name no file `-root.vue`, and two of them are that.
+  return found.map((part) => ({
+    ...part,
+    root: part.file.endsWith("-root.vue") || found.length === 1,
+  }));
 };
 
 /** Alphabetical is what a union normalises to; a size reads `sm, md, lg` or reads wrong. */
@@ -138,24 +163,53 @@ const toEvent = (name: string, type: string): ApiEvent => {
   return { name, payload: payload || "—" };
 };
 
-export const emitApi = (checker: ComponentMetaChecker): number => {
-  const emitted: string[] = [];
+/**
+ * Every family the package exports, read from the barrel that decides it. A directory listing
+ * would report the shared layers a component is built on, which nothing exports.
+ */
+export const publicFamilies = (): string[] => {
+  const source = readFileSync(join(SRC, "components", "index.ts"), "utf8");
 
-  for (const family of families()) {
-    const collected: ApiPart[] = [];
+  return [...source.matchAll(/^export \* from "\.\/([a-z0-9-]+)";$/gm)]
+    .map(([, dir]) => dir!)
+    .sort();
+};
 
-    for (const { file, name } of parts(family)) {
+/**
+ * The props, events and slots of every public family — not only the ones a page shows, because
+ * the reference the site generates for a machine to read covers the whole package.
+ */
+export const collectApi = (checker: ComponentMetaChecker): Record<string, ApiPart[]> => {
+  const collected: Record<string, ApiPart[]> = {};
+
+  for (const family of publicFamilies()) {
+    collected[family] = parts(family).map(({ file, name, root }) => {
       const meta = checker.getComponentMeta(join(SRC, file));
 
-      collected.push({
+      return {
         events: meta.events.map((event) => toEvent(event.name, event.type)),
         name,
         props: meta.props
           .filter((prop) => isAuthored(prop) && !UNIVERSAL.has(prop.name))
           .map((prop) => toProp(prop, family))
           .sort((a, b) => a.name.localeCompare(b.name)),
+        ...(root ? { root: true as const } : {}),
         slots: meta.slots.map(toSlot),
-      });
+      };
+    });
+  }
+
+  return collected;
+};
+
+export const emitApi = (api: Record<string, readonly ApiPart[]>): number => {
+  const emitted: string[] = [];
+
+  for (const family of families()) {
+    const collected = api[family];
+
+    if (!collected) {
+      throw new Error(`<Api family="${family}" /> names no component the package exports.`);
     }
 
     emitted.push(

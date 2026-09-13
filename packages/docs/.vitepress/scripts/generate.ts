@@ -12,8 +12,9 @@ import { join } from "node:path";
 
 import { createChecker } from "vue-component-meta";
 
-import { emitApi } from "./api";
+import { collectApi, emitApi } from "./api";
 import { emitControlSpecs } from "./control-specs";
+import { emitLlms } from "./llms";
 import { ROPAV } from "./shared";
 import { assertShikiMatchesVitePress } from "./shiki";
 import { emitStories } from "./stories";
@@ -25,15 +26,19 @@ const main = (): void => {
 
   const checker = createChecker(join(ROPAV, "tsconfig.json"), { schema: { ignore: [] } });
 
+  const api = collectApi(checker);
+
   const specs = emitControlSpecs(checker);
-  const families = emitApi(checker);
+  const families = emitApi(api);
   const stories = emitStories();
+  const llms = emitLlms(api);
 
   // eslint-disable-next-line no-console
   console.log(
     `Generated ${count(specs, "playground spec", "playground specs")}, ` +
       `${count(families, "API family", "API families")}, ` +
-      `${count(stories, "story entry", "story entries")}.`,
+      `${count(stories, "story entry", "story entries")}, ` +
+      `${count(llms, "agent file", "agent files")}.`,
   );
 };
 

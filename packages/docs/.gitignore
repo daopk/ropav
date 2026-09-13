@@ -2,3 +2,5 @@
 .vitepress/dist
 .vitepress/.temp
 .vitepress/generated
+public/llms-full.txt
+public/llms.txt

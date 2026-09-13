@@ -194,6 +194,12 @@ drops what you never import.
 import { Button } from "ropav/button";
 ```
 
+## Pointing an agent at this
+
+A coding agent writes better Ropav if it reads the arrangement rules first — they are in
+`node_modules/ropav/AGENTS.md` once the package is installed, and every component's arrangement
+and props are in [llms-full.txt](https://ropav.netlify.app/llms-full.txt).
+
 ## First component
 
 ```vue
