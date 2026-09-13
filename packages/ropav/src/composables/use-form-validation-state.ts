@@ -1,4 +1,4 @@
-import type { ComputedRef, MaybeRefOrGetter } from "vue";
+import type { ComputedRef, MaybeRefOrGetter, Ref } from "vue";
 
 import { computed, nextTick, shallowRef, toValue, watch } from "vue";
 
@@ -66,6 +66,13 @@ export const CUSTOM_VALIDITY_STATE: ValidationDetails = Object.freeze({
   valid: false,
 });
 
+/** A required field with nothing in it. What the browser reports under `"native"`. */
+export const MISSING_VALIDITY_STATE: ValidationDetails = Object.freeze({
+  ...VALID_VALIDITY_STATE,
+  valid: false,
+  valueMissing: true,
+});
+
 export const DEFAULT_VALIDATION_RESULT: ValidationResult = Object.freeze({
   isInvalid: false,
   validationDetails: VALID_VALIDITY_STATE,
@@ -124,6 +131,62 @@ export const getNativeValidation = (element: ValidatableElement): ValidationResu
   };
 };
 
+/**
+ * The kinds of control a required field can be. Each is a different sentence: a list asks to be
+ * chosen from, a checkbox to be ticked.
+ */
+export type RequiredControl = "checkbox" | "radio" | "select" | "text";
+
+const missingValueMessages = new Map<RequiredControl, string>();
+
+/**
+ * What the browser would say about an empty control of this kind.
+ *
+ * Read off a detached probe rather than translated here. The platform already holds the sentence,
+ * in the *browser's* locale — which is the locale a validation message belongs in, since it sits
+ * beside the browser's own — and it is the one the same field would report under `"native"`.
+ *
+ * Empty on a server, where the field cannot have been revealed yet and so has nothing to say.
+ */
+export const missingValueMessage = (kind: RequiredControl): string => {
+  const cached = missingValueMessages.get(kind);
+
+  if (cached !== undefined) return cached;
+  if (typeof document === "undefined") return "";
+
+  let probe: ValidatableElement;
+
+  if (kind === "select") {
+    probe = document.createElement("select");
+  } else {
+    const input = document.createElement("input");
+
+    if (kind !== "text") {
+      input.type = kind;
+      // A radio reports on its group rather than on itself, and an unnamed radio has none.
+      input.name = "probe";
+    }
+
+    probe = input;
+  }
+
+  probe.required = true;
+
+  const message = probe.validationMessage;
+
+  missingValueMessages.set(kind, message);
+
+  return message;
+};
+
+/** Whether a value counts as nothing. Covers every shape a field holds when it is empty. */
+export const isValueMissing = (value: unknown): boolean => {
+  if (value == null || value === "" || value === false) return true;
+  if (Array.isArray(value)) return value.length === 0;
+
+  return typeof value === "number" && Number.isNaN(value);
+};
+
 /** Errors a server returned, keyed by the `name` each field submits under. */
 export type FormValidationErrors = Record<string, string | string[]>;
 
@@ -132,6 +195,14 @@ export interface FormContext {
   validationErrors: ComputedRef<FormValidationErrors>;
   /** Default for every field inside, unless the field names its own. */
   validationBehavior: ComputedRef<ValidationBehavior>;
+  /**
+   * Bumped by every submit attempt.
+   *
+   * Under `"native"` a field learns of a failed submit from the browser, which fires `invalid` at
+   * it. Under `"aria"` the browser is not involved, so this is the only thing that tells a field
+   * holding an unrevealed error that it is now being asked for.
+   */
+  submitCount?: Readonly<Ref<number>>;
 }
 
 /**
@@ -163,6 +234,18 @@ export interface UseFormValidationStateOptions<T> {
   name?: MaybeRefOrGetter<string | string[] | undefined>;
   /** Validity a composite field worked out from its own parts. */
   builtinValidation?: MaybeRefOrGetter<ValidationResult | undefined>;
+  /**
+   * Whether the field has to hold a value.
+   *
+   * Enforced here only under `"aria"`. Under `"native"` the control carries the `required`
+   * attribute and the browser reaches the same verdict itself, so a second one here would only
+   * be a chance to disagree.
+   */
+  isRequired?: MaybeRefOrGetter<boolean | undefined>;
+  /** Which sentence a missing value is reported with. @default "text" */
+  requiredControl?: RequiredControl;
+  /** Whether the value counts as nothing. @default {@link isValueMissing} */
+  isEmpty?: (value: T | null | undefined) => boolean;
   /**
    * A validation state owned by something above, which this field reports through instead of
    * keeping one of its own.
@@ -234,14 +317,18 @@ export const isEqualValidation = (
  * Decide what a field's validation currently says, ported from React Aria's
  * `packages/react-stately/src/form/useFormValidationState.ts` (react-stately 3.49.0).
  *
- * Knows nothing about the DOM — `useFormValidation` is what connects this to a real input.
- * Four sources feed it, in a fixed order of precedence:
+ * Holds no element of its own — `useFormValidation` is what connects this to a real input.
+ * Five sources feed it, in a fixed order of precedence:
  *
  * ```
- * realtime        = controlled ?? server ?? client ?? builtin ?? valid
+ * realtime        = controlled ?? server ?? client ?? required ?? builtin ?? valid
  * display(native) = controlled ?? server ?? committed
- * display(aria)   = controlled ?? server ?? client ?? builtin ?? committed
+ * display(aria)   = controlled ?? server ?? client ?? required* ?? builtin ?? committed
  * ```
+ *
+ * `required` is the missing-value rule, and it is there for `"aria"` alone: under `"native"` the
+ * control carries the attribute and the browser reaches the verdict itself. The `*` is the reveal
+ * — it waits for a commit or a submit, so a form does not arrive with every required field red.
  *
  * `realtimeValidation` is what the field pushes onto the input through `setCustomValidity`,
  * so the browser blocks submission the moment the value stops being acceptable.
@@ -308,6 +395,25 @@ export const useFormValidationState = <T>(
     return result && !result.validationDetails.valid ? result : null;
   });
 
+  /*
+   * Only under `"aria"`. The value is read through the same `isEmpty` the caller can replace,
+   * because "nothing" is a different shape per field — a text field holds `""`, a select `null`,
+   * a checkbox `false`, a number field `NaN`.
+   */
+  const requiredError = computed<ValidationResult | null>(() => {
+    if (validationBehavior.value !== "aria") return null;
+    if (!toValue(options.isRequired)) return null;
+    if (!(options.isEmpty ?? isValueMissing)(toValue(options.value))) return null;
+
+    const message = missingValueMessage(options.requiredControl ?? "text");
+
+    return {
+      isInvalid: true,
+      validationDetails: MISSING_VALIDITY_STATE,
+      validationErrors: message ? [message] : [],
+    };
+  });
+
   const serverErrors = computed<FormValidationErrors>(() => form?.validationErrors.value ?? {});
 
   const serverErrorMessages = computed<string[]>(() => {
@@ -338,6 +444,21 @@ export const useFormValidationState = <T>(
   const nextNative = shallowRef<ValidationResult>(DEFAULT_VALIDATION_RESULT);
   /** What a commit has already revealed. */
   const committed = shallowRef<ValidationResult>(DEFAULT_VALIDATION_RESULT);
+  /**
+   * Whether the field has been asked to prove itself yet.
+   *
+   * A required field is empty from its first render, and `"aria"` shows a client error the moment
+   * it appears — so without this a form would arrive with every required field already red. It
+   * gates the missing-value verdict alone; a `validate` the caller wrote still reports as it types.
+   */
+  const isRevealed = shallowRef(false);
+
+  watch(
+    () => form?.submitCount?.value ?? 0,
+    (count) => {
+      if (count > 0) isRevealed.value = true;
+    },
+  );
 
   // A plain `let`, not a ref: nothing renders from it, and making it reactive would only
   // add a render pass between queueing a commit and performing it.
@@ -348,6 +469,7 @@ export const useFormValidationState = <T>(
       controlledError.value ??
       serverError.value ??
       clientError.value ??
+      requiredError.value ??
       builtinValidation.value ??
       DEFAULT_VALIDATION_RESULT,
   );
@@ -361,6 +483,7 @@ export const useFormValidationState = <T>(
       controlledError.value ??
       serverError.value ??
       clientError.value ??
+      (isRevealed.value ? requiredError.value : null) ??
       builtinValidation.value ??
       committed.value
     );
@@ -373,6 +496,7 @@ export const useFormValidationState = <T>(
   return {
     commitValidation: () => {
       isServerErrorCleared.value = true;
+      isRevealed.value = true;
 
       if (validationBehavior.value !== "native" || isCommitQueued) return;
 
@@ -393,6 +517,7 @@ export const useFormValidationState = <T>(
     realtimeValidation,
     resetValidation: () => {
       setCommitted(DEFAULT_VALIDATION_RESULT);
+      isRevealed.value = false;
       // Drop any queued commit, or a reset triggered from inside a change handler would be
       // undone a tick later by the commit that change had already scheduled.
       isCommitQueued = false;

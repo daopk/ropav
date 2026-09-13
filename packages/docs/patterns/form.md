@@ -55,8 +55,8 @@ Submit the form above without touching it to see one land.
 `validation-behavior` defaults to `"native"`: the browser blocks submission and the errors appear
 on a failed submit. `"aria"` marks the fields through ARIA, reveals errors as the value changes, and
 leaves submission alone — which is what you want when submitting is a fetch rather than a
-navigation. The browser is out of it entirely under `"aria"`, so `is-required` only announces
-itself and the check behind it is the caller's, as the demo above shows.
+navigation. `is-required` holds either way — the browser enforces it under `"native"`, and under
+`"aria"` the field reaches the same verdict itself, kept back until the first submit.
 
 ## Accessibility
 

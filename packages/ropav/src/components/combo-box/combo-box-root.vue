@@ -70,6 +70,7 @@ const state = useComboBoxState<T>({
   inputValue: () => props.inputValue,
   isInvalid: () => props.isInvalid,
   isReadOnly: () => props.isReadOnly,
+  isRequired: () => props.isRequired,
   itemDisabled: props.itemDisabled,
   itemKey: props.itemKey,
   items: () => props.items,

@@ -129,6 +129,7 @@ export const useColorFieldState = (options: UseColorFieldStateOptions = {}): Col
 
   const validation = useFormValidationState<Color | null>({
     isInvalid: () => toValue(options.isInvalid),
+    isRequired: () => toValue(options.isRequired),
     name: () => toValue(options.name),
     validate: () => toValue(options.validate),
     validationBehavior: () => toValue(options.validationBehavior),

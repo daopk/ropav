@@ -21,7 +21,7 @@ import { createListCollection } from "../utils/virtualizer-collection";
 import { useCollection } from "./use-collection";
 import { useControllableState } from "./use-controllable-state";
 import { useFilter } from "./use-filter";
-import { useFormValidationState } from "./use-form-validation-state";
+import { isValueMissing, useFormValidationState } from "./use-form-validation-state";
 import { useMenuTriggerState } from "./use-overlay-trigger-state";
 import { defaultItemTextValue } from "./use-select-state";
 import { useSelectionManager } from "./use-selection-manager";
@@ -103,6 +103,8 @@ export interface UseComboBoxStateOptions<T> {
   disabledBehavior?: MaybeRefOrGetter<DisabledBehavior | undefined>;
   isReadOnly?: MaybeRefOrGetter<boolean | undefined>;
   isInvalid?: MaybeRefOrGetter<boolean | undefined>;
+  /** Whether the field has to hold a value. Enforced by the validation state under `"aria"`. */
+  isRequired?: MaybeRefOrGetter<boolean | undefined>;
   validate?: MaybeRefOrGetter<ValidationFunction<ComboBoxValidationValue> | undefined>;
   validationBehavior?: MaybeRefOrGetter<ValidationBehavior | undefined>;
   name?: MaybeRefOrGetter<string | undefined>;
@@ -326,7 +328,10 @@ export const useComboBoxState = <T>(
   const inputValue = computed(() => input.state.value);
 
   const validation = useFormValidationState<ComboBoxValidationValue>({
+    // The value is always an object once anything is chosen, so emptiness is the key inside it.
+    isEmpty: (current) => !current || isValueMissing(current.value),
     isInvalid: options.isInvalid,
+    isRequired: options.isRequired,
     name: options.name,
     validate: options.validate,
     validationBehavior: options.validationBehavior,

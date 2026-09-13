@@ -93,7 +93,9 @@ export const useRadioGroupState = (options: UseRadioGroupStateOptions = {}): Rad
 
   const validation = useFormValidationState<string | null>({
     isInvalid: () => toValue(options.isInvalid),
+    isRequired,
     name: () => toValue(options.name),
+    requiredControl: "radio",
     validate: () => toValue(options.validate),
     validationBehavior: () => toValue(options.validationBehavior),
     value: () => selectedValue.value,

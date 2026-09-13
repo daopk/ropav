@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { SelectedValue } from "ropav";
-
 import {
   Button,
   Checkbox,
@@ -27,7 +25,7 @@ import {
   TextArea,
   TextField,
 } from "ropav";
-import { computed, shallowRef } from "vue";
+import { shallowRef } from "vue";
 
 const plans = [
   { id: "starter", name: "Starter" },
@@ -38,37 +36,12 @@ const plans = [
 const byName = (plan: { name: string }) => plan.name;
 
 const serverErrors = shallowRef<Record<string, string>>({});
-const selectedPlan = shallowRef<SelectedValue>(null);
 
-// `"aria"` reveals a client error the moment the value fails, and an empty required field
-// fails from the first render — so the required checks wait to be asked for.
-const hasSubmitted = shallowRef(false);
-
-const validateName = (value: string) =>
-  hasSubmitted.value && !value.trim() ? "Every workspace needs a name." : null;
-
-const validateSlug = (value: string) => {
-  if (!value) return hasSubmitted.value ? "Every workspace needs a URL." : null;
-
-  return /^[a-z0-9-]+$/.test(value) ? null : "Lowercase letters, numbers and dashes only.";
-};
-
-// A select holds `null` with nothing chosen, and `validate` is skipped for a null value, so
-// this one field reports its own validity instead of being handed a function.
-const isPlanMissing = computed(() => (hasSubmitted.value && !selectedPlan.value) || undefined);
-
-// The select is controlled, so a native reset would leave it holding its value while every
-// field around it went back to its default.
-const onReset = () => {
-  hasSubmitted.value = false;
-  selectedPlan.value = null;
-  serverErrors.value = {};
-};
+const validateSlug = (value: string) =>
+  /^[a-z0-9-]*$/.test(value) ? null : "Lowercase letters, numbers and dashes only.";
 
 const onSubmit = (event: Event) => {
   event.preventDefault();
-
-  hasSubmitted.value = true;
 
   const data = new FormData(event.target as HTMLFormElement);
 
@@ -82,7 +55,6 @@ const onSubmit = (event: Event) => {
     class="form"
     validation-behavior="aria"
     :validation-errors="serverErrors"
-    @reset="onReset"
     @submit="onSubmit"
   >
     <Fieldset>
@@ -90,7 +62,7 @@ const onSubmit = (event: Event) => {
       <Description>Everyone you invite lands here.</Description>
 
       <FieldGroup>
-        <TextField is-required name="name" :validate="validateName">
+        <TextField is-required name="name">
           <Label>Name</Label>
           <Input placeholder="Acme Research" />
           <FieldError />
@@ -104,10 +76,8 @@ const onSubmit = (event: Event) => {
         </TextField>
 
         <Select
-          v-model:value="selectedPlan"
           full-width
           is-required
-          :is-invalid="isPlanMissing"
           :item-text-value="byName"
           :items="plans"
           name="plan"
@@ -131,7 +101,7 @@ const onSubmit = (event: Event) => {
               </ListBoxItem>
             </ListBox>
           </SelectPopover>
-          <FieldError>Choose a plan.</FieldError>
+          <FieldError />
         </Select>
 
         <TextField name="notes">

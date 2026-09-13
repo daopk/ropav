@@ -61,6 +61,7 @@ const state = useDatePickerState({
   isDateUnavailable: props.isDateUnavailable,
   isInvalid: () => props.isInvalid,
   isOpen: () => props.isOpen,
+  isRequired: () => props.isRequired,
   maxValue: () => props.maxValue,
   minValue: () => props.minValue,
   name: () => props.name,

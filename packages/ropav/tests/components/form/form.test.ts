@@ -2,6 +2,7 @@ import type { FormValidationState } from "@/composables/use-form-validation-stat
 
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
 import FormFixture from "./fixtures.vue";
 
@@ -142,6 +143,36 @@ describe("Form", () => {
       });
 
       expect(state.displayValidation.value.validationErrors).toEqual(["not acceptable"]);
+
+      unmount();
+    });
+
+    it("holds a required field's error back until the form is submitted", async () => {
+      const { container, state, unmount } = renderFormWithField({
+        field: { isRequired: true, value: "" },
+        validationBehavior: "aria",
+      });
+
+      expect(state.displayValidation.value.isInvalid).toBe(false);
+
+      container.querySelector<HTMLButtonElement>("[data-testid='submit']")!.click();
+      await nextTick();
+
+      expect(state.displayValidation.value.isInvalid).toBe(true);
+      expect(state.displayValidation.value.validationDetails.valueMissing).toBe(true);
+
+      unmount();
+    });
+
+    it("leaves a required field to the browser under native behaviour", async () => {
+      const { container, state, unmount } = renderFormWithField({
+        field: { isRequired: true, value: "" },
+      });
+
+      container.querySelector<HTMLButtonElement>("[data-testid='submit']")!.click();
+      await nextTick();
+
+      expect(state.displayValidation.value.isInvalid).toBe(false);
 
       unmount();
     });

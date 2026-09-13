@@ -62,6 +62,8 @@ export interface UseSelectStateOptions<T> {
   /** @default "all" */
   disabledBehavior?: MaybeRefOrGetter<DisabledBehavior | undefined>;
   isInvalid?: MaybeRefOrGetter<boolean | undefined>;
+  /** Whether the field has to hold a value. Enforced by the validation state under `"aria"`. */
+  isRequired?: MaybeRefOrGetter<boolean | undefined>;
   validate?: MaybeRefOrGetter<ValidationFunction<SelectedValue> | undefined>;
   validationBehavior?: MaybeRefOrGetter<ValidationBehavior | undefined>;
   name?: MaybeRefOrGetter<string | undefined>;
@@ -211,7 +213,9 @@ export const useSelectState = <T>(options: UseSelectStateOptions<T>): UseSelectS
 
   const validation = useFormValidationState<SelectedValue>({
     isInvalid: options.isInvalid,
+    isRequired: options.isRequired,
     name: options.name,
+    requiredControl: "select",
     validate: options.validate,
     validationBehavior: options.validationBehavior,
     // An empty list is nothing chosen, and custom validation is skipped for a value of `null`.

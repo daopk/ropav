@@ -13,6 +13,7 @@ const props = withDefaults(defineProps<FormValidationHarnessProps>(), { isInvali
 
 if (props.withForm) {
   provideFormContext({
+    submitCount: computed(() => props.submitCount ?? 0),
     validationBehavior: computed(() => props.formValidationBehavior ?? "native"),
     validationErrors: computed(() => props.validationErrors ?? {}),
   });
@@ -23,8 +24,10 @@ if (props.withForm) {
   <FormValidationHost
     :builtin-validation="props.builtinValidation"
     :is-invalid="props.isInvalid"
+    :is-required="props.isRequired"
     :name="props.name"
     :on-ready="props.onReady"
+    :required-control="props.requiredControl"
     :validate="props.validate"
     :validation-behavior="props.validationBehavior"
     :validation-state="props.validationState"

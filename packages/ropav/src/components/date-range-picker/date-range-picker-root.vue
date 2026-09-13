@@ -66,6 +66,7 @@ const state = useDateRangePickerState({
   isDateUnavailable: props.isDateUnavailable,
   isInvalid: () => props.isInvalid,
   isOpen: () => props.isOpen,
+  isRequired: () => props.isRequired,
   maxValue: () => props.maxValue,
   minValue: () => props.minValue,
   onChange: (value) => {

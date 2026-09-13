@@ -88,7 +88,9 @@ const styles = computed(() => checkboxVariants({ variant: resolvedVariant.value 
 // and what the group's own `FieldError` shows.
 const ownValidation = useFormValidationState<boolean>({
   isInvalid: () => props.isInvalid,
+  isRequired: resolvedIsRequired,
   name: () => props.name,
+  requiredControl: "checkbox",
   validate: () => props.validate,
   validationBehavior: () => props.validationBehavior,
   value: () => isSelected.value,

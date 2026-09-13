@@ -12,7 +12,9 @@ const props = withDefaults(defineProps<FormValidationHostProps>(), { isInvalid: 
 const state = useFormValidationState({
   builtinValidation: () => props.builtinValidation,
   isInvalid: () => props.isInvalid,
+  isRequired: () => props.isRequired,
   name: () => props.name,
+  requiredControl: props.requiredControl,
   validate: () => props.validate as ValidationFunction<unknown> | undefined,
   validationBehavior: () => props.validationBehavior,
   validationState: props.validationState,

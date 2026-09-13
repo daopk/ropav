@@ -380,6 +380,7 @@ export const useDateFieldState = (options: UseDateFieldStateOptions): DateFieldS
   const validation = useFormValidationState<DateValue | null>({
     builtinValidation,
     isInvalid: () => toValue(options.isInvalid),
+    isRequired,
     name: () => toValue(options.name),
     /*
      * Read through a getter, not handed over bare. `useFormValidationState` resolves this option

@@ -45,7 +45,9 @@ const styles = computed(() => switchVariants({ size: props.size }));
 
 const validation = useFormValidationState<boolean>({
   isInvalid: () => props.isInvalid,
+  isRequired: () => props.isRequired,
   name: () => props.name,
+  requiredControl: "checkbox",
   validate: () => props.validate,
   validationBehavior: () => props.validationBehavior,
   value: () => state.value,

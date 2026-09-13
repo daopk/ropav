@@ -55,6 +55,7 @@ const state = useSelectState<T>({
   disabledKeys: () => props.disabledKeys,
   isInvalid: () => props.isInvalid,
   isOpen: () => props.isOpen,
+  isRequired: () => props.isRequired,
   itemDisabled: props.itemDisabled,
   itemKey: props.itemKey,
   items: () => props.items,

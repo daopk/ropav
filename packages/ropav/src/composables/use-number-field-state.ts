@@ -197,6 +197,7 @@ export const useNumberFieldState = (options: UseNumberFieldStateOptions = {}): N
 
   const validation = useFormValidationState<number>({
     isInvalid: () => toValue(options.isInvalid),
+    isRequired: () => toValue(options.isRequired),
     name: () => toValue(options.name),
     validate: () => toValue(options.validate),
     validationBehavior: () => toValue(options.validationBehavior),

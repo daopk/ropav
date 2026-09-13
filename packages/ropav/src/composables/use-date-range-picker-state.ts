@@ -48,6 +48,8 @@ export interface UseDateRangePickerStateOptions {
   hideTimeZone?: MaybeRefOrGetter<boolean | undefined>;
   shouldForceLeadingZeros?: MaybeRefOrGetter<boolean | undefined>;
   isInvalid?: MaybeRefOrGetter<boolean | undefined>;
+  /** Whether the field has to hold a value. Enforced by the validation state under `"aria"`. */
+  isRequired?: MaybeRefOrGetter<boolean | undefined>;
   validate?: (value: DateRange | null) => string | string[] | true | null | undefined;
   validationBehavior?: MaybeRefOrGetter<ValidationBehavior | undefined>;
   /** Name the start of the range is submitted under. */
@@ -225,7 +227,10 @@ export const useDateRangePickerState = (
         formatOpts.value,
       ),
     ),
+    // A range is nothing until both ends are set, so a half-filled one still reads as missing.
+    isEmpty: (range) => !range?.start || !range.end,
     isInvalid: () => toValue(options.isInvalid),
+    isRequired: () => toValue(options.isRequired),
     // Both names, so a server error keyed to either end reaches this one state.
     name: () => [toValue(options.startName), toValue(options.endName)].filter(Boolean) as string[],
     // Read through a getter, never handed over bare: `toValue` cannot tell a function-valued

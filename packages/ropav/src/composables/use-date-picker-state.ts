@@ -35,6 +35,8 @@ export interface UseDatePickerStateOptions {
   hideTimeZone?: MaybeRefOrGetter<boolean | undefined>;
   shouldForceLeadingZeros?: MaybeRefOrGetter<boolean | undefined>;
   isInvalid?: MaybeRefOrGetter<boolean | undefined>;
+  /** Whether the field has to hold a value. Enforced by the validation state under `"aria"`. */
+  isRequired?: MaybeRefOrGetter<boolean | undefined>;
   validate?: (value: DateValue | null) => string | string[] | true | null | undefined;
   validationBehavior?: MaybeRefOrGetter<ValidationBehavior | undefined>;
   name?: MaybeRefOrGetter<string | undefined>;
@@ -155,6 +157,7 @@ export const useDatePickerState = (options: UseDatePickerStateOptions): DatePick
       ),
     ),
     isInvalid: () => toValue(options.isInvalid),
+    isRequired: () => toValue(options.isRequired),
     name: () => toValue(options.name),
     // Read through a getter, never handed over bare: `toValue` cannot tell a function-valued
     // option from a getter, and would call the validator here with no argument.

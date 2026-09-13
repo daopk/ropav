@@ -102,7 +102,9 @@ export const useCheckboxGroupState = (
 
   const validation = useFormValidationState<string[]>({
     isInvalid: () => toValue(options.isInvalid),
+    isRequired,
     name: () => toValue(options.name),
+    requiredControl: "checkbox",
     validate: () => toValue(options.validate),
     validationBehavior: () => toValue(options.validationBehavior),
     value: () => value.value,

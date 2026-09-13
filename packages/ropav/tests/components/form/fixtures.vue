@@ -16,6 +16,7 @@ const props = defineProps<FormFixtureProps>();
   >
     <FormValidationHost
       :is-invalid="props.field?.isInvalid"
+      :is-required="props.field?.isRequired"
       :name="props.field?.name"
       :on-ready="props.field?.onReady"
       :validate="props.field?.validate"

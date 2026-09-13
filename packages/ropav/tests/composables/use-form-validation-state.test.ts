@@ -234,6 +234,135 @@ describe("useFormValidationState", () => {
     });
   });
 
+  describe("required", () => {
+    it("does not enforce it under native, where the browser does", () => {
+      const { state, unmount } = renderState({ isRequired: true, value: "" });
+
+      expect(state.realtimeValidation.value.isInvalid).toBe(false);
+
+      unmount();
+    });
+
+    it("holds the verdict back until the field is asked for", () => {
+      const { state, unmount } = renderState({
+        isRequired: true,
+        validationBehavior: "aria",
+        value: "",
+      });
+
+      expect(state.realtimeValidation.value.isInvalid).toBe(true);
+      expect(state.displayValidation.value.isInvalid).toBe(false);
+
+      unmount();
+    });
+
+    it("reveals it on a commit", async () => {
+      const { state, unmount } = renderState({
+        isRequired: true,
+        validationBehavior: "aria",
+        value: "",
+      });
+
+      state.commitValidation();
+      await nextTick();
+
+      expect(state.displayValidation.value.isInvalid).toBe(true);
+      expect(state.displayValidation.value.validationDetails.valueMissing).toBe(true);
+      // The browser's own sentence, whatever this environment words it as.
+      expect(state.displayValidation.value.validationErrors[0]).toBeTruthy();
+
+      unmount();
+    });
+
+    it("reveals it when the form is submitted", async () => {
+      const props = reactive({
+        formValidationBehavior: "aria" as const,
+        isRequired: true,
+        submitCount: 0,
+        value: "",
+        withForm: true,
+      });
+      const { state, unmount } = renderState(props);
+
+      expect(state.displayValidation.value.isInvalid).toBe(false);
+
+      props.submitCount = 1;
+      await nextTick();
+
+      expect(state.displayValidation.value.isInvalid).toBe(true);
+
+      unmount();
+    });
+
+    it("clears once the field holds something", async () => {
+      const props = reactive({
+        isRequired: true,
+        validationBehavior: "aria" as const,
+        value: "" as string,
+      });
+      const { state, unmount } = renderState(props);
+
+      state.commitValidation();
+      await nextTick();
+
+      expect(state.displayValidation.value.isInvalid).toBe(true);
+
+      props.value = "filled in";
+      await nextTick();
+
+      expect(state.displayValidation.value.isInvalid).toBe(false);
+
+      unmount();
+    });
+
+    it("goes back into hiding on a reset", async () => {
+      const { state, unmount } = renderState({
+        isRequired: true,
+        validationBehavior: "aria",
+        value: "",
+      });
+
+      state.commitValidation();
+      await nextTick();
+      state.resetValidation();
+      await nextTick();
+
+      expect(state.displayValidation.value.isInvalid).toBe(false);
+
+      unmount();
+    });
+
+    it.each([
+      ["an empty string", ""],
+      ["null", null],
+      ["false", false],
+      ["an empty array", []],
+    ])("counts %s as nothing", (_label, value) => {
+      const { state, unmount } = renderState({
+        isRequired: true,
+        validationBehavior: "aria",
+        value,
+      });
+
+      expect(state.realtimeValidation.value.isInvalid).toBe(true);
+
+      unmount();
+    });
+
+    it("lets a validate message win over it", () => {
+      const { state, unmount } = renderState({
+        isRequired: true,
+        validate: () => "say this instead",
+        validationBehavior: "aria",
+        value: "",
+      });
+
+      expect(state.realtimeValidation.value.validationErrors).toEqual(["say this instead"]);
+
+      unmount();
+    });
+  });
+
   describe("native behavior", () => {
     it("hides a validate error until the field commits", async () => {
       const { state, unmount } = renderState({
