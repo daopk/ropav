@@ -31,7 +31,7 @@ export const playgroundBlock = (md: MarkdownRenderer): void => {
       return [
         `<Playground component="${id}">`,
         "",
-        "```vue",
+        "```vue-html",
         renderCode(spec, defaultState(spec)),
         "```",
         "",

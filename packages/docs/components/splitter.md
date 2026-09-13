@@ -52,7 +52,7 @@ once after mount. A stored layout is discarded unless it still matches the panel
 is why panels worth remembering should carry explicit `id`s — generated keys stop matching the
 moment a panel is added, removed or reordered.
 
-```vue
+```vue-html
 <Splitter aria-label="Workspace" auto-save-id="workspace">
   <SplitterPanel id="sidebar" default-size="240px" min-size="160px">…</SplitterPanel>
   <SplitterHandle id="sidebar-handle" />

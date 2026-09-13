@@ -42,7 +42,7 @@ For one shimmer travelling across a group rather than one per placeholder, put t
 on the container. A container carrying it that has skeletons inside runs a single pass over all of
 them and stops each child's own:
 
-```vue
+```vue-html
 <div class="rp-skeleton--shimmer relative grid grid-cols-3 gap-4 overflow-hidden rounded-[calc(var(--rp-radius)*1.5)]">
   <Skeleton class="h-24 rounded-[calc(var(--rp-radius)*1.5)]" />
   <Skeleton class="h-24 rounded-[calc(var(--rp-radius)*1.5)]" />

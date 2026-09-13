@@ -99,7 +99,7 @@ A colour that more than one state paints goes through a custom property instead,
 state can be retuned without flattening the rest. Those are set with `style`, which needs no build
 of any kind.
 
-```vue
+```vue-html
 <!-- `w-full` is a class of yours; the layer order is what makes it land -->
 <Button class="w-full" variant="secondary">Save</Button>
 

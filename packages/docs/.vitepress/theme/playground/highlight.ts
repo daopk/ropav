@@ -11,7 +11,7 @@ let core: Promise<HighlighterCore> | undefined;
 const load = (): Promise<HighlighterCore> =>
   createHighlighterCore({
     engine: createJavaScriptRegexEngine(),
-    langs: [import("@shikijs/langs/vue")],
+    langs: [import("@shikijs/langs/vue-html")],
     themes: [import("@shikijs/themes/github-dark"), import("@shikijs/themes/github-light")],
   });
 
@@ -26,7 +26,7 @@ export const highlight = async (code: string): Promise<string> => {
     colorReplacements,
     // Emits the custom properties the theme's stylesheet reads, rather than one fixed colour.
     defaultColor: false,
-    lang: "vue",
+    lang: "vue-html",
     themes,
   });
 };

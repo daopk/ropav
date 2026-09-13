@@ -45,7 +45,7 @@ HTML before any JavaScript runs.
 Vapor changes nothing about the shape of a component's API. Slot props still arrive as slot
 props, so content can follow the state of the thing that holds it:
 
-```vue
+```vue-html
 <Button v-slot="{ isPressed, isPending }">
   {{ isPending ? "Saving…" : isPressed ? "Nearly" : "Save" }}
 </Button>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineProps<{ title?: string }>();
+defineProps<{ full?: boolean; open?: boolean; title?: string }>();
 
 defineSlots<{ code?: () => unknown; default?: () => unknown }>();
 </script>
@@ -9,11 +9,11 @@ defineSlots<{ code?: () => unknown; default?: () => unknown }>();
     <!-- `.ropav-demo` sits on the preview alone. The prose styles are unlayered and reach
          `pre` and `code`, so a revert that took in the snippet below would strip its
          highlighting with them. -->
-    <div class="ropav-demo demo__preview">
+    <div class="ropav-demo demo__preview" :class="{ 'demo__preview--full': full }">
       <slot />
     </div>
 
-    <details v-if="$slots['code']" class="demo__source">
+    <details v-if="$slots['code']" :open="open" class="demo__source">
       <summary>{{ title ?? "Source" }}</summary>
       <slot name="code" />
     </details>
@@ -36,6 +36,12 @@ defineSlots<{ code?: () => unknown; default?: () => unknown }>();
   padding: 32px 24px;
   color: var(--rp-foreground);
   background-color: var(--rp-background);
+}
+
+/* A pattern is one screen fragment, not a row of samples: there is nothing to space apart,
+   and the flex row sizes to content what should fill the width. */
+.demo__preview--full {
+  display: block;
 }
 
 .demo__source {

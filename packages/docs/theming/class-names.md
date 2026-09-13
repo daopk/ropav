@@ -46,7 +46,7 @@ to target is on the element, not locked inside a render function.
 
 Every component takes one, appended to the classes its recipe already carries.
 
-```vue
+```vue-html
 <!-- `w-full` here is a class your own build defines. Ropav ships no such utility. -->
 <Button class="w-full" variant="secondary">Save</Button>
 ```

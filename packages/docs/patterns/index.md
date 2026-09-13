@@ -33,7 +33,7 @@ components a prop actually belongs on.
 The app shell is the frame and the others are what goes inside it: one `Sidebar` holding a form or
 a table in its `SidebarInset`, with the overlays opening over both.
 
-```vue
+```vue-html
 <Sidebar>
   <SidebarPanel aria-label="Main">
     <!-- the navigation -->

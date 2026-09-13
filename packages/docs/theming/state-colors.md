@@ -24,7 +24,7 @@ the day a state is added.
 
 So you set the property instead, and the states that read the others are left standing:
 
-```vue
+```vue-html
 <!-- No line at rest; it still flares on hover and while dragging. -->
 <Sidebar style="--sidebar-rail-line: transparent" />
 ```
@@ -36,7 +36,7 @@ component rules read it from, and it beats every one of them without naming a la
 selector. It needs no build, so the same line works in a Vue template, in plain HTML, and in
 whatever your toolchain is.
 
-```vue
+```vue-html
 <!-- a value that changes -->
 <Button :style="{ '--button-bg-hover': tint }">Publish</Button>
 ```
@@ -65,7 +65,7 @@ Retuning one state carries the ones below it unless they are set too.
 follows `--button-bg-hover`. So a single override reaches the whole ladder, and you step in lower
 only where you want a different answer.
 
-```vue
+```vue-html
 <Button style="--button-bg-hover: var(--rp-success)">Publish</Button>
 ```
 

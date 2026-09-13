@@ -165,7 +165,7 @@ const family = (name: string, parts: readonly ApiPart[], hosts: readonly string[
 
   block.push("");
 
-  if (code) block.push("```vue", code, "```", "");
+  if (code) block.push("```vue-html", code, "```", "");
   else if (hosts.length > 0) block.push(`Arranged inside: ${hosts.join(", ")}.`, "");
   else block.push("No worked example yet.", "");
 
