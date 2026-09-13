@@ -1,11 +1,12 @@
 <script setup lang="ts" vapor>
 import type { SearchFieldGroupProps, SearchFieldGroupSlotProps } from "./search-field.types";
 
-import { computed } from "vue";
+import { computed, shallowRef } from "vue";
 
 import { useFocusWithin, useInteractionStates } from "../../composables/use-interaction-states";
 import { useTextFieldControlContext } from "../../composables/use-text-field";
 import { dataAttr } from "../../utils/assertion";
+import { isNestedControl } from "../../utils/focus";
 
 import { useSearchFieldContext } from "./search-field.context";
 
@@ -15,6 +16,12 @@ defineSlots<{ default?: (props: SearchFieldGroupSlotProps) => unknown }>();
 
 const { slots } = useSearchFieldContext();
 const control = useTextFieldControlContext();
+
+const element = shallowRef<HTMLDivElement | null>(null);
+
+const setElement = (next: unknown) => {
+  element.value = next instanceof HTMLDivElement ? next : null;
+};
 
 const styles = computed(() => slots.value.group({ class: props.class }));
 
@@ -27,12 +34,28 @@ const isInvalid = computed(() => control?.isInvalid.value ?? false);
 const interaction = useInteractionStates({ isDisabled });
 const focusWithin = useFocusWithin();
 
+/**
+ * The clear button keeps its place in the layout while the field is empty — the stylesheet only
+ * fades it out and takes it out of hit-testing — so a click aimed at it lands on the group, and
+ * the caret would otherwise stay wherever it was. The search icon is unhittable for the same
+ * reason, and so is the padding either side of the control.
+ *
+ * A click that did reach a control belongs to that control: the browser has already put the caret
+ * in the input, and the clear button takes focus back on the way down by itself.
+ */
+const onClick = (event: MouseEvent) => {
+  if (isNestedControl(event.target)) return;
+
+  element.value?.querySelector("input")?.focus();
+};
+
 // A real group, unlike the one inside a text field: the field hands this one no role, so it
 // reports itself rather than staying presentational.
 </script>
 
 <template>
   <div
+    :ref="setElement"
     :class="styles"
     :data-disabled="dataAttr(isDisabled)"
     :data-focus-visible="dataAttr(focusWithin.isFocusVisible.value)"
@@ -41,6 +64,7 @@ const focusWithin = useFocusWithin();
     :data-invalid="dataAttr(isInvalid)"
     data-slot="search-field-group"
     role="group"
+    @click="onClick"
     @focusin="focusWithin.onFocusin"
     @focusout="focusWithin.onFocusout"
     @pointerenter="interaction.onPointerenter"

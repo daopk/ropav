@@ -387,6 +387,76 @@ describe("SearchField", () => {
     });
   });
 
+  describe("click to focus", () => {
+    it("moves focus into the control when the group is clicked beside it", () => {
+      // The clear button holds its place in the layout while the field is empty, so the click
+      // aimed at it is delivered to the group itself.
+      const { control, group, unmount } = renderSearchField();
+
+      (group as HTMLElement).click();
+
+      expect(control).toHaveFocus();
+
+      unmount();
+    });
+
+    it("moves focus into the control when the search icon is clicked", () => {
+      const { container, control, unmount } = renderSearchField();
+
+      // Dispatched rather than `click()`ed: the icon is an `<svg>`, which has no such method.
+      container
+        .querySelector('[data-slot="search-field-search-icon"]')!
+        .dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));
+
+      expect(control).toHaveFocus();
+
+      unmount();
+    });
+
+    it("leaves the control alone when the click lands on it", () => {
+      const { control, unmount } = renderSearchField();
+      const focus = vi.spyOn(control, "focus");
+
+      control.click();
+
+      expect(focus).not.toHaveBeenCalled();
+
+      focus.mockRestore();
+      unmount();
+    });
+
+    it("leaves the clear button its own click", () => {
+      // The button takes focus back on the way down by itself, and pulling focus again from here
+      // would be a second answer to one press. `detail` is set because a click reporting none is
+      // a virtual one — a screen reader's — and the press responder plays the whole press out on
+      // it, focus included, which would hide what this is asserting.
+      const { clearButton, control, unmount } = renderSearchField({ defaultValue: "shoes" });
+      const focus = vi.spyOn(control, "focus");
+
+      clearButton.dispatchEvent(
+        new MouseEvent("click", { bubbles: true, cancelable: true, detail: 1 }),
+      );
+
+      expect(focus).not.toHaveBeenCalled();
+
+      focus.mockRestore();
+      unmount();
+    });
+
+    it("finds the control of its own field only", () => {
+      const first = renderSearchField();
+      const second = renderSearchField();
+
+      (first.group as HTMLElement).click();
+
+      expect(first.control).toHaveFocus();
+      expect(second.control).not.toHaveFocus();
+
+      first.unmount();
+      second.unmount();
+    });
+  });
+
   describe("tab order", () => {
     // Written even though a native input and textarea are already tabbable: Safari does not
     // focus one unless an explicit tab index says so, which is why react-aria always sets it —

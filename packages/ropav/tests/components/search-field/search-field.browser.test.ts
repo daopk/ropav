@@ -96,6 +96,29 @@ describe("SearchField (browser)", () => {
     unmount();
   });
 
+  it("moves focus into the control when a pointer clicks the hidden clear button", async () => {
+    // The button keeps its box in the layout while the field is empty, so a pointer aimed at it
+    // lands on the group and the group is what has to answer. Aimed by position rather than by
+    // clicking the button, which the driver refuses while nothing can hit it.
+    const { container, unmount } = renderSearchField();
+    const group = slot(container, "search-field-group");
+    const control = container.querySelector<HTMLInputElement>("input")!;
+    const groupBox = group.getBoundingClientRect();
+    const clearBox = slot(container, "search-field-clear-button").getBoundingClientRect();
+    const x = clearBox.left + clearBox.width / 2;
+    const y = clearBox.top + clearBox.height / 2;
+
+    expect(document.elementFromPoint(x, y)).toBe(group);
+
+    await userEvent.click(group, { position: { x: x - groupBox.left, y: y - groupBox.top } });
+
+    // Polled for the same reason as the label case below: the browser settles focus on its own
+    // schedule, and this reads document-wide state.
+    await expect.poll(() => document.activeElement).toBe(control);
+
+    unmount();
+  });
+
   it("shows the clear button once there is something to clear", async () => {
     const { container, unmount } = renderSearchField();
     const control = container.querySelector<HTMLInputElement>("input")!;
