@@ -52,6 +52,10 @@ export const useDescription = (
         return;
       }
 
+      // The node is appended to the body, which a server render has none of. It carries nothing
+      // visible, and the watcher runs again in the browser, so skipping it there costs nothing.
+      if (typeof document === "undefined") return;
+
       let node = nodes.get(text);
 
       if (!node) {
