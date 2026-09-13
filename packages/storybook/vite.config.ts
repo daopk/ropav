@@ -3,8 +3,6 @@ import { default as vue } from "@vitejs/plugin-vue";
 import { default as Icons } from "unplugin-icons/vite";
 import { defineConfig } from "vite";
 
-import { vaporIconCompiler } from "./.storybook/vapor-icon-compiler.ts";
-
 export default defineConfig({
   optimizeDeps: {
     exclude: ["sb-vite"],
@@ -17,7 +15,7 @@ export default defineConfig({
     // the components they are placed in. `scale: 1` because the plugin defaults to 1.2em
     // while `@iconify/react` renders 1em — leaving it would make every icon in a Vue story
     // 20% larger than the React one it is meant to be compared against.
-    Icons({ compiler: vaporIconCompiler(), scale: 1 }),
+    Icons({ compiler: "vue-vapor", scale: 1 }),
     tailwindcss(),
   ],
 });

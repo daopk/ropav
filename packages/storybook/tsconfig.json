@@ -2,9 +2,9 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    // `vite.config.ts` imports `.storybook/vapor-icon-compiler.ts` by its real filename, which
-    // Vite's native config loader requires and which the JS loader it is replacing did not. This
-    // package only ever typechecks, so nothing is emitted that could carry the extension through.
+    // `vitest.config.ts` imports `vite.config.ts` by its real filename, which Vite's native
+    // config loader requires. This package only ever typechecks, so nothing is emitted that
+    // could carry the extension through.
     "allowImportingTsExtensions": true
   },
   "include": [".storybook/**/*", "vitest.config.ts", "vite.config.ts"],
