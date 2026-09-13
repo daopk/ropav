@@ -261,7 +261,11 @@ export const emitLlms = (api: Record<string, readonly ApiPart[]>): number => {
     "",
     "# Patterns",
     "",
-    "Whole screen fragments, each a single file that runs as it stands.",
+    "Whole screen fragments, each a single file that runs as it stands. The app shell is the",
+    "frame the others go inside: put them in its `SidebarInset`, which already sets `min-width:",
+    "0`, so a table wider than the room it is given scrolls rather than stopping the sidebar",
+    "collapsing. An overlay is teleported out of the inset, so that `overflow: hidden` never",
+    "clips a menu, a dialog or a toast.",
     "",
     ...patterns.map(
       (pattern) => `## Pattern: ${pattern.name}\n\n\`\`\`vue\n${pattern.source}\n\`\`\`\n`,

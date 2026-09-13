@@ -9,6 +9,9 @@ Every component the library ships has a page here — a playground, worked examp
 read straight off the source. Nothing on this list sends you somewhere else to find out what it
 is for.
 
+[Patterns](/patterns/) go the other way: several of these arranged into one screen fragment you
+can copy whole.
+
 [Storybook](/guide/storybook) is generated from the same files and stays in step with them by
 construction. Reach for it to see one component under every combination of its props at once,
 which is a different question from the one a page answers.

@@ -14,6 +14,7 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "@internationalized/date": "3.12.4",
     "@ropav/styles": "workspace:*",
     "@shikijs/langs": "4.4.3",
     "@shikijs/themes": "4.4.3",

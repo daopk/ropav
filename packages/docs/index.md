@@ -13,6 +13,9 @@ hero:
       text: Components
       link: /components/
     - theme: alt
+      text: Patterns
+      link: /patterns/
+    - theme: alt
       text: GitHub
       link: https://github.com/daopk/ropav
 
@@ -37,6 +40,10 @@ features:
     details: State is published on data attributes and colours go through custom properties, so a single state can be retuned without a wrapper, a fork, or an important.
     link: /theming/state-colors
     linkText: State colors
+  - title: Whole screens to copy
+    details: A component page shows one family doing one thing. A pattern arranges several into something you would ship — a form, a table screen, the shell around both — and each is a single file, copied whole.
+    link: /patterns/
+    linkText: Patterns
   - title: Calendars beyond Gregorian
     details: Buddhist, Hebrew, Islamic, Japanese and the rest are one opt-in away, and stay out of the bundle until you ask — so a project that never leaves Gregorian never carries them.
     link: /guide/calendar-systems

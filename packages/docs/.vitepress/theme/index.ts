@@ -1,5 +1,5 @@
 import type { Theme } from "vitepress";
-import type { Component } from "vue";
+import type { App, Component } from "vue";
 
 import DefaultTheme from "vitepress/theme";
 
@@ -13,16 +13,26 @@ import { installVaporInterop } from "./vapor-interop";
 
 import "../../styles/globals.css";
 
-/**
- * Demos are prefixed on registration because the bare PascalCase of a file name collides
- * with the library's own exports - `card-header.vue` would shadow `CardHeader`.
- */
 const demos = import.meta.glob<{ default: Component }>("./demos/*.vue", { eager: true });
+const patterns = import.meta.glob<{ default: Component }>("./patterns/*.vue", { eager: true });
 
-const demoName = (path: string): string =>
-  `Demo${path
-    .slice("./demos/".length, -".vue".length)
-    .replace(/(?:^|-)([a-z0-9])/g, (_, c: string) => c.toUpperCase())}`;
+/**
+ * Prefixed on registration because the bare PascalCase of a file name collides with the
+ * library's own exports - `card-header.vue` would shadow `CardHeader`. The prefix also says
+ * which directory a tag on a page came from.
+ */
+const register = (
+  app: App,
+  prefix: string,
+  modules: Record<string, { default: Component }>,
+): void => {
+  for (const [path, module] of Object.entries(modules)) {
+    const file = path.slice(path.lastIndexOf("/") + 1, -".vue".length);
+    const name = file.replace(/(?:^|-)([a-z0-9])/g, (_, c: string) => c.toUpperCase());
+
+    app.component(`${prefix}${name}`, module.default);
+  }
+};
 
 export default {
   Layout,
@@ -36,9 +46,8 @@ export default {
     app.component("Playground", Playground);
     app.component("StorybookLink", StorybookLink);
 
-    for (const [path, module] of Object.entries(demos)) {
-      app.component(demoName(path), module.default);
-    }
+    register(app, "Demo", demos);
+    register(app, "Pattern", patterns);
   },
   extends: DefaultTheme,
 } satisfies Theme;

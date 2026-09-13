@@ -40,6 +40,7 @@ export default defineConfig({
     nav: [
       { link: "/guide/", text: "Guide" },
       { link: "/components/", text: "Components" },
+      { link: "/patterns/", text: "Patterns" },
       { link: "/theming/", text: "Theming" },
       { link: STORYBOOK, text: "Storybook" },
     ],
@@ -166,6 +167,7 @@ export default defineConfig({
             { link: "/components/toast", text: "Toast" },
             { link: "/components/spinner", text: "Spinner" },
             { link: "/components/skeleton", text: "Skeleton" },
+            { link: "/components/empty-state", text: "EmptyState" },
             { link: "/components/progress-bar", text: "ProgressBar" },
             { link: "/components/progress-circle", text: "ProgressCircle" },
             { link: "/components/meter", text: "Meter" },
@@ -193,6 +195,22 @@ export default defineConfig({
             { link: "/guide/storybook", text: "The rest of the components" },
           ],
           text: "Going further",
+        },
+      ],
+      "/patterns/": [
+        {
+          items: [
+            { link: "/patterns/", text: "Overview" },
+            { link: "/patterns/form", text: "Form" },
+            { link: "/patterns/data-table", text: "Data table" },
+            { link: "/patterns/app-shell", text: "App shell" },
+            { link: "/patterns/overlays", text: "Overlays" },
+            { link: "/patterns/settings", text: "Settings" },
+            { link: "/patterns/upload", text: "Upload" },
+            { link: "/patterns/async", text: "Async states" },
+            { link: "/patterns/scheduling", text: "Scheduling" },
+          ],
+          text: "Patterns",
         },
       ],
       "/theming/": [
