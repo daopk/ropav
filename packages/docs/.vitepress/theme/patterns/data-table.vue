@@ -113,9 +113,8 @@ watch(pageCount, (count) => {
 
 <template>
   <div class="screen">
-    <div class="screen__header">
-      <!-- Outside the toolbar: a horizontal toolbar claims the arrow keys, caret included. -->
-      <SearchField v-model:value="query" aria-label="Search members" class="search">
+    <Toolbar aria-label="Member actions" class="screen__header">
+      <SearchField v-model:value="query" aria-label="Search members">
         <SearchFieldGroup>
           <SearchFieldSearchIcon />
           <SearchFieldInput placeholder="Search members…" />
@@ -123,27 +122,25 @@ watch(pageCount, (count) => {
         </SearchFieldGroup>
       </SearchField>
 
-      <Toolbar aria-label="Member actions">
-        <Button :is-disabled="selectedCount === 0" variant="secondary">
-          Export{{ selectedCount ? ` (${selectedCount})` : "" }}
-        </Button>
+      <Button :is-disabled="selectedCount === 0" variant="secondary">
+        Export{{ selectedCount ? ` (${selectedCount})` : "" }}
+      </Button>
 
-        <Dropdown>
-          <Button variant="secondary">Actions</Button>
+      <Dropdown>
+        <Button variant="secondary">Actions</Button>
 
-          <DropdownPopover>
-            <DropdownMenu>
-              <MenuItem id="invite" text-value="Resend invite">
-                <Label>Resend invite</Label>
-              </MenuItem>
-              <MenuItem id="suspend" text-value="Suspend" variant="danger">
-                <Label>Suspend</Label>
-              </MenuItem>
-            </DropdownMenu>
-          </DropdownPopover>
-        </Dropdown>
-      </Toolbar>
-    </div>
+        <DropdownPopover>
+          <DropdownMenu>
+            <MenuItem id="invite" text-value="Resend invite">
+              <Label>Resend invite</Label>
+            </MenuItem>
+            <MenuItem id="suspend" text-value="Suspend" variant="danger">
+              <Label>Suspend</Label>
+            </MenuItem>
+          </DropdownMenu>
+        </DropdownPopover>
+      </Dropdown>
+    </Toolbar>
 
     <Table class="frame">
       <TableScrollContainer>
@@ -227,16 +224,12 @@ watch(pageCount, (count) => {
   gap: calc(var(--rp-spacing) * 4);
 }
 
+/* A toolbar sizes itself to its controls; widening it and letting the first column take the
+   slack puts the search field across the row with the actions at its end. */
 .screen__header {
-  display: flex;
-  flex-wrap: wrap;
+  width: 100%;
+  grid-template-columns: minmax(0, 1fr);
   gap: calc(var(--rp-spacing) * 3);
-  align-items: center;
-  justify-content: space-between;
-}
-
-.search {
-  flex: 1 1 calc(var(--rp-spacing) * 48);
 }
 
 /* Enough room for the empty state to stand in, rather than collapsing the body to one line. */

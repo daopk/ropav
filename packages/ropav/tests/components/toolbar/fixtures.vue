@@ -13,6 +13,8 @@ const props = withDefaults(
     ToolbarProps & {
       /** Orientation handed to the inner groups, overriding what they inherit. */
       groupOrientation?: "horizontal" | "vertical";
+      /** Renders a native input of this type between the two groups, when given. */
+      inputType?: string;
       /** Orientation handed to the standalone separator, overriding what it inherits. */
       separatorOrientation?: "horizontal" | "vertical";
       /** Nests a second Toolbar inside the first, which is not allowed to own the keyboard. */
@@ -23,6 +25,7 @@ const props = withDefaults(
   // asked for and the parts could never inherit one.
   {
     groupOrientation: undefined,
+    inputType: undefined,
     isAttached: undefined,
     orientation: undefined,
     separatorOrientation: undefined,
@@ -45,6 +48,7 @@ const props = withDefaults(
       <ToggleButton id="bold">Bold</ToggleButton>
       <ToggleButton id="italic">Italic</ToggleButton>
     </ToggleButtonGroup>
+    <input v-if="props.inputType" aria-label="Search" :type="props.inputType" />
     <Separator :orientation="props.separatorOrientation" />
     <ButtonGroup :orientation="props.groupOrientation">
       <Button>Copy</Button>

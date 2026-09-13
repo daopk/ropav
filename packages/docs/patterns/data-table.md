@@ -40,12 +40,6 @@ A sortable column reports a `sort-descriptor` and renders the rows it is handed.
 current page works the same way — which is why the search, the sort and the page above are three
 computeds over one array, and why the row count the footer reports is the filtered one.
 
-## The search field is not in the toolbar
-
-[Toolbar](/components/toolbar) makes its controls one tab stop and moves focus between them with
-the arrow keys. A text field inside it loses the caret to that, so the search sits beside the
-toolbar rather than in it.
-
 ## Nothing to show
 
 `TableBody` has an `#empty` slot, which renders in place of the rows when the collection is empty.

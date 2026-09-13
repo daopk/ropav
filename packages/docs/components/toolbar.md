@@ -46,6 +46,8 @@ for a toolbar that floats over content rather than sitting in the page.
   a keyboard user leaves the whole toolbar in one press.
 - The control focus last sat on is restored when focus comes back from outside, so returning to a
   toolbar does not put you back at its first button.
+- A text field keeps the arrow keys for its own caret, so a search box belongs in the row rather
+  than beside it.
 - A toolbar inside a toolbar reports `role="group"` and hands its keys upward. Only the outermost
   one owns the keyboard, which is what stops an arrow key being consumed twice.
 - Give the toolbar an `aria-label`, and an icon-only control inside it one of its own.

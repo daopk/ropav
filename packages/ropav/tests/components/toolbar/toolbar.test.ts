@@ -21,10 +21,12 @@ const renderToolbar = async (props: Record<string, unknown> = {}) => {
 const controlsIn = (container: HTMLElement) => [...container.querySelectorAll("button")];
 
 const press = async (key: string, options: KeyboardEventInit = {}) => {
-  document.activeElement?.dispatchEvent(
-    new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key, ...options }),
-  );
+  const event = new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key, ...options });
+
+  document.activeElement?.dispatchEvent(event);
   await nextTick();
+
+  return event;
 };
 
 describe("Toolbar", () => {
@@ -309,6 +311,82 @@ describe("Toolbar", () => {
       expect(document.activeElement).toBe(italic);
 
       outside.remove();
+      unmount();
+    });
+  });
+
+  /**
+   * A control that takes text answers the arrow keys itself, so a search field can sit in a
+   * toolbar rather than beside it. React Aria's toolbar claims them either way, which is what
+   * makes a text field unusable inside one there.
+   */
+  describe("controls that answer the arrow keys themselves", () => {
+    const inputIn = (container: HTMLElement) => container.querySelector("input")!;
+
+    it("leaves the inline arrows to a text input", async () => {
+      const { container, unmount } = await renderToolbar({ inputType: "text" });
+      const input = inputIn(container);
+
+      input.focus();
+
+      await press("ArrowRight");
+      expect(document.activeElement).toBe(input);
+
+      await press("ArrowLeft");
+      expect(document.activeElement).toBe(input);
+
+      unmount();
+    });
+
+    // Focus staying put is only half of it: a claimed key never reaches the caret either.
+    it("does not claim the key it stood down on", async () => {
+      const { container, unmount } = await renderToolbar({ inputType: "text" });
+
+      inputIn(container).focus();
+
+      expect((await press("ArrowLeft")).defaultPrevented).toBe(false);
+
+      unmount();
+    });
+
+    it("leaves the block arrows to a text input in a vertical toolbar", async () => {
+      const { container, unmount } = await renderToolbar({
+        inputType: "text",
+        orientation: "vertical",
+      });
+      const input = inputIn(container);
+
+      input.focus();
+      await press("ArrowDown");
+
+      expect(document.activeElement).toBe(input);
+
+      unmount();
+    });
+
+    // The field is still one of the toolbar's controls; it is only its own keys it keeps.
+    it("still moves focus onto the field from the control beside it", async () => {
+      const { container, unmount } = await renderToolbar({ inputType: "text" });
+      const [, italic] = controlsIn(container);
+
+      italic!.focus();
+      await press("ArrowRight");
+
+      expect(document.activeElement).toBe(inputIn(container));
+
+      unmount();
+    });
+
+    // A checkbox has no caret to move, so the row is still the only thing the arrows can mean.
+    it("keeps the arrow keys over an input that takes no text", async () => {
+      const { container, unmount } = await renderToolbar({ inputType: "checkbox" });
+      const [, , copy] = controlsIn(container);
+
+      inputIn(container).focus();
+      await press("ArrowRight");
+
+      expect(document.activeElement).toBe(copy);
+
       unmount();
     });
   });

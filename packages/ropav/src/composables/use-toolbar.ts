@@ -3,6 +3,7 @@ import type { ComputedRef, MaybeRefOrGetter } from "vue";
 import { computed, onMounted, shallowRef, toValue } from "vue";
 
 import { focusableIn } from "../utils/focus";
+import { willOpenKeyboard } from "../utils/platform";
 
 export type ToolbarOrientation = "horizontal" | "vertical";
 
@@ -86,13 +87,19 @@ export const useToolbar = (options: UseToolbarOptions): UseToolbarReturn => {
     const target = event.target;
 
     // A portalled control renders elsewhere in the DOM, so its keys are not ours.
-    if (!element || !(target instanceof Node) || !element.contains(target)) return;
+    if (!element || !(target instanceof Element) || !element.contains(target)) return;
 
     // RTL mirrors the inline axis only; a vertical toolbar reads top to bottom either way.
     const isReversed =
       orientation.value === "horizontal" && getComputedStyle(element).direction === "rtl";
     const forward = orientation.value === "horizontal" ? "ArrowRight" : "ArrowDown";
     const backward = orientation.value === "horizontal" ? "ArrowLeft" : "ArrowUp";
+
+    // A control that takes text answers these keys itself — the caret walks the word rather
+    // than the row — so the toolbar stands down and leaves them to it. React Aria's toolbar does
+    // not, which is why a text field cannot be put inside one there. Tab is deliberately not
+    // guarded: leaving the toolbar in one press is still what a field wants.
+    if ((event.key === forward || event.key === backward) && willOpenKeyboard(target)) return;
 
     if (event.key === forward) {
       moveFocus(isReversed ? -1 : 1);
