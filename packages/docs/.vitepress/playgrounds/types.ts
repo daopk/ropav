@@ -20,6 +20,15 @@ export interface ControlSpec {
 export interface PlaygroundNode {
   children?: readonly (PlaygroundNode | string)[];
   /**
+   * Props picked by the live value of one control, for a box whose shape follows it. The
+   * preview and the snippet read the same entry, so what the reader copies is what they are
+   * looking at.
+   */
+  follows?: {
+    cases: Readonly<Record<string, Readonly<Record<string, unknown>>>>;
+    control: string;
+  };
+  /**
    * Written as-is, ahead of the controlled props. A value that is not a primitive is bound as
    * JSON, which is what lets a node carry the collection a component like `Select` requires.
    */

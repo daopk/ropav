@@ -17,9 +17,10 @@ import { Separator } from "ropav";
 ::: playground separator
 :::
 
-`orientation` decides the axis, but inside a [Toolbar](/components/toolbar) it does not need
-setting — a separator falls back to the toolbar's *cross* axis, because a rule between controls in
-a row has to run down the page. Set it explicitly anywhere else.
+`orientation` decides the axis, and the box around the rule has to agree with it — which is why
+the snippet above carries one. Inside a [Toolbar](/components/toolbar) neither needs setting: a
+separator falls back to the toolbar's *cross* axis, because a rule between controls in a row has to
+run down the page. Set it explicitly anywhere else.
 
 ## Between things in a row
 
