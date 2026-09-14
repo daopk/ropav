@@ -13,7 +13,7 @@ import { declaredProperties, MODES, renderAll, styleDelta } from "./render";
 export type Report = Record<string, Record<string, Record<string, string>>>;
 
 /**
- * The composition slots are left out on purpose, under either name.
+ * The custom properties are left out on purpose, under either prefix.
  *
  * `--tw-ring-shadow` and its kin existed only to let one utility compose with the next; they were
  * renamed to `--rp-` and several groups dissolved outright. What matters is the property they
@@ -21,8 +21,8 @@ export type Report = Record<string, Record<string, Record<string, string>>>;
  * make a rename read as two thousand regressions while saying nothing the `box-shadow` line does
  * not already say.
  *
- * Every token this package means as a token is unprefixed (`--rp-accent`, `--rp-field-border`), so a
- * prefixed name is machinery by construction.
+ * The palette wears that same prefix and goes for the same reason: a token is only ever visible
+ * through the property that reads it, and that property is recorded.
  */
 const recorded = (sheets: StyleSheetList) =>
   declaredProperties(sheets).filter((prop) => !/^--(?:tw|rp)-/.test(prop));
