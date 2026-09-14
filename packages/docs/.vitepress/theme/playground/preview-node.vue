@@ -4,10 +4,15 @@ import type { PlaygroundNode, PlaygroundState } from "../../playgrounds/types";
 import { computed } from "vue";
 
 import { parts } from "./registry";
+import { followed } from "./state";
 
 const props = defineProps<{ node: PlaygroundNode; state: PlaygroundState }>();
 
-const component = computed(() => parts[props.node.tag]);
+// A lowercase tag is a plain element the catalogue writes out itself, so the snippet can carry
+// the box a part needs around it. Anything else has to be a registered part.
+const component = computed(() =>
+  /^[a-z]/.test(props.node.tag) ? props.node.tag : parts[props.node.tag],
+);
 
 /**
  * A leaf is rendered with no default slot. Vue registers a slot from inner content at
@@ -20,13 +25,15 @@ const hasChildren = computed(() => (props.node.children?.length ?? 0) > 0);
 
 // Only the root is driven by the panel; a nested part carries what the catalogue wrote.
 const bound = computed(() => {
-  if (!props.node.root) return props.node.props;
+  const shape = followed(props.node, props.state);
+
+  if (!props.node.root) return { ...props.node.props, ...shape };
 
   const live = Object.fromEntries(
     Object.entries(props.state).filter(([, value]) => value !== undefined),
   );
 
-  return { ...props.node.props, ...live };
+  return { ...props.node.props, ...shape, ...live };
 });
 </script>
 

@@ -87,16 +87,33 @@ const template = (file: string): string | undefined => {
   return found?.replace(/^ {2}/gm, "");
 };
 
+const rootOf = (parts: readonly ApiPart[] | undefined): ApiPart | undefined =>
+  parts?.find((part) => part.root);
+
 /**
- * A playground's node tree renders to the same snippet the site shows: `renderCode` writes only
- * what differs from a control's default, so an empty control set leaves the node's own props.
+ * A playground's node tree renders to the same snippet the site shows. The API defaults are
+ * restated as the control set rather than left empty: `renderCode` writes only what differs from
+ * one, so they add nothing to the root, and a node whose box `follows` a control needs the value
+ * in hand to pick the case that box is written as.
  */
-const arrangement = (family: string): string | undefined => {
-  const entry = catalogue[family];
+const arrangement = (name: string, root: ApiPart | undefined): string | undefined => {
+  const entry = catalogue[name];
 
-  if (entry) return renderCode({ controls: [], id: family, node: entry.node }, {});
+  if (entry) {
+    const controls = (root?.props ?? []).map((prop) => ({
+      defaultValue: prop.default?.replace(/^"|"$/g, ""),
+      description: "",
+      kind: "string" as const,
+      name: prop.name,
+    }));
 
-  const page = join(DOCS, "components", `${family}.md`);
+    return renderCode(
+      { controls, id: name, node: entry.node },
+      Object.fromEntries(controls.map((control) => [control.name, control.defaultValue])),
+    );
+  }
+
+  const page = join(DOCS, "components", `${name}.md`);
 
   if (!existsSync(page)) return undefined;
 
@@ -151,8 +168,8 @@ const partLines = (part: ApiPart): string[] => {
 
 const family = (name: string, parts: readonly ApiPart[], hosts: readonly string[]): string => {
   const names = parts.map((part) => part.name);
-  const code = arrangement(name);
-  const root = parts.find((part) => part.root);
+  const root = rootOf(parts);
+  const code = arrangement(name, root);
   const rest = parts.filter((part) => !part.root);
   const bare = rest.filter((part) => partLines(part).length === 0);
   const block: string[] = [`## ${names[0] ?? name}`, ""];
@@ -193,7 +210,7 @@ export const emitLlms = (api: Record<string, readonly ApiPart[]>): number => {
     }));
 
   const code = new Map([
-    ...names.map((name) => [name, arrangement(name)] as const),
+    ...names.map((name) => [name, arrangement(name, rootOf(api[name]))] as const),
     ...patterns.map((pattern) => [`the ${pattern.name} pattern`, pattern.source] as const),
   ]);
 

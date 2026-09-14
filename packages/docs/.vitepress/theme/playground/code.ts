@@ -1,5 +1,7 @@
 import type { PlaygroundNode, PlaygroundSpec, PlaygroundState } from "../../playgrounds/types.ts";
 
+import { followed } from "./state.ts";
+
 const INDENT = "  ";
 const WIDTH = 100;
 
@@ -28,7 +30,9 @@ const attributes = (
   spec: PlaygroundSpec,
   state: PlaygroundState,
 ): string[] => {
-  const written = Object.entries(node.props ?? {}).map(([name, value]) => attribute(name, value));
+  const written = Object.entries({ ...node.props, ...followed(node, state) }).map(([name, value]) =>
+    attribute(name, value),
+  );
 
   if (node.root) {
     for (const [name, value] of Object.entries(state)) {

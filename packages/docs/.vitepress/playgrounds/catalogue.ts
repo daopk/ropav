@@ -563,8 +563,23 @@ export const catalogue: Record<string, CatalogueEntry> = {
         { root: true, tag: "Separator" },
         { children: ["Publish"], tag: "Button" },
       ],
-      props: { "aria-label": "Document actions" },
-      tag: "Toolbar",
+      // A rule sizes itself from the box around it, so the box is part of the answer: a
+      // horizontal one is `width: 100%` of a parent that has to have a width, and a vertical
+      // one is a hairline that stretches down a row.
+      follows: {
+        cases: {
+          horizontal: {
+            style:
+              "display: flex; flex-direction: column; gap: calc(var(--rp-spacing) * 4); " +
+              "width: 100%; max-width: var(--rp-container-xs)",
+          },
+          vertical: {
+            style: "display: flex; align-items: center; gap: calc(var(--rp-spacing) * 4)",
+          },
+        },
+        control: "orientation",
+      },
+      tag: "div",
     },
   },
 
