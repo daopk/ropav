@@ -11,6 +11,7 @@
     "predev": "pnpm generate",
     "pretypecheck": "pnpm generate",
     "preview": "vitepress preview --port 4173",
+    "test": "vitest run",
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
@@ -30,6 +31,7 @@
     "typescript": "catalog:",
     "vite": "catalog:",
     "vitepress": "2.0.0-alpha.20",
+    "vitest": "catalog:",
     "vue-component-meta": "catalog:",
     "vue-tsc": "catalog:"
   }
