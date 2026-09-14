@@ -14,11 +14,13 @@ import IconPlugConnection from "~icons/gravity-ui/plug-connection";
 import IconPlus from "~icons/gravity-ui/plus";
 
 import { Button } from "../button";
+import { Card, CardContent } from "../card";
 import { Chip, ChipLabel } from "../chip";
 import { Description } from "../description";
 import { FieldError } from "../field-error";
 import { Kbd, KbdAbbr, KbdContent } from "../kbd";
 import { Label } from "../label";
+import { Popover, PopoverContent, PopoverDialog } from "../popover";
 import { Spinner } from "../spinner";
 import { TextField } from "../textfield";
 import { TooltipContent, Tooltip } from "../tooltip";
@@ -35,6 +37,8 @@ import {
 // to resolve `InputGroupPrefix` through, so dot notation cannot be used here.
 const components = {
   Button,
+  Card,
+  CardContent,
   Chip,
   ChipLabel,
   Description,
@@ -58,6 +62,9 @@ const components = {
   KbdAbbr,
   KbdContent,
   Label,
+  Popover,
+  PopoverContent,
+  PopoverDialog,
   Spinner,
   TextField,
   Tooltip: Tooltip,
@@ -667,6 +674,72 @@ export const AllVariations: Story = {
             </InputGroup>
           </TextField>
         </div>
+      </div>
+    `,
+  }),
+};
+
+/**
+ * The same field over every fill the library paints behind it.
+ *
+ * A field takes `--rp-field-background` from `--rp-surface`, and `--secondary` takes `--rp-default`,
+ * so either variant can end up the same colour as whatever it is sitting on — a primary field on a
+ * default card or inside a popover, a secondary one on a tertiary card. What separates it there is
+ * `--rp-field-edge`, an inset hairline that owes nothing to the container; the drop shadow is gone
+ * in the dark half and the secondary variant drops it in both, so nothing else is left to.
+ *
+ * Worth reading in both schemes and on more than one palette — the toolbar drives both, and the
+ * URL takes them as `?globals=ropav-scheme:dark` and `ropav-theme:<id>`.
+ */
+export const AcrossSurfaces: Story = {
+  parameters: { layout: "fullscreen" },
+  render: () => ({
+    components,
+    setup: () => ({ variants: ["primary", "secondary"] as const }),
+    template: `
+      <div class="flex flex-col gap-6 p-6">
+        <div class="flex flex-col gap-3">
+          <span class="text-xs text-[var(--rp-muted)]">On the page</span>
+          <div class="flex gap-3">
+            <InputGroup v-for="variant in variants" :key="variant" :variant="variant">
+              <InputGroupPrefix>
+                <IconEnvelope class="size-4 text-[var(--rp-muted)]" />
+              </InputGroupPrefix>
+              <InputGroupInput class="w-[200px]" :placeholder="variant" />
+            </InputGroup>
+          </div>
+        </div>
+
+        <Card v-for="card in ['default', 'secondary', 'tertiary']" :key="card" :variant="card">
+          <CardContent class="flex flex-col gap-3">
+            <span class="text-xs text-[var(--rp-muted)]">On a {{ card }} card</span>
+            <div class="flex gap-3">
+              <InputGroup v-for="variant in variants" :key="variant" :variant="variant">
+                <InputGroupPrefix>
+                  <IconEnvelope class="size-4 text-[var(--rp-muted)]" />
+                </InputGroupPrefix>
+                <InputGroupInput class="w-[200px]" :placeholder="variant" />
+              </InputGroup>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Popover default-open>
+          <Button variant="tertiary">In a popover</Button>
+          <PopoverContent is-non-modal placement="bottom start">
+            <PopoverDialog class="flex flex-col gap-3">
+              <span class="text-xs text-[var(--rp-muted)]">In a popover</span>
+              <div class="flex gap-3">
+                <InputGroup v-for="variant in variants" :key="variant" :variant="variant">
+                  <InputGroupPrefix>
+                    <IconEnvelope class="size-4 text-[var(--rp-muted)]" />
+                  </InputGroupPrefix>
+                  <InputGroupInput class="w-[200px]" :placeholder="variant" />
+                </InputGroup>
+              </div>
+            </PopoverDialog>
+          </PopoverContent>
+        </Popover>
       </div>
     `,
   }),
