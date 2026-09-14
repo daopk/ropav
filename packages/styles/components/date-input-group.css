@@ -10,7 +10,7 @@
   font-size: var(--rp-text-sm);
   line-height: var(--rp-leading, var(--rp-text-sm--line-height));
   color: var(--rp-field-foreground, var(--rp-foreground));
-  --rp-shadow: var(--rp-field-shadow);
+  --rp-shadow: var(--rp-field-edge), var(--rp-field-shadow);
   box-shadow: var(--rp-ring), var(--rp-shadow);
   --rp-outline-style: none;
   outline-style: none;
@@ -279,7 +279,7 @@
 }
 
 .rp-date-input-group--secondary {
-  --rp-shadow: 0 0 #0000;
+  --rp-shadow: var(--rp-field-edge);
   box-shadow: var(--rp-ring), var(--rp-shadow);
 
   --date-input-group-bg: var(--rp-default);

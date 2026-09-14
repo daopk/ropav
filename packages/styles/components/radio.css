@@ -107,7 +107,7 @@
   border-width: var(--rp-border-width-field);
   border-color: var(--rp-field-border, var(--rp-border));
   background-color: var(--rp-field-background, var(--rp-default));
-  --rp-shadow: var(--rp-field-shadow);
+  --rp-shadow: var(--rp-field-edge), var(--rp-field-shadow);
   box-shadow: var(--rp-ring), var(--rp-shadow);
   --rp-outline-style: none;
   outline-style: none;

@@ -63,6 +63,7 @@
     --field-border-hover: var(--rp-field-border-hover);
     --field-border-invalid: var(--rp-field-border-invalid);
     --field-border-width: var(--rp-field-border-width);
+    --field-edge: var(--rp-field-edge);
     --field-focus: var(--rp-field-focus);
     --field-foreground: var(--rp-field-foreground);
     --field-hover: var(--rp-field-hover);

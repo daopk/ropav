@@ -79,6 +79,8 @@
       var(--rp-field-foreground, var(--rp-foreground)) 10%
     );
     --rp-field-border-invalid: var(--rp-danger);
+    --rp-field-edge: 0 0 0 1px
+      color-mix(in oklab, var(--rp-field-foreground, var(--rp-foreground)) 18%, transparent) inset;
     --rp-field-focus: var(--rp-field-background, var(--rp-default));
     --rp-field-foreground: oklch(21.03% 0 17.07);
     --rp-field-hover: color-mix(
@@ -235,6 +237,8 @@
       var(--rp-field-foreground, var(--rp-foreground)) 10%
     );
     --rp-field-border-invalid: var(--rp-danger);
+    --rp-field-edge: 0 0 0 1px
+      color-mix(in oklab, var(--rp-field-foreground, var(--rp-foreground)) 12%, transparent) inset;
     --rp-field-focus: var(--rp-field-background, var(--rp-default));
     --rp-field-foreground: oklch(99.11% 0 17.07);
     --rp-field-hover: color-mix(

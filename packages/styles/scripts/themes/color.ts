@@ -730,6 +730,7 @@ export function getDerivedColorFormulas(
   const vibrant = options?.vibrant ?? false;
   const [softPct, softHoverPct] = isLight ? ["15%", "20%"] : ["12%", "16%"];
   const statePct = isLight ? "9%" : "7%";
+  const edgePct = isLight ? "18%" : "12%";
 
   const vibrantSoftFg = "color-mix(in oklab, var(--VAR) 92%, var(--rp-foreground) 8%)";
   const sfFg = (colorVar: string, accessibleFormula: string) =>
@@ -775,6 +776,7 @@ export function getDerivedColorFormulas(
     "--rp-field-border-hover":
       "color-mix(in oklab, var(--rp-field-border, var(--rp-border)) 88%, var(--rp-field-foreground, var(--rp-foreground)) 10%)",
     "--rp-field-border-invalid": "var(--rp-danger)",
+    "--rp-field-edge": `0 0 0 1px color-mix(in oklab, var(--rp-field-foreground, var(--rp-foreground)) ${edgePct}, transparent) inset`,
     "--rp-field-focus": "var(--rp-field-background, var(--rp-default))",
     "--rp-field-hover":
       "color-mix(in oklab, var(--rp-field-background, var(--rp-default)) 90%, var(--rp-field-foreground, var(--rp-foreground)) 2%)",
