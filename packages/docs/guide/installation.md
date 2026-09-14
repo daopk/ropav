@@ -140,21 +140,6 @@ without it these would resolve once on `:root` and freeze the root theme's palet
 Map only the names you spell. A mapping that carries the whole token set is mostly names nothing
 writes, and a name nothing writes cannot be found to be wrong.
 
-::: tip Coming from the unprefixed names
-Before the prefix, the palette answered to the same names without it. One import brings that
-spelling back for as long as you need it:
-
-```css
-@import "ropav/styles";
-@import "ropav/styles/compat-0.10.css";
-```
-
-It carries only the names no other design system claims — the type scale, the weights, the
-spacing step and the corner radius are absent, because those are Tailwind's own and re-declaring
-one bare is the collision the prefix removed. Every alias resolves on `:root`, so a `data-theme`
-subtree setting its own value moves the prefixed name and not the alias.
-:::
-
 [Tokens](/theming/tokens) lists the names.
 
 ## Importing only what you need
