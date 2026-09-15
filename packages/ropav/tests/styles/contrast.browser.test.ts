@@ -89,8 +89,8 @@ const PAIRS: readonly Pair[] = [
   },
   /**
    * Measured, not guessed. Every entry is one theme and one scheme that sits below the floor, with
-   * the ratio it sits at - `--rp-accent` and `--rp-danger` carry brand identity, and lifting either
-   * means a visibly darker blue or red across the themes that use them.
+   * the ratio it sits at - `--rp-accent` carries brand identity, and lifting it means a visibly
+   * darker blue across the themes that use it.
    */
   {
     bg: "--rp-accent",
@@ -106,19 +106,23 @@ const PAIRS: readonly Pair[] = [
       "hero/dark", // 3.59
     ],
   },
+  /**
+   * Both danger pairs clear the floor in the themes whose palette is ours to choose. What is left
+   * reproduces someone else's red to a published hex, which is the one reason to keep a pairing
+   * that misses - a replica that corrects the colour has stopped being a replica.
+   *
+   * The two are listed apart because they are the same colour doing different jobs: a fill
+   * carrying a button label, and body text on the page. They also fail in opposite schemes, which
+   * is the whole reason the token moves the way it does - see `SEMANTIC_COLORS.danger`.
+   */
   {
     bg: "--rp-background",
     fg: "--rp-danger",
     knownDebt: [
-      "default/light", // 3.27
       "airbnb/dark", // 3.65
       "discord/light", // 4.20
-      "hero/light", // 3.27
-      "lavender/light", // 3.26
-      "mint/light", // 3.30
       "netflix/dark", // 3.00
       "rabbit/light", // 3.64
-      "sky/light", // 3.28
       "spotify/dark", // 4.44
     ],
   },
@@ -126,20 +130,10 @@ const PAIRS: readonly Pair[] = [
     bg: "--rp-danger",
     fg: "--rp-danger-foreground",
     knownDebt: [
-      "default/light", // 3.48
-      "default/dark", // 4.35
       "discord/light", // 4.24
       "discord/dark", // 3.56
-      "hero/light", // 3.48
-      "hero/dark", // 4.35
-      "lavender/light", // 3.46
-      "lavender/dark", // 4.32
-      "mint/light", // 3.51
-      "mint/dark", // 4.38
       "rabbit/light", // 3.69
       "rabbit/dark", // 3.69
-      "sky/light", // 3.49
-      "sky/dark", // 4.37
       "spotify/dark", // 4.24
     ],
   },

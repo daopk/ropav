@@ -237,4 +237,17 @@ describe("Button (browser)", () => {
 
     unmount();
   });
+
+  /**
+   * No exclusion, deliberately. The smallest size is the one that has to hold: it renders the
+   * label at the size axe judges against the 4.5:1 floor rather than the 3:1 one, so a danger
+   * button that passes here passes at every size above it.
+   */
+  it("has no axe violations on the solid danger variant at the size the AA floor applies to", async () => {
+    const { container, unmount } = renderButton({ size: "sm", variant: "danger" });
+
+    await expectNoA11yViolations(container);
+
+    unmount();
+  });
 });

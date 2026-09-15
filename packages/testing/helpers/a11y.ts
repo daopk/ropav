@@ -27,13 +27,17 @@ export const findA11yViolations = async (
 /**
  * The contrast failures that belong to the palette rather than to any component.
  *
- * `--rp-accent` against `--rp-accent-foreground`, and `--rp-danger` against the page, both sit under the
- * 4.5:1 WCAG AA floor for normal text. They come from `@ropav/styles`, so every component that
- * paints with them inherits the finding and none of them can fix it. `ropav`'s contrast matrix
- * records the ratio per theme and scheme — read it there rather than trusting a number here.
+ * `--rp-accent` against `--rp-accent-foreground` sits under the 4.5:1 WCAG AA floor for normal
+ * text. It comes from `@ropav/styles`, so every component that paints with it inherits the finding
+ * and none of them can fix it. `ropav`'s contrast matrix records the ratio per theme and scheme —
+ * read it there rather than trusting a number here.
  *
  * Switched off here, in one place, so the debt has a name. Reaching for `{rules: {"color-contrast":
  * ...}}` inline is how the previous version of this drifted into three different shapes.
+ *
+ * `--rp-danger` no longer needs this and a danger-painted subtree should not reach for it: the
+ * solid button and the error text both clear the floor in the themes whose palette is ours. Only a
+ * brand replica still misses, and no default-theme test renders one.
  */
 export const PALETTE_CONTRAST_DEBT: RunOptions = {
   rules: { "color-contrast": { enabled: false } },

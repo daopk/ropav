@@ -72,13 +72,27 @@ const DEFAULT_THEME_VALUES = {
 
 // Semantic color defaults (from `themes/hero.css`)
 const SEMANTIC_COLORS = {
+  /**
+   * Danger moves further from the page than the other two, and in opposite directions per scheme,
+   * because it is the only semantic colour the library paints both as a solid fill carrying a
+   * button label and as body text - `field-error`, `error-message`, and the destructive menu item.
+   *
+   * Those two jobs pull the same way within a scheme and opposite ways across them: on a light
+   * page both want a dark red, on a dark page both want a light one. A value between the two, which
+   * is where this sat, fails both. There is no third option - contrast against white multiplied by
+   * contrast against black is 21 for any colour, so a red that carries white text at AA is by
+   * construction too dark to read against a dark page.
+   *
+   * Crossing `LIGHTNESS_THRESHOLD` in dark is deliberate: it is what hands the solid fill a dark
+   * label, the way the brand themes whose reds already sit up here are handled.
+   */
   danger: {
     chromaDark: 0.1967,
     chromaLight: 0.2328,
     hue: 25.74,
     hueDark: 24.63,
-    lightnessDark: 0.594,
-    lightnessLight: 0.6532,
+    lightnessDark: 0.7,
+    lightnessLight: 0.55,
   },
   success: {
     chromaDark: 0.1935,
@@ -340,7 +354,8 @@ function generateSemanticColor(
   const colorDark = formatOklch({ c: chromaDark, h: adjustedHueDark, l: config.lightnessDark });
 
   // Determine foreground color based on semantic color lightness
-  // Threshold ~0.67: Success (0.73), Warning (0.78) → dark fg; Danger (0.65) → light fg
+  // Threshold ~0.67: Success (0.73), Warning (0.78) and dark-scheme Danger (0.70) → dark fg;
+  // light-scheme Danger (0.55) → light fg
   const LIGHTNESS_THRESHOLD = 0.67;
 
   const fgLightTheme =

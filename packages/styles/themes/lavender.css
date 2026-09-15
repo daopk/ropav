@@ -94,7 +94,7 @@
       0 0 1px 0 rgba(0, 0, 0, 0.06);
 
     /* Status Colors */
-    --rp-danger: oklch(65.32% 0.2335 31.88);
+    --rp-danger: oklch(55% 0.2335 31.88);
     --rp-danger-foreground: oklch(99.11% 0 0);
     --rp-danger-hover: color-mix(in oklab, var(--rp-danger) 90%, var(--rp-danger-foreground) 10%);
     --rp-danger-soft: color-mix(in oklab, var(--rp-danger) 15%, transparent);
@@ -250,8 +250,8 @@
     --rp-field-shadow: 0 0 0 0 transparent inset;
 
     /* Status Colors */
-    --rp-danger: oklch(59.4% 0.1973 30.77);
-    --rp-danger-foreground: oklch(99.11% 0 0);
+    --rp-danger: oklch(70% 0.1973 30.77);
+    --rp-danger-foreground: oklch(21.03% 0.0059 30.77);
     --rp-danger-hover: color-mix(in oklab, var(--rp-danger) 90%, var(--rp-danger-foreground) 10%);
     --rp-danger-soft: color-mix(in oklab, var(--rp-danger) 15%, transparent);
     --rp-danger-soft-foreground: color-mix(

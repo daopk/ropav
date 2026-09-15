@@ -90,7 +90,7 @@
     --rp-warning: oklch(0.7819 0.1585 72.33);
     --rp-warning-foreground: var(--rp-eclipse);
 
-    --rp-danger: oklch(0.6532 0.2328 25.74);
+    --rp-danger: oklch(0.55 0.2328 25.74);
     --rp-danger-foreground: var(--rp-snow);
 
     /* Component Colors */
@@ -314,8 +314,8 @@
     --rp-warning: oklch(0.8203 0.1388 76.34);
     --rp-warning-foreground: var(--rp-eclipse);
 
-    --rp-danger: oklch(0.594 0.1967 24.63);
-    --rp-danger-foreground: var(--rp-snow);
+    --rp-danger: oklch(0.7 0.1967 24.63);
+    --rp-danger-foreground: var(--rp-eclipse);
 
     /* Component Colors */
     --rp-segment: oklch(0.3964 0.01 285.93);
