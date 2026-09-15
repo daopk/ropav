@@ -1,4 +1,10 @@
-import { PALETTE_CONTRAST_DEBT, expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import type { RunOptions } from "@ropav/testing/helpers/a11y";
+
+import {
+  PALETTE_CONTRAST_DEBT,
+  expectNoA11yViolations,
+  findA11yViolations,
+} from "@ropav/testing/helpers/a11y";
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it, vi } from "vitest";
 import { userEvent } from "vitest/browser";
@@ -246,6 +252,61 @@ describe("Table (browser)", () => {
       await expectNoA11yViolations(container, PALETTE_CONTRAST_DEBT);
 
       unmount();
+    });
+
+    /**
+     * A row header names its row, and `empty-table-header` is the rule that says so. Run on its
+     * own rather than through the whole suite, because the column-label shortfall above would
+     * mask it: these assert the name is there, not that the table is otherwise clean.
+     */
+    describe("row header naming", () => {
+      const ROW_HEADER_NAME: RunOptions = {
+        runOnly: { type: "rule", values: ["empty-table-header"] },
+      };
+
+      it("names a row header that holds text", async () => {
+        const { container, unmount } = await render();
+
+        expect(await findA11yViolations(container, ROW_HEADER_NAME)).toEqual([]);
+
+        unmount();
+      });
+
+      // The rename case: the cell swaps its text for a field, so name-from-contents finds
+      // nothing and `textValue` is what stands in.
+      it("names a row header whose content is a labelled field", async () => {
+        const { rows, unmount } = await render({
+          withRowHeaderInput: true,
+          withRowHeaderTextValue: true,
+        });
+        const container = rows[0]!.closest("table")!;
+        const header = rows[0]!.querySelector('[role="rowheader"]')!;
+
+        expect(header).toHaveAttribute("aria-label", "Kate Moore");
+        expect(await findA11yViolations(container, ROW_HEADER_NAME)).toEqual([]);
+
+        unmount();
+      });
+
+      // Neither of these names a row - one says the table is empty and the other that more is
+      // coming - so neither may claim to be a row header.
+      it("leaves the placeholder rows out of the row headers", async () => {
+        const empty = await render({ users: [] });
+
+        expect(empty.table.querySelectorAll('[role="rowheader"]')).toHaveLength(0);
+        expect(await findA11yViolations(empty.container, ROW_HEADER_NAME)).toEqual([]);
+
+        empty.unmount();
+
+        const loading = await render({ isLoading: true, withLoadMore: true });
+
+        expect(
+          loading.table.querySelector('[data-slot="table-load-more"] [role="rowheader"]'),
+        ).toBeNull();
+        expect(await findA11yViolations(loading.container, ROW_HEADER_NAME)).toEqual([]);
+
+        loading.unmount();
+      });
     });
   });
 });

@@ -229,7 +229,8 @@ describe("Table", () => {
       const placeholder = body.querySelector("td")!;
 
       expect(placeholder).toHaveAttribute("colspan", "3");
-      expect(placeholder).toHaveAttribute("role", "rowheader");
+      // It names no row, so it is not a row header - an unnamed one reads as a header with no text.
+      expect(placeholder).toHaveAttribute("role", "gridcell");
       expect(placeholder).toHaveTextContent("Nothing here");
       // Structural, so it carries no slot of its own.
       expect(placeholder).not.toHaveAttribute("data-slot");
@@ -568,7 +569,7 @@ describe("Table", () => {
       // A flat table still reports the level a tree grid would use.
       expect(row).toHaveAttribute("aria-level", "1");
       expect(row).toHaveAttribute("data-level", "1");
-      expect(cell).toHaveAttribute("role", "rowheader");
+      expect(cell).toHaveAttribute("role", "gridcell");
       expect(cell).toHaveAttribute("colspan", "3");
     });
 

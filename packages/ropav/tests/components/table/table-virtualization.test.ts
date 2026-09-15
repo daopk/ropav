@@ -259,7 +259,7 @@ describe("Table virtualization", () => {
     it("reports being empty with a placeholder that spans the columns", async () => {
       const { grid, unmount } = await renderVirtualized({ items: [] });
       const body = grid.querySelector('[data-slot="table-body"]')!;
-      const placeholder = body.querySelector('[role="rowheader"]') as HTMLElement;
+      const placeholder = body.querySelector('[role="gridcell"]') as HTMLElement;
 
       expect(body.getAttribute("data-empty")).toBe("true");
       expect(placeholder.textContent).toBe("No users");
@@ -290,7 +290,7 @@ describe("Table virtualization", () => {
     it("spans the columns with the indicator row while loading", async () => {
       const { grid, unmount } = await renderVirtualized({ isLoading: true, withLoadMore: true });
       const indicator = grid.querySelector('[data-slot="table-load-more"]')!;
-      const cell = indicator.querySelector('[role="rowheader"]') as HTMLElement;
+      const cell = indicator.querySelector('[role="gridcell"]') as HTMLElement;
 
       expect(indicator.tagName).toBe("DIV");
       expect(cell.getAttribute("aria-colspan")).toBe("3");

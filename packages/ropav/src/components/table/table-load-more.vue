@@ -120,7 +120,7 @@ onUnmounted(disconnect);
         :is="virtualizer ? 'div' : 'td'"
         :aria-colspan="virtualizer ? columnCount : undefined"
         :colspan="virtualizer ? undefined : columnCount"
-        role="rowheader"
+        role="gridcell"
         :style="indicatorStyle"
       >
         <slot />

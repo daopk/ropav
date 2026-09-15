@@ -49,6 +49,8 @@ const props = withDefaults(
       scrollContainerStyle?: Record<string, string>;
       scrollOffset?: number;
       withCellInput?: boolean;
+      withRowHeaderInput?: boolean;
+      withRowHeaderTextValue?: boolean;
       withFooter?: boolean;
       withLoadMore?: boolean;
       withSelectionColumn?: boolean;
@@ -78,6 +80,8 @@ const props = withDefaults(
     users: undefined,
     variant: undefined,
     withCellInput: undefined,
+    withRowHeaderInput: undefined,
+    withRowHeaderTextValue: undefined,
     withFooter: undefined,
     withSelectionColumn: undefined,
     withSortableHeader: undefined,
@@ -140,7 +144,15 @@ const defaultUsers: TableFixtureUser[] = [
             <TableCell v-if="props.withSelectionColumn">
               <TableSelectionCheckbox variant="secondary" />
             </TableCell>
-            <TableCell>{{ user.name }}</TableCell>
+            <TableCell :text-value="props.withRowHeaderTextValue ? user.name : undefined">
+              <input
+                v-if="props.withRowHeaderInput"
+                :aria-label="`Name for ${user.name}`"
+                type="text"
+                :value="user.name"
+              />
+              <template v-else>{{ user.name }}</template>
+            </TableCell>
             <TableCell>{{ user.role }}</TableCell>
             <TableCell>
               <input

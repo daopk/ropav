@@ -31,7 +31,8 @@ gives a wide table somewhere to overflow that is not the page.
 </Demo>
 
 One column should carry `is-row-header`: it is the cell that names the row, and what a screen
-reader reads back when the reader moves down a column.
+reader reads back when the reader moves down a column. Give that cell `text-value` when its
+content is a control rather than text, so the row keeps its name while it is being edited.
 
 ## Selection
 

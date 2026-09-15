@@ -60,6 +60,16 @@ const isRowHeader = computed(
   () => columnKey.value != null && collection.rowHeaderColumnKeys.value.has(columnKey.value),
 );
 
+/*
+ * A row header names its row, so it has to have a name of its own. Name-from-contents covers a
+ * cell holding text and covers nothing else: a cell that swaps its text for an input while the row
+ * is renamed reads as an empty header, and so does the row pointed at it.
+ *
+ * `textValue` is that name. Deriving one from the control instead would name the row after the
+ * field rather than the row - every row being renamed would answer to "Name" - and the row's own
+ * name is only known to the caller.
+ */
+
 // Only a row header cell carries an id, because only that id is pointed at — by the row's
 // `aria-labelledby`. React Aria puts a generated id on every other cell that nothing reads.
 const cellId = computed(() =>
@@ -124,6 +134,7 @@ const placement = virtualizer
     :id="cellId"
     ref="element"
     :aria-colindex="virtualizer && index >= 0 ? index + 1 : undefined"
+    :aria-label="isRowHeader ? props.textValue : undefined"
     :class="['rp-table__cell', props.class]"
     :data-collection="collectionId"
     :data-column-index="index < 0 ? undefined : index"
