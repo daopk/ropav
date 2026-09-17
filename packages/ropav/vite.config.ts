@@ -114,9 +114,16 @@ export default defineConfig({
         preserveModules: true,
         preserveModulesRoot: "src",
       },
+      /*
+       * `"always"` is the default, and stated anyway because `false` here is a correctness bug:
+       * reading `.value` off a ref is what subscribes the surrounding effect, so a read whose
+       * result goes unused — which is the entire point of `void version.value;` — gets dropped,
+       * and a `computed` whose only dependency was one caches its first answer for good. Source
+       * keeps the read and the tests run against source, so only the published build breaks.
+       */
       treeshake: {
         moduleSideEffects: false,
-        propertyReadSideEffects: false,
+        propertyReadSideEffects: "always",
       },
     },
     sourcemap: false,
