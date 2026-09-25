@@ -30,7 +30,7 @@
       right top;
     mask-repeat: no-repeat;
     mask-size:
-      calc(100% - var(--scroll-shadow-scrollbar-size)) 100%,
+      100% 100%,
       var(--scroll-shadow-scrollbar-size) 100%;
     -webkit-mask-image: linear-gradient(var(--scroll-linear-gradient)), linear-gradient(#000, #000);
     -webkit-mask-position:
@@ -38,7 +38,7 @@
       right top;
     -webkit-mask-repeat: no-repeat;
     -webkit-mask-size:
-      calc(100% - var(--scroll-shadow-scrollbar-size)) 100%,
+      100% 100%,
       var(--scroll-shadow-scrollbar-size) 100%;
   }
 
@@ -66,7 +66,7 @@
       left bottom;
     mask-repeat: no-repeat;
     mask-size:
-      100% calc(100% - var(--scroll-shadow-scrollbar-size)),
+      100% 100%,
       100% var(--scroll-shadow-scrollbar-size);
     -webkit-mask-image: linear-gradient(var(--scroll-linear-gradient)), linear-gradient(#000, #000);
     -webkit-mask-position:
@@ -74,7 +74,7 @@
       left bottom;
     -webkit-mask-repeat: no-repeat;
     -webkit-mask-size:
-      100% calc(100% - var(--scroll-shadow-scrollbar-size)),
+      100% 100%,
       100% var(--scroll-shadow-scrollbar-size);
   }
 
