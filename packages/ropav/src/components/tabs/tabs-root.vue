@@ -26,13 +26,8 @@ const props = withDefaults(defineProps<TabsRootProps>(), {
   variant: undefined,
 });
 
-/*
- * `selectionChange` is reported through the declared `onSelectionChange` prop alone, and is not
- * also an emit. A `@selection-change` listener lands on that prop, since a listener and a prop
- * are the same raw key, and `emit` looks its handler up among the raw props whether they are
- * declared or not, as vdom does. Emitting it as well would call the caller's handler twice.
- */
 const emit = defineEmits<{
+  selectionChange: [key: CollectionKey];
   "update:selectedKey": [key: CollectionKey];
 }>();
 
@@ -50,7 +45,7 @@ const state = useTabListState({
   id: () => props.id,
   isDisabled: () => props.isDisabled,
   onSelectionChange: (key) => {
-    props.onSelectionChange?.(key);
+    emit("selectionChange", key);
     emit("update:selectedKey", key);
   },
   selectedKey: () => props.selectedKey,

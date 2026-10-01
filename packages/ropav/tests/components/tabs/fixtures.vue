@@ -34,6 +34,8 @@ const props = withDefaults(
       withSeparator?: boolean;
       withPanels?: boolean;
       forceMountPanels?: boolean;
+      /** A listener for the `selectionChange` event. */
+      onSelectionChange?: (key: CollectionKey) => void;
     }
   >(),
   {
@@ -66,11 +68,11 @@ const props = withDefaults(
     :disabled-keys="props.disabledKeys"
     :is-disabled="props.isDisabled"
     :keyboard-activation="props.keyboardActivation"
-    :on-selection-change="props.onSelectionChange"
     :orientation="props.orientation"
     :align="props.align"
     :selected-key="props.selectedKey"
     :variant="props.variant"
+    @selection-change="props.onSelectionChange"
   >
     <TabsListContainer v-if="props.withContainer">
       <TabsList aria-label="Options">

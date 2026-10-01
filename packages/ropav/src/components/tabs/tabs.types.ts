@@ -35,7 +35,6 @@ export interface TabsRootProps {
    * for itself.
    */
   id?: string;
-  onSelectionChange?: (key: CollectionKey) => void;
 }
 
 export interface TabsRootSlotProps {

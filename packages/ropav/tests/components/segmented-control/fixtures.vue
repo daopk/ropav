@@ -26,7 +26,8 @@ const props = withDefaults(
       items?: SegmentedControlFixtureItem[];
       withIndicator?: boolean;
       withSeparator?: boolean;
-      /** A listener for the `v-model` event, kept apart so a test can tell the two paths apart. */
+      /** Listeners for the two events the root emits, kept apart so a test can tell them apart. */
+      onSelectionChange?: (key: CollectionKey) => void;
       onUpdateSelectedKeyEvent?: (key: CollectionKey) => void;
     }
   >(),

@@ -238,7 +238,6 @@ describe("Tabs", () => {
       press(getAllByRole("tab")[1]!);
       await settle();
 
-      // The fixture binds the callback as `:on-selection-change`, the hyphenated prop form.
       expect(onSelectionChange.mock.calls).toEqual([["analytics"]]);
       expect(getAllByRole("tab")[1]).toHaveAttribute("aria-selected", "true");
 

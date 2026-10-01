@@ -165,9 +165,6 @@ describe("SegmentedControl", () => {
       await settle();
 
       expect(selectedKeyIn(container)).toBe("monthly");
-      // The fixture binds the callback as `@selection-change`, which lands on the declared
-      // `onSelectionChange` prop. `emit` would find it there too, so the root reports through the
-      // prop alone and the caller hears about the change once rather than twice.
       expect(onSelectionChange.mock.calls).toEqual([["monthly"]]);
       expect(onUpdateSelectedKeyEvent.mock.calls).toEqual([["monthly"]]);
     });

@@ -32,7 +32,6 @@ export interface SegmentedControlRootProps {
   ariaLabel?: string;
   ariaLabelledby?: string;
   ariaDescribedby?: string;
-  onSelectionChange?: (key: CollectionKey) => void;
 }
 
 export interface SegmentedControlRootSlotProps {
