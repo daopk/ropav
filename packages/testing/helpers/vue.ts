@@ -15,6 +15,11 @@ export interface RenderVaporOptions {
    * Props passed to the component. Each is wrapped in a getter, which is what keeps it
    * reactive — reading a `ref` inside the object makes DOM updates follow it with no
    * `rerender` step.
+   *
+   * The new value reaches the component on the scheduler, as a parent's render hands it to a
+   * child in vdom: `props.x` reads the previous value until `await nextTick()`, and two writes
+   * inside one turn arrive as only the last. A test that needs a composable to see a write in the
+   * same turn drives the composable from a ref directly rather than through a component's props.
    */
   props?: Record<string, unknown>;
   /**
