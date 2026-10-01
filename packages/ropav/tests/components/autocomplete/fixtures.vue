@@ -95,7 +95,6 @@ const filter = useFilter({ sensitivity: "base" });
       :item-text-value="(item: AutocompleteFixtureItem) => item.name"
       :items="props.items"
       :name="props.name"
-      :on-clear="props.onClear"
       :placeholder="props.placeholder"
       :selection-mode="props.selectionMode"
       :size="props.size"
