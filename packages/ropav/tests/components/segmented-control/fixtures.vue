@@ -26,11 +26,7 @@ const props = withDefaults(
       items?: SegmentedControlFixtureItem[];
       withIndicator?: boolean;
       withSeparator?: boolean;
-      /**
-       * Listeners for the two events the root emits, kept apart from the `onSelectionChange`
-       * callback prop so a test can tell the three reporting paths from one another.
-       */
-      onSelectionChangeEvent?: (key: CollectionKey) => void;
+      /** A listener for the `v-model` event, kept apart so a test can tell the two paths apart. */
       onUpdateSelectedKeyEvent?: (key: CollectionKey) => void;
     }
   >(),
@@ -61,10 +57,9 @@ const props = withDefaults(
     :disabled-keys="props.disabledKeys"
     :full-width="props.fullWidth"
     :is-disabled="props.isDisabled"
-    :on-selection-change="props.onSelectionChange"
     :selected-key="props.selectedKey"
     :size="props.size"
-    @selection-change="props.onSelectionChangeEvent"
+    @selection-change="props.onSelectionChange"
     @update:selected-key="props.onUpdateSelectedKeyEvent"
   >
     <SegmentedControlItem

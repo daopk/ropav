@@ -5,19 +5,19 @@ catalog:
   "@tailwindcss/cli": 4.3.3
   "@tailwindcss/postcss": 4.3.3
   "@tailwindcss/vite": 4.3.3
-  "@types/node": 26.6.2
+  "@types/node": 26.6.3
   "@vitejs/plugin-vue": 6.0.9
-  "@vitest/browser": 5.0.1
-  "@vitest/browser-playwright": 5.0.1
-  "@vue/compiler-vapor": 3.6.0-rc.9
+  "@vitest/browser": 5.0.2
+  "@vitest/browser-playwright": 5.0.2
+  "@vue/compiler-vapor": 3.6.0-rc.10
   lightningcss: 1.33.0
   playwright: 1.63.0
   tailwindcss: 4.3.3
-  typescript: npm:typescript-native-bridge@6.0.3-bridge.17.tsgo.7.0.2
+  typescript: npm:typescript-native-bridge@6.0.3-bridge.18.tsgo.7.0.2
   unplugin-icons: 24.0.0
-  vite: 8.3.0
-  vitest: 5.0.1
-  vue: 3.6.0-rc.9
+  vite: 8.3.1
+  vitest: 5.0.2
+  vue: 3.6.0-rc.10
   vue-component-meta: 3.3.11
   vue-tsc: 3.3.11
 
@@ -33,3 +33,20 @@ allowBuilds:
   esbuild: false
   lmdb: false
   msgpackr-extract: false
+
+# `vue` 3.6.0-rc.10 landed inside the minimum release age, and the rc channel is the only one
+# that carries the vapor runtime. Each entry pins one exact version, so once that version ages
+# past the cutoff it is a no-op and the list can go.
+minimumReleaseAgeExclude:
+  - "@vue/compiler-core@3.6.0-rc.10"
+  - "@vue/compiler-dom@3.6.0-rc.10"
+  - "@vue/compiler-sfc@3.6.0-rc.10"
+  - "@vue/compiler-ssr@3.6.0-rc.10"
+  - "@vue/compiler-vapor@3.6.0-rc.10"
+  - "@vue/reactivity@3.6.0-rc.10"
+  - "@vue/runtime-core@3.6.0-rc.10"
+  - "@vue/runtime-dom@3.6.0-rc.10"
+  - "@vue/runtime-vapor@3.6.0-rc.10"
+  - "@vue/server-renderer@3.6.0-rc.10"
+  - "@vue/shared@3.6.0-rc.10"
+  - vue@3.6.0-rc.10

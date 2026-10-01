@@ -27,7 +27,7 @@
     "@tailwindcss/vite": "catalog:",
     "@types/node": "catalog:",
     "tailwindcss": "catalog:",
-    "tsx": "4.23.13",
+    "tsx": "4.23.15",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vitepress": "2.0.0-alpha.20",

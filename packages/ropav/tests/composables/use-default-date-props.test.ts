@@ -3,7 +3,9 @@ import type { DefaultDateProps } from "@/composables/use-default-date-props";
 import { CalendarDate, CalendarDateTime, ZonedDateTime } from "@internationalized/date";
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it } from "vitest";
-import { nextTick, reactive } from "vue";
+import { effectScope, nextTick, reactive, shallowRef } from "vue";
+
+import { useDefaultDateProps } from "@/composables/use-default-date-props";
 
 import Host from "../fixtures/default-date-props-host.vue";
 
@@ -107,16 +109,22 @@ describe("useDefaultDateProps", () => {
        * watcher the datetime is never seen at all, so clearing takes the control back to the
        * date-only default and its time segments disappear. A picker reads `hasTime` in the same
        * turn its owner writes the value, so the answer cannot be a tick behind.
+       *
+       * Driven from a ref rather than through the host, the way a picker drives it from its own
+       * state: a component's props are delivered on the scheduler, so two writes to one inside a
+       * turn reach the child as only the last.
        */
-      const props = reactive<{ value: CalendarDate | CalendarDateTime | null }>({
-        value: new CalendarDate(2026, 6, 15),
-      });
-      const { resolved } = setup(props);
+      const value = shallowRef<CalendarDate | CalendarDateTime | null>(
+        new CalendarDate(2026, 6, 15),
+      );
+      const scope = effectScope();
+      const resolved = scope.run(() => useDefaultDateProps(value, undefined))!;
 
-      props.value = new CalendarDateTime(2026, 6, 15, 13, 45);
-      props.value = null;
+      value.value = new CalendarDateTime(2026, 6, 15, 13, 45);
+      value.value = null;
 
-      expect(resolved().granularity.value).toBe("minute");
+      expect(resolved.granularity.value).toBe("minute");
+      scope.stop();
     });
 
     it("follows a value that changes shape", async () => {

@@ -69,7 +69,7 @@
   },
   "devDependencies": {
     "@ropav/testing": "workspace:*",
-    "@storybook/vue3-vite": "10.6.0",
+    "@storybook/vue3-vite": "10.6.1",
     "@tailwindcss/vite": "catalog:",
     "@tanstack/vue-table": "9.2.4",
     "@vitejs/plugin-vue": "catalog:",

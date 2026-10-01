@@ -156,24 +156,19 @@ describe("SegmentedControl", () => {
       expect(selectedKeyIn(container)).toBe("monthly");
     });
 
-    it("selects on press and reports it down all three paths, once each", async () => {
+    it("selects on press and reports it down both paths, once each", async () => {
       const onSelectionChange = vi.fn();
-      const onSelectionChangeEvent = vi.fn();
       const onUpdateSelectedKeyEvent = vi.fn();
-      const { container } = await render({
-        onSelectionChange,
-        onSelectionChangeEvent,
-        onUpdateSelectedKeyEvent,
-      });
+      const { container } = await render({ onSelectionChange, onUpdateSelectedKeyEvent });
 
       press(itemsIn(container)[2]!);
       await settle();
 
       expect(selectedKeyIn(container)).toBe("monthly");
-      // Declaring `onSelectionChange` as a prop takes it out of the emit listener lookup, so
-      // the callback and the event of the same name stay one report each rather than two.
+      // The fixture binds the callback as `@selection-change`, which lands on the declared
+      // `onSelectionChange` prop. `emit` would find it there too, so the root reports through the
+      // prop alone and the caller hears about the change once rather than twice.
       expect(onSelectionChange.mock.calls).toEqual([["monthly"]]);
-      expect(onSelectionChangeEvent.mock.calls).toEqual([["monthly"]]);
       expect(onUpdateSelectedKeyEvent.mock.calls).toEqual([["monthly"]]);
     });
 
