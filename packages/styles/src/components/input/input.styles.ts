@@ -18,6 +18,7 @@ export const inputVariants = tv({
       lg: "rp-input--lg",
       md: "",
       sm: "rp-input--sm",
+      xs: "rp-input--xs",
     },
     variant: {
       primary: "rp-input--primary",

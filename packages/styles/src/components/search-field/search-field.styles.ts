@@ -31,6 +31,9 @@ export const searchFieldVariants = tv({
       sm: {
         base: "rp-search-field--sm",
       },
+      xs: {
+        base: "rp-search-field--xs",
+      },
     },
     variant: {
       primary: {

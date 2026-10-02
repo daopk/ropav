@@ -35,6 +35,10 @@ export const autocompleteVariants = tv({
         base: "rp-autocomplete--sm",
         popover: "rp-autocomplete__popover--sm",
       },
+      xs: {
+        base: "rp-autocomplete--xs",
+        popover: "rp-autocomplete__popover--xs",
+      },
     },
     variant: {
       primary: {

@@ -310,6 +310,16 @@
 
 /* The input inside sizes itself from the context the root provides, so only the option rows are
  * left - reached from the popover's own class, since it is teleported out of this tree. */
+.rp-combo-box__popover--xs {
+  font-size: var(--rp-text-xs);
+  line-height: var(--rp-leading, var(--rp-text-xs--line-height));
+
+  [data-slot="list-box-item"] {
+    min-height: calc(var(--rp-spacing) * 7);
+    padding-block: var(--rp-spacing);
+  }
+}
+
 .rp-combo-box__popover--sm {
   [data-slot="list-box-item"] {
     min-height: calc(var(--rp-spacing) * 8);

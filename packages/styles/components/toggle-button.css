@@ -144,6 +144,23 @@
    Size variants
    ========================================================================== */
 
+.rp-toggle-button--xs {
+  height: calc(var(--rp-spacing) * 7);
+  padding-inline: calc(var(--rp-spacing) * 2.5);
+  font-size: var(--rp-text-xs);
+  line-height: var(--rp-leading, var(--rp-text-xs--line-height));
+
+  & svg {
+    width: calc(var(--rp-spacing) * 3.5);
+    height: calc(var(--rp-spacing) * 3.5);
+  }
+
+  &:active,
+  &[data-pressed="true"] {
+    transform: scale(0.99);
+  }
+}
+
 .rp-toggle-button--sm {
   height: calc(var(--rp-spacing) * 8);
   padding-inline: calc(var(--rp-spacing) * 3);
@@ -193,6 +210,10 @@
 .rp-toggle-button--icon-only {
   width: calc(var(--rp-spacing) * 9);
   padding: 0px;
+}
+
+.rp-toggle-button--icon-only.rp-toggle-button--xs {
+  width: calc(var(--rp-spacing) * 7);
 }
 
 .rp-toggle-button--icon-only.rp-toggle-button--sm {

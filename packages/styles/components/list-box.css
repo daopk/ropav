@@ -83,6 +83,16 @@
    ========================================================================== */
 
 /* A row is as tall as a field of the same size, so a collection standing beside one lines up. */
+.rp-list-box--xs {
+  font-size: var(--rp-text-xs);
+  line-height: var(--rp-leading, var(--rp-text-xs--line-height));
+
+  [data-slot="list-box-item"] {
+    min-height: calc(var(--rp-spacing) * 7);
+    padding-block: var(--rp-spacing);
+  }
+}
+
 .rp-list-box--sm {
   [data-slot="list-box-item"] {
     min-height: calc(var(--rp-spacing) * 8);

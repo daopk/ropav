@@ -62,6 +62,14 @@ describe("ToggleButton", () => {
 
       unmount();
     });
+
+    it("exposes the extra small size modifier", () => {
+      const { container, unmount } = renderToggleButton({ size: "xs" });
+
+      expect(buttonIn(container).classList.contains("rp-toggle-button--xs")).toBe(true);
+
+      unmount();
+    });
   });
 
   /**

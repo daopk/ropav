@@ -29,6 +29,9 @@ export const inputGroupVariants = tv({
       sm: {
         base: "rp-input-group--sm",
       },
+      xs: {
+        base: "rp-input-group--xs",
+      },
     },
     variant: {
       primary: {

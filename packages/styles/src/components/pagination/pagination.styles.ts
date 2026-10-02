@@ -32,6 +32,9 @@ export const paginationVariants = tv({
       sm: {
         base: "rp-pagination--sm",
       },
+      xs: {
+        base: "rp-pagination--xs",
+      },
     },
   },
 });

@@ -90,7 +90,7 @@ export const Default: Story = {
 export const Sizes: Story = {
   render: () => ({
     components,
-    setup: () => ({ sizes: ["sm", "md", "lg"] as const }),
+    setup: () => ({ sizes: ["xs", "sm", "md", "lg"] as const }),
     template: `
       <div class="flex items-start gap-4">
         <Surface v-for="size in sizes" :key="size" class="w-52 p-0">

@@ -31,6 +31,9 @@ export const numberFieldVariants = tv({
       sm: {
         base: "rp-number-field--sm",
       },
+      xs: {
+        base: "rp-number-field--xs",
+      },
     },
     variant: {
       primary: {

@@ -244,7 +244,7 @@ describe("Button (browser)", () => {
    * button that passes here passes at every size above it.
    */
   it("has no axe violations on the solid danger variant at the size the AA floor applies to", async () => {
-    const { container, unmount } = renderButton({ size: "sm", variant: "danger" });
+    const { container, unmount } = renderButton({ size: "xs", variant: "danger" });
 
     await expectNoA11yViolations(container);
 

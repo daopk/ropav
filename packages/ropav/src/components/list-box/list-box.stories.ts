@@ -128,7 +128,7 @@ const FILE_ACTIONS = [
 export const Sizes: Story = {
   render: () => ({
     components,
-    setup: () => ({ sizes: ["sm", "md", "lg"] as const, users: USERS.slice(0, 3) }),
+    setup: () => ({ sizes: ["xs", "sm", "md", "lg"] as const, users: USERS.slice(0, 3) }),
     template: `
       <div class="flex items-start gap-4">
         <ListBox

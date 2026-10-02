@@ -233,7 +233,7 @@ export const Default: Story = {
 export const Sizes: Story = {
   render: () => ({
     components,
-    setup: () => ({ byName, items: SHORT_ANIMALS, sizes: ["sm", "md", "lg"] as const }),
+    setup: () => ({ byName, items: SHORT_ANIMALS, sizes: ["xs", "sm", "md", "lg"] as const }),
     template: `
       <div class="flex flex-col gap-4">
         <div v-for="size in sizes" :key="size" class="flex items-center gap-3">

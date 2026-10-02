@@ -233,10 +233,17 @@
 }
 
 /* ==========================================================================
-   Sizes - the outer track lands on the control scale (32/36/40px), so a
+   Sizes - the outer track lands on the control scale (28/32/36/40px), so a
    segmented control lines up with a button or a field of the same size. The
    track's own `p-1` is the 8px difference.
    ========================================================================== */
+
+.rp-segmented-control--xs .rp-segmented-control__item {
+  height: calc(var(--rp-spacing) * 5);
+  padding-inline: calc(var(--rp-spacing) * 2);
+  font-size: var(--rp-text-xs);
+  line-height: var(--rp-leading, var(--rp-text-xs--line-height));
+}
 
 .rp-segmented-control--sm .rp-segmented-control__item {
   height: calc(var(--rp-spacing) * 6);

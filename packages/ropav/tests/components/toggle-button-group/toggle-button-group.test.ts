@@ -286,11 +286,11 @@ describe("ToggleButtonGroup", () => {
   });
 
   describe("size", () => {
-    it("propagates its size to every button", () => {
-      const { container, unmount } = renderGroup({ size: "lg" });
+    it.each(["xs", "lg"] as const)("propagates the %s size to every button", (size) => {
+      const { container, unmount } = renderGroup({ size });
 
       for (const button of buttonsIn(container)) {
-        expect(button.classList.contains("rp-toggle-button--lg")).toBe(true);
+        expect(button.classList.contains(`rp-toggle-button--${size}`)).toBe(true);
       }
 
       unmount();

@@ -204,13 +204,16 @@ describe("Input", () => {
       unmount();
     });
 
-    it("takes the field's size when it sets none of its own", () => {
-      const { control, unmount } = render({ fieldSize: "sm", inField: true });
+    it.each(["xs", "sm"] as const)(
+      "takes the field's %s size when it sets none of its own",
+      (fieldSize) => {
+        const { control, unmount } = render({ fieldSize, inField: true });
 
-      expect(control).toHaveClass("rp-input--sm");
+        expect(control).toHaveClass(`rp-input--${fieldSize}`);
 
-      unmount();
-    });
+        unmount();
+      },
+    );
 
     it("lets its own size win over the field's", () => {
       const { control, unmount } = render({ fieldSize: "sm", inField: true, size: "lg" });

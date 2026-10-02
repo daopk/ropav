@@ -30,7 +30,7 @@ const meta: StoryMeta = {
   argTypes: {
     fullWidth: { control: { type: "boolean" } },
     isDisabled: { control: { type: "boolean" } },
-    size: { control: { type: "radio" }, options: ["sm", "md", "lg"] },
+    size: { control: { type: "radio" }, options: ["xs", "sm", "md", "lg"] },
   },
   args: {
     fullWidth: false,
@@ -82,7 +82,7 @@ export const Default: Story = {
 export const Sizes: Story = {
   render: () => ({
     components,
-    setup: () => ({ items: RANGE_ITEMS, sizes: ["sm", "md", "lg"] as const }),
+    setup: () => ({ items: RANGE_ITEMS, sizes: ["xs", "sm", "md", "lg"] as const }),
     template: `
       <div class="flex flex-col gap-6">
         <div v-for="size in sizes" :key="size" class="flex items-center gap-3">

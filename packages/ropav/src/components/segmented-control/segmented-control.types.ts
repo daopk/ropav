@@ -8,7 +8,7 @@ export interface SegmentedControlRootProps {
   /**
    * The control's scale.
    *
-   * The track lands on 32/36/40px, the three heights a button and a field stand at, so a
+   * The track lands on 28/32/36/40px, the four heights a button and a field stand at, so a
    * segmented control lines up with either.
    *
    * @default "md"

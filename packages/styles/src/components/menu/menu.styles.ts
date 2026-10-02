@@ -12,6 +12,7 @@ export const menuVariants = tv({
       lg: "rp-menu--lg",
       md: "",
       sm: "rp-menu--sm",
+      xs: "rp-menu--xs",
     },
   },
 });

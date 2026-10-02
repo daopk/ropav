@@ -31,7 +31,7 @@ export interface SelectFixtureProps {
   form?: string;
   placeholder?: string;
   variant?: "primary" | "secondary";
-  size?: "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg";
   fullWidth?: boolean;
   /** Whether a `Label` is rendered, since the trigger is named by it. */
   withLabel?: boolean;

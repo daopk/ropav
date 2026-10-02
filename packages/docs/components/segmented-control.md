@@ -32,8 +32,8 @@ segment that is not disabled, so a segmented control is never in a state with no
 `disabled-keys` takes individual segments out, and `is-disabled` freezes the whole control — the
 selection stays visible but cannot be moved, which is the right shape for a read-only view.
 
-The track lands on 32, 36 and 40 pixels for the three sizes, the same heights a button and a field
-stand at, so a segmented control lines up with either beside it.
+The track lands on 28, 32, 36 and 40 pixels for the four sizes, the same heights a button and a
+field stand at, so a segmented control lines up with either beside it.
 
 ## Accessibility
 

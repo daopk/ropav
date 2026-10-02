@@ -29,6 +29,16 @@
    ========================================================================== */
 
 /* A row is as tall as a field of the same size, so a collection standing beside one lines up. */
+.rp-menu--xs {
+  font-size: var(--rp-text-xs);
+  line-height: var(--rp-leading, var(--rp-text-xs--line-height));
+
+  [data-slot="menu-item"] {
+    min-height: calc(var(--rp-spacing) * 7);
+    padding-block: var(--rp-spacing);
+  }
+}
+
 .rp-menu--sm {
   [data-slot="menu-item"] {
     min-height: calc(var(--rp-spacing) * 8);

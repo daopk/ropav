@@ -24,6 +24,7 @@ export const textAreaVariants = tv({
       lg: "rp-textarea--lg",
       md: "",
       sm: "rp-textarea--sm",
+      xs: "rp-textarea--xs",
     },
     variant: {
       primary: "rp-textarea--primary",

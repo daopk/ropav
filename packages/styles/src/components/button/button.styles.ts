@@ -22,6 +22,7 @@ export const buttonVariants = tv({
       lg: "rp-button--lg",
       md: "rp-button--md",
       sm: "rp-button--sm",
+      xs: "rp-button--xs",
     },
     variant: {
       danger: "rp-button--danger",

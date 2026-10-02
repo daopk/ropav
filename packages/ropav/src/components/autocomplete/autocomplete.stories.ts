@@ -656,7 +656,7 @@ export const Sizes: Story = {
         byName,
         contains: filter.value.contains,
         items: ANIMALS,
-        sizes: ["sm", "md", "lg"] as const,
+        sizes: ["xs", "sm", "md", "lg"] as const,
       }),
       template: `
         <div class="flex flex-col gap-4">

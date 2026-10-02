@@ -134,24 +134,27 @@ describe("ComboBox", () => {
       expect(popoverOf(result)!.className).toContain("rp-combo-box__popover");
     });
 
-    it("hands its size to the input and to the popover", async () => {
-      // Two channels, because the parts are in two trees: the input takes its size from the text
-      // field context, and the popover is teleported out of the root entirely.
-      const result = render({ size: "sm" });
+    it.each(["xs", "sm"] as const)(
+      "hands its %s size to the input and to the popover",
+      async (size) => {
+        // Two channels, because the parts are in two trees: the input takes its size from the
+        // text field context, and the popover is teleported out of the root entirely.
+        const result = render({ size });
 
-      await open(result);
+        await open(result);
 
-      expect(result.container.querySelector('[data-slot="input"]')!.className).toContain(
-        "rp-input--sm",
-      );
-      expect(popoverOf(result)!.className).toContain("rp-combo-box__popover--sm");
-    });
+        expect(result.container.querySelector('[data-slot="input"]')!.className).toContain(
+          `rp-input--${size}`,
+        );
+        expect(popoverOf(result)!.className).toContain(`rp-combo-box__popover--${size}`);
+      },
+    );
 
     it("leaves the default size unmarked", () => {
       const result = render({ size: "md" });
 
       expect(result.container.querySelector('[data-slot="input"]')!.className).not.toMatch(
-        /rp-input--(sm|md|lg)/,
+        /rp-input--(xs|sm|md|lg)/,
       );
     });
 

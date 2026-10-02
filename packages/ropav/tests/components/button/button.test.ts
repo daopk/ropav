@@ -82,6 +82,7 @@ describe("Button", () => {
     });
 
     it.each([
+      ["size", "xs", "rp-button--xs"],
       ["size", "lg", "rp-button--lg"],
       ["variant", "danger", "rp-button--danger"],
       ["isIconOnly", true, "rp-button--icon-only"],

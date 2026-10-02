@@ -13,6 +13,7 @@ export const listboxVariants = tv({
       lg: "rp-list-box--lg",
       md: "",
       sm: "rp-list-box--sm",
+      xs: "rp-list-box--xs",
     },
     variant: {
       danger: "rp-list-box--danger",

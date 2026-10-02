@@ -6,7 +6,7 @@ outline: [2, 3]
 
 # TextArea
 
-`TextArea` is the multi-line counterpart of `Input`: the same variants, the same three sizes, and
+`TextArea` is the multi-line counterpart of `Input`: the same variants, the same four sizes, and
 the same behaviour inside a field. It is the control, not the field — for a label, a description
 and a validation state, put it inside a [TextField](/components/textfield) exactly as you would an
 input.

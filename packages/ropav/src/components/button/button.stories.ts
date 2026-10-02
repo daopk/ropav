@@ -26,7 +26,7 @@ const meta: StoryMeta = {
     },
     size: {
       control: { type: "select" },
-      options: ["sm", "md", "lg"],
+      options: ["xs", "sm", "md", "lg"],
     },
     variant: {
       control: { type: "select" },
@@ -81,7 +81,7 @@ export const Default: Story = {
 export const Sizes: Story = {
   render: () => ({
     components: { ...components, IconEllipsis, IconPlus },
-    setup: () => ({ sizes: ["sm", "md", "lg"] }),
+    setup: () => ({ sizes: ["xs", "sm", "md", "lg"] }),
     template: `
       <div class="flex flex-col gap-6">
         <div class="flex items-center gap-3">

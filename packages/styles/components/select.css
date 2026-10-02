@@ -414,6 +414,20 @@
 
 /* The trigger's own metrics, and the option rows in a popover that is portalled out of this tree -
  * which is why the popover carries its own size class rather than being reached from the base. */
+.rp-select--xs .rp-select__trigger {
+  min-height: calc(var(--rp-spacing) * 7);
+  padding-block: calc(var(--rp-spacing) * 0.5);
+  font-size: var(--rp-text-base);
+  line-height: var(--rp-leading, var(--rp-text-base--line-height));
+  @media (width >= 40rem) {
+    padding-block: calc(var(--rp-spacing) * 1.5);
+  }
+  @media (width >= 40rem) {
+    font-size: var(--rp-text-xs);
+    line-height: var(--rp-leading, var(--rp-text-xs--line-height));
+  }
+}
+
 .rp-select--sm .rp-select__trigger {
   min-height: calc(var(--rp-spacing) * 8);
   padding-block: var(--rp-spacing);
@@ -433,6 +447,16 @@
   padding-block: calc(var(--rp-spacing) * 2);
   font-size: var(--rp-text-base);
   line-height: var(--rp-leading, var(--rp-text-base--line-height));
+}
+
+.rp-select__popover--xs {
+  font-size: var(--rp-text-xs);
+  line-height: var(--rp-leading, var(--rp-text-xs--line-height));
+
+  [data-slot="list-box-item"] {
+    min-height: calc(var(--rp-spacing) * 7);
+    padding-block: var(--rp-spacing);
+  }
 }
 
 .rp-select__popover--sm {

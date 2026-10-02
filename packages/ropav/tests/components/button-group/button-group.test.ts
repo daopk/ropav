@@ -77,6 +77,14 @@ describe("ButtonGroup", () => {
       unmount();
     });
 
+    it("passes the extra small size to the buttons", () => {
+      const { getByRole, unmount } = renderGroup({ size: "xs" });
+
+      expect(getByRole("button", { name: "Save" }).classList.contains("rp-button--xs")).toBe(true);
+
+      unmount();
+    });
+
     it("passes its disabled state to the buttons", () => {
       const { getByRole, unmount } = renderGroup({ isDisabled: true });
 

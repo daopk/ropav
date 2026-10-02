@@ -179,6 +179,37 @@
    Size variants
    ========================================================================== */
 
+.rp-pagination--xs {
+  .rp-pagination__link {
+    width: calc(var(--rp-spacing) * 6);
+    height: calc(var(--rp-spacing) * 6);
+    font-size: var(--rp-text-xs);
+    line-height: var(--rp-leading, var(--rp-text-xs--line-height));
+
+    &:active,
+    &[data-pressed="true"] {
+      transform: scale(0.99);
+    }
+  }
+
+  .rp-pagination__link--nav {
+    width: auto;
+    padding-inline: calc(var(--rp-spacing) * 1.5);
+  }
+
+  .rp-pagination__ellipsis {
+    width: calc(var(--rp-spacing) * 6);
+    height: calc(var(--rp-spacing) * 6);
+    font-size: var(--rp-text-xs);
+    line-height: var(--rp-leading, var(--rp-text-xs--line-height));
+  }
+
+  .rp-pagination__summary {
+    font-size: var(--rp-text-xs);
+    line-height: var(--rp-leading, var(--rp-text-xs--line-height));
+  }
+}
+
 .rp-pagination--sm {
   .rp-pagination__link {
     width: calc(var(--rp-spacing) * 7);

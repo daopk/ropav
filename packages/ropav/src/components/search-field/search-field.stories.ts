@@ -66,11 +66,11 @@ export const Default: Story = {
   }),
 };
 
-/** The three heights a button stands at, so a search field and a button line up. */
+/** The four heights a button stands at, so a search field and a button line up. */
 export const Sizes: Story = {
   render: () => ({
     components,
-    setup: () => ({ sizes: ["sm", "md", "lg"] as const }),
+    setup: () => ({ sizes: ["xs", "sm", "md", "lg"] as const }),
     template: `
       <div class="flex flex-col gap-4">
         <SearchField

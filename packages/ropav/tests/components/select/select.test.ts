@@ -88,25 +88,28 @@ describe("Select", () => {
       expect(trigger).toHaveClass("rp-select__trigger--full-width");
     });
 
-    it("carries the size modifier on the root and on the popover", async () => {
-      // The popover is teleported out of the root, so it cannot be reached from the root's
-      // modifier and has to carry one of its own.
-      const { root, trigger } = await render({ size: "sm" });
+    it.each(["xs", "sm"] as const)(
+      "carries the %s size modifier on the root and on the popover",
+      async (size) => {
+        // The popover is teleported out of the root, so it cannot be reached from the root's
+        // modifier and has to carry one of its own.
+        const { root, trigger } = await render({ size });
 
-      expect(root).toHaveClass("rp-select--sm");
+        expect(root).toHaveClass(`rp-select--${size}`);
 
-      press(trigger);
-      await settle();
+        press(trigger);
+        await settle();
 
-      expect(document.querySelector('[data-slot="select-popover"]')).toHaveClass(
-        "rp-select__popover--sm",
-      );
-    });
+        expect(document.querySelector('[data-slot="select-popover"]')).toHaveClass(
+          `rp-select__popover--${size}`,
+        );
+      },
+    );
 
     it("leaves the default size unmarked", async () => {
       const { root } = await render({ size: "md" });
 
-      expect(root.className).not.toMatch(/rp-select--(sm|md|lg)/);
+      expect(root.className).not.toMatch(/rp-select--(xs|sm|md|lg)/);
     });
 
     it("keeps a caller's class on every part, beside the BEM one", async () => {

@@ -70,6 +70,14 @@ describe("SegmentedControl", () => {
       expect(root.className).toContain("rp-segmented-control--full-width");
     });
 
+    it("renders the extra small modifier on the root", async () => {
+      const { container } = await render({ size: "xs" });
+
+      expect(container.querySelector('[data-slot="segmented-control"]')!.className).toContain(
+        "rp-segmented-control--xs",
+      );
+    });
+
     it("takes the default size without a caller saying so", async () => {
       const { container } = await render();
 

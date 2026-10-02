@@ -17,6 +17,7 @@ export const toggleButtonVariants = tv({
       lg: "rp-toggle-button--lg",
       md: "rp-toggle-button--md",
       sm: "rp-toggle-button--sm",
+      xs: "rp-toggle-button--xs",
     },
     variant: {
       default: "rp-toggle-button--default",

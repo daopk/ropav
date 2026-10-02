@@ -294,6 +294,25 @@
 
 /* The shell states the floor and the control inside carries the metrics, which is the same split
  * the base makes - the group may grow around a textarea, so it cannot state a height. */
+.rp-input-group--xs {
+  min-height: calc(var(--rp-spacing) * 7);
+  font-size: var(--rp-text-xs);
+  line-height: var(--rp-leading, var(--rp-text-xs--line-height));
+
+  .rp-input-group__input {
+    padding-block: calc(var(--rp-spacing) * 0.5);
+    font-size: var(--rp-text-base);
+    line-height: var(--rp-leading, var(--rp-text-base--line-height));
+    @media (width >= 40rem) {
+      padding-block: calc(var(--rp-spacing) * 1.5);
+    }
+    @media (width >= 40rem) {
+      font-size: var(--rp-text-xs);
+      line-height: var(--rp-leading, var(--rp-text-xs--line-height));
+    }
+  }
+}
+
 .rp-input-group--sm {
   min-height: calc(var(--rp-spacing) * 8);
 

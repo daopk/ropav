@@ -34,6 +34,10 @@ export const selectVariants = tv({
         base: "rp-select--sm",
         popover: "rp-select__popover--sm",
       },
+      xs: {
+        base: "rp-select--xs",
+        popover: "rp-select__popover--xs",
+      },
     },
     variant: {
       primary: {

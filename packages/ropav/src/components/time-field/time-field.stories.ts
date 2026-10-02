@@ -73,11 +73,11 @@ export const Default: Story = {
   }),
 };
 
-/** The three heights a button stands at, set on the group that draws the field. */
+/** The four heights a button stands at, set on the group that draws the field. */
 export const Sizes: Story = {
   render: () => ({
     components,
-    setup: () => ({ sizes: ["sm", "md", "lg"] as const }),
+    setup: () => ({ sizes: ["xs", "sm", "md", "lg"] as const }),
     template: `
       <div class="flex flex-col gap-4">
         <TimeField

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Button } from "ropav";
 
-const sizes = ["sm", "md", "lg"] as const;
+const sizes = ["xs", "sm", "md", "lg"] as const;
 </script>
 
 <template>

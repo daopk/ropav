@@ -31,6 +31,9 @@ export const dateInputGroupVariants = tv({
       sm: {
         base: "rp-date-input-group--sm",
       },
+      xs: {
+        base: "rp-date-input-group--xs",
+      },
     },
     variant: {
       primary: {

@@ -41,7 +41,7 @@ describe("Pagination", () => {
       unmount();
     });
 
-    it.each(["sm", "md", "lg"] as const)("renders the %s size", (size) => {
+    it.each(["xs", "sm", "md", "lg"] as const)("renders the %s size", (size) => {
       const { nav, unmount } = renderPagination({ size });
 
       expect(nav).toHaveClass(`rp-pagination--${size}`);

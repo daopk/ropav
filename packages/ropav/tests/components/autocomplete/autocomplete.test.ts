@@ -137,26 +137,29 @@ describe("Autocomplete", () => {
       expect(result.screen.queryByRole("searchbox")).toBeNull();
     });
 
-    it("carries the size modifier on the root and on the popover", async () => {
-      // The popover is teleported out of the root, so it cannot be reached from the root's
-      // modifier and has to carry one of its own.
-      const result = render({ size: "sm" });
+    it.each(["xs", "sm"] as const)(
+      "carries the %s size modifier on the root and on the popover",
+      async (size) => {
+        // The popover is teleported out of the root, so it cannot be reached from the root's
+        // modifier and has to carry one of its own.
+        const result = render({ size });
 
-      await open(result);
+        await open(result);
 
-      expect(result.container.querySelector('[data-slot="autocomplete"]')!.className).toContain(
-        "rp-autocomplete--sm",
-      );
-      expect(
-        result.baseElement.querySelector('[data-slot="autocomplete-popover"]')!.className,
-      ).toContain("rp-autocomplete__popover--sm");
-    });
+        expect(result.container.querySelector('[data-slot="autocomplete"]')!.className).toContain(
+          `rp-autocomplete--${size}`,
+        );
+        expect(
+          result.baseElement.querySelector('[data-slot="autocomplete-popover"]')!.className,
+        ).toContain(`rp-autocomplete__popover--${size}`);
+      },
+    );
 
     it("leaves the default size unmarked", () => {
       const result = render({ size: "md" });
 
       expect(result.container.querySelector('[data-slot="autocomplete"]')!.className).not.toMatch(
-        /rp-autocomplete--(sm|md|lg)/,
+        /rp-autocomplete--(xs|sm|md|lg)/,
       );
     });
 

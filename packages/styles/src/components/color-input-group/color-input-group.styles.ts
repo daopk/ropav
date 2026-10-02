@@ -29,6 +29,9 @@ export const colorInputGroupVariants = tv({
       sm: {
         base: "rp-color-input-group--sm",
       },
+      xs: {
+        base: "rp-color-input-group--xs",
+      },
     },
     variant: {
       primary: {

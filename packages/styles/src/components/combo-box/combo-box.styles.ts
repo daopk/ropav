@@ -32,6 +32,9 @@ export const comboBoxVariants = tv({
       sm: {
         popover: "rp-combo-box__popover--sm",
       },
+      xs: {
+        popover: "rp-combo-box__popover--xs",
+      },
     },
   },
 });

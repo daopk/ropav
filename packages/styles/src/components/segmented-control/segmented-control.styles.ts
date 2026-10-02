@@ -30,6 +30,9 @@ export const segmentedControlVariants = tv({
       sm: {
         base: "rp-segmented-control--sm",
       },
+      xs: {
+        base: "rp-segmented-control--xs",
+      },
     },
   },
 });

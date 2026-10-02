@@ -1,6 +1,6 @@
 ---
 title: Button
-description: A button fires an action, in seven variants and three sizes.
+description: A button fires an action, in seven variants and four sizes.
 outline: [2, 3]
 ---
 

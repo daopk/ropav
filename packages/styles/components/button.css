@@ -116,6 +116,23 @@
 }
 
 /* Size variants */
+.rp-button--xs {
+  height: calc(var(--rp-spacing) * 7);
+  padding-inline: calc(var(--rp-spacing) * 2.5);
+  font-size: var(--rp-text-xs);
+  line-height: var(--rp-leading, var(--rp-text-xs--line-height));
+
+  & svg:not([data-slot="spinner"] svg, [data-slot="link-icon"] svg) {
+    width: calc(var(--rp-spacing) * 3.5);
+    height: calc(var(--rp-spacing) * 3.5);
+  }
+
+  &:active,
+  &[data-pressed="true"] {
+    transform: scale(0.99);
+  }
+}
+
 .rp-button--sm {
   height: calc(var(--rp-spacing) * 8);
   padding-inline: calc(var(--rp-spacing) * 3);
@@ -213,6 +230,10 @@
 .rp-button--icon-only {
   width: calc(var(--rp-spacing) * 9);
   padding: 0px;
+}
+
+.rp-button--icon-only.rp-button--xs {
+  width: calc(var(--rp-spacing) * 7);
 }
 
 .rp-button--icon-only.rp-button--sm {

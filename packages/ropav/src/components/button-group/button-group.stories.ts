@@ -48,7 +48,7 @@ const meta: StoryMeta = {
     },
     size: {
       control: { type: "select" },
-      options: ["sm", "md", "lg"],
+      options: ["xs", "sm", "md", "lg"],
     },
     variant: {
       control: { type: "select" },
@@ -95,6 +95,7 @@ export const Sizes: Story = {
     components,
     setup: () => ({
       sizes: [
+        { label: "Extra small", size: "xs" },
         { label: "Small", size: "sm" },
         { label: "Medium (default)", size: "md" },
         { label: "Large", size: "lg" },
