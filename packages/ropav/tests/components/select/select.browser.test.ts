@@ -198,6 +198,28 @@ describe("Select (browser)", () => {
       expect(popover).toHaveAttribute("data-placement", "bottom");
       expect(box.top).toBeGreaterThanOrEqual(trigger.bottom);
     });
+
+    /*
+     * The listbox's own modifier sizes the rows, and reaches them only because the select hands
+     * its size down: the popover is teleported out of the root, so no rule keyed on
+     * `.rp-select--xs` could find them.
+     */
+    it.each([
+      ["xs", 28, "12px"],
+      ["lg", 40, "16px"],
+    ] as const)("stands a %s option row at %ipx with %s type", async (size, height, fontSize) => {
+      const result = mount({ size });
+
+      await nextTick();
+      await open(result);
+
+      const row = document.body.querySelector<HTMLElement>('[data-slot="list-box-item"]')!;
+
+      expect({ fontSize: getComputedStyle(row).fontSize, height: row.offsetHeight }).toEqual({
+        fontSize,
+        height,
+      });
+    });
   });
 
   describe("presence", () => {

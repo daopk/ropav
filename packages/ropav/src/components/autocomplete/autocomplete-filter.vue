@@ -162,6 +162,8 @@ provideListBoxStateContext({
   // mouse — otherwise the next arrow press would jump back to wherever the keyboard left off.
   shouldFocusOnHover: true,
   shouldUseVirtualFocus: () => !props.disableVirtualFocus,
+  // Carried over from the root's, which this one shadows, so the rows keep the autocomplete's size.
+  size: () => root.size.value,
 });
 
 provideAutocompleteInputContext({

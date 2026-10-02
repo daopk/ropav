@@ -27,16 +27,13 @@ export const selectVariants = tv({
     size: {
       lg: {
         base: "rp-select--lg",
-        popover: "rp-select__popover--lg",
       },
       md: {},
       sm: {
         base: "rp-select--sm",
-        popover: "rp-select__popover--sm",
       },
       xs: {
         base: "rp-select--xs",
-        popover: "rp-select__popover--xs",
       },
     },
     variant: {

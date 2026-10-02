@@ -82,7 +82,9 @@
    Size variants
    ========================================================================== */
 
-/* A row is as tall as a field of the same size, so a collection standing beside one lines up. */
+/* A row is as tall as a field of the same size, so a collection standing beside one lines up.
+ * These are a picker's option rows too: Select, ComboBox and Autocomplete hand their size to the
+ * list box in their popover. */
 .rp-list-box--xs {
   font-size: var(--rp-text-xs);
   line-height: var(--rp-leading, var(--rp-text-xs--line-height));

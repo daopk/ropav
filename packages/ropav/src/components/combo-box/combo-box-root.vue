@@ -158,7 +158,7 @@ const selectedText = computed(() => {
   return new Intl.ListFormat(locale.value.locale).format(texts);
 });
 
-const styles = computed(() => comboBoxVariants({ fullWidth: props.fullWidth, size: props.size }));
+const styles = computed(() => comboBoxVariants({ fullWidth: props.fullWidth }));
 
 const isDisabled = computed(() => Boolean(props.isDisabled));
 
@@ -222,6 +222,7 @@ provideListBoxStateContext({
   // The pointer and the keyboard drive the same highlight, so it follows the mouse.
   shouldFocusOnHover: true,
   shouldUseVirtualFocus: true,
+  size: () => props.size,
 });
 
 /**

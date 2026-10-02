@@ -161,6 +161,7 @@ provideListBoxStateContext({
   // The pointer and the keyboard drive the same single choice here, so the highlight follows
   // the mouse.
   shouldFocusOnHover: true,
+  size: () => props.size,
 });
 
 provideOverlayTargetContext({

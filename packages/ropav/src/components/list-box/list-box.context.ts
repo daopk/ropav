@@ -5,6 +5,7 @@ import type { UseDroppableCollectionStateReturn } from "../../composables/use-dr
 import type { UseListKeyboardReturn } from "../../composables/use-list-keyboard";
 import type { FocusStrategy } from "../../composables/use-overlay-trigger-state";
 import type { UseSelectionManagerReturn } from "../../composables/use-selection-manager";
+import type { ListBoxVariants } from "@ropav/styles";
 import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
 import { createContext } from "../../utils/create-context";
@@ -73,6 +74,13 @@ export interface ListBoxStateContext {
   ariaLabel?: MaybeRefOrGetter<string | undefined>;
   /** Where focus lands when the listbox appears, given how its owner was opened. */
   autoFocus?: MaybeRefOrGetter<boolean | FocusStrategy | undefined>;
+  /**
+   * The owner's size, which the listbox's rows take when it declares none of its own.
+   *
+   * Handed down rather than reached by a selector: a picker's listbox is teleported out of the
+   * picker's DOM along with the popover, so no rule keyed on the root can find its rows.
+   */
+  size?: MaybeRefOrGetter<ListBoxVariants["size"] | undefined>;
   /** Whether hovering an option moves focus to it. @default false */
   shouldFocusOnHover?: MaybeRefOrGetter<boolean | undefined>;
   /**

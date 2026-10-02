@@ -89,20 +89,18 @@ describe("Select", () => {
     });
 
     it.each(["xs", "sm"] as const)(
-      "carries the %s size modifier on the root and on the popover",
+      "carries the %s size modifier on the root and hands it to the listbox in the popover",
       async (size) => {
-        // The popover is teleported out of the root, so it cannot be reached from the root's
-        // modifier and has to carry one of its own.
-        const { root, trigger } = await render({ size });
+        // The popover is teleported out of the root, so no rule keyed on the root's modifier can
+        // reach its rows. The size travels with the listbox's state instead.
+        const { listbox, root, trigger } = await render({ size });
 
         expect(root).toHaveClass(`rp-select--${size}`);
 
         press(trigger);
         await settle();
 
-        expect(document.querySelector('[data-slot="select-popover"]')).toHaveClass(
-          `rp-select__popover--${size}`,
-        );
+        expect(listbox()).toHaveClass(`rp-list-box--${size}`);
       },
     );
 

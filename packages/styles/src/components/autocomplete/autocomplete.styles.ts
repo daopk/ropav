@@ -28,16 +28,13 @@ export const autocompleteVariants = tv({
     size: {
       lg: {
         base: "rp-autocomplete--lg",
-        popover: "rp-autocomplete__popover--lg",
       },
       md: {},
       sm: {
         base: "rp-autocomplete--sm",
-        popover: "rp-autocomplete__popover--sm",
       },
       xs: {
         base: "rp-autocomplete--xs",
-        popover: "rp-autocomplete__popover--xs",
       },
     },
     variant: {

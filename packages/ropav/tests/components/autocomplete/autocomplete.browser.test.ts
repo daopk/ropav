@@ -311,6 +311,28 @@ describe("Autocomplete (browser)", () => {
       expect(getComputedStyle(clear).opacity).toBe("1");
       expect(getComputedStyle(clear).pointerEvents).toBe("auto");
     });
+
+    /*
+     * The listbox's own modifier sizes the rows, and reaches them only because the autocomplete
+     * hands its size down: the popover is teleported out of the root, so no rule keyed on
+     * `.rp-autocomplete--xs` could find them.
+     */
+    it.each([
+      ["xs", 28, "12px"],
+      ["lg", 40, "16px"],
+    ] as const)("stands a %s option row at %ipx with %s type", async (size, height, fontSize) => {
+      const result = mount({ size });
+
+      await nextTick();
+      await open(result.container);
+
+      const row = document.body.querySelector<HTMLElement>('[data-slot="list-box-item"]')!;
+
+      expect({ fontSize: getComputedStyle(row).fontSize, height: row.offsetHeight }).toEqual({
+        fontSize,
+        height,
+      });
+    });
   });
 
   describe("a windowed collection", () => {

@@ -145,6 +145,7 @@ provideAutocompleteContext({
   setTriggerElement: (element) => {
     triggerElement.value = element;
   },
+  size: computed(() => props.size),
   slots: styles,
   state: state as UseSelectStateReturn<unknown>,
   triggerElement,
@@ -185,6 +186,7 @@ provideListBoxStateContext({
   listId: () => select.listId.value,
   selection: state.selection,
   shouldFocusOnHover: true,
+  size: () => props.size,
 });
 
 /**

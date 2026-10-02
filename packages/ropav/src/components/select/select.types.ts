@@ -68,7 +68,10 @@ export interface SelectRootProps<T = unknown> {
   ariaLabelledby?: string;
   ariaDescribedby?: string;
   variant?: SelectVariants["variant"];
-  /** How tall the trigger stands, matching a button of the same size. @default "md" */
+  /**
+   * How tall the trigger stands, matching a button of the same size. Handed to the listbox in the
+   * popover, unless it declares one of its own. @default "md"
+   */
   size?: SelectVariants["size"];
   fullWidth?: boolean;
 }

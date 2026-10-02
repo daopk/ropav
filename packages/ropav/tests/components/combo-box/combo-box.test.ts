@@ -135,10 +135,11 @@ describe("ComboBox", () => {
     });
 
     it.each(["xs", "sm"] as const)(
-      "hands its %s size to the input and to the popover",
+      "hands its %s size to the input and to the listbox in the popover",
       async (size) => {
         // Two channels, because the parts are in two trees: the input takes its size from the
-        // text field context, and the popover is teleported out of the root entirely.
+        // text field context, and the listbox, teleported out of the root with the popover, from
+        // the state the root hands it.
         const result = render({ size });
 
         await open(result);
@@ -146,7 +147,9 @@ describe("ComboBox", () => {
         expect(result.container.querySelector('[data-slot="input"]')!.className).toContain(
           `rp-input--${size}`,
         );
-        expect(popoverOf(result)!.className).toContain(`rp-combo-box__popover--${size}`);
+        expect(popoverOf(result)!.querySelector('[data-slot="list-box"]')!.className).toContain(
+          `rp-list-box--${size}`,
+        );
       },
     );
 

@@ -287,6 +287,28 @@ describe("ComboBox (browser)", () => {
       expect(popover).not.toBeNull();
       expect(getComputedStyle(icon).rotate).toBe("180deg");
     });
+
+    /*
+     * The listbox's own modifier sizes the rows, and reaches them only because the combo box hands
+     * its size down: the popover is teleported out of the root, so no rule keyed on
+     * `.rp-combo-box--xs` could find them.
+     */
+    it.each([
+      ["xs", 28, "12px"],
+      ["lg", 40, "16px"],
+    ] as const)("stands a %s option row at %ipx with %s type", async (size, height, fontSize) => {
+      const result = mount({ size });
+
+      await nextTick();
+      await open(result.container);
+
+      const row = document.body.querySelector<HTMLElement>('[data-slot="list-box-item"]')!;
+
+      expect({ fontSize: getComputedStyle(row).fontSize, height: row.offsetHeight }).toEqual({
+        fontSize,
+        height,
+      });
+    });
   });
 
   describe("the way out", () => {

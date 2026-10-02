@@ -57,10 +57,6 @@ const callerSlots = defineSlots<{
  */
 const itemOf = (node?: VirtualizerNode) => node?.content as T | undefined;
 
-const styles = computed(() =>
-  listboxVariants({ class: props.class, size: props.size, variant: props.variant }),
-);
-
 /**
  * The state this listbox runs on, which is not always its own.
  *
@@ -69,6 +65,14 @@ const styles = computed(() =>
  * one is there the listbox borrows it whole rather than keeping a second copy that would drift.
  */
 const owner = useListBoxStateContext();
+
+// A size on the listbox itself wins over the one its owner hands down, as an `Input`'s wins over
+// its field's.
+const resolvedSize = computed(() => props.size ?? toValue(owner?.size));
+
+const styles = computed(() =>
+  listboxVariants({ class: props.class, size: resolvedSize.value, variant: props.variant }),
+);
 
 const ownListId = useId();
 const collectionId = useId();

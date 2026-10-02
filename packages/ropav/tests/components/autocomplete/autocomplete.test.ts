@@ -138,20 +138,18 @@ describe("Autocomplete", () => {
     });
 
     it.each(["xs", "sm"] as const)(
-      "carries the %s size modifier on the root and on the popover",
+      "carries the %s size modifier on the root and hands it to the listbox in the popover",
       async (size) => {
-        // The popover is teleported out of the root, so it cannot be reached from the root's
-        // modifier and has to carry one of its own.
+        // The popover is teleported out of the root, so no rule keyed on the root's modifier can
+        // reach its rows. The size travels with the listbox's state instead — and here through
+        // `AutocompleteFilter`, which hands down a state of its own and has to carry it on.
         const result = render({ size });
-
-        await open(result);
+        const listbox = await open(result);
 
         expect(result.container.querySelector('[data-slot="autocomplete"]')!.className).toContain(
           `rp-autocomplete--${size}`,
         );
-        expect(
-          result.baseElement.querySelector('[data-slot="autocomplete-popover"]')!.className,
-        ).toContain(`rp-autocomplete__popover--${size}`);
+        expect(listbox.className).toContain(`rp-list-box--${size}`);
       },
     );
 

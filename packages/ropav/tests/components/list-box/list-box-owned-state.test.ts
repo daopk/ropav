@@ -193,4 +193,25 @@ describe("ListBox driven from above", () => {
       expect(items()[1]).not.toHaveFocus();
     });
   });
+
+  describe("size", () => {
+    it.each(["xs", "sm", "lg"] as const)("takes the owner's %s size", async (size) => {
+      const { listbox } = await render({ size });
+
+      expect(listbox).toHaveClass(`rp-list-box--${size}`);
+    });
+
+    it("keeps a size of its own over the owner's", async () => {
+      const { listbox } = await render({ listBoxSize: "lg", size: "xs" });
+
+      expect(listbox).toHaveClass("rp-list-box--lg");
+      expect(listbox).not.toHaveClass("rp-list-box--xs");
+    });
+
+    it("leaves the default size unmarked", async () => {
+      const { listbox } = await render({ size: "md" });
+
+      expect(listbox.className).not.toMatch(/rp-list-box--(xs|sm|md|lg)/);
+    });
+  });
 });

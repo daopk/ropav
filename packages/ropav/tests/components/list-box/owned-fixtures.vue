@@ -33,6 +33,10 @@ const props = withDefaults(
     focusedKey?: string;
     selectionMode?: "none" | "single" | "multiple";
     defaultSelectedKeys?: Iterable<string>;
+    /** The size the owner hands down, as a picker hands down its own. */
+    size?: "xs" | "sm" | "md" | "lg";
+    /** A size set on the listbox itself. */
+    listBoxSize?: "xs" | "sm" | "md" | "lg";
   }>(),
   {
     autoFocus: undefined,
@@ -45,11 +49,13 @@ const props = withDefaults(
       { id: "3", name: "Martha" },
     ],
     labelledBy: undefined,
+    listBoxSize: undefined,
     listId: undefined,
     renderItems: true,
     selectionMode: "single",
     shouldFocusOnHover: undefined,
     shouldUseVirtualFocus: undefined,
+    size: undefined,
   },
 );
 
@@ -98,6 +104,7 @@ provideListBoxStateContext({
   selection,
   shouldFocusOnHover: () => props.shouldFocusOnHover,
   shouldUseVirtualFocus: () => props.shouldUseVirtualFocus,
+  size: () => props.size,
 });
 
 defineExpose({ collection, selection });
@@ -106,7 +113,7 @@ defineExpose({ collection, selection });
 <template>
   <span v-if="props.labelledBy" :id="props.labelledBy">Users</span>
   <input v-if="props.shouldUseVirtualFocus" data-testid="outside" type="text" />
-  <ListBox>
+  <ListBox :size="props.listBoxSize">
     <ListBoxItem v-for="item in props.renderItems ? props.items : []" :id="item.id" :key="item.id">
       {{ item.name }}
       <ListBoxItemIndicator />
