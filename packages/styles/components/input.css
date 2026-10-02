@@ -1,3 +1,25 @@
+/**
+ * One line of a field, at each size.
+ *
+ * The scale is the control scale: 28, 32, 36 and 40px for `xs`, `sm`, `md` and `lg`, the four
+ * heights a button stands at, so a field and a button of the same size line up.
+ *
+ * The padding carries the height rather than a `height`, because a field is content-driven - some
+ * shells grow, an input group around a textarea or a multi-select trigger wrapping its chips, and
+ * a height would fight them. The shell states its own floor instead: a `min-height` where it may
+ * grow, a `height` where it may not. The control inside sets the type and the padding either way.
+ *
+ * The type changes at 40rem, and the padding changes with it. Below 40rem every size sets 16px
+ * type, because anything smaller makes mobile Safari zoom the page when the field takes focus, and
+ * 16px sets a 24px line, so the padding is 2, 4, 6 and 8px. From 40rem up the type is 12, 14, 14
+ * and 16px on lines of 16, 20, 20 and 24px, and the padding gives back the difference, so the
+ * height comes out the same either way. `lg` keeps 16px throughout, as the large button does.
+ *
+ * Every field writes the same block out in its own stylesheet - the textarea, the input, search,
+ * number, colour and date groups, and the select and autocomplete triggers - rather than sharing
+ * this one, because each `components/*.css` is a public import that has to stand on its own.
+ * `packages/ropav/tests/styles/field-metrics.browser.test.ts` is what holds the copies together.
+ */
 .rp-input {
   border-radius: var(--rp-field-radius, calc(var(--rp-radius) * 0.75));
   border-style: var(--rp-border-style);
