@@ -43,7 +43,7 @@ directly:
 ```ts
 import type { ButtonVariants } from "@ropav/styles";
 
-type Size = ButtonVariants["size"]; // "sm" | "md" | "lg"
+type Size = ButtonVariants["size"]; // "xs" | "sm" | "md" | "lg"
 ```
 
 ## Shipping less
