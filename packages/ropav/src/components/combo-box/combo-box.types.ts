@@ -115,7 +115,7 @@ export interface ComboBoxRootProps<T = unknown> {
   /** Whether the combo box stretches to fill its container. */
   fullWidth?: boolean;
   /** Visual variant the `Input` inside picks up. @default "primary" */
-  variant?: "primary" | "secondary";
+  variant?: InputVariants["variant"];
 }
 
 export interface ComboBoxRootEmits {

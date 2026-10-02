@@ -1,3 +1,4 @@
+import type { SelectProps } from "@/components/select";
 import type { SelectedValue } from "@/composables/use-select-state";
 
 /** The datum every select fixture builds its options from. */
@@ -30,8 +31,8 @@ export interface SelectFixtureProps {
   /** Id of the form the hidden control belongs to, wired by attribute. */
   form?: string;
   placeholder?: string;
-  variant?: "primary" | "secondary";
-  size?: "xs" | "sm" | "md" | "lg";
+  variant?: SelectProps["variant"];
+  size?: SelectProps["size"];
   fullWidth?: boolean;
   /** Whether a `Label` is rendered, since the trigger is named by it. */
   withLabel?: boolean;

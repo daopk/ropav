@@ -1,3 +1,4 @@
+import type { AutocompleteProps } from "@/components/autocomplete";
 import type { SelectedValue } from "@/composables/use-select-state";
 
 /** The datum every autocomplete fixture builds its options from. */
@@ -33,8 +34,8 @@ export interface AutocompleteFixtureProps {
   /** Id of the form the hidden control belongs to, wired by attribute. */
   form?: string;
   placeholder?: string;
-  variant?: "primary" | "secondary";
-  size?: "xs" | "sm" | "md" | "lg";
+  variant?: AutocompleteProps["variant"];
+  size?: AutocompleteProps["size"];
   fullWidth?: boolean;
   /** Whether the search field narrows the options at all. */
   withFilter?: boolean;

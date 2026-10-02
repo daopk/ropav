@@ -1,10 +1,11 @@
+import type { TimeFieldGroupProps } from "@/components/time-field";
 import type { ValidationBehavior } from "@/composables/use-form-validation-state";
 import type { TimeGranularity } from "@/composables/use-time-field-state";
 import type { TimeValue } from "@/utils/date-format";
 
 export interface TimeFieldFixtureProps {
   class?: string;
-  variant?: "primary" | "secondary";
+  variant?: TimeFieldGroupProps["variant"];
   fullWidth?: boolean;
   value?: TimeValue | null;
   defaultValue?: TimeValue | null;

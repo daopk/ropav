@@ -1,6 +1,9 @@
+import type { InputGroupProps } from "@/components/input-group";
+import type { TextFieldProps } from "@/components/textfield";
+
 export interface InputGroupFixtureProps {
   class?: string;
-  variant?: "primary" | "secondary";
+  variant?: InputGroupProps["variant"];
   fullWidth?: boolean;
   isDisabled?: boolean;
   isInvalid?: boolean;
@@ -10,7 +13,7 @@ export interface InputGroupFixtureProps {
   /** Field-level state, to check the group picks it up when it declares none of its own. */
   fieldIsDisabled?: boolean;
   fieldIsInvalid?: boolean;
-  fieldVariant?: "primary" | "secondary";
+  fieldVariant?: TextFieldProps["variant"];
   fieldDefaultValue?: string;
   withPrefix?: boolean;
   withSuffix?: boolean;

@@ -1,3 +1,4 @@
+import type { ComboBoxProps } from "@/components/combo-box";
 import type { ComboBoxFilter, ComboBoxMenuTrigger } from "@/composables/use-combo-box-state";
 import type { SelectedValue } from "@/composables/use-select-state";
 
@@ -38,8 +39,8 @@ export interface ComboBoxFixtureProps {
   /** Whether a form carries the chosen key or the text in the field. */
   formValue?: "key" | "text";
   placeholder?: string;
-  variant?: "primary" | "secondary";
-  size?: "xs" | "sm" | "md" | "lg";
+  variant?: ComboBoxProps["variant"];
+  size?: ComboBoxProps["size"];
   fullWidth?: boolean;
   /** Whether a `Label` is rendered, since the field is named by it. */
   withLabel?: boolean;

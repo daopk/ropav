@@ -1,5 +1,6 @@
 <script setup lang="ts" vapor>
 import type { FixtureItem } from "./fixtures.types";
+import type { ListBoxProps } from "@/components/list-box";
 import type { FocusStrategy } from "@/composables/use-overlay-trigger-state";
 import type { CollectionSelection } from "@/composables/use-selection-manager";
 
@@ -34,9 +35,9 @@ const props = withDefaults(
     selectionMode?: "none" | "single" | "multiple";
     defaultSelectedKeys?: Iterable<string>;
     /** The size the owner hands down, as a picker hands down its own. */
-    size?: "xs" | "sm" | "md" | "lg";
+    size?: ListBoxProps["size"];
     /** A size set on the listbox itself. */
-    listBoxSize?: "xs" | "sm" | "md" | "lg";
+    listBoxSize?: ListBoxProps["size"];
   }>(),
   {
     autoFocus: undefined,

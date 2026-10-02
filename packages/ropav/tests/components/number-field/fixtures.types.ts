@@ -1,3 +1,4 @@
+import type { NumberFieldProps } from "@/components/number-field";
 import type {
   ValidationBehavior,
   ValidationFunction,
@@ -6,7 +7,7 @@ import type { NumberFieldCommitBehavior } from "@/composables/use-number-field-s
 
 export interface NumberFieldFixtureProps {
   class?: string;
-  variant?: "primary" | "secondary";
+  variant?: NumberFieldProps["variant"];
   fullWidth?: boolean;
   value?: number | null;
   defaultValue?: number;

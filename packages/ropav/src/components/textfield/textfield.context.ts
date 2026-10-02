@@ -5,7 +5,7 @@ import { createContext } from "../../utils/create-context";
 
 export interface TextFieldContext {
   /** Visual variant the control inside picks up when it declares none of its own. */
-  variant: ComputedRef<"primary" | "secondary" | undefined>;
+  variant: ComputedRef<InputVariants["variant"] | undefined>;
   /** Size the control inside picks up when it declares none of its own. */
   size: ComputedRef<InputVariants["size"] | undefined>;
 }

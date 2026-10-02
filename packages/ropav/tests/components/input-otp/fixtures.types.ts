@@ -1,10 +1,11 @@
+import type { InputOTPProps } from "@/components/input-otp";
 import type { ValidationDetails } from "@/composables/use-form-validation-state";
 import type { InputOTPTextAlign } from "@/composables/use-input-otp";
 
 export interface InputOTPFixtureProps {
   class?: string;
   inputClass?: string;
-  variant?: "primary" | "secondary";
+  variant?: InputOTPProps["variant"];
   maxLength?: number;
   value?: string;
   defaultValue?: string;

@@ -1,3 +1,4 @@
+import type { SearchFieldProps } from "@/components/search-field";
 import type {
   FormValidationErrors,
   ValidationBehavior,
@@ -6,7 +7,7 @@ import type {
 
 export interface SearchFieldFixtureProps {
   class?: string;
-  variant?: "primary" | "secondary";
+  variant?: SearchFieldProps["variant"];
   fullWidth?: boolean;
   value?: string;
   defaultValue?: string;

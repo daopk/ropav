@@ -1,3 +1,4 @@
+import type { CheckboxProps } from "@/components/checkbox";
 import type { CheckboxGroupProps } from "@/components/checkbox-group";
 
 export interface CheckboxGroupFixtureProps extends CheckboxGroupProps {
@@ -14,7 +15,7 @@ export interface CheckboxGroupFixtureProps extends CheckboxGroupProps {
   /** Disables the first item on its own, over the group's setting. */
   itemDisabled?: boolean;
   /** Gives the first item a variant of its own. */
-  itemVariant?: "primary" | "secondary";
+  itemVariant?: CheckboxProps["variant"];
   /** Wraps the group in a form with a submit button. */
   withForm?: boolean;
   formValidationErrors?: Record<string, string | string[]>;

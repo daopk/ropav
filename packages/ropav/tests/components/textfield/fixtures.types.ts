@@ -1,3 +1,5 @@
+import type { InputProps } from "@/components/input";
+import type { TextFieldProps } from "@/components/textfield";
 import type {
   FormValidationErrors,
   ValidationBehavior,
@@ -6,7 +8,7 @@ import type {
 
 export interface TextFieldFixtureProps {
   class?: string;
-  variant?: "primary" | "secondary";
+  variant?: TextFieldProps["variant"];
   fullWidth?: boolean;
   value?: string;
   defaultValue?: string;
@@ -30,7 +32,7 @@ export interface TextFieldFixtureProps {
   withDescription?: boolean;
   withFieldError?: boolean;
   /** Variant set on the control itself, to check it beats the one from the field. */
-  controlVariant?: "primary" | "secondary";
+  controlVariant?: InputProps["variant"];
   /** Placeholder set on the control itself, to check a local prop beats the field's. */
   controlPlaceholder?: string;
   onChange?: (value: string) => void;

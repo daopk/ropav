@@ -1,5 +1,6 @@
 <script setup lang="ts" vapor>
 import type { ColorFieldProps } from "@/components/color-field";
+import type { ColorInputGroupProps } from "@/components/color-input-group";
 import type { Color } from "@/utils/color-types";
 
 import { ColorField } from "@/components/color-field";
@@ -16,7 +17,7 @@ import { Label } from "@/components/label";
 withDefaults(
   defineProps<
     ColorFieldProps & {
-      variant?: "primary" | "secondary";
+      variant?: ColorInputGroupProps["variant"];
       placeholder?: string;
       withLabel?: boolean;
       withDescription?: boolean;

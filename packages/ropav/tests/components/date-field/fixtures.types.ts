@@ -1,10 +1,11 @@
+import type { DateFieldGroupProps } from "@/components/date-field";
 import type { ValidationBehavior } from "@/composables/use-form-validation-state";
 import type { Granularity } from "@/utils/date-format";
 import type { Calendar, CalendarIdentifier, DateValue } from "@internationalized/date";
 
 export interface DateFieldFixtureProps {
   class?: string;
-  variant?: "primary" | "secondary";
+  variant?: DateFieldGroupProps["variant"];
   fullWidth?: boolean;
   value?: DateValue | null;
   defaultValue?: DateValue | null;
