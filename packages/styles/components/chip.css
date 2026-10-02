@@ -82,6 +82,16 @@
 }
 
 /* Size variants */
+/* The base fixes the line at 20px through `--rp-leading`, so the only way under the 20px a small
+ * chip already stands at is a shorter line. */
+.rp-chip--xs {
+  padding-inline: calc(var(--rp-spacing) * 0.5);
+  padding-block: 0px;
+  font-size: var(--rp-text-xs);
+  --rp-leading: calc(var(--rp-spacing) * 4);
+  line-height: calc(var(--rp-spacing) * 4);
+}
+
 .rp-chip--sm {
   padding-inline: var(--rp-spacing);
   padding-block: 0px;

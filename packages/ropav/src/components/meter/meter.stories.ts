@@ -10,7 +10,7 @@ const components = { Label, Meter, MeterFill, MeterOutput, MeterTrack };
 const meta: StoryMeta = {
   argTypes: {
     color: { control: "select", options: ["default", "accent", "success", "warning", "danger"] },
-    size: { control: "select", options: ["sm", "md", "lg"] },
+    size: { control: "select", options: ["xs", "sm", "md", "lg"] },
   },
   component: Meter,
   decorators: [() => ({ template: '<div class="w-96 p-8"><story /></div>' })],
@@ -52,6 +52,9 @@ export const Sizes: Story = {
     setup: () => ({ args }),
     template: `
       <div class="flex w-full flex-col gap-6">
+        <Meter v-bind="args" size="xs" :value="20">
+          <Label>Extra small</Label><MeterOutput /><MeterTrack><MeterFill /></MeterTrack>
+        </Meter>
         <Meter v-bind="args" size="sm" :value="40">
           <Label>Small</Label><MeterOutput /><MeterTrack><MeterFill /></MeterTrack>
         </Meter>

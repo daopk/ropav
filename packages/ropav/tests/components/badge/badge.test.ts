@@ -122,6 +122,7 @@ describe("Badge", () => {
       ["color", "danger", "rp-badge--danger"],
       ["placement", "bottom-left", "rp-badge--bottom-left"],
       ["size", "lg", "rp-badge--lg"],
+      ["size", "xs", "rp-badge--xs"],
       ["variant", "soft", "rp-badge--soft"],
     ])("applies the %s modifier class", (prop, value, expected) => {
       const { container, unmount } = renderVapor(Fixture, { props: { [prop]: value } });

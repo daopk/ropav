@@ -22,6 +22,9 @@ export const tagVariants = tv({
       sm: {
         base: "rp-tag--sm",
       },
+      xs: {
+        base: "rp-tag--xs",
+      },
     },
     variant: {
       default: {

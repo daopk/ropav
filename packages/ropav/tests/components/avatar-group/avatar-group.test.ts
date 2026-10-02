@@ -90,6 +90,7 @@ describe("AvatarGroup", () => {
       ["overlap", "sm", "rp-avatar-group--overlap-sm"],
       ["size", "lg", "rp-avatar-group--lg"],
       ["size", "sm", "rp-avatar-group--sm"],
+      ["size", "xs", "rp-avatar-group--xs"],
     ])("applies the %s modifier class for %s", (prop, value, expected) => {
       const { container, unmount } = renderGroup({ [prop]: value });
 
@@ -112,17 +113,20 @@ describe("AvatarGroup", () => {
   });
 
   describe("inherited size", () => {
-    it("passes its size to every avatar, the overflow count included", () => {
-      const { container, unmount } = renderGroup({ count: 5, size: "lg" });
-      const avatars = avatarsIn(container);
+    it.each(["xs", "lg"] as const)(
+      "passes the %s size to every avatar, the overflow count included",
+      (size) => {
+        const { container, unmount } = renderGroup({ count: 5, size });
+        const avatars = avatarsIn(container);
 
-      expect(avatars).toHaveLength(4);
-      for (const avatar of avatars) {
-        expect(avatar.classList.contains("rp-avatar--lg")).toBe(true);
-      }
+        expect(avatars).toHaveLength(4);
+        for (const avatar of avatars) {
+          expect(avatar.classList.contains(`rp-avatar--${size}`)).toBe(true);
+        }
 
-      unmount();
-    });
+        unmount();
+      },
+    );
 
     it("lets an avatar override the size it inherits", () => {
       const { container, unmount } = renderGroup({ childSize: "sm", size: "lg" });

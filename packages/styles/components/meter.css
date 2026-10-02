@@ -95,6 +95,13 @@
    Size variants
    ========================================================================== */
 
+/* Half a step under `sm`, since a whole one would leave no track at all. */
+.rp-meter--xs {
+  .rp-meter__track {
+    height: calc(var(--rp-spacing) * 0.5);
+  }
+}
+
 .rp-meter--sm {
   .rp-meter__track {
     height: var(--rp-spacing);

@@ -56,6 +56,9 @@ export const badgeVariants = tv({
       sm: {
         base: "rp-badge--sm",
       },
+      xs: {
+        base: "rp-badge--xs",
+      },
     },
     variant: {
       primary: {

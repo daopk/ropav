@@ -94,7 +94,7 @@ describe("Switch", () => {
     });
 
     it("maps size to the block modifier", () => {
-      for (const size of ["sm", "md", "lg"] as const) {
+      for (const size of ["xs", "sm", "md", "lg"] as const) {
         const { container, unmount } = renderSwitch({ size });
 
         expect(slot(container, "switch").classList.contains(`rp-switch--${size}`)).toBe(true);

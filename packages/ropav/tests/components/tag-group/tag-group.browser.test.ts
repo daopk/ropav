@@ -126,9 +126,9 @@ describe("TagGroup (browser)", () => {
    */
   it("gives the remove button a 24px hit area that stays off the next tag", async () => {
     const onRemove = vi.fn();
-    const { container, tags, unmount } = await render({ onRemove, size: "sm" });
+    const { container, tags, unmount } = await render({ onRemove, size: "xs" });
 
-    // The target reaches 2px past the tag, and the first tag sits flush at the top of the page,
+    // The target reaches 4px past the tag, and the first tag sits flush at the top of the page,
     // so without this the probe above it lands outside the viewport rather than on the overlay.
     container.style.padding = "40px";
 

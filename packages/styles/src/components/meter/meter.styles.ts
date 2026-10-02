@@ -41,6 +41,9 @@ export const meterVariants = tv({
       sm: {
         base: "rp-meter--sm",
       },
+      xs: {
+        base: "rp-meter--xs",
+      },
     },
   },
 });

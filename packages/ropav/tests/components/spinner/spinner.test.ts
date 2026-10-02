@@ -57,6 +57,14 @@ describe("Spinner", () => {
       unmount();
     });
 
+    it("exposes the extra small size modifier", () => {
+      const { getByRole, unmount } = renderSpinner({ size: "xs" });
+
+      expect(getByRole("status").classList.contains("rp-spinner--xs")).toBe(true);
+
+      unmount();
+    });
+
     it("exposes color and size BEM modifiers", () => {
       const { getByRole, unmount } = renderSpinner({ color: "danger", size: "lg" });
       const spinner = getByRole("status");

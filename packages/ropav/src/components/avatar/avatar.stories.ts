@@ -30,7 +30,7 @@ const meta: StoryMeta = {
     },
     size: {
       control: { type: "select" },
-      options: ["sm", "md", "lg"],
+      options: ["xs", "sm", "md", "lg"],
     },
   },
   component: Avatar,
@@ -172,6 +172,7 @@ export const Sizes: Story = {
     components,
     setup: () => ({
       sizes: [
+        { alt: "Extra small", label: "XS", size: "xs", src: avatarSrc(2) },
         { alt: "Small", label: "SM", size: "sm", src: avatarSrc(3) },
         { alt: "Medium", label: "MD", size: "md", src: avatarSrc(4) },
         { alt: "Large", label: "LG", size: "lg", src: avatarSrc(5) },

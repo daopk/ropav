@@ -64,7 +64,7 @@ export const Default: Story = {
 export const Sizes: Story = {
   render: () => ({
     components,
-    setup: () => ({ categories: CATEGORIES.slice(0, 3), sizes: ["sm", "md", "lg"] }),
+    setup: () => ({ categories: CATEGORIES.slice(0, 3), sizes: ["xs", "sm", "md", "lg"] }),
     template: `
       <div class="flex flex-col gap-4">
         <TagGroup v-for="size in sizes" :key="size" :size="size" selection-mode="single">

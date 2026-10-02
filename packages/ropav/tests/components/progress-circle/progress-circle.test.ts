@@ -150,7 +150,7 @@ describe("ProgressCircle", () => {
     },
   );
 
-  it.each(["sm", "md", "lg"] as const)("applies the %s size modifier", (size) => {
+  it.each(["xs", "sm", "md", "lg"] as const)("applies the %s size modifier", (size) => {
     const { container, unmount } = renderVapor(Fixture, { props: { ariaLabel: "Loading", size } });
 
     expect(part(container, "progress-circle")).toHaveClass(`rp-progress-circle--${size}`);

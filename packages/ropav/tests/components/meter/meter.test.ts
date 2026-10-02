@@ -151,7 +151,7 @@ describe("Meter", () => {
     },
   );
 
-  it.each(["sm", "md", "lg"] as const)("applies the %s size modifier", (size) => {
+  it.each(["xs", "sm", "md", "lg"] as const)("applies the %s size modifier", (size) => {
     const { container, unmount } = renderVapor(Fixture, { props: { size } });
 
     expect(part(container, "meter")).toHaveClass(`rp-meter--${size}`);

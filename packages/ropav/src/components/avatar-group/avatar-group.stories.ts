@@ -34,7 +34,7 @@ const meta: StoryMeta = {
     front: { control: { type: "inline-radio" }, options: ["first", "last"] },
     orientation: { control: { type: "inline-radio" }, options: ["horizontal", "vertical"] },
     overlap: { control: { type: "select" }, options: ["none", "sm", "md", "lg"] },
-    size: { control: { type: "select" }, options: ["sm", "md", "lg"] },
+    size: { control: { type: "select" }, options: ["xs", "sm", "md", "lg"] },
   },
   component: AvatarGroup,
   parameters: { layout: "centered" },
@@ -109,7 +109,7 @@ export const Overlap: Story = {
 export const Sizes: Story = {
   render: () => ({
     components,
-    setup: () => ({ members, sizes: ["sm", "md", "lg"] }),
+    setup: () => ({ members, sizes: ["xs", "sm", "md", "lg"] }),
     template: `
       <div class="flex flex-col gap-4">
         <AvatarGroup v-for="size in sizes" :key="size" :size="size">

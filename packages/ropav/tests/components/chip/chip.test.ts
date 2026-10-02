@@ -122,6 +122,7 @@ describe("Chip", () => {
     it.each([
       ["color", "danger", "rp-chip--danger"],
       ["size", "lg", "rp-chip--lg"],
+      ["size", "xs", "rp-chip--xs"],
       ["variant", "tertiary", "rp-chip--tertiary"],
     ])("applies the %s modifier class", (prop, value, expected) => {
       const { container, unmount } = renderVapor(ChipFixture, { props: { [prop]: value } });

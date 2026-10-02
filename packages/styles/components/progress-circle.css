@@ -78,6 +78,13 @@
    Size variants
    ========================================================================== */
 
+.rp-progress-circle--xs {
+  .rp-progress-circle__track {
+    width: calc(var(--rp-spacing) * 3);
+    height: calc(var(--rp-spacing) * 3);
+  }
+}
+
 .rp-progress-circle--sm {
   .rp-progress-circle__track {
     width: calc(var(--rp-spacing) * 5);

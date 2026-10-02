@@ -53,6 +53,17 @@
 }
 
 /* Size modifiers */
+.rp-avatar--xs {
+  width: calc(var(--rp-spacing) * 6);
+  height: calc(var(--rp-spacing) * 6);
+  border-radius: calc(var(--rp-radius) * 1.5);
+
+  .rp-avatar__fallback {
+    font-size: var(--rp-text-xs);
+    line-height: var(--rp-leading, var(--rp-text-xs--line-height));
+  }
+}
+
 .rp-avatar--sm {
   width: calc(var(--rp-spacing) * 8);
   height: calc(var(--rp-spacing) * 8);

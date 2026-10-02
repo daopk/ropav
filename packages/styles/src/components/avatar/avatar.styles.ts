@@ -40,6 +40,9 @@ export const avatarVariants = tv({
       sm: {
         base: "rp-avatar--sm",
       },
+      xs: {
+        base: "rp-avatar--xs",
+      },
     },
     variant: {
       default: {},

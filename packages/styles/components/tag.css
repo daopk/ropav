@@ -118,6 +118,13 @@
 }
 
 /* Size */
+.rp-tag--xs {
+  padding-inline: calc(var(--rp-spacing) * 1.5);
+  padding-block: 0px;
+  font-size: var(--rp-text-xs);
+  line-height: var(--rp-leading, var(--rp-text-xs--line-height));
+}
+
 .rp-tag--sm {
   padding-inline: calc(var(--rp-spacing) * 2);
   padding-block: calc(var(--rp-spacing) * 0.5);
@@ -157,8 +164,8 @@
  * The glyph is 12px, half the minimum target size, and a tap that misses it lands on the tag
  * body — which takes the press and removes nothing, so removing a tag by touch takes several
  * goes. A transparent overlay widens what a finger can land on to the 24px floor without moving
- * anything: on `--sm` it reaches about 2px past the tag box, which the 6px gap between tags
- * absorbs, so it never covers a neighbour.
+ * anything: on `--sm` it reaches about 2px past the tag box and on `--xs` 4px, which the 6px gap
+ * between tags absorbs, so it never covers a neighbour.
  */
 .rp-tag__remove-button {
   width: calc(var(--rp-spacing) * 3);

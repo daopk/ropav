@@ -117,6 +117,12 @@ describe("TagGroup", () => {
 
       expect(tags()[0]).toHaveClass("rp-tag", "rp-tag--lg", "rp-tag--surface");
     });
+
+    it("takes the extra small size from the group", async () => {
+      const { tags } = await render({ size: "xs" });
+
+      expect(tags()[0]).toHaveClass("rp-tag--xs");
+    });
   });
 
   describe("selection", () => {

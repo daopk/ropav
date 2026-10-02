@@ -54,6 +54,9 @@ export const avatarGroupVariants = tv({
       sm: {
         base: "rp-avatar-group--sm",
       },
+      xs: {
+        base: "rp-avatar-group--xs",
+      },
     },
   },
 });

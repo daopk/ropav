@@ -66,6 +66,17 @@
   /* No styles as this is the default size */
 }
 
+/* Small enough to be a dot, or to hold a single digit. The line is set tighter than the other sizes
+ * so that 8px type and the 1px border still fit the 12px floor rather than pushing past it. */
+.rp-badge--xs {
+  min-height: calc(var(--rp-spacing) * 3);
+  min-width: calc(var(--rp-spacing) * 3);
+  border-radius: var(--rp-radius);
+  font-size: 8px;
+  --rp-leading: 1.25;
+  line-height: 1.25;
+}
+
 .rp-badge--sm {
   min-height: calc(var(--rp-spacing) * 4);
   min-width: calc(var(--rp-spacing) * 4);

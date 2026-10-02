@@ -34,7 +34,7 @@ const meta: StoryMeta = {
     },
     size: {
       control: { type: "select" },
-      options: ["sm", "md", "lg"],
+      options: ["xs", "sm", "md", "lg"],
     },
     variant: {
       control: { type: "select" },
@@ -84,6 +84,7 @@ export const Sizes: Story = {
         { label: "Large", value: "lg" },
         { label: "Medium", value: "md" },
         { label: "Small", value: "sm" },
+        { label: "Extra small", value: "xs" },
       ],
     }),
     template: `
@@ -224,6 +225,7 @@ export const DotBadge: Story = {
         { label: "Large", value: "lg" },
         { label: "Medium", value: "md" },
         { label: "Small", value: "sm" },
+        { label: "Extra small", value: "xs" },
       ],
     }),
     template: `

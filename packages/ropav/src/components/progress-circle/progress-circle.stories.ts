@@ -21,7 +21,7 @@ const components = {
 const meta: StoryMeta = {
   argTypes: {
     color: { control: "select", options: ["default", "accent", "success", "warning", "danger"] },
-    size: { control: "select", options: ["sm", "md", "lg"] },
+    size: { control: "select", options: ["xs", "sm", "md", "lg"] },
   },
   component: ProgressCircle,
   parameters: { layout: "centered" },
@@ -51,6 +51,7 @@ export const Sizes: Story = {
     setup: () => ({ args }),
     template: `
       <div class="flex items-center gap-6">
+        ${template('size="xs" :value="20"')}
         ${template('size="sm" :value="40"')}
         ${template('size="md" :value="60"')}
         ${template('size="lg" :value="80"')}

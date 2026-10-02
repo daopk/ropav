@@ -39,6 +39,9 @@ export const chipVariants = tv({
       sm: {
         base: "rp-chip--sm",
       },
+      xs: {
+        base: "rp-chip--xs",
+      },
     },
     variant: {
       primary: {

@@ -124,6 +124,16 @@
    Size variants
    ========================================================================== */
 
+/* Half a step under `sm`, since a whole one would leave no track at all. The tile keeps to twice
+ * the height, as it does at `sm`. */
+.rp-progress-bar--xs {
+  --progress-bar-stripe-size: 0.25rem;
+
+  .rp-progress-bar__track {
+    height: calc(var(--rp-spacing) * 0.5);
+  }
+}
+
 .rp-progress-bar--sm {
   /* One 1rem tile spans more than the track is tall, so a 4px bar would show a single smear
    * rather than a run of stripes. The tile tracks the height instead. */

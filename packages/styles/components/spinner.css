@@ -9,6 +9,13 @@
 }
 
 /* Size variants */
+/* Half a step under `sm` rather than a whole one: at 8px the arcs, drawn on a 24-unit box, would
+ * thin to about a pixel and read as a smudge rather than motion. */
+.rp-spinner--xs {
+  width: calc(var(--rp-spacing) * 3);
+  height: calc(var(--rp-spacing) * 3);
+}
+
 .rp-spinner--sm {
   width: calc(var(--rp-spacing) * 4);
   height: calc(var(--rp-spacing) * 4);

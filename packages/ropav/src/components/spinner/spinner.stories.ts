@@ -13,7 +13,7 @@ const meta: StoryMeta = {
     },
     size: {
       control: { type: "select" },
-      options: ["sm", "md", "lg", "xl"],
+      options: ["xs", "sm", "md", "lg", "xl"],
     },
   },
   component: Spinner,
@@ -50,7 +50,7 @@ export const Colors: Story = {
 export const Sizes: Story = {
   render: () => ({
     components,
-    setup: () => ({ sizes: ["sm", "md", "lg", "xl"] }),
+    setup: () => ({ sizes: ["xs", "sm", "md", "lg", "xl"] }),
     template: `
       <div class="flex items-center gap-3">
         <Spinner v-for="size in sizes" :key="size" :size="size" />

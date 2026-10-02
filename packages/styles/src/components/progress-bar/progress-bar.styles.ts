@@ -55,6 +55,9 @@ export const progressBarVariants = tv({
       sm: {
         base: "rp-progress-bar--sm",
       },
+      xs: {
+        base: "rp-progress-bar--xs",
+      },
     },
   },
 });

@@ -62,6 +62,10 @@
    Size modifiers
    ========================================================================== */
 
+.rp-avatar-group--xs {
+  --avatar-group-size: calc(var(--rp-spacing) * 6);
+}
+
 .rp-avatar-group--sm {
   --avatar-group-size: calc(var(--rp-spacing) * 8);
 }

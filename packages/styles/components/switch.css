@@ -62,6 +62,14 @@
     color: var(--rp-muted);
   }
 
+  &.rp-switch--xs > [data-slot="description"] {
+    padding-inline-start: calc(1.5rem + 0.75rem);
+  }
+
+  &.rp-switch--xs > [data-slot="field-error"] {
+    padding-inline-start: calc(1.5rem + 0.75rem);
+  }
+
   &.rp-switch--sm > [data-slot="description"] {
     padding-inline-start: calc(2rem + 0.75rem);
   }
@@ -92,6 +100,10 @@
 }
 
 /* Size variants - default is medium */
+.rp-switch--xs {
+  /* Extra small size modifier */
+}
+
 .rp-switch--sm {
   /* Small size modifier */
 }
@@ -215,6 +227,11 @@
 }
 
 /* Size-specific control dimensions */
+.rp-switch--xs .rp-switch__control {
+  height: 0.75rem; /* ~10.5px on desktop, ~12px on mobile */
+  width: 1.5rem; /* ~21px on desktop, ~24px on mobile */
+}
+
 .rp-switch--sm .rp-switch__control {
   height: 1rem; /* ~14px on desktop, ~16px on mobile */
   width: 2rem; /* ~32px on desktop, ~36px on mobile */
@@ -284,6 +301,17 @@
 }
 
 /* Size-specific thumb dimensions */
+.rp-switch--xs .rp-switch__thumb {
+  height: 0.5rem; /* ~7px on desktop, ~8px on mobile */
+  width: 0.6875rem; /* ~9.6px on desktop, ~11px on mobile - maintains 1.375:1 ratio */
+
+  /* Extra small selected state positioning */
+  .rp-switch[aria-checked="true"] &,
+  .rp-switch[data-selected="true"] & {
+    margin-inline-start: calc(100% - 0.8125rem);
+  }
+}
+
 .rp-switch--sm .rp-switch__thumb {
   height: 0.75rem; /* ~10.5px on desktop, ~12px on mobile */
   width: 1.03125rem; /* ~14.4px on desktop, ~16.5px on mobile - maintains 1.375:1 ratio */

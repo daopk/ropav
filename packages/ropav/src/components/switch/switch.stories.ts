@@ -47,7 +47,7 @@ const meta: StoryMeta = {
     },
     size: {
       control: { type: "select" },
-      options: ["sm", "md", "lg"],
+      options: ["xs", "sm", "md", "lg"],
     },
   },
   component: Switch,
@@ -206,6 +206,14 @@ export const Sizes: Story = {
     components,
     template: `
       <div class="flex gap-6">
+        <Switch size="xs">
+          <SwitchContent>
+            <SwitchControl>
+              <SwitchThumb />
+            </SwitchControl>
+            Extra small
+          </SwitchContent>
+        </Switch>
         <Switch size="sm">
           <SwitchContent>
             <SwitchControl>

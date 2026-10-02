@@ -12,7 +12,7 @@ const meta: StoryMeta = {
     color: { control: "select", options: ["default", "accent", "success", "warning", "danger"] },
     isAnimated: { control: "boolean" },
     isStriped: { control: "boolean" },
-    size: { control: "select", options: ["sm", "md", "lg"] },
+    size: { control: "select", options: ["xs", "sm", "md", "lg"] },
   },
   component: ProgressBar,
   decorators: [() => ({ template: '<div class="w-96 p-8"><story /></div>' })],
@@ -43,6 +43,9 @@ export const Sizes: Story = {
     setup: () => ({ args }),
     template: `
       <div class="flex w-full flex-col gap-6">
+        <ProgressBar v-bind="args" size="xs" :value="20">
+          <Label>Extra small</Label><ProgressBarOutput /><ProgressBarTrack><ProgressBarFill /></ProgressBarTrack>
+        </ProgressBar>
         <ProgressBar v-bind="args" size="sm" :value="40">
           <Label>Small</Label><ProgressBarOutput /><ProgressBarTrack><ProgressBarFill /></ProgressBarTrack>
         </ProgressBar>
@@ -136,6 +139,9 @@ export const Striped: Story = {
     setup: () => ({ args }),
     template: `
       <div class="flex w-full flex-col gap-6">
+        <ProgressBar v-bind="args" is-striped size="xs" :value="60">
+          <Label>Extra small</Label><ProgressBarOutput /><ProgressBarTrack><ProgressBarFill /></ProgressBarTrack>
+        </ProgressBar>
         <ProgressBar v-bind="args" is-striped size="sm" :value="60">
           <Label>Small</Label><ProgressBarOutput /><ProgressBarTrack><ProgressBarFill /></ProgressBarTrack>
         </ProgressBar>

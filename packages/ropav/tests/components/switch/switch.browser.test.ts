@@ -81,7 +81,7 @@ describe("Switch (browser)", () => {
   });
 
   it("travels the thumb the full width of the control at every size", async () => {
-    for (const size of ["sm", "md", "lg"] as const) {
+    for (const size of ["xs", "sm", "md", "lg"] as const) {
       const off = renderSwitch({ size });
       const offControl = slot(off.container, "switch-control").getBoundingClientRect();
       const offThumb = slot(off.container, "switch-thumb").getBoundingClientRect();

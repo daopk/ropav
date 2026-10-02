@@ -346,6 +346,7 @@ describe("Avatar", () => {
     });
 
     it.each([
+      ["size", "xs", "rp-avatar--xs"],
       ["size", "lg", "rp-avatar--lg"],
       ["variant", "soft", "rp-avatar--soft"],
     ])("applies the %s modifier class", (prop, value, expected) => {

@@ -21,6 +21,7 @@ export const spinnerVariants = tv({
       md: "rp-spinner--md",
       sm: "rp-spinner--sm",
       xl: "rp-spinner--xl",
+      xs: "rp-spinner--xs",
     },
   },
 });

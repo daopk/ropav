@@ -1,6 +1,6 @@
 ---
 title: Spinner
-description: An indeterminate wait, in four sizes.
+description: An indeterminate wait, in five sizes.
 outline: [2, 3]
 ---
 

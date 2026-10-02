@@ -24,6 +24,9 @@ export const switchVariants = tv({
       sm: {
         base: "rp-switch--sm",
       },
+      xs: {
+        base: "rp-switch--xs",
+      },
     },
   },
 });

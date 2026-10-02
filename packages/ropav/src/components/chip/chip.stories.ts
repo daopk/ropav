@@ -33,7 +33,7 @@ const meta: StoryMeta = {
     },
     size: {
       control: { type: "select" },
-      options: ["sm", "md", "lg"],
+      options: ["xs", "sm", "md", "lg"],
     },
     variant: {
       control: { type: "select" },
@@ -76,6 +76,7 @@ export const Sizes: Story = {
     setup: () => ({ args }),
     template: `
       <div class="flex items-center gap-3">
+        <Chip v-bind="args" size="xs"><ChipLabel>Extra small</ChipLabel></Chip>
         <Chip v-bind="args" size="sm"><ChipLabel>Small</ChipLabel></Chip>
         <Chip v-bind="args" size="md"><ChipLabel>Medium</ChipLabel></Chip>
         <Chip v-bind="args" size="lg"><ChipLabel>Large</ChipLabel></Chip>

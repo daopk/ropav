@@ -41,6 +41,9 @@ export const progressCircleVariants = tv({
       sm: {
         base: "rp-progress-circle--sm",
       },
+      xs: {
+        base: "rp-progress-circle--xs",
+      },
     },
   },
 });
