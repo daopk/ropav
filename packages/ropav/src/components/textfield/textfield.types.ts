@@ -3,6 +3,7 @@ import type {
   ValidationDetails,
   ValidationFunction,
 } from "../../composables/use-form-validation-state";
+import type { InputVariants } from "@ropav/styles";
 
 // Boolean props are declared as plain `boolean` rather than through the variants type. The
 // SFC compiler cannot resolve an imported indexed-access type into a runtime prop type, and
@@ -16,7 +17,7 @@ export interface TextFieldRootProps {
    * How tall the control inside stands, matching a button of the same size. Handed to the control
    * unless it declares one of its own. @default "md"
    */
-  size?: "sm" | "md" | "lg";
+  size?: InputVariants["size"];
   /** Whether the field stretches to fill its container. */
   fullWidth?: boolean;
   /** Text in the field. Makes it controlled. */

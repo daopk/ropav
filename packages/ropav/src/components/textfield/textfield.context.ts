@@ -1,3 +1,4 @@
+import type { InputVariants } from "@ropav/styles";
 import type { ComputedRef } from "vue";
 
 import { createContext } from "../../utils/create-context";
@@ -6,7 +7,7 @@ export interface TextFieldContext {
   /** Visual variant the control inside picks up when it declares none of its own. */
   variant: ComputedRef<"primary" | "secondary" | undefined>;
   /** Size the control inside picks up when it declares none of its own. */
-  size: ComputedRef<"sm" | "md" | "lg" | undefined>;
+  size: ComputedRef<InputVariants["size"] | undefined>;
 }
 
 /**
