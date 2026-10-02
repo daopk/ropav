@@ -58,8 +58,8 @@
   }
 
   /* Field-level help text below the control + label row, indented past the track and the gap so it
-   * starts under the label. `field-error.css` zeroes a toggle's error padding at the same
-   * specificity, as it does for Checkbox and Radio, so the error indent holds by import order. */
+   * starts under the label. `field-error.css` zeroes a toggle's error padding under `:where()`,
+   * as it does for Checkbox and Radio, so the error indent holds whichever file comes first. */
   & > [data-slot="description"] {
     width: 100%;
     min-width: 0px;

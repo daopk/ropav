@@ -20,15 +20,16 @@
 }
 
 /*
- * Toggle fields (checkbox/switch): stack below the label like description.
+ * Toggle fields (checkbox/radio/switch): stack below the label like description.
  * Disable collapsible height/opacity — those styles break flex-col content layout.
+ *
+ * The toggle sits in `:where()`, so this weighs the same as `.rp-field-error` and wins by coming
+ * after it in this file. Each toggle indents its error past the control at (0,2,0) in its own
+ * file, so that indent outweighs the `padding` here whichever file an app imports first.
+ * `[data-visible]` outweighs this as well, and sets the same height and opacity.
  */
-.rp-checkbox > .rp-field-error,
-.rp-checkbox > [data-slot="field-error"],
-.rp-switch > .rp-field-error,
-.rp-switch > [data-slot="field-error"],
-.rp-radio > .rp-field-error,
-.rp-radio > [data-slot="field-error"] {
+:where(.rp-checkbox, .rp-switch, .rp-radio) > .rp-field-error,
+:where(.rp-checkbox, .rp-switch, .rp-radio) > [data-slot="field-error"] {
   margin: 0px;
   height: auto;
   min-height: 0px;

@@ -39,4 +39,10 @@ export const RENAMED: Renamed = {
   // The same narrowing, reaching the close button nested inside that rule.
   ':is(.rp-toast:not([data-frontmost="true"]):not([data-expanded="true"])) .rp-toast__close-button':
     ':is(.rp-toast:not([data-frontmost="true"])) .rp-toast__close-button',
+
+  // Lighter rather than moved: the toggle went into `:where()`, so each toggle's own indent on its
+  // error outweighs this rule's `padding` in either import order. Same declarations, and the first
+  // alternative builds the same `.rp-checkbox > .rp-field-error` it did.
+  ':where(.rp-checkbox, .rp-switch, .rp-radio) > .rp-field-error, :where(.rp-checkbox, .rp-switch, .rp-radio) > [data-slot="field-error"]':
+    '.rp-checkbox > .rp-field-error, .rp-checkbox > [data-slot="field-error"], .rp-switch > .rp-field-error, .rp-switch > [data-slot="field-error"], .rp-radio > .rp-field-error, .rp-radio > [data-slot="field-error"]',
 };
