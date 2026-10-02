@@ -14,6 +14,8 @@ tests are written on.
 - **`computed-styles.browser.test.ts`** — the golden itself.
 - **`coverage.browser.test.ts`** — the guard on the engine, which fails if the matrix stops
   reaching the `components` layer, or if `renamed.ts` stops describing it.
+- **`report.test.ts`** — the guard on the summary the golden fails with. The golden only compares
+  where a baseline was frozen, so nothing else would notice the summary stop saying what moved.
 
 The tests that only *use* the engine live beside their peers in `../`, not here.
 
@@ -47,8 +49,8 @@ VITE_FREEZE_STYLES=1 pnpm --filter ropav exec vitest run --project vue-browser t
 ```
 
 That writes `__baseline__/computed-styles.json`, which is gitignored. Then make the change and run
-the suite normally; the snapshot test reports which cases moved, and by which property, rather
-than dumping the file.
+the suite normally; the snapshot test reports which values moved and by which property, and which
+cases came or went, rather than dumping the file.
 
 ## Renaming a selector
 
@@ -68,14 +70,29 @@ the matrix keeps the first case per id.
 
 ## Reading the report
 
-A line with `|` is a property that moved on a case both reports name — that is the signal, and
-the only line that compares two values.
+The golden fails with a summary rather than with every line, because a step that moves a thousand
+values does not fit in a terminal. `summarise` in `report.ts` builds it, in three parts kept apart
+because they are different findings.
 
-A line with `+` or `-` is a case id that appeared or vanished, and nothing was compared for it.
-Two things do that. A rule was genuinely added or removed, which the diff already tells you. Or a
-selector was rewritten, and the case it was keyed by retired while an unrelated-looking one
-arrived — that is what `renamed.ts` is for, and a `+`/`-` pair with no `|` anywhere between them
-is the shape of a rename nobody recorded.
+`changed` is a property that moved on a case both reports name — that is the signal, and the only
+part that compares two values. It counts the cases and the values that moved, counts the values by
+property, and gives the first line that moved each property, for a dozen properties at most, as
+`mode id | property: from -> to`. One line per property rather than the first ten lines, because
+sorted, the first ten are whatever selector sorts first, which routinely means ten copies of one
+finding while a different one further down goes unread.
 
-So a report that is all `+` and `-` has measured nothing, however plausible the counts look. Read
-the pairs before believing the absence of `|` lines.
+`added` and `removed` are case ids only one report names, and nothing was compared for them. Each
+counts its cases and names them, the first forty and then how many more. An id is named once
+rather than once per mode: a case is built the same under every mode, so it comes or goes in all
+four together. One that came or went in only some keeps those modes, as `mode id`, and that is a
+finding of its own.
+
+Two things put an id there. A rule was genuinely added or removed, which the diff already tells
+you, and the list says whether the golden saw the same rules come and go. Or a selector was
+rewritten, and the case it was keyed by retired while an unrelated-looking one arrived — that is
+what `renamed.ts` is for, and an id under `removed` with a look-alike under `added` is the shape of
+a rename nobody recorded.
+
+So a report whose only entries are under `added` and `removed` has measured nothing, however
+plausible the counts look. Read the two lists against each other before believing an empty
+`changed`.
