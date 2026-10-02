@@ -101,6 +101,45 @@ describe("Switch (browser)", () => {
     }
   });
 
+  it("sizes the control and the thumb at every size, and indents the help text past the track", async () => {
+    // Twice as wide as it is tall, and a thumb 2px clear of it above and below at 1.375:1.
+    const sizes = [
+      { control: { height: 12, width: 24 }, size: "xs", thumb: { height: 8, width: 11 } },
+      { control: { height: 16, width: 32 }, size: "sm", thumb: { height: 12, width: 16.5 } },
+      { control: { height: 20, width: 40 }, size: "md", thumb: { height: 16, width: 22 } },
+      { control: { height: 24, width: 48 }, size: "lg", thumb: { height: 20, width: 27.5 } },
+    ] as const;
+
+    for (const { control, size, thumb } of sizes) {
+      const { container, unmount } = renderSwitch({
+        isInvalid: true,
+        size,
+        withDescription: true,
+        withFieldError: true,
+      });
+
+      await nextTick();
+
+      const track = slot(container, "switch-control").getBoundingClientRect();
+      const knob = slot(container, "switch-thumb").getBoundingClientRect();
+
+      expect({ height: track.height, width: track.width }).toEqual(control);
+      expect({ height: knob.height, width: knob.width }).toEqual(thumb);
+
+      // The help text starts under the label, so past the track and the gap that follows it. The
+      // error is the one `field-error.css` also pads, so it is the one the cascade can lose.
+      const gap = Number.parseFloat(getComputedStyle(slot(container, "switch-content")).columnGap);
+
+      for (const name of ["description", "field-error"]) {
+        const indent = getComputedStyle(slot(container, name)).paddingInlineStart;
+
+        expect(Number.parseFloat(indent)).toBe(track.width + gap);
+      }
+
+      unmount();
+    }
+  });
+
   it("does not travel the thumb of a disabled switch that is off", () => {
     const off = renderSwitch({ isDisabled: true });
     const offThumb = slot(off.container, "switch-thumb").getBoundingClientRect();

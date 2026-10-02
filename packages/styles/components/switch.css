@@ -9,6 +9,17 @@
   /* Cursor */
   cursor: var(--rp-cursor-interactive);
 
+  /* The track's height, which the track's width, the thumb and the help text's indent are all
+   * derived from, so a size sets this alone. The root carries it rather than the track, so the
+   * indent on the help text beside the track reads the same value, and a switch nested inside
+   * another resets it rather than inheriting its parent's. A part placed outside a root takes no
+   * size from it, as it already takes no track colour. */
+  --switch-size: calc(var(--rp-spacing) * 5);
+  /* How far the thumb stands inside the track, at either end and above and below it. */
+  --switch-inset: calc(var(--rp-spacing) * 0.5);
+  /* Between the track and the label, which is also how far past the track the help text starts. */
+  --switch-gap: calc(var(--rp-spacing) * 3);
+
   /* Default tokens for switch control states */
   --switch-control-bg: var(--rp-default);
   --switch-control-bg-hover: color-mix(in oklab, var(--switch-control-bg), transparent 20%);
@@ -46,44 +57,22 @@
     }
   }
 
-  /* Field-level help text below the control + label row */
+  /* Field-level help text below the control + label row, indented past the track and the gap so it
+   * starts under the label. `field-error.css` zeroes a toggle's error padding at the same
+   * specificity, as it does for Checkbox and Radio, so the error indent holds by import order. */
   & > [data-slot="description"] {
     width: 100%;
     min-width: 0px;
-    padding-inline-start: calc(2.5rem + 0.75rem);
+    padding-inline-start: calc(var(--switch-size) * 2 + var(--switch-gap));
   }
 
   & > [data-slot="field-error"] {
     width: 100%;
     min-width: 0px;
-    padding-inline-start: calc(2.5rem + 0.75rem);
+    padding-inline-start: calc(var(--switch-size) * 2 + var(--switch-gap));
     font-size: var(--rp-text-xs);
     line-height: var(--rp-leading, var(--rp-text-xs--line-height));
     color: var(--rp-muted);
-  }
-
-  &.rp-switch--xs > [data-slot="description"] {
-    padding-inline-start: calc(1.5rem + 0.75rem);
-  }
-
-  &.rp-switch--xs > [data-slot="field-error"] {
-    padding-inline-start: calc(1.5rem + 0.75rem);
-  }
-
-  &.rp-switch--sm > [data-slot="description"] {
-    padding-inline-start: calc(2rem + 0.75rem);
-  }
-
-  &.rp-switch--sm > [data-slot="field-error"] {
-    padding-inline-start: calc(2rem + 0.75rem);
-  }
-
-  &.rp-switch--lg > [data-slot="description"] {
-    padding-inline-start: calc(3rem + 0.75rem);
-  }
-
-  &.rp-switch--lg > [data-slot="field-error"] {
-    padding-inline-start: calc(3rem + 0.75rem);
   }
 
   /* Disabled + Selected state */
@@ -101,11 +90,11 @@
 
 /* Size variants - default is medium */
 .rp-switch--xs {
-  /* Extra small size modifier */
+  --switch-size: calc(var(--rp-spacing) * 3);
 }
 
 .rp-switch--sm {
-  /* Small size modifier */
+  --switch-size: calc(var(--rp-spacing) * 4);
 }
 
 .rp-switch--md {
@@ -113,12 +102,11 @@
 }
 
 .rp-switch--lg {
-  /* Large size modifier */
+  --switch-size: calc(var(--rp-spacing) * 6);
 }
 
 /* Switch control (track) */
 .rp-switch__control {
-  /* Default size (medium) */
   position: relative;
   display: flex;
   flex-shrink: 0;
@@ -126,8 +114,8 @@
   overflow: hidden;
 
   border-radius: min(32px, var(--rp-component-radius));
-  height: 1.25rem; /* 20px on desktop (14px base), 20px on mobile (16px base) - scales with font-size */
-  width: 2.5rem; /* 35px on desktop, 40px on mobile - scales with font-size */
+  height: var(--switch-size);
+  width: calc(var(--switch-size) * 2);
 
   background-color: var(--switch-control-bg);
 
@@ -214,7 +202,7 @@
   display: inline-flex;
   cursor: inherit;
   align-items: center;
-  gap: calc(var(--rp-spacing) * 3);
+  gap: var(--switch-gap);
   font-size: var(--rp-text-sm);
   line-height: var(--rp-leading, var(--rp-text-sm--line-height));
   font-weight: var(--rp-font-weight-medium);
@@ -226,30 +214,14 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Size-specific control dimensions */
-.rp-switch--xs .rp-switch__control {
-  height: 0.75rem; /* ~10.5px on desktop, ~12px on mobile */
-  width: 1.5rem; /* ~21px on desktop, ~24px on mobile */
-}
-
-.rp-switch--sm .rp-switch__control {
-  height: 1rem; /* ~14px on desktop, ~16px on mobile */
-  width: 2rem; /* ~32px on desktop, ~36px on mobile */
-}
-
-.rp-switch--md .rp-switch__control {
-  /* No styles as this is the default size */
-}
-
-.rp-switch--lg .rp-switch__control {
-  height: 1.5rem; /* ~21px on desktop, ~24px on mobile */
-  width: 3rem; /* ~48px on desktop, ~56px on mobile */
-}
-
 /* Switch thumb */
 .rp-switch__thumb {
-  /* Default size (medium) with margin-based positioning */
-  margin-inline-start: calc(var(--rp-spacing) * 0.5);
+  /* Clear of the track by the inset above and below, at the 1.375:1 it keeps at every size. */
+  --switch-thumb-height: calc(var(--switch-size) - var(--switch-inset) * 2);
+  --switch-thumb-width: calc(var(--switch-thumb-height) * 1.375);
+
+  /* Positioned by margin, which the checked state carries to the far end */
+  margin-inline-start: var(--switch-inset);
   display: flex;
   transform-origin: center;
   color: var(--rp-color-black);
@@ -263,8 +235,8 @@
   --switch-thumb-bg-disabled: color-mix(in oklab, var(--rp-default-foreground) 20%, transparent);
 
   background-color: var(--switch-thumb-bg);
-  height: 1rem; /* ~14px on desktop, ~16px on mobile */
-  width: 1.375rem; /* ~19px on desktop, ~22px on mobile */
+  height: var(--switch-thumb-height);
+  width: var(--switch-thumb-width);
 
   /* Reads against the `Canvas` track the control falls back to; the `color` carries any icon
    * slotted inside, which would otherwise be `CanvasText` on `CanvasText`. */
@@ -277,10 +249,10 @@
     var(--rp-motion) margin 300ms var(--rp-ease-out-fluid),
     background-color 200ms var(--rp-ease-out);
 
-  /* Selected/checked state - use margin instead of translate */
+  /* Selected/checked state - use margin instead of translate, leaving the same inset at the end */
   .rp-switch[aria-checked="true"] &,
   .rp-switch[data-selected="true"] & {
-    margin-inline-start: calc(100% - 1.5rem);
+    margin-inline-start: calc(100% - var(--switch-thumb-width) - var(--switch-inset));
     color: var(--rp-accent);
 
     background-color: var(--switch-thumb-bg-selected);
@@ -293,44 +265,6 @@
       background-color: HighlightText;
       color: Highlight;
     }
-  }
-
-  .rp-switch:active &,
-  .rp-switch[data-pressed="true"] & {
-  }
-}
-
-/* Size-specific thumb dimensions */
-.rp-switch--xs .rp-switch__thumb {
-  height: 0.5rem; /* ~7px on desktop, ~8px on mobile */
-  width: 0.6875rem; /* ~9.6px on desktop, ~11px on mobile - maintains 1.375:1 ratio */
-
-  /* Extra small selected state positioning */
-  .rp-switch[aria-checked="true"] &,
-  .rp-switch[data-selected="true"] & {
-    margin-inline-start: calc(100% - 0.8125rem);
-  }
-}
-
-.rp-switch--sm .rp-switch__thumb {
-  height: 0.75rem; /* ~10.5px on desktop, ~12px on mobile */
-  width: 1.03125rem; /* ~14.4px on desktop, ~16.5px on mobile - maintains 1.375:1 ratio */
-
-  /* Small selected state positioning */
-  .rp-switch[aria-checked="true"] &,
-  .rp-switch[data-selected="true"] & {
-    margin-inline-start: calc(100% - 1.15625rem);
-  }
-}
-
-.rp-switch--lg .rp-switch__thumb {
-  height: 1.25rem; /* ~17.5px on desktop, ~20px on mobile */
-  width: 1.71875rem; /* ~24px on desktop, ~27.5px on mobile - maintains 1.375:1 ratio */
-
-  /* Large selected state positioning */
-  .rp-switch[aria-checked="true"] &,
-  .rp-switch[data-selected="true"] & {
-    margin-inline-start: calc(100% - 1.84375rem);
   }
 }
 
