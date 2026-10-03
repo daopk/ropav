@@ -2,7 +2,7 @@ import { renderVapor } from "@ropav/testing/helpers/vue";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 
-import { setInteractionModality } from "@/composables/use-interaction-states";
+import { setInteractionModality } from "@/composables/interaction-modality";
 import { resetTooltipWarmup } from "@/composables/use-tooltip-trigger-state";
 
 import TooltipFixture from "./fixtures.vue";

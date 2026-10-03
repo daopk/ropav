@@ -6,9 +6,8 @@ import {
   isFocusVisible,
   retainInteractionModality,
   setInteractionModality,
-  useFocusWithin,
-  useInteractionStates,
-} from "@/composables/use-interaction-states";
+} from "@/composables/interaction-modality";
+import { useFocusWithin, useInteractionStates } from "@/composables/use-interaction-states";
 
 import { withScope } from "../harness/scope";
 

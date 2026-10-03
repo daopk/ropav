@@ -11,7 +11,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { computed, nextTick } from "vue";
 
 import { beginDragging, getDragSession } from "@/composables/drag-manager";
-import { setInteractionModality } from "@/composables/use-interaction-states";
+import { setInteractionModality } from "@/composables/interaction-modality";
 import { dndStrings } from "@/i18n/dnd";
 
 import Harness from "../fixtures/droppable-collection-harness.vue";

@@ -5,7 +5,7 @@ import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
 import { ToastQueue, createViewTransitionUpdate } from "@/components/toast";
-import { setInteractionModality } from "@/composables/use-interaction-states";
+import { setInteractionModality } from "@/composables/interaction-modality";
 
 import { settled } from "../../harness/settle";
 import { tap } from "../../harness/tap";

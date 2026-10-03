@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 
 import { getDragSession } from "@/composables/drag-manager";
-import { setInteractionModality } from "@/composables/use-interaction-states";
+import { setInteractionModality } from "@/composables/interaction-modality";
 /**
  * Dragging inside a tree grid.
  *

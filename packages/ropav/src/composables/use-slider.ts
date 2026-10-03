@@ -5,7 +5,7 @@ import { computed, onScopeDispose, toValue } from "vue";
 
 import { clamp } from "../utils/number";
 
-import { setInteractionModality } from "./use-interaction-states";
+import { setInteractionModality } from "./interaction-modality";
 import { useMove } from "./use-move";
 
 export interface UseSliderOptions {

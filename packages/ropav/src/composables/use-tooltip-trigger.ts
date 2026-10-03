@@ -4,12 +4,12 @@ import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
 import { computed, onScopeDispose, shallowRef, toValue, watch } from "vue";
 
-import { useId } from "./use-id";
 import {
   getInteractionModality,
   isFocusVisible,
   retainInteractionModality,
-} from "./use-interaction-states";
+} from "./interaction-modality";
+import { useId } from "./use-id";
 
 export interface UseTooltipTriggerOptions {
   isDisabled?: MaybeRefOrGetter<boolean | undefined>;

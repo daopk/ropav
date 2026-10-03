@@ -7,7 +7,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { computed, shallowRef } from "vue";
 
 import { beginDragging, getDragSession } from "@/composables/drag-manager";
-import { setInteractionModality } from "@/composables/use-interaction-states";
+import { setInteractionModality } from "@/composables/interaction-modality";
 import { dndStrings } from "@/i18n/dnd";
 import { DROP_OPERATION } from "@/utils/dnd-constants";
 import { writeToDataTransfer } from "@/utils/dnd-data-transfer";

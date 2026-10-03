@@ -3,7 +3,8 @@ import type { PressEvent } from "@/composables/use-press";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick, shallowRef } from "vue";
 
-import { isVirtualClick, isVirtualPointerEvent, usePress } from "@/composables/use-press";
+import { usePress } from "@/composables/use-press";
+import { isVirtualClick, isVirtualPointerEvent } from "@/composables/virtual-event";
 
 import { withScope } from "../harness/scope";
 

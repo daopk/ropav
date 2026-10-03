@@ -4,7 +4,7 @@ import { nextTick } from "vue";
 
 import { ToastQueue } from "@/components/toast/toast-queue";
 import { DEFAULT_TOAST_TIMEOUT } from "@/components/toast/toast.constants";
-import { setInteractionModality } from "@/composables/use-interaction-states";
+import { setInteractionModality } from "@/composables/interaction-modality";
 
 import ToastRegionHost from "../fixtures/toast-region-host.vue";
 

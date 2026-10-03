@@ -9,10 +9,10 @@ import { computed, onScopeDispose, toValue, watch } from "vue";
 import { calendarStrings } from "../i18n/calendar";
 import { getScrollParent } from "../utils/focus";
 
+import { getInteractionModality } from "./interaction-modality";
 import { isRangeCalendarState } from "./use-calendar";
 import { useDateFormatter } from "./use-date-formatter";
 import { useDescription } from "./use-description";
-import { getInteractionModality } from "./use-interaction-states";
 import { useLocalizedStringFormatter } from "./use-localized-string-formatter";
 import { usePress } from "./use-press";
 

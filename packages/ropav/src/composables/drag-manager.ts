@@ -20,7 +20,7 @@ import { getTypes } from "../utils/dnd-data-transfer";
 import { announce } from "../utils/live-announcer";
 
 import { getDragModality } from "./drag-modality";
-import { isVirtualClick, isVirtualPointerEvent } from "./use-press";
+import { isVirtualClick, isVirtualPointerEvent } from "./virtual-event";
 
 /**
  * The keyboard and screen reader drag session, ported from React Aria's `dnd/DragManager.ts`.

@@ -4,7 +4,7 @@ import { h, nextTick } from "vue";
 
 import { Button } from "@/components/button";
 import { Tooltip, TooltipArrow, TooltipContent } from "@/components/tooltip";
-import { setInteractionModality } from "@/composables/use-interaction-states";
+import { setInteractionModality } from "@/composables/interaction-modality";
 import { resetTooltipWarmup } from "@/composables/use-tooltip-trigger-state";
 
 /**

@@ -31,9 +31,9 @@ import {
 
 import { registerDropTarget } from "./drag-manager";
 import { registerDroppableCollection } from "./droppable-collection-registry";
+import { setInteractionModality } from "./interaction-modality";
 import { useAutoScroll } from "./use-auto-scroll";
 import { useDrop } from "./use-drop";
-import { setInteractionModality } from "./use-interaction-states";
 import { useLocale } from "./use-locale";
 
 /** Extra keys a collection's keyboard delegate may offer beyond the drag navigation ones. */

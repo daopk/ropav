@@ -5,7 +5,7 @@ import type { MaybeRefOrGetter } from "vue";
 import { onScopeDispose, toValue, watch } from "vue";
 
 import { useCalendar } from "./use-calendar";
-import { isVirtualPointerEvent } from "./use-press";
+import { isVirtualPointerEvent } from "./virtual-event";
 
 /**
  * What to do with a half-built range when the pointer comes up somewhere else, or focus leaves.

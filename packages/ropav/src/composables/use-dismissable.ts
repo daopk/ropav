@@ -4,7 +4,7 @@ import { computed, onScopeDispose, toValue, watch } from "vue";
 
 import { isInTopLayer } from "../utils/top-layer";
 
-import { isElementInAnyFocusScope } from "./use-focus-scope";
+import { isElementInAnyFocusScope } from "./focus-scope-registry";
 
 /**
  * Open overlays, innermost last.

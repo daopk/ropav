@@ -2,83 +2,10 @@ import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
 import { computed, onScopeDispose, shallowRef, toValue } from "vue";
 
+import { getFocusRingModality, retainInteractionModality } from "./interaction-modality";
+
 /** How the last interaction reached the page, which decides whether focus is visible. */
 export type InteractionModality = "keyboard" | "pointer";
-
-const modality = shallowRef<InteractionModality>("keyboard");
-
-/**
- * The same answer, kept out of the reactive graph.
- *
- * These are two different questions and they need two different answers. "Should a focus ring be
- * painted" may only change when something is pressed or a key is struck — a bare mouse move must
- * not erase a ring that is already there. "How is the user driving the page right now" has to
- * follow the pointer as it moves, because a tooltip decides whether to open on hover by asking it.
- * Answering the second reactively would make every mouse move re-render every focusable thing on
- * the page and drop the ring while doing it, which is why React Aria keeps the same split.
- */
-let latestModality: InteractionModality = "keyboard";
-
-/** Number of live consumers, so the document listeners are attached exactly once. */
-let consumerCount = 0;
-
-const onGlobalKeydown = (event: KeyboardEvent) => {
-  // A modifier chord is a shortcut rather than navigation, so it must not make a
-  // subsequent pointer focus look like keyboard focus.
-  if (event.metaKey || event.altKey || event.ctrlKey) return;
-
-  latestModality = "keyboard";
-  modality.value = "keyboard";
-};
-
-const onGlobalPointerdown = () => {
-  latestModality = "pointer";
-  modality.value = "pointer";
-};
-
-/** Tracked without touching the reactive ref, for the reason above. */
-const onGlobalPointerMoved = () => {
-  latestModality = "pointer";
-};
-
-/** Attach the shared modality listeners, returning the release for this consumer. */
-const retainModalityListeners = (): (() => void) => {
-  if (typeof document === "undefined") return () => {};
-
-  if (++consumerCount === 1) {
-    // Capture phase, so the modality is already up to date when `focus` fires.
-    document.addEventListener("keydown", onGlobalKeydown, true);
-    document.addEventListener("pointerdown", onGlobalPointerdown, true);
-    document.addEventListener("pointermove", onGlobalPointerMoved, true);
-    document.addEventListener("pointerup", onGlobalPointerMoved, true);
-  }
-
-  return () => {
-    if (--consumerCount === 0) {
-      document.removeEventListener("keydown", onGlobalKeydown, true);
-      document.removeEventListener("pointerdown", onGlobalPointerdown, true);
-      document.removeEventListener("pointermove", onGlobalPointerMoved, true);
-      document.removeEventListener("pointerup", onGlobalPointerMoved, true);
-    }
-  };
-};
-
-/**
- * Keep the shared modality listeners attached, returning the release.
- *
- * For a component that has to ask how the user is driving the page without otherwise taking part
- * in the interaction lifecycle — a tooltip trigger, which opens on hover only for a real pointer.
- * Without this the answer would be whatever it was when the last interactive component unmounted.
- */
-export const retainInteractionModality = (): (() => void) => retainModalityListeners();
-
-/**
- * How the user is driving the page right now.
- *
- * Ported from React Aria's `getInteractionModality`. Not reactive on purpose — read it inside an
- * event handler, where the answer is the one that matters.
- */
-export const getInteractionModality = (): InteractionModality => latestModality;
 
 /**
  * The same answer as a reactive ref, for text that is rendered rather than read in a handler.
@@ -93,37 +20,11 @@ export const getInteractionModality = (): InteractionModality => latestModality;
  * interaction lifecycle.
  */
 export const useInteractionModality = (): ComputedRef<InteractionModality> => {
-  const release = retainModalityListeners();
+  const release = retainInteractionModality();
 
   onScopeDispose(release);
 
-  return computed(() => modality.value);
-};
-
-/**
- * Whether focus arriving right now is the kind that came from a keyboard.
- *
- * Ported from React Aria's `isFocusVisible`, and reads the same answer React Aria reads — the one
- * that follows the pointer as it moves. Read it inside a handler: a tooltip asks it on focus to
- * tell tabbing to a button apart from clicking it, and only the pointer-following answer knows the
- * user had already reached for the mouse.
- *
- * Not the answer that decides whether a ring is painted. That one lives on `useInteractionStates`
- * and deliberately ignores a bare mouse move, so moving the pointer cannot erase a ring that is
- * already there. The two can disagree, and that is the point.
- */
-export const isFocusVisible = (): boolean => latestModality === "keyboard";
-
-/**
- * Declare how the last interaction reached the page.
- *
- * Ported from React Aria's `setInteractionModality`. A component that moves focus itself —
- * a slider label handing focus to its first thumb — has to say that the move came from the
- * keyboard, or the ring it just earned would not be painted.
- */
-export const setInteractionModality = (next: InteractionModality): void => {
-  latestModality = next;
-  modality.value = next;
+  return computed(() => getFocusRingModality());
 };
 
 export interface UseInteractionStatesOptions {
@@ -226,7 +127,7 @@ export const useInteractionStates = (
     endPress();
   };
 
-  const releaseModalityListeners = retainModalityListeners();
+  const releaseModalityListeners = retainInteractionModality();
 
   onScopeDispose(() => {
     releaseModalityListeners();
@@ -237,7 +138,7 @@ export const useInteractionStates = (
     // Reading through the inert flags keeps a stale state from outliving the prop that
     // suppressed it — a button disabled mid-hover would otherwise stay hovered.
     isFocusVisible: computed(
-      () => focused.value && !isDisabled.value && modality.value === "keyboard",
+      () => focused.value && !isDisabled.value && getFocusRingModality() === "keyboard",
     ),
     isFocused: computed(() => focused.value && !isDisabled.value),
     isHovered: computed(() => hovered.value && !isInert.value),
@@ -308,7 +209,7 @@ export const useFocusWithin = (options: UseFocusWithinOptions = {}): UseFocusWit
     focusWithin.value = false;
   };
 
-  const releaseModalityListeners = retainModalityListeners();
+  const releaseModalityListeners = retainInteractionModality();
 
   onScopeDispose(() => {
     releaseModalityListeners();
@@ -316,7 +217,7 @@ export const useFocusWithin = (options: UseFocusWithinOptions = {}): UseFocusWit
 
   return {
     isFocusVisible: computed(
-      () => focusWithin.value && !isDisabled.value && modality.value === "keyboard",
+      () => focusWithin.value && !isDisabled.value && getFocusRingModality() === "keyboard",
     ),
     isFocusWithin: computed(() => focusWithin.value && !isDisabled.value),
     onFocusin,

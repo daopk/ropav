@@ -5,7 +5,7 @@ import type { TableDragHandleProps } from "./table.types";
 import { computed, shallowRef } from "vue";
 
 import { providePressResponder } from "../../composables/press-responder";
-import { isVirtualClick, isVirtualPointerEvent } from "../../composables/use-press";
+import { isVirtualClick, isVirtualPointerEvent } from "../../composables/virtual-event";
 
 import { useTableRowContext } from "./table.context";
 

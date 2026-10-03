@@ -30,7 +30,7 @@ import { beginDragging } from "./drag-manager";
 import { useDragModality } from "./drag-modality";
 import { useDescription } from "./use-description";
 import { useLocalizedStringFormatter } from "./use-localized-string-formatter";
-import { isVirtualClick, isVirtualPointerEvent } from "./use-press";
+import { isVirtualClick, isVirtualPointerEvent } from "./virtual-event";
 
 export interface UseDragOptions {
   /** The items being dragged, read when the drag starts. */

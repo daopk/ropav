@@ -7,11 +7,8 @@ import { toastStrings } from "../i18n/toast";
 import { willOpenKeyboard } from "../utils/platform";
 import { TOP_LAYER_ATTRIBUTE } from "../utils/top-layer";
 
-import {
-  getInteractionModality,
-  retainInteractionModality,
-  useInteractionStates,
-} from "./use-interaction-states";
+import { getInteractionModality, retainInteractionModality } from "./interaction-modality";
+import { useInteractionStates } from "./use-interaction-states";
 import { useLocalizedStringFormatter } from "./use-localized-string-formatter";
 
 /** The only thing the region needs to know about a queued toast. */

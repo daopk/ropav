@@ -16,7 +16,7 @@ import {
   registerDropItem,
   registerDropTarget,
 } from "@/composables/drag-manager";
-import { setInteractionModality } from "@/composables/use-interaction-states";
+import { setInteractionModality } from "@/composables/interaction-modality";
 import { dndStrings } from "@/i18n/dnd";
 
 /**

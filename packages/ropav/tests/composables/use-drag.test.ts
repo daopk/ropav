@@ -4,7 +4,7 @@ import { renderVapor } from "@ropav/testing/helpers/vue";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { getDragSession } from "@/composables/drag-manager";
-import { setInteractionModality } from "@/composables/use-interaction-states";
+import { setInteractionModality } from "@/composables/interaction-modality";
 import { CUSTOM_DRAG_TYPE } from "@/utils/dnd-constants";
 import { globalAllowedDropOperations } from "@/utils/dnd-state";
 

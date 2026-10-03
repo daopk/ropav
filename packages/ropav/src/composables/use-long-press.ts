@@ -7,7 +7,7 @@ import { useDescription } from "./use-description";
 import { usePress } from "./use-press";
 
 /** How long the press has to be held before it counts as a long press. */
-export const LONG_PRESS_THRESHOLD_MS = 500;
+const LONG_PRESS_THRESHOLD_MS = 500;
 
 export interface LongPressEvent extends Omit<PressEvent, "type"> {
   type: "longpressstart" | "longpressend" | "longpress";

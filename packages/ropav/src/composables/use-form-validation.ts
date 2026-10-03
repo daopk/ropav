@@ -4,7 +4,7 @@ import type { MaybeRefOrGetter, Ref } from "vue";
 
 import { onScopeDispose, toValue, watch, watchEffect } from "vue";
 
-import { setInteractionModality } from "./use-interaction-states";
+import { setInteractionModality } from "./interaction-modality";
 import { getNativeValidation } from "./validation-result";
 
 export interface UseFormValidationOptions {
