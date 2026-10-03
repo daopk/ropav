@@ -6,7 +6,7 @@ import { computed } from "vue";
 import { datepickerStrings } from "../i18n/datepicker";
 
 import { useLocale } from "./use-locale";
-import { useLocalizedStringDictionary } from "./use-localized-string-formatter";
+import { useLocalizedStringDictionary } from "./use-localized-string-dictionary";
 
 export interface DisplayNames {
   /**

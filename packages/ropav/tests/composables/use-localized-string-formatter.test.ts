@@ -4,7 +4,7 @@ import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it } from "vitest";
 import { nextTick, reactive } from "vue";
 
-import { useLocalizedStringDictionary } from "@/composables/use-localized-string-formatter";
+import { useLocalizedStringDictionary } from "@/composables/use-localized-string-dictionary";
 import { calendarStrings } from "@/i18n/calendar";
 import { datepickerStrings } from "@/i18n/datepicker";
 

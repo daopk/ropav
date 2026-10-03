@@ -5,7 +5,7 @@ import { renderVapor } from "@ropav/testing/helpers/vue";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { effectScope, nextTick, reactive } from "vue";
 
-import { useDefaultLocale } from "@/composables/use-locale";
+import { useDefaultLocale } from "@/composables/use-default-locale";
 
 import Harness from "../fixtures/locale-harness.vue";
 
