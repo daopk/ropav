@@ -2,18 +2,26 @@
  * One line of a field, at each size.
  *
  * The scale is the control scale: 28, 32, 36 and 40px for `xs`, `sm`, `md` and `lg`, the four
- * heights a button stands at, so a field and a button of the same size line up.
+ * heights a button stands at, so a field and a button of the same size line up - under any field
+ * border a theme sets, not only the default theme's none.
  *
  * The padding carries the height rather than a `height`, because a field is content-driven - some
  * shells grow, an input group around a textarea or a multi-select trigger wrapping its chips, and
  * a height would fight them. The shell states its own floor instead: a `min-height` where it may
  * grow, a `height` where it may not. The control inside sets the type and the padding either way.
  *
+ * The field border is inside that height, not on top of it. `--rp-field-border-width` is 0 in the
+ * default theme and a theme is free to draw one, so every padding gives it back -
+ * `calc(<step> - var(--rp-border-width-field))` - and a 1px edge leaves a field at 32px beside a
+ * 32px button rather than at 34. The control inside a group gives it back as well, though the
+ * border is drawn on the group, so it fills the group's box exactly rather than overflowing it.
+ *
  * The type changes at 40rem, and the padding changes with it. Below 40rem every size sets 16px
  * type, because anything smaller makes mobile Safari zoom the page when the field takes focus, and
- * 16px sets a 24px line, so the padding is 2, 4, 6 and 8px. From 40rem up the type is 12, 14, 14
- * and 16px on lines of 16, 20, 20 and 24px, and the padding gives back the difference, so the
- * height comes out the same either way. `lg` keeps 16px throughout, as the large button does.
+ * 16px sets a 24px line, so the padding is 2, 4, 6 and 8px, less the border. From 40rem up the
+ * type is 12, 14, 14 and 16px on lines of 16, 20, 20 and 24px, and the padding gives back the
+ * difference, so the height comes out the same either way. `lg` keeps 16px throughout, as the
+ * large button does.
  *
  * Every field writes the same block out in its own stylesheet - the textarea, the input, search,
  * number, colour and date groups, and the select and autocomplete triggers - rather than sharing
@@ -25,11 +33,11 @@
   border-style: var(--rp-border-style);
   border-width: 1px;
   padding-inline: calc(var(--rp-spacing) * 3);
-  padding-block: calc(var(--rp-spacing) * 1.5);
+  padding-block: calc(var(--rp-spacing) * 1.5 - var(--rp-border-width-field));
   font-size: var(--rp-text-base);
   line-height: var(--rp-leading, var(--rp-text-base--line-height));
   @media (width >= 40rem) {
-    padding-block: calc(var(--rp-spacing) * 2);
+    padding-block: calc(var(--rp-spacing) * 2 - var(--rp-border-width-field));
   }
   @media (width >= 40rem) {
     font-size: var(--rp-text-sm);
@@ -168,11 +176,11 @@
    ========================================================================== */
 
 .rp-input--xs {
-  padding-block: calc(var(--rp-spacing) * 0.5);
+  padding-block: calc(var(--rp-spacing) * 0.5 - var(--rp-border-width-field));
   font-size: var(--rp-text-base);
   line-height: var(--rp-leading, var(--rp-text-base--line-height));
   @media (width >= 40rem) {
-    padding-block: calc(var(--rp-spacing) * 1.5);
+    padding-block: calc(var(--rp-spacing) * 1.5 - var(--rp-border-width-field));
   }
   @media (width >= 40rem) {
     font-size: var(--rp-text-xs);
@@ -181,11 +189,11 @@
 }
 
 .rp-input--sm {
-  padding-block: var(--rp-spacing);
+  padding-block: calc(var(--rp-spacing) - var(--rp-border-width-field));
   font-size: var(--rp-text-base);
   line-height: var(--rp-leading, var(--rp-text-base--line-height));
   @media (width >= 40rem) {
-    padding-block: calc(var(--rp-spacing) * 1.5);
+    padding-block: calc(var(--rp-spacing) * 1.5 - var(--rp-border-width-field));
   }
   @media (width >= 40rem) {
     font-size: var(--rp-text-sm);
@@ -194,7 +202,7 @@
 }
 
 .rp-input--lg {
-  padding-block: calc(var(--rp-spacing) * 2);
+  padding-block: calc(var(--rp-spacing) * 2 - var(--rp-border-width-field));
   font-size: var(--rp-text-base);
   line-height: var(--rp-leading, var(--rp-text-base--line-height));
 }

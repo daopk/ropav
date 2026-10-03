@@ -127,11 +127,11 @@
   border-width: 0px;
   background-color: transparent;
   padding-inline: calc(var(--rp-spacing) * 3);
-  padding-block: calc(var(--rp-spacing) * 1.5);
+  padding-block: calc(var(--rp-spacing) * 1.5 - var(--rp-border-width-field));
   font-size: var(--rp-text-base);
   line-height: var(--rp-leading, var(--rp-text-base--line-height));
   @media (width >= 40rem) {
-    padding-block: calc(var(--rp-spacing) * 2);
+    padding-block: calc(var(--rp-spacing) * 2 - var(--rp-border-width-field));
   }
   @media (width >= 40rem) {
     font-size: var(--rp-text-sm);
@@ -225,11 +225,11 @@
   line-height: var(--rp-leading, var(--rp-text-xs--line-height));
 
   .rp-color-input-group__input {
-    padding-block: calc(var(--rp-spacing) * 0.5);
+    padding-block: calc(var(--rp-spacing) * 0.5 - var(--rp-border-width-field));
     font-size: var(--rp-text-base);
     line-height: var(--rp-leading, var(--rp-text-base--line-height));
     @media (width >= 40rem) {
-      padding-block: calc(var(--rp-spacing) * 1.5);
+      padding-block: calc(var(--rp-spacing) * 1.5 - var(--rp-border-width-field));
     }
     @media (width >= 40rem) {
       font-size: var(--rp-text-xs);
@@ -242,11 +242,11 @@
   height: calc(var(--rp-spacing) * 8);
 
   .rp-color-input-group__input {
-    padding-block: var(--rp-spacing);
+    padding-block: calc(var(--rp-spacing) - var(--rp-border-width-field));
     font-size: var(--rp-text-base);
     line-height: var(--rp-leading, var(--rp-text-base--line-height));
     @media (width >= 40rem) {
-      padding-block: calc(var(--rp-spacing) * 1.5);
+      padding-block: calc(var(--rp-spacing) * 1.5 - var(--rp-border-width-field));
     }
     @media (width >= 40rem) {
       font-size: var(--rp-text-sm);
@@ -259,7 +259,7 @@
   height: calc(var(--rp-spacing) * 10);
 
   .rp-color-input-group__input {
-    padding-block: calc(var(--rp-spacing) * 2);
+    padding-block: calc(var(--rp-spacing) * 2 - var(--rp-border-width-field));
     font-size: var(--rp-text-base);
     line-height: var(--rp-leading, var(--rp-text-base--line-height));
   }

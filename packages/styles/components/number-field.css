@@ -161,11 +161,11 @@
   border-width: 0px;
   background-color: transparent;
   padding-inline: calc(var(--rp-spacing) * 3);
-  padding-block: calc(var(--rp-spacing) * 1.5);
+  padding-block: calc(var(--rp-spacing) * 1.5 - var(--rp-border-width-field));
   font-size: var(--rp-text-base);
   line-height: var(--rp-leading, var(--rp-text-base--line-height));
   @media (width >= 40rem) {
-    padding-block: calc(var(--rp-spacing) * 2);
+    padding-block: calc(var(--rp-spacing) * 2 - var(--rp-border-width-field));
   }
   @media (width >= 40rem) {
     font-size: var(--rp-text-sm);
@@ -370,11 +370,11 @@
   }
 
   .rp-number-field__input {
-    padding-block: calc(var(--rp-spacing) * 0.5);
+    padding-block: calc(var(--rp-spacing) * 0.5 - var(--rp-border-width-field));
     font-size: var(--rp-text-base);
     line-height: var(--rp-leading, var(--rp-text-base--line-height));
     @media (width >= 40rem) {
-      padding-block: calc(var(--rp-spacing) * 1.5);
+      padding-block: calc(var(--rp-spacing) * 1.5 - var(--rp-border-width-field));
     }
     @media (width >= 40rem) {
       font-size: var(--rp-text-xs);
@@ -406,11 +406,11 @@
   }
 
   .rp-number-field__input {
-    padding-block: var(--rp-spacing);
+    padding-block: calc(var(--rp-spacing) - var(--rp-border-width-field));
     font-size: var(--rp-text-base);
     line-height: var(--rp-leading, var(--rp-text-base--line-height));
     @media (width >= 40rem) {
-      padding-block: calc(var(--rp-spacing) * 1.5);
+      padding-block: calc(var(--rp-spacing) * 1.5 - var(--rp-border-width-field));
     }
     @media (width >= 40rem) {
       font-size: var(--rp-text-sm);
@@ -442,7 +442,7 @@
   }
 
   .rp-number-field__input {
-    padding-block: calc(var(--rp-spacing) * 2);
+    padding-block: calc(var(--rp-spacing) * 2 - var(--rp-border-width-field));
     font-size: var(--rp-text-base);
     line-height: var(--rp-leading, var(--rp-text-base--line-height));
   }

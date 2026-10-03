@@ -18,6 +18,22 @@ is no rebuild of the package, and no need to go through a theme file at all:
 Author CSS outside a cascade layer outranks everything the library declares, so these win wherever
 you put them.
 
+## A border on fields
+
+The default theme draws fields with a fill and no border. `--rp-field-border-width` gives them
+one:
+
+```css
+:root {
+  --rp-field-border-width: 1px;
+}
+```
+
+The border is drawn inside the field's height rather than added to it — each field takes the width
+back out of its padding — so an input, a select or a search field stays at 28, 32, 36 or 40 pixels,
+level with a button of the same size. Set it on `:root`: it is read there, so a `data-theme`
+subtree that sets its own leaves the fields under it as they were.
+
 ## Adding a palette rather than changing the default
 
 Write the same token block under your own attribute:
