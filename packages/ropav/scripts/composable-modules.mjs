@@ -90,6 +90,7 @@ export const HOST_EXPORTED_MODULES = {
   "use-image-loading-status": ["avatar"],
   "use-input-otp": ["input-otp"],
   "use-menu-trigger": ["dropdown"],
+  "use-menu-trigger-state": ["dropdown"],
   "use-number-field": ["number-field"],
   "use-number-field-state": ["number-field"],
   "use-password-manager-badge": ["input-otp"],

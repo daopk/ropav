@@ -5,7 +5,8 @@ import type {
   ValidationBehavior,
   ValidationFunction,
 } from "./use-form-validation-state";
-import type { FocusStrategy, MenuTriggerState } from "./use-overlay-trigger-state";
+import type { MenuTriggerState } from "./use-menu-trigger-state";
+import type { FocusStrategy } from "./use-overlay-trigger-state";
 import type { SelectSelectionMode, SelectedItem, SelectedValue } from "./use-select-state";
 import type {
   CollectionSelection,
@@ -22,7 +23,7 @@ import { useCollection } from "./use-collection";
 import { useControllableState } from "./use-controllable-state";
 import { useFilter } from "./use-filter";
 import { isValueMissing, useFormValidationState } from "./use-form-validation-state";
-import { useMenuTriggerState } from "./use-overlay-trigger-state";
+import { useMenuTriggerState } from "./use-menu-trigger-state";
 import { defaultItemTextValue } from "./use-select-state";
 import { useSelectionManager } from "./use-selection-manager";
 

@@ -4,7 +4,7 @@ import type { CollectionKey } from "../../composables/use-collection";
 import { computed, onScopeDispose, shallowRef, watch } from "vue";
 
 import { useId } from "../../composables/use-id";
-import { useSubmenuTriggerState } from "../../composables/use-overlay-trigger-state";
+import { useSubmenuTriggerState } from "../../composables/use-menu-trigger-state";
 import { provideMenuItemPopupContext } from "../menu-item/menu-item.context";
 import { useMenuContext } from "../menu/menu.context";
 

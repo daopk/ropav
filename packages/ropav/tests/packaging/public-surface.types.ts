@@ -20,6 +20,7 @@ import type {
   PushPasswordManagerStrategy,
   RadioGroupState,
   RangeCalendarCommitBehavior,
+  RootMenuTriggerState,
   SelectSelectionMode,
   SelectedItem,
   SelectedValue,
@@ -88,6 +89,7 @@ export interface HostExportedTypes {
   "disclosure-group: UseDisclosureGroupNavigationReturn": UseDisclosureGroupNavigationReturn;
   "disclosure-group: UseDisclosureGroupReturn": UseDisclosureGroupReturn;
   "dropdown: MenuTriggerType": MenuTriggerType;
+  "dropdown: RootMenuTriggerState": RootMenuTriggerState;
   "input-otp: InputOTPTextAlign": InputOTPTextAlign;
   "input-otp: PushPasswordManagerStrategy": PushPasswordManagerStrategy;
   "list-box: UseDraggableCollectionStateReturn": UseDraggableCollectionStateReturn;

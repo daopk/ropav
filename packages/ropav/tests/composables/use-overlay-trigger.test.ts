@@ -1,12 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 import { shallowRef } from "vue";
 
+import { useMenuTriggerState, useSubmenuTriggerState } from "@/composables/use-menu-trigger-state";
 import { useOverlayTrigger } from "@/composables/use-overlay-trigger";
-import {
-  useMenuTriggerState,
-  useOverlayTriggerState,
-  useSubmenuTriggerState,
-} from "@/composables/use-overlay-trigger-state";
+import { useOverlayTriggerState } from "@/composables/use-overlay-trigger-state";
 
 import { withScope } from "../harness/scope";
 

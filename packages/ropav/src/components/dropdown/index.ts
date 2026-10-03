@@ -35,6 +35,8 @@ export type { DropdownContext, DropdownPopoverTarget } from "./dropdown.context"
  * -----------------------------------------------------------------------------------------------*/
 export type { MenuTriggerType } from "../../composables/use-menu-trigger";
 
+export type { RootMenuTriggerState } from "../../composables/use-menu-trigger-state";
+
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/

@@ -6,7 +6,7 @@ import { computed } from "vue";
 
 import { providePressResponder } from "../../composables/press-responder";
 import { useMenuTrigger } from "../../composables/use-menu-trigger";
-import { useMenuTriggerState } from "../../composables/use-overlay-trigger-state";
+import { useMenuTriggerState } from "../../composables/use-menu-trigger-state";
 
 import { provideDropdownContext, provideDropdownPopoverTarget } from "./dropdown.context";
 

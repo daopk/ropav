@@ -1,4 +1,5 @@
-import type { PageSize, ViewportSize } from "./use-viewport-size";
+import type { PageSize } from "./use-page-size";
+import type { ViewportSize } from "./use-viewport-size";
 import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
 import { computed, toValue, watch } from "vue";
@@ -7,8 +8,9 @@ import { ariaHideOutside } from "../utils/aria-hide-outside";
 
 import { useDismissable } from "./use-dismissable";
 import { useFocusScope } from "./use-focus-scope";
+import { usePageSize } from "./use-page-size";
 import { usePreventScroll } from "./use-prevent-scroll";
-import { usePageSize, useViewportSize } from "./use-viewport-size";
+import { useViewportSize } from "./use-viewport-size";
 
 export interface UseModalOverlayOptions {
   /**

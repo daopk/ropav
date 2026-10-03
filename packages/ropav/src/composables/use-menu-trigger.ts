@@ -1,6 +1,7 @@
 import type { PressResponder } from "./press-responder";
+import type { MenuTriggerState } from "./use-menu-trigger-state";
 import type { OverlayType } from "./use-overlay-trigger";
-import type { FocusStrategy, MenuTriggerState } from "./use-overlay-trigger-state";
+import type { FocusStrategy } from "./use-overlay-trigger-state";
 import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
 import { computed, shallowRef, toValue } from "vue";

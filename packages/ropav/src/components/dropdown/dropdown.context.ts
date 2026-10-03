@@ -1,4 +1,4 @@
-import type { RootMenuTriggerState } from "../../composables/use-overlay-trigger-state";
+import type { RootMenuTriggerState } from "../../composables/use-menu-trigger-state";
 import type { OverlayTargetContext } from "../overlay";
 import type { dropdownVariants } from "@ropav/styles";
 import type { ComputedRef } from "vue";

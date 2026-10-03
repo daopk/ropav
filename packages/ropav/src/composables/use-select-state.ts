@@ -5,7 +5,8 @@ import type {
   ValidationBehavior,
   ValidationFunction,
 } from "./use-form-validation-state";
-import type { FocusStrategy, MenuTriggerState } from "./use-overlay-trigger-state";
+import type { MenuTriggerState } from "./use-menu-trigger-state";
+import type { FocusStrategy } from "./use-overlay-trigger-state";
 import type {
   CollectionSelection,
   DisabledBehavior,
@@ -20,7 +21,7 @@ import { createListCollection } from "../utils/virtualizer-collection";
 import { useCollection } from "./use-collection";
 import { useControllableState } from "./use-controllable-state";
 import { useFormValidationState } from "./use-form-validation-state";
-import { useMenuTriggerState } from "./use-overlay-trigger-state";
+import { useMenuTriggerState } from "./use-menu-trigger-state";
 import { useSelectionManager } from "./use-selection-manager";
 
 /** Whether one or several options can be chosen. */
