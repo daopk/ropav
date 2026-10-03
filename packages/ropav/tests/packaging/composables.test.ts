@@ -3,7 +3,7 @@ import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { readComponentDirs } from "../../scripts/component-dirs.mjs";
+import { INTERNAL_DIRS, readComponentDirs } from "../../scripts/component-dirs.mjs";
 import {
   HOST_EXPORTED_MODULES,
   PUBLIC,
@@ -205,27 +205,51 @@ describe("public type surface", () => {
    * Over-approximates: a type imported into a public type source but used only in a non-exported
    * position is still reported. Re-exporting it is harmless, so that is the cheaper error to make.
    * Follows one hop, so a type source importing from another type source is not traced.
+   *
+   * A part re-exported from an internal directory counts as the host's own. `DateFieldSegmentProps`
+   * is `date-input-group`'s type under the field's name, and it names `DateSegment` — skipping the
+   * internal directory would let that composable go private with the prop still pointing at it.
    */
   it("names every type a public prop or context needs", () => {
+    /*
+     * `.types.ts` and `.context.ts` only. Those two files exist to declare the shape a consumer
+     * sees, so a name they import has to be nameable. An implementation module the barrel also
+     * re-exports from — `toast-queue.ts`, for its `Timer` — carries types on private members that
+     * are nobody's business, and following it would report `ToastAction` forever.
+     */
+    const isTypeSource = (source: string) => /^\.\/[a-z0-9-]+\.(types|context)$/.test(source);
+
+    /** The type sources of an internal directory that define `names`, as [dir, source]. */
+    const internalTypeSources = (dir: string, names: Set<string>): [string, string][] =>
+      parseStatements(readComponentIndex(dir))
+        .filter((statement) => statement.isExport && isTypeSource(statement.source))
+        .filter((statement) => statement.specifiers.some((one) => names.has(localName(one))))
+        .map((statement) => [dir, statement.source]);
+
     const stranded = components.flatMap((name) => {
       const indexSource = readComponentIndex(name);
       const exported = exportedNames(indexSource);
+      const statements = parseStatements(indexSource).filter((statement) => statement.isExport);
 
-      /*
-       * `.types.ts` and `.context.ts` only. Those two files exist to declare the shape a consumer
-       * sees, so a name they import has to be nameable. An implementation module the barrel also
-       * re-exports from — `toast-queue.ts`, for its `Timer` — carries types on private members that
-       * are nobody's business, and following it would report `ToastAction` forever.
-       */
-      const typeSources = parseStatements(indexSource)
-        .filter(
-          (statement) =>
-            statement.isExport && /^\.\/[a-z0-9-]+\.(types|context)$/.test(statement.source),
-        )
-        .map((statement) => statement.source);
+      const typeSources: [string, string][] = [
+        ...statements
+          .filter((statement) => isTypeSource(statement.source))
+          .map((statement): [string, string] => [name, statement.source]),
+        ...statements.flatMap((statement) => {
+          const internal = /^\.\.\/([a-z0-9-]+)$/.exec(statement.source)?.[1];
 
-      return [...new Set(typeSources)].flatMap((source) => {
-        const file = path.join(componentsDir, name, `${source.slice(2)}.ts`);
+          if (!internal || !INTERNAL_DIRS.has(internal)) return [];
+
+          const names = new Set(statement.specifiers.map((one) => one.split(" as ")[0]!.trim()));
+
+          return internalTypeSources(internal, names);
+        }),
+      ];
+
+      const unique = [...new Map(typeSources.map((one) => [one.join("/"), one])).values()];
+
+      return unique.flatMap(([dir, source]) => {
+        const file = path.join(componentsDir, dir, `${source.slice(2)}.ts`);
 
         if (!fs.existsSync(file)) return [];
 
