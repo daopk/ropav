@@ -288,6 +288,26 @@
   justify-content: flex-end;
 }
 
+/*
+ * Tabs that hug their labels rather than sharing the row - `full-width="false"`. Scoped the way
+ * the alignment is, so a Tabs nested in a panel keeps its own width.
+ *
+ * Only the tab's width goes. The list keeps `width: max-content; min-width: 100%`, so it still
+ * grows past the scroller when the labels do not fit and ScrollShadow still sees the overflow.
+ * Vertical tabs are untouched: a column stretches an auto-width tab exactly as far as `100%` did.
+ */
+.rp-tabs--fit > :is(.rp-tabs__list-container, .rp-tabs__list) .rp-tabs__tab {
+  width: auto;
+}
+
+/* The primary track hugs the tabs as well - a pill running on past the last tab marks nothing.
+ * `max-width` hands the scroller its edge back once the labels outgrow the row. The secondary
+ * variant keeps its full width, because its rule is the edge of the header the tabs sit in. */
+.rp-tabs--fit:not(.rp-tabs--secondary) > .rp-tabs__list-container {
+  width: fit-content;
+  max-width: 100%;
+}
+
 /* Tab separator */
 .rp-tabs__separator {
   pointer-events: none;

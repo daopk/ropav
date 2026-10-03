@@ -352,6 +352,143 @@ describe("Tabs (browser)", () => {
     });
   });
 
+  /*
+   * Whether the tabs share the row or hug their labels is layout, so only real geometry says
+   * whether the rule reached the tab - and whether the list it leaves alone still overflows.
+   */
+  describe("width", () => {
+    const boxOf = (element: Element) => element.getBoundingClientRect();
+    const containerIn = (container: HTMLElement) =>
+      container.querySelector<HTMLElement>('[data-slot="tabs-list-container"]')!;
+    const rootIn = (container: HTMLElement) =>
+      container.querySelector<HTMLElement>('[data-slot="tabs"]')!;
+
+    /**
+     * A tab's label plus its padding - what a hugging tab measures. The label's text node, not the
+     * tab's contents, because the indicator inside is laid out at the tab's full width.
+     */
+    const contentWidthOf = (tab: HTMLElement) => {
+      const style = getComputedStyle(tab);
+      const label = [...tab.childNodes].find(
+        (node) => node.nodeType === Node.TEXT_NODE && node.textContent!.trim(),
+      )!;
+      const range = document.createRange();
+
+      range.selectNodeContents(label);
+
+      return (
+        range.getBoundingClientRect().width +
+        Number.parseFloat(style.paddingLeft) +
+        Number.parseFloat(style.paddingRight)
+      );
+    };
+
+    it("shares the row between the tabs by default", async () => {
+      const { container, unmount } = renderVapor(TabsFixture, { props: { class: "w-[600px]" } });
+
+      await ready();
+
+      const widths = tabsIn(container).map((tab) => Math.round(boxOf(tab).width));
+
+      // 600px less the list's 4px padding each side, in three.
+      expect(widths).toEqual([197, 197, 197]);
+      expect(Math.round(boxOf(containerIn(container)).width)).toBe(600);
+
+      unmount();
+    });
+
+    it("sizes each tab to its label, and the track to the tabs, when it does not", async () => {
+      const { container, unmount } = renderVapor(TabsFixture, {
+        props: { class: "w-[600px]", fullWidth: false },
+      });
+
+      await ready();
+
+      const tabs = tabsIn(container);
+
+      for (const tab of tabs) {
+        expect(boxOf(tab).width).toBeCloseTo(contentWidthOf(tab), 0);
+      }
+
+      // The track ends where the last tab does, padding and all, rather than running on.
+      const track = boxOf(containerIn(container));
+      const last = boxOf(tabs.at(-1)!);
+
+      expect(track.width).toBeLessThan(600);
+      expect(track.right - last.right).toBeCloseTo(4, 0);
+
+      unmount();
+    });
+
+    it("keeps the secondary rule across the whole row", async () => {
+      const { container, unmount } = renderVapor(TabsFixture, {
+        props: { class: "w-[600px]", fullWidth: false, variant: "secondary" },
+      });
+
+      await ready();
+
+      const tab = tabsIn(container)[0]!;
+
+      expect(boxOf(tab).width).toBeCloseTo(contentWidthOf(tab), 0);
+      expect(Math.round(boxOf(containerIn(container)).width)).toBe(600);
+
+      unmount();
+    });
+
+    it("starts the row at the inline start in a right-to-left strip", async () => {
+      const { container, unmount } = renderVapor(TabsFixture, {
+        props: { class: "w-[600px]", fullWidth: false },
+      });
+
+      container.setAttribute("dir", "rtl");
+      await ready();
+
+      const root = boxOf(rootIn(container));
+      const track = boxOf(containerIn(container));
+      const tabs = tabsIn(container);
+
+      // The track and the first tab sit against the right edge, and the row stops well short of
+      // the left one - where a shared row would have run the last tab out to it.
+      expect(root.right - track.right).toBeCloseTo(0, 0);
+      expect(root.right - boxOf(tabs[0]!).right).toBeCloseTo(4, 0);
+      expect(boxOf(tabs.at(-1)!).left - root.left).toBeGreaterThan(200);
+
+      unmount();
+    });
+
+    it("still overflows into the scroller when the labels outgrow the row", async () => {
+      const { container, unmount } = renderVapor(TabsFixture, {
+        props: { class: "w-[400px]", fullWidth: false, items: OVERFLOW_ITEMS },
+      });
+
+      await ready();
+
+      const scroller = scrollerIn(container);
+
+      // The hugging track is held to the row, so the scroller has an edge to overflow past.
+      expect(Math.round(boxOf(containerIn(container)).width)).toBe(400);
+      expect(scroller.scrollWidth).toBeGreaterThan(scroller.clientWidth);
+      expect(scroller.dataset["rightScroll"]).toBe("true");
+      expect(getComputedStyle(chevronIn(container, "next")).display).toBe("flex");
+
+      unmount();
+    });
+
+    it("leaves a vertical list's tabs at the widest one's width", async () => {
+      const { container, unmount } = renderVapor(TabsFixture, {
+        props: { fullWidth: false, orientation: "vertical" },
+      });
+
+      await ready();
+
+      const widths = new Set(tabsIn(container).map((tab) => Math.round(boxOf(tab).width)));
+
+      expect(widths.size).toBe(1);
+
+      unmount();
+    });
+  });
+
   it("has no accessibility violations", async () => {
     const { container, unmount } = renderVapor(TabsFixture);
 

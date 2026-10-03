@@ -17,6 +17,14 @@ export interface TabsRootProps {
    * @default "center"
    */
   align?: TabsVariants["align"];
+  /**
+   * Whether the tabs share the row between them. `false` sizes each tab to its label and starts
+   * the row at the inline start, which is the header-bar layout; the primary track then hugs the
+   * tabs too. A vertical list is unaffected — its tabs always take the widest one's width.
+   *
+   * @default true
+   */
+  fullWidth?: boolean;
   /** The selected tab, when the caller drives it. */
   selectedKey?: CollectionKey;
   /** The initially selected tab. Falls back to the first tab that is not disabled. */

@@ -113,6 +113,16 @@ describe("Tabs", () => {
       expect(slot((await render()).container)).not.toContain("rp-tabs--align");
     });
 
+    it("exposes the fit modifier only when the tabs stop sharing the row", async () => {
+      const slot = (container: HTMLElement) =>
+        container.querySelector('[data-slot="tabs"]')!.className;
+
+      expect(slot((await render({ fullWidth: false })).container)).toContain("rp-tabs--fit");
+      // Sharing the row is what the base rule already does, so it carries no class of its own.
+      expect(slot((await render({ fullWidth: true })).container)).not.toContain("rp-tabs--fit");
+      expect(slot((await render()).container)).not.toContain("rp-tabs--fit");
+    });
+
     it("lets a caller's class override the slot's own", async () => {
       const { container } = await render({ class: "p-10" });
 

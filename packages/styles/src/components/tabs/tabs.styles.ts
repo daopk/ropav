@@ -5,6 +5,7 @@ import { tv } from "../../tv";
 export const tabsVariants = tv({
   defaultVariants: {
     align: "center",
+    fullWidth: true,
     variant: "primary",
   },
   slots: {
@@ -29,6 +30,13 @@ export const tabsVariants = tv({
       start: {
         base: "rp-tabs--align-start",
       },
+    },
+    fullWidth: {
+      false: {
+        base: "rp-tabs--fit",
+      },
+      // The base rule already shares the row between the tabs, so the default carries no class.
+      true: {},
     },
     variant: {
       primary: {},

@@ -20,6 +20,7 @@ import { provideTabsContext } from "./tabs.context";
 // rather than being cast to `false` and read as a caller's decision.
 const props = withDefaults(defineProps<TabsRootProps>(), {
   align: undefined,
+  fullWidth: undefined,
   isDisabled: undefined,
   keyboardActivation: undefined,
   orientation: undefined,
@@ -37,7 +38,9 @@ const orientation = computed(() => props.orientation ?? "horizontal");
 const keyboardActivation = computed(() => props.keyboardActivation ?? "automatic");
 const isDisabled = computed(() => Boolean(props.isDisabled));
 
-const slots = computed(() => tabsVariants({ align: props.align, variant: props.variant }));
+const slots = computed(() =>
+  tabsVariants({ align: props.align, fullWidth: props.fullWidth, variant: props.variant }),
+);
 
 const state = useTabListState({
   defaultSelectedKey: props.defaultSelectedKey,

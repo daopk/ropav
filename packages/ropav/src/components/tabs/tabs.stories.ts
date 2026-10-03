@@ -54,12 +54,14 @@ const components = {
 const meta: StoryMeta = {
   argTypes: {
     align: { control: { type: "radio" }, options: ["start", "center", "end"] },
+    fullWidth: { control: { type: "boolean" } },
     isDisabled: { control: { type: "boolean" } },
     keyboardActivation: { control: { type: "radio" }, options: ["automatic", "manual"] },
     orientation: { control: { type: "radio" }, options: ["horizontal", "vertical"] },
     variant: { control: { type: "radio" }, options: ["primary", "secondary"] },
   },
   args: {
+    fullWidth: true,
     isDisabled: false,
   },
   component: Tabs,
@@ -87,6 +89,7 @@ const overviewTemplate = (extraRootProps = "") => `
       :is-disabled="args.isDisabled"
       :keyboard-activation="args.keyboardActivation"
       :align="args.align"
+      :full-width="args.fullWidth"
       :orientation="args.orientation"
       :variant="args.variant"${extraRootProps}
     >
@@ -134,6 +137,39 @@ export const Aligned: Story = {
         >
           <TabsListContainer>
             <TabsList :aria-label="align">
+              <TabsTab v-for="item in items" :id="item.id" :key="item.id">
+                {{ item.label }}
+                <TabsIndicator />
+              </TabsTab>
+            </TabsList>
+          </TabsListContainer>
+        </Tabs>
+      </div>
+    `,
+  }),
+};
+
+/**
+ * `full-width="false"` sizes each tab to its label and starts the row at the inline start, the
+ * layout of a few tabs at the head of a bar. The primary track hugs the tabs with them; the
+ * secondary rule keeps running the whole row, being the edge of the bar rather than of the tabs.
+ */
+export const FitToLabels: Story = {
+  render: (args) => ({
+    components,
+    setup: () => ({ args, items: OVERVIEW_ITEMS }),
+    template: `
+      <div class="flex w-[600px] flex-col gap-6">
+        <Tabs
+          v-for="variant in ['primary', 'secondary']"
+          :key="variant"
+          :full-width="false"
+          :is-disabled="args.isDisabled"
+          :keyboard-activation="args.keyboardActivation"
+          :variant="variant"
+        >
+          <TabsListContainer>
+            <TabsList :aria-label="variant">
               <TabsTab v-for="item in items" :id="item.id" :key="item.id">
                 {{ item.label }}
                 <TabsIndicator />

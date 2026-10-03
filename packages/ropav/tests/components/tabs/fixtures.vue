@@ -47,6 +47,7 @@ const props = withDefaults(
       { id: "reports", label: "Reports" },
     ],
     align: undefined,
+    fullWidth: undefined,
     keyboardActivation: undefined,
     orientation: undefined,
     variant: undefined,
@@ -70,6 +71,7 @@ const props = withDefaults(
     :keyboard-activation="props.keyboardActivation"
     :orientation="props.orientation"
     :align="props.align"
+    :full-width="props.fullWidth"
     :selected-key="props.selectedKey"
     :variant="props.variant"
     @selection-change="props.onSelectionChange"

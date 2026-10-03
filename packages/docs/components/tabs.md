@@ -35,10 +35,32 @@ it lays them out on one line and sizes the icon, and the count joins the name th
 </template>
 </Demo>
 
+## Width
+
+A horizontal list shares its row between the tabs, so every tab is as wide as the row divided by
+the number of tabs. `:full-width="false"` sizes each tab to its label instead and starts the row at
+the inline start, which is the layout of a few tabs at the head of a bar. The primary track hugs
+the tabs along with them; the secondary rule still runs the whole row, because it is the edge of
+the bar rather than of the tabs.
+
+Either way the list grows with its labels, so a row that outgrows its container scrolls and shows
+its chevrons as before. A vertical list is unaffected: its tabs always take the widest one's width.
+
+<Demo title="tabs-header.vue">
+<DemoTabsHeader />
+
+<template #code>
+
+<<< @/.vitepress/theme/demos/tabs-header.vue
+
+</template>
+</Demo>
+
 ## Alignment
 
-A tab fills the width its list gives it, so its label sits in the middle of that space; `align`
-moves the label to either end instead, which is usually what a vertical deck wants.
+A tab that shares the row is wider than its label, so the label sits in the middle of that space;
+`align` moves the label to either end instead, which is usually what a vertical deck wants. A tab
+sized to its label has no space to move it in.
 
 ## Activation
 
