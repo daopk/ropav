@@ -250,8 +250,14 @@ A theme only needs to carry colours. Everything keyed on neither the palette nor
 Base colors (`--rp-background`, `--rp-surface`, `--rp-overlay`, `--rp-muted`), interactive and status colors
 (`--rp-accent`, `--rp-success`, `--rp-warning`, `--rp-danger`, each with a `-foreground` and a derived `-hover` and
 `-soft`), form fields (`--rp-field-background`, `--rp-field-border`, `--rp-field-radius`, …), layout knobs
-(`--rp-spacing`, `--rp-border-width`, `--rp-radius`, `--rp-focus-ring-offset`, `--rp-cursor-interactive`), the
-scrollbar set, and shadows.
+(`--rp-spacing`, `--rp-border-width`, `--rp-radius`, `--rp-component-radius`, `--rp-focus-ring-offset`,
+`--rp-cursor-interactive`), the scrollbar set, and shadows.
+
+`--rp-field-radius` rounds the fields and `--rp-component-radius` nearly everything else — buttons, toggle
+buttons and their groups' ends, tabs, alerts, surfaces, chips and tags. The default theme sets
+`--rp-component-radius: var(--rp-field-radius)`, so a button under a text field meets it corner for
+corner; the bundled palettes leave it at `calc(var(--rp-radius) * 3)`. A theme pairs the two by setting
+that one token on the element that declares the theme.
 
 **`themes/default.css` is the source of truth — read it rather than a list in a README**, which goes
 stale the moment a token moves. `themes/shared/tokens.css` holds the rest of what a rule can name

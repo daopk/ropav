@@ -11,7 +11,9 @@ Three tiers, narrowing as they go.
 `--rp-muted`), interactive and status colours (`--rp-accent`, `--rp-success`, `--rp-warning`, `--rp-danger`, each
 with a `-foreground` and a derived `-hover` and `-soft`), form fields (`--rp-field-background`,
 `--rp-field-border`, `--rp-field-radius`, …), layout knobs (`--rp-spacing`, `--rp-border-width`, `--rp-radius`,
-`--rp-focus-ring-offset`, `--rp-cursor-interactive`), the scrollbar set, and the shadows.
+`--rp-component-radius`, `--rp-focus-ring-offset`, `--rp-cursor-interactive`), the scrollbar set, and the
+shadows. The two radii are the pair a theme sets to line its buttons up with its fields — see
+[Corners](/theming/custom-theme#corners).
 
 **Declared, not derived** — the type scale, the weights and the easing curves live in
 `themes/shared/tokens.css`, because none of them turns on the palette or the appearance.

@@ -34,6 +34,44 @@ back out of its padding — so an input, a select or a search field stays at 28,
 level with a button of the same size. Set it on `:root`: it is read there, so a `data-theme`
 subtree that sets its own leaves the fields under it as they were.
 
+## Corners
+
+Two tokens round the library, and which one a component reads decides what it lines up with.
+
+`--rp-field-radius` rounds the fields: an input, a text area, a select's trigger, a search, number
+or date field. `--rp-component-radius` rounds nearly everything else — buttons, toggle buttons and
+both ends of their groups, tabs and segmented controls, alerts, cards, popovers and menus, and
+chips and tags as well. The larger surfaces cap it at 32px, so a theme that sets it high enough to
+make a button a pill does not make a card a capsule.
+
+The default theme points the second at the first, so a button under a text field meets it corner
+for corner, at every size. The bundled `data-theme` palettes leave it at three steps of
+`--rp-radius`, rounder than their fields. To pair them in a theme of your own, set the one token
+beside the field radius:
+
+```css
+[data-theme="ocean"] {
+  --rp-field-radius: 6px;
+  --rp-component-radius: var(--rp-field-radius);
+}
+```
+
+Beside it, on the element that declares the theme: a `var()` resolves where it is declared, and a
+bundled palette declares its own `--rp-component-radius` on its `[data-theme]` element, so a value
+set on `:root` stops at the first subtree that carries one.
+
+Chips and tags square off with the controls. To keep them round, hand them a radius of their own —
+the token is read on the element that draws the corner, so setting it there is enough:
+
+```css
+.rp-chip,
+.rp-tag {
+  --rp-component-radius: 32px;
+}
+```
+
+A badge reads `--rp-radius` rather than either token, so pairing the two leaves it as it was.
+
 ## Adding a palette rather than changing the default
 
 Write the same token block under your own attribute:
