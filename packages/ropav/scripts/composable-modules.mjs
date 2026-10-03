@@ -21,6 +21,11 @@ import path from "node:path";
  *
  * Sorted, and asserted sorted, because this list shrinks over many commits and a reviewable diff
  * depends on it.
+ *
+ * A listed module publishes everything it exports, so its runtime exports are held to `use*`,
+ * `provide*` and `compose*` functions. A constant, a setter or a test reset that a sibling needs
+ * lives in a private module beside it — `interaction-modality.ts` beside `use-interaction-states.ts`
+ * — rather than riding out on the public one.
  */
 export const PUBLIC_MODULES = [
   "focus-responder",

@@ -294,6 +294,40 @@ describe("public composables", () => {
 
     expect(untested).toEqual([]);
   });
+
+  /*
+   * The barrel publishes whole modules, so a helper written beside a hook is public the moment it
+   * is exported for a sibling or a test. Validity constants, a modality setter and a tooltip
+   * warm-up reset all leaked that way. A module that needs one moves it into a private sibling.
+   *
+   * No exception list, for the reason the test above gives.
+   */
+  it("export no runtime value but a use, provide or compose function", () => {
+    const declared =
+      /^export (?:const|let|var|function|class|enum)\s+(\[[^\]]*\]|[A-Za-z0-9_$]+)/gm;
+
+    const strays = PUBLIC_MODULES.flatMap((module) => {
+      const source = fs.readFileSync(path.join(composablesDir, `${module}.ts`), "utf8");
+
+      const names = [
+        ...[...source.matchAll(declared)].flatMap((match) =>
+          (match[1] ?? "").replace(/^\[|\]$/g, "").split(","),
+        ),
+        ...parseStatements(source)
+          .filter((statement) => statement.isExport && !statement.isTypeOnly)
+          .flatMap((statement) => statement.specifiers)
+          .filter((specifier) => !specifier.startsWith("type ")),
+      ]
+        .map((name) => localName(name.trim()))
+        .filter(Boolean);
+
+      return names
+        .filter((name) => !/^(use|provide|compose)[A-Z]/.test(name))
+        .map((name) => `${module}: ${name}`);
+    });
+
+    expect(strays).toEqual([]);
+  });
 });
 
 describe("private composables", () => {
