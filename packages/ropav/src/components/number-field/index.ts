@@ -36,6 +36,8 @@ export type { NumberFieldContext } from "./number-field.context";
  * -----------------------------------------------------------------------------------------------*/
 export type { NumberFieldStepper, UseNumberFieldReturn } from "../../composables/use-number-field";
 
+export type { NumberFieldCommitBehavior } from "../../composables/use-number-field-state";
+
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/

@@ -17,6 +17,11 @@ export type { DisclosureGroupContext } from "./disclosure-group.context";
 /* -------------------------------------------------------------------------------------------------
  * Composables
  * -----------------------------------------------------------------------------------------------*/
+export type {
+  DisclosureKey,
+  UseDisclosureGroupReturn,
+} from "../../composables/use-disclosure-group";
+
 export { useDisclosureGroupNavigation } from "../../composables/use-disclosure-group-navigation";
 
 export type {

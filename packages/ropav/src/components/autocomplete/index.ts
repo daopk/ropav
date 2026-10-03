@@ -47,6 +47,12 @@ export type { AutocompleteContext } from "./autocomplete.context";
  * -----------------------------------------------------------------------------------------------*/
 export type { UseSelectReturn } from "../../composables/use-select";
 
+export type {
+  SelectedItem,
+  SelectedValue,
+  UseSelectStateReturn,
+} from "../../composables/use-select-state";
+
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/

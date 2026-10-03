@@ -4,31 +4,51 @@ import type {
   CalendarSelectionMode,
   CalendarValue,
   CalendarYearPickerFormatOptions,
+  CheckboxGroupState,
+  ComboBoxFilter,
+  ComboBoxMenuTrigger,
+  ComboBoxValidationValue,
   DateRange,
   DateSegment,
+  DisclosureKey,
   ImageLoadingStatus,
   InputOTPTextAlign,
   MenuTriggerType,
+  NumberFieldCommitBehavior,
   NumberFieldStepper,
   PageBehavior,
   PushPasswordManagerStrategy,
+  RadioGroupState,
   RangeCalendarCommitBehavior,
+  SelectSelectionMode,
+  SelectedItem,
+  SelectedValue,
   SelectionAlignment,
   SidebarCollapsibleMode,
   SidebarState,
+  SliderOrientation,
   SplitterState,
   TableColumnSize,
   TimeGranularity,
   Timer,
+  ToggleGroupKey,
+  ToggleGroupSelectionMode,
   ToolbarOrientation,
+  TooltipTriggerState,
   UseCalendarReturn,
   UseComboBoxReturn,
+  UseComboBoxStateReturn,
   UseDisclosureGroupNavigationOptions,
   UseDisclosureGroupNavigationReturn,
+  UseDisclosureGroupReturn,
   UseDraggableCollectionStateReturn,
   UseDroppableCollectionStateReturn,
   UseNumberFieldReturn,
   UseSelectReturn,
+  UseSelectStateReturn,
+  UseSingleSelectListStateReturn,
+  UseTabListStateReturn,
+  UseToggleGroupStateReturn,
 } from "@/index";
 
 /*
@@ -55,24 +75,44 @@ export interface HostExportedTypes {
   "calendar: PageBehavior": PageBehavior;
   "calendar: SelectionAlignment": SelectionAlignment;
   "calendar: UseCalendarReturn": UseCalendarReturn;
+  "checkbox-group: CheckboxGroupState": CheckboxGroupState;
+  "combo-box: ComboBoxFilter": ComboBoxFilter;
+  "combo-box: ComboBoxMenuTrigger": ComboBoxMenuTrigger;
+  "combo-box: ComboBoxValidationValue": ComboBoxValidationValue;
   "combo-box: UseComboBoxReturn": UseComboBoxReturn;
+  "combo-box: UseComboBoxStateReturn": UseComboBoxStateReturn<unknown>;
   "date-field: DateSegment": DateSegment;
   "date-range-picker: DateRange": DateRange;
+  "disclosure-group: DisclosureKey": DisclosureKey;
   "disclosure-group: UseDisclosureGroupNavigationOptions": UseDisclosureGroupNavigationOptions;
   "disclosure-group: UseDisclosureGroupNavigationReturn": UseDisclosureGroupNavigationReturn;
+  "disclosure-group: UseDisclosureGroupReturn": UseDisclosureGroupReturn;
   "dropdown: MenuTriggerType": MenuTriggerType;
   "input-otp: InputOTPTextAlign": InputOTPTextAlign;
   "input-otp: PushPasswordManagerStrategy": PushPasswordManagerStrategy;
   "list-box: UseDraggableCollectionStateReturn": UseDraggableCollectionStateReturn;
   "list-box: UseDroppableCollectionStateReturn": UseDroppableCollectionStateReturn;
+  "number-field: NumberFieldCommitBehavior": NumberFieldCommitBehavior;
   "number-field: NumberFieldStepper": NumberFieldStepper;
   "number-field: UseNumberFieldReturn": UseNumberFieldReturn;
+  "radio-group: RadioGroupState": RadioGroupState;
   "range-calendar: RangeCalendarCommitBehavior": RangeCalendarCommitBehavior;
+  "segmented-control: UseSingleSelectListStateReturn": UseSingleSelectListStateReturn;
+  "select: SelectSelectionMode": SelectSelectionMode;
+  "select: SelectedItem": SelectedItem<unknown>;
+  "select: SelectedValue": SelectedValue;
+  "select: UseSelectStateReturn": UseSelectStateReturn<unknown>;
   "sidebar: SidebarCollapsibleMode": SidebarCollapsibleMode;
   "sidebar: SidebarState": SidebarState;
+  "slider: SliderOrientation": SliderOrientation;
   "splitter: SplitterState": SplitterState;
   "table: TableColumnSize": TableColumnSize;
+  "tabs: UseTabListStateReturn": UseTabListStateReturn;
   "time-field: TimeGranularity": TimeGranularity;
   "toast: Timer": Timer;
+  "toggle-button-group: ToggleGroupKey": ToggleGroupKey;
+  "toggle-button-group: ToggleGroupSelectionMode": ToggleGroupSelectionMode;
+  "toggle-button-group: UseToggleGroupStateReturn": UseToggleGroupStateReturn;
   "toolbar: ToolbarOrientation": ToolbarOrientation;
+  "tooltip: TooltipTriggerState": TooltipTriggerState;
 }

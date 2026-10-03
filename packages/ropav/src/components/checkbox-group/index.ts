@@ -15,6 +15,11 @@ export { useCheckboxGroupContext, provideCheckboxGroupContext } from "./checkbox
 export type { CheckboxGroupContext } from "./checkbox-group.context";
 
 /* -------------------------------------------------------------------------------------------------
+ * Composables
+ * -----------------------------------------------------------------------------------------------*/
+export type { CheckboxGroupState } from "../../composables/use-checkbox-group-state";
+
+/* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
 export { checkboxGroupVariants } from "@ropav/styles";

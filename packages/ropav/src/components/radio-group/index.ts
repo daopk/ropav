@@ -15,6 +15,11 @@ export { useRadioGroupContext, provideRadioGroupContext } from "./radio-group.co
 export type { RadioGroupContext } from "./radio-group.context";
 
 /* -------------------------------------------------------------------------------------------------
+ * Composables
+ * -----------------------------------------------------------------------------------------------*/
+export type { RadioGroupState } from "../../composables/use-radio-group-state";
+
+/* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
 export { radioGroupVariants } from "@ropav/styles";

@@ -24,6 +24,11 @@ export { useTooltipContext } from "./tooltip.context";
 export type { TooltipContext } from "./tooltip.context";
 
 /* -------------------------------------------------------------------------------------------------
+ * Composables
+ * -----------------------------------------------------------------------------------------------*/
+export type { TooltipTriggerState } from "../../composables/use-tooltip-trigger-state";
+
+/* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
 export { tooltipVariants } from "@ropav/styles";

@@ -40,6 +40,13 @@ export type { SelectContext } from "./select.context";
  * -----------------------------------------------------------------------------------------------*/
 export type { UseSelectReturn } from "../../composables/use-select";
 
+export type {
+  SelectSelectionMode,
+  SelectedItem,
+  SelectedValue,
+  UseSelectStateReturn,
+} from "../../composables/use-select-state";
+
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/

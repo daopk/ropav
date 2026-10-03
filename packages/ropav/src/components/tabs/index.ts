@@ -42,6 +42,11 @@ export { useTabsContext, useTabsTabContext } from "./tabs.context";
 export type { TabsContext, TabsTabContext } from "./tabs.context";
 
 /* -------------------------------------------------------------------------------------------------
+ * Composables
+ * -----------------------------------------------------------------------------------------------*/
+export type { UseTabListStateReturn } from "../../composables/use-tab-list-state";
+
+/* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
 export { tabsVariants } from "@ropav/styles";

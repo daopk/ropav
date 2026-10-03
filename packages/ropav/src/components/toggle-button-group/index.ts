@@ -19,6 +19,15 @@ export { useToggleButtonGroupContext } from "./toggle-button-group.context";
 export type { ToggleButtonGroupContext } from "./toggle-button-group.context";
 
 /* -------------------------------------------------------------------------------------------------
+ * Composables
+ * -----------------------------------------------------------------------------------------------*/
+export type {
+  ToggleGroupKey,
+  ToggleGroupSelectionMode,
+  UseToggleGroupStateReturn,
+} from "../../composables/use-toggle-group-state";
+
+/* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
 export { toggleButtonGroupVariants } from "@ropav/styles";

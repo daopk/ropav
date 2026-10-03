@@ -39,6 +39,19 @@ export type { ComboBoxContext } from "./combo-box.context";
  * -----------------------------------------------------------------------------------------------*/
 export type { UseComboBoxReturn } from "../../composables/use-combo-box";
 
+export type {
+  ComboBoxFilter,
+  ComboBoxMenuTrigger,
+  ComboBoxValidationValue,
+  UseComboBoxStateReturn,
+} from "../../composables/use-combo-box-state";
+
+export type {
+  SelectSelectionMode,
+  SelectedItem,
+  SelectedValue,
+} from "../../composables/use-select-state";
+
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
