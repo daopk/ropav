@@ -3,7 +3,7 @@ import type { FormValidationInputProps } from "./form-validation-input.types";
 
 import { computed } from "vue";
 
-import { provideFormContext } from "@/composables/use-form-validation-state";
+import { provideFormContext } from "@/composables/form-context";
 
 import FormValidationInputHost from "./form-validation-input-host.vue";
 

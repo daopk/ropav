@@ -3,7 +3,7 @@ import type { FieldErrorRootProps, FieldErrorSlotProps } from "./field-error.typ
 
 import { computed } from "vue";
 
-import { DEFAULT_VALIDATION_RESULT } from "../../composables/use-form-validation-state";
+import { DEFAULT_VALIDATION_RESULT } from "../../composables/validation-result";
 
 import FieldErrorContent from "./field-error-content.vue";
 import { useFieldErrorContext } from "./field-error.context";

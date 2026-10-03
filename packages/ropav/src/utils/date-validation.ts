@@ -5,7 +5,7 @@ import type { DateValue } from "@internationalized/date";
 import { DateFormatter } from "@internationalized/date";
 import { LocalizedStringDictionary, LocalizedStringFormatter } from "@internationalized/string";
 
-import { VALID_VALIDITY_STATE, mergeValidation } from "../composables/use-form-validation-state";
+import { VALID_VALIDITY_STATE, mergeValidation } from "../composables/validation-result";
 import { dateValidationStrings } from "../i18n/date-validation";
 
 import { getFormatOptions } from "./date-format";

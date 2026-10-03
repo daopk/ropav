@@ -16,13 +16,10 @@ import { computed, toValue } from "vue";
 import { useDatePickerGroup } from "../../composables/use-date-picker-group";
 import { useDescription } from "../../composables/use-description";
 import { useFieldIds } from "../../composables/use-field-ids";
-import {
-  DEFAULT_VALIDATION_RESULT,
-  mergeValidation,
-} from "../../composables/use-form-validation-state";
 import { useId } from "../../composables/use-id";
 import { useLocale } from "../../composables/use-locale";
 import { useLocalizedStringFormatter } from "../../composables/use-localized-string-formatter";
+import { DEFAULT_VALIDATION_RESULT, mergeValidation } from "../../composables/validation-result";
 import { datepickerStrings } from "../../i18n/datepicker";
 import { createFocusManager } from "../../utils/focus";
 

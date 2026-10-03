@@ -5,10 +5,7 @@ import { computed } from "vue";
 
 import { FieldError, provideFieldErrorContext } from "@/components/field-error";
 import { provideFieldIdsContext, useFieldIds } from "@/composables/use-field-ids";
-import {
-  CUSTOM_VALIDITY_STATE,
-  VALID_VALIDITY_STATE,
-} from "@/composables/use-form-validation-state";
+import { CUSTOM_VALIDITY_STATE, VALID_VALIDITY_STATE } from "@/composables/validation-result";
 
 const props = defineProps<FieldErrorFixtureProps>();
 

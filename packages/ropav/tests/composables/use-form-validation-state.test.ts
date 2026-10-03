@@ -13,7 +13,7 @@ import {
   VALID_VALIDITY_STATE,
   isEqualValidation,
   mergeValidation,
-} from "@/composables/use-form-validation-state";
+} from "@/composables/validation-result";
 
 import Harness from "../fixtures/form-validation-harness.vue";
 

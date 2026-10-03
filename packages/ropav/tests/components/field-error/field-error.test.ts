@@ -2,7 +2,7 @@ import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it } from "vitest";
 import { nextTick, reactive } from "vue";
 
-import { VALID_VALIDITY_STATE } from "@/composables/use-form-validation-state";
+import { VALID_VALIDITY_STATE } from "@/composables/validation-result";
 
 import FieldErrorFixture from "./fixtures.vue";
 

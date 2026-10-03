@@ -9,11 +9,8 @@ import type { ComputedRef, MaybeRefOrGetter } from "vue";
 import { computed, nextTick, toValue } from "vue";
 
 import { useControllableState } from "./use-controllable-state";
-import {
-  DEFAULT_VALIDATION_RESULT,
-  getNativeValidation,
-  useFormValidationState,
-} from "./use-form-validation-state";
+import { useFormValidationState } from "./use-form-validation-state";
+import { DEFAULT_VALIDATION_RESULT, getNativeValidation } from "./validation-result";
 
 export interface UseCheckboxGroupStateOptions {
   /** Selected values. Makes the group controlled. */

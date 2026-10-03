@@ -1,10 +1,11 @@
-import type { FormValidationState, ValidatableElement } from "./use-form-validation-state";
+import type { FormValidationState } from "./use-form-validation-state";
+import type { ValidatableElement } from "./validation-result";
 import type { MaybeRefOrGetter, Ref } from "vue";
 
 import { onScopeDispose, toValue, watch, watchEffect } from "vue";
 
-import { getNativeValidation } from "./use-form-validation-state";
 import { setInteractionModality } from "./use-interaction-states";
+import { getNativeValidation } from "./validation-result";
 
 export interface UseFormValidationOptions {
   /** Called instead of focusing the element when a failed submit lands on this field. */

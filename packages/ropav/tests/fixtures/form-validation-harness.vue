@@ -3,7 +3,7 @@ import type { FormValidationHarnessProps } from "./form-validation.types";
 
 import { computed } from "vue";
 
-import { provideFormContext } from "@/composables/use-form-validation-state";
+import { provideFormContext } from "@/composables/form-context";
 
 import FormValidationHost from "./form-validation-host.vue";
 

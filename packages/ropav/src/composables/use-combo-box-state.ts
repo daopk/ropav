@@ -22,10 +22,11 @@ import { createListCollection } from "../utils/virtualizer-collection";
 import { useCollection } from "./use-collection";
 import { useControllableState } from "./use-controllable-state";
 import { useFilter } from "./use-filter";
-import { isValueMissing, useFormValidationState } from "./use-form-validation-state";
+import { useFormValidationState } from "./use-form-validation-state";
 import { useMenuTriggerState } from "./use-menu-trigger-state";
 import { defaultItemTextValue } from "./use-select-state";
 import { useSelectionManager } from "./use-selection-manager";
+import { isValueMissing } from "./validation-result";
 
 /**
  * What made the popover open, which decides whether it shows every option or only the matches.

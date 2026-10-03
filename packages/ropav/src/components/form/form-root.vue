@@ -3,7 +3,7 @@ import type { FormRootProps } from "./form.types";
 
 import { computed, shallowRef } from "vue";
 
-import { provideFormContext } from "../../composables/use-form-validation-state";
+import { provideFormContext } from "../../composables/form-context";
 
 const props = defineProps<FormRootProps>();
 
