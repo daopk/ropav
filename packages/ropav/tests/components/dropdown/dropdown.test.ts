@@ -145,6 +145,30 @@ describe("Dropdown", () => {
       result.unmount();
     });
 
+    // The menu is the standalone one's block with a hook beside it, so the standalone menu's size
+    // modifiers are the ones that set its rows.
+    it.each(["xs", "sm", "lg"] as const)(
+      "carries the %s size modifier on the menu",
+      async (size) => {
+        const result = render({ menuClass: "w-56", size });
+        const menu = await open(result);
+
+        expect(menu).toHaveClass("rp-menu", `rp-menu--${size}`, "rp-dropdown__menu", "w-56");
+
+        result.unmount();
+      },
+    );
+
+    it("leaves a menu given no size unmarked", async () => {
+      const result = render({ menuClass: "w-56" });
+      const menu = await open(result);
+
+      expect(menu).toHaveClass("rp-menu", "rp-dropdown__menu", "w-56");
+      expect(menu.className).not.toMatch(/rp-menu--/);
+
+      result.unmount();
+    });
+
     it("removes everything it rendered when it closes", async () => {
       const result = render();
       const menu = await open(result);

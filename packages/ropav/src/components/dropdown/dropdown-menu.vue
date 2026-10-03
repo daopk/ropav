@@ -3,6 +3,7 @@ import type { CollectionKey } from "../../composables/use-collection";
 import type { CollectionSelection } from "../../composables/use-selection-manager";
 import type { DropdownMenuProps } from "./dropdown.types";
 
+import { menuVariants } from "@ropav/styles";
 import { computed } from "vue";
 
 import { useMenu } from "../../composables/use-menu";
@@ -30,6 +31,12 @@ const callerSlots = defineSlots<{
 }>();
 
 const target = useDropdownPopoverTarget();
+
+// The standalone menu's recipe, so a size reaches the rows here too; `rp-dropdown__menu` is the hook
+// `dropdown.css` and callers target.
+const styles = computed(() =>
+  menuVariants({ class: ["rp-dropdown__menu", props.class], size: props.size }),
+);
 
 // A menu lays its own items out, so a rule between two of them has to take part in that
 // layout rather than being the block-level `hr` it would be on its own.
@@ -72,7 +79,7 @@ const hasEmptySlot = computed(() => Boolean(callerSlots["empty"]));
 <template>
   <div
     :ref="setElement"
-    :class="['rp-menu rp-dropdown__menu', props.class]"
+    :class="styles"
     :data-selection-mode="props.selectionMode"
     data-slot="dropdown-menu"
     v-bind="menu.menuAttributes.value"

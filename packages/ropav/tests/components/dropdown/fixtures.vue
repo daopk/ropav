@@ -1,5 +1,6 @@
 <script setup lang="ts" vapor>
 import type { DropdownFixtureItem } from "./fixtures.types";
+import type { DropdownMenuProps } from "@/components/dropdown";
 import type { CollectionKey } from "@/composables/use-collection";
 import type { MenuTriggerType } from "@/composables/use-menu-trigger";
 import type { CollectionSelection, SelectionMode } from "@/composables/use-selection-manager";
@@ -46,13 +47,17 @@ const props = withDefaults(
     withBorrowedTrigger?: boolean;
     /** Whether the caller hands over an empty slot at all. */
     withEmptyState?: boolean;
+    menuClass?: string;
+    size?: DropdownMenuProps["size"];
   }>(),
   {
     disabledKeys: undefined,
     isDisabled: undefined,
     isOpen: undefined,
+    menuClass: undefined,
     selectedKeys: undefined,
     selectionMode: undefined,
+    size: undefined,
     trigger: undefined,
     triggerIsDisabled: undefined,
     withEmptyState: undefined,
@@ -95,9 +100,11 @@ const emit = defineEmits<{
     <Button v-else aria-label="Menu" variant="secondary">Actions</Button>
     <DropdownPopover>
       <DropdownMenu
+        :class="props.menuClass"
         :disabled-keys="props.disabledKeys"
         :selected-keys="props.selectedKeys"
         :selection-mode="props.selectionMode"
+        :size="props.size"
         @action="emit('action', $event)"
         @selection-change="emit('selectionChange', $event)"
       >

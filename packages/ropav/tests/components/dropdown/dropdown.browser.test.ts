@@ -825,6 +825,31 @@ describe("Dropdown (browser)", () => {
     });
   });
 
+  /*
+   * The standalone menu's modifiers size the rows, and reach them here only because the menu builds
+   * its class from the same recipe. Unsized, a row stands as it always has, at the popover's type.
+   */
+  describe("size", () => {
+    it.each([
+      ["xs", 28, "12px"],
+      [undefined, 36, "14px"],
+      ["lg", 40, "16px"],
+    ] as const)("stands a %s row at %ipx with %s type", async (size, height, fontSize) => {
+      const result = render({ size });
+
+      const popover = await open(result);
+      const row = popover.querySelector<HTMLElement>('[data-slot="menu-item"]')!;
+
+      expect({ fontSize: getComputedStyle(row).fontSize, height: row.offsetHeight }).toEqual({
+        fontSize,
+        height,
+      });
+
+      await dismiss(result);
+      result.unmount();
+    });
+  });
+
   describe("accessibility", () => {
     it("has no axe violations", async () => {
       const result = render({ withHeader: true, withSection: true });
