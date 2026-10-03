@@ -17,10 +17,10 @@
   "dependencies": {
     "@internationalized/date": "3.12.4",
     "@ropav/styles": "workspace:*",
-    "@shikijs/langs": "4.4.3",
-    "@shikijs/themes": "4.4.3",
+    "@shikijs/langs": "4.5.0",
+    "@shikijs/themes": "4.5.0",
     "ropav": "workspace:*",
-    "shiki": "4.4.3",
+    "shiki": "4.5.0",
     "vue": "catalog:"
   },
   "devDependencies": {
