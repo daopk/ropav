@@ -57,4 +57,27 @@ describe("renderCode", () => {
       '<div style="display: block" />',
     );
   });
+
+  describe("a boolean control", () => {
+    const withSwitch = (defaultValue?: boolean): PlaygroundSpec => ({
+      controls: [{ defaultValue, description: "", kind: "boolean", name: "fullWidth" }],
+      id: "probe",
+      node: { root: true, tag: "Tabs" },
+    });
+
+    it("writes nothing while it holds its default", () => {
+      expect(renderCode(withSwitch(true), { fullWidth: true })).toBe("<Tabs />");
+      expect(renderCode(withSwitch(), { fullWidth: false })).toBe("<Tabs />");
+    });
+
+    it("writes the bare attribute when turned on", () => {
+      expect(renderCode(withSwitch(), { fullWidth: true })).toBe("<Tabs full-width />");
+    });
+
+    it("binds false when turned off against a true default", () => {
+      expect(renderCode(withSwitch(true), { fullWidth: false })).toBe(
+        '<Tabs :full-width="false" />',
+      );
+    });
+  });
 });

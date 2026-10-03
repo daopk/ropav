@@ -10,7 +10,8 @@ const attrName = (name: string): string => name.replace(/[A-Z]/g, (c) => `-${c.t
 /** `undefined` means the attribute is not written at all. */
 const attribute = (name: string, value: unknown): string | undefined => {
   if (value === undefined) return undefined;
-  if (typeof value === "boolean") return value ? attrName(name) : undefined;
+  // Reached only off the default, so a `false` here is one a `true` default has to be told.
+  if (typeof value === "boolean") return value ? attrName(name) : `:${attrName(name)}="false"`;
   if (typeof value === "number") return `:${attrName(name)}="${value}"`;
   if (typeof value === "string") return `${attrName(name)}="${value}"`;
 
@@ -21,7 +22,12 @@ const attribute = (name: string, value: unknown): string | undefined => {
 const isDefault = (spec: PlaygroundSpec, name: string, value: unknown): boolean => {
   const control = spec.controls.find((candidate) => candidate.name === name);
 
-  return value === undefined || value === control?.defaultValue;
+  // An absent boolean is a false one, so a switch turned off against no default writes nothing.
+  return (
+    value === undefined ||
+    value === control?.defaultValue ||
+    (value === false && control?.defaultValue === undefined)
+  );
 };
 
 /** Sorted the way the library's own templates are, which ignores the binding colon. */
