@@ -196,6 +196,10 @@ export default defineConfig({
           ],
           text: "Going further",
         },
+        {
+          items: [{ link: "/guide/composables", text: "Composables" }],
+          text: "Building your own",
+        },
       ],
       "/patterns/": [
         {
