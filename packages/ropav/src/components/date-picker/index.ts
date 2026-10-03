@@ -63,6 +63,13 @@ export { provideDatePickerContext, useDatePickerContext } from "./date-picker.co
 export type { DatePickerContext } from "./date-picker.context";
 
 /* -------------------------------------------------------------------------------------------------
+ * Composables
+ * -----------------------------------------------------------------------------------------------*/
+export type { PageBehavior } from "../../composables/use-calendar-state";
+
+export type { DateSegment } from "../../composables/use-date-field-state";
+
+/* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
 export { dateInputGroupVariants, datePickerVariants } from "@ropav/styles";

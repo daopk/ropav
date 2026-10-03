@@ -45,6 +45,13 @@ export type {
 } from "../date-input-group";
 
 /* -------------------------------------------------------------------------------------------------
+ * Composables
+ * -----------------------------------------------------------------------------------------------*/
+export type { DateSegment } from "../../composables/use-date-field-state";
+
+export type { TimeGranularity } from "../../composables/use-time-field-state";
+
+/* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
 export { dateInputGroupVariants, timeFieldVariants } from "@ropav/styles";

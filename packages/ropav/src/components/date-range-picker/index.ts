@@ -73,6 +73,10 @@ export type { DateRangePickerContext } from "./date-range-picker.context";
  * -----------------------------------------------------------------------------------------------*/
 export type { DateRange } from "../../composables/use-calendar";
 
+export type { PageBehavior } from "../../composables/use-calendar-state";
+
+export type { DateSegment } from "../../composables/use-date-field-state";
+
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/

@@ -69,6 +69,13 @@ export type { AnyCalendarState, UseCalendarReturn } from "../../composables/use-
 
 export type { CalendarHeadingFormatOptions } from "../../composables/use-calendar-heading";
 
+export type {
+  CalendarSelectionMode,
+  CalendarValue,
+  PageBehavior,
+  SelectionAlignment,
+} from "../../composables/use-calendar-state";
+
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/

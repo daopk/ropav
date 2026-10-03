@@ -65,6 +65,8 @@ export type { AnyCalendarState, DateRange } from "../../composables/use-calendar
 
 export type { CalendarHeadingFormatOptions } from "../../composables/use-calendar-heading";
 
+export type { PageBehavior, SelectionAlignment } from "../../composables/use-calendar-state";
+
 export type { RangeCalendarCommitBehavior } from "../../composables/use-range-calendar";
 
 /* -------------------------------------------------------------------------------------------------

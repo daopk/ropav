@@ -1,18 +1,24 @@
 import type {
   AnyCalendarState,
   CalendarHeadingFormatOptions,
+  CalendarSelectionMode,
+  CalendarValue,
   CalendarYearPickerFormatOptions,
   DateRange,
+  DateSegment,
   ImageLoadingStatus,
   InputOTPTextAlign,
   MenuTriggerType,
   NumberFieldStepper,
+  PageBehavior,
   PushPasswordManagerStrategy,
   RangeCalendarCommitBehavior,
+  SelectionAlignment,
   SidebarCollapsibleMode,
   SidebarState,
   SplitterState,
   TableColumnSize,
+  TimeGranularity,
   Timer,
   ToolbarOrientation,
   UseCalendarReturn,
@@ -44,8 +50,13 @@ export interface HostExportedTypes {
   "calendar-year-picker: CalendarYearPickerFormatOptions": CalendarYearPickerFormatOptions;
   "calendar: AnyCalendarState": AnyCalendarState;
   "calendar: CalendarHeadingFormatOptions": CalendarHeadingFormatOptions;
+  "calendar: CalendarSelectionMode": CalendarSelectionMode;
+  "calendar: CalendarValue": CalendarValue;
+  "calendar: PageBehavior": PageBehavior;
+  "calendar: SelectionAlignment": SelectionAlignment;
   "calendar: UseCalendarReturn": UseCalendarReturn;
   "combo-box: UseComboBoxReturn": UseComboBoxReturn;
+  "date-field: DateSegment": DateSegment;
   "date-range-picker: DateRange": DateRange;
   "disclosure-group: UseDisclosureGroupNavigationOptions": UseDisclosureGroupNavigationOptions;
   "disclosure-group: UseDisclosureGroupNavigationReturn": UseDisclosureGroupNavigationReturn;
@@ -61,6 +72,7 @@ export interface HostExportedTypes {
   "sidebar: SidebarState": SidebarState;
   "splitter: SplitterState": SplitterState;
   "table: TableColumnSize": TableColumnSize;
+  "time-field: TimeGranularity": TimeGranularity;
   "toast: Timer": Timer;
   "toolbar: ToolbarOrientation": ToolbarOrientation;
 }
