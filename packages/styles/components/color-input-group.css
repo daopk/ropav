@@ -119,6 +119,9 @@
 .rp-color-input-group__input {
   display: flex;
   height: 100%;
+  /* An <input> is about twenty characters wide on its own, and a flex item will not shrink below
+   * that unless told it may - so in a narrow field it pushes the suffix out past the edge. */
+  min-width: 0px;
   flex: 1;
   cursor: text;
   align-items: center;
