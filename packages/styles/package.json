@@ -1,6 +1,6 @@
 {
   "name": "@ropav/styles",
-  "version": "0.14.0",
+  "version": "0.15.0",
   "description": "Ropav core styles - framework-agnostic CSS",
   "keywords": [
     "css",
