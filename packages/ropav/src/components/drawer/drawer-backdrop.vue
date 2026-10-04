@@ -8,6 +8,7 @@ import { provideFocusResponder } from "../../composables/focus-responder";
 import { providePressResponder } from "../../composables/press-responder";
 import { useModalOverlay } from "../../composables/use-modal-overlay";
 import { useModalTransition } from "../../composables/use-modal-transition";
+import { usePortal } from "../../composables/use-portal";
 import { dataAttr } from "../../utils/assertion";
 
 import {
@@ -98,7 +99,9 @@ provideDrawerOverlayContext({
 
 const styles = computed(() => slots.value.backdrop({ class: props.class }));
 
-const target = computed(() => props.portalContainer ?? "body");
+// The component's own container wins over the nearest `PortalProvider`'s, which wins over the body.
+const portal = usePortal();
+const target = computed(() => props.portalContainer ?? portal.container.value);
 
 const setElement = (next: unknown) => {
   backdropElement.value = (next as HTMLElement | null) ?? null;

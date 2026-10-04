@@ -61,6 +61,7 @@ export * from "./modal";
 export * from "./number-field";
 export * from "./pagination";
 export * from "./popover";
+export * from "./portal-provider";
 export * from "./progress-bar";
 export * from "./progress-circle";
 export * from "./radio";

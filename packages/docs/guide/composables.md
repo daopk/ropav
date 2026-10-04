@@ -228,7 +228,8 @@ useDismissable(options: UseDismissableOptions): UseDismissableReturn
 ```
 
 Closes an overlay on Escape or on an interaction outside it, and understands that a submenu opened
-from inside it is not outside.
+from inside it is not outside. With a `region`, a press outside that element is neither a dismissal
+nor swallowed, and the overlay only stacks with overlays whose region overlaps its own.
 
 ```ts
 const { onKeydown } = useDismissable({
@@ -246,7 +247,7 @@ useFocusScope(options: UseFocusScopeOptions): void
 ```
 
 Keeps focus inside an overlay while it is open and gives it back to where it came from when it
-closes.
+closes. With a `region`, focus moving outside that element is let go rather than pulled back.
 
 ```ts
 useFocusScope({
@@ -256,6 +257,25 @@ useFocusScope({
   restoreFocus: true,
   scopeRef: popoverElement,
 });
+```
+
+### usePortal, providePortal
+
+```ts
+usePortal(): Portal
+providePortal(options: PortalOptions): Portal
+```
+
+Where overlays render and the part of the page they belong to: the nearest provider's
+`container` and `root`, or `"body"` and `null` (the whole document) without one. Pass
+`portal.container.value` to a `Teleport`, and `portal.root.value` as the `region` of
+`useDismissable` and `useFocusScope` and the `boundaryElement` of `useOverlayPosition`.
+`PortalProvider` is `providePortal` as a component.
+
+```ts
+const portal = usePortal();
+// <Teleport :to="portal.container.value">
+// portal.isContained.value → true when the container is not the body
 ```
 
 ### usePreventScroll

@@ -5,6 +5,7 @@ import { computed, shallowRef } from "vue";
 
 import { useEnterExit } from "../../composables/use-enter-exit";
 import { useOverlayPosition } from "../../composables/use-overlay-position";
+import { usePortal } from "../../composables/use-portal";
 import { dataAttr } from "../../utils/assertion";
 import { provideOverlayArrowContext } from "../overlay";
 
@@ -25,6 +26,8 @@ const { shouldSkipAnimation, slots, state, tooltipId, triggerElement } = useTool
 
 const element = shallowRef<HTMLElement | null>(null);
 const arrow = shallowRef<Element | null>(null);
+// Where the tooltip renders, and the part of the page it is placed inside.
+const portal = usePortal();
 
 /**
  * Built straight on the positioner rather than on the shared overlay primitive.
@@ -38,6 +41,8 @@ const arrow = shallowRef<Element | null>(null);
 const { arrowStyle, overlayStyle, placement } = useOverlayPosition({
   arrowBoundaryOffset: () => props.arrowBoundaryOffset,
   arrowRef: arrow,
+  // Kept inside the part of the page it belongs to, flipping and shifting at its edges.
+  boundaryElement: () => portal.root.value,
   containerPadding: () => props.containerPadding,
   crossOffset: () => props.crossOffset,
   isOpen: () => state.isOpen.value,
@@ -82,7 +87,8 @@ const isPresent = computed(
 
 const styles = computed(() => slots.value.base({ class: props.class }));
 
-const target = computed(() => props.portalContainer ?? "body");
+// The component's own container wins over the nearest `PortalProvider`'s, which wins over the body.
+const target = computed(() => props.portalContainer ?? portal.container.value);
 
 const setElement = (next: unknown) => {
   element.value = (next as HTMLElement | null) ?? null;

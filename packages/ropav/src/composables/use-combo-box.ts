@@ -20,6 +20,7 @@ import { useId } from "./use-id";
 import { useLabels } from "./use-labels";
 import { useLocalizedStringFormatter } from "./use-localized-string-formatter";
 import { useOverlayTrigger } from "./use-overlay-trigger";
+import { usePortal } from "./use-portal";
 import { usePress } from "./use-press";
 import { useTextField } from "./use-text-field";
 
@@ -450,6 +451,8 @@ export const useComboBox = <T>(
     { flush: "post", immediate: true },
   );
 
+  const portal = usePortal();
+
   /**
    * Everything but the field and its options is taken out of the accessibility tree while the
    * popover is open.
@@ -459,11 +462,22 @@ export const useComboBox = <T>(
    * keeps a screen reader's browse mode inside the widget it is reading.
    */
   watch(
-    [() => state.isOpen.value, inputElement, () => toValue(options.popoverElement)],
-    ([isOpen, input, popover], _previous, onCleanup) => {
+    [
+      () => state.isOpen.value,
+      inputElement,
+      () => toValue(options.popoverElement),
+      () => portal.root.value,
+    ],
+    ([isOpen, input, popover, root], _previous, onCleanup) => {
       if (!isOpen || !popover) return;
 
-      onCleanup(ariaHideOutside([input, popover].filter((element) => element != null)));
+      // Under a `PortalProvider` with a root, only that part of the page.
+      onCleanup(
+        ariaHideOutside(
+          [input, popover].filter((element) => element != null),
+          { root: root ?? undefined },
+        ),
+      );
     },
     { flush: "post", immediate: true },
   );

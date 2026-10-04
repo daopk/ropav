@@ -232,6 +232,82 @@ describe("useFocusScope", () => {
     });
   });
 
+  describe("region", () => {
+    /** An app's window: the scope sits in it beside the app's own content. */
+    const buildRegion = () => {
+      const region = document.createElement("section");
+      const content = document.createElement("button");
+      const scope = buildScope();
+
+      region.append(content, scope.root);
+      document.body.appendChild(region);
+
+      return { ...scope, content, region };
+    };
+
+    it("pulls focus back inside its region and lets it go outside", async () => {
+      const { content, region, root } = buildRegion();
+      const elsewhere = document.createElement("button");
+
+      document.body.appendChild(elsewhere);
+
+      const [, dispose] = withScope(() => useFocusScope({ contain: true, region, scopeRef: root }));
+
+      await nextTick();
+      content.focus();
+
+      expect(document.activeElement).toBe(root);
+
+      // Another app's window beside this one: focus going there is the user leaving, not escaping.
+      elsewhere.focus();
+
+      expect(document.activeElement).toBe(elsewhere);
+
+      dispose();
+      document.body.replaceChildren();
+    });
+
+    it("leaves Tab alone when focus is outside its region", async () => {
+      const { region, root } = buildRegion();
+      const elsewhere = document.createElement("button");
+
+      document.body.appendChild(elsewhere);
+
+      const [, dispose] = withScope(() => useFocusScope({ contain: true, region, scopeRef: root }));
+
+      await nextTick();
+      elsewhere.focus();
+
+      expect(tab().defaultPrevented).toBe(false);
+      expect(document.activeElement).toBe(elsewhere);
+
+      dispose();
+      document.body.replaceChildren();
+    });
+
+    it("keeps containing while a scope in another region opens after it", async () => {
+      const first = buildRegion();
+      const second = buildRegion();
+      const [, disposeFirst] = withScope(() =>
+        useFocusScope({ contain: true, region: first.region, scopeRef: first.root }),
+      );
+      const [, disposeSecond] = withScope(() =>
+        useFocusScope({ contain: true, region: second.region, scopeRef: second.root }),
+      );
+
+      await nextTick();
+      first.last.focus();
+      tab();
+
+      // Not shadowed by the later scope: the two are not nested, so each holds its own window.
+      expect(document.activeElement).toBe(first.first);
+
+      disposeSecond();
+      disposeFirst();
+      document.body.replaceChildren();
+    });
+  });
+
   describe("auto focus", () => {
     it("focuses the scope itself", async () => {
       const { root } = buildScope();

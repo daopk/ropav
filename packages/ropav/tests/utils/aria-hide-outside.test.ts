@@ -152,6 +152,88 @@ describe("ariaHideOutside", () => {
   });
 });
 
+describe("ariaHideOutside with a root", () => {
+  /** Two apps' windows side by side, each with content and an overlay of its own. */
+  const region = () => {
+    const root = document.createElement("section");
+    const content = document.createElement("p");
+    const overlay = document.createElement("div");
+
+    root.append(content, overlay);
+    document.body.appendChild(root);
+
+    return { content, overlay, root };
+  };
+
+  it("hides only inside the root, and watches only the root", async () => {
+    const chrome = document.createElement("nav");
+
+    document.body.appendChild(chrome);
+
+    const { content, overlay, root } = region();
+    const restore = ariaHideOutside([overlay], { root });
+
+    expect(content).toHaveAttribute("aria-hidden", "true");
+    expect(chrome).not.toHaveAttribute("aria-hidden");
+    expect(root).not.toHaveAttribute("aria-hidden");
+
+    const outside = document.createElement("aside");
+    const inside = document.createElement("p");
+
+    document.body.appendChild(outside);
+    root.appendChild(inside);
+    await Promise.resolve();
+
+    // The rest of the page is another app's business, now and later.
+    expect(outside).not.toHaveAttribute("aria-hidden");
+    expect(inside).toHaveAttribute("aria-hidden", "true");
+
+    restore();
+
+    expect(content).not.toHaveAttribute("aria-hidden");
+  });
+
+  it("keeps watching a root while another root beside it opens an overlay", async () => {
+    const first = region();
+    const second = region();
+    const restoreFirst = ariaHideOutside([first.overlay], { root: first.root });
+    const restoreSecond = ariaHideOutside([second.overlay], { root: second.root });
+
+    // Neither is nested in the other, so the later one does not take the watching over.
+    const later = document.createElement("p");
+
+    first.root.appendChild(later);
+    await Promise.resolve();
+
+    expect(later).toHaveAttribute("aria-hidden", "true");
+
+    restoreSecond();
+    restoreFirst();
+
+    expect(later).not.toHaveAttribute("aria-hidden");
+  });
+
+  it("exempts an element from the layer hiding its own root, not merely the newest", async () => {
+    const first = region();
+    const second = region();
+    const restoreFirst = ariaHideOutside([first.overlay], { root: first.root });
+    const restoreSecond = ariaHideOutside([second.overlay], { root: second.root });
+    const listbox = document.createElement("div");
+
+    first.root.appendChild(listbox);
+
+    const stopKeeping = keepVisible(listbox);
+
+    await Promise.resolve();
+
+    expect(listbox).not.toHaveAttribute("aria-hidden");
+
+    stopKeeping?.();
+    restoreSecond();
+    restoreFirst();
+  });
+});
+
 describe("keepVisible", () => {
   it("exempts an element from an existing hide", async () => {
     const { overlay } = build();

@@ -9,6 +9,7 @@ import { ariaHideOutside } from "../utils/aria-hide-outside";
 import { useDismissable } from "./use-dismissable";
 import { useFocusScope } from "./use-focus-scope";
 import { usePageSize } from "./use-page-size";
+import { usePortal } from "./use-portal";
 import { usePreventScroll } from "./use-prevent-scroll";
 import { useViewportSize } from "./use-viewport-size";
 
@@ -75,6 +76,7 @@ export interface UseModalOverlayReturn {
  */
 export const useModalOverlay = (options: UseModalOverlayOptions): UseModalOverlayReturn => {
   const isOpen = () => toValue(options.isOpen);
+  const portal = usePortal();
 
   const dismissable = useDismissable({
     isDismissable: options.isDismissable,
@@ -82,17 +84,20 @@ export const useModalOverlay = (options: UseModalOverlayOptions): UseModalOverla
     isOpen,
     onClose: options.onClose,
     overlayRef: options.modalRef,
+    // A press in another app's window is not a press on this modal's backdrop.
+    region: () => portal.root.value,
     shouldCloseOnInteractOutside: options.shouldCloseOnInteractOutside,
   });
 
   // Everything outside the modal is hidden from assistive technology and made inert, so a screen
-  // reader cannot wander out of a dialog that visually blocks the page.
+  // reader cannot wander out of a dialog that visually blocks the page. Under a `PortalProvider`
+  // with a root, "the page" is that root: a modal of one region leaves the rest live.
   watch(
-    [isOpen, () => toValue(options.modalRef)],
-    ([open, modal], _previous, onCleanup) => {
+    [isOpen, () => toValue(options.modalRef), () => portal.root.value],
+    ([open, modal, root], _previous, onCleanup) => {
       if (!open || !modal) return;
 
-      onCleanup(ariaHideOutside([modal], { shouldUseInert: true }));
+      onCleanup(ariaHideOutside([modal], { root: root ?? undefined, shouldUseInert: true }));
     },
     { flush: "post", immediate: true },
   );
@@ -101,6 +106,8 @@ export const useModalOverlay = (options: UseModalOverlayOptions): UseModalOverla
   useFocusScope({
     contain: true,
     isActive: isOpen,
+    // Focus that leaves for another app's window is let go rather than pulled back.
+    region: () => portal.root.value,
     restoreFocus: true,
     scopeRef: options.modalRef,
   });
@@ -115,6 +122,10 @@ export const useModalOverlay = (options: UseModalOverlayOptions): UseModalOverla
     page: computed(() => page.value),
     viewport: computed(() => viewport.value),
     viewportStyle: computed(() => {
+      // Rendered into an element of its own, the modal sizes to that element (the stylesheet's
+      // `100%` fallback), not to the window's visual viewport.
+      if (portal.isContained.value) return {};
+
       const style: Record<string, string> = {
         "--visual-viewport-height": `${viewport.value.height}px`,
         "--visual-viewport-width": `${viewport.value.width}px`,

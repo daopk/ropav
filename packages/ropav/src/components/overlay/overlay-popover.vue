@@ -7,6 +7,7 @@ import { useDismissable } from "../../composables/use-dismissable";
 import { useEnterExit } from "../../composables/use-enter-exit";
 import { useFocusScope } from "../../composables/use-focus-scope";
 import { useOverlayPosition } from "../../composables/use-overlay-position";
+import { usePortal } from "../../composables/use-portal";
 import { usePreventScroll } from "../../composables/use-prevent-scroll";
 import { ariaHideOutside, keepVisible } from "../../utils/aria-hide-outside";
 import { dataAttr } from "../../utils/assertion";
@@ -35,6 +36,9 @@ defineSlots<{ default?: () => unknown }>();
 
 const target = useOverlayTargetContext();
 const group = useOverlayGroupContext();
+// Where a group's outermost overlay renders its container, and the part of the page the overlay
+// belongs to: what it hides, holds focus and presses within, and is placed inside.
+const portal = usePortal();
 
 /**
  * Modality belongs to the overlay, not to the thing that opened it.
@@ -82,6 +86,7 @@ provideSurfaceContext({ variant: computed(() => "default" as const) });
 const { arrowStyle, overlayStyle, placement } = useOverlayPosition({
   arrowBoundaryOffset: () => props.arrowBoundaryOffset,
   arrowRef: arrow,
+  boundaryElement: () => portal.root.value,
   containerPadding: () => props.containerPadding,
   crossOffset: () => props.crossOffset,
   isOpen: () => target.state.isOpen.value,
@@ -157,6 +162,7 @@ const dismissable = useDismissable({
   isOpen: () => target.state.isOpen.value,
   onClose: target.state.close,
   overlayRef: element,
+  region: () => portal.root.value,
   // Always, as in `usePopover`. Only a non-modal overlay can observe it: a modal one contains
   // focus, so focus never leaves to blur away from. That makes this the one way out of an overlay
   // that leaves the page live besides Escape — a press outside is meant for what it landed on.
@@ -182,17 +188,19 @@ const onKeydown = (event: KeyboardEvent) => {
  * hiding began, which is why it asks to be exempted rather than assuming.
  */
 watch(
-  [() => target.state.isOpen.value, element, ownContainer, isNonModal],
-  ([isOpen, popover, container], _previous, onCleanup) => {
+  [() => target.state.isOpen.value, element, ownContainer, isNonModal, () => portal.root.value],
+  ([isOpen, popover, container, nonModal, root], _previous, onCleanup) => {
     if (!isOpen || !popover) return;
 
-    if (isNonModal.value) {
+    if (nonModal) {
       onCleanup(keepVisible(popover) ?? (() => {}));
 
       return;
     }
 
-    onCleanup(ariaHideOutside([container ?? popover], { shouldUseInert: true }));
+    onCleanup(
+      ariaHideOutside([container ?? popover], { root: root ?? undefined, shouldUseInert: true }),
+    );
   },
   { flush: "post", immediate: true },
 );
@@ -206,6 +214,7 @@ watch(
 useFocusScope({
   contain: () => isDialog.value || focusContainRequests.value > 0,
   isActive: () => target.state.isOpen.value,
+  region: () => portal.root.value,
   restoreFocus: true,
   scopeRef: element,
 });
@@ -267,7 +276,7 @@ const setContainer = (next: unknown) => {
 </script>
 
 <template>
-  <Teleport v-if="!isSubOverlay && isPresent" to="body">
+  <Teleport v-if="!isSubOverlay && isPresent" :to="portal.container.value">
     <div :ref="setContainer" :style="CONTAINER_STYLE" />
   </Teleport>
   <Teleport v-if="contentTarget && isPresent" :to="contentTarget">

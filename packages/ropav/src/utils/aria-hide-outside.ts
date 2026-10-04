@@ -1,3 +1,4 @@
+import { regionsOverlap } from "./region";
 import { TOP_LAYER_SELECTOR } from "./top-layer";
 
 const supportsInert = typeof HTMLElement !== "undefined" && "inert" in HTMLElement.prototype;
@@ -12,14 +13,31 @@ const supportsInert = typeof HTMLElement !== "undefined" && "inert" in HTMLEleme
 const refCounts = new WeakMap<Element, number>();
 
 interface Layer {
+  root: Element;
   visibleNodes: Set<Element>;
   hiddenNodes: Set<Element>;
   observe: () => void;
   disconnect: () => void;
 }
 
-/** Active layers, innermost last. Only the innermost watches the DOM for new content. */
+/**
+ * Active layers, innermost last. Only the innermost of the layers whose roots overlap watches the
+ * DOM for new content: two modals open in two apps' windows side by side each keep watching their
+ * own, while two nested in one place hand watching to the inner one.
+ */
 const layers: Layer[] = [];
+
+/** Whether a later layer covers this one's root, so this one leaves the watching to it. */
+const isShadowed = (layer: Layer) =>
+  layers.slice(layers.indexOf(layer) + 1).some((later) => regionsOverlap(later.root, layer.root));
+
+/** Watch with exactly the layers nothing later covers. */
+const syncObservers = () => {
+  for (const layer of layers) {
+    if (isShadowed(layer)) layer.disconnect();
+    else layer.observe();
+  }
+};
 
 /** Content that must never be hidden, however deep in the page it sits. */
 const ALWAYS_VISIBLE_SELECTOR = `[data-live-announcer], ${TOP_LAYER_SELECTOR}`;
@@ -28,7 +46,10 @@ const isAlwaysVisible = (node: Element) =>
   node instanceof HTMLElement && node.matches(ALWAYS_VISIBLE_SELECTOR);
 
 export interface AriaHideOutsideOptions {
-  /** Nothing above this element is hidden. @default document.body */
+  /**
+   * Nothing outside this element is hidden, and only this element is watched for content added
+   * later. @default document.body
+   */
   root?: Element;
   /**
    * Uses `inert` instead of `aria-hidden`, which also blocks pointer interaction and focus
@@ -133,10 +154,6 @@ export const ariaHideOutside = (
     }
   };
 
-  // Only the innermost layer watches, so a node added while two overlays are open is hidden once
-  // rather than once per layer.
-  layers.at(-1)?.disconnect();
-
   walk(root);
 
   const observer = new MutationObserver((changes) => {
@@ -162,12 +179,16 @@ export const ariaHideOutside = (
   const layer: Layer = {
     disconnect: () => observer.disconnect(),
     hiddenNodes,
+    // Observing again with the same options replaces the registration rather than adding one.
     observe: () => observer.observe(root, { childList: true, subtree: true }),
+    root,
     visibleNodes,
   };
 
-  layer.observe();
+  // Only the innermost layer watches, so a node added while two overlays are open is hidden once
+  // rather than once per layer.
   layers.push(layer);
+  syncObservers();
 
   return () => {
     observer.disconnect();
@@ -189,8 +210,8 @@ export const ariaHideOutside = (
 
     if (index >= 0) layers.splice(index, 1);
 
-    // Hand watching back to whichever layer is now innermost.
-    layers.at(-1)?.observe();
+    // Hand watching back to whichever layers are now innermost.
+    syncObservers();
   };
 };
 
@@ -203,7 +224,9 @@ export const ariaHideOutside = (
  * @returns A function withdrawing the exemption, or `undefined` if nothing is hiding anything.
  */
 export const keepVisible = (element: Element): (() => void) | undefined => {
-  const layer = layers.at(-1);
+  // The innermost layer hiding the part of the page the element is in, not merely the newest:
+  // that may belong to another app's window entirely.
+  const layer = layers.findLast((candidate) => candidate.root.contains(element)) ?? layers.at(-1);
 
   if (!layer || layer.visibleNodes.has(element)) return undefined;
 

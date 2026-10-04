@@ -63,7 +63,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  height: var(--visual-viewport-height);
+  height: var(--visual-viewport-height, 100%);
   width: 100%;
 
   /* Entering animation */
@@ -131,7 +131,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: var(--visual-viewport-height);
+  height: var(--visual-viewport-height, 100%);
   width: 100%;
   min-width: 0px;
   flex: 1;

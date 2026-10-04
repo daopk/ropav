@@ -2,6 +2,7 @@ import type { MaybeRefOrGetter } from "vue";
 
 import { computed, onScopeDispose, toValue, watch } from "vue";
 
+import { regionsOverlap } from "../utils/region";
 import { isInTopLayer } from "../utils/top-layer";
 
 import { isElementInAnyFocusScope } from "./focus-scope-registry";
@@ -12,8 +13,15 @@ import { isElementInAnyFocusScope } from "./focus-scope-registry";
  * Module-level on purpose: a click outside must dismiss exactly one overlay — the innermost —
  * and no single overlay can know whether another is nested inside it. React Aria keeps the same
  * list for the same reason.
+ *
+ * Innermost *within a region*: overlays in two apps' windows side by side are not stacked over one
+ * another, so Escape still closes the older of two modals open at once in different windows.
  */
-const visibleOverlays: object[] = [];
+interface OverlayLayer {
+  region: () => Element | null;
+}
+
+const visibleOverlays: OverlayLayer[] = [];
 
 export interface UseDismissableOptions {
   /** The overlay element. Interaction inside it never dismisses. */
@@ -39,6 +47,12 @@ export interface UseDismissableOptions {
    * should be left alone — the trigger of an already-open submenu, for one.
    */
   shouldCloseOnInteractOutside?: (element: Element) => boolean;
+  /**
+   * The part of the page the overlay belongs to. A press outside it — in another app's window
+   * beside this one — is neither an outside interaction nor swallowed, and the overlay is only
+   * stacked with overlays whose region overlaps its own. `null` or absent: the whole document.
+   */
+  region?: MaybeRefOrGetter<Element | null | undefined>;
 }
 
 export interface UseDismissableReturn {
@@ -77,14 +91,18 @@ export interface UseDismissableReturn {
 export const useDismissable = (options: UseDismissableOptions): UseDismissableReturn => {
   // Identity for this overlay in the shared stack. The element itself cannot be used: it does
   // not exist yet when the overlay registers, and it is replaced when the overlay reopens.
-  const layer = {};
+  const layer: OverlayLayer = { region: () => toValue(options.region) ?? null };
 
   const isOpen = computed(() => Boolean(toValue(options.isOpen)));
   const isDismissable = computed(() => Boolean(toValue(options.isDismissable)));
 
   const getOverlay = () => toValue(options.overlayRef) ?? null;
 
-  const isTopMost = () => visibleOverlays.at(-1) === layer;
+  /** The innermost open overlay this one is stacked with — possibly itself. */
+  const innermost = () =>
+    visibleOverlays.findLast((other) => regionsOverlap(other.region(), layer.region()));
+
+  const isTopMost = () => innermost() === layer;
 
   const close = () => {
     if (isTopMost()) options.onClose?.();
@@ -127,6 +145,12 @@ export const useDismissable = (options: UseDismissableOptions): UseDismissableRe
     // is not what the user asked for. React Aria draws the same exemption in the same place.
     if (isInTopLayer(target)) return false;
 
+    // Another part of the page altogether — another app's window — is not behind this overlay, so
+    // a press there is not one to dismiss on, and not one to swallow either.
+    const region = layer.region();
+
+    if (region && !region.contains(target)) return false;
+
     // `composedPath` rather than `contains`, so a target inside an open shadow root resolves
     // to the real element rather than to the shadow root.
     return !event.composedPath().includes(overlay);
@@ -135,7 +159,7 @@ export const useDismissable = (options: UseDismissableOptions): UseDismissableRe
   /** Whether the pointerdown that began this interaction was outside. */
   let pointerDownWasOutside = false;
   /** Which overlay was innermost when the interaction began, so a dismissal that opened another overlay does not also dismiss this one. */
-  let layerAtPointerDown: object | undefined;
+  let layerAtPointerDown: OverlayLayer | undefined;
 
   const listeners: (() => void)[] = [];
 
@@ -145,7 +169,7 @@ export const useDismissable = (options: UseDismissableOptions): UseDismissableRe
     const onPointerdown = (event: PointerEvent) => {
       if (!isOutside(event)) return;
 
-      layerAtPointerDown = visibleOverlays.at(-1);
+      layerAtPointerDown = innermost();
 
       if (
         options.shouldCloseOnInteractOutside &&

@@ -294,4 +294,68 @@ describe("useDismissable", () => {
       outer.dispose();
     });
   });
+
+  describe("region", () => {
+    /** An overlay inside an app's window, the region it belongs to. */
+    const setupInRegion = () => {
+      const region = document.createElement("section");
+      const content = document.createElement("button");
+      const overlay = setup({ region });
+
+      region.append(content, overlay.overlay);
+      document.body.appendChild(region);
+
+      return {
+        ...overlay,
+        content,
+        dispose: () => {
+          overlay.dispose();
+          region.remove();
+        },
+        region,
+      };
+    };
+
+    it("neither dismisses on nor swallows a press outside its region", () => {
+      const { dispose, onClose } = setupInRegion();
+      const elsewhere = document.createElement("button");
+      const reached = vi.fn();
+
+      elsewhere.addEventListener("pointerdown", reached);
+      document.body.appendChild(elsewhere);
+
+      pressOutside(elsewhere);
+
+      // Another app's window is not behind this overlay: the press is meant for it, whole.
+      expect(onClose).not.toHaveBeenCalled();
+      expect(reached).toHaveBeenCalledTimes(1);
+
+      elsewhere.remove();
+      dispose();
+    });
+
+    it("still dismisses on a press outside the overlay inside its region", () => {
+      const { content, dispose, onClose } = setupInRegion();
+
+      pressOutside(content);
+
+      expect(onClose).toHaveBeenCalledTimes(1);
+
+      dispose();
+    });
+
+    it("closes on Escape while an overlay in another region opened after it", () => {
+      const first = setupInRegion();
+      const second = setupInRegion();
+
+      first.overlay.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Escape" }));
+
+      // Two windows side by side are not nested, so neither overlay is stacked over the other.
+      expect(first.onClose).toHaveBeenCalledTimes(1);
+      expect(second.onClose).not.toHaveBeenCalled();
+
+      second.dispose();
+      first.dispose();
+    });
+  });
 });

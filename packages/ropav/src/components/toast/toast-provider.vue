@@ -6,6 +6,7 @@ import { toastVariants } from "@ropav/styles";
 import { computed, onScopeDispose, shallowRef, watch } from "vue";
 
 import { useLocale } from "../../composables/use-locale";
+import { usePortal } from "../../composables/use-portal";
 import { useToastRegion } from "../../composables/use-toast-region";
 import { dataAttr } from "../../utils/assertion";
 import { composeSlotClassName } from "../../utils/compose";
@@ -146,7 +147,9 @@ provideToastRegionContext({
   visibleToasts,
 });
 
-const target = computed(() => props.portalContainer ?? "body");
+// The component's own container wins over the nearest `PortalProvider`'s, which wins over the body.
+const portal = usePortal();
+const target = computed(() => props.portalContainer ?? portal.container.value);
 
 const styles = computed(() => composeSlotClassName(slots.value.region, props.class));
 

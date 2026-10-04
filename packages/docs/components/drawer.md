@@ -51,7 +51,9 @@ back every time.
 The drag lives on `DrawerDialog`, not on the handle: the whole panel answers the gesture, and
 `DrawerHandle` is only the bar that says so.
 
-`portal-container` says where the drawer is rendered, for an app that is not mounted on `body`.
+`portal-container` says where the drawer is rendered, for an app that is not mounted on `body`. A
+[`PortalProvider`](/patterns/overlays#inside-one-part-of-the-page) says it once for every overlay
+below it.
 
 ## Accessibility
 

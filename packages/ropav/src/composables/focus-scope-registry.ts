@@ -1,6 +1,10 @@
+import { regionsOverlap } from "../utils/region";
+
 export interface RegisteredScope {
   root: () => HTMLElement | null;
   contain: () => boolean;
+  /** The part of the page the scope belongs to, `null` for the whole document. */
+  region: () => Element | null;
 }
 
 /**
@@ -12,11 +16,17 @@ export interface RegisteredScope {
  */
 const scopes: RegisteredScope[] = [];
 
-export const innermostContainingScope = (): RegisteredScope | null => {
+/**
+ * The innermost scope holding focus in a region, among the scopes whose region overlaps it.
+ *
+ * Without a region every scope overlaps every other, which is the page-wide question. With one, a
+ * modal in one app's window is not shadowed by a modal another app opened later in its own.
+ */
+export const innermostContainingScope = (region: Element | null = null): RegisteredScope | null => {
   for (let index = scopes.length - 1; index >= 0; index--) {
     const scope = scopes[index]!;
 
-    if (scope.contain()) return scope;
+    if (scope.contain() && regionsOverlap(scope.region(), region)) return scope;
   }
 
   return null;

@@ -56,6 +56,7 @@ export const PUBLIC_MODULES = [
   "use-number-formatter",
   "use-overlay-position",
   "use-overlay-trigger-state",
+  "use-portal",
   "use-press",
   "use-prevent-scroll",
   "use-selection-manager",

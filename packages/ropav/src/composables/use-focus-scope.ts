@@ -35,6 +35,12 @@ export interface UseFocusScopeOptions {
    * @default false
    */
   autoFocus?: MaybeRefOrGetter<boolean | "first" | "last" | undefined>;
+  /**
+   * The part of the page containment holds focus within. Focus moving to something outside it —
+   * another app's window beside this one — is left alone rather than pulled back, and Tab pressed
+   * out there is not taken over. `null` or absent: the whole document.
+   */
+  region?: MaybeRefOrGetter<Element | null | undefined>;
 }
 
 /**
@@ -66,7 +72,15 @@ export const useFocusScope = (options: UseFocusScopeOptions): void => {
   const getRoot = () => toValue(options.scopeRef) ?? null;
   const scope: RegisteredScope = {
     contain: () => Boolean(toValue(options.contain)),
+    region: () => toValue(options.region) ?? null,
     root: getRoot,
+  };
+
+  /** Whether an element is somewhere this scope has any say over. */
+  const isInRegion = (element: Element | null) => {
+    const region = scope.region();
+
+    return !region || !element || region.contains(element);
   };
 
   const focusElement = (element: HTMLElement | null) => {
@@ -95,7 +109,8 @@ export const useFocusScope = (options: UseFocusScopeOptions): void => {
 
     const onKeydown = (event: KeyboardEvent) => {
       if (event.key !== "Tab" || event.altKey || event.ctrlKey || event.metaKey) return;
-      if (innermostContainingScope() !== scope) return;
+      if (innermostContainingScope(scope.region()) !== scope) return;
+      if (!isInRegion(ownerDocument.activeElement)) return;
 
       const focusable = tabbableIn(root);
 
@@ -118,11 +133,12 @@ export const useFocusScope = (options: UseFocusScopeOptions): void => {
     };
 
     const onFocusin = (event: FocusEvent) => {
-      if (innermostContainingScope() !== scope) return;
+      if (innermostContainingScope(scope.region()) !== scope) return;
 
       const target = event.target;
 
       if (!(target instanceof Element)) return;
+      if (!isInRegion(target)) return;
       // A submenu is a sibling of the menu it belongs to rather than a descendant, so
       // containment has to allow focus into any scope, not only into this one.
       if (isElementInAnyFocusScope(target)) return;
