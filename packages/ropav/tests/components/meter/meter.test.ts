@@ -17,7 +17,7 @@ describe("Meter", () => {
 
     await nextTick();
 
-    expect(root).toHaveAttribute("role", "meter progressbar");
+    expect(root).toHaveAttribute("role", "meter");
     expect(root).toHaveAttribute("aria-valuemin", "0");
     expect(root).toHaveAttribute("aria-valuemax", "100");
     expect(root).toHaveAttribute("aria-valuenow", "60");

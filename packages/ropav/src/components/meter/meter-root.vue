@@ -44,7 +44,7 @@ provideMeterContext({ slots, state });
     :aria-valuetext="state.valueText.value"
     :class="composeSlotClassName(slots.base, props.class)"
     data-slot="meter"
-    role="meter progressbar"
+    role="meter"
   >
     <slot :percentage="state.percentage.value ?? 0" :value-text="state.valueText.value" />
   </div>

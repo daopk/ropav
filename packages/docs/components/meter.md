@@ -39,9 +39,9 @@ it per row, so the thresholds live in one place.
 
 ## Accessibility
 
-- The role is written as a fallback list, `meter progressbar`, because `meter` is not supported
-  everywhere. Software that knows the role reads out a level; software that does not lands on a
-  progress bar rather than on nothing at all.
+- The root is a `role="meter"`, which every current browser and screen reader reads out as a
+  level. It is a single role rather than a `meter progressbar` fallback list: axe does not read
+  fallback lists, and flagged every `aria-value*` attribute on one as not allowed.
 - Colour is a threshold and never the message. The output beside the label is what says 94%; the
   red says it faster to a reader who can see it, and nothing at all to one who cannot.
 - `format-options` sets how the value reads. A percentage suits a proportion; bytes or a count
