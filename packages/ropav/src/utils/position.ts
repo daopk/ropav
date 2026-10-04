@@ -117,9 +117,8 @@ const clamp = (value: number, min: number, max: number) => Math.min(Math.max(val
 
 const getVisualViewport = () => (typeof document === "undefined" ? null : window.visualViewport);
 
-/** Whether one node is the other, or contains it. */
-const nodeContains = (node: Element | null, other: Element | null) =>
-  Boolean(node && other && node.contains(other));
+/** Whether the element stands for the viewport, as the body and the document element do. */
+const isViewportElement = (node: Element) => node.tagName === "BODY" || node.tagName === "HTML";
 
 const isWebKit = () =>
   typeof navigator !== "undefined" &&
@@ -236,7 +235,7 @@ const getContainerDimensions = (
 
   // An absolutely positioned element inside an unpositioned `html`/`body` resolves against the
   // initial containing block, which is the viewport rather than the document.
-  if (containerNode.tagName === "BODY" || containerNode.tagName === "HTML") {
+  if (isViewportElement(containerNode)) {
     const documentElement = document.documentElement;
 
     totalWidth = documentElement.clientWidth;
@@ -260,11 +259,7 @@ const getContainerDimensions = (
 
   // Safari reports a non-zero scroll offset for a non-scrolling body while pinch zoomed in,
   // unlike every other browser, which would shift the overlay by that amount.
-  if (
-    isWebKit() &&
-    (containerNode.tagName === "BODY" || containerNode.tagName === "HTML") &&
-    isPinchZoomedIn
-  ) {
+  if (isWebKit() && isViewportElement(containerNode) && isPinchZoomedIn) {
     scroll.top = 0;
     scroll.left = 0;
     top = visualViewport?.pageTop ?? 0;
@@ -279,24 +274,16 @@ const getDelta = (
   axis: PositionAxis,
   offset: number,
   size: number,
-  boundaryDimensions: Dimensions,
+  boundary: Offset,
   containerDimensions: Dimensions,
   padding: number,
-  containerOffsetWithBoundary: Offset,
 ) => {
-  const containerScroll = containerDimensions.scroll[axis] ?? 0;
-  const boundarySize = boundaryDimensions[AXIS_SIZE[axis]];
-  const boundaryScroll = boundaryDimensions.scroll[AXIS[axis]] ?? 0;
-
-  const boundaryStartEdge = containerOffsetWithBoundary[axis] + boundaryScroll + padding;
-  const boundaryEndEdge =
-    containerOffsetWithBoundary[axis] + boundaryScroll + boundarySize - padding;
-  const startEdgeOffset =
-    offset -
-    containerScroll +
-    boundaryScroll +
-    containerOffsetWithBoundary[axis] -
-    boundaryDimensions[AXIS[axis]];
+  // The boundary is measured from the container's visible origin, and the overlay from the
+  // origin of its scrolled content.
+  const boundaryStart = boundary[axis] + (containerDimensions.scroll[axis] ?? 0);
+  const boundaryStartEdge = boundaryStart + padding;
+  const boundaryEndEdge = boundaryStart + boundary[AXIS_SIZE[axis]] - padding;
+  const startEdgeOffset = offset;
   const endEdgeOffset = startEdgeOffset + size;
 
   if (startEdgeOffset < boundaryStartEdge) return boundaryStartEdge - startEdgeOffset;
@@ -404,44 +391,30 @@ type HeightGrowthDirection = "top" | "bottom";
 
 const getMaxHeight = (
   position: Position,
-  boundaryDimensions: Dimensions,
-  containerOffsetWithBoundary: Offset,
+  boundary: Offset,
+  viewport: Offset | null,
   margins: Position,
   padding: number,
   overlayHeight: number,
   heightGrowthDirection: HeightGrowthDirection,
   containerDimensions: Dimensions,
-  isContainerDescendentOfBoundary: boolean,
-  visualViewport: VisualViewport | null,
 ) => {
+  // Measured from the container's visible origin, like the boundary and the viewport.
   const overlayTop =
     (position.top != null
       ? position.top
       : containerDimensions[TOTAL_SIZE.height] - (position.bottom ?? 0) - overlayHeight) -
     (containerDimensions.scroll.top ?? 0);
 
-  const boundaryToContainerTransformOffset = isContainerDescendentOfBoundary
-    ? containerOffsetWithBoundary.top
-    : 0;
-
   // The tighter of the boundary and the visual viewport, so a pinch-zoomed page does not get
   // an overlay taller than what is on screen. Without a visual viewport the boundary is the
   // only answer available — React Aria treats a missing one as a zero-height viewport, which
   // would cap every overlay to nothing outside a real browser.
-  const viewportTop = visualViewport?.offsetTop ?? boundaryDimensions.top;
-  const viewportBottom = visualViewport
-    ? visualViewport.offsetTop + visualViewport.height
-    : boundaryDimensions.top + boundaryDimensions.height;
+  const visible = viewport ?? boundary;
 
   const boundingRect = {
-    bottom: Math.min(
-      boundaryDimensions.top + boundaryDimensions.height + boundaryToContainerTransformOffset,
-      viewportBottom,
-    ),
-    top: Math.max(
-      boundaryDimensions.top + boundaryToContainerTransformOffset,
-      viewportTop + boundaryToContainerTransformOffset,
-    ),
+    bottom: Math.min(boundary.top + boundary.height, visible.top + visible.height),
+    top: Math.max(boundary.top, visible.top),
   };
 
   const reserved = (margins.top ?? 0) + (margins.bottom ?? 0) + padding;
@@ -453,41 +426,22 @@ const getMaxHeight = (
 
 /** How much room there is on the side the overlay wants to be on. */
 const getAvailableSpace = (
-  boundaryDimensions: Dimensions,
-  containerOffsetWithBoundary: Offset,
+  boundary: Offset,
   childOffset: Offset,
   margins: Position,
   padding: number,
   placementInfo: ParsedPlacement,
   containerDimensions: Dimensions,
-  isContainerDescendentOfBoundary: boolean,
 ) => {
   const { axis, placement, size } = placementInfo;
-  const containerOffset = isContainerDescendentOfBoundary ? containerOffsetWithBoundary[axis] : 0;
+  const boundaryStart = boundary[axis] + (containerDimensions.scroll[axis] ?? 0);
+  const reserved = (margins[axis] ?? 0) + (margins[FLIPPED_DIRECTION[axis]] ?? 0) + padding;
 
-  if (placement === axis) {
-    return Math.max(
-      0,
-      childOffset[axis] -
-        (containerDimensions.scroll[axis] ?? 0) -
-        (boundaryDimensions[axis] + containerOffset) -
-        (margins[axis] ?? 0) -
-        (margins[FLIPPED_DIRECTION[axis]] ?? 0) -
-        padding,
-    );
-  }
+  if (placement === axis) return Math.max(0, childOffset[axis] - boundaryStart - reserved);
 
   return Math.max(
     0,
-    boundaryDimensions[size] +
-      boundaryDimensions[axis] +
-      containerOffset -
-      childOffset[axis] -
-      childOffset[size] +
-      (containerDimensions.scroll[axis] ?? 0) -
-      (margins[axis] ?? 0) -
-      (margins[FLIPPED_DIRECTION[axis]] ?? 0) -
-      padding,
+    boundaryStart + boundary[size] - childOffset[axis] - childOffset[size] - reserved,
   );
 };
 
@@ -499,17 +453,15 @@ export const calculatePositionInternal = (
   margins: Position,
   padding: number,
   flip: boolean,
-  boundaryDimensions: Dimensions,
+  boundary: Offset,
   containerDimensions: Dimensions,
-  containerOffsetWithBoundary: Offset,
+  viewport: Offset | null,
   offset: number,
   crossOffset: number,
   isContainerPositioned: boolean,
   userSetMaxHeight: number | undefined,
   arrowSize: number,
   arrowBoundaryOffset: number,
-  isContainerDescendentOfBoundary: boolean,
-  visualViewport: VisualViewport | null,
 ): PositionResult => {
   let placementInfo = parsePlacement(placementInput);
   const { crossAxis, crossSize, size } = placementInfo;
@@ -528,14 +480,12 @@ export const calculatePositionInternal = (
   );
 
   const space = getAvailableSpace(
-    boundaryDimensions,
-    containerOffsetWithBoundary,
+    boundary,
     childOffset,
     margins,
     padding + offset,
     placementInfo,
     containerDimensions,
-    isContainerDescendentOfBoundary,
   );
 
   if (flip && overlaySize[size] > space) {
@@ -554,14 +504,12 @@ export const calculatePositionInternal = (
       containerDimensions,
     );
     const flippedSpace = getAvailableSpace(
-      boundaryDimensions,
-      containerOffsetWithBoundary,
+      boundary,
       childOffset,
       margins,
       padding + offset,
       flippedPlacementInfo,
       containerDimensions,
-      isContainerDescendentOfBoundary,
     );
 
     // Only worth flipping if the other side is actually roomier; otherwise a cramped overlay
@@ -584,23 +532,20 @@ export const calculatePositionInternal = (
     crossAxis,
     position[crossAxis]!,
     overlaySize[crossSize],
-    boundaryDimensions,
+    boundary,
     containerDimensions,
     padding,
-    containerOffsetWithBoundary,
   );
 
   let maxHeight = getMaxHeight(
     position,
-    boundaryDimensions,
-    containerOffsetWithBoundary,
+    boundary,
+    viewport,
     margins,
     padding,
     overlaySize.height,
     heightGrowthDirection,
     containerDimensions,
-    isContainerDescendentOfBoundary,
-    visualViewport,
   );
 
   if (userSetMaxHeight && userSetMaxHeight < maxHeight) maxHeight = userSetMaxHeight;
@@ -624,10 +569,9 @@ export const calculatePositionInternal = (
     crossAxis,
     position[crossAxis]!,
     overlaySize[crossSize],
-    boundaryDimensions,
+    boundary,
     containerDimensions,
     padding,
-    containerOffsetWithBoundary,
   );
 
   const arrowPosition: Position = {};
@@ -730,31 +674,48 @@ export const calculatePosition = (options: PositionOptions): PositionResult => {
   overlaySize.width += (margins.left ?? 0) + (margins.right ?? 0);
   overlaySize.height += (margins.top ?? 0) + (margins.bottom ?? 0);
 
-  const boundaryDimensions = getContainerDimensions(boundaryElement, visualViewport);
   const containerDimensions = getContainerDimensions(container, visualViewport);
 
-  // The boundary's origin expressed in the container's coordinate system, which differs in
-  // three distinguishable cases.
-  let containerOffsetWithBoundary: Offset;
-  const isBoundaryViewport =
-    boundaryElement.tagName === "BODY" || boundaryElement.tagName === "HTML";
+  // Everything the boundary is checked against is measured from the container's visible origin
+  // — the top left of its padding box as it sits on screen — so the boundary, the viewport and
+  // the overlay agree on where 0 is however far from the page origin the container sits. The
+  // overlay and its trigger are measured from the origin of the container's scrolled content,
+  // which is that same point moved by the container's scroll.
+  const { clientHeight, clientWidth } = document.documentElement;
+  const viewportRect: Offset = {
+    height: visualViewport?.height ?? clientHeight,
+    left: visualViewport?.offsetLeft ?? 0,
+    top: visualViewport?.offsetTop ?? 0,
+    width: visualViewport?.width ?? clientWidth,
+  };
+  let origin: { left: number; top: number };
 
-  if (isBoundaryViewport && !isViewportContainer) {
-    // The boundary's dimensions are in viewport space rather than document space, so a rect
-    // is the right measure here.
-    const containerRect = getRect(container, false);
-
-    containerOffsetWithBoundary = {
-      height: 0,
-      left: -(containerRect.left - boundaryDimensions.left),
-      top: -(containerRect.top - boundaryDimensions.top),
-      width: 0,
+  if (isViewportElement(container)) {
+    // The viewport's own dimensions already say where the visual viewport sits in its frame,
+    // including Safari's pinch-zoom correction, so the origin is read back from them.
+    origin = {
+      left: viewportRect.left - containerDimensions.left,
+      top: viewportRect.top - containerDimensions.top,
     };
-  } else if (isBoundaryViewport && isViewportContainer) {
-    containerOffsetWithBoundary = { height: 0, left: 0, top: 0, width: 0 };
   } else {
-    containerOffsetWithBoundary = getPosition(boundaryElement, container, false);
+    const containerRect = container.getBoundingClientRect();
+
+    origin = {
+      left: containerRect.left + container.clientLeft,
+      top: containerRect.top + container.clientTop,
+    };
   }
+
+  const toContainer = ({ height, left, top, width }: Offset): Offset => ({
+    height,
+    left: left - origin.left,
+    top: top - origin.top,
+    width,
+  });
+  const viewport = toContainer(viewportRect);
+  const boundary = isViewportElement(boundaryElement)
+    ? viewport
+    : toContainer(getRect(boundaryElement, false));
 
   return calculatePositionInternal(
     placement,
@@ -763,17 +724,15 @@ export const calculatePosition = (options: PositionOptions): PositionResult => {
     margins,
     padding,
     shouldFlip,
-    boundaryDimensions,
+    boundary,
     containerDimensions,
-    containerOffsetWithBoundary,
+    visualViewport ? viewport : null,
     offset,
     crossOffset,
     isContainerPositioned,
     maxHeight,
     arrowSize,
     arrowBoundaryOffset,
-    nodeContains(boundaryElement, container),
-    visualViewport,
   );
 };
 

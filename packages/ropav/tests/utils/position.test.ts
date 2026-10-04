@@ -20,7 +20,6 @@ const VIEWPORT = {
 };
 
 const NO_MARGINS = { bottom: 0, left: 0, right: 0, top: 0 };
-const NO_CONTAINER_OFFSET = { height: 0, left: 0, top: 0, width: 0 };
 
 interface Rect {
   top: number;
@@ -53,15 +52,13 @@ const position = (
     options.flip ?? true,
     VIEWPORT,
     VIEWPORT,
-    NO_CONTAINER_OFFSET,
+    null,
     options.offset ?? 8,
     options.crossOffset ?? 0,
     false,
     options.maxHeight,
     options.arrowSize ?? 0,
     options.arrowBoundaryOffset ?? 0,
-    false,
-    null,
   );
 
 const TRIGGER = { height: 40, left: 200, top: 100, width: 80 };
