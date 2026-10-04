@@ -200,3 +200,132 @@ describe.each([
     expect(overlay.bottom).toBeLessThanOrEqual(bounds.bottom);
   });
 });
+
+/**
+ * An app's window whose overlay container is also the region that scrolls, already scrolled when
+ * the overlay opens. The triggers sit in the scrolled content, so they and the overlays move
+ * together as it scrolls.
+ */
+const scrolledWindowAt = (containerStyle: string) => {
+  const host = document.createElement("section");
+  const container = document.createElement("div");
+  const content = document.createElement("div");
+
+  host.style.cssText = "position: absolute; left: 120px; top: 200px; width: 280px; height: 360px";
+  container.style.cssText = `${containerStyle}; overflow: auto; height: 100%`;
+  content.style.height = "1000px";
+  container.append(content);
+  host.append(container);
+  document.body.append(host);
+
+  return { container, host };
+};
+
+const SCROLL = 100;
+
+const openScrolledIn = async (
+  containerStyle: string,
+  open: "popover" | "tooltip",
+  triggers: { popover?: string; tooltip?: string },
+) => {
+  const { container, host } = scrolledWindowAt(containerStyle);
+  const props = reactive({
+    container,
+    open: undefined as "popover" | "tooltip" | undefined,
+    popoverTriggerStyle: triggers.popover,
+    root: host,
+    tooltipTriggerStyle: triggers.tooltip,
+  });
+  const result = renderVapor(PlacementFixture, { props });
+
+  container.append(result.container);
+  container.scrollTop = SCROLL;
+  cleanup = async () => result.unmount();
+
+  props.open = open;
+
+  const overlay = await vi.waitFor(() => {
+    const found = container.querySelector<HTMLElement>(
+      open === "tooltip" ? "[role='tooltip']" : "[data-trigger]",
+    );
+
+    if (!found?.dataset["placement"]) throw new Error("not placed yet");
+
+    return found;
+  });
+
+  await settled(overlay);
+
+  const name = open === "tooltip" ? "Tooltip trigger" : "Open popover";
+  const trigger = [...result.container.querySelectorAll("button")].find(
+    (button) => button.textContent?.trim() === name,
+  )!;
+
+  return { container, host, overlay, trigger };
+};
+
+describe.each([
+  ["positioned, with `contain: layout`", "position: relative; contain: layout"],
+  ["unpositioned, with `contain: layout`", "contain: layout"],
+  ["positioned, with a transform", "position: relative; transform: translateZ(0)"],
+  ["unpositioned, with a transform", "transform: translateZ(0)"],
+  ["bordered, with `contain: layout`", "contain: layout; border: 6px solid"],
+])("placing an overlay rendered into a scrolled container, %s", (_name, containerStyle) => {
+  it("centres a tooltip on its trigger", async () => {
+    const { overlay, trigger } = await openScrolledIn(containerStyle, "tooltip", {
+      tooltip: `position: absolute; left: 80px; top: ${SCROLL + 160}px`,
+    });
+    const overlayRect = overlay.getBoundingClientRect();
+    const triggerRect = trigger.getBoundingClientRect();
+
+    expect(overlay.dataset["placement"]).toBe("top");
+    expect(overlayRect.left + overlayRect.width / 2).toBeCloseTo(
+      triggerRect.left + triggerRect.width / 2,
+      0,
+    );
+    expect(overlayRect.bottom).toBeLessThanOrEqual(triggerRect.top);
+    expect(overlayRect.bottom).toBeGreaterThan(triggerRect.top - 10);
+  });
+
+  it("flips a popover above when the root has no room below its trigger", async () => {
+    const { host, overlay, trigger } = await openScrolledIn(containerStyle, "popover", {
+      popover: `position: absolute; left: 20px; top: ${SCROLL + 300}px`,
+    });
+    const overlayRect = overlay.getBoundingClientRect();
+    const triggerRect = trigger.getBoundingClientRect();
+
+    expect(overlay.dataset["placement"]).toBe("top");
+    expect(overlayRect.bottom).toBeLessThanOrEqual(triggerRect.top);
+    expect(overlayRect.bottom).toBeGreaterThan(triggerRect.top - 10);
+    expect(overlayRect.top).toBeGreaterThanOrEqual(host.getBoundingClientRect().top);
+  });
+
+  it("shifts a popover to stay inside the root, short of its padding", async () => {
+    const { host, overlay, trigger } = await openScrolledIn(containerStyle, "popover", {
+      popover: `position: absolute; right: 0; top: ${SCROLL + 20}px`,
+    });
+    const bounds = host.getBoundingClientRect();
+    const overlayRect = overlay.getBoundingClientRect();
+    const triggerRect = trigger.getBoundingClientRect();
+
+    expect(overlay.dataset["placement"]).toBe("bottom");
+    expect(overlayRect.top).toBeGreaterThanOrEqual(triggerRect.bottom);
+    expect(overlayRect.top).toBeLessThan(triggerRect.bottom + 10);
+    expect(overlayRect.right).toBeCloseTo(bounds.right - 12, 0);
+  });
+
+  it("keeps a popover by its trigger as the container scrolls", async () => {
+    const { container, overlay, trigger } = await openScrolledIn(containerStyle, "popover", {
+      popover: `position: absolute; left: 20px; top: ${SCROLL + 20}px`,
+    });
+    const before = trigger.getBoundingClientRect().bottom - overlay.getBoundingClientRect().top;
+
+    container.scrollTop += 50;
+    await nextTick();
+
+    expect(overlay.isConnected).toBe(true);
+    expect(
+      trigger.getBoundingClientRect().bottom - overlay.getBoundingClientRect().top,
+    ).toBeCloseTo(before, 0);
+  });
+});

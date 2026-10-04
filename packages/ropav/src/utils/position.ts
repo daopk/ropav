@@ -117,8 +117,16 @@ const clamp = (value: number, min: number, max: number) => Math.min(Math.max(val
 
 const getVisualViewport = () => (typeof document === "undefined" ? null : window.visualViewport);
 
-/** Whether the element stands for the viewport, as the body and the document element do. */
+/** Whether a boundary element stands for the viewport, as the body and the document element do. */
 const isViewportElement = (node: Element) => node.tagName === "BODY" || node.tagName === "HTML";
+
+/**
+ * Whether the container is the viewport. Only the document element ever is: the body is the
+ * container only once it is positioned or a containing block, and then an overlay is placed from
+ * the body's own padding box, which a body taller than the viewport, or set apart from it by its
+ * margin, does not share with the viewport.
+ */
+const isViewportContainer = (node: Element) => node === document.documentElement;
 
 const isWebKit = () =>
   typeof navigator !== "undefined" &&
@@ -187,7 +195,8 @@ const isContainingBlock = (node: Element): boolean => {
     style.transform !== "none" ||
     /transform|perspective/.test(style.willChange) ||
     style.filter !== "none" ||
-    style.contain === "paint" ||
+    // Layout or paint containment, alone or through the `strict` and `content` shorthands.
+    /\b(layout|paint|strict|content)\b/.test(style.contain) ||
     ("backdropFilter" in style && style.backdropFilter !== "none")
   );
 };
@@ -233,24 +242,28 @@ const getContainerDimensions = (
   const scroll: Position = {};
   const isPinchZoomedIn = (visualViewport?.scale ?? 1) > 1;
 
-  // An absolutely positioned element inside an unpositioned `html`/`body` resolves against the
-  // initial containing block, which is the viewport rather than the document.
-  if (isViewportElement(containerNode)) {
+  // An absolutely positioned element inside an unpositioned `html` resolves against the initial
+  // containing block, which is the viewport rather than the document.
+  if (isViewportContainer(containerNode)) {
     const documentElement = document.documentElement;
 
     totalWidth = documentElement.clientWidth;
     totalHeight = documentElement.clientHeight;
     width = visualViewport?.width ?? totalWidth;
     height = visualViewport?.height ?? totalHeight;
-    scroll.top = documentElement.scrollTop || containerNode.scrollTop;
-    scroll.left = documentElement.scrollLeft || containerNode.scrollLeft;
+    scroll.top = documentElement.scrollTop;
+    scroll.left = documentElement.scrollLeft;
 
     if (visualViewport) {
       top = visualViewport.offsetTop;
       left = visualViewport.offsetLeft;
     }
   } else {
-    ({ height, left, top, width } = getOffset(containerNode, false));
+    ({ left, top } = getOffset(containerNode, false));
+    // An overlay placed from the far edge, with `bottom` or `right`, is measured from the far
+    // edge of the padding box, inside any border or scrollbar.
+    width = containerNode.clientWidth;
+    height = containerNode.clientHeight;
     scroll.top = containerNode.scrollTop;
     scroll.left = containerNode.scrollLeft;
     totalWidth = width;
@@ -259,7 +272,7 @@ const getContainerDimensions = (
 
   // Safari reports a non-zero scroll offset for a non-scrolling body while pinch zoomed in,
   // unlike every other browser, which would shift the overlay by that amount.
-  if (isWebKit() && isViewportElement(containerNode) && isPinchZoomedIn) {
+  if (isWebKit() && isViewportContainer(containerNode) && isPinchZoomedIn) {
     scroll.top = 0;
     scroll.left = 0;
     top = visualViewport?.pageTop ?? 0;
@@ -652,16 +665,16 @@ export const calculatePosition = (options: PositionOptions): PositionResult => {
   const visualViewport = getVisualViewport();
   const container =
     overlayNode instanceof HTMLElement ? getContainingBlock(overlayNode) : document.documentElement;
-  const isViewportContainer = container === document.documentElement;
+  const isContainerViewport = isViewportContainer(container);
   const containerPositionStyle = window.getComputedStyle(container).position;
   const isContainerPositioned =
     Boolean(containerPositionStyle) && containerPositionStyle !== "static";
 
-  const childOffset: Offset = isViewportContainer
+  const childOffset: Offset = isContainerViewport
     ? getOffset(targetNode, false, targetRect)
     : getPosition(targetNode, container, false, targetRect);
 
-  if (!isViewportContainer) {
+  if (!isContainerViewport) {
     const { marginLeft, marginTop } = window.getComputedStyle(targetNode);
 
     childOffset.top += parseInt(marginTop, 10) || 0;
@@ -690,7 +703,7 @@ export const calculatePosition = (options: PositionOptions): PositionResult => {
   };
   let origin: { left: number; top: number };
 
-  if (isViewportElement(container)) {
+  if (isContainerViewport) {
     // The viewport's own dimensions already say where the visual viewport sits in its frame,
     // including Safari's pinch-zoom correction, so the origin is read back from them.
     origin = {
