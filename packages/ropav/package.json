@@ -1,6 +1,6 @@
 {
   "name": "ropav",
-  "version": "0.15.1",
+  "version": "0.16.0",
   "description": "Vapor-native Vue 3 component library — accessible by default, styled with framework-agnostic CSS.",
   "keywords": [
     "components",
