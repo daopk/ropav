@@ -153,7 +153,7 @@ describe("ariaHideOutside", () => {
 });
 
 describe("ariaHideOutside with a root", () => {
-  /** Two apps' windows side by side, each with content and an overlay of its own. */
+  /** Two regions side by side, each with content and an overlay of its own. */
   const region = () => {
     const root = document.createElement("section");
     const content = document.createElement("p");

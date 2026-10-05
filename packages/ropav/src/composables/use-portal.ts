@@ -34,8 +34,8 @@ const BODY: Portal = {
  * The portal that applies here: the nearest `PortalProvider`'s, or the document's body.
  *
  * Ported from React Aria's `UNSAFE_PortalProvider` (`getContainer`), with the root added: an
- * overlay rendered into a region of the page, say an app's window, belongs to that region and has
- * to leave the rest of the page alone — hidden, focused and pressed as it was.
+ * overlay rendered into a region of the page belongs to that region and has to leave the rest of
+ * the page alone — hidden, focused and pressed as it was.
  */
 export const usePortal = (): Portal => usePortalContext() ?? BODY;
 

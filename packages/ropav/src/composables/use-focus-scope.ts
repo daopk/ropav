@@ -37,7 +37,7 @@ export interface UseFocusScopeOptions {
   autoFocus?: MaybeRefOrGetter<boolean | "first" | "last" | undefined>;
   /**
    * The part of the page containment holds focus within. Focus moving to something outside it —
-   * another app's window beside this one — is left alone rather than pulled back, and Tab pressed
+   * another region beside this one — is left alone rather than pulled back, and Tab pressed
    * out there is not taken over. `null` or absent: the whole document.
    */
   region?: MaybeRefOrGetter<Element | null | undefined>;

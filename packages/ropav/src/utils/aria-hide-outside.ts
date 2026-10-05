@@ -22,7 +22,7 @@ interface Layer {
 
 /**
  * Active layers, innermost last. Only the innermost of the layers whose roots overlap watches the
- * DOM for new content: two modals open in two apps' windows side by side each keep watching their
+ * DOM for new content: two modals open in two regions side by side each keep watching their
  * own, while two nested in one place hand watching to the inner one.
  */
 const layers: Layer[] = [];
@@ -225,7 +225,7 @@ export const ariaHideOutside = (
  */
 export const keepVisible = (element: Element): (() => void) | undefined => {
   // The innermost layer hiding the part of the page the element is in, not merely the newest:
-  // that may belong to another app's window entirely.
+  // that may belong to another region entirely.
   const layer = layers.findLast((candidate) => candidate.root.contains(element)) ?? layers.at(-1);
 
   if (!layer || layer.visibleNodes.has(element)) return undefined;

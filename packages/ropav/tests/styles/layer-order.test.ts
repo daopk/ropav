@@ -8,10 +8,9 @@ import { describe, expect, it } from "vitest";
  *
  * A consumer that declares layers of its own has to name these four, in this order, before its
  * own — otherwise its `app` layer lands between `components` and `utilities`, or the two swap and
- * a utility passed through `class` stops beating the component rule it is correcting. The one app
- * in the world that consumes this package copies the line verbatim into its own entry, so
- * reordering or renaming here is a break that shows up as a layout that is subtly wrong rather
- * than as an error.
+ * a utility passed through `class` stops beating the component rule it is correcting. An app that
+ * declares its own layers copies this line verbatim into its entry, so reordering or renaming here
+ * breaks it silently: what shows up is a layout that is subtly wrong rather than an error.
  *
  * It has to be the first statement, too: `@layer` establishes order at first mention, so a later
  * one cannot reorder what an `@import` above it already introduced.

@@ -296,7 +296,7 @@ describe("useDismissable", () => {
   });
 
   describe("region", () => {
-    /** An overlay inside an app's window, the region it belongs to. */
+    /** An overlay inside the region it belongs to. */
     const setupInRegion = () => {
       const region = document.createElement("section");
       const content = document.createElement("button");
@@ -326,7 +326,7 @@ describe("useDismissable", () => {
 
       pressOutside(elsewhere);
 
-      // Another app's window is not behind this overlay: the press is meant for it, whole.
+      // Another region is not behind this overlay: the press is meant for it, whole.
       expect(onClose).not.toHaveBeenCalled();
       expect(reached).toHaveBeenCalledTimes(1);
 

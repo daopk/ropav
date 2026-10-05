@@ -53,8 +53,9 @@ report into from a dialog that is closing.
 ## Inside one part of the page
 
 Every overlay renders at the end of `body` and treats the whole document as the page behind it.
-When the app is one region of a larger page — a window in a desktop-like shell, a widget embedded
-in someone else's site — wrap it in `PortalProvider`, which renders no element of its own:
+When the app is one region of a larger page — a panel on a page it shares with other content, a
+widget embedded in someone else's site — wrap it in `PortalProvider`, which renders no element of
+its own:
 
 ```vue
 <script setup lang="ts">
@@ -89,8 +90,8 @@ const frame = useTemplateRef<HTMLElement>("frame");
 - **`root`** is the part of the page they belong to, usually an element holding both the app and
   the container. A modal makes only the root `inert`, holds focus and outside presses only within
   it, and leaves content added later outside it alone; a popover or tooltip flips and shifts to stay
-  inside it. The shell and other apps' windows stay live, and a modal in one window is not stacked
-  over a modal in another — <kbd>Esc</kbd> closes each in its own.
+  inside it. The rest of the page stays live, and a modal in one root is not stacked over a modal in
+  another — <kbd>Esc</kbd> closes each in its own.
 
 Leaving a prop out of a nested provider inherits the enclosing one's; `null` goes back to the body
 and the whole document. A template ref is `null` on the first render, so an overlay already open

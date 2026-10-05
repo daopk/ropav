@@ -84,7 +84,7 @@ export const useModalOverlay = (options: UseModalOverlayOptions): UseModalOverla
     isOpen,
     onClose: options.onClose,
     overlayRef: options.modalRef,
-    // A press in another app's window is not a press on this modal's backdrop.
+    // A press in another region of the page is not a press on this modal's backdrop.
     region: () => portal.root.value,
     shouldCloseOnInteractOutside: options.shouldCloseOnInteractOutside,
   });
@@ -106,7 +106,7 @@ export const useModalOverlay = (options: UseModalOverlayOptions): UseModalOverla
   useFocusScope({
     contain: true,
     isActive: isOpen,
-    // Focus that leaves for another app's window is let go rather than pulled back.
+    // Focus that leaves for another region of the page is let go rather than pulled back.
     region: () => portal.root.value,
     restoreFocus: true,
     scopeRef: options.modalRef,

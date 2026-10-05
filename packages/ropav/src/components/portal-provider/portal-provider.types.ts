@@ -13,8 +13,8 @@ export interface PortalProviderRootProps {
   /**
    * The part of the page the overlays below belong to, usually an element holding both the content
    * and the `container`. A modal makes only this element `inert` and holds focus and outside
-   * presses only within it, and a placed overlay flips and shifts to stay inside it — so an app
-   * rendered in a window of a larger page leaves the rest of that page alone.
+   * presses only within it, and a placed overlay flips and shifts to stay inside it — so content
+   * rendered into one region of a larger page leaves the rest of that page alone.
    *
    * Omitted, it inherits the enclosing provider's root; `null` goes back to the whole document.
    */

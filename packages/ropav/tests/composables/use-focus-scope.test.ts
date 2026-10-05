@@ -233,7 +233,7 @@ describe("useFocusScope", () => {
   });
 
   describe("region", () => {
-    /** An app's window: the scope sits in it beside the app's own content. */
+    /** A region of the page: the scope sits in it beside the region's own content. */
     const buildRegion = () => {
       const region = document.createElement("section");
       const content = document.createElement("button");
@@ -258,7 +258,7 @@ describe("useFocusScope", () => {
 
       expect(document.activeElement).toBe(root);
 
-      // Another app's window beside this one: focus going there is the user leaving, not escaping.
+      // Another region beside this one: focus going there is the user leaving, not escaping.
       elsewhere.focus();
 
       expect(document.activeElement).toBe(elsewhere);

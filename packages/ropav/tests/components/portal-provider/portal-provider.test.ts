@@ -10,7 +10,7 @@ const settle = async () => {
   await nextTick();
 };
 
-/** A page with a region of its own: `root` holds the app's content and the overlay `container`. */
+/** A page with a region of its own: `root` holds the content and the overlay `container`. */
 const region = () => {
   const chrome = document.createElement("button");
   const root = document.createElement("section");
@@ -108,8 +108,8 @@ describe("PortalProvider", () => {
 
     await settle();
 
-    // The shell, or another app's window: neither is behind this modal, so focus moving there is
-    // the user leaving rather than escaping, and Tab pressed there is theirs.
+    // The rest of the page is not behind this modal, so focus moving there is the user leaving
+    // rather than escaping, and Tab pressed there is theirs.
     chrome.focus();
 
     const tab = new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key: "Tab" });

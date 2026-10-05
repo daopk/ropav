@@ -14,8 +14,8 @@ import { isElementInAnyFocusScope } from "./focus-scope-registry";
  * and no single overlay can know whether another is nested inside it. React Aria keeps the same
  * list for the same reason.
  *
- * Innermost *within a region*: overlays in two apps' windows side by side are not stacked over one
- * another, so Escape still closes the older of two modals open at once in different windows.
+ * Innermost *within a region*: overlays in two regions side by side are not stacked over one
+ * another, so Escape still closes the older of two modals open at once in different regions.
  */
 interface OverlayLayer {
   region: () => Element | null;
@@ -48,7 +48,7 @@ export interface UseDismissableOptions {
    */
   shouldCloseOnInteractOutside?: (element: Element) => boolean;
   /**
-   * The part of the page the overlay belongs to. A press outside it — in another app's window
+   * The part of the page the overlay belongs to. A press outside it — in another region
    * beside this one — is neither an outside interaction nor swallowed, and the overlay is only
    * stacked with overlays whose region overlaps its own. `null` or absent: the whole document.
    */
@@ -145,7 +145,7 @@ export const useDismissable = (options: UseDismissableOptions): UseDismissableRe
     // is not what the user asked for. React Aria draws the same exemption in the same place.
     if (isInTopLayer(target)) return false;
 
-    // Another part of the page altogether — another app's window — is not behind this overlay, so
+    // Another part of the page altogether — another region — is not behind this overlay, so
     // a press there is not one to dismiss on, and not one to swallow either.
     const region = layer.region();
 

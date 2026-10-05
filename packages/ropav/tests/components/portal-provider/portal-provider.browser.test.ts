@@ -13,23 +13,23 @@ const settled = async (element: Element) => {
 };
 
 /**
- * A page with an app's window on it: the frame holds the app's content and is its overlays'
- * container and root, and a field outside it stands for the shell or another app.
+ * A page with a region on it: the frame holds the content and is its overlays' container and
+ * root, and a field outside it stands for the rest of the page.
  */
 const page = () => {
-  const shell = document.createElement("input");
+  const outside = document.createElement("input");
   const frame = document.createElement("section");
   const content = document.createElement("button");
 
-  shell.setAttribute("aria-label", "Shell field");
+  outside.setAttribute("aria-label", "Outside field");
   content.textContent = "App content";
   // A containing block for `position: fixed`, as the provider asks of a container.
   frame.style.cssText =
     "contain: layout; position: absolute; left: 40px; top: 120px; width: 360px; height: 280px";
   frame.append(content);
-  document.body.append(shell, frame);
+  document.body.append(outside, frame);
 
-  return { content, frame, shell };
+  return { content, frame, outside };
 };
 
 let cleanup: (() => Promise<void>) | undefined;
@@ -67,19 +67,19 @@ const openModalIn = async (frame: HTMLElement) => {
 
 describe("PortalProvider in a browser", () => {
   it("makes only its root inert, and leaves the rest of the page usable", async () => {
-    const { content, frame, shell } = page();
+    const { content, frame, outside } = page();
 
     await openModalIn(frame);
 
     expect(content.inert).toBe(true);
-    expect(shell.inert).toBe(false);
+    expect(outside.inert).toBe(false);
 
-    // Focus and typing reach the shell, and the modal neither pulls focus back nor closes.
-    await userEvent.click(shell);
+    // Focus and typing reach the field outside, and the modal neither pulls focus back nor closes.
+    await userEvent.click(outside);
     await userEvent.keyboard("hello");
 
-    expect(document.activeElement).toBe(shell);
-    expect(shell.value).toBe("hello");
+    expect(document.activeElement).toBe(outside);
+    expect(outside.value).toBe("hello");
     expect(frame.querySelector("[role='dialog']")).not.toBeNull();
   });
 
@@ -98,10 +98,10 @@ describe("PortalProvider in a browser", () => {
 });
 
 /**
- * An app's window away from the page origin: the window is the root, and the overlays go into a
- * layer covering it — or straight into the window. The triggers are placed against the window.
+ * A region away from the page origin: the region is the root, and the overlays go into a layer
+ * covering it — or straight into the region. The triggers are placed against the region.
  */
-const windowAt = (layered: boolean) => {
+const regionAt = (layered: boolean) => {
   const host = document.createElement("section");
 
   host.style.cssText = "position: absolute; left: 120px; top: 200px; width: 280px; height: 360px";
@@ -125,7 +125,7 @@ const openIn = async (
   open: "popover" | "tooltip",
   triggers: { popover?: string; tooltip?: string },
 ) => {
-  const { container, host } = windowAt(layered);
+  const { container, host } = regionAt(layered);
   const props = reactive({
     container,
     open: undefined as "popover" | "tooltip" | undefined,
@@ -135,7 +135,7 @@ const openIn = async (
   });
   const result = renderVapor(PlacementFixture, { props });
 
-  // The triggers belong to the window, so they are positioned against it.
+  // The triggers belong to the region, so they are positioned against it.
   host.append(result.container);
   cleanup = async () => result.unmount();
 
@@ -202,11 +202,11 @@ describe.each([
 });
 
 /**
- * An app's window whose overlay container is also the region that scrolls, already scrolled when
- * the overlay opens. The triggers sit in the scrolled content, so they and the overlays move
- * together as it scrolls.
+ * A region whose overlay container is also the element that scrolls, already scrolled when the
+ * overlay opens. The triggers sit in the scrolled content, so they and the overlays move together
+ * as it scrolls.
  */
-const scrolledWindowAt = (containerStyle: string) => {
+const scrolledRegionAt = (containerStyle: string) => {
   const host = document.createElement("section");
   const container = document.createElement("div");
   const content = document.createElement("div");
@@ -228,7 +228,7 @@ const openScrolledIn = async (
   open: "popover" | "tooltip",
   triggers: { popover?: string; tooltip?: string },
 ) => {
-  const { container, host } = scrolledWindowAt(containerStyle);
+  const { container, host } = scrolledRegionAt(containerStyle);
   const props = reactive({
     container,
     open: undefined as "popover" | "tooltip" | undefined,
