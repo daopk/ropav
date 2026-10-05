@@ -22,6 +22,10 @@ export type Renamed = Record<string, string>;
 
 /** A codemod that renames selectors writes its map here; entries above it are written by hand. */
 export const RENAMED: Renamed = {
+  // Weightier rather than moved: the clear button's size now outweighs `.rp-close-button` in any
+  // file order. Same declarations, same element.
+  ".rp-search-field .rp-search-field__clear-button": ".rp-search-field__clear-button",
+
   // The rule did not move, it narrowed: the resize cursor now excludes the disabled rail rather
   // than outweighing it. Same declaration, same element measured — only the name is longer.
   '.rp-sidebar__rail--resizable:not([data-disabled="true"])': ".rp-sidebar__rail--resizable",
@@ -30,6 +34,10 @@ export const RENAMED: Renamed = {
   // is closed, since opening it is precisely giving each toast its own height back.
   '.rp-toast:not([data-frontmost="true"]):not([data-expanded="true"])':
     '.rp-toast:not([data-frontmost="true"])',
+
+  // The same weighting, reaching the icon nested inside that rule.
+  ':is(.rp-search-field .rp-search-field__clear-button) [data-slot="close-button-icon"]':
+    ':is(.rp-search-field__clear-button) [data-slot="close-button-icon"]',
 
   // Narrowed rather than moved: the trigger's hover fill now stands down while the clear button
   // inside it is the thing being hovered, so the two do not both light up. Same declarations.

@@ -230,7 +230,11 @@
   height: calc(var(--rp-spacing) * 4);
 }
 
-.rp-search-field__clear-button {
+/* Under the field's root for the weight: the button is a close button too, and `.rp-close-button`
+ * sizes it at the same single class. The two only came out this way round because this file
+ * followed that one, which an app importing the component files in its own order, or loading
+ * them later than the first paint, does not promise. */
+.rp-search-field .rp-search-field__clear-button {
   margin-inline-end: calc(var(--rp-spacing) * 2);
   width: calc(var(--rp-spacing) * 5);
   height: calc(var(--rp-spacing) * 5);

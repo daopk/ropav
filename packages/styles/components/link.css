@@ -1,5 +1,11 @@
-/* Base link styles */
-.rp-link {
+/* Base link styles.
+ *
+ * Weightless, through `:where()`, so a link wearing a button's classes - `buttonVariants()` on
+ * a `Link` - takes its size, shape, colour and transitions from `.rp-button` wherever the two
+ * files sit. At the class's weight the two tied, and the button only won by coming later; an app
+ * importing the component files in its own order, or loading them later than the first paint,
+ * turned that the other way round. The states below keep the class's weight. */
+:where(.rp-link) {
   position: relative;
   display: inline-flex;
   height: fit-content;
@@ -27,7 +33,9 @@
 
   /* Cursor */
   cursor: var(--rp-cursor-interactive);
+}
 
+.rp-link {
   /* Hover state */
   @media (hover: hover) {
     &:hover,
