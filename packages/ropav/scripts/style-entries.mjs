@@ -8,10 +8,10 @@ import { UNSTYLED_DIRS } from "./component-dirs.mjs";
  * `ropav/styles/<name>`, written into `dist/styles/` by `build.mjs`.
  *
  * `ropav/styles` is everything at once. These are the same rules cut so an app can take the core
- * and the components it renders with its first paint, and every other component later — a host
- * page whose remote apps arrive on demand. A component's entry carries the files of everything
- * it renders as well as its own, which is the part an app cannot be expected to know: a `Modal`
- * draws a `CloseButton`, a `ListBox` draws `VirtualizerItem`s.
+ * and the components it renders with its first paint, and every other component later — when the
+ * code that draws them is split off and loaded on demand. A component's entry carries the files of
+ * everything it renders as well as its own, which is the part an app cannot be expected to know: a
+ * `Modal` draws a `CloseButton`, a `ListBox` draws `VirtualizerItem`s.
  *
  * No component entry carries the core. One loaded late would bring the default theme back after
  * the app's own `@layer theme` tokens, and the later of two declarations in one layer wins.

@@ -8,8 +8,8 @@ import { compileCss } from "../../../styles/scripts/bundle-css.mjs";
  * `@ropav/styles` in two halves: `core.css`, everything the component files stand on, and
  * `components.css`, the component files and nothing else.
  *
- * The split exists so an app can take the core with its first paint and the components later —
- * a host page whose remote apps arrive on demand. Two properties make that safe, and both are
+ * The split exists so an app can take the core with its first paint and the components later, with
+ * the code that draws them when it is loaded on demand. Two properties make that safe, and both are
  * pinned here rather than left to the comments that state them:
  *
  * - the halves are the whole entry, rule for rule, in the same layers. A rule that fell between

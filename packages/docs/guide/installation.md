@@ -167,13 +167,13 @@ bundler keeps the first copy.
 
 ### Loading the rest later
 
-An app whose components arrive after its first paint — remote apps on a host page, a route split
-into its own chunk — can take the core and its own components up front, and every other
-component's rules when the code that draws them loads:
+An app whose components arrive after its first paint — a route split into its own chunk, a feature
+loaded only when it is asked for — can take the core and its own components up front, and every
+other component's rules when the code that draws them loads:
 
 ```ts
 // Wherever the late code is loaded: the rules arrive with it.
-const [remote] = await Promise.all([import("./remote-app"), import("ropav/styles/components")]);
+const [page] = await Promise.all([import("./settings-page"), import("ropav/styles/components")]);
 ```
 
 `ropav/styles/components` is every component's rules and nothing else. Wait for it before
