@@ -33,6 +33,22 @@ export const BARREL_ONLY_DIRS = new Set(["dnd", "icons"]);
 export const SKIP_DIRS = new Set([...INTERNAL_DIRS, ...BARREL_ONLY_DIRS]);
 
 /**
+ * Directories with no file in `@ropav/styles/components`. Every other directory has one of its
+ * own name, and `scripts/style-entries.mjs` builds each component's stylesheet entry from that.
+ * Providers render nothing of their own, `form` is a plain `<form>`, and `overlay` and `icons`
+ * render inside a host that brings the classes, so a stylesheet of their own would be empty.
+ */
+export const UNSTYLED_DIRS = new Set([
+  "dnd",
+  "form",
+  "i18n-provider",
+  "icons",
+  "overlay",
+  "portal-provider",
+  "router-provider",
+]);
+
+/**
  * Read `src/components` and sort its directories into what the packaging pipeline needs.
  *
  * @param {string} componentsDir Absolute or cwd-relative path to `src/components`.

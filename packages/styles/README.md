@@ -56,7 +56,7 @@ Either way you get, in layer order (`theme, base, components, utilities`):
 
 - the scoped reset, and the keyframes the components animate through
 - base styles and the scrollbar system
-- the component layer — 88 files, one per component
+- the component layer — 89 files, one per component
 - the default theme: tokens for light and dark, and every token a rule names directly
 - the classes offered by name rather than through a component
 
@@ -67,27 +67,31 @@ the browser's default, which is a serif.
 
 ### Importing only what you need
 
-Everything the components stand on comes first, once — the registrations, the motion switch and
-the tokens are not optional, and leaving one out fails quietly rather than loudly:
+The entry is two halves, each importable on its own: `core.css`, everything the components stand
+on, and `components.css`, every component file in the `components` layer. Take the core first and
+once, then the component files you draw:
 
 ```css
-@import "@ropav/styles/base/reset.css";
-@import "@ropav/styles/base/base.css" layer(base);
-@import "@ropav/styles/base/scrollbar.css" layer(base);
-@import "@ropav/styles/motion.css";
-@import "@ropav/styles/slots.css";
-@import "@ropav/styles/animations.css";
-@import "@ropav/styles/themes/default";
-@import "@ropav/styles/themes/shared/tokens.css";
+@import "@ropav/styles/core.css";
 
 @import "@ropav/styles/components/button.css" layer(components);
 @import "@ropav/styles/components/chip.css" layer(components);
 ```
 
-> `./bundled.css` and the pattern subpaths — `./components/*.css`, `./base`, `./base/*.css`, `./themes/*`,
+The core is the layer order, the reset, the base styles, the registrations, the motion switch,
+the keyframes, the default theme, the tokens and the utility classes; leaving any of it out fails
+quietly rather than loudly. A component file holds that component's rules only — a modal's close
+button is `close-button.css` — and `ropav/styles/<name>` is the same thing with what each
+component draws already listed.
+
+`components.css` carries no theme, so it is the half that can arrive after the first paint: a
+theme loaded then would land after the app's own `@layer theme` tokens and win over them.
+
+> `./bundled.css` and the pattern subpaths — `./base`, `./base/*.css`, `./themes/*`,
 > `./themes/*.css`, `./utilities` — exist **only in the published tarball**;
 > `clean-package.config.json` writes them into `exports` at `prepack` time. Inside the workspace, import the
-> files from `packages/styles/` by relative path instead.
+> files from `packages/styles/` by relative path instead. `./core.css`, `./components.css` and
+> `./components/*.css` resolve in both.
 
 ### Variants
 
@@ -104,7 +108,9 @@ Every component also has its own subpath so bundlers can drop the rest:
 
 ```
 packages/styles/
-├── index.css              # Entry point — declares layer order, then imports everything below
+├── index.css              # Entry point — declares layer order, then the two halves below
+├── core.css               # Everything the component files stand on: base, theme, tokens, utilities
+├── components.css         # Every component file, in `@layer components`, and nothing else
 ├── motion.css             # `--rp-motion`, the switch every animated declaration reads
 ├── slots.css              # `@property` registrations the component rules compose through
 ├── animations.css         # Every keyframe, names being document-global

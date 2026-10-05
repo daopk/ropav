@@ -1,0 +1,42 @@
+/* Ropav Styles - the core: everything the component files are written on top of, and none of them.
+ *
+ * Half of the full entry, `index.css`, which is this and `components.css`. An app that takes the
+ * component files one at a time, or loads them later than the first paint, takes this once and
+ * first. Every line is load-bearing and fails quietly when missing: an unregistered slot takes its
+ * whole declaration down, a missing token resolves to nothing, and a component that renders the
+ * `scrollbar` class needs the utilities below. */
+
+/* The layer order, and it is a contract: a consumer that declares its own layers has to name
+ * these four in this order before its own, or a component rule and the utility correcting it
+ * swap places. First statement in the file, because a later `@layer` cannot reorder them. */
+@layer theme, base, components, utilities;
+
+/* Base styles. The reset comes first: it is what everything below is written on top of, and it
+ * layers itself so that it lands whether or not the page also carries a reset of its own. */
+@import "./base/reset.css";
+@import "./base/base.css" layer(base);
+@import "./base/scrollbar.css" layer(base);
+
+/* Whether motion is allowed, as one inherited property the animated declarations read. */
+@import "./motion.css";
+
+/* The `@property` registrations the component rules compose through. Unlayered, and before the
+ * rules that read them - an unregistered slot makes the declaration reading it invalid. */
+@import "./slots.css";
+
+/* The keyframes the components animate through, and the slots those read. Same reason to come
+ * first, and keyframe names are document-global, so this is the only place they are declared. */
+@import "./animations.css";
+
+/* Default theme. Declares its own `@layer theme`; the bundled alternatives in
+ * `themes/*.css` are opt-in and layer themselves the same way. Ahead of the component files
+ * rather than after them, which the layers make invisible: a `theme` rule weighs the same
+ * against a `components` rule wherever either one is written. */
+@import "./themes/default.css";
+
+/* Every token a rule spells directly, as plain custom properties. */
+@import "./themes/shared/tokens.css";
+
+/* The classes offered by name rather than through a component. Declares its own
+ * `@layer utilities`, because landing after `components` is half of what they mean. */
+@import "./utilities/index.css";

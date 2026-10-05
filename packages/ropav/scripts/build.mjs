@@ -1,13 +1,14 @@
 /* eslint-disable no-console */
 import { execSync } from "node:child_process";
 import { existsSync } from "node:fs";
-import { cp, readdir, readFile, rename, rm, writeFile } from "node:fs/promises";
+import { cp, mkdir, readdir, readFile, rename, rm, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import zlib from "node:zlib";
 
 import { readComponentDirs } from "./component-dirs.mjs";
+import { buildStyleEntries, readComponentOrder, readRenderGraph } from "./style-entries.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
@@ -31,7 +32,26 @@ async function buildStyles() {
     await cp(path.join(rootDir, "src", file), path.join(distDir, file));
   }
 
-  console.log("✅ Styles export created successfully");
+  // The same rules cut into the core, the components, and one entry per component.
+  const require = createRequire(import.meta.url);
+  const stylesRoot = path.dirname(require.resolve("@ropav/styles/package.json"));
+  const entries = buildStyleEntries({
+    components: readComponentDirs(path.join(rootDir, "src/components")).components,
+    graph: readRenderGraph(path.join(rootDir, "src/components")),
+    order: readComponentOrder(
+      await readFile(path.join(stylesRoot, "components/index.css"), "utf8"),
+    ),
+  });
+
+  await mkdir(path.join(distDir, "styles"), { recursive: true });
+
+  for (const [file, css] of Object.entries(entries)) {
+    await writeFile(path.join(distDir, "styles", file), css);
+  }
+
+  console.log(
+    `✅ Styles export created successfully (${Object.keys(entries).length} split entries)`,
+  );
 }
 
 /**

@@ -19,6 +19,10 @@ import { describe, expect, it } from "vitest";
 
 const ENTRIES = {
   "@ropav/styles": "../../../styles/index.css",
+  // The two halves of the entry above. Either can be the first stylesheet a page meets — an app
+  // that loads the components later still might list them first — so each carries the order.
+  "@ropav/styles/components.css": "../../../styles/components.css",
+  "@ropav/styles/core.css": "../../../styles/core.css",
   ropav: "../../src/styles.css",
 };
 
@@ -43,6 +47,8 @@ describe("the published entries", () => {
 
     expect(opening).toEqual({
       "@ropav/styles": ORDER,
+      "@ropav/styles/components.css": ORDER,
+      "@ropav/styles/core.css": ORDER,
       // Its own first statement is the import of the one above, which carries the order.
       ropav: '@import "@ropav/styles";',
     });

@@ -4,7 +4,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { readComponentDirs } from "./component-dirs.mjs";
+import { readComponentDirs, UNSTYLED_DIRS } from "./component-dirs.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
@@ -52,6 +52,21 @@ export function buildExports(components) {
     // The compiled stylesheet, for a consumer with no build step to resolve the entry above.
     "./styles/bundled.css": "./dist/ropav.min.css",
   };
+
+  // The entry above in parts, for an app that loads the component rules later than the core:
+  // the core, every component, and one per component with what it renders (`style-entries.mjs`).
+  const styleEntries = [
+    "core",
+    "components",
+    ...components.filter((name) => !UNSTYLED_DIRS.has(name)),
+  ];
+
+  for (const name of styleEntries) {
+    exports[`./styles/${name}`] = {
+      style: `./dist/styles/${name}.css`,
+      default: `./dist/styles/${name}.css`,
+    };
+  }
 
   /* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 

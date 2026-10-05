@@ -18,6 +18,10 @@ so a bundler drops what is never imported. The stylesheet is a separate import:
 import "ropav/styles/bundled.css";
 ```
 
+Through a bundler, it also comes in parts: `ropav/styles/core` once, then `ropav/styles/<name>` for
+each component used (`ropav/styles/modal`), or `ropav/styles/components` for all of them. The
+core holds the theme, so it is never the part loaded late.
+
 Every component takes `class`, `aria-label`, `aria-labelledby` and `aria-describedby`. Props are
 camelCase in the types and kebab-case in a template: `itemTextValue` is written `item-text-value`.
 

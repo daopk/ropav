@@ -3,7 +3,12 @@ import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { readComponentDirs } from "../../scripts/component-dirs.mjs";
+import { readComponentDirs, UNSTYLED_DIRS } from "../../scripts/component-dirs.mjs";
+import {
+  buildStyleEntries,
+  readComponentOrder,
+  readRenderGraph,
+} from "../../scripts/style-entries.mjs";
 import { buildExports } from "../../scripts/update-exports.mjs";
 
 /*
@@ -69,6 +74,18 @@ describe("@ropav/styles style subpaths", () => {
   });
 
   /*
+   * The two halves of the entry, for an app that loads the component rules later than the core.
+   * `ropav`'s own split entries are built on these by name, so a missing one is a broken import
+   * in every installed copy rather than a missing feature.
+   */
+  it("offers the entry's two halves", () => {
+    expect([targets(exports["./core.css"]), targets(exports["./components.css"])]).toEqual([
+      ["./dist/core.css", "./dist/core.css"],
+      ["./dist/components.css", "./dist/components.css"],
+    ]);
+  });
+
+  /*
    * A CDN ignores `exports` and reads these, which is what makes a bare
    * `<link href="https://cdn.jsdelivr.net/npm/@ropav/styles">` land on the stylesheet.
    */
@@ -106,5 +123,110 @@ describe("@ropav/styles style subpaths", () => {
     const dropped = Object.keys(source).filter((subpath) => !(subpath in exports));
 
     expect(dropped).toEqual([]);
+  });
+});
+
+/*
+ * `ropav/styles/core`, `ropav/styles/components` and `ropav/styles/<name>`: the same rules as
+ * `ropav/styles`, cut so an app can load the components it renders first and the rest later.
+ *
+ * What these pin is the part nobody would notice going wrong. A component entry that left out
+ * something its component draws renders that part unstyled in exactly the apps that took the
+ * entry instead of the whole sheet; one that carried the core would bring the default theme back
+ * over an app's tokens whenever it loaded late. Neither throws.
+ */
+describe("ropav split style entries", () => {
+  const componentsDir = path.join(ropavRoot, "src/components");
+  const { components } = readComponentDirs(componentsDir);
+  const graph = readRenderGraph(componentsDir) as Map<string, string[]>;
+  const order = readComponentOrder(
+    fs.readFileSync(path.join(stylesRoot, "components/index.css"), "utf8"),
+  ) as string[];
+  const entries = buildStyleEntries({ components, graph, order }) as Record<string, string>;
+  const exports = buildExports(components) as Record<string, unknown>;
+
+  /** The component files an entry imports, in its order. */
+  const filesOf = (css: string) =>
+    [...css.matchAll(/@ropav\/styles\/components\/([a-z0-9-]+)\.css/g)].map(([, name]) => name);
+
+  const dirs = fs
+    .readdirSync(componentsDir, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name);
+
+  it("finds a stylesheet for every directory not listed as unstyled", () => {
+    const styled = new Set(order);
+
+    expect(dirs.filter((dir) => !styled.has(dir) && !UNSTYLED_DIRS.has(dir))).toEqual([]);
+    expect([...UNSTYLED_DIRS].filter((dir) => styled.has(dir) || !dirs.includes(dir))).toEqual([]);
+  });
+
+  it("reads what a component draws, and not the contexts it reads", () => {
+    expect(graph.get("modal")).toContain("close-button");
+    expect(graph.get("sidebar")).toContain("drawer");
+    expect(graph.get("dropdown")).toContain("menu");
+    // `useButtonGroupContext` and `useFieldsetContext` are imports, but nothing drawn.
+    expect(graph.get("button")).toEqual([]);
+  });
+
+  it("offers an entry for every styled component, and the core and components halves", () => {
+    const styled = components.filter((name) => !UNSTYLED_DIRS.has(name));
+
+    expect(Object.keys(entries).sort()).toEqual(
+      ["components.css", "core.css", ...styled.map((name) => `${name}.css`)].sort(),
+    );
+    expect(
+      Object.keys(exports)
+        .filter((subpath) => subpath.startsWith("./styles/") && subpath !== "./styles/bundled.css")
+        .map((subpath) => `${subpath.slice("./styles/".length)}.css`)
+        .sort(),
+    ).toEqual(Object.keys(entries).sort());
+  });
+
+  it("lists each entry's files in the order the full sheet has them", () => {
+    const disordered = Object.entries(entries).filter(([, css]) => {
+      const files = filesOf(css);
+
+      return files.join() !== order.filter((name) => files.includes(name)).join();
+    });
+
+    expect(disordered.map(([file]) => file)).toEqual([]);
+  });
+
+  it("carries what a component draws along with its own file", () => {
+    expect(filesOf(entries["modal.css"]!)).toEqual(["close-button", "modal"]);
+    expect(filesOf(entries["sidebar.css"]!)).toContain("drawer");
+  });
+
+  it("opens every component entry with the layer order, and keeps the core out of all of them", () => {
+    const components_ = Object.entries(entries).filter(
+      ([file]) => file !== "core.css" && file !== "components.css",
+    );
+
+    expect(
+      components_
+        .filter(
+          ([, css]) =>
+            !css.split("\n")[1]!.startsWith("@layer theme, base, components, utilities;"),
+        )
+        .map(([file]) => file),
+    ).toEqual([]);
+    expect(
+      components_
+        .filter(([, css]) => /core\.css|themes\/|@ropav\/styles"|index\.css/.test(css))
+        .map(([file]) => file),
+    ).toEqual([]);
+    expect(entries["components.css"]).not.toMatch(/core\.css|themes\//);
+  });
+
+  it("brings the override block wherever `button-group` goes, and into the components half", () => {
+    const carrying = Object.entries(entries)
+      .filter(([, css]) => css.includes("styles-overrides.css"))
+      .map(([file]) => file);
+    const withGroup = Object.entries(entries)
+      .filter(([, css]) => filesOf(css).includes("button-group"))
+      .map(([file]) => file);
+
+    expect(carrying.sort()).toEqual([...withGroup, "components.css"].sort());
   });
 });

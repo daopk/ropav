@@ -40,6 +40,18 @@
       "style": "./index.css",
       "default": "./index.css"
     },
+    "./core.css": {
+      "style": "./core.css",
+      "default": "./core.css"
+    },
+    "./components.css": {
+      "style": "./components.css",
+      "default": "./components.css"
+    },
+    "./components/*.css": {
+      "style": "./components/*.css",
+      "default": "./components/*.css"
+    },
     "./animations.css": {
       "style": "./animations.css",
       "default": "./animations.css"

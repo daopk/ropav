@@ -26,6 +26,7 @@ const stylesRoot = path.resolve(__dirname, "..");
  * floor at the mercy of a data update: the same source would start emitting different CSS on a
  * lockfile bump, and the one thing a floor has to do is not move on its own.
  */
+/** @param {number} major @param {number} [minor] */
 const version = (major, minor = 0) => (major << 16) | (minor << 8);
 
 const TARGETS = { chrome: version(111), firefox: version(128), safari: version(16, 4) };
@@ -50,15 +51,58 @@ const INCLUDE = Features.Nesting;
 const EXCLUDE = Features.LightDark | Features.DirSelector;
 
 /**
+ * The `exports` entry for `subpath`, and what its `*` stood for.
+ *
+ * A literal key wins; otherwise the pattern with the longest part before its `*` does, which is
+ * Node's rule too — `./components/*.css` answers `./components/button.css` ahead of
+ * `./components/*`, the script half of the map.
+ */
+/** @typedef {string | Record<string, string>} ExportEntry */
+
+/**
+ * @param {Record<string, ExportEntry> | undefined} exports
+ * @param {string} subpath
+ * @returns {{ entry: ExportEntry, star: string | undefined } | undefined}
+ */
+const matchExport = (exports, subpath) => {
+  if (exports?.[subpath]) return { entry: exports[subpath], star: undefined };
+
+  const [key] = Object.keys(exports ?? {})
+    .filter((candidate) => {
+      const [before = "", after, extra] = candidate.split("*");
+
+      if (after === undefined || extra !== undefined) return false;
+
+      return (
+        subpath.length >= before.length + after.length &&
+        subpath.startsWith(before) &&
+        subpath.endsWith(after)
+      );
+    })
+    .sort((a, b) => b.indexOf("*") - a.indexOf("*") || b.length - a.length);
+
+  if (!key) return undefined;
+
+  const [before = "", after = ""] = key.split("*");
+
+  return {
+    entry: /** @type {ExportEntry} */ (exports?.[key]),
+    star: subpath.slice(before.length, subpath.length - after.length),
+  };
+};
+
+/**
  * `@import` targets, resolved the way a bundler resolves them rather than as paths.
  *
- * Only `packages/ropav`'s entry needs this: it imports `@ropav/styles` by name, and the answer
+ * `packages/ropav`'s entries need this: they import `@ropav/styles` by name, and the answer
  * is whatever the `style` condition in that package's `exports` names — the same condition a
  * consumer's build reads, so the artifact is built through the map it is published behind.
  */
 const resolver = {
+  /** @param {string} file */
   read: (file) => readFile(file, "utf8"),
 
+  /** @param {string} specifier @param {string} from */
   resolve(specifier, from) {
     if (specifier.startsWith(".") || path.isAbsolute(specifier)) {
       return path.resolve(path.dirname(from), specifier);
@@ -70,8 +114,10 @@ const resolver = {
 
     const require = createRequire(from);
     const manifest = require.resolve(`${name}/package.json`);
-    const entry = require(manifest).exports?.[subpath];
-    const target = typeof entry === "string" ? entry : (entry?.style ?? entry?.default);
+    const match = matchExport(require(manifest).exports, subpath);
+    const entry = match?.entry;
+    const named = typeof entry === "string" ? entry : (entry?.["style"] ?? entry?.["default"]);
+    const target = match?.star === undefined ? named : named?.replaceAll("*", match.star);
 
     if (!target) throw new Error(`\`${specifier}\` names no stylesheet (imported by ${from})`);
 
@@ -79,7 +125,13 @@ const resolver = {
   },
 };
 
-export async function bundleCss({ entry, out }) {
+/**
+ * The compiled stylesheet for `entry`, as text. What `bundleCss` writes, for a test to read.
+ *
+ * @param {string} entry Absolute path.
+ * @returns {Promise<string>}
+ */
+export async function compileCss(entry) {
   const { code } = await bundleAsync({
     exclude: EXCLUDE,
     filename: entry,
@@ -88,6 +140,13 @@ export async function bundleCss({ entry, out }) {
     resolver,
     targets: TARGETS,
   });
+
+  return code.toString();
+}
+
+/** @param {{ entry: string, out: string }} paths Absolute paths. */
+export async function bundleCss({ entry, out }) {
+  const code = await compileCss(entry);
 
   await writeFile(out, code);
 

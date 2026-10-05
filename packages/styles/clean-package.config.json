@@ -19,6 +19,14 @@
         "style": "./dist/index.css",
         "default": "./dist/index.css"
       },
+      "./core.css": {
+        "style": "./dist/core.css",
+        "default": "./dist/core.css"
+      },
+      "./components.css": {
+        "style": "./dist/components.css",
+        "default": "./dist/components.css"
+      },
       "./animations.css": {
         "style": "./dist/animations.css",
         "default": "./dist/animations.css"

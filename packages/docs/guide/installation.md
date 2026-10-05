@@ -63,9 +63,9 @@ The bundled themes are finished CSS too, so a second `<link>` is all another pal
 
 ### Source, through your bundler
 
-Take the entry instead and you get to drop the components you never import. It is a list of
-`@import` statements, so anything that follows them resolves it — Vite, webpack, Parcel, a
-Tailwind build, `@import` in the browser.
+Take the entry instead and your build resolves it, which is also what lets you take less of it
+([below](#importing-only-what-you-need)). It is a list of `@import` statements, so anything that
+follows them resolves it — Vite, webpack, Parcel, a Tailwind build, `@import` in the browser.
 
 ```css
 @import "ropav/styles";
@@ -144,33 +144,67 @@ writes, and a name nothing writes cannot be found to be wrong.
 
 ## Importing only what you need
 
-If you ship only a handful of components, take their CSS one file at a time instead of the whole
-entry. These are subpaths of `@ropav/styles` rather than of `ropav`, so install it yourself as
-well — a package manager that does not flatten `node_modules` will not resolve a dependency's
-dependency. Everything the components stand on comes first, once:
+`ropav/styles` is every component's rules at once, and most of it is rules for components a given
+app never draws. The same stylesheet comes in parts: the core, which everything stands on, and one
+entry per component.
 
 ```css
-@import "@ropav/styles/base/reset.css";
-@import "@ropav/styles/base/base.css" layer(base);
-@import "@ropav/styles/base/scrollbar.css" layer(base);
-@import "@ropav/styles/motion.css";
-@import "@ropav/styles/slots.css";
-@import "@ropav/styles/animations.css";
-@import "@ropav/styles/themes/default";
-@import "@ropav/styles/themes/shared/tokens.css";
-
-@import "@ropav/styles/components/button.css" layer(components);
-@import "@ropav/styles/components/chip.css" layer(components);
+@import "ropav/styles/core";
+@import "ropav/styles/button";
+@import "ropav/styles/modal";
+@import "ropav/styles/textfield";
 ```
 
-None of the first block is optional, and leaving one out fails quietly rather than loudly:
-`slots.css` registers the custom properties a rule composes a shadow or a transform through, and
-an unregistered one takes its whole declaration down to the property's initial value — a border
-sized `1px` in the source rendering as no border at all. `motion.css` is the switch that reduced
-motion turns off; `tokens.css` holds every size, weight and curve a rule names.
+The core comes first and once: the layer order, the reset, the motion switch, the custom
+property registrations, the keyframes, the default theme, the tokens and the utility classes. A
+component entry is that component's rules in the `components` layer, plus the rules of whatever
+it draws itself — `modal` brings the close button its `ModalCloseTrigger` renders. What you put
+inside it is yours to import: a `TextField` holding a `Label` and an `Input` takes `label` and
+`input` as well. The names are the component subpaths, `ropav/<name>`.
 
-The layer wrapper on the components is not optional either — a component rule has to land in
-`components` for a utility you pass through `class` to win on layer order.
+Order between component entries does not matter, and neither does importing one twice; your
+bundler keeps the first copy.
+
+### Loading the rest later
+
+An app whose components arrive after its first paint — remote apps on a host page, a route split
+into its own chunk — can take the core and its own components up front, and every other
+component's rules when the code that draws them loads:
+
+```ts
+// Wherever the late code is loaded: the rules arrive with it.
+const [remote] = await Promise.all([import("./remote-app"), import("ropav/styles/components")]);
+```
+
+`ropav/styles/components` is every component's rules and nothing else. Wait for it before
+rendering the components it styles, or they paint unstyled for a frame. Two rules make loading it
+late safe:
+
+- **Never load `ropav/styles` or `ropav/styles/core` late.** Both carry the default theme. Your
+  own tokens sit in `@layer theme` after it, and a theme arriving later lands after them and wins.
+- **Load the core first.** It fixes the layer order for the page; every part restates that order,
+  so a part read first still sets it right, but the core is what the rest is written on.
+
+Rules already on the page are restated in the same order, so the late copy lands where the page
+already is.
+
+### From `@ropav/styles` directly
+
+The parts above are built from `@ropav/styles`'s own files, and those are importable one at a
+time too. This is the lower level: you list everything a component draws yourself, and you add
+the layer wrapper. Install `@ropav/styles` as well — a package manager that does not flatten
+`node_modules` will not resolve a dependency's dependency.
+
+```css
+@import "@ropav/styles/core.css";
+
+@import "@ropav/styles/components/close-button.css" layer(components);
+@import "@ropav/styles/components/modal.css" layer(components);
+```
+
+`core.css` is the whole first block. The layer wrapper on the components is not optional — a
+component rule has to land in `components` for a utility you pass through `class` to win on layer
+order. `@ropav/styles/components.css` is every component file, wrapped.
 
 The JavaScript side is already per-component: every component has its own subpath, so a bundler
 drops what you never import.

@@ -1,0 +1,13 @@
+/* Ropav Styles - every component file, in the `components` layer, and nothing else.
+ *
+ * The other half of the full entry, `index.css`. No theme here on purpose: an app may load this
+ * after its first paint, after its own tokens have joined `@layer theme`, and a theme arriving
+ * then would land after them in that layer and win. Rules in `components` can arrive late
+ * safely - the core has already fixed the layer order, and this file restates each component's
+ * rules in full, in their order. */
+
+/* Restated so the file means the same thing imported before the core as after it. */
+@layer theme, base, components, utilities;
+
+/* Base component structures (unstyled) */
+@import "./components/index.css" layer(components);
