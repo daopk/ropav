@@ -8,6 +8,8 @@ defineProps<
   SliderProps & {
     /** Leaves the visible label out, so the group has to name itself. */
     withoutLabel?: boolean;
+    /** Leaves the output out, so a bare track is all the slider holds. */
+    withoutOutput?: boolean;
     /** Name submitted with the form, put on the first thumb. */
     name?: string;
     /** `id` of a form the thumb submits with, for a slider rendered outside it. */
@@ -37,7 +39,7 @@ defineEmits<{
     @change-end="$emit('changeEnd', $event)"
   >
     <Label v-if="!$props.withoutLabel">Volume</Label>
-    <SliderOutput />
+    <SliderOutput v-if="!$props.withoutOutput" />
     <SliderTrack v-slot="{ values }">
       <SliderFill />
       <SliderThumb

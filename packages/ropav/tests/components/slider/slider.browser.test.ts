@@ -259,6 +259,45 @@ describe("Slider (browser)", () => {
     unmount();
   });
 
+  describe("layout", () => {
+    it("drops the label row when there is neither a label nor an output", async () => {
+      const { container, unmount } = renderSlider({
+        ariaLabel: "Volume",
+        defaultValue: 50,
+        withoutLabel: true,
+        withoutOutput: true,
+      });
+
+      await nextTick();
+
+      const root = slot(container, "slider");
+      const track = slot(container, "slider-track");
+
+      // An empty first row and the gap under it would sit the track below the root's top edge,
+      // and off the centre of a row it shares with a button.
+      expect(track.getBoundingClientRect().top).toBe(root.getBoundingClientRect().top);
+      expect(root.getBoundingClientRect().height).toBe(track.getBoundingClientRect().height);
+
+      unmount();
+    });
+
+    it.each([
+      ["a label", { withoutOutput: true }],
+      ["an output", { ariaLabel: "Volume", withoutLabel: true }],
+    ])("keeps a row above the track for %s alone", async (_name, props) => {
+      const { container, unmount } = renderSlider({ defaultValue: 50, ...props });
+
+      await nextTick();
+
+      const root = slot(container, "slider");
+      const track = slot(container, "slider-track");
+
+      expect(track.getBoundingClientRect().top).toBeGreaterThan(root.getBoundingClientRect().top);
+
+      unmount();
+    });
+  });
+
   /**
    * Every other pointer test here synthesises its own events, which cannot see how a listener is
    * attached: a real press has to move the pointer onto the element first, and that hover
