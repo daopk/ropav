@@ -48,6 +48,14 @@ export const RENAMED: Renamed = {
   ':is(.rp-toast:not([data-frontmost="true"]):not([data-expanded="true"])) .rp-toast__close-button':
     ':is(.rp-toast:not([data-frontmost="true"])) .rp-toast__close-button',
 
+  // Narrowed rather than moved: the thumb left the rule it shared with the fill, since its cross
+  // size now follows the knob as well as the bar. The fill keeps the same declaration, and the
+  // first alternative builds the same fill it did.
+  ':is(:is(.rp-slider)[data-orientation="horizontal"]) .rp-slider__fill':
+    ':is(:is(.rp-slider)[data-orientation="horizontal"]) .rp-slider__fill, :is(:is(.rp-slider)[data-orientation="horizontal"]) .rp-slider__thumb',
+  ':is(:is(.rp-slider)[data-orientation="vertical"]) .rp-slider__fill':
+    ':is(:is(.rp-slider)[data-orientation="vertical"]) .rp-slider__fill, :is(:is(.rp-slider)[data-orientation="vertical"]) .rp-slider__thumb',
+
   // Lighter rather than moved: the toggle went into `:where()`, so each toggle's own indent on its
   // error outweighs this rule's `padding` in either import order. Same declarations, and the first
   // alternative builds the same `.rp-checkbox > .rp-field-error` it did.

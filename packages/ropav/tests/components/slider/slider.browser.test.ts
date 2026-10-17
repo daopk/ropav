@@ -296,6 +296,115 @@ describe("Slider (browser)", () => {
 
       unmount();
     });
+
+    it("draws a bar thinner than the track and still takes a press beside it", async () => {
+      const { container, unmount } = renderSlider({
+        ariaLabel: "Volume",
+        defaultValue: 0,
+        step: 10,
+        style: "--slider-track-thickness: 16px; --slider-rail-thickness: 4px",
+        withoutLabel: true,
+        withoutOutput: true,
+      });
+
+      await nextTick();
+
+      const root = slot(container, "slider");
+      const track = slot(container, "slider-track");
+      const box = track.getBoundingClientRect();
+
+      // The element is the bar; the track's thickness is the room it takes in the row.
+      expect(box.height).toBe(4);
+      expect(root.getBoundingClientRect().height).toBe(16);
+      // The fill and the thumb's frame follow the bar rather than the track.
+      expect(slot(container, "slider-fill").getBoundingClientRect().height).toBe(4);
+
+      // 5px above the bar is off the element, but inside the band a press lands on.
+      const x = box.left + box.width / 2;
+      const y = box.top - 5;
+
+      expect(document.elementFromPoint(x, y)).toBe(track);
+
+      track.dispatchEvent(
+        new PointerEvent("pointerdown", {
+          bubbles: true,
+          button: 0,
+          clientX: x,
+          clientY: y,
+          pointerId: 1,
+          pointerType: "mouse",
+        }),
+      );
+      await nextTick();
+      window.dispatchEvent(new PointerEvent("pointerup", { pointerId: 1 }));
+
+      expect(container.querySelector("input")!.value).toBe("50");
+
+      unmount();
+    });
+
+    it("lets the thumb hang past the ends of the track with no inset", async () => {
+      const { container, unmount } = renderSlider({
+        ariaLabel: "Volume",
+        defaultValue: 0,
+        style: "--slider-thumb-inset: 0px",
+        withoutLabel: true,
+      });
+
+      await nextTick();
+
+      const track = slot(container, "slider-track").getBoundingClientRect();
+      const thumb = slot(container, "slider-thumb").getBoundingClientRect();
+
+      // Centred on the start of the track, rather than half a knob inside it.
+      expect(thumb.left + thumb.width / 2).toBeCloseTo(track.left, 0);
+
+      unmount();
+    });
+
+    it("keeps the focus ring outside the knob when the knob is thicker than the bar", async () => {
+      const { container, unmount } = renderSlider({
+        ariaLabel: "Volume",
+        defaultValue: 50,
+        style:
+          "--slider-track-thickness: 16px; --slider-rail-thickness: 4px; --slider-thumb-length: 12px; --slider-thumb-thickness: 12px",
+        withoutLabel: true,
+      });
+
+      await nextTick();
+
+      const thumb = slot(container, "slider-thumb");
+      const shadowWhenIdle = getComputedStyle(thumb).boxShadow;
+
+      // The ring is a shadow on the thumb element, which the knob would cover were the element
+      // only as thick as the bar.
+      expect(thumb.getBoundingClientRect().width).toBe(12);
+      expect(thumb.getBoundingClientRect().height).toBe(12);
+
+      await userEvent.keyboard("{Tab}");
+      await nextTick();
+      await settled(thumb);
+
+      expect(thumb.getAttribute("data-focus-visible")).toBe("true");
+      expect(getComputedStyle(thumb).boxShadow).not.toBe(shadowWhenIdle);
+
+      unmount();
+    });
+
+    it("keeps the knob inside the track at the minimum by default", async () => {
+      const { container, unmount } = renderSlider({ defaultValue: 0 });
+
+      await nextTick();
+
+      const track = slot(container, "slider-track").getBoundingClientRect();
+      const knob = getComputedStyle(slot(container, "slider-thumb"), "::after");
+      const thumb = slot(container, "slider-thumb").getBoundingClientRect();
+      const knobStart = thumb.left + thumb.width / 2 - Number.parseFloat(knob.width) / 2;
+
+      expect(knobStart).toBeCloseTo(track.left, 0);
+
+      unmount();
+    });
   });
 
   /**

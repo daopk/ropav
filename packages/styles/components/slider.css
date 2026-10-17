@@ -5,6 +5,23 @@
   width: 100%;
   gap: var(--rp-spacing);
 
+  /* The geometry, every value across the track named for its axis rather than for width or
+   * height, so one set serves both orientations. The root carries them, so a slider nested in
+   * another resets them rather than inheriting its parent's. */
+
+  /* The track's thickness: the room it takes in the layout, and the band a press lands on. */
+  --slider-track-thickness: calc(var(--rp-spacing) * 5);
+  /* The bar painted down the middle of it. Thinner than the track, it draws a slim line that is
+   * still easy to hit; it is never thicker than the track. */
+  --slider-rail-thickness: var(--slider-track-thickness);
+  /* The knob, along the track and across it. */
+  --slider-thumb-length: 1.5rem;
+  --slider-thumb-thickness: 1rem;
+  --slider-thumb-radius: min(32px, var(--rp-component-radius));
+  /* How far short of either end of the track the thumb's centre stops. Half its length keeps the
+   * knob inside the track at the minimum and the maximum; 0 lets it hang half past either end. */
+  --slider-thumb-inset: calc(var(--slider-thumb-length) / 2);
+
   grid-template-areas:
     "label output"
     "track track";
@@ -64,6 +81,14 @@
 
     grid-area: track;
 
+    /* The band a press lands on, when the bar is thinner than the track. Transparent, so it
+     * paints nothing in any mode, and part of the track for hit-testing, so a press on it is a
+     * press on the track. Sized per orientation below. */
+    &::before {
+      position: absolute;
+      content: "";
+    }
+
     /* Forced Colors Mode flattens the bar to `Canvas`, the colour of the page behind it, so
      * the track stops existing - hence the edge. The spacer borders are dealt with per
      * orientation below, which is where they are set. */
@@ -95,7 +120,7 @@
     background-color: var(--rp-accent);
     -webkit-tap-highlight-color: transparent;
 
-    border-radius: min(32px, var(--rp-component-radius));
+    border-radius: var(--slider-thumb-radius);
 
     /* The wrapper is the fill colour in ordinary use, which hides it against the fill. Flattened
      * to `Canvas` it would punch a hole through the fill instead, so it steps back and lets
@@ -119,7 +144,7 @@
       box-shadow: var(--rp-ring), var(--rp-shadow);
       content: "";
 
-      border-radius: min(32px, var(--rp-component-radius));
+      border-radius: var(--slider-thumb-radius);
 
       /* Both the knob's fill and the shadow that separates it from the track are gone under
        * forced colors. `Canvas` inside a `CanvasText` ring reads against the bare track on one
@@ -195,13 +220,21 @@
     flex-direction: column;
 
     .rp-slider__track {
-      height: calc(var(--rp-spacing) * 5);
+      /* The element is the bar. What the track adds past it is margin, so it still takes its
+       * room in the layout, and the `::before` band, so a press there still lands. */
+      height: var(--slider-rail-thickness);
+      margin-block: max(0px, (var(--slider-track-thickness) - var(--slider-rail-thickness)) / 2);
       width: 100%;
-      /* Add transparent borders to provide space for thumb at edges */
-      /* Thumb width is 1.5rem (24px), so half is 0.75rem (12px) */
+      /* Transparent borders hold the thumb's travel short of either end - half the knob by
+       * default, so the knob stays on the bar at the minimum and the maximum. */
       border-inline-style: var(--rp-border-style);
-      border-inline-width: 0.75rem;
+      border-inline-width: var(--slider-thumb-inset);
       border-inline-color: transparent;
+
+      &::before {
+        inset-block: calc((var(--slider-rail-thickness) - var(--slider-track-thickness)) / 2);
+        inset-inline: calc(var(--slider-thumb-inset) * -1);
+      }
 
       /* A transparent border-color is one of the few things forced colors turns *opaque*, so
        * without this the two spacers render as solid blocks at either end of the track. */
@@ -229,20 +262,26 @@
       }
     }
 
-    .rp-slider__fill,
-    .rp-slider__thumb {
+    .rp-slider__fill {
       height: 100%;
     }
 
     .rp-slider__thumb {
       top: calc(1 / 2 * 100%);
 
-      /* Thumb width + border width */
-      width: calc(1.5rem + 0.25rem);
+      /* The knob plus the frame the bar leaves showing above and below it, repeated at either
+       * end so the frame is even all round. A knob thicker than the bar leaves no frame, but
+       * the element never shrinks inside the knob: the focus ring is drawn around it. */
+      width: calc(
+        var(--slider-thumb-length) +
+          max(0px, var(--slider-rail-thickness) - var(--slider-thumb-thickness))
+      );
+      height: max(var(--slider-rail-thickness), var(--slider-thumb-thickness));
 
       &::after {
-        width: 1.5rem;
-        height: 1rem;
+        flex-shrink: 0;
+        width: var(--slider-thumb-length);
+        height: var(--slider-thumb-thickness);
       }
     }
   }
@@ -294,13 +333,19 @@
 
     .rp-slider__track {
       height: 100%;
-      width: calc(var(--rp-spacing) * 5);
-      /* Add transparent borders to provide space for thumb at edges */
-      /* Thumb height is 1.5rem (24px), so half is 0.75rem (12px) */
+      width: var(--slider-rail-thickness);
+      margin-inline: max(0px, (var(--slider-track-thickness) - var(--slider-rail-thickness)) / 2);
+      /* Transparent borders hold the thumb's travel short of either end - half the knob by
+       * default, so the knob stays on the bar at the minimum and the maximum. */
       border-block-style: var(--rp-border-style);
-      border-block-width: 0.75rem;
+      border-block-width: var(--slider-thumb-inset);
       border-block-color: transparent;
       justify-self: center;
+
+      &::before {
+        inset-inline: calc((var(--slider-rail-thickness) - var(--slider-track-thickness)) / 2);
+        inset-block: calc(var(--slider-thumb-inset) * -1);
+      }
 
       /* Same as the horizontal spacers - opaque without this */
       @media (forced-colors: active) {
@@ -325,8 +370,7 @@
       }
     }
 
-    .rp-slider__fill,
-    .rp-slider__thumb {
+    .rp-slider__fill {
       width: 100%;
     }
 
@@ -334,12 +378,17 @@
       /* Cross-axis centering; React Aria applies a physical translateX(-50%), so keep left-1/2 for RTL correctness */
       left: calc(1 / 2 * 100%);
 
-      /* Thumb height + border height */
-      height: calc(1.5rem + 0.25rem);
+      /* The knob plus an even frame, as in the horizontal case. */
+      height: calc(
+        var(--slider-thumb-length) +
+          max(0px, var(--slider-rail-thickness) - var(--slider-thumb-thickness))
+      );
+      width: max(var(--slider-rail-thickness), var(--slider-thumb-thickness));
 
       &::after {
-        width: 1rem;
-        height: 1.5rem;
+        flex-shrink: 0;
+        width: var(--slider-thumb-thickness);
+        height: var(--slider-thumb-length);
       }
     }
   }
