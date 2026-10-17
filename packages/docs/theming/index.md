@@ -22,6 +22,31 @@ carries both halves.
 Try it with the picker in this site's header. It changes the components on the page and leaves
 the page itself alone, because the site's own chrome is not the library's to theme.
 
+## One part of the page in the other appearance
+
+The class works on any element, not only the root. Controls laid over a photo or a video, or a
+code panel, can be dark on a light page:
+
+```html
+<div class="controls dark">…</div>
+```
+
+Every token is declared again on that element, `color-scheme` included, so the components inside
+it come out dark. `class="light"` does the reverse inside a dark page. Three things stay outside
+the scope's reach:
+
+- **Text the app colours itself.** The library colours its components and leaves the page's own
+  text alone, so text inheriting a colour set higher up keeps that colour. Give the scope
+  `color: var(--rp-foreground)`, and a background if it needs one; over a picture it usually does
+  not.
+- **The palette of the page.** A palette's dark half answers to `[data-theme].dark` and to
+  `.dark [data-theme]`, not to a `.dark` inside a `[data-theme]`, which gets the default theme's
+  dark half instead. Name the palette on the scope too: `<div data-theme="netflix" class="dark">`.
+- **Overlays.** Tooltips, popovers, menus and dialogs render at the end of `body`, outside the
+  scope, in the page's appearance. Give the overlay's own part the class as well, or render
+  overlays inside the scope with
+  [`PortalProvider`](/patterns/overlays#inside-one-part-of-the-page).
+
 ## Bundled palettes
 
 The default one, plus a palette per brand — `hero` among them, being the palette this library's
