@@ -290,12 +290,15 @@ export const useInputOTP = (options: UseInputOTPOptions): UseInputOTPReturn => {
     setFormValue(inputEl.value, value.value);
   };
 
+  /** Bumped on every change reported, so the re-assert runs even when the owner keeps the value. */
+  const changeCount = shallowRef(0);
+
   /*
    * The reset source has to be in step before a reset rather than after it: the browser drains
    * microtasks between dispatching `reset` and restoring the controls, so nothing written in
    * response to the event arrives in time.
    */
-  watch([inputEl, value], reassert, { flush: "post", immediate: true });
+  watch([inputEl, value, changeCount], reassert, { flush: "post", immediate: true });
 
   /*
    * Nothing did this at all before. A reset blanked the input while the state kept the code the
@@ -306,9 +309,22 @@ export const useInputOTP = (options: UseInputOTPOptions): UseInputOTPReturn => {
 
   useFormReset(inputEl, () => toValue(options.defaultValue) ?? initialValue, setState);
 
+  /*
+   * The re-assert waits for the watcher rather than running here, because the value only settles
+   * once the owner has heard the change: a Vapor component reads its props from a copy the
+   * scheduler refreshes, so straight after the emit `value` still holds the old code. Writing that
+   * back, then the new one after it, sends the caret to the end of the text. A value that is
+   * already the field's reports nothing, so there is no owner to wait for.
+   */
   const setValue = (next: string) => {
+    if (next === value.value) {
+      reassert();
+
+      return;
+    }
+
     setState(next);
-    reassert();
+    changeCount.value++;
   };
 
   const badge = usePasswordManagerBadge({

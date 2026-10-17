@@ -317,6 +317,31 @@ describe("InputOTP", () => {
       unmount();
     });
 
+    it("leaves the caret where the edit put it for a caller that takes the change", async () => {
+      /*
+       * Straight after the change is reported the field still reads the caller's old code, because
+       * a Vapor component's props only catch up on the scheduler. Writing that back to the control,
+       * and the new code after it, sends the caret to the end of the text.
+       */
+      const props = reactive<Record<string, unknown>>({ value: "123" });
+
+      props["onChange"] = (next: string) => {
+        props["value"] = next;
+      };
+
+      const { control, unmount } = renderInputOTP(props);
+
+      control.value = "23";
+      control.setSelectionRange(0, 0);
+      control.dispatchEvent(new Event("input"));
+      await nextTick();
+
+      expect(control).toHaveValue("23");
+      expect(control.selectionStart).toBe(0);
+
+      unmount();
+    });
+
     it("puts the text back when the caller declines the change", async () => {
       const { control, slotAt, unmount } = renderInputOTP({ value: "1" });
 

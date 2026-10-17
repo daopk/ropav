@@ -230,6 +230,9 @@ export const useTextField = (options: UseTextFieldOptions = {}): UseTextFieldRet
     slots: ["label", "description", "errorMessage"],
   });
 
+  /** Bumped on every change the field reports, so the re-assert runs even when the value stays. */
+  const changeCount = shallowRef(0);
+
   /** Whether a control has taken the value over, in which case the field writes nothing. */
   const isValueOwned = shallowRef(false);
 
@@ -258,11 +261,28 @@ export const useTextField = (options: UseTextFieldOptions = {}): UseTextFieldRet
    * early and is overwritten. `immediate`, and with the element in the dependencies, because a
    * field nobody has typed into yet is exactly the one a reset is most likely to find.
    */
-  watch([element, value, isValueOwned], reassert, { flush: "post", immediate: true });
+  watch([element, value, isValueOwned, changeCount], reassert, { flush: "post", immediate: true });
 
+  /*
+   * The re-assert waits for the watcher above rather than running here, because the value only
+   * settles once the owner has heard the change. A Vapor component reads its props from a copy the
+   * scheduler refreshes, so straight after the emit `value` still holds the *old* text even for an
+   * owner that took the new one at once — and writing that back, then the new text after it, sends
+   * the caret to the end on every keystroke made mid-text.
+   *
+   * Bumping the counter is what still runs the watcher when the owner declines and nothing else
+   * moves, which is the case the re-assert is for. A value that is already the field's reports
+   * nothing, so there is no owner to wait for and the text goes back at once.
+   */
   const setValue = (next: string) => {
+    if (next === value.value) {
+      reassert();
+
+      return;
+    }
+
     setState(next);
-    reassert();
+    changeCount.value++;
   };
 
   const initialValue = value.value;

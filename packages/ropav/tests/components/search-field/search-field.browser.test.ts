@@ -2,7 +2,7 @@ import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { afterEach, describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
-import { nextTick } from "vue";
+import { nextTick, reactive } from "vue";
 
 import { settled } from "../../harness/settle";
 
@@ -175,6 +175,46 @@ describe("SearchField (browser)", () => {
     await nextTick();
 
     expect(control.value).toBe("");
+
+    unmount();
+  });
+
+  it("keeps the caret in place when an owner that accepts the change is edited mid-text", async () => {
+    const props = reactive<Record<string, unknown>>({ value: "zoi" });
+
+    props["onChange"] = (next: string) => {
+      props["value"] = next;
+    };
+
+    const { container, unmount } = renderSearchField(props);
+    const control = container.querySelector<HTMLInputElement>("input")!;
+
+    await userEvent.click(control);
+    control.setSelectionRange(1, 1);
+    await userEvent.keyboard("{Backspace}");
+    await nextTick();
+
+    expect(control.value).toBe("oi");
+    expect(control.selectionStart).toBe(0);
+
+    await userEvent.keyboard("X");
+    await nextTick();
+
+    expect(control.value).toBe("Xoi");
+    expect(control.selectionStart).toBe(1);
+
+    unmount();
+  });
+
+  it("puts the text back for an owner that keeps the value", async () => {
+    const { container, unmount } = renderSearchField({ value: "pinned" });
+    const control = container.querySelector<HTMLInputElement>("input")!;
+
+    await userEvent.click(control);
+    await userEvent.keyboard("typed");
+    await nextTick();
+
+    expect(control.value).toBe("pinned");
 
     unmount();
   });

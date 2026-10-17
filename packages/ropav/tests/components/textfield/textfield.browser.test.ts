@@ -2,7 +2,7 @@ import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
-import { nextTick } from "vue";
+import { nextTick, reactive } from "vue";
 
 import { pressRealReset } from "../../harness/real-reset";
 import { settled } from "../../harness/settle";
@@ -155,6 +155,53 @@ describe("TextField (browser)", () => {
     expect(input.value).toBe("fixed");
 
     unmount();
+  });
+
+  describe("editing mid-text in a field its owner keeps up to date", () => {
+    /*
+     * The owner sets its value synchronously from the change, as `v-model` does. The caret has to
+     * stay where the browser put it: any write of a different text in between — the old one, which
+     * is all the field can read straight after the emit — sends it to the end.
+     */
+    const renderOwned = (value: string) => {
+      const props = reactive<Record<string, unknown>>({ value });
+
+      props["onChange"] = (next: string) => {
+        props["value"] = next;
+      };
+
+      const result = renderField(props);
+
+      return { ...result, input: slot(result.container, "input") as HTMLInputElement };
+    };
+
+    it("keeps the caret in place on a deletion", async () => {
+      const { input, unmount } = renderOwned("zoi");
+
+      await userEvent.click(input);
+      input.setSelectionRange(1, 1);
+      await userEvent.keyboard("{Backspace}");
+      await nextTick();
+
+      expect(input.value).toBe("oi");
+      expect(input.selectionStart).toBe(0);
+
+      unmount();
+    });
+
+    it("keeps the caret in place on an insertion", async () => {
+      const { input, unmount } = renderOwned("zoi");
+
+      await userEvent.click(input);
+      input.setSelectionRange(1, 1);
+      await userEvent.keyboard("X");
+      await nextTick();
+
+      expect(input.value).toBe("zXoi");
+      expect(input.selectionStart).toBe(2);
+
+      unmount();
+    });
   });
 
   it("stretches the control to the field when full width", async () => {
