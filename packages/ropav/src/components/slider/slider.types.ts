@@ -1,11 +1,19 @@
 import type { SliderOrientation } from "../../composables/use-slider-state";
 
-export interface SliderRootProps {
+/** A slider's value: a number for one thumb, an array for one thumb per entry. */
+export type SliderValue = number | number[];
+
+/**
+ * `V` is the shape the caller hands over, inferred from `value` or `defaultValue`, so `change`
+ * and `change-end` report a number to a caller who passed one and an array to one who passed an
+ * array.
+ */
+export interface SliderRootProps<V extends SliderValue = SliderValue> {
   class?: string;
   /** Current value. A number drives one thumb, an array one thumb per entry. */
-  value?: number | number[];
+  value?: V;
   /** Value while the slider is uncontrolled. */
-  defaultValue?: number | number[];
+  defaultValue?: V;
   /** @default 0 */
   minValue?: number;
   /** @default 100 */

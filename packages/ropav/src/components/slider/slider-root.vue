@@ -1,5 +1,5 @@
-<script setup lang="ts" vapor>
-import type { SliderRootProps, SliderSlotProps } from "./slider.types";
+<script setup lang="ts" vapor generic="V extends SliderValue = SliderValue">
+import type { SliderRootProps, SliderSlotProps, SliderValue } from "./slider.types";
 
 import { sliderVariants } from "@ropav/styles";
 import { computed, shallowRef } from "vue";
@@ -14,7 +14,7 @@ import { useFieldsetContext } from "../fieldset/fieldset.context";
 
 import { provideSliderContext } from "./slider.context";
 
-const props = withDefaults(defineProps<SliderRootProps>(), { isDisabled: undefined });
+const props = withDefaults(defineProps<SliderRootProps<V>>(), { isDisabled: undefined });
 
 const fieldset = useFieldsetContext();
 
@@ -22,11 +22,18 @@ const fieldset = useFieldsetContext();
 // to be told outright.
 const fieldsetIsDisabled = computed(() => props.isDisabled ?? fieldset?.isDisabled.value);
 
+/**
+ * Written out rather than named, so the API reference reads it. `V` is inferred from the value
+ * itself, which makes `:default-value="30"` the literal `30`; the events report any number.
+ */
 const emit = defineEmits<{
-  change: [value: number | number[]];
-  changeEnd: [value: number | number[]];
-  "update:value": [value: number | number[]];
+  change: [value: V extends number ? number : number[]];
+  changeEnd: [value: V extends number ? number : number[]];
+  "update:value": [value: V extends number ? number : number[]];
 }>();
+
+/** What the events carry, for the casts below. */
+type Reported = V extends number ? number : number[];
 
 defineSlots<{ default?: (props: SliderSlotProps) => unknown }>();
 
@@ -43,11 +50,12 @@ const state = useSliderState({
   maxValue: () => props.maxValue,
   minValue: () => props.minValue,
   numberFormatter,
+  // The state hands back the shape it was given, which is the shape of `V`.
   onChange: (value) => {
-    emit("change", value);
-    emit("update:value", value);
+    emit("change", value as Reported);
+    emit("update:value", value as Reported);
   },
-  onChangeEnd: (value) => emit("changeEnd", value),
+  onChangeEnd: (value) => emit("changeEnd", value as Reported),
   orientation: () => props.orientation,
   step: () => props.step,
   value: () => props.value,

@@ -20,7 +20,8 @@ import { Slider, SliderFill, SliderThumb, SliderTrack } from "ropav";
 ## One thumb or two
 
 Pass a number for one thumb and an array for two. Each `SliderThumb` then takes the `index` it
-controls, and the fill spans between them.
+controls, and the fill spans between them. `change` and `change-end` hand back the same shape, and
+are typed that way: a handler on a slider given a number receives a number.
 
 <Demo title="slider-basic.vue">
 <DemoSliderBasic />
