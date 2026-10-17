@@ -629,6 +629,28 @@ describe("SearchField", () => {
 
       result.unmount();
     });
+
+    it("leaves the caret where the edit put it for an owner that accepts the change", async () => {
+      // Writing the text the field held before the owner caught up, then the new one, would move
+      // the caret to the end of the text twice over.
+      const props = reactive<Record<string, unknown>>({ value: "zoi" });
+
+      props["onChange"] = (next: string) => {
+        props["value"] = next;
+      };
+
+      const { control, unmount } = renderSearchField(props);
+
+      control.value = "oi";
+      control.setSelectionRange(0, 0);
+      control.dispatchEvent(new Event("input"));
+      await nextTick();
+
+      expect(control).toHaveValue("oi");
+      expect(control.selectionStart).toBe(0);
+
+      unmount();
+    });
   });
 
   describe("validation", () => {

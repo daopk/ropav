@@ -1,6 +1,6 @@
 import { renderVapor } from "@ropav/testing/helpers/vue";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { nextTick } from "vue";
+import { nextTick, reactive } from "vue";
 
 import { expectResetSource } from "../../harness/form-reset";
 
@@ -364,6 +364,38 @@ describe("ComboBox", () => {
 
       expect(optionsOf(result)).toHaveLength(0);
       expect(result.screen.getByText("No results found")).toBeTruthy();
+    });
+  });
+
+  describe("a text its owner holds", () => {
+    it("leaves the caret where the edit put it for an owner that takes the change", async () => {
+      // Straight after the change is reported the field still reads the owner's old text, and
+      // writing that back before the new one sends the caret to the end.
+      const props = reactive<Record<string, unknown>>({ inputValue: "cat" });
+
+      props["onInputChange"] = (next: string) => {
+        props["inputValue"] = next;
+      };
+
+      const input = inputOf(render(props));
+
+      input.value = "at";
+      input.setSelectionRange(0, 0);
+      input.dispatchEvent(
+        new InputEvent("input", { bubbles: true, inputType: "deleteContentBackward" }),
+      );
+      await settle();
+
+      expect(input.value).toBe("at");
+      expect(input.selectionStart).toBe(0);
+    });
+
+    it("puts the text back when the owner keeps it", async () => {
+      const input = inputOf(render({ inputValue: "cat" }));
+
+      await type(input, "cats");
+
+      expect(input.value).toBe("cat");
     });
   });
 

@@ -278,6 +278,32 @@ describe("TextField", () => {
       unmount();
     });
 
+    it("leaves the caret where the edit put it in a field its owner keeps up to date", async () => {
+      /*
+       * The owner sets its value synchronously from the change, which is what `v-model` or an
+       * `@update:value` handler does. A Vapor child reads its props from a copy the scheduler
+       * refreshes, so straight after the emit the field still holds the old text. Writing that
+       * back to the control, and the new text after it, moves the caret to the end twice.
+       */
+      const props = reactive<Record<string, unknown>>({ value: "zoi" });
+
+      props["onChange"] = (next: string) => {
+        props["value"] = next;
+      };
+
+      const { control, unmount } = renderField(props);
+
+      control.value = "oi";
+      control.setSelectionRange(0, 0);
+      control.dispatchEvent(new Event("input"));
+      await nextTick();
+
+      expect(control.value).toBe("oi");
+      expect(control.selectionStart).toBe(0);
+
+      unmount();
+    });
+
     it("follows a controlled value its owner accepts", async () => {
       const props = reactive({ value: "first" });
       const { control, unmount } = renderField(props);
