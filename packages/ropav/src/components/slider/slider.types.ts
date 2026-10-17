@@ -63,6 +63,22 @@ export interface SliderSlotProps {
   isDisabled: boolean;
 }
 
+/** State the track hands to its slot. */
+export interface SliderTrackSlotProps extends SliderSlotProps {
+  /**
+   * The value a press would set where a mouse or pen hovers over the track, snapped to the step,
+   * or `null` while none hovers or the slider is disabled. For a preview of what a press would
+   * do, such as a tooltip.
+   */
+  hoverValue: number | null;
+  /**
+   * Where `hoverValue` sits along the track, from 0 to 1, or `null` with it. A child of the track
+   * placed at this fraction of its width (its height, from the bottom, when vertical) sits where
+   * the thumb would land.
+   */
+  hoverPercent: number | null;
+}
+
 /** State a thumb hands to its slot. */
 export interface SliderThumbSlotProps {
   isDragging: boolean;

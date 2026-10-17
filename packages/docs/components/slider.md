@@ -102,6 +102,25 @@ says nothing about the value.
 }
 ```
 
+### Previewing a press
+
+While a mouse or pen hovers over the track, its slot hands over `hoverValue`, the value a press
+there would set, snapped to the step, and `hoverPercent`, where that value sits along the track
+from 0 to 1. Placed in the track at that fraction, a preview sits where the thumb would land. Both
+are `null` while nothing hovers, under touch, and while the slider is disabled.
+
+<Demo title="slider-hover.vue">
+<DemoSliderHover />
+
+<template #code>
+
+<<< @/.vitepress/theme/demos/slider-hover.vue
+
+</template>
+</Demo>
+
+The preview repeats what the thumb announces once it is pressed, so it is `aria-hidden`.
+
 ## Accessibility
 
 - Each thumb is a native range input, so the value and the range are the browser's to announce.

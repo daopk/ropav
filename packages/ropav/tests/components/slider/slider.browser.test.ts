@@ -172,6 +172,88 @@ describe("Slider (browser)", () => {
     unmount();
   });
 
+  it("hands the track's slot the value under a hovering pointer, placed where a press would go", async () => {
+    const { container, unmount } = renderSlider({
+      defaultValue: 0,
+      step: 10,
+      withHoverPreview: true,
+    });
+
+    await nextTick();
+
+    const track = slot(container, "slider-track");
+    const box = track.getBoundingClientRect();
+    const preview = () => container.querySelector<HTMLElement>("[data-testid='hover-preview']");
+    // 38% along the travel, which snaps to 40.
+    const x = box.left + track.clientLeft + track.clientWidth * 0.38;
+    const y = box.top + box.height / 2;
+    const hover = (pointerType: string) =>
+      track.dispatchEvent(
+        new PointerEvent("pointermove", {
+          bubbles: true,
+          clientX: x,
+          clientY: y,
+          pointerId: 1,
+          pointerType,
+        }),
+      );
+
+    expect(preview()).toBeNull();
+
+    hover("mouse");
+    await nextTick();
+
+    expect(preview()!.textContent).toBe("40");
+    // At the fraction of the travel the thumb would sit at, rather than under the pointer itself.
+    expect(preview()!.getBoundingClientRect().left).toBeCloseTo(
+      box.left + track.clientLeft + track.clientWidth * 0.4,
+      0,
+    );
+    // Hovering is not pressing.
+    expect(container.querySelector("input")!.value).toBe("0");
+
+    track.dispatchEvent(new PointerEvent("pointerleave", { pointerId: 1, pointerType: "mouse" }));
+    await nextTick();
+
+    expect(preview()).toBeNull();
+
+    // A finger has nothing to hover with.
+    hover("touch");
+    await nextTick();
+
+    expect(preview()).toBeNull();
+
+    unmount();
+  });
+
+  it("hands no hover value while the slider is disabled", async () => {
+    const { container, unmount } = renderSlider({
+      defaultValue: 0,
+      isDisabled: true,
+      withHoverPreview: true,
+    });
+
+    await nextTick();
+
+    const track = slot(container, "slider-track");
+    const box = track.getBoundingClientRect();
+
+    track.dispatchEvent(
+      new PointerEvent("pointermove", {
+        bubbles: true,
+        clientX: box.left + box.width / 2,
+        clientY: box.top + box.height / 2,
+        pointerId: 1,
+        pointerType: "mouse",
+      }),
+    );
+    await nextTick();
+
+    expect(container.querySelector("[data-testid='hover-preview']")).toBeNull();
+
+    unmount();
+  });
+
   it("grows the fill with the value and colours the end of the track it reaches", async () => {
     const { container, unmount } = renderSlider({ defaultValue: 0, step: 100 });
 

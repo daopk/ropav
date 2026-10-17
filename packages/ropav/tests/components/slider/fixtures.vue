@@ -14,6 +14,8 @@ defineProps<
     name?: string;
     /** `id` of a form the thumb submits with, for a slider rendered outside it. */
     form?: string;
+    /** Renders a preview of the value under a hovering pointer, placed where a press would go. */
+    withHoverPreview?: boolean;
   }
 >();
 
@@ -40,7 +42,13 @@ defineEmits<{
   >
     <Label v-if="!$props.withoutLabel">Volume</Label>
     <SliderOutput v-if="!$props.withoutOutput" />
-    <SliderTrack v-slot="{ values }">
+    <SliderTrack v-slot="{ hoverPercent, hoverValue, values }">
+      <span
+        v-if="$props.withHoverPreview && hoverValue !== null"
+        data-testid="hover-preview"
+        :style="{ left: `${(hoverPercent ?? 0) * 100}%`, position: 'absolute' }"
+        >{{ hoverValue }}</span
+      >
       <SliderFill />
       <SliderThumb
         v-for="(_, index) in values"

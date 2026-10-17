@@ -1,7 +1,7 @@
 import type { SliderState } from "./use-slider-state";
 import type { CSSProperties, ComputedRef, MaybeRefOrGetter, Ref } from "vue";
 
-import { computed, onScopeDispose, toValue } from "vue";
+import { computed, onScopeDispose, shallowRef, toValue } from "vue";
 
 import { clamp } from "../utils/number";
 
@@ -40,11 +40,23 @@ export interface UseSliderReturn {
   /** For the root element: the thumbs are inputs, and the group is what names them together. */
   groupProps: ComputedRef<SliderGroupAttrs>;
   /**
-   * The track accepts clicks and drags for the nearest thumb. Attach with `@pointerdown`, never
-   * through `v-bind`: a vapor render re-attaches every `on*` key that arrived that way, which
-   * drops the listener when the press itself is what re-rendered the element.
+   * The track accepts clicks and drags for the nearest thumb, and follows a hovering pointer.
+   * Attach each with its own `@pointer…` listener, never through `v-bind`: a vapor render
+   * re-attaches every `on*` key that arrived that way, which drops the listener when the press
+   * itself is what re-rendered the element.
    */
-  trackHandlers: { onPointerdown: (event: PointerEvent) => void };
+  trackHandlers: {
+    onPointerdown: (event: PointerEvent) => void;
+    onPointermove: (event: PointerEvent) => void;
+    onPointerleave: () => void;
+  };
+  /**
+   * The value a press would set where a mouse or pen hovers over the track, snapped to the step,
+   * or `null` while none hovers or the slider is disabled.
+   */
+  hoverValue: ComputedRef<number | null>;
+  /** Where `hoverValue` sits along the thumb's travel, from 0 to 1. */
+  hoverPercent: ComputedRef<number | null>;
   /** Inline styles the track needs whatever the stylesheet says. */
   trackStyle: CSSProperties;
   outputProps: ComputedRef<SliderOutputAttrs>;
@@ -116,6 +128,15 @@ export const useSlider = (options: UseSliderOptions): UseSliderReturn => {
 
     return ids.length > 0 ? ids.join(" ") : undefined;
   });
+
+  /** Where a hovering mouse or pen is along the travel, from 0 to 1, unsnapped. */
+  const hoverPosition = shallowRef<number | null>(null);
+
+  const hoverValue = computed(() =>
+    hoverPosition.value === null || state.isDisabled.value
+      ? null
+      : state.getPercentValue(hoverPosition.value),
+  );
 
   /** Index of the thumb the current press on the track is dragging. */
   let draggingIndex: number | null = null;
@@ -259,6 +280,10 @@ export const useSlider = (options: UseSliderOptions): UseSliderReturn => {
       id: toValue(options.id),
       role: "group" as const,
     })),
+    hoverPercent: computed(() =>
+      hoverValue.value === null ? null : state.getValuePercent(hoverValue.value),
+    ),
+    hoverValue,
     labelledBy,
     outputProps: computed(() => ({
       "aria-live": "off" as const,
@@ -269,6 +294,14 @@ export const useSlider = (options: UseSliderOptions): UseSliderReturn => {
         onPointerdown(event);
         // After the press has picked a thumb, so the first move continues from it.
         moveHandlers.onPointerdown(event);
+      },
+      onPointerleave: () => {
+        hoverPosition.value = null;
+      },
+      // A finger only moves while it presses, so there is nothing for it to hover.
+      onPointermove: (event: PointerEvent) => {
+        hoverPosition.value =
+          event.pointerType === "touch" ? null : percentAt(event.clientX, event.clientY);
       },
     },
     trackStyle: { position: "relative", touchAction: "none" },

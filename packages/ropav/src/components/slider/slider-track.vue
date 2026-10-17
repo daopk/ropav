@@ -1,5 +1,5 @@
 <script setup lang="ts" vapor>
-import type { SliderSlotProps, SliderTrackProps } from "./slider.types";
+import type { SliderTrackProps, SliderTrackSlotProps } from "./slider.types";
 
 import { computed } from "vue";
 
@@ -11,13 +11,19 @@ import { useSliderContext } from "./slider.context";
 
 const props = defineProps<SliderTrackProps>();
 
-defineSlots<{ default?: (props: SliderSlotProps) => unknown }>();
+defineSlots<{ default?: (props: SliderTrackSlotProps) => unknown }>();
 
 const { setTrackEl, slider, slots, state } = useSliderContext();
 
 const { isHovered, onPointerenter, onPointerleave } = useInteractionStates({
   isDisabled: () => state.isDisabled.value,
 });
+
+/** Leaving ends the hover state and the value the pointer was over, together. */
+const onTrackPointerleave = () => {
+  onPointerleave();
+  slider.trackHandlers.onPointerleave();
+};
 
 /** Where the filled part of the track starts and ends, as fractions of its length. */
 const offsets = computed(() => {
@@ -58,9 +64,12 @@ const fill = computed(() => {
     :style="slider.trackStyle"
     @pointerdown="slider.trackHandlers.onPointerdown"
     @pointerenter="onPointerenter"
-    @pointerleave="onPointerleave"
+    @pointerleave="onTrackPointerleave"
+    @pointermove="slider.trackHandlers.onPointermove"
   >
     <slot
+      :hover-percent="slider.hoverPercent.value"
+      :hover-value="slider.hoverValue.value"
       :is-disabled="state.isDisabled.value"
       :orientation="state.orientation.value"
       :values="state.values.value"

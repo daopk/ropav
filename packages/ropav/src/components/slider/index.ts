@@ -18,6 +18,7 @@ export type {
   SliderThumbProps,
   SliderMarksProps,
   SliderSlotProps,
+  SliderTrackSlotProps,
   SliderThumbSlotProps,
 } from "./slider.types";
 
