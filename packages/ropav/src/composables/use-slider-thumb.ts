@@ -8,6 +8,7 @@ import { clamp } from "../utils/number";
 
 import { useFormReset } from "./use-form-reset";
 import { useMove } from "./use-move";
+import { getTrackTravel } from "./use-slider";
 
 export interface UseSliderThumbOptions {
   state: SliderState;
@@ -125,8 +126,7 @@ export const useSliderThumb = (options: UseSliderThumbOptions): UseSliderThumbRe
     onMove: ({ deltaX, deltaY, pointerType, shiftKey }) => {
       if (!trackEl.value) return;
 
-      const rect = trackEl.value.getBoundingClientRect();
-      const size = isVertical.value ? rect.height : rect.width;
+      const { size } = getTrackTravel(trackEl.value, isVertical.value);
 
       if (currentPosition === null) {
         currentPosition = state.getThumbPercent(index.value) * size;

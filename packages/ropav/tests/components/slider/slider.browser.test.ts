@@ -54,14 +54,54 @@ describe("Slider (browser)", () => {
     const track = slot(container, "slider-track");
     const thumb = slot(container, "slider-thumb");
     const input = container.querySelector("input")!;
+    // The thumb travels between the spacers at either end, not across the whole box.
+    const travel = track.clientWidth;
+    const centre = () => {
+      const box = thumb.getBoundingClientRect();
 
-    // A drag is measured against the track's full width, borders included.
-    await drag(thumb, track.getBoundingClientRect().width / 2);
+      return box.left + box.width / 2;
+    };
+    const before = centre();
 
-    // Half the track from a thumb that started at the minimum is half the range.
-    expect(Number(input.value)).toBeGreaterThan(48);
-    expect(Number(input.value)).toBeLessThan(52);
-    expect(thumb.style.left).not.toBe("0%");
+    await drag(thumb, travel / 2);
+
+    // Half the travel from a thumb that started at the minimum is half the range, and the
+    // thumb moved exactly as far as the pointer did.
+    expect(input.value).toBe("50");
+    expect(centre() - before).toBeCloseTo(travel / 2, 0);
+
+    unmount();
+  });
+
+  it("lands the thumb under the pointer wherever the track is pressed", async () => {
+    const { container, unmount } = renderSlider({ defaultValue: 0, step: 1 });
+
+    await nextTick();
+
+    const track = slot(container, "slider-track");
+    const thumb = slot(container, "slider-thumb");
+    const box = track.getBoundingClientRect();
+    // A quarter of the way along the travel, past the spacer at the start.
+    const x = box.left + track.clientLeft + track.clientWidth / 4;
+
+    track.dispatchEvent(
+      new PointerEvent("pointerdown", {
+        bubbles: true,
+        button: 0,
+        clientX: x,
+        clientY: box.top + box.height / 2,
+        pointerId: 1,
+        pointerType: "mouse",
+      }),
+    );
+    await nextTick();
+    window.dispatchEvent(new PointerEvent("pointerup", { pointerId: 1 }));
+    await nextTick();
+
+    const landed = thumb.getBoundingClientRect();
+
+    expect(container.querySelector("input")!.value).toBe("25");
+    expect(landed.left + landed.width / 2).toBeCloseTo(x, 0);
 
     unmount();
   });
@@ -420,18 +460,20 @@ describe("Slider (browser)", () => {
       await nextTick();
 
       const track = slot(container, "slider-track");
-      const box = track.getBoundingClientRect();
-      const middle = box.height / 2;
+      // Positions count from inside the track's border, which is where the thumb's travel
+      // between the spacers starts.
+      const travel = track.clientWidth;
+      const middle = track.clientHeight / 2;
 
       await userEvent.dragAndDrop(track, track, {
-        sourcePosition: { x: box.width / 4, y: middle },
-        targetPosition: { x: (box.width * 3) / 4, y: middle },
+        sourcePosition: { x: travel / 4, y: middle },
+        targetPosition: { x: (travel * 3) / 4, y: middle },
       });
       await nextTick();
 
-      // The press lands a quarter along and the drag carries the thumb another half.
-      expect(Number(container.querySelector("input")!.value)).toBeGreaterThan(70);
-      expect(Number(container.querySelector("input")!.value)).toBeLessThan(80);
+      // The press lands a quarter along and the drag carries the thumb another half, so it ends
+      // under the pointer.
+      expect(Math.abs(Number(container.querySelector("input")!.value) - 75)).toBeLessThanOrEqual(1);
       // The release closed the drag rather than leaving the thumb stuck to the pointer.
       expect(slot(container, "slider-thumb").hasAttribute("data-dragging")).toBe(false);
 
@@ -445,15 +487,14 @@ describe("Slider (browser)", () => {
 
       const track = slot(container, "slider-track");
       const thumb = slot(container, "slider-thumb");
-      const box = track.getBoundingClientRect();
 
+      // As above, the target counts from inside the border, along the thumb's travel.
       await userEvent.dragAndDrop(thumb, track, {
-        targetPosition: { x: (box.width * 3) / 4, y: box.height / 2 },
+        targetPosition: { x: (track.clientWidth * 3) / 4, y: track.clientHeight / 2 },
       });
       await nextTick();
 
-      expect(Number(container.querySelector("input")!.value)).toBeGreaterThan(70);
-      expect(Number(container.querySelector("input")!.value)).toBeLessThan(80);
+      expect(Math.abs(Number(container.querySelector("input")!.value) - 75)).toBeLessThanOrEqual(1);
       expect(thumb.hasAttribute("data-dragging")).toBe(false);
 
       unmount();

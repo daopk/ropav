@@ -10,7 +10,10 @@ import { useMove } from "./use-move";
 
 export interface UseSliderOptions {
   state: SliderState;
-  /** The track element. Its length is the distance a thumb can travel. */
+  /**
+   * The track element. Its length, less the spacers at either end, is the distance a thumb can
+   * travel.
+   */
   trackEl: Ref<HTMLElement | null>;
   /** The group's own id, and the stem every thumb id grows from. */
   id: MaybeRefOrGetter<string>;
@@ -53,6 +56,29 @@ export interface UseSliderReturn {
   /** Hand focus to the first thumb, for a click on the label. */
   focusFirstThumb: () => void;
 }
+
+/**
+ * Where a thumb's travel starts on screen and how long it is. The track's end spacers are
+ * borders, and the thumb is positioned inside them, so the travel is the track's box less its
+ * borders rather than the box itself: measured against the whole box, a press would land the
+ * thumb off the pointer and a drag would trail it. A vertical travel starts at the bottom.
+ */
+export const getTrackTravel = (track: HTMLElement, isVertical: boolean) => {
+  const rect = track.getBoundingClientRect();
+  const style = getComputedStyle(track);
+
+  if (isVertical) {
+    const top = Number.parseFloat(style.borderTopWidth) || 0;
+    const bottom = Number.parseFloat(style.borderBottomWidth) || 0;
+
+    return { size: rect.height - top - bottom, start: rect.bottom - bottom };
+  }
+
+  const left = Number.parseFloat(style.borderLeftWidth) || 0;
+  const right = Number.parseFloat(style.borderRightWidth) || 0;
+
+  return { size: rect.width - left - right, start: rect.left + left };
+};
 
 /**
  * Labelling, the output element, and click-and-drag on the track.
@@ -98,12 +124,20 @@ export const useSlider = (options: UseSliderOptions): UseSliderReturn => {
   let currentPointerId: number | undefined;
   let detachRelease: (() => void) | undefined;
 
-  const trackSize = () => {
-    const rect = trackEl.value?.getBoundingClientRect();
+  const measureTravel = () =>
+    trackEl.value ? getTrackTravel(trackEl.value, isVertical.value) : null;
 
-    if (!rect) return 0;
+  const trackSize = () => measureTravel()?.size ?? 0;
 
-    return isVertical.value ? rect.height : rect.width;
+  /** How far along the travel a point on screen is, from 0 to 1. */
+  const percentAt = (clientX: number, clientY: number) => {
+    const travel = measureTravel();
+
+    if (!travel || travel.size <= 0) return 0;
+
+    const offset = isVertical.value ? travel.start - clientY : clientX - travel.start;
+
+    return clamp(offset / travel.size, 0, 1);
   };
 
   const { handlers: moveHandlers } = useMove({
@@ -178,12 +212,7 @@ export const useSlider = (options: UseSliderOptions): UseSliderReturn => {
       return;
     }
 
-    const rect = trackEl.value.getBoundingClientRect();
-    const size = isVertical.value ? rect.height : rect.width;
-    const offset = isVertical.value ? event.clientY - rect.top : event.clientX - rect.left;
-    // A vertical track counts from the bottom up.
-    const percent = isVertical.value ? 1 - offset / size : offset / size;
-    const value = state.getPercentValue(percent);
+    const value = state.getPercentValue(percentAt(event.clientX, event.clientY));
     const index = closestThumb(value);
 
     if (index < 0 || !state.isThumbEditable(index)) {
