@@ -28,6 +28,9 @@ export default mergeConfig(
   defineConfig({
     plugins: [await storybookTest({ configDir: path.join(dirname, ".storybook") })],
     test: {
+      // The forced-colors audit emulates the media feature over CDP, which Vitest only opens with
+      // both of these. The Storybook plugin turns them off unless they are set here.
+      api: { allowExec: true, allowWrite: true },
       browser: {
         enabled: true,
         headless: true,
