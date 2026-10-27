@@ -63,7 +63,7 @@
   },
   "dependencies": {
     "@internationalized/date": "3.12.4",
-    "@internationalized/number": "3.6.8",
+    "@internationalized/number": "3.6.9",
     "@internationalized/string": "3.2.10",
     "@ropav/styles": "workspace:*"
   },
@@ -71,7 +71,7 @@
     "@ropav/testing": "workspace:*",
     "@storybook/vue3-vite": "10.6.3",
     "@tailwindcss/vite": "catalog:",
-    "@tanstack/vue-table": "9.2.4",
+    "@tanstack/vue-table": "9.3.1",
     "@vitejs/plugin-vue": "catalog:",
     "clean-package": "2.2.0",
     "tailwindcss": "catalog:",
