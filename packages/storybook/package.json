@@ -35,7 +35,7 @@
     "@vitest/browser-playwright": "catalog:",
     "@vue/compiler-vapor": "catalog:",
     "playwright": "catalog:",
-    "postcss": "8.5.28",
+    "postcss": "8.5.31",
     "storybook": "10.6.1",
     "tailwindcss": "catalog:",
     "typescript": "catalog:",
