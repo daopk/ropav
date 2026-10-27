@@ -133,7 +133,7 @@ export const WithCustomContent: Story = {
     template: `
       <div class="flex items-center gap-3">
         <Popover>
-          <PopoverTrigger aria-label="Popover trigger">
+          <PopoverTrigger>
             <div class="flex items-center gap-2">
               <Avatar size="sm">
                 <AvatarImage alt="Zoe" :src="AVATAR_SRC" />

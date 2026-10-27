@@ -112,7 +112,7 @@ export const Default: Story = {
     components,
     template: `
       <Dropdown>
-        <Button aria-label="Menu" variant="secondary">Actions</Button>
+        <Button variant="secondary">Actions</Button>
         <DropdownPopover>
           <DropdownMenu>
             <DropdownSection>
@@ -145,7 +145,7 @@ export const Disabled: Story = {
     template: `
       <div class="flex items-center gap-2">
         <Dropdown is-disabled>
-          <Button aria-label="Menu" variant="secondary">Actions</Button>
+          <Button variant="secondary">Actions</Button>
           <DropdownPopover>
             <DropdownMenu>
               <DropdownItem id="new-file" text-value="New file">
@@ -155,10 +155,7 @@ export const Disabled: Story = {
           </DropdownPopover>
         </Dropdown>
         <Dropdown is-disabled>
-          <DropdownTrigger
-            aria-label="Menu"
-            class="rp-button rp-button--md rp-button--secondary"
-          >
+          <DropdownTrigger class="rp-button rp-button--md rp-button--secondary">
             Actions
           </DropdownTrigger>
           <DropdownPopover>
@@ -184,7 +181,7 @@ export const WithSingleSelection: Story = {
     }),
     template: `
       <Dropdown>
-        <Button aria-label="Menu" variant="secondary">Fruit</Button>
+        <Button variant="secondary">Fruit</Button>
         <DropdownPopover class="min-w-[256px]">
           <DropdownMenu v-model:selected-keys="selected" selection-mode="single">
             <DropdownSection>
@@ -225,7 +222,7 @@ export const SingleWithCustomIndicator: Story = {
     // needs in order to know whether to draw anything at all.
     template: `
       <Dropdown>
-        <Button aria-label="Menu" variant="secondary">Fruits</Button>
+        <Button variant="secondary">Fruits</Button>
         <DropdownPopover class="min-w-[256px]">
           <DropdownMenu v-model:selected-keys="selected" selection-mode="single">
             <DropdownSection>
@@ -274,7 +271,7 @@ export const WithMultipleSelection: Story = {
     }),
     template: `
       <Dropdown>
-        <Button aria-label="Menu" variant="secondary">Preferred Fruits</Button>
+        <Button variant="secondary">Preferred Fruits</Button>
         <DropdownPopover class="min-w-[256px]">
           <DropdownMenu v-model:selected-keys="selected" selection-mode="multiple">
             <DropdownSection>
@@ -329,7 +326,7 @@ export const WithSectionLevelSelection: Story = {
     // straight through all three without either selection interfering with the other.
     template: `
       <Dropdown>
-        <Button aria-label="Menu" variant="secondary">Styles</Button>
+        <Button variant="secondary">Styles</Button>
         <DropdownPopover class="min-w-[256px]">
           <DropdownMenu>
             <DropdownSection>
@@ -409,7 +406,7 @@ export const WithKeyboardShortcuts: Story = {
     }),
     template: `
       <Dropdown>
-        <Button aria-label="Menu" variant="secondary">Actions</Button>
+        <Button variant="secondary">Actions</Button>
         <DropdownPopover>
           <DropdownMenu>
             <DropdownItem
@@ -444,7 +441,7 @@ export const WithIcons: Story = {
     components: { ...components, IconFloppyDisk, IconFolderOpen, IconSquarePlus, IconTrashBin },
     template: `
       <Dropdown>
-        <Button aria-label="Menu" variant="secondary">Actions</Button>
+        <Button variant="secondary">Actions</Button>
         <DropdownPopover>
           <DropdownMenu>
             <DropdownItem id="new-file" text-value="New file">
@@ -495,7 +492,7 @@ export const LongPressTrigger: Story = {
     // assistive technology and answers Alt+ArrowDown as the keyboard way in.
     template: `
       <Dropdown trigger="longPress">
-        <Button aria-label="Menu" variant="secondary">Long Press</Button>
+        <Button variant="secondary">Long Press</Button>
         <DropdownPopover>
           <DropdownMenu>
             <DropdownItem
@@ -522,7 +519,7 @@ export const WithDescriptions: Story = {
     setup: () => ({ actions: DESCRIBED_ACTIONS }),
     template: `
       <Dropdown>
-        <Button aria-label="Menu" variant="secondary">Actions</Button>
+        <Button variant="secondary">Actions</Button>
         <DropdownPopover>
           <DropdownMenu>
             <DropdownItem
@@ -673,7 +670,7 @@ export const WithSubmenus: Story = {
     // knows the two belong to each other.
     template: `
       <Dropdown>
-        <Button aria-label="Menu" variant="secondary">Share</Button>
+        <Button variant="secondary">Share</Button>
         <DropdownPopover>
           <DropdownMenu>
             <DropdownItem id="copy-link" text-value="Copy Link">
@@ -732,7 +729,7 @@ export const WithCustomSubmenuIndicator: Story = {
     components: { ...components, IconArrowRight },
     template: `
       <Dropdown>
-        <Button aria-label="Menu" variant="secondary">Share</Button>
+        <Button variant="secondary">Share</Button>
         <DropdownPopover>
           <DropdownMenu>
             <DropdownItem id="copy-link" text-value="Copy Link">
@@ -827,7 +824,7 @@ export const Controlled: Story = {
       template: `
         <div class="min-w-sm space-y-4">
           <Dropdown>
-            <Button aria-label="Menu" variant="secondary">Actions</Button>
+            <Button variant="secondary">Actions</Button>
             <DropdownPopover>
               <DropdownMenu v-model:selected-keys="selected" selection-mode="multiple">
                 <DropdownItem id="bold" text-value="Bold">
@@ -862,7 +859,7 @@ export const ControlledOpenState: Story = {
           Dropdown is: <strong>{{ isOpen ? "open" : "closed" }}</strong>
         </p>
         <Dropdown v-model:is-open="isOpen">
-          <Button aria-label="Menu" variant="secondary">Actions</Button>
+          <Button variant="secondary">Actions</Button>
           <DropdownPopover>
             <DropdownMenu>
               <DropdownItem
