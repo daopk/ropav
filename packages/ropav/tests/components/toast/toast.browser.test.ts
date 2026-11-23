@@ -71,8 +71,16 @@ const waitForToasts = (count: number, budget = 2000) =>
 const waitForNoRegion = (budget = 2000) =>
   waitUntil("the region to go away", () => region() === null, budget);
 
-/** The timeout the pausing tests give a toast, and the unit they advance the fake clock in. */
-const TOAST_CLOCK = 400;
+/**
+ * The timeout the pausing tests give a toast, and the unit they advance the fake clock in.
+ *
+ * A minute, because a `userEvent` action is not neutral to a fake clock: while `hover` waits for
+ * the toast to be stable, Vitest advances fake timers by 50ms every 50ms of real time. A short
+ * timeout runs out under a loaded full-suite run before the pointer arrives to pause it, and the
+ * hover then retries against a toast on its way out. An action gives up after ~15s, so it can never
+ * advance the clock by a minute — only the test's own `advanceTimersByTime` can.
+ */
+const TOAST_CLOCK = 60_000;
 
 describe("Toast (browser)", () => {
   afterEach(() => {
