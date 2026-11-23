@@ -65,9 +65,10 @@ describe("ColorArea (browser)", () => {
 
       expect(style.backgroundImage).toContain("linear-gradient(to right, rgb(0, 0, 0)");
       expect(style.backgroundImage).toContain("linear-gradient(to top, rgb(0, 0, 0)");
-      // Without this the top layer covers the others and the square still looks plausible.
-      // Chromium reports one blend mode per background layer, so three layers give three copies.
-      expect(style.backgroundBlendMode.split(", ")).toEqual(["screen", "screen", "screen"]);
+      // Without this the top layer covers the others and the square still looks plausible. How
+      // many copies come back varies by version — one per layer up to Chromium 158, the declared
+      // list from 159 — but a shorter list repeats over the layers, so every entry is the claim.
+      expect(new Set(style.backgroundBlendMode.split(", "))).toEqual(new Set(["screen"]));
 
       unmount();
     });
@@ -81,7 +82,7 @@ describe("ColorArea (browser)", () => {
 
       expect(style.backgroundImage).toContain("rgb(0, 255, 255)");
       // Two layers here, and neither is blended — only the rgb branch needs `screen`.
-      expect(style.backgroundBlendMode.split(", ")).toEqual(["normal", "normal"]);
+      expect(new Set(style.backgroundBlendMode.split(", "))).toEqual(new Set(["normal"]));
 
       unmount();
     });

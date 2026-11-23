@@ -327,28 +327,54 @@ describe("Tabs (browser)", () => {
   /*
    * The alignment rules reach the tab through the list, so only a mounted tree says whether they
    * match — and the class landing on the root is not the same claim as the tab moving.
+   *
+   * Measured where the label lands rather than read off `justify-content`: the computed keyword is
+   * not stable across Chromium versions (158 reports `flex-start` back as `flow-start`) while the
+   * layout it produces is, and the layout is the claim.
    */
   describe("alignment", () => {
-    const justify = async (align?: string) => {
-      const { container, unmount } = renderVapor(TabsFixture, { props: { align } });
+    /** Which edge of the tab's content box the label sits against, at a width that leaves it room. */
+    const edgeOf = async (align?: string) => {
+      const { container, unmount } = renderVapor(TabsFixture, {
+        props: { align, class: "w-[600px]" },
+      });
 
       await ready();
 
       const tab = container.querySelector<HTMLElement>('[data-slot="tabs-tab"]')!;
-      const resolved = getComputedStyle(tab).justifyContent;
+      const style = getComputedStyle(tab);
+      const box = tab.getBoundingClientRect();
+      // The label's text node, not the tab's contents: the indicator spans the tab's full width.
+      const label = [...tab.childNodes].find(
+        (node) => node.nodeType === Node.TEXT_NODE && node.textContent!.trim(),
+      )!;
+      const range = document.createRange();
+
+      range.selectNodeContents(label);
+
+      const text = range.getBoundingClientRect();
+      const before = text.left - (box.left + Number.parseFloat(style.paddingLeft));
+      const after = box.right - Number.parseFloat(style.paddingRight) - text.right;
 
       unmount();
 
-      return resolved;
+      // Without room to move, every alignment would measure the same and the test would prove nothing.
+      expect(before + after).toBeGreaterThan(40);
+
+      if (before < 1) return "start";
+      if (after < 1) return "end";
+      if (Math.abs(before - after) < 1) return "center";
+
+      return `${before.toFixed(1)}px before, ${after.toFixed(1)}px after`;
     };
 
     it("moves the tab's content to the edge it names", async () => {
       expect({
-        center: await justify("center"),
-        end: await justify("end"),
-        none: await justify(),
-        start: await justify("start"),
-      }).toEqual({ center: "center", end: "flex-end", none: "center", start: "flex-start" });
+        center: await edgeOf("center"),
+        end: await edgeOf("end"),
+        none: await edgeOf(),
+        start: await edgeOf("start"),
+      }).toEqual({ center: "center", end: "end", none: "center", start: "start" });
     });
   });
 
