@@ -28,9 +28,7 @@ const navigate = (href: string) => {
         </Link>
       </nav>
 
-      <p class="note">
-        Route: <code>{{ path }}</code> — no reload, and no router in the library.
-      </p>
+      <p class="note">Route: <code>{{ path }}</code> — no reload, and no router in the library.</p>
     </div>
   </RouterProvider>
 </template>
