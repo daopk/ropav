@@ -7,6 +7,7 @@ import { nextTick } from "vue";
 import { isAppleDevice } from "@/utils/platform";
 
 import { pressRealReset } from "../../harness/real-reset";
+import { startSlowMotion, stopSlowMotion } from "../../harness/slow-motion";
 
 import Fixture from "./fixtures.vue";
 
@@ -49,6 +50,8 @@ const settled = async (popover: HTMLElement) => {
 const cleanups: Array<() => void> = [];
 
 afterEach(async () => {
+  stopSlowMotion();
+
   while (cleanups.length > 0) cleanups.pop()?.();
   await nextTick();
 
@@ -330,9 +333,18 @@ describe("ComboBox (browser)", () => {
         "Panda",
       ]);
 
+      /*
+       * The list is only on screen for as long as the exit animation runs. A full-suite run can
+       * spend longer than that between the Escape and the read below, and then the popover is
+       * already gone and the read finds no options at all. Stretched, the exit outlasts any delay.
+       */
+      startSlowMotion();
+
       await userEvent.keyboard("{Escape}");
       await nextTick();
       await nextTick();
+
+      expect(popoverOf()).toHaveAttribute("data-exiting", "true");
 
       /*
        * Escape empties the field, and an empty filter matches everything — so the list the state
