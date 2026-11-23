@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@testing-library/dom": "10.4.2",
-    "@testing-library/jest-dom": "7.0.1",
+    "@testing-library/jest-dom": "8.0.0",
     "@vitest/browser-playwright": "catalog:",
     "axe-core": "4.14.1",
     "jsdom": "31.0.1",
