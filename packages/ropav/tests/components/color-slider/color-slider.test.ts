@@ -8,8 +8,12 @@ import { parseColor } from "@/utils/color";
 
 import Fixture from "./fixtures.vue";
 
+/**
+ * The track's `#efefef 0% 25%, #f7f7f7 0% 50%` as the style serializes it back: a stop with two
+ * positions is two stops of the same colour, and jsdom writes it out that way.
+ */
 const CHECKERBOARD =
-  "repeating-conic-gradient(rgb(239, 239, 239) 0% 25%, rgb(247, 247, 247) 0% 50%)";
+  "repeating-conic-gradient(rgb(239, 239, 239) 0%, rgb(239, 239, 239) 25%, rgb(247, 247, 247) 0%, rgb(247, 247, 247) 50%)";
 
 const renderSlider = (props: Record<string, unknown> = {}) =>
   renderVapor(Fixture, {

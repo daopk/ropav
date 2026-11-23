@@ -176,7 +176,7 @@ describe("ColorPicker", () => {
       await open();
 
       // #0485F7 is hue 208.15 in hsb, which is where the slider's thumb has to sit.
-      expect(slot("color-slider-thumb").style.left).toBe("57.77777777777777%");
+      expect(slot("color-slider-thumb").style.left).toBe("57.7778%");
 
       unmount();
     });
@@ -203,7 +203,7 @@ describe("ColorPicker", () => {
 
       // Saturation 98.38%, brightness 96.86% — the same colour, read on two axes.
       expect(thumb.style.left).toBe("98.38%");
-      expect(thumb.style.top).toBe("3.1399999999999983%");
+      expect(thumb.style.top).toBe("3.14%");
 
       unmount();
     });

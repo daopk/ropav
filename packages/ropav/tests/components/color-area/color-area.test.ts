@@ -157,7 +157,7 @@ describe("ColorArea", () => {
       const { container, unmount } = renderArea({ defaultValue: "hsl(30, 100%, 50%)" });
       const thumb = slot(container, "color-area-thumb");
 
-      expect(thumb.style.left).toBe("8.333333333333332%");
+      expect(thumb.style.left).toBe("8.33333%");
       expect(thumb.style.top).toBe("0%");
       expect(thumb.style.position).toBe("absolute");
 

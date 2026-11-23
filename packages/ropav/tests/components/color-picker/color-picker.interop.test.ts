@@ -139,7 +139,7 @@ describe("ColorPicker under a vdom host", () => {
     await nextTick();
     await open();
 
-    expect(slot("color-slider-thumb").style.left).toBe("57.77777777777777%");
+    expect(slot("color-slider-thumb").style.left).toBe("57.7778%");
 
     unmount();
   });
